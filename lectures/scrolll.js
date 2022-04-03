@@ -40,6 +40,22 @@ function setScroll() {
     meet2.innerHTML = '';
     meet2.prepend(before2);
     meet2.append(after2);
+    
+    <!--- --->
+
+    let meet3 = document.getElementById("meetings-title3");
+    let before3 = document.createElement("span");
+    before3.classList.add("navigation");
+    before3.innerHTML = '&larr; Modern Vis';
+    let after3 = document.createElement("span");
+    after3.classList.add("navigation");
+    after3.innerHTML = ' ualisation Technologies &rarr;';
+    meet3.innerHTML = '';
+    meet3.prepend(before3);
+    meet3.append(after3);
+    
+
+    
 
     let meetings = document.getElementById("meetings");
     let meeting = document.getElementsByClassName("meeting");
