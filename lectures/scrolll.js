@@ -17,6 +17,7 @@ function scroll(element, start, stop, current) {
 
 function setScroll() {
     let meet = document.getElementById("meetings-title");
+    let meet2 = document.getElementById("meetings-title2");
 
     let before = document.createElement("span");
     before.classList.add("navigation");
@@ -24,10 +25,21 @@ function setScroll() {
     let after = document.createElement("span");
     after.classList.add("navigation");
     after.innerHTML = ' Graphics Applications &rarr;';
+    
+    let before2 = document.createElement("span");
+    before2.classList.add("navigation");
+    before2.innerHTML = '&larr; xxxxxxxx';
+    let after2 = document.createElement("span");
+    after2.classList.add("navigation");
+    after2.innerHTML = ' yyyyyyyyy &rarr;';
 
     meet.innerHTML = '';
     meet.prepend(before);
     meet.append(after);
+    
+    meet2.innerHTML = '';
+    meet2.prepend(before2);
+    meet2.append(after2);
 
     let meetings = document.getElementById("meetings");
     let meeting = document.getElementsByClassName("meeting");
