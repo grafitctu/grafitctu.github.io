@@ -21,7 +21,7 @@ function setScroll() {
 
     let before = document.createElement("span");
     before.classList.add("navigation");
-    before.innerHTML = '&larr; Virtual gam';
+    before.innerHTML = '&larr; Virtual Gam';
     let after = document.createElement("span");
     after.classList.add("navigation");
     after.innerHTML = 'ing Worlds &rarr;';
