@@ -57,10 +57,6 @@ function setScroll() {
         console.log(w, max, meetings.scrollLeft);
         let end = Math.min(max, meetings.scrollLeft + w);
         scroll(meetings, meetings.scrollLeft, end, meetings.scrollLeft)
-        
-        console.log(w2, max2, meetings2.scrollLeft);
-        let end2 = Math.min(max2, meetings2.scrollLeft + w2);
-        scroll(meetings2, meetings2.scrollLeft, end2, meetings2.scrollLeft)
     }
     
 }
