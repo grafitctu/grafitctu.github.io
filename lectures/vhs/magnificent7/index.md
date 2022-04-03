@@ -12,7 +12,7 @@
 
 **[Dynamický svět](./documentation2.md)**
 
-**[Doc 3](./Documentation/documentation3.md)**
+**[Komplexní svět](./documentation3.md)**
 
 ## Buildy
 
