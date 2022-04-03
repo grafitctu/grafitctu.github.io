@@ -21,10 +21,10 @@ function setScroll() {
 
     let before = document.createElement("span");
     before.classList.add("navigation");
-    before.innerHTML = '&larr; Multimedia and';
+    before.innerHTML = '&larr; Virtual gam';
     let after = document.createElement("span");
     after.classList.add("navigation");
-    after.innerHTML = ' Graphics Applications &rarr;';
+    after.innerHTML = 'ing Worlds &rarr;';
     
     let before2 = document.createElement("span");
     before2.classList.add("navigation");
