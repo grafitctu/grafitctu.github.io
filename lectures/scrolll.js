@@ -28,10 +28,10 @@ function setScroll() {
     
     let before2 = document.createElement("span");
     before2.classList.add("navigation");
-    before2.innerHTML = '&larr; xxxxxxxx';
+    before2.innerHTML = '&larr; Programming of';
     let after2 = document.createElement("span");
     after2.classList.add("navigation");
-    after2.innerHTML = ' yyyyyyyyy &rarr;';
+    after2.innerHTML = ' Graphic Applications &rarr;';
 
     meet.innerHTML = '';
     meet.prepend(before);
