@@ -56,11 +56,7 @@ function setScroll() {
     before.onclick = () => {
         console.log(w, max, meetings.scrollLeft);
         let end = Math.max(0, meetings.scrollLeft - w);
-        scroll(meetings, meetings.scrollLeft, end, meetings.scrollLeft)
-        
-        console.log(w2, max2, meetings2.scrollLeft);
-        let end2 = Math.max(0, meetings2.scrollLeft - w2);
-        scroll(meetings2, meetings2.scrollLeft, end2, meetings2.scrollLeft)
+        scroll(meetings, meetings.scrollLeft, end, meetings.scrollLeft)      
     }
     
     after.onclick = () => {
