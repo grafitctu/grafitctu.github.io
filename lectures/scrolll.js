@@ -48,7 +48,7 @@ function setScroll() {
     meetings.scrollLeft = max;
     
     let meetings2 = document.getElementById("meetings2");
-    let meeting2 = document.getElementsByClassName("meeting2");
+    let meeting2 = document.getElementsByClassName("meeting");
     let w2 = meeting2[0].offsetWidth;
     let max2 = meetings2.scrollWidth;
     meetings2.scrollLeft = max;
@@ -58,9 +58,9 @@ function setScroll() {
         let end = Math.max(0, meetings.scrollLeft - w);
         scroll(meetings, meetings.scrollLeft, end, meetings.scrollLeft)
         
-        console.log(w, max, meetings.scrollLeft);
-        let end = Math.max(0, meetings.scrollLeft - w);
-        scroll(meetings, meetings.scrollLeft, end, meetings.scrollLeft)
+        console.log(w2, max2, meetings2.scrollLeft);
+        let end2 = Math.max(0, meetings2.scrollLeft - w2);
+        scroll(meetings2, meetings2.scrollLeft, end2, meetings2.scrollLeft)
     }
     
     after.onclick = () => {
