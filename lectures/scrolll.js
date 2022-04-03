@@ -46,13 +46,7 @@ function setScroll() {
     let w = meeting[0].offsetWidth;
     let max = meetings.scrollWidth;
     meetings.scrollLeft = max;
-    
-    let meetings2 = document.getElementById("meetings2");
-    let meeting2 = document.getElementsByClassName("meeting");
-    let w2 = meeting2[0].offsetWidth;
-    let max2 = meetings2.scrollWidth;
-    meetings2.scrollLeft = max;
-    
+       
     before.onclick = () => {
         console.log(w, max, meetings.scrollLeft);
         let end = Math.max(0, meetings.scrollLeft - w);
