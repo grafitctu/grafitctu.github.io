@@ -20,7 +20,7 @@ function setScroll() {
 
     let before = document.createElement("span");
     before.classList.add("navigation");
-    before.innerHTML = '&larr; BI-MGA Multimedia and';
+    before.innerHTML = '&larr; Multimedia and';
     let after = document.createElement("span");
     after.classList.add("navigation");
     after.innerHTML = ' Graphics Applications &rarr;';
