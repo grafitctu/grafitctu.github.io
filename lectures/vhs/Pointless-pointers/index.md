@@ -7,7 +7,7 @@ Hra je 2D s pohledem shora. Hráč bude postupovat příběhem formou dialogů s
 Mezi mechaniky bude patřit: 
 *  Interakce s předmětem
 *  Interakce s NPC
-*  Jednuduchý combat
+*  Jednoduchý combat
 *  Volba možnosti v dialogu
 *  Změna hry na základě ukazatelů na základě hráčových voleb (morálnost, opilost, ...)
 
@@ -18,17 +18,26 @@ Pro tvorbu dialogu jsme použili asset fungus:
 https://fungusgames.com/
 
 
-Soubory s veškerou dokumentací k příběhu, scénám a assetům jsou ve složce [zde](https://gitlab.fit.cvut.cz/BI-VHS/b201projects/pointless-pointers/tree/master/story_linky), nebo v google dokumentech (odkazy níže)
-## Dokumentace statického světa:
-[Dokumentace1](https://gitlab.fit.cvut.cz/BI-VHS/b201projects/pointless-pointers/blob/master/dokumentace1.md)
+Soubory s veškerou dokumentací k příběhu, scénám a assetům jsou ve složce [zde](story_linky), nebo v google dokumentech (odkazy níže)
+## Dokumentace:
+[Dokumentace statického světa](dokumentace1.md)
+
+[Dokumentace dynamického světa](dokumentace2.md)
+
+[Dokumentace komplexního světa](dokumentace3.md)
 ## Popis scén:
-https://docs.google.com/document/d/18CFeOQMLK4Dyf-vzMNYGeEL0ibuGkwZiXZqJsWt2Qpw/edit#heading=h.lnty5z6636to
+[Popis scén - google docs](https://docs.google.com/document/d/18CFeOQMLK4Dyf-vzMNYGeEL0ibuGkwZiXZqJsWt2Qpw/edit#heading=h.lnty5z6636to)
+
+[Popis scén - lokálně](story_linky/popis_scen_zlodej.docx)
 
 ## Postavy a příběh:
 
-https://docs.google.com/document/d/1qKkztczfzYKKnTZPS91ce4szmXhybrZph-qHo4H6EVU/edit?usp=drive_web&ouid=102369778580244113328
+[Postavy a příběh - google docs](https://docs.google.com/document/d/1qKkztczfzYKKnTZPS91ce4szmXhybrZph-qHo4H6EVU/edit?usp=drive_web&ouid=102369778580244113328)
 
+[Postavy a příběh - lokálně](story_linky/pribeh.docx)
 ## Assety:
 
-https://docs.google.com/document/d/1SDCFm7Y3P5sCd-yiooQf_u0HExDKepfOwGlUJivuU-c/edit
+[Assety - google docs](https://docs.google.com/document/d/1SDCFm7Y3P5sCd-yiooQf_u0HExDKepfOwGlUJivuU-c/edit)
+
+[Assety - lokálně](story_linky/assety.docx)
 
