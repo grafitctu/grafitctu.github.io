@@ -20,10 +20,10 @@ function setScroll() {
 
     let before = document.createElement("span");
     before.classList.add("navigation");
-    before.innerHTML = '&larr; Rese';
+    before.innerHTML = '&larr; Lectures ';
     let after = document.createElement("span");
     after.classList.add("navigation");
-    after.innerHTML = 'arch &rarr;';
+    after.innerHTML = ' overview &rarr;';
 
     meet.innerHTML = '';
     meet.prepend(before);
