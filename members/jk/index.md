@@ -5,45 +5,41 @@
 Ing. Jiří Kubišta
 -----------
 
-kratky info odstavec
+is currently working of CESNET, an association of universities of the Czech Republic and the Czech Academy of Sciences and head of SAGElab laboratory on at Faculty of Information Technology, Czech Technical University in Prague. He received his Master's degree in Software Engineerig from the Faculty of Information Technology, Czech Technical University in Prague. His areas of interest covers photogrametry, web oriented design, and music arts.  
 
-*   Head of [SAGElab ](https://sagelab.cesnet.cz/)
-*   VR, AR
-*   ...
-*   ...
-*   ...
-*   ...
+*   head of [SAGElab](https://sagelab.cesnet.cz/)
+*   [Interactive 3D models with remote access](http://modely.cesnet.cz/)
+*   photogrammetry
+*   SAGE, Smart Amplified Group Environment
+*   graphical design and modelling
+
 
 #### Publications
 
-*   [Richtr Radek, Haindl Michal : Dynamic Texture Similarity Criterion](http://library.utia.cas.cz/separaty/2018/RO/haindl-0492503.pdf), The 24th International Conference on Pattern Recognition (ICPR 2018), p. 904-909, The 24th International Conference on Pattern Recognition (ICPR 2018), (Beijing, CN, 20180820) \[2018\] DOI: 10.1109/ICPR.2018.8545370
-*   ...
-*   ...
+
+*   [Ubik, Sven, and Jiri Kubista. INTERACTIVE 3D MODELS OF COLLECTION ITEMS FOR EDUCATION AND PRESENTATION APPLICATIONS.](https://books.ub.uni-heidelberg.de/arthistoricum/reader/download/443/443-17-83199-1-10-20181205.pdf)
+*   [Ubik, S., & Kubišta, J. (2017, September). Scalable real-time sharing of 3D model visualizations for group collaboration.](https://link.springer.com/chapter/10.1007/978-3-319-66805-5_31) In International Conference on Cooperative Design, Visualization and Engineering (pp. 244-251). Springer, Cham.
+*   [Ubik, S., & Kubišta, J. (2016, October). Interactive Scalable Visualizations of Cultural Heritage for Distance Access.](https://link.springer.com/chapter/10.1007/978-3-319-48974-2_21) In Euro-Mediterranean Conference (pp. 191-198). Springer, Cham.
+*   [Jiří, K. (2019). Systém pro práci s interaktivními 3D modely](https://dspace.cvut.cz/bitstream/handle/10467/82314/F8-DP-2019-Kubista-Jiri-thesis.pdf?sequence=-1) (Master's thesis, České vysoké učení technické v Praze. Vypočetní a informační centrum.).
+
 
 #### Lectures
 
-*   ...
-*   ...
-*   ...
-*   ...
+*   BI-PGA
 
 #### Theses
 
-*   [Rozpoznávání želv](https://dspace.cvut.cz/handle/10467/96860), Kristýna Pátková, 2021, Bachelor thesis
-*   [Sedm statečných - optimalizace animací](https://dspace.cvut.cz/handle/10467/96927), Petr Hromják, 2021, Bachelor thesis
-*   [Překlad do kruhového písma jazyka gallifreyan](https://dspace.cvut.cz/handle/10467/95040), Barbora Kyseľová, 2021, Bachelor thesis
-*   [Rozpoznávání a editace urbanistické scény II.](https://dspace.cvut.cz/handle/10467/95027), Pavel Kříž, 2021, Bachelor thesis
-*   [Modelování a editece dynamických textur](https://dspace.cvut.cz/handle/10467/95030), Alžběta Mrkvová, 2021, Bachelor thesis
-*   [Vizualizace zvuku pomoci LED panelu](https://dspace.cvut.cz/handle/10467/96862), Ondřej Švejstil, 2021, Bachelor thesis
-*   [Vulkan API: sada výukových renderovacích scén](https://dspace.cvut.cz/handle/10467/95106), Jozef Valko, 2021, Bachelor thesis
-*   [Globální osvětlovací modely](https://dspace.cvut.cz/handle/10467/95025), Matěj Hoffmann, 2021, Bachelor thesis
-*   [Rozpoznávání a editace urbanistické scény](https://dspace.cvut.cz/handle/10467/88288), Jan Šefčík, 2020, Bachelor thesis
-*   [Fraviz: Fraktální audio vizualizér](https://dspace.cvut.cz/handle/10467/90350), Radka Hošková, 2020, Bachelor thesis
-*   [Vizualizace 3-rozměrných dat slunečního povrchu](https://dspace.cvut.cz/handle/10467/83382), Vojtěch Tomas, 2019, Bachelor thesis
-*   [3D model fakulty](https://dspace.cvut.cz/handle/10467/83392), Oldřich Milec, 2019, Bachelor thesis
-*   [Karkulka v gramatickém lese: Samoučící 2D hra generovaná gramatikou](https://dspace.cvut.cz/handle/10467/73969), Klára Hájková, 2018, Master thesis
+
+*   [Aplikace pro porovnávání algoritmů počítačového vidění](https://dspace.cvut.cz/bitstream/handle/10467/65881/F8-BP-2016-Kubista-Adam-thesis.pdf?sequence=1), Kubišta A., 2016, bachelor thesis
+*   [Animace humanoidního 3D modelu](https://dspace.cvut.cz/bitstream/handle/10467/88260/F8-BP-2020-Linhart-Oldrich-thesis.pdf?sequence=-1&isAllowed=y), Linhart O., 2020, Bachelor thesis
+ 
 
 Contacts
 --------
 
-*   **Emaily:** username@fit.cvut.com
+*   **Emaily:** kubista@cesnet.cz
+
+Calendar of availability
+--------
+
+[gCal](https://calendar.google.com/calendar/embed?src=kob0eg7qu8rfvb33n8e227l2t0%40group.calendar.google.com&ctz=Europe/Prague)
