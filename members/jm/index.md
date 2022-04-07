@@ -1,11 +1,9 @@
-    members
-
 [back to members](../)
 
 Ing. Jiří Melnikov
 -----------
 
-is currently researcher at CESNET, an association of universities of the Czech Republic and the Czech Academy of Sciences and head of SAGElab laboratory on at Faculty of Information Technology, Czech Technical University in Prague. He received his Master's degree in Computer Systems and Networks from the Faculty of Information Technology, Czech Technical University in Prague. His areas of interest covers internet of thinks, network  administration, low photogrametry, web oriented design, and music arts.  
+is currently researcher at CESNET, an association of universities of the Czech Republic and the Czech Academy of Sciences and head of SAGElab laboratory on at Faculty of Information Technology, Czech Technical University in Prague. He received his Master's degree in Computer Systems and Networks from the Faculty of Information Technology, Czech Technical University in Prague. His areas of interest covers internet of thinks, network  administration and traveling. 
 
 *   head of [SAGElab](https://sagelab.cesnet.cz/)
 *   [Live culture over the network](http://mvtp.cesnet.cz)
@@ -37,18 +35,18 @@ is currently researcher at CESNET, an association of universities of the Czech R
  
 
 *   [Kernel module for operating system Linux to simulate a virtual video device](https://dspace.cvut.cz/handle/10467/25064), Bachelor Thesis, Ján Sebechlebský
-*   [SAGELab - Gesture based display controller](https://dspace.cvut.cz/handle/10467/63189),	Bachelor Thesis, Lukáš Sedláček (sedlalu2)		
-*   [SAGELab - Distributed visualization of high-resolution image data on SAGE display wall](https://dspace.cvut.cz/handle/10467/63204)	, Bachelor Thesis, 	Jiří Kubišta (kubisjir)		
-*   [SAGELab - Management of multimedia materials in cloud storage](https://dspace.cvut.cz/handle/10467/63150)	, Bachelor Thesis,	Roman Svoboda (svoboro1)		
-*   [Implementation of library and application for control NEC X463UN LCD monitors](https://dspace.cvut.cz/handle/10467/63159)	, Bachelor Thesis, 	Patrik Faistaver (faistpat)		
-*   [SAGELab - REST interface for SAGE display wall](https://dspace.cvut.cz/handle/10467/63081)	, Bachelor Thesis, 	Ondřej Brém (bremondr)		
+*   [SAGELab - Gesture based display controller](https://dspace.cvut.cz/handle/10467/63189),	Bachelor Thesis, Lukáš Sedláček  
+*   [SAGELab - Distributed visualization of high-resolution image data on SAGE display wall](https://dspace.cvut.cz/handle/10467/63204)	, Bachelor Thesis, 	Jiří Kubišta  
+*   [SAGELab - Management of multimedia materials in cloud storage](https://dspace.cvut.cz/handle/10467/63150)	, Bachelor Thesis,	Roman Svoboda  
+*   [Implementation of library and application for control NEC X463UN LCD monitors](https://dspace.cvut.cz/handle/10467/63159)	, Bachelor Thesis, 	Patrik Faistaver  
+*   [SAGELab - REST interface for SAGE display wall](https://dspace.cvut.cz/handle/10467/63081)	, Bachelor Thesis, 	Ondřej Brém  
 *   Remote admissions conference system	, Bachelor Thesis, Michal Manda  
 
 
 Contacts
 --------
 
-*   **Emaily:** kubista@cesnet.cz
+*   **Email:** melnikov@cesnet.cz
 
 Calendar of availability
 --------
