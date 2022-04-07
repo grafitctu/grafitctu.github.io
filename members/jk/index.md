@@ -2,12 +2,12 @@
 
 [back to members](../)
 
-title, name
+Ing. Jiří Kubišta
 -----------
 
 kratky info odstavec
 
-*   Founder of Grafit group
+*   Head of [SAGElab ](https://sagelab.cesnet.cz/)
 *   VR, AR
 *   ...
 *   ...
