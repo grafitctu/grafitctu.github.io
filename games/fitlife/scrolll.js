@@ -20,7 +20,7 @@ function setScroll() {
 
     let before = document.createElement("span");
     before.classList.add("navigation");
-    before.innerHTML = '&larr; Im ';
+    before.innerHTML = '&larr; Im';
     let after = document.createElement("span");
     after.classList.add("navigation");
     after.innerHTML = ' gs &rarr;';
