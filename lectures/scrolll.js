@@ -41,7 +41,7 @@ function setScroll() {
     meet2.prepend(before2);
     meet2.append(after2);
     
-    <!--- --->
+    <!---  
 
     let meet3 = document.getElementById("meetings-title3");
     let before3 = document.createElement("span");
@@ -54,7 +54,7 @@ function setScroll() {
     meet3.prepend(before3);
     meet3.append(after3);
 
-
+--->
     
 
     let meetings = document.getElementById("meetings");
