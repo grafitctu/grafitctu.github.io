@@ -104,7 +104,7 @@ function setScroll() {
    
 
     let meetings = document.getElementById("meetings");
-    let meeting = document.getElementsByClassName("meeting");
+    let meeting  = document.getElementsByClassName("meeting");
     let w = meeting[0].offsetWidth;
     let max = meetings.scrollWidth;
     meetings.scrollLeft = max;
