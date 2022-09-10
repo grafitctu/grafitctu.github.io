@@ -18,10 +18,10 @@ function scroll(element, start, stop, current) {
 function setScroll() {
     let meet = document.getElementById("meetings-title");
     let meet2 = document.getElementById("meetings-title2");
-    let meet2 = document.getElementById("meetings-title3");    
-    let meet2 = document.getElementById("meetings-title5");    
+    let meet3 = document.getElementById("meetings-title3");    
+    let meet5 = document.getElementById("meetings-title5");    
     let meet7 = document.getElementById("meetings-title7");
-    let meet7 = document.getElementById("meetings-title8");    
+    let meet8 = document.getElementById("meetings-title8");    
     let meet9 = document.getElementById("meetings-title9");    
 
     let before = document.createElement("span");
@@ -90,6 +90,18 @@ function setScroll() {
     meet9.innerHTML = '';
     meet9.prepend(before2);
     meet9.append(after2);  
+    meet3.innerHTML = '';
+    meet3.prepend(before2);
+    meet3.append(after2);  
+    meet5.innerHTML = '';
+    meet5.prepend(before2);
+    meet5.append(after2);  
+    meet8.innerHTML = '';
+    meet8.prepend(before2);
+    meet8.append(after2);  
+    
+    
+
     
    
 
