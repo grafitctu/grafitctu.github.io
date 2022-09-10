@@ -18,13 +18,18 @@ function scroll(element, start, stop, current) {
 function setScroll() {
     let meet = document.getElementById("meetings-title");
     let meet2 = document.getElementById("meetings-title2");
+    let meet2 = document.getElementById("meetings-title3");    
+    let meet2 = document.getElementById("meetings-title5");    
+    let meet7 = document.getElementById("meetings-title7");
+    let meet7 = document.getElementById("meetings-title8");    
+    let meet9 = document.getElementById("meetings-title9");    
 
     let before = document.createElement("span");
     before.classList.add("navigation");
     before.innerHTML = '&larr; Virtual Gam';
     let after = document.createElement("span");
     after.classList.add("navigation");
-    after.innerHTML = 'ing Worlds &rarr;';
+    after.innerHTML = 'ing Worlds &rarr;';    
     
     let before2 = document.createElement("span");
     before2.classList.add("navigation");
@@ -32,6 +37,46 @@ function setScroll() {
     let after2 = document.createElement("span");
     after2.classList.add("navigation");
     after2.innerHTML = ' Graphic Applications &rarr;';
+    
+    let before3 = document.createElement("span");
+    before3.classList.add("navigation");
+    before3.innerHTML = '&larr; MV';
+    let after3 = document.createElement("span");
+    after3.classList.add("navigation");
+    after3.innerHTML = 'T &rarr;';
+    
+    
+    let before5 = document.createElement("span");
+    before5.classList.add("navigation");
+    before5.innerHTML = '&larr; Creative Coding for ';
+    let after5 = document.createElement("span");
+    after5.classList.add("navigation");
+    after5.innerHTML = ' Computational Arts &rarr;';
+    
+    
+    let before7 = document.createElement("span");
+    before7.classList.add("navigation");
+    before7.innerHTML = '&larr; Pattern ';
+    let after7 = document.createElement("span");
+    after7.classList.add("navigation");
+    after7.innerHTML = ' Recognition &rarr;';
+  
+    let before8 = document.createElement("span");
+    before8.classList.add("navigation");
+    before8.innerHTML = '&larr; PV';
+    let after8 = document.createElement("span");
+    after8.classList.add("navigation");
+    after8.innerHTML = 'R &rarr;';
+
+  
+    let before9 = document.createElement("span");
+    before9.classList.add("navigation");
+    before9.innerHTML = '&larr; Computer  ';
+    let after9 = document.createElement("span");
+    after9.classList.add("navigation");
+    after9.innerHTML = ' Graphics 1 &rarr;';
+    
+
 
     meet.innerHTML = '';
     meet.prepend(before);
@@ -39,6 +84,14 @@ function setScroll() {
     meet2.innerHTML = '';
     meet2.prepend(before2);
     meet2.append(after2);        
+    meet7.innerHTML = '';
+    meet7.prepend(before2);
+    meet7.append(after2);  
+    meet9.innerHTML = '';
+    meet9.prepend(before2);
+    meet9.append(after2);  
+    
+   
 
     let meetings = document.getElementById("meetings");
     let meeting = document.getElementsByClassName("meeting");
