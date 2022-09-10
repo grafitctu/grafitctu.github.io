@@ -51,8 +51,7 @@ function setScroll() {
     before5.innerHTML = '&larr; Creative Coding for ';
     let after5 = document.createElement("span");
     after5.classList.add("navigation");
-    after5.innerHTML = ' Computational Arts &rarr;';
-    
+    after5.innerHTML = ' Computational Arts &rarr;';    
     
     let before7 = document.createElement("span");
     before7.classList.add("navigation");
@@ -83,24 +82,23 @@ function setScroll() {
     meet.append(after);    
     meet2.innerHTML = '';
     meet2.prepend(before2);
-    meet2.append(after2);        
-    meet7.innerHTML = '';
-    meet7.prepend(before2);
-    meet7.append(after2);  
-    meet9.innerHTML = '';
-    meet9.prepend(before2);
-    meet9.append(after2);  
+    meet2.append(after2);    
     meet3.innerHTML = '';
-    meet3.prepend(before2);
-    meet3.append(after2);  
+    meet3.prepend(before3);
+    meet3.append(after3);  
     meet5.innerHTML = '';
-    meet5.prepend(before2);
-    meet5.append(after2);  
+    meet5.prepend(before5);
+    meet5.append(after5);       
+    meet7.innerHTML = '';
+    meet7.prepend(before7);
+    meet7.append(after7);     
     meet8.innerHTML = '';
-    meet8.prepend(before2);
-    meet8.append(after2);  
-    
-    
+    meet8.prepend(before8);
+    meet8.append(after8);      
+    meet9.innerHTML = '';
+    meet9.prepend(before9);
+    meet9.append(after9);  
+
 
     
    
