@@ -14,6 +14,7 @@
             width: 100%;
             overflow: hidden;
             position: relative;
+            margin-bottom: 30px;
         }
         .gallery-inner {
             display: flex;
@@ -26,22 +27,24 @@
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const galleryInner = document.querySelector('.gallery-inner');
-            let currentIndex = 0;
-            const items = document.querySelectorAll('.gallery-item');
-            const itemWidth = items[0].offsetWidth + 20; // Including margin
+            const galleries = document.querySelectorAll('.gallery-inner');
+            galleries.forEach((galleryInner, index) => {
+                let currentIndex = 0;
+                const items = galleryInner.querySelectorAll('.gallery-item');
+                const itemWidth = items[0].offsetWidth + 20; // Including margin
 
-            function scrollGallery() {
-                currentIndex = (currentIndex + 1) % items.length;
-                galleryInner.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
+                function scrollGallery() {
+                    currentIndex = (currentIndex + 1) % items.length;
+                    galleryInner.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
+                    setTimeout(scrollGallery, getRandomDelay());
+                }
+
+                function getRandomDelay() {
+                    return Math.floor(Math.random() * 5000) + 10000; // Random delay between 10 and 15 seconds
+                }
+
                 setTimeout(scrollGallery, getRandomDelay());
-            }
-
-            function getRandomDelay() {
-                return Math.floor(Math.random() * 5000) + 10000; // Random delay between 10 and 15 seconds
-            }
-
-            setTimeout(scrollGallery, getRandomDelay());
+            });
         });
     </script>
 </head>
@@ -70,18 +73,15 @@
                 <img src="../assets/showcase/niccc_sc4.png" alt="Project 2">
             </div>
             <div class="gallery-item">
-                 <img src="../assets/showcase/niccc_sc5.png" alt="Project 2">
+                <img src="../assets/showcase/niccc_sc5.png" alt="Project 2">
             </div>
             <div class="gallery-item">
-                 <img src="../assets/showcase/niccc_sc6.png" alt="Project 2">
+                <img src="../assets/showcase/niccc_sc6.png" alt="Project 2">
             </div>
             <div class="gallery-item">
                 <img src="../assets/showcase/FitLife.png" alt="Project 5">
             </div>
             <div class="gallery-item">
-                <img src="assets/showcase/img_vhs_6.png" alt="Project 5">
-            </div>
-              <div class="gallery-item">
                 <img src="assets/showcase/img_vhs_6.png" alt="Project 5">
             </div>
             <div class="gallery-item">
@@ -90,15 +90,22 @@
             <div class="gallery-item">
                 <img src="assets/showcase/img_vhs_2.png" alt="Project 5">
             </div>
-             <div class="gallery-item">
+            <div class="gallery-item">
                 <img src="assets/showcase/img_vhs_3.png" alt="Project 5">
             </div>
-           
         </div>
     </div>
-
-        <div class="gallery">
+    <div class="gallery">
         <div class="gallery-inner">
+            <div class="gallery-item">
+                <img src="../assets/showcase/img_ble_1.png" alt="Project 1">
+            </div>
+            <div class="gallery-item">
+                <img src="../assets/showcase/img_ble_2.png" alt="Project 2">
+            </div>
+            <div class="gallery-item">
+                <img src="../assets/showcase/img_ble_3.png" alt="Project 3">
+            </div>
             <div class="gallery-item">
                 <img src="../assets/showcase/niccc_sc1.png" alt="Project 4">
             </div>
@@ -112,18 +119,15 @@
                 <img src="../assets/showcase/niccc_sc4.png" alt="Project 2">
             </div>
             <div class="gallery-item">
-                 <img src="../assets/showcase/niccc_sc5.png" alt="Project 2">
+                <img src="../assets/showcase/niccc_sc5.png" alt="Project 2">
             </div>
             <div class="gallery-item">
-                 <img src="../assets/showcase/niccc_sc6.png" alt="Project 2">
+                <img src="../assets/showcase/niccc_sc6.png" alt="Project 2">
             </div>
             <div class="gallery-item">
                 <img src="../assets/showcase/FitLife.png" alt="Project 5">
             </div>
             <div class="gallery-item">
-                <img src="assets/showcase/img_vhs_6.png" alt="Project 5">
-            </div>
-              <div class="gallery-item">
                 <img src="assets/showcase/img_vhs_6.png" alt="Project 5">
             </div>
             <div class="gallery-item">
@@ -132,13 +136,10 @@
             <div class="gallery-item">
                 <img src="assets/showcase/img_vhs_2.png" alt="Project 5">
             </div>
-             <div class="gallery-item">
+            <div class="gallery-item">
                 <img src="assets/showcase/img_vhs_3.png" alt="Project 5">
             </div>
-           
         </div>
     </div>
-
-    
 </body>
 </html>
