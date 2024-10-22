@@ -28,11 +28,28 @@
             width: 100%;
             height: auto;
         }
+        .gallery-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+        .control {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            padding: 10px;
+            cursor: pointer;
+        }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const galleries = document.querySelectorAll('.gallery-inner');
-            galleries.forEach((galleryInner, index) => {
+            const galleries = document.querySelectorAll('.gallery');
+            galleries.forEach((gallery) => {
+                const galleryInner = gallery.querySelector('.gallery-inner');
                 let currentIndex = 0;
                 const items = galleryInner.querySelectorAll('.gallery-item');
                 const itemWidth = items[0].offsetWidth + 20; // Including margin
@@ -47,6 +64,21 @@
                     return Math.floor(Math.random() * 5000) + 10000; // Random delay between 10 and 15 seconds
                 }
 
+                function manualScroll(direction) {
+                    if (direction === 'left') {
+                        currentIndex = (currentIndex - 1 + items.length) % items.length;
+                    } else if (direction === 'right') {
+                        currentIndex = (currentIndex + 1) % items.length;
+                    }
+                    galleryInner.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
+                }
+
+                const leftButton = gallery.querySelector('.control-left');
+                const rightButton = gallery.querySelector('.control-right');
+
+                leftButton.addEventListener('click', () => manualScroll('left'));
+                rightButton.addEventListener('click', () => manualScroll('right'));
+
                 setTimeout(scrollGallery, getRandomDelay());
             });
         });
@@ -55,15 +87,6 @@
 <body>
     <div class="gallery">
         <div class="gallery-inner">
-            <div class="gallery-item">
-                <img src="../assets/showcase/img_ble_1.png" alt="Project 1">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/img_ble_2.png" alt="Project 2">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/img_ble_3.png" alt="Project 3">
-            </div>
             <div class="gallery-item">
                 <img src="../assets/showcase/niccc_sc1.png" alt="Project 4">
             </div>
@@ -97,6 +120,10 @@
             <div class="gallery-item">
                 <img src="assets/showcase/img_vhs_3.png" alt="Project 5">
             </div>
+        </div>
+        <div class="gallery-controls">
+            <button class="control control-left">&#9664;</button>
+            <button class="control control-right">&#9654;</button>
         </div>
     </div>
     <div class="gallery">
@@ -143,6 +170,10 @@
             <div class="gallery-item">
                 <img src="assets/showcase/img_vhs_3.png" alt="Project 5">
             </div>
+        </div>
+        <div class="gallery-controls">
+            <button class="control control-left">&#9664;</button>
+            <button class="control control-right">&#9654;</button>
         </div>
     </div>
 </body>
