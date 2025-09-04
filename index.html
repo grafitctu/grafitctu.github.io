@@ -577,62 +577,7 @@
         </section>
     </div>
 
-<!-- === X/Twitter feed === -->
-<section id="x-feed" style="margin:3rem 0">
-  <h2 style="margin:0 0 .75rem 0">Novinky (X/Twitter)</h2>
 
-  <!-- Oficiální anchor; nechávám twitter.com podle dokumentace -->
-  <a class="twitter-timeline"
-     data-height="600"
-     data-chrome="noheader nofooter transparent"
-     data-dnt="true"
-     href="https://twitter.com/CtuGrafit">
-    Tweets by @CtuGrafit
-  </a>
-
-  <!-- Fallback obsah (schová se, pokud se feed načte) -->
-  <div id="x-fallback" style="display:none; border:1px solid #e5e7eb; border-radius:12px; padding:14px">
-    <p style="margin:0 0 .5rem 0; opacity:.8">
-      Nepodařilo se načíst embedded feed (často kvůli přihlášení / blokování). 
-    </p>
-    <a href="https://x.com/CtuGrafit" style="text-decoration:none">
-      ► Otevřít náš profil na X (nové okno)
-    </a>
-  </div>
-</section>
-
-<!-- Oficiální skript X/Twitter widgets -->
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<script>
-  (function () {
-    var anchor = document.querySelector('#x-feed a.twitter-timeline');
-    var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    anchor && anchor.setAttribute('data-theme', dark ? 'dark' : 'light');
-
-    // Počkáme, zda se widget promění na iframe. Když ne, zobrazíme fallback.
-    function showFallback() {
-      var feed = document.getElementById('x-feed');
-      var hasIframe = feed && feed.querySelector('iframe');
-      if (!hasIframe) {
-        document.getElementById('x-fallback').style.display = 'block';
-        // volitelné: schovat anchor, ať nezabírá místo
-        if (anchor) anchor.style.display = 'none';
-      }
-    }
-    // zkusíme několikrát v intervalu (někdy widgets.js renderuje později)
-    var tries = 0;
-    var iv = setInterval(function(){
-      tries++;
-      var hasIframe = document.getElementById('x-feed')?.querySelector('iframe');
-      if (hasIframe || tries > 20) { // ~10 s
-        clearInterval(iv);
-        if (!hasIframe) showFallback();
-      }
-    }, 500);
-  })();
-</script>
-<!-- === /X/Twitter feed === -->
     
     
     <section>
