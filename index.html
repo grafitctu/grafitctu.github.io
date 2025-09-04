@@ -577,42 +577,63 @@
         </section>
     </div>
 
-<!-- === X/Twitter feed: vložte někam dolů na homepage (např. nad "Members") === -->
+<!-- === X/Twitter feed === -->
 <section id="x-feed" style="margin:3rem 0">
   <h2 style="margin:0 0 .75rem 0">Novinky (X/Twitter)</h2>
 
-  <!-- Základní "anchor", který widgets.js přemění na timeline -->
+  <!-- Oficiální anchor; nechávám twitter.com podle dokumentace -->
   <a class="twitter-timeline"
      data-height="600"
      data-chrome="noheader nofooter transparent"
      data-dnt="true"
-     href="https://x.com/CtuGrafit">
-    Příspěvky @CtuGrafit
+     href="https://twitter.com/CtuGrafit">
+    Tweets by @CtuGrafit
   </a>
 
-  <!-- Fallback (když návštěvník blokuje skripty) -->
-  <p class="x-note" style="font-size:.9rem;opacity:.7;margin-top:.5rem">
-    Pokud se feed nezobrazí, otevři náš profil na <a href="https://x.com/CtuGrafit">x.com/CtuGrafit</a>.
-  </p>
+  <!-- Fallback obsah (schová se, pokud se feed načte) -->
+  <div id="x-fallback" style="display:none; border:1px solid #e5e7eb; border-radius:12px; padding:14px">
+    <p style="margin:0 0 .5rem 0; opacity:.8">
+      Nepodařilo se načíst embedded feed (často kvůli přihlášení / blokování). 
+    </p>
+    <a href="https://x.com/CtuGrafit" style="text-decoration:none">
+      ► Otevřít náš profil na X (nové okno)
+    </a>
+  </div>
 </section>
 
+<!-- Oficiální skript X/Twitter widgets -->
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 <script>
-  // Nastaví motiv (světlý/tmavý) ještě před načtením widgets.js
   (function () {
     var anchor = document.querySelector('#x-feed a.twitter-timeline');
-    if (!anchor) return;
     var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    anchor.setAttribute('data-theme', dark ? 'dark' : 'light');
+    anchor && anchor.setAttribute('data-theme', dark ? 'dark' : 'light');
 
-    // Načti oficiální skript, který z anchoru udělá timeline
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = "https://platform.twitter.com/widgets.js";
-    s.charset = "utf-8";
-    document.body.appendChild(s);
+    // Počkáme, zda se widget promění na iframe. Když ne, zobrazíme fallback.
+    function showFallback() {
+      var feed = document.getElementById('x-feed');
+      var hasIframe = feed && feed.querySelector('iframe');
+      if (!hasIframe) {
+        document.getElementById('x-fallback').style.display = 'block';
+        // volitelné: schovat anchor, ať nezabírá místo
+        if (anchor) anchor.style.display = 'none';
+      }
+    }
+    // zkusíme několikrát v intervalu (někdy widgets.js renderuje později)
+    var tries = 0;
+    var iv = setInterval(function(){
+      tries++;
+      var hasIframe = document.getElementById('x-feed')?.querySelector('iframe');
+      if (hasIframe || tries > 20) { // ~10 s
+        clearInterval(iv);
+        if (!hasIframe) showFallback();
+      }
+    }, 500);
   })();
 </script>
 <!-- === /X/Twitter feed === -->
+    
     
     <section>
         <div class="panel">
@@ -656,27 +677,7 @@
             <img alt="dc" height="51" src="imgs/dc.png" width="51"></a>
     </p>-->
 
-    <!-- === X/Twitter feed === -->
-
-    <a class="twitter-timeline" href="https://twitter.com/CtuGrafit?ref_src=twsrc%5Etfw">Tweets by CtuGrafit</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-    
-<section id="x-feed" style="margin:3rem 0">
-  <h2 style="margin:0 0 .75rem 0">Novinky (X/Twitter)</h2>
-
-  <a class="twitter-timeline"
-     data-height="600"
-     data-chrome="noheader nofooter transparent"
-     data-theme="light"
-     data-dnt="true"
-     href="https://x.com/CtuGrafit">
-    Příspěvky @CtuGrafit
-  </a>
-</section>
-
-<!-- Oficiální script musí být fyzicky v kódu -->
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<!-- === /X/Twitter feed === -->
+   
     
 </body>
 
