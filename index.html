@@ -576,6 +576,44 @@
             </div>
         </section>
     </div>
+
+<!-- === X/Twitter feed: vložte někam dolů na homepage (např. nad "Members") === -->
+<section id="x-feed" style="margin:3rem 0">
+  <h2 style="margin:0 0 .75rem 0">Novinky (X/Twitter)</h2>
+
+  <!-- Základní "anchor", který widgets.js přemění na timeline -->
+  <a class="twitter-timeline"
+     data-height="600"
+     data-chrome="noheader nofooter transparent"
+     data-dnt="true"
+     href="https://x.com/CtuGrafit">
+    Příspěvky @CtuGrafit
+  </a>
+
+  <!-- Fallback (když návštěvník blokuje skripty) -->
+  <p class="x-note" style="font-size:.9rem;opacity:.7;margin-top:.5rem">
+    Pokud se feed nezobrazí, otevři náš profil na <a href="https://x.com/CtuGrafit">x.com/CtuGrafit</a>.
+  </p>
+</section>
+
+<script>
+  // Nastaví motiv (světlý/tmavý) ještě před načtením widgets.js
+  (function () {
+    var anchor = document.querySelector('#x-feed a.twitter-timeline');
+    if (!anchor) return;
+    var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    anchor.setAttribute('data-theme', dark ? 'dark' : 'light');
+
+    // Načti oficiální skript, který z anchoru udělá timeline
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = "https://platform.twitter.com/widgets.js";
+    s.charset = "utf-8";
+    document.body.appendChild(s);
+  })();
+</script>
+<!-- === /X/Twitter feed === -->
+    
     <section>
         <div class="panel">
             <h2>Members</h2>
