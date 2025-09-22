@@ -1,0 +1,525 @@
+import React, { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
+import { Github, Rocket, Calendar, GraduationCap, FlaskConical, Gamepad2, Sun, Moon, ExternalLink, Twitter, Youtube, MessageCircle, Cpu, MousePointer2, Search, Sparkles, Filter } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+
+// -------------------------------------------------------------
+// Demo data (lze snadno nahradit reálnými JSONy z grafitctu.github.io)
+// -------------------------------------------------------------
+const EVENTS = [
+  { id: "e-gexpo", title: "GEXPO 2025", blurb: "Výstava studentských projektů, 60+ účastníků, program do pozdního večera.", img: "https://grafitctu.github.io/assets/projects/gexpo_logo.jpg", href: "https://grafitctu.github.io/events/gexpo/2025", tags: ["expo", "games", "vr"], date: "May 2025" },
+  { id: "e-gj2024", title: "GameJam 2024", blurb: "Tradiční velikonoční jam s porotou z herních studií.", img: "https://grafitctu.github.io/assets/projects/gamejam_2024b_logo.jpg", href: "https://grafitctu.github.io/events/gamejam02/", tags: ["jam", "community"], date: "Mar 2024" },
+  { id: "e-grafit-games", title: "Grafit Games Studio", blurb: "Propojujeme výzkum s vývojem digitálních i deskových her.", img: "https://grafitctu.github.io/assets/projects/gamedesign.png", href: "https://barushe22.itch.io/neckventure", tags: ["studio", "games"], date: "2024–" },
+];
+
+const RESEARCH = [
+  { id: "r-politeia", title: "Politeia 21", blurb: "Interdisciplinární VR experiment k Platóněm tezím o společnosti a etice.", img: "https://grafitctu.github.io/assets/projects/politeia.png", links: [{ label: "Unihack Award", href: "https://www.unihack.cz" }], tags: ["vr", "ethics", "research"] },
+  { id: "r-venna", title: "Věnná města českých královen", blurb: "Mapování vývoje a digitalizace kulturního dědictví (2018–2022).", img: "https://grafitctu.github.io/assets/projects/vennamesta.png", links: [{ label: "Projekt", href: "https://www.kralovskavennamesta.cz" }, { label: "UHK", href: "https://www.uhk.cz" }], tags: ["heritage", "mapping"] },
+  { id: "r-most", title: "Most – město, které nezaniklo", blurb: "Rekonstrukce vzhledu města před rozsáhlou přestavbou (2023–2027).", img: "https://grafitctu.github.io/assets/projects/most.png", links: [{ label: "VÚGTK", href: "https://www.vugtk.cz" }, { label: "UJEP", href: "https://www.ujep.cz" }], tags: ["heritage", "ai", "inpainting"] },
+  { id: "r-tactile", title: "Haptické rozhraní: interaktivní stěna", blurb: "Taktálně-specifické UI; spolupráce s MIT, Tokyo University, initi.org a CAMP.", img: "https://grafitctu.github.io/assets/projects/intwall.png", links: [{ label: "Tactile Matrix Box (MIT)", href: "https://www.youtube.com" }, { label: "Video", href: "https://www.youtube.com" }], tags: ["haptics", "ui", "installation"] },
+];
+
+const COURSES = [
+  { id: "c-vhs", code: "BI‑VHS", title: "Virtuální herní světy", blurb: "Game & level design, tvorba herních světů.", link: "https://bilakniha.cvut.cz" },
+  { id: "c-pga", code: "BI‑PGA", title: "Programování grafických aplikací", blurb: "Pluginy v GIMPu/Blenderu, pokročilá grafika.", link: "https://bilakniha.cvut.cz" },
+  { id: "c-pg1", code: "NI‑PG1", title: "Počítačová grafika 1", blurb: "Rendering, datové struktury a realistické textury.", link: "https://bilakniha.cvut.cz" },
+];
+
+const SHOWCASE = [
+  { id: "s-m7", title: "Magnificent 7", img: "https://img.youtube.com/vi/7Gq_LNQao2Y/hqdefault.jpg", tags: ["unity", "vhs"], links: [{ label: "Video", href: "https://youtu.be/" }] },
+  { id: "s-pointers", title: "Pointless Pointers", img: "https://grafitctu.github.io/assets/projects/gamedesign.png", tags: ["pixel-art", "vhs"], links: [{ label: "Video", href: "https://www.youtube.com" }] },
+  { id: "s-texture", title: "Texture Editing", img: "https://grafitctu.github.io/assets/projects/textures.jpg", tags: ["gimp", "pga"], links: [{ label: "GitLab", href: "https://gitlab.fit.cvut.cz" }] },
+];
+
+// sjednocené tagy
+const ALL_TAGS = Array.from(new Set([
+  ...EVENTS.flatMap(e => e.tags ?? []),
+  ...RESEARCH.flatMap(r => r.tags ?? []),
+  ...SHOWCASE.flatMap(s => s.tags ?? []),
+]));
+
+// -------------------------------------------------------------
+// Scroll progress bar
+// -------------------------------------------------------------
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 20, mass: 0.2 });
+  return (
+    <motion.div style={{ scaleX }} className="fixed left-0 top-0 h-1 w-full origin-left bg-gradient-to-r from-blue-400 via-cyan-300 to-fuchsia-300 z-50" />
+  );
+}
+
+// -------------------------------------------------------------
+// Pozadí částic (canvas) – varianta pro pevnou výšku (hero)
+// -------------------------------------------------------------
+function ParticlesBG() {
+  const ref = useRef(null as HTMLCanvasElement | null);
+  useEffect(() => {
+    const c = ref.current; if (!c) return; const ctx = c.getContext("2d");
+    let raf = 0; let w = (c.width = window.innerWidth); let h = (c.height = 520);
+    const N = 42; const dots = Array.from({ length: N }, () => ({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * 0.4, vy: (Math.random() - .5) * 0.4 }));
+    const draw = () => {
+      if (!ctx) return; ctx.clearRect(0,0,w,h);
+      const grad = ctx.createLinearGradient(0,0,w,h);
+      grad.addColorStop(0, "#0b1220"); grad.addColorStop(1, "#0b0f16");
+      ctx.fillStyle = grad; ctx.globalAlpha = 0.95; ctx.fillRect(0,0,w,h); ctx.globalAlpha = 1;
+      for (let i=0;i<N;i++){
+        const a = dots[i]; a.x+=a.vx; a.y+=a.vy;
+        if (a.x<0||a.x>w) a.vx*=-1; if (a.y<0||a.y>h) a.vy*=-1;
+        for (let j=i+1;j<N;j++){
+          const b = dots[j]; const dx=a.x-b.x, dy=a.y-b.y; const d=Math.hypot(dx,dy);
+          if (d<120){ ctx.globalAlpha = 1 - d/120; ctx.strokeStyle = "#60a5fa"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
+        }
+        ctx.fillStyle = "#22d3ee"; ctx.beginPath(); ctx.arc(a.x,a.y,1.2,0,Math.PI*2); ctx.fill();
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    const onResize = () => { w = (c.width = window.innerWidth); h = (c.height = 520); };
+    window.addEventListener("resize", onResize);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
+  }, []);
+  return <canvas ref={ref} className="absolute inset-0 w-full" style={{ height: 520 }} />;
+}
+
+// -------------------------------------------------------------
+// Pozadí částic – varianta, která vyplní výšku rodiče (pro spodní část)
+// -------------------------------------------------------------
+function ParticlesArea() {
+  const ref = useRef<HTMLCanvasElement|null>(null);
+  const wrapperRef = useRef<HTMLDivElement|null>(null);
+
+  useEffect(() => {
+    const c = ref.current; const host = wrapperRef.current; if (!c || !host) return; const ctx = c.getContext("2d");
+    let raf = 0; let w = 0, h = 0;
+
+    const resize = () => {
+      const rect = host.getBoundingClientRect();
+      w = c.width = Math.max(window.innerWidth, Math.ceil(rect.width));
+      h = c.height = Math.ceil(rect.height);
+    };
+
+    resize();
+
+    const N = 48; const dots = Array.from({ length: N }, () => ({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * 0.35, vy: (Math.random() - .5) * 0.35 }));
+
+    const draw = () => {
+      if (!ctx) return; ctx.clearRect(0,0,w,h);
+      const grad = ctx.createLinearGradient(0,0,w,h);
+      grad.addColorStop(0, "#0b1220"); grad.addColorStop(1, "#0b0f16");
+      ctx.fillStyle = grad; ctx.globalAlpha = 0.92; ctx.fillRect(0,0,w,h); ctx.globalAlpha = 1;
+      for (let i=0;i<N;i++){
+        const a = dots[i]; a.x+=a.vx; a.y+=a.vy;
+        if (a.x<0||a.x>w) a.vx*=-1; if (a.y<0||a.y>h) a.vy*=-1;
+        for (let j=i+1;j<N;j++){
+          const b = dots[j]; const dx=a.x-b.x, dy=a.y-b.y; const d=Math.hypot(dx,dy);
+          if (d<120){ ctx.globalAlpha = 1 - d/120; ctx.strokeStyle = "#60a5fa"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
+        }
+        ctx.fillStyle = "#22d3ee"; ctx.beginPath(); ctx.arc(a.x,a.y,1.2,0,Math.PI*2); ctx.fill();
+      }
+      raf = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    const RZ = (window as any).ResizeObserver;
+    let ro: ResizeObserver | null = null;
+    if (typeof RZ !== "undefined") {
+      ro = new RZ(resize);
+      ro.observe(host);
+    }
+    window.addEventListener("resize", resize);
+    return () => { ro?.disconnect(); cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+  }, []);
+
+  return (
+    <div ref={wrapperRef} className="absolute inset-0 z-0 pointer-events-none">
+      <canvas ref={ref} className="w-full h-full" />
+    </div>
+  );
+}
+
+// -------------------------------------------------------------
+// Pomoc: join tříd
+// -------------------------------------------------------------
+function cx(...xs: Array<string|false|undefined>) { return xs.filter(Boolean).join(" "); }
+
+// -------------------------------------------------------------
+// Chip
+// -------------------------------------------------------------
+function Chip({ children, active=false, onClick }:{ children: React.ReactNode, active?: boolean, onClick?: ()=>void }){
+  return (
+    <button onClick={onClick}
+      className={cx(
+        "px-3 py-1 rounded-full border text-sm transition",
+        active ? "bg-cyan-500/20 border-cyan-400 text-cyan-700 dark:text-cyan-200" : "bg-neutral-100 border-neutral-300 text-neutral-700 hover:border-neutral-400 dark:bg-neutral-900/60 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-500"
+      )}
+    >{children}</button>
+  );
+}
+
+// -------------------------------------------------------------
+// Karta s hover animací – motivy pro světlý i tmavý
+// -------------------------------------------------------------
+function FancyCard({ item, kind }:{ item: any, kind: "event"|"research"|"showcase" }){
+  return (
+    <motion.a
+      href={item.href || "#"}
+      target="_blank"
+      rel="noreferrer"
+      className={cx(
+        "group relative rounded-2xl overflow-hidden shadow-xl border",
+        "dark:border-neutral-800 dark:bg-gradient-to-b dark:from-neutral-900 dark:to-black",
+        "border-neutral-200 bg-gradient-to-b from-white to-neutral-100"
+      )}
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 260, damping: 18 }}
+    >
+      <div className="relative h-44 w-full overflow-hidden">
+        <img src={item.img} alt={item.title} className="h-full w-full object-cover object-center transition scale-[1.02] group-hover:scale-[1.06]"/>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"/>
+        {item.date && (
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-neutral-200 border border-white/10"><Calendar className="h-3 w-3"/>{item.date}</span>
+        )}
+      </div>
+      <div className="p-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">{item.title}</h3>
+          <span className="text-neutral-500 text-xs uppercase tracking-wide">{kind}</span>
+        </div>
+        <p className="mt-1 text-neutral-700 dark:text-neutral-300/90 text-sm leading-relaxed">{item.blurb}</p>
+        {Array.isArray(item.tags) && item.tags.length>0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {item.tags.map((t:string)=> <span key={t} className="text-xs rounded-full border px-2 py-0.5 text-neutral-700 border-neutral-300 dark:text-neutral-300 dark:border-neutral-700/80">#{t}</span>)}
+          </div>
+        )}
+        {(Array.isArray(item.links) && item.links.length>0) && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {item.links.map((l:any)=> (
+              <a key={l.label} href={l.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-cyan-700 hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
+                {l.label}<ExternalLink className="h-3 w-3"/>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </motion.a>
+  );
+}
+
+// -------------------------------------------------------------
+// Hlavní komponenta
+// -------------------------------------------------------------
+export default function GrafitInteractive() {
+  const [dark, setDark] = useState(true); // výchozí tmavý
+  const [query, setQuery] = useState("");
+  const [activeTags, setActiveTags] = useState<string[]>([]);
+  const toggleTag = (t:string) => setActiveTags(s => s.includes(t) ? s.filter(x=>x!==t) : [...s, t]);
+
+  const searchFilter = (item:any) => {
+    const q = query.trim().toLowerCase();
+    const text = `${item.title} ${item.blurb} ${(item.tags||[]).join(" ")}`.toLowerCase();
+    const matchQ = q === "" || text.includes(q);
+    const matchTags = activeTags.length===0 || (item.tags||[]).some((t:string)=>activeTags.includes(t));
+    return matchQ && matchTags;
+  };
+
+  // stavová data (lze přepsat importem)
+  const [events, setEvents] = useState(EVENTS);
+  const [researchItems, setResearchItems] = useState(RESEARCH);
+  const [showcaseItems, setShowcaseItems] = useState(SHOWCASE);
+  const [courses, setCourses] = useState(COURSES);
+  const [loadingImport, setLoadingImport] = useState(false);
+  const [importNote, setImportNote] = useState("");
+
+  const filtered = {
+    events: events.filter(searchFilter),
+    research: researchItems.filter(searchFilter),
+    showcase: showcaseItems.filter(searchFilter),
+  };
+
+  useEffect(()=>{
+    // Tailwind dark-mode (class strategy)
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
+
+  // --- DEV „testy“ pro rychlou diagnostiku v konzoli ---
+  useEffect(() => {
+    console.assert(ALL_TAGS.length > 0, "[TEST] ALL_TAGS should not be empty");
+    // Po mountu zkontrolujeme přítomnost canvasů
+    try {
+      const canvases = document.querySelectorAll('canvas');
+      console.assert(canvases.length >= 1, "[TEST] At least one canvas should exist");
+    } catch {}
+  }, []);
+
+  // Importer ze sitemap.xml + OG meta (experimentální)
+  async function importFromSite(){
+    try {
+      setLoadingImport(true); setImportNote("");
+      const base = 'https://grafitctu.github.io';
+      const abs = (u:string) => { try { return new URL(u, base).href; } catch { return u; } };
+      const fetchText = async (u:string) => (await fetch(u, { mode: 'cors' })).text();
+      const parseOg = (doc: Document, prop: string) => doc.querySelector(`meta[property="${prop}"]`)?.getAttribute('content') || '';
+      const getUrls = async (segment: string) => {
+        try {
+          const xml = await fetchText(base + '/sitemap.xml');
+          const dom = new DOMParser().parseFromString(xml, 'text/xml');
+          const urls = Array.from(dom.querySelectorAll('url > loc')).map(n=>n.textContent||'');
+          return urls.filter(u => u.includes('/'+segment+'/'));
+        } catch { return []; }
+      };
+      const fetchPages = async (urls: string[], kind: 'event'|'showcase'|'course'|'research') => {
+        const out: any[] = [];
+        for (const url of urls.slice(0, 24)) {
+          try {
+            const html = await fetchText(url);
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const title = parseOg(doc,'og:title') || doc.querySelector('title')?.textContent || url;
+            const img = abs(parseOg(doc,'og:image') || 'https://grafitctu.github.io/assets/logos/grafit_bw.png');
+            const desc = parseOg(doc,'og:description') || '';
+            out.push({ id: `${kind}-${Math.random().toString(36).slice(2)}`, title, blurb: desc, img, href: url, tags: [] });
+          } catch {}
+        }
+        return out;
+      };
+      const mergeByHref = (old: any[], incoming: any[]) => {
+        const seen = new Set(old.map(i => i.href || i.title));
+        const add = incoming.filter(i => !seen.has(i.href || i.title));
+        return { list: [...old, ...add], added: add.length };
+      };
+
+      const eventsUrls = await getUrls('events');
+      const showcaseUrls = [ ...(await getUrls('showcase')), ...(await getUrls('students')), ...(await getUrls('projects')) ];
+      const courseUrls = await getUrls('courses');
+
+      const [ev, sc, co] = await Promise.all([
+        fetchPages(eventsUrls, 'event'),
+        fetchPages(showcaseUrls, 'showcase'),
+        fetchPages(courseUrls, 'course'),
+      ]);
+
+      const m1 = mergeByHref(events, ev);
+      const m2 = mergeByHref(showcaseItems, sc);
+      const m3 = mergeByHref(courses, co.map(x => ({ id: x.id, code: x.title.split(' ')[0] || 'COURSE', title: x.title, blurb: x.blurb, link: x.href })));
+
+      setEvents(m1.list);
+      setShowcaseItems(m2.list);
+      setCourses(m3.list as any);
+
+      setImportNote(`Načteno +${m1.added} events, +${m2.added} showcase, +${m3.added} courses`);
+    } catch (e) {
+      setImportNote('Import se nepodařil (CORS nebo struktura webu).');
+    } finally {
+      setLoadingImport(false);
+    }
+  }
+
+  return (
+    <div className={cx(
+      "min-h-screen text-neutral-900 dark:text-white",
+      dark ? "bg-gradient-to-b from-[#070b12] via-[#0a0f18] to-[#090d14]" : "bg-gradient-to-b from-[#f9fafb] via-[#f4f6f8] to-[#eef2f7]"
+    )}>
+      <ScrollProgress />
+
+      {/* HERO */}
+      <section className="relative overflow-hidden">
+        <ParticlesBG />
+        <div className="relative mx-auto max-w-6xl px-6 pt-24 pb-12">
+          <div className="flex items-start gap-6">
+            <img src="https://grafitctu.github.io/assets/logos/grafit_bw.png" alt="Grafit" className="h-14 w-14 rounded-xl border border-white/10 shadow"/>
+            <div>
+              <motion.h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 110, damping: 14 }}>
+                Grafit Research Group
+              </motion.h1>
+              <p className="mt-3 max-w-3xl text-neutral-700 dark:text-neutral-300">
+                Pro programátory, designéry a umělce. VR/AR, počítačová grafika, UX/UI, rozpoznávání vzorů a game design.
+              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <Badge variant="outline" className="border-black/10 text-neutral-700 bg-black/5 dark:bg-black/40 dark:border-white/10 dark:text-neutral-200">Local dev build</Badge>
+                <a href="https://grafitctu.github.io/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-3 py-1 text-sm text-neutral-700 hover:bg-black/10 dark:border-white/15 dark:bg-white/5 dark:text-neutral-200 dark:hover:bg-white/10">
+                  Live web <ExternalLink className="h-3 w-3"/>
+                </a>
+                <button onClick={()=>setDark(d=>!d)} className="ml-auto inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-3 py-1 text-sm text-neutral-700 hover:bg-white/80 dark:border-white/15 dark:bg-white/5 dark:text-neutral-200 dark:hover:bg-white/10">
+                  {dark? <Sun className="h-4 w-4"/> : <Moon className="h-4 w-4"/>}
+                  Toggle theme
+                </button>
+              </div>
+
+              {/* Hledání a tagy */}
+              <div className="mt-6 rounded-2xl border border-black/10 bg-white/70 p-3 backdrop-blur dark:bg-black/30 dark:border-white/10">
+                <div className="flex items-center gap-2">
+                  <Search className="h-4 w-4 text-neutral-500 dark:text-neutral-400"/>
+                  <Input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Hledat v events/research/showcase…" className="bg-white border-black/10 text-neutral-900 placeholder:text-neutral-400 dark:bg-black/40 dark:border-white/10 dark:text-white dark:placeholder:text-neutral-500"/>
+                </div>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400 flex items-center gap-1"><Filter className="h-3 w-3"/>Filtr tagů:</span>
+                  {ALL_TAGS.map(t => (
+                    <Chip key={t} active={activeTags.includes(t)} onClick={()=>toggleTag(t)}>{t}</Chip>
+                  ))}
+                  {activeTags.length>0 && (
+                    <button onClick={()=>setActiveTags([])} className="ml-2 text-xs text-cyan-700 hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">Reset</button>
+                  )}
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <button onClick={importFromSite} disabled={loadingImport} className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-3 py-1 text-sm text-neutral-800 hover:bg-white/90 disabled:opacity-60 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/20">
+                    {loadingImport ? 'Načítám…' : 'Načíst z grafitctu.github.io (beta)'}
+                  </button>
+                  {importNote && (<span className="text-xs text-neutral-500 dark:text-neutral-400">{importNote}</span>)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* STRIP – běžící „live feed“ bez cukání */}
+      <Marquee
+        items={[
+          { icon: <Youtube className="h-4 w-4"/>, label: "YouTube", href: "https://www.youtube.com/@grafitctu" },
+          { icon: <MessageCircle className="h-4 w-4"/>, label: "Discord", href: "#" },
+          { icon: <Twitter className="h-4 w-4"/>, label: "Twitter @CtuGrafit", href: "https://twitter.com/CtuGrafit" },
+          { icon: <FlaskConical className="h-4 w-4"/>, label: "Laboratoř SAGElab", href: "#" },
+          { icon: <Cpu className="h-4 w-4"/>, label: "Laboratoř ggLab", href: "#" },
+          { icon: <MousePointer2 className="h-4 w-4"/>, label: "Laboratoř UXlab", href: "#" },
+        ]}
+      />
+
+      {/* SECTIONS */}
+      <section className="relative overflow-hidden">
+        <ParticlesArea />
+        <main className="relative z-10 mx-auto max-w-6xl px-6 py-10">
+          {/* Events */}
+          <SectionHeader icon={<Calendar className="h-5 w-5"/>} title="Events" subtitle="Co se u nás děje" />
+          <Grid items={filtered.events} kind="event" />
+
+          {/* Research */}
+          <SectionHeader icon={<FlaskConical className="h-5 w-5"/>} title="Research" subtitle="Projekty a spolupráce" />
+          <Grid items={filtered.research} kind="research" />
+
+          {/* Showcase */}
+          <SectionHeader icon={<Gamepad2 className="h-5 w-5"/>} title="Student Showcase" subtitle="Vybrané studentské práce" />
+          <Grid items={filtered.showcase} kind="showcase" />
+
+          {/* Courses */}
+          <SectionHeader icon={<GraduationCap className="h-5 w-5"/>} title="Courses & Lectures" subtitle="Předměty a výuka" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {courses.map(c => (
+              <motion.div key={c.id} whileHover={{ y: -3 }} className="rounded-2xl border p-4 dark:border-white/10 dark:bg-gradient-to-b dark:from-neutral-900 dark:to-black border-neutral-200 bg-gradient-to-b from-white to-neutral-100">
+                <div className="flex items-start gap-3">
+                  <Badge className="bg-cyan-600/15 text-cyan-700 border-cyan-700/20 dark:bg-cyan-500/20 dark:text-cyan-200 dark:border-cyan-400/30">{c.code}</Badge>
+                  <div>
+                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">{c.title}</h3>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-300/90">{c.blurb}</p>
+                    <a href={c.link} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-cyan-700 hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200 text-sm">Syllabus <ExternalLink className="h-3 w-3"/></a>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-5 border-cyan-700/20 bg-cyan-600/10 text-neutral-800 dark:border-cyan-400/20 dark:bg-cyan-500/10 dark:text-neutral-200">
+            <div>
+              <h3 className="text-xl font-semibold text-cyan-800 dark:text-cyan-200">Chceš tohle nasadit na GitHub Pages / Jekyll?</h3>
+              <p className="text-neutral-700 dark:text-neutral-300/90 text-sm">Můžeme exportovat komponenty do čistého HTML, nebo sestavit šablonu (Jekyll/MkDocs/Quarto) s tímto designem.</p>
+            </div>
+            <div className="flex gap-2">
+              <a href="https://github.com/grafitctu/grafitctu.github.io" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm text-neutral-800 hover:bg-black/5 border-black/15 bg-white/70 dark:border-white/15 dark:bg-black/40 dark:text-neutral-200 dark:hover:bg-black/60"><Github className="h-4 w-4"/> Repo</a>
+              <a href="https://grafitctu.github.io/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm text-neutral-800 hover:bg-black/5 border-black/15 bg-white/70 dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"><Rocket className="h-4 w-4"/> Live</a>
+            </div>
+          </div>
+
+          <footer className="mt-14 border-t py-8 text-center text-sm text-neutral-500 dark:border-white/10 dark:text-neutral-400 border-black/10">© Grafit Research Group — pracovní prototyp pro iteraci designu.</footer>
+        </main>
+      </section>
+
+    </div>
+  );
+}
+
+function SectionHeader({ icon, title, subtitle }:{ icon: React.ReactNode, title: string, subtitle: string }){
+  return (
+    <div className="mb-4 flex items	end justify-between">
+      <div>
+        <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/60 border-black/10 dark:border-white/10 dark:bg-white/5">{icon}</span>
+          <span className="text-sm uppercase tracking-wide text-neutral-500 dark:text-neutral-400">{subtitle}</span>
+        </div>
+        <h2 className="mt-1 text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">{title}</h2>
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------------------------------------
+// Nekonečný marquee bez trhání (měřená šířka jedné stopy, plynulý posun)
+// -------------------------------------------------------------
+function Marquee({ items }:{ items: { icon: React.ReactNode, label: string, href?: string }[] }){
+  const laneRef = useRef<HTMLDivElement|null>(null);
+  const [w, setW] = useState(0);
+
+  useEffect(() => {
+    const measure = () => {
+      if (!laneRef.current) return;
+      const width = laneRef.current.getBoundingClientRect().width;
+      setW(width);
+    };
+    measure();
+
+    const RZ = (window as any).ResizeObserver;
+    let ro: ResizeObserver | null = null;
+    if (typeof RZ !== "undefined") {
+      ro = new RZ(measure);
+      if (laneRef.current) ro.observe(laneRef.current);
+    }
+    window.addEventListener("resize", measure);
+    return () => { ro?.disconnect(); window.removeEventListener("resize", measure); };
+  }, []);
+
+  useEffect(() => {
+    if (items?.length) {
+      console.assert(items.length > 0, "[TEST] Marquee items should not be empty");
+      // asynchronně ověřit, že máme nenulovou šířku
+      setTimeout(() => { try { console.assert(w > 0, "[TEST] Marquee width measured"); } catch {} }, 0);
+    }
+  }, [items, w]);
+
+  const Lane = ({ innerRef }:{ innerRef?: React.RefObject<HTMLDivElement> }) => (
+    <div ref={innerRef as any} className="flex items-center whitespace-nowrap">
+      {items.map((it, i) => (
+        <a key={`${it.label}-${i}`} href={it.href || "#"} target="_blank" rel="noreferrer" className="mx-6 inline-flex items-center gap-2 text-sm">
+          {it.icon}
+          <span className="text-neutral-700 dark:text-neutral-300">{it.label}</span>
+        </a>
+      ))}
+    </div>
+  );
+
+  return (
+    <div className="relative overflow-hidden border-y border-black/5 bg-black/5 dark:border-white/5 dark:bg-black/20">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/5 to-transparent dark:from-white/5"/>
+      <motion.div
+        className="flex py-2 will-change-transform"
+        style={{ width: w ? w * 2 : undefined }}
+        animate={ w ? { x: [0, -w] } : undefined }
+        transition={{ duration: Math.max(12, w / 40), ease: "linear", repeat: Infinity }}
+      >
+        <Lane innerRef={laneRef} />
+        <Lane />
+      </motion.div>
+    </div>
+  );
+}
+
+function Grid({ items, kind }:{ items: any[], kind: "event"|"research"|"showcase" }){
+  if (!items?.length) return (
+    <p className="mb-10 text-sm text-neutral-500 dark:text-neutral-400">Žádné položky neodpovídají filtru.</p>
+  );
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+      {items.map(item => <FancyCard key={item.id} item={item} kind={kind} />)}
+    </div>
+  );
+}
