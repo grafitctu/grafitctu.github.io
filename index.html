@@ -1,334 +1,675 @@
-# Create a complete single-file HTML (test.html) per user's latest request:
-# - Remove marquee; add QuickNav with section links + external links
-# - Research cards: 3:1 aspect, 3 per row
-# - Events & Showcase: 2:1 aspect, 4 per row on xl
-html = r"""<!doctype html>
-<html lang="cs" class="dark">
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Grafit – test</title>
-  <!-- Tailwind (Play CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    html { scroll-behavior: smooth; }
-    /* Micro-motion hover for cards */
-    .card {
-      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-    .card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.25);
-    }
-    .card .thumb {
-      transform: scale(1.02);
-      transition: transform 500ms cubic-bezier(.22,1,.36,1);
-    }
-    .card:hover .thumb {
-      transform: scale(1.08);
-    }
-    /* Courses (slightly subtler) */
-    .course-card { transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease; }
-    .course-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 16px 32px rgba(0,0,0,.22); }
-
-    /* Tmavé/světlé přechody pozadí */
-    .bg-gradient-dark { background: linear-gradient(#070b12,#0a0f18 55%,#090d14); }
-    .bg-gradient-light{ background: linear-gradient(#f9fafb,#f4f6f8 55%,#eef2f7); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/footer.css">
+    <script src="/w3.js"></script>
+    <title>Grafit Research Group</title>
 </head>
-<body class="min-h-screen text-neutral-900 dark:text-white bg-gradient-dark dark:bg-gradient-dark">
 
-  <!-- horní progress pruh -->
-  <div id="scrollbar" class="fixed left-0 top-0 h-1 w-0 bg-gradient-to-r from-blue-400 via-cyan-300 to-fuchsia-300 z-50"></div>
-
-  <!-- HERO -->
-  <section class="relative overflow-hidden">
-    <canvas id="heroCanvas" class="absolute inset-0 w-full" style="height:520px"></canvas>
-    <div class="relative mx-auto max-w-7xl px-6 pt-24 pb-12">
-      <div class="flex items-start gap-6">
-        <img src="https://grafitctu.github.io/assets/logos/grafit_bw.png" alt="Grafit" class="h-14 w-14 rounded-xl border border-white/10 shadow">
-        <div>
-          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Grafit Research Group</h1>
-          <p class="mt-3 max-w-3xl text-neutral-300">
-            Pro programátory, designéry a umělce. VR/AR, počítačová grafika, UX/UI, rozpoznávání vzorů a game design.
-          </p>
-          <div class="mt-4 flex flex-wrap items-center gap-3">
-            <span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-white/10 bg-white/10 text-neutral-200">Local dev build</span>
-            <a href="https://grafitctu.github.io/" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-neutral-200 hover:bg-white/10">Live web ↗</a>
-            <button id="toggleTheme" class="ml-auto inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-neutral-200 hover:bg-white/10">
-              ☀︎ / 🌙 Toggle theme
-            </button>
-          </div>
-
-          <!-- Hledání + tagy -->
-          <div class="mt-6 rounded-2xl border border-white/10 bg-black/30 p-3 backdrop-blur">
-            <div class="flex items-center gap-2">
-              <span class="text-neutral-400 text-sm">🔎</span>
-              <input id="search" placeholder="Hledat v events/research/showcase…" class="px-3 py-2 rounded-md border border-white/10 bg-black/40 text-white placeholder:text-neutral-500 w-full"/>
+<body>
+    <div class="bg-dim">
+        <section>
+            <div class="hero-panel">
+                <div class="logos">
+                    <img class="logo" src="/assets/logos/grafit_bw.png" alt="grafit logo">
+                    <img class="logo" src="/assets/logos/fitctu_bw.svg" alt="grafit logo">
+                </div>
+                <div>
+                    <p><span>Grafit</span> Research Group: For Programmers, Designers and Artists</p>
+                    <p>Focused on <span>virtual</span> and <span>augmented reality</span>, computer graphics, <span>user interface design</span>, <span>pattern recognition</span>, and <span>game design &darr;</span></p>
+                </div>
             </div>
-            <div id="tags" class="mt-3 flex flex-wrap items-center gap-2"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        </section>
 
-  <!-- QUICK NAV -->
-  <nav class="relative border-y border-white/10 bg-white/5 backdrop-blur dark:border-white/10 dark:bg-white/5">
-    <div class="mx-auto max-w-7xl px-6 py-3 flex flex-wrap items-center gap-3">
-      <a href="#events"   class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-neutral-200 hover:bg-white/10 border-white/10">↓ Events</a>
-      <a href="#research" class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-neutral-200 hover:bg-white/10 border-white/10">↓ Research</a>
-      <a href="#showcase" class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-neutral-200 hover:bg-white/10 border-white/10">↓ Students showcase</a>
-      <a href="#courses"  class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-neutral-200 hover:bg-white/10 border-white/10">↓ Courses</a>
-      <span class="mx-2 h-5 w-px bg-white/10"></span>
-      <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-neutral-200 hover:bg-white/10 border-white/10">YouTube ↗</a>
-      <a href="#" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-neutral-200 hover:bg-white/10 border-white/10">Discord ↗</a>
-      <a href="https://twitter.com/CtuGrafit" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-neutral-200 hover:bg-white/10 border-white/10">Twitter @CtuGrafit ↗</a>
-      <a href="#" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-neutral-200 hover:bg-white/10 border-white/10">SAGElab ↗</a>
-      <a href="#" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-neutral-200 hover:bg-white/10 border-white/10">ggLab ↗</a>
-      <a href="#" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-neutral-200 hover:bg-white/10 border-white/10">UXlab ↗</a>
-    </div>
-  </nav>
-
-  <!-- Spodní sekce s částicemi podklad -->
-  <section class="relative overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none z-0">
-      <canvas id="areaCanvas" class="w-full h-full"></canvas>
-    </div>
-    <main class="relative z-10 mx-auto max-w-7xl px-6 py-10">
-      <!-- Events -->
-      <div class="mb-4">
-        <div class="flex items-center gap-2 text-neutral-300">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">📅</span>
-          <span class="text-sm uppercase tracking-wide text-neutral-400">Co se u nás děje</span>
-        </div>
-        <h2 id="events" class="mt-1 text-2xl font-bold tracking-tight">Events</h2>
-      </div>
-      <div id="eventsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10"></div>
-
-      <!-- Research -->
-      <div class="mb-4">
-        <div class="flex items-center gap-2 text-neutral-300">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🧪</span>
-          <span class="text-sm uppercase tracking-wide text-neutral-400">Projekty a spolupráce</span>
-        </div>
-        <h2 id="research" class="mt-1 text-2xl font-bold tracking-tight">Research</h2>
-      </div>
-      <div id="researchGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
-
-      <!-- Showcase -->
-      <div class="mb-4">
-        <div class="flex items-center gap-2 text-neutral-300">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎮</span>
-          <span class="text-sm uppercase tracking-wide text-neutral-400">Vybrané studentské práce</span>
-        </div>
-        <h2 id="showcase" class="mt-1 text-2xl font-bold tracking-tight">Student Showcase</h2>
-      </div>
-      <div id="showcaseGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10"></div>
-
-      <!-- Courses -->
-      <div class="mb-4">
-        <div class="flex items-center gap-2 text-neutral-300">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎓</span>
-          <span class="text-sm uppercase tracking-wide text-neutral-400">Předměty a výuka</span>
-        </div>
-        <h2 id="courses" class="mt-1 text-2xl font-bold tracking-tight">Courses & Lectures</h2>
-      </div>
-      <div id="courses" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-
-      <!-- CTA -->
-      <div class="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-5 border-cyan-400/20 bg-cyan-500/10 text-neutral-200">
-        <div>
-          <h3 class="text-xl font-semibold text-cyan-200">Chceš tohle posunout do šablony (Jekyll/Quarto)?</h3>
-          <p class="text-neutral-300/90 text-sm">Umím to převést do statického HTML s partialy a daty.</p>
-        </div>
-        <div class="flex gap-2">
-          <a href="https://github.com/grafitctu/grafitctu.github.io" class="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm hover:bg-white/10 border-white/15 bg-black/40">Repo ↗</a>
-          <a href="https://grafitctu.github.io/" class="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm hover:bg-white/10 border-white/15 bg-white/10">Live ↗</a>
-        </div>
-      </div>
-
-      <footer class="mt-14 border-t py-8 text-center text-sm text-neutral-400 border-white/10">
-        © Grafit Research Group — pracovní prototyp pro iteraci designu.
-      </footer>
-    </main>
-  </section>
-
-  <script>
-    // --- data (můžeš libovolně rozšířit) ---
-    const EVENTS = [
-      { id:"e-gexpo", title:"GEXPO 2025", blurb:"Výstava studentských projektů, 60+ účastníků…", img:"https://grafitctu.github.io/assets/projects/gexpo_logo.jpg", href:"https://grafitctu.github.io/events/gexpo/2025", tags:["expo","games","vr"], date:"May 2025" },
-      { id:"e-gj2024", title:"GameJam 2024", blurb:"Tradiční velikonoční jam…", img:"https://grafitctu.github.io/assets/projects/gamejam_2024b_logo.jpg", href:"https://grafitctu.github.io/events/gamejam02/", tags:["jam","community"], date:"Mar 2024" },
-      { id:"e-grafit-games", title:"Grafit Games Studio", blurb:"Propojujeme výzkum s vývojem…", img:"https://grafitctu.github.io/assets/projects/gamedesign.png", href:"https://barushe22.itch.io/neckventure", tags:["studio","games"], date:"2024–" },
-    ];
-    const RESEARCH = [
-      { id:"r-politeia", title:"Politeia 21", blurb:"Interdisciplinární VR experiment…", img:"https://grafitctu.github.io/assets/projects/politeia.png", href:"https://www.unihack.cz", tags:["vr","ethics","research"] },
-      { id:"r-venna", title:"Věnná města českých královen", blurb:"Mapování kulturního dědictví…", img:"https://grafitctu.github.io/assets/projects/vennamesta.png", href:"https://www.kralovskavennamesta.cz", tags:["heritage","mapping"] },
-      { id:"r-most", title:"Most – město, které nezaniklo", blurb:"Rekonstrukce města…", img:"https://grafitctu.github.io/assets/projects/most.png", href:"https://www.vugtk.cz", tags:["heritage","ai","inpainting"] },
-      { id:"r-tactile", title:"Haptické rozhraní: interaktivní stěna", blurb:"Taktálně-specifické UI…", img:"https://grafitctu.github.io/assets/projects/intwall.png", href:"https://www.youtube.com", tags:["haptics","ui","installation"] },
-    ];
-    const SHOWCASE = [
-      { id:"s-m7", title:"Magnificent 7", img:"https://img.youtube.com/vi/7Gq_LNQao2Y/hqdefault.jpg", href:"#", tags:["unity","vhs"] },
-      { id:"s-pointers", title:"Pointless Pointers", img:"https://grafitctu.github.io/assets/projects/gamedesign.png", href:"#", tags:["pixel-art","vhs"] },
-      { id:"s-texture", title:"Texture Editing", img:"https://grafitctu.github.io/assets/projects/textures.jpg", href:"#", tags:["gimp","pga"] },
-    ];
-    const COURSES = [
-      { id:"c-vhs", code:"BI-VHS", title:"Virtuální herní světy", blurb:"Game & level design…", link:"https://bilakniha.cvut.cz" },
-      { id:"c-pga", code:"BI-PGA", title:"Programování grafických aplikací", blurb:"Pluginy, pokročilá grafika…", link:"https://bilakniha.cvut.cz" },
-      { id:"c-pg1", code:"NI-PG1", title:"Počítačová grafika 1", blurb:"Rendering, textury…", link:"https://bilakniha.cvut.cz" },
-    ];
-
-    const MARQUEE_ITEMS = []; // už nepoužíváme (ponecháno pro snadné doplnění)
-
-    // --- pomocné ---
-    const $ = sel => document.querySelector(sel);
-    const create = (tag, cls="", html="") => { const el = document.createElement(tag); if(cls) el.className = cls; if(html) el.innerHTML = html; return el; };
-    const allTags = Array.from(new Set([...EVENTS, ...RESEARCH, ...SHOWCASE].flatMap(i => i.tags||[])));
-
-    // --- render karty ---
-    function card(item, kind){
-      const a = create("a", "card group relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block", "");
-      a.href = item.href || "#"; a.target = "_blank"; a.rel="noreferrer";
-
-      // poměr stran podle sekce: research 3:1, ostatní 2:1
-      const aspect = (kind === "research") ? "aspect-[3/1]" : "aspect-[2/1]";
-      const imgBox = create("div", `relative w-full overflow-hidden ${aspect}`, "");
-
-      const img = create("img","thumb h-full w-full object-cover object-center", ""); img.src = item.img; img.alt = item.title; imgBox.appendChild(img);
-      imgBox.appendChild(create("div","absolute inset-0 bg-gradient-to-t from-black/50 to-transparent",""));
-      if(item.date){ imgBox.appendChild(create("span","absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-neutral-200 border border-white/10","📅 "+item.date)); }
-      a.appendChild(imgBox);
-
-      const body = create("div","p-4","");
-      body.appendChild(create("div","flex items-center justify-between",`<h3 class='text-lg font-semibold text-neutral-100'>${item.title}</h3><span class='text-neutral-400 text-xs uppercase tracking-wide'>${kind}</span>`));
-      body.appendChild(create("p","mt-1 text-neutral-300/90 text-sm leading-relaxed",item.blurb||""));
-      if((item.tags||[]).length){ const tg = create("div","mt-3 flex flex-wrap gap-2",""); (item.tags||[]).forEach(t=> tg.appendChild(create("span","text-xs rounded-full border px-2 py-0.5 text-neutral-300 border-neutral-700/80","#"+t))); body.appendChild(tg); }
-      a.appendChild(body);
-      return a;
-    }
-
-    function renderLists(filterFn){
-      // Events (xl 4 vedle sebe, 2:1)
-      const E = $("#eventsGrid"); E.innerHTML = "";
-      EVENTS.filter(filterFn).forEach(it=>E.appendChild(card(it,"event")));
-
-      // Research (3 vedle sebe, 3:1)
-      const R = $("#researchGrid"); R.innerHTML = "";
-      RESEARCH.filter(filterFn).forEach(it=>R.appendChild(card(it,"research")));
-
-      // Showcase (xl 4 vedle sebe, 2:1)
-      const S = $("#showcaseGrid"); S.innerHTML = "";
-      SHOWCASE.filter(filterFn).forEach(it=>S.appendChild(card(it,"showcase")));
-
-      // Courses
-      const C = document.querySelector("div#courses"); C.innerHTML = "";
-      COURSES.forEach(c=>{
-        const box = create("div","course-card rounded-2xl border p-4 border-white/10 bg-gradient-to-b from-neutral-900 to-black","");
-        box.innerHTML = `
-          <div class="flex items-start gap-3">
-            <span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-cyan-400/30 bg-cyan-500/20 text-cyan-200">${c.code}</span>
-            <div>
-              <h3 class="text-lg font-semibold text-neutral-100">${c.title}</h3>
-              <p class="text-sm text-neutral-300/90">${c.blurb||""}</p>
-              <a class="mt-2 inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-200 text-sm" href="${c.link}" target="_blank" rel="noreferrer">Syllabus ↗</a>
+        <section>
+            <div class="panel">
+                <h2>Events</h2>                
             </div>
-          </div>`;
-        C.appendChild(box);
-      });
-    }
+            <div class="projects">
+                <div class="project">
+                    <img src="/assets/projects/majak2.png" alt="GameJam Velikonoční 2025">
+                    <div class="description">
+                        <h3>GameJam 2025</h3>
+                        <p>Another installment in our series of traditional game jams! Once again, we're hosting it over Easter, but this time with a surprise – our judges will be industry leaders from game studios and major companies!</p>
+                        <ul>
+                            <li><a href="https://itch.io/jam/gamejam-fit-2025a">GameJam 2025 </a></li>
+                            
+                        </ul>
+                    </div>
+                </div>            
+           
+                <div class="project">
+                    <img src="/events/hellofit.jpg" alt="HelloFit 2025">
+                    <div class="description">
+                        <h3>HelloFit 2025</h3>
+                        <p>Another part of our traditional series of events for freshmen. Once again, we helped our friends from Fit++, welcomed new students and invited them to join our game design group and the STOH board game club.</p>
+                        <ul>
+                            <li><a href="https://www.klubfitpp.cz/events/2025/hello-fit-25/">HelloFit 2025 </a></li>
+                            <li><a href="https://stoh.su.cvut.cz/phprs/">Klub STOH</a></li> 
+                        </ul>
+                    </div>
+                </div>                
+           
+                <div class="project">
+                    <img src="/assets/projects/gamejam_2024b_logo.jpg" alt="GameJam Vánoční 2024">
+                    <div class="description">
+                        <h3>GameJam 2024</h3>
+                        <p>Another installment in our series of traditional game jams! Once again, we're hosting it over Easter, but this time with a surprise – our judges will be industry leaders from game studios and major companies!</p>
+                        <ul>
+                            <li><a href="https://itch.io/jam/gamejam-fit-2024-vanocni">itch.io 2025 </a></li>
+                            <li><a href="events/gamejam02/">GameJam 2024</a></li> 
+                        </ul>
+                    </div>
+                </div>
+                <div class="project">
+                    <img src="/assets/projects/gexpo_logo.jpg" alt="GEXPO">
+                    <div class="description">
+                        <h3>GEXPO 2025</h3>
+                        <p>It’s becoming a tradition! This year’s Graphics Expo once again showcased the achievements of our students in game development, VR, and final projects. With 60+ participants and a program running late into the evening, it was an event to remember!</p>
+                        <ul>
+                            <li><a href="events/gexpo/2025">Gexpo 2025</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project">
+                    <img src="/assets/projects/nocvedcu.png" alt="Noc vedcu">
+                    <div class="description">
+                        <h3>ResearchersNight 2025</h3>
+                        <p>This year, we will celebrate the 20th anniversary of Researchers' Night in the Czech Republic with you! Together, we will meet again in more than 50 cities on Friday, 26 September 2025.</p>
+                        <ul>
+                            <li><a href="https://www.nocvedcu.cz/en">Researchers Night</a></li>
+                        </ul>
+                    </div>
+                </div>                
+                 <div class="project">
+                    <img src="/assets/projects/grafitgames_logo.jpg" alt="Grafit games">
+                    <div class="description">
+                        <h3>Grafit Games Studio</h3>
+                        <p>Bridging cutting-edge research with creative game development, we craft both digital and board game experiences.</p>
+                        <ul>
+                            <li><a href="https://barushe22.itch.io/neckventure">NeckVenture</a></li>
+                            <li><a href="https://betacaroten.itch.io/game-everyday">GameEveryday</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                               
+            </div>
+        </section>
+        
+        <section>
+            <div class="panel">
+                <h2>Research</h2>
+                <p class="nav">see also <a href="/publications">Publications</a> and <a href="/theses">Theses</a></p>
+            </div>
+            <div class="projects">
+                <div class="project">
+                    <img src="/assets/projects/politeia.png" alt="politeia 21">
+                    <div class="description">
+                        <h3>Politeia 21</h3>
+                        <p>An interdisciplinary project combining virtual reality, social studies and philosophy. Our goal is to build a virtual simulation where Plato's theses about an ideal society and ethical aspects of human behavior could be examined. We plan to use the simulation as a vast experimental instrument to study real time human interactions in a virtual environment.</p>
+                        <ul>
+                            <li><a href="https://www.unihack.cz/project/8">Unihack Special Jury Award </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project">
+                    <img src="/assets/projects/vennamesta.png" alt="venna mesta">
+                    <div class="description">
+                        <h3>Dowry Towns of Bohemian Queens</h3>
+                        <p>The towns which used to belong to Bohemian queens, the so-called royal dowry towns, pertain to a specific category among historic Bohemian cities in many respects. The institution of dowry towns was created in the early 14th century and underwent a complex development. We have contributed to several projects mapping their historical development and digitalization of cultural heritage. (2018-2022)</p>
+                        <ul>
+                            <li><a href="https://www.kralovskavennamesta.cz/">Věnná města českých královen ve VR</a></li>
+                            <li><a href="https://www.uhk.cz/en/philosophical-faculty/about-faculty">PF University of Hradec Králove</a></li>
+                            <li><a href="https://www.hiu.cas.cz/projekty/venna-mesta-ceskych-kraloven-ziva-soucast-historickeho-vedomi-a-jeji-podpora-nastroji-historicke-geografie-virtualni-reality-a-kyberprostoru">Institute of History CAS </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project">
+                    <img src="/assets/projects/gamedesign.png" alt="game design">
+                    <div class="description">
+                        <h3>Game design</h3>
+                        <p>Our focus is on the game design theory; we are interested in word design, acessibility of inpaired users and creative writing.</p>
+                        <ul>
+                            <li><a href="https://casopis.fit.cvut.cz/deni-na-fit/nemam-cas-na-spanek-jsem-na-gamejamu/">GameJam 2020 CS</a></li>
+                            <li><a href="events/gamejam_cs/">GameJam 2022.1 CS</a><a href="events/gamejam/"> EN</a></li>
+                            <li><a href="events/gamejam02/">GameJam 2022.2 CS</a></li>                            
+                            <li><a href="https://www.youtube.com/channel/UC5lYKLsaeDs7ucC1nZIg19Q/playlists">VHS Youtube Channel</a></li>
+                            <li><a href="projects/">FIT games</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project">
+                    <img src="/assets/projects/textures.jpg" alt="textures">
+                    <div class="description">
+                        <h3>Texture modeling</h3>
+                        <p>In cooperation with the Institute of Information Theory and Automation, Czech Academy of Sciences, we map and model the realistic appearance of materials.</p>
+                        <ul>
+                            <li><a href="https://youtu.be/gj6j4cmcGd0">BRDF and BTF lectures (cs)</a></li>
+                            <li><a href="http://btf.utia.cas.cz/?brdf_dwn">BTF measuring and modelling</a></li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="project">
+                    <img src="/assets/projects/most.png" alt="venna mesta">
+                    <div class="description">
+                        <h3>Most - city that not disappear</h3>
+                        <p>Most is a city that has experienced a turbulent reconstruction in its history. We reconstruct the appearance of the city before this massive reconstruction. (2023-2027)</p>
+                        <ul>
+                            <li><a href="https://www.vugtk.cz/en/home-page/">VÚGTK</a></li>
+                            <li><a href="https://www.ujep.cz/en/about-ujep">University of J. E. Purkyně</a></li>                            
+                        </ul>
+                    </div>
+                </div>
+                 <div class="project">
+                    <img src="/assets/projects/intwall.png" alt="textures">
+                    <div class="description">
+                        <h3>Tactile interfaces: interactive wall</h3>
+                        <p>In cooperation with MIT, Tokyo University, initi.org and CAMP we explore the tactile-specific interfaces</p>
+                        <ul>
+                            <li><a href="https://www.youtube.com/watch?v=3jvmoj7pLZU&ab_channel=IraWinder">Taxtile Matrix Box (MIT version)</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=3jvmoj7pLZU&ab_channel=IraWinder">Interactive wall</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <section>
+        <div class="panel">
+            <h2>Student Showcase</h2>
+        </div>
+        <div class="showcase">
+            <div class="item">
+                <h4>Wood texture generation</h4>
+                <a href="https://iga.ksi.fit.cvut.cz/bi-pga/b241/3d/jechjose?class=3d">
+                    <img src="/assets/showcase/jechdrevo.png" /> </a></p>
+                </a>
+                <p>Plugin for creating artificial wood texture. (PGA course, bachelor work)</p>
+            </div>
+            <div class="item">
+                <h4>AI Texture to 3D generatiopn</h4>
+                <a href="stablegen.ai">
+                    <img src="/assets/showcase/stablegen.jpg" /> </a></p>
+                </a>
+                <p>Plugin for generating amazing AI textures for 3D objects. (PGA course, bachelor work) </p>
+            </div>
+            <div class="item">
+                <h4>Texture editing</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/stud/svabosa1/blob/master/dokumentace1.adoc">
+                    <img src="/assets/showcase/svabova.png" /> </a></p>
+                </a>
+                <p>Content aware fill implemented as a GIMP plugin (PGA course)</p>
+            </div>            
+            <div class="item">
+                <h4>Elections visualisation</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/stud/milecold/blob/master/dokumentace2.adoc">
+                    <img src="/assets/showcase/milec.png" />
+                </a>
+                <p>Parliament elections visualisation + online parser, implemented as a SAGE app (PGA course)</p>
+            </div>
+            <div class="item">
+                <h4>Edge detectors</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/stud/hoskorad/blob/master/dokumentace1.adoc">
+                    <img src="/assets/showcase/hoskorad.jpg" />
+                </a>
+                <p>A set of edge detectors and comparisons of the application of the resulting operators, implemented as a GIMP plugin (PGA course)</p>
+            </div>
+            <div class="item">
+                <h4>3D FT visualisation</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/valkojo1/tree/master/3D">
+                    <img src="/assets/showcase/valko.png" />
+                </a>
+                <p>Fourier transformation visualisation implemented as a Blender plugin (PGA course)</p>
+            </div>
+            <div class="item">
+                <h4>Parametric towers generation</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/trzasmar/blob/master/3D-object_generator/dokumentace3.adoc">
+                    <img src="/assets/showcase/trzasmar.jpg" />
+                </a>
+                <p>Object generation implemented as a Blender plugin (PGA course)</p>
+            </div>
+            <div class="item">
+                <h4>Mandelbulb</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/svejsond/blob/master/3D/dokumentace3.adoc">
+                    <img src="/assets/showcase/svejstil.jpg" />
+                </a>
+                <p>Fractal rendering implemented as a Blender plugin (PGA course)</p>
+            </div>
+            <div class="item">
+                <h4>Linky animation</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/spaneada/blob/master/gimp/dokumentace1.md">
+                    <img src="/assets/showcase/cvut2.gif" />
+                </a>
+                <p>4x170 animation exporter implemented as a GIMP plugin (PGA course)</p>
+            </div>
+            <div class="item">
+                <h4>Edge Detect Material</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/poncaada">
+                    <img src="/assets/showcase/poncaada.png" />
+                </a>
+                <p>Object manipulation implemented as a Blender plugin (PGA course)</p>
+            </div>
+            <div class="item">
+                <h4>Seam carving</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/kolemrad/blob/master/dokumentace1.md">
+                    <img src="/assets/showcase/kolemrad.png" />
+                </a>
+                <p>Content-aware image resizing, implemented as a GIMP plugin (PGA course)</p>
+            </div>
+            <div class="item">
+                <h4>Gallifreyan translator</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/kyselba1">
+                    <img src="/assets/showcase/kyselova.png" />
+                </a>
+                <p>Corosion and price metal simulation, implemented as a Blender plugin (bachelor thesis)</p>
+            </div>
+            <div class="item">
+                <h4>Blender Snow</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/kacervik">
+                    <img src="/assets/showcase/kacer.jpg" />
+                </a>
+                <p>Covering model by added snow implemented as a Blender plugin (PGA course)</p>
+            </div>
+            <div class="item">
+                <h4>Decimation</h4>
+                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/kvasnric">
+                    <img src="/assets/showcase/kvasnica.jpg" />
+                </a>
+                <p>Decimation by vertex clustering implemented as a Blender plugin (PGA course)</p>
+            </div>
 
-    // --- vyhledávání + tagy ---
-    let activeTags = new Set();
-    function applyFilter(){
-      const q = ($("#search").value || "").trim().toLowerCase();
-      const filterFn = (item) => {
-        const text = ((item.title||"")+" "+(item.blurb||"")+" "+(item.tags||[]).join(" ")).toLowerCase();
-        const matchQ = !q || text.includes(q);
-        const matchTags = activeTags.size===0 || (item.tags||[]).some(t => activeTags.has(t));
-        return matchQ && matchTags;
-      };
-      renderLists(filterFn);
-    }
+            <div class="item">
+                <h4>Magnificent 7</h4>
+                <a href="https://youtu.be/SN_Pse347iI">
+                    <img src="/assets/showcase/img_vhs_1.png" alt="cover">
+                </a>
+                <p>Student game, unity engine, multiple story endings (VHS course)</p>
+                <a href="https://drive.google.com/drive/u/1/folders/1ihZj2bwOup5j24CMroseJMnO4suCWSoJ?usp=sharing">demo</a>
+            </div>
 
-    function renderTags(){
-      const T = $("#tags"); T.innerHTML = `<span class="text-xs text-neutral-400">Filtr tagů:</span>`;
-      allTags.forEach(t=>{
-        const b = create("button","px-3 py-1 rounded-full border text-sm border-neutral-700 text-neutral-300 hover:border-neutral-500","");
-        b.textContent = t;
-        b.onclick = () => { activeTags.has(t) ? activeTags.delete(t) : activeTags.add(t); b.classList.toggle("bg-cyan-500/20"); b.classList.toggle("border-cyan-400"); applyFilter(); };
-        T.appendChild(b);
-      });
-      if(allTags.length){
-        const reset = create("button","ml-2 text-xs text-cyan-300 hover:text-cyan-200","Reset");
-        reset.onclick = () => { activeTags = new Set(); renderTags(); applyFilter(); };
-        T.appendChild(reset);
-      }
-    }
+            <div class="item">
+                <h4>Pointless pointers</h4>
+                <a href="https://www.youtube.com/watch?v=4u3qrxFuULM&t=1s">
+                    <img src="/assets/showcase/img_vhs_2.png" />
+                </a>
+                <p>A game with living world as pixel art, many dialogs, colorful characters (VHS course)</p>
+                <a href="https://drive.google.com/drive/u/1/folders/1ihZj2bwOup5j24CMroseJMnO4suCWSoJ?usp=sharing">demo</a>
+            </div>
 
-    // --- částice (canvas) ---
-    function particles(canvas, opts){
-      const c = canvas, ctx = c.getContext("2d");
-      let w=0,h=0, raf=0;
-      const N = opts.N || 42;
-      const speed = opts.speed || 0.4;
-      function resize(){
-        const rect = canvas.parentElement.getBoundingClientRect();
-        w = c.width = Math.max(window.innerWidth, Math.ceil(rect.width||window.innerWidth));
-        h = c.height = Math.ceil(opts.fixedHeight || rect.height || 520);
-      }
-      const dots = Array.from({length:N}, ()=>({x:0,y:0,vx:(Math.random()-.5)*speed,vy:(Math.random()-.5)*speed}));
-      function reset(){
-        dots.forEach(d=>{ d.x=Math.random()*w; d.y=Math.random()*h; });
-      }
-      function draw(){
-        ctx.clearRect(0,0,w,h);
-        const grad = ctx.createLinearGradient(0,0,w,h);
-        grad.addColorStop(0,"#0b1220"); grad.addColorStop(1,"#0b0f16");
-        ctx.fillStyle=grad; ctx.globalAlpha=.94; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1;
-        for(let i=0;i<N;i++){
-          const a=dots[i]; a.x+=a.vx; a.y+=a.vy;
-          if(a.x<0||a.x>w) a.vx*=-1; if(a.y<0||a.y>h) a.vy*=-1;
-          for(let j=i+1;j<N;j++){ const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
-            if(d<120){ ctx.globalAlpha = 1 - d/120; ctx.strokeStyle = "#60a5fa"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
-          }
-          ctx.fillStyle="#22d3ee"; ctx.beginPath(); ctx.arc(a.x,a.y,1.2,0,Math.PI*2); ctx.fill();
-        }
-        raf = requestAnimationFrame(draw);
-      }
-      function start(){ resize(); reset(); draw(); }
-      function stop(){ cancelAnimationFrame(raf); }
-      const ro = new ResizeObserver(()=>{ resize(); });
-      ro.observe(canvas.parentElement);
-      window.addEventListener("resize", resize);
-      start();
-      return { stop, ro };
-    }
+            <div class="item">
+                <h4>Strahov Gang</h4>
+                <a href="https://youtu.be/n1OENc6Fc2M?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m">
+                    <img src="/assets/showcase/img_vhs_3.png" />
+                </a>
+                <p>Unreal engine-based game, beautiful and optimistic; capturing student live at FIT CTU (VHS course)</p>
+                <a href="https://drive.google.com/drive/folders/1icQkARaYjq0B90TApwGjrA_ugspPzygI?usp=sharing">demo</a>
+            </div>
 
-    // --- theme toggle ---
-    $("#toggleTheme").onclick = () => {
-      document.documentElement.classList.toggle("dark");
-      const body = document.body;
-      body.classList.toggle("bg-gradient-dark");
-      body.classList.toggle("bg-gradient-light");
-    };
+            <div class="item">
+                <h4>Golf Town</h4>
+                <a href="https://www.youtube.com/watch?v=OB7_UmOI_2U&t=6s">
+                    <img src="/assets/showcase/img_vhs_4.png" />
+                </a>
+                <p>Unity engine-based game with western motives + VR + Hide 'N Seek! (VHS course)</p>
+                <a href="https://drive.google.com/drive/u/1/folders/1ihZj2bwOup5j24CMroseJMnO4suCWSoJ?usp=sharing">demo</a>
+            </div>
 
-    // --- scroll progress ---
-    window.addEventListener("scroll", () => {
-      const s = document.documentElement.scrollTop || document.body.scrollTop;
-      const h = (document.documentElement.scrollHeight - document.documentElement.clientHeight) || 1;
-      const pct = Math.max(0, Math.min(1, s/h));
-      $("#scrollbar").style.width = (pct*100) + "%";
-    });
+            <div class="item">
+                <h4>Path of Exile Ripoff</h4>
+                <a href="https://www.youtube.com/watch?v=7P3N3s81QqU&t=20s">
+                    <img src="/assets/showcase/img_vhs_5.png" />
+                </a>
+                <p>Unity engine MMORPG where you can encounter 20+ enemies (VHS course)</p>
+                <a href="https://drive.google.com/drive/u/1/folders/1ihZj2bwOup5j24CMroseJMnO4suCWSoJ?usp=sharing">demo</a>
+            </div>
 
-    // init
-    renderTags();
-    applyFilter();
-    const hero = particles(document.getElementById("heroCanvas"), { fixedHeight: 520, N: 42, speed: .4 });
-    const area = particles(document.getElementById("areaCanvas"), { N: 48, speed: .35 });
-  </script>
+            <div class="item">
+                <h4>Ardaestra Magitech</h4>
+                <a href="https://youtu.be/Zz09tvnLEuo?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m">
+                    <img src="assets/showcase/img_vhs_6.png" />
+                </a>
+                <p>3D single player Action RPG made with Unity Engine (VHS course)</p>
+                <a href="https://drive.google.com/drive/folders/1icQkARaYjq0B90TApwGjrA_ugspPzygI?usp=sharing">demo</a>
+            </div>
+
+            <div class="item">
+                <h4>FitLife</h4>
+                <a href="https://antik98.github.io/FitLife/">
+                    <img src="assets/showcase/FitLife.png" />
+                </a>
+                <p>PixelArt online playable game about living, studying and surviving FIT (bachelor thesis)</p>
+                <a href="https://antik98.github.io/FitLife/">live demo</a>
+            </div>   
+
+
+            <div class="item">
+                <h4>Honza</h4>
+                <a href="https://www.youtube.com/watch?v=dhuMuopxlio&list=PLXhipPFpvUWEhSxw79CDOdjFFm5D6b3us&index=4&ab_channel=GrafitCTUFITPrague">
+                    <img src="assets/showcase/honzaDetail.png" />
+                </a>
+                <p>PixelArt game based on Czech fairytales. Lets try to be Dumm Honza! (VHS course)</p>
+                <a href="https://drive.google.com/drive/folders/196Tsc10b4VhWHliSrVg9lHpd5kfuz8Kr?usp=sharing">demo</a>
+            </div> 
+
+
+
+            <div class="item">
+                <h4>Music Wave - image sonification</h4>
+                <a href="https://ni-ccc.github.io/projects/music_wave/">
+                    <img src="assets/showcase/niccc_sc5.png" />
+                </a>
+                <p>Experimental project about sonification of images (CCC course)</p>
+                <a href="https://dspace.cvut.cz/handle/10467/101569">thesis</a>
+            </div>    
+            
+            <div class="item">
+                <h4>The sound of extinction</h4>
+                <a href="https://ni-ccc.github.io/projects/music_wave/">
+                    <img src="assets/showcase/niccc_sc6.png" />
+                </a>
+                <p> An audio visualization of animal sounds, animals that went extinct or are on the verge of extinction (CCC course, thesis)</p>
+                <a href="https://sound-of-extinction.herokuapp.com/">live demo</a>  <a href="https://dspace.cvut.cz/handle/10467/101774"> thesis</a>
+            </div>   
+
+            <div class="item">
+                <h4>Pulse detection</h4>
+                <a href="https://ni-ccc.github.io/projects/pavel/">
+                    <img src="assets/showcase/niccc_sc2.png" />
+                </a>
+                <p> Pulse detection from webcamera (CCC course)</p>
+                <a href="https://ni-ccc.github.io/projects/pavel/"> demo</a>  
+            </div>        
+
+            <div class="item">
+                <h4>Covid visualisation</h4>
+                <a href="https://ni-ccc.github.io/projects/vizualizace_covid/">
+                    <img src="assets/showcase/niccc_sc4.png" />
+                </a>
+                <p> Covid time human movement visualization (CCC course)</p>
+                <a href="https://ni-ccc.github.io/projects/vizualizace_covid/"> demo</a>  
+            </div>     
+
+            <div class="item">
+                <h4>Renoir style transfer</h4>
+                <a href="https://ni-ccc.github.io/projects/martin_honza/">
+                    <img src="assets/showcase/niccc_sc3.png" />
+                </a>
+                <p> Covid time human movement visualization (CCC course)</p>
+                <a href="https://ni-ccc.github.io/projects/martin_honza/"> demo</a>  
+            </div>    
+
+
+
+
+            <div class="item">
+                <h4>Fantasy tree scene</h4>
+                <a href="https://iga.ksi.fit.cvut.cz/bi-ble/gallery">
+                    <img src="assets/showcase/img_ble_1.png" />
+                </a>
+                <p> Fantasy tree scene 3D model and video render (BLE course)</p>
+                <a href="https://iga.ksi.fit.cvut.cz/cache/files/4/b222/kahoujos/02-scene/video.mp4">video</a>  
+            </div>  
+            <div class="item">
+                <h4>Abstract scene</h4>
+                <a href="https://iga.ksi.fit.cvut.cz/bi-ble/gallery">
+                    <img src="assets/showcase/img_ble_2.png" />
+                </a>
+                <p> Abstract animation (BLE course)</p>
+                <a href="https://iga.ksi.fit.cvut.cz/cache/files/4/b222/kuzneole/09-compositing/video.mp4">video</a>  
+            </div>  
+            <div class="item">
+                <h4>Game scene</h4>
+                <a href="https://iga.ksi.fit.cvut.cz/bi-ble/gallery">
+                    <img src="assets/showcase/img_ble_3.png" />
+                </a>
+                <p> Material and scene showcase (BLE course)</p>
+                <a href="https://iga.ksi.fit.cvut.cz/cache/files/4/b222/gaierda1/04-textures/video.mp4">video</a>  
+            </div>              
+
+            
+        </div>
+    </section>
+    <div class="bg-dim">
+        <section>
+            <div class="panel">
+                <h2>Courses and Lectures</h2>
+            </div>
+            <div class="courses">
+                <div class="course">
+                    <div>
+                        <div class="label">Course</div>
+                        <h3>Multimedial &amp; Graphic Applications</h3>
+                        <p class="staff">J. Buriánek, L. Bařinka, J. Chludil</p>
+                        <p>Introductory overview course, where students learn to work with 2D and 3D graphics tools</p>
+                        <p class="original">CS: Multimediální a grafické aplikace</p>
+                    </div>
+                    <div class="stats">
+                        <div class="badge">BI-MGA</div>
+                        <div class="badge">3rd semester</div>
+                        <div class="badge">obligatory</div>
+                        <div class="badge">4 credits</div>
+                        <div class="badge"><a href="https://bilakniha.cvut.cz/cs/predmet1122906.html#gsc.tab=0">Syllabus</a></div>
+                    </div>
+                </div>
+
+                <div class="course">
+                    <div>
+                        <div class="label">Course</div>
+                        <h3>Virtual Game Worlds</h3>
+                        <p class="staff">R. Richtr</p>
+                        <p>A subject dedicated to game design, level design and the creation of the game world</p>
+                        <p class="original">CS: Virtuální herní světy</p>
+                    </div>
+                    <div class="stats">
+                        <div class="badge">BI-VHS</div>
+                        <div class="badge">3rd, 5th semester</div>
+                        <div class="badge">optional</div>
+                        <div class="badge">4 credits</div>
+                        <div class="badge"><a href="https://bilakniha.cvut.cz/en/predmet6570106.html#gsc.tab=0">Syllabus</a></div>                        
+                    </div>
+                </div>
+
+                <div class="course">
+                    <div>
+                        <div class="label">Course</div>
+                        <h3>Blender</h3>
+                        <p class="staff">L. Bařinka</p>
+                        <p>An advanced course following the MGA and developing considerably the knowledge of working in Blender</p>
+                    </div>
+                    <div class="stats">
+                        <div class="badge">BI-BLE</div>
+                        <div class="badge">summer semester</div>
+                        <div class="badge">eligible</div>
+                        <div class="badge">4 credits</div>
+                        <div class="badge"><a href="https://bilakniha.cvut.cz/en/predmet5240406.html#gsc.tab=0">Syllabus</a></div>   
+                        <div class="badge"><a href="https://iga.ksi.fit.cvut.cz/bi-ble/gallery">gelery</a></div>                         
+                    </div>
+                </div>
+
+                <div class="course">
+                    <div>
+                        <div class="label">Course</div>
+                        <h3>Graphic Application Programming</h3>
+                        <p class="staff">R. Richtr, J. Chludil</p>
+                        <p>Advanced subject finalizing students' graphic knowledge; the course deals with programming plugins in GIMP and Blender</p>
+                        <p class="original">CS: Programování grafických aplikací</p>
+                    </div>
+                    <div class="stats">
+                        <div class="badge">BI-PGA</div>
+                        <div class="badge">5th semester</div>
+                        <div class="badge">obligatory</div>
+                        <div class="badge">4 credits</div>
+                        <div class="badge"><a href="https://bilakniha.cvut.cz/en/predmet6703006.html#gsc.tab=0">Syllabus</a></div>  
+                    </div>
+                </div>
+
+                <div class="course">
+                    <div>
+                        <div class="label">Course</div>
+                        <h3>Modern Visualization Technologies</h3>
+                        <p class="staff">P. Pauš, J. Chludil</p>
+                        <p>An overview subject devoted to modern technologies and hardware</p>
+                        <p class="original">CS: Moderní vizualizační technologie</p>
+                    </div>
+                    <div class="stats">
+                        <div class="badge">BI-MVT</div>
+                        <div class="badge">5th semester</div>
+                        <div class="badge">obligatory</div>
+                        <div class="badge">4 credits</div>
+                        <div class="badge"><a href="https://bk.fit.cvut.cz/cz/predmety/00/00/00/00/00/00/06/56/98/p6569806.html">Syllabus</a></div>  
+                    </div>
+                </div>
+
+                <div class="course">
+                    <div>
+                        <div class="label">Course</div>
+                        <h3>Advanced Virtual Reality</h3>
+                        <p class="staff">P. Pauš</p>
+                        <p>Advanced virtual reality course in unity engine</p>
+                        <p class="original">CS: Pokročilá virtuální realita</p>
+                    </div>
+                    <div class="stats">
+                        <div class="badge">BI-PVR</div>
+                        <div class="badge">winter semester</div>
+                        <div class="badge">optional</div>
+                        <div class="badge">4 credits</div>
+                        <div class="badge"><a href="https://bilakniha.cvut.cz/cs/predmet6166006.html#gsc.tab=0">Syllabus</a></div>  
+                    </div>
+                </div>
+
+                <div class="course">
+                    <div>
+                        <div class="label">Course</div>
+                        <h3>Computer Graphics 1</h3>
+                        <p class="staff">R. Richtr, V. Tomas</p>
+                        <p>Advanced course completing knowledge of rendering, data structures for computer graphics and state-of-the-art realistic texturing</p>
+                        <p class="original">CS: Počítačová grafika 1</p>
+                    </div>
+                    <div class="stats">
+                        <div class="badge">NI-PG1</div>
+                        <div class="badge">summer semester</div>
+                        <div class="badge">optional</div>
+                        <div class="badge">4 credits</div>
+                        <div class="badge"><a href="https://bilakniha.cvut.cz/cs/predmet6083506.html#gsc.tab=0">Syllabus</a></div>  
+                    </div>
+                </div>
+
+                <div class="course">
+                    <div>
+                        <div class="label">Course</div>
+                        <h3>Recognition 1</h3>
+                        <p class="staff">M. Haindl, R. Richtr</p>
+                        <p>Advanced pattern recognition course; lectures in cooperation with the Academy of Sciences</p>
+                        <p class="original">CS: Rozpoznávání 1</p>
+                    </div>
+                    <div class="stats">
+                        <div class="badge">NI-ROZ</div>
+                        <div class="badge">winter semester</div>
+                        <div class="badge">optional</div>
+                        <div class="badge">4 credits</div>
+                        <div class="badge"><a href="https://bilakniha.cvut.cz/cs/predmet6768306.html#gsc.tab=0">Syllabus</a></div>  
+                    </div>
+                </div>
+
+                <div class="course">
+                    <div>
+                        <div class="label">Course</div>
+                        <h3>Creative Coding &amp; Computational Art</h3>
+                        <p class="staff">J. Kortan, V. Tomas, R. Richtr</p>
+                        <p>A project-oriented course that maps a wide range of art, graphics and creative programming, see <a href="https://ni-ccc.github.io">course website</a></p>
+                    </div>
+                    <div class="stats">
+                        <div class="badge">NI-CCC</div>
+                        <div class="badge">winter semester</div>
+                        <div class="badge">optional</div>
+                        <div class="badge">4 credits</div>
+                        <div class="badge"><a href="https://bilakniha.cvut.cz/en/predmet5240406.html#gsc.tab=0">Syllabus</a></div>  
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <h3>Associated Courses</h3>
+            </div>
+            <div class="associated">
+            </div>
+            <div class="panel">
+                <h3>Featured Lectures</h3>
+            </div>
+            <div class="lectures">
+                <div class="lecture">
+                    <h4>Texture Segmentation</h4>
+                    <p>Textural featres (H. Tamura), see <a href="https://courses.fit.cvut.cz/MI-ROZ/media/tutorials/archive/bernhdav-roz-TZ.pdf">documentation (cs)</a>, tested on ÚTIA CAS benchmark <a href="https://mosaic.utia.cas.cz/">Mosaic</a> - <a href="https://mosaic.utia.cas.cz/index.php?act=res_details&rid=2602"> complete results</a> </p>
+                </div>
+                <div class="lecture">
+                    <h4>Skin Cancer Recognition</h4>
+                    <p>SURF (H. Bay), see <a href="https://courses.fit.cvut.cz/MI-ROZ/media/tutorials/archive/rames-roz-TZ.pdf">documentation (cs)</a>, Various dataset validation (i.e. <a href="https://www.kaggle.com/datasets/nodoubttome/skin-cancer9-classesisic">ISIC</a>)</p>
+                </div>
+                <div class="lecture">
+                    <h4>Iris Recognition</h4>
+                    <p>Local Binary Patterns (T. Ojala), see <a href="https://courses.fit.cvut.cz/MI-ROZ/media/tutorials/archive/bernhdav-roz-TZ.pdf">documentation (cs)</a>, Various LBP variations</p>
+                </div>
+                <div class="lecture">
+                    <h4>Bark Recognition</h4>
+                    <p>Various Textural Features, see <a href="http://library.utia.cas.cz/separaty/2019/RO/haindl-0506602.pdf">article</a>, Rotationally Invariant Multispectral</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    
+    
+    <section>
+        <div class="panel">
+            <h2>Members</h2>
+            <p>Grafit Research Group consists of researchers and teachers of computer graphics and related sciences centered around CTU FIT</p>
+        </div>
+        <div class="members">
+            <a class="member" href="/members/rr/">Radek Richtr</a>
+            <a class="member" href="/members/jch/">Jiří Chludil</a>
+            <a class="member" href="/members/pp/">Petr Pauš</a>
+            <a class="member" href="/members/ob/">Ondřej Brém</a>
+            <a class="member" href="/members/tn/">Tomáš Nováček</a>
+            <a class="member" href="/members/jk/">Jiří Kubišta</a>
+            <a class="member" href="/members/jm/">Jiří Melnikov</a>
+        </div>
+    </section>
+
+    <section>
+        <div class="panel">
+            <h2>Labs</h2>
+            <p>Grafit Research Group manages four laboratories that funciton as a joint workplace for researchers, students and other collaborators</p>
+        </div>
+        <div class="labs">
+            <a class="lab" href="https://sagelab.cesnet.cz/en/">SAGElab</a>
+            <a class="lab" href="/labs/ulab">Usability Lab</a>
+            <a class="lab" href="/labs/gglab">ggLab</a>
+            <a class="lab" href="/labs/vrlab">VR Lab</a>
+        </div>
+    </section>
+    <section>
+        <div w3-include-html="/footer.html"></div>
+    </section>
+
+    <!---<ul>
+    <p>
+        <a href="https://www.youtube.com/channel/UC5lYKLsaeDs7ucC1nZIg19Q">
+            <img alt="yt" height="51" src="imgs/yt.png" width="51"></a>
+        <a href="https://twitter.com/CtuGrafit">
+            <img alt="tw" height="51" src="imgs/tw.png" width="51"></a>
+        <a href="https://discord.gg/sfMx2nq7BQ">
+            <img alt="dc" height="51" src="imgs/dc.png" width="51"></a>
+    </p>-->
+
+   
+    
 </body>
+
+<script>w3IncludeHTML();</script>
+
 </html>
-"""
-open('/mnt/data/test.html','w', encoding='utf-8').write(html)
-print("Saved to /mnt/data/test.html")
