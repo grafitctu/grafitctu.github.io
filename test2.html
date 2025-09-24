@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="cs" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grafit – Courses & Lectures (test)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; }
+    html, body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji"; }
+    /* Tooltip arrow */
+    .tooltip::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-6px;
+      transform:translateX(-50%);
+      border-width:6px;
+      border-style:solid;
+      border-color:transparent transparent rgb(0 0 0 / .9) transparent;
+    }
+  </style>
+</head>
+<body class="h-full bg-neutral-950 text-neutral-100">
+  <header class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold tracking-tight">Grafit – Courses & Lectures</h1>
+    <p class="mt-2 text-neutral-400">Testovací stránka s kompaktními kartami, avatary vyučujících a tagy.</p>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-20">
+    <!-- COURSES -->
+    <section>
+      <div class="flex items-end justify-between gap-4">
+        <h2 class="text-2xl font-semibold">Courses</h2>
+        <div class="text-sm text-neutral-400">Hover/focus na avataru zobrazí celé jméno vyučujícího.</div>
+      </div>
+
+      <div id="courses-grid" class="mt-6 grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-2"></div>
+    </section>
+
+    <!-- LECTURES -->
+    <section class="mt-14">
+      <h2 class="text-2xl font-semibold">Featured Lectures</h2>
+      <div id="lectures-grid" class="mt-6 grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3"></div>
+    </section>
+  </main>
+
+  <script>
+    // ----- DATA ----------------------------------------------------------------
+    const COURSES = [
+      {
+        id:"c-mga",
+        code:"BI-MGA",
+        title:"Multimediální a grafické aplikace",
+        blurb:"Introductory overview course where students learn to work with 2D and 3D graphics tools.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["J. Barták","L. Bartůněk","J. Chalupa"],
+        tags:["3rd semester","obligatory","4 ECTS"]
+      },
+      {
+        id:"c-vhs",
+        code:"BI-VHS",
+        title:"Virtuální herní světy",
+        blurb:"A subject dedicated to game design, level design and the creation of the game world.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["R. Richtr"],
+        tags:["3rd & 5th semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-ble",
+        code:"BI-BLE",
+        title:"Blender",
+        blurb:"An advanced course following MGA, significantly deepening work in Blender.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["L. Bartůněk"],
+        tags:["summer semester","elective","4 ECTS"]
+      },
+      {
+        id:"c-pga",
+        code:"BI-PGA",
+        title:"Programování grafických aplikací",
+        blurb:"Advanced course focused on developing plugins for GIMP and Blender.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["R. Richtr","J. Chalupa"],
+        tags:["5th semester","obligatory","4 ECTS"]
+      },
+      {
+        id:"c-mvt",
+        code:"BI-MVT",
+        title:"Moderní vizualizační technologie",
+        blurb:"Overview of modern visualization technologies and hardware.",
+        link:"https://bk.fit.cvut.cz",
+        teachers:["P. Pauli","J. Chalupa"],
+        tags:["5th semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-pvr",
+        code:"BI-PVR",
+        title:"Pokročilá virtuální realita",
+        blurb:"Advanced virtual reality course in the Unity engine.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["P. Pauli"],
+        tags:["winter semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-pg1",
+        code:"NI-PG1",
+        title:"Počítačová grafika 1",
+        blurb:"Rendering, data structures for CG, and state-of-the-art realistic texturing.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["R. Richtr","V. Tomaš"],
+        tags:["summer semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-roz",
+        code:"NI-ROZ",
+        title:"Rozpoznávání 1",
+        blurb:"Advanced pattern recognition; lectures in cooperation with the Academy of Sciences.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["M. Haindl","R. Richtr"],
+        tags:["winter semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-ccc",
+        code:"NI-CCC",
+        title:"Creative Coding & Computational Art",
+        blurb:"Project-oriented course spanning art, graphics and creative programming.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["A. Karten","V. Tomaš","R. Richtr"],
+        tags:["winter semester","optional","4 ECTS"]
+      },
+    ];
+
+    const LECTURES = [
+      { id:"l-texture-seg", code:"LECT-TS", title:"Texture Segmentation",
+        blurb:"Textural features (H. Tamura); experiments on the ÚTIA CAS Mosaic benchmark.",
+        link:"https://mosaic.utia.cas.cz" },
+      { id:"l-skin-cancer", code:"LECT-SKIN", title:"Skin Cancer Recognition",
+        blurb:"SURF (H. Bay) and validation on public datasets (e.g., ISIC).",
+        link:"https://www.kaggle.com/datasets/nodoubttome/skin-cancer9-classesisic" },
+      { id:"l-iris", code:"LECT-IRIS", title:"Iris Recognition",
+        blurb:"Local Binary Patterns (T. Ojala) and selected LBP variants.",
+        link:"https://courses.fit.cvut.cz/MI-ROZ/media/tutorials/archive/bernhdav-roz-TZ.pdf" },
+      { id:"l-bark", code:"LECT-BARK", title:"Bark Recognition",
+        blurb:"Rotationally invariant multispectral textural features.",
+        link:"https://library.utia.cas.cz/separaty/2019/RO/haindl-0506602.pdf" },
+    ];
+
+    // ----- UI HELPERS ----------------------------------------------------------
+    const initials = (name) => name.split(/\s+/).map(s=>s[0]).slice(0,2).join('').toUpperCase();
+
+    // (volitelné) deterministická barva avataru z jména
+    function avatarBg(name){
+      let h=0; for (let i=0;i<name.length;i++) h = (h*31 + name.charCodeAt(i)) % 360;
+      return `hsl(${h} 60% 22% / .9)`; // tmavý kruh, čitelnost v dark UI
+    }
+
+    function Avatar(name){
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className =
+        "relative group h-7 w-7 rounded-full ring-1 ring-white/15 text-[10px] " +
+        "font-semibold text-white flex items-center justify-center " +
+        "bg-white/10 hover:bg-white/15 focus:bg-white/15 focus:outline-none";
+      el.style.background = avatarBg(name);
+      el.setAttribute('aria-label', name);
+      el.title = name;
+      el.textContent = initials(name);
+
+      const tip = document.createElement('span');
+      tip.className =
+        "tooltip pointer-events-none absolute left-1/2 top-full z-20 mt-2 -translate-x-1/2 " +
+        "whitespace-nowrap rounded-md bg-black/90 px-2 py-1 text-xs text-white " +
+        "opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus:opacity-100";
+      tip.setAttribute('role','tooltip');
+      tip.textContent = name;
+      el.appendChild(tip);
+
+      return el;
+    }
+
+    function chip(text){
+      const s = document.createElement('span');
+      s.className = "rounded-md px-2 py-0.5 text-[10px] font-medium bg-white/5 text-neutral-200 ring-1 ring-white/10";
+      s.textContent = text;
+      return s;
+    }
+
+    function courseCard(c){
+      const article = document.createElement('article');
+      article.className = "rounded-2xl bg-neutral-900/70 ring-1 ring-white/10 p-4 sm:p-5 shadow-lg";
+
+      const row = document.createElement('div');
+      row.className = "flex items-start gap-3";
+      article.appendChild(row);
+
+      const code = document.createElement('span');
+      code.className = "shrink-0 rounded-md px-2 py-1 text-xs font-semibold bg-cyan-900/40 ring-1 ring-cyan-400/30 text-cyan-200";
+      code.textContent = c.code;
+      row.appendChild(code);
+
+      const body = document.createElement('div');
+      body.className = "min-w-0 flex-1";
+      row.appendChild(body);
+
+      const h3 = document.createElement('h3');
+      h3.className = "text-lg font-semibold tracking-tight text-white";
+      h3.textContent = c.title;
+      body.appendChild(h3);
+
+      const p = document.createElement('p');
+      p.className = "mt-1 text-sm text-neutral-300";
+      p.textContent = c.blurb;
+      body.appendChild(p);
+
+      const meta = document.createElement('div');
+      meta.className = "mt-2 flex items-center gap-3";
+      body.appendChild(meta);
+
+      if (Array.isArray(c.teachers) && c.teachers.length){
+        const avs = document.createElement('div');
+        avs.className = "flex items-center gap-1.5";
+        c.teachers.forEach(t => avs.appendChild(Avatar(t)));
+        meta.appendChild(avs);
+      }
+
+      const tagbox = document.createElement('div');
+      tagbox.className = "ml-auto flex flex-wrap gap-2";
+      (c.tags || []).forEach(t => tagbox.appendChild(chip(t)));
+      meta.appendChild(tagbox);
+
+      const a = document.createElement('a');
+      a.href = c.link;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "mt-2 inline-block text-sm text-cyan-300 hover:text-cyan-200";
+      a.textContent = "Syllabus ↗";
+      body.appendChild(a);
+
+      return article;
+    }
+
+    function lectureCard(l){
+      const a = document.createElement('a');
+      a.href = l.link;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "block rounded-2xl bg-neutral-900/70 ring-1 ring-white/10 p-4 sm:p-5 shadow-lg hover:ring-cyan-400/30";
+
+      const code = document.createElement('span');
+      code.className = "mb-2 inline-block rounded-md px-2 py-1 text-xs font-semibold bg-emerald-900/40 ring-1 ring-emerald-400/30 text-emerald-200";
+      code.textContent = l.code;
+      a.appendChild(code);
+
+      const h3 = document.createElement('h3');
+      h3.className = "text-lg font-semibold tracking-tight text-white";
+      h3.textContent = l.title;
+      a.appendChild(h3);
+
+      const p = document.createElement('p');
+      p.className = "mt-1 text-sm text-neutral-300";
+      p.textContent = l.blurb;
+      a.appendChild(p);
+
+      const link = document.createElement('span');
+      link.className = "mt-2 inline-block text-sm text-cyan-300";
+      link.textContent = "Open ↗";
+      a.appendChild(link);
+
+      return a;
+    }
+
+    // ----- RENDER --------------------------------------------------------------
+    const cg = document.getElementById('courses-grid');
+    COURSES.forEach(c => cg.appendChild(courseCard(c)));
+
+    const lg = document.getElementById('lectures-grid');
+    LECTURES.forEach(l => lg.appendChild(lectureCard(l)));
+  </script>
+</body>
+</html>
