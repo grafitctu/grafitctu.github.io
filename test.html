@@ -34,6 +34,16 @@
     /* QuickNav pills */
     .pill { display:inline-flex; align-items:center; gap:.5rem; border-radius:9999px; padding:.25rem .75rem; border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.9); }
     .pill:hover { background: rgba(255,255,255,.08); }
+    .pill:focus-visible { outline: 2px solid rgba(56,189,248,.9); outline-offset: 2px; }
+    /* Wide-screen compaction so more pills fit */
+    @media (min-width: 1280px) { /* xl+ */
+      .pill { padding: .20rem .60rem; font-size: .9rem; }
+      .icon { width: .9rem; height: .9rem; }
+    }
+    @media (min-width: 1536px) { /* 2xl+ */
+      .pill { padding: .15rem .55rem; font-size: .875rem; }
+      .icon { width: .85rem; height: .85rem; }
+    }
   </style>
 </head>
 <body class="min-h-screen text-neutral-900 dark:text-white bg-gradient-dark dark:bg-gradient-dark">
@@ -53,7 +63,6 @@
             Pro programátory, designéry a umělce. VR/AR, počítačová grafika, UX/UI, rozpoznávání vzorů a game design.
           </p>
           <div class="mt-4 flex flex-wrap items-center gap-3">
-            <span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-white/10 bg-white/10 text-neutral-200">Local dev build</span>
             <a href="https://grafitctu.github.io/" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-neutral-200 hover:bg-white/10">Live web ↗</a>
             <button id="toggleTheme" class="ml-auto inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-neutral-200 hover:bg-white/10">
               ☀︎ / 🌙 Toggle theme
@@ -73,24 +82,20 @@
     </div>
   </section>
 
-  <!-- QUICK NAV with icons -->
+  <!-- QUICK NAV with icons (blur kept) -->
   <nav class="relative border-y border-white/10 bg-white/5 backdrop-blur">
-    <!--<div class="mx-auto max-w-7xl px-6 py-3 flex flex-wrap items-center gap-3">-->
-    <!--<div class="mx-auto max-w-none px-6 2xl:px-8 py-3 flex flex-wrap items-center gap-2 2xl:gap-2">-->
-      <div class="mx-auto max-w-none px-6 2xl:px-8 py-3 flex flex-wrap items-center justify-center gap-2 2xl:gap-2">
-
-
-      <a href="#events"   class="pill"><i data-lucide="calendar" class="icon"></i><span>↓ Events</span></a>
-      <a href="#research" class="pill"><i data-lucide="flask-conical" class="icon"></i><span>↓ Research</span></a>
-      <a href="#showcase" class="pill"><i data-lucide="gamepad-2" class="icon"></i><span>↓ Students showcase</span></a>
-      <a href="#courses"  class="pill"><i data-lucide="graduation-cap" class="icon"></i><span>↓ Courses</span></a>
+    <div class="mx-auto max-w-none px-6 2xl:px-8 py-3 flex flex-wrap items-center justify-center gap-2 2xl:gap-2">
+      <a href="#events"   class="pill" aria-label="Přejít na sekci Events"><i data-lucide="calendar" class="icon"></i><span>↓ Events</span></a>
+      <a href="#research" class="pill" aria-label="Přejít na sekci Research"><i data-lucide="flask-conical" class="icon"></i><span>↓ Research</span></a>
+      <a href="#showcase" class="pill" aria-label="Přejít na sekci Students showcase"><i data-lucide="gamepad-2" class="icon"></i><span>↓ Showcase</span></a>
+      <a href="#courses"  class="pill" aria-label="Přejít na sekci Courses"><i data-lucide="graduation-cap" class="icon"></i><span>↓ Courses</span></a>
       <span class="mx-2 h-5 w-px bg-white/10"></span>
-      <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer" class="pill"><i data-lucide="youtube" class="icon"></i><span>YouTube</span> ↗</a>
-      <a href="#" target="_blank" rel="noreferrer" class="pill"><i data-lucide="message-circle" class="icon"></i><span>Discord</span> ↗</a>
-      <a href="https://twitter.com/CtuGrafit" target="_blank" rel="noreferrer" class="pill"><i data-lucide="twitter" class="icon"></i><span>Twitter @CtuGrafit</span> ↗</a>
-      <a href="#" target="_blank" rel="noreferrer" class="pill"><i data-lucide="flask-conical" class="icon"></i><span>SAGElab</span> ↗</a>
-      <a href="#" target="_blank" rel="noreferrer" class="pill"><i data-lucide="cpu" class="icon"></i><span>ggLab</span> ↗</a>
-      <a href="#" target="_blank" rel="noreferrer" class="pill"><i data-lucide="mouse-pointer-2" class="icon"></i><span>UXlab</span> ↗</a>
+      <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít YouTube kanál Grafit"><i data-lucide="youtube" class="icon"></i><span>YouTube</span> ↗</a>
+      <a href="#" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít Discord Grafit"><i data-lucide="message-circle" class="icon"></i><span>Discord</span> ↗</a>
+      <a href="https://twitter.com/CtuGrafit" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít Twitter Grafit"><i data-lucide="twitter" class="icon"></i><span>Twitter @CtuGrafit</span> ↗</a>
+      <a href="#" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít SAGElab"><i data-lucide="flask-conical" class="icon"></i><span>SAGElab</span> ↗</a>
+      <a href="#" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít ggLab"><i data-lucide="cpu" class="icon"></i><span>ggLab</span> ↗</a>
+      <a href="#" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít UXlab"><i data-lucide="mouse-pointer-2" class="icon"></i><span>UXlab</span> ↗</a>
     </div>
   </nav>
 
@@ -164,7 +169,7 @@
       if (window.lucide) { window.lucide.createIcons(); }
     });
 
-    // --- data (můžeš libovolně rozšířit) ---
+    // --- data ---
     const EVENTS = [
       { id:"e-gexpo", title:"GEXPO 2025", blurb:"Výstava studentských projektů, 60+ účastníků…", img:"https://grafitctu.github.io/assets/projects/gexpo_logo.jpg", href:"https://grafitctu.github.io/events/gexpo/2025", tags:["expo","games","vr"], date:"May 2025" },
       { id:"e-gj2024", title:"GameJam 2024", blurb:"Tradiční velikonoční jam…", img:"https://grafitctu.github.io/assets/projects/gamejam_2024b_logo.jpg", href:"https://grafitctu.github.io/events/gamejam02/", tags:["jam","community"], date:"Mar 2024" },
@@ -201,7 +206,11 @@
       const aspect = (kind === "research") ? "aspect-[3/1]" : "aspect-[2/1]";
       const imgBox = create("div", `relative w-full overflow-hidden ${aspect}`, "");
 
-      const img = create("img","thumb h-full w-full object-cover object-center", ""); img.src = item.img; img.alt = item.title; imgBox.appendChild(img);
+      const img = create("img","thumb h-full w-full object-cover object-center", "");
+      img.src = item.img; img.alt = item.title;
+      img.loading = "lazy"; img.decoding = "async";
+      imgBox.appendChild(img);
+
       imgBox.appendChild(create("div","absolute inset-0 bg-gradient-to-t from-black/50 to-transparent",""));
       if(item.date){ imgBox.appendChild(create("span","absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-neutral-200 border border-white/10","📅 "+item.date)); }
       a.appendChild(imgBox);
@@ -284,9 +293,7 @@
         h = c.height = Math.ceil(opts.fixedHeight || rect.height || 520);
       }
       const dots = Array.from({length:N}, ()=>({x:0,y:0,vx:(Math.random()-.5)*speed,vy:(Math.random()-.5)*speed}));
-      function reset(){
-        dots.forEach(d=>{ d.x=Math.random()*w; d.y=Math.random()*h; });
-      }
+      function reset(){ dots.forEach(d=>{ d.x=Math.random()*w; d.y=Math.random()*h; }); }
       function draw(){
         ctx.clearRect(0,0,w,h);
         const grad = ctx.createLinearGradient(0,0,w,h);
@@ -328,10 +335,13 @@
     });
 
     // init
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     renderTags();
     applyFilter();
-    const hero = particles(document.getElementById("heroCanvas"), { fixedHeight: 520, N: 42, speed: .4 });
-    const area = particles(document.getElementById("areaCanvas"), { N: 48, speed: .35 });
+    if (!prefersReduced) {
+      particles(document.getElementById("heroCanvas"), { fixedHeight: 520, N: 42, speed: .4 });
+      particles(document.getElementById("areaCanvas"), { N: 48, speed: .35 });
+    }
   </script>
 </body>
 </html>
