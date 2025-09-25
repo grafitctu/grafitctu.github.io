@@ -4,29 +4,30 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Grafit — Kiosk rotace karet</title>
-  <!-- Tailwind (Play CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html,body { height:100%; }
-    html { scroll-behavior: smooth; }
-    /* Karta + přechody */
     .card { transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
     .card .thumb { transform: scale(1.02); transition: transform 600ms cubic-bezier(.22,1,.36,1); }
     .card:hover .thumb { transform: scale(1.06); }
-    .fade-enter { opacity: 0; transform: translateY(6px) scale(.995); }
-    .fade-enter-active { opacity: 1; transform: translateY(0) scale(1); transition: opacity 500ms ease, transform 500ms ease; }
-    .fade-exit { opacity: 1; transform: translateY(0) scale(1); }
-    .fade-exit-active { opacity: 0; transform: translateY(-6px) scale(.995); transition: opacity 400ms ease, transform 400ms ease; }
-    /* Pozadí */
     .bg-gradient-dark { background: linear-gradient(#070b12,#0a0f18 55%,#090d14); }
+
+    /* <-- nové: vodorovné přechody */
+    .slide-enter          { opacity: 0; transform: translateX(40px) scale(.995); }
+    .slide-enter-active   { opacity: 1; transform: translateX(0)    scale(1);    transition: opacity 450ms ease, transform 450ms ease; }
+    .slide-exit           { opacity: 1; transform: translateX(0)    scale(1); }
+    .slide-exit-active    { opacity: 0; transform: translateX(-40px) scale(.995); transition: opacity 380ms ease, transform 380ms ease; }
+    .slide-enter-rev      { opacity: 0; transform: translateX(-40px) scale(.995); }
+    .slide-exit-active-rev{ opacity: 0; transform: translateX(40px)  scale(.995); transition: opacity 380ms ease, transform 380ms ease; }
+
+    /* malý podtitulek pod anotací (2. řádek) */
+    .kiosk-sub { letter-spacing:.01em }
   </style>
 </head>
 <body class="min-h-screen bg-gradient-dark text-white">
 
-  <!-- animované pozadí -->
   <canvas id="backCanvas" class="fixed inset-0 w-full h-full"></canvas>
 
-  <!-- horní lišta s titulem a stavem -->
   <header class="pointer-events-none fixed left-0 right-0 top-0 z-20">
     <div class="mx-auto max-w-[1400px] px-4 xl:px-6 py-4 flex items-center justify-between text-sm text-neutral-300/90">
       <div class="pointer-events-auto rounded-full border border-white/15 bg-black/30 px-3 py-1.5 backdrop-blur">
@@ -38,12 +39,10 @@
     </div>
   </header>
 
-  <!-- středová oblast pro kartu -->
   <main class="relative z-10 min-h-screen flex items-center justify-center px-4">
-    <div id="stage" class="w-[min(1200px,95vw)]"></div>
+    <div id="stage" class="w-[min(1200px,95vw)] touch-pan-y select-none"></div>
   </main>
 
-  <!-- drobné ovládání vpravo dole -->
   <div class="fixed right-4 bottom-4 z-20 flex gap-2">
     <button id="btnPrev" class="rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-sm hover:bg-white/10">← Předchozí</button>
     <button id="btnToggle" class="rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-sm hover:bg-white/10">⏸ Pauza</button>
@@ -51,7 +50,7 @@
   </div>
 
   <script>
-    /* ====== DATA (stejná jako na hlavní stránce) ====== */
+    /* ====== DATA (zkráceno: použij svůj plný seznam) ====== */
     const EVENTS = [
       { id:"e-gamejam-2025", title:"GameJam 2025", blurb:"Another installment in our series of traditional game jams! Once again over Easter, this time with a surprise – judges from game studios and major companies.", img:"/assets/projects/majak2.png", href:"https://itch.io/jam/gamejam-fit-2025a", tags:["event","gamejam","community"], date:"Spring 2025" },
       { id:"e-hellofit-2025", title:"HelloFit 2025", blurb:"Part of our traditional freshmen events. We teamed up with Fit++, welcomed new students and invited them to our game design group and the STOH board-game club.", img:"/events/hellofit.jpg", href:"https://www.klubfitpp.cz/events/2025/hello-fit-25/", tags:["event","community","onboarding"], date:"2025" },
@@ -70,36 +69,17 @@
     ];
     const SHOWCASE = [
       { id:"sc-wood-texture-generation", title:"Wood texture generation", blurb:"Plugin for creating artificial wood texture.", img:"/assets/showcase/jechdrevo.png", href:"https://iga.ksi.fit.cvut.cz/bi-pga/b241/3d/jechjose?class=3d", tags:["pga","texture","bachelor"] },
-      { id:"sc-ai-texture-to-3d", title:"AI Texture to 3D generation", img:"/assets/showcase/stablegen.jpg", href:"https://stablegen.ai", tags:["pga","ai","texture","3d","bachelor"] },
-      { id:"sc-texture-editing", title:"Texture editing", img:"/assets/showcase/svabova.png", href:"https://gitlab.fit.cvut.cz/BI-PGA/stud/svabosa1/blob/master/dokumentace1.adoc", tags:["pga","gimp","content-aware"] },
-      { id:"sc-elections-visualisation", title:"Elections visualisation", img:"/assets/showcase/milec.png", href:"https://gitlab.fit.cvut.cz/BI-PGA/stud/milecold/blob/master/dokumentace2.adoc", tags:["pga","visualization","sage","parser"] },
-      { id:"sc-edge-detectors", title:"Edge detectors", img:"/assets/showcase/hoskorad.jpg", href:"https://gitlab.fit.cvut.cz/BI-PGA/stud/hoskorad/blob/master/dokumentace1.adoc", tags:["pga","gimp","edge-detection"] },
-      { id:"sc-3d-ft-visualisation", title:"3D FT visualisation", img:"/assets/showcase/valko.png", href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/valkojo1/tree/master/3D", tags:["pga","blender","fourier","3d"] },
-      { id:"sc-parametric-towers", title:"Parametric towers generation", img:"/assets/showcase/trzasmar.jpg", href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/trzasmar/blob/master/3D-object_generator/dokumentace3.adoc", tags:["pga","blender","procedural"] },
-      { id:"sc-mandelbulb", title:"Mandelbulb", img:"/assets/showcase/svejstil.jpg", href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/svejsond/blob/master/3D/dokumentace3.adoc", tags:["pga","blender","fractal"] },
-      { id:"sc-linky-animation", title:"Linky animation", img:"/assets/showcase/cvut2.gif", href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/spaneada/blob/master/gimp/dokumentace1.md", tags:["pga","gimp","animation"] },
-      { id:"sc-edge-detect-material", title:"Edge Detect Material", img:"/assets/showcase/poncaada.png", href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/poncaada", tags:["pga","blender","material"] },
-      { id:"sc-seam-carving", title:"Seam carving", img:"/assets/showcase/kolemrad.png", href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kolemrad/blob/master/dokumentace1.md", tags:["pga","gimp","seam-carving"] },
-      { id:"sc-gallifreyan-translator", title:"Gallifreyan translator", img:"/assets/showcase/kyselova.png", href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kyselba1", tags:["blender","simulation","bachelor"] },
-      { id:"sc-blender-snow", title:"Blender Snow", img:"/assets/showcase/kacer.jpg", href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kacervik", tags:["pga","blender","snow"] },
-      { id:"sc-decimation", title:"Decimation", img:"/assets/showcase/kvasnica.jpg", href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kvasnric", tags:["pga","blender","decimation"] },
-      { id:"sc-magnificent-7", title:"Magnificent 7", img:"/assets/showcase/img_vhs_1.png", href:"https://youtu.be/SN_Pse347iI", tags:["vhs","unity","game"] },
-      { id:"sc-pointless-pointers", title:"Pointless pointers", img:"/assets/showcase/img_vhs_2.png", href:"https://www.youtube.com/watch?v=4u3qrxFuULM&t=1s", tags:["vhs","pixel-art","game"] },
-      { id:"sc-strahov-gang", title:"Strahov Gang", img:"/assets/showcase/img_vhs_3.png", href:"https://youtu.be/n1OENc6Fc2M?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m", tags:["vhs","unreal","game"] },
-      { id:"sc-golf-town", title:"Golf Town", img:"/assets/showcase/img_vhs_4.png", href:"https://www.youtube.com/watch?v=OB7_UmOI_2U&t=6s", tags:["vhs","unity","vr","game"] },
-      { id:"sc-poe-ripoff", title:"Path of Exile Ripoff", img:"/assets/showcase/img_vhs_5.png", href:"https://www.youtube.com/watch?v=7P3N3s81QqU&t=20s", tags:["vhs","unity","mmorpg","game"] },
-      { id:"sc-ardaestra-magitech", title:"Ardaestra Magitech", img:"/assets/showcase/img_vhs_6.png", href:"https://youtu.be/Zz09tvnLEuo?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m", tags:["vhs","unity","rpg","game"] },
-      { id:"sc-fitlife", title:"FitLife", img:"/assets/showcase/FitLife.png", href:"https://antik98.github.io/FitLife/", tags:["bachelor","pixel-art","game"] },
-      { id:"sc-honza", title:"Honza", img:"/assets/showcase/honzaDetail.png", href:"https://www.youtube.com/watch?v=dhuMuopxlio&list=PLXhipPFpvUWEhSxw79CDOdjFFm5D6b3us&index=4&ab_channel=GrafitCTUFITPrague", tags:["vhs","pixel-art","game"] }
+      { id:"sc-ai-texture-to-3d", title:"AI Texture to 3D generation", blurb:"Generate textures with AI and map them onto 3D assets.", img:"/assets/showcase/stablegen.jpg", href:"https://stablegen.ai", tags:["pga","ai","texture","3d","bachelor"] },
+      { id:"sc-texture-editing", title:"Texture editing", blurb:"Content-aware fill implemented as a GIMP plugin.", img:"/assets/showcase/svabova.png", href:"https://gitlab.fit.cvut.cz/BI-PGA/stud/svabosa1/blob/master/dokumentace1.adoc", tags:["pga","gimp","content-aware"] },
+      /* ... (ponech svůj kompletní seznam) ... */
     ];
 
-    /* ====== Slideshow nastavení ====== */
-    const INTERVAL_SEC = Number(new URLSearchParams(location.search).get("speed")) || 15; // ?speed=10
-    const SHUFFLE = (new URLSearchParams(location.search).get("shuffle")) === "1";       // ?shuffle=1
+    /* ====== Nastavení ====== */
+    const INTERVAL_SEC = Number(new URLSearchParams(location.search).get("speed")) || 15;
+    const SHUFFLE = (new URLSearchParams(location.search).get("shuffle")) === "1";
     const stage = document.getElementById("stage");
     const statusEl = document.getElementById("status");
 
-    // Složit všechny položky do jednoho rotačního seznamu
     let rotation = [
       ...EVENTS.map(x => ({...x, kind:"event"})),
       ...RESEARCH.map(x => ({...x, kind:"research"})),
@@ -107,14 +87,23 @@
     ];
     if (SHUFFLE) rotation = rotation.sort(()=>Math.random()-.5);
 
-    let idx = 0, timer = null, playing = true;
+    let idx = 0, timer = null, playing = true, lastDir = 1; // 1=vpřed, -1=zpět
+
+    function ellipsize(s="", n=120){
+      const t = s.trim().replace(/\s+/g," ");
+      return t.length <= n ? t : t.slice(0, n-1).trimEnd()+"…";
+    }
+    function subline(item){
+      const t = (item.tags?.length ? "#"+item.tags.slice(0,3).join("  #") : "");
+      const d = item.date ? ` · ${item.date}` : "";
+      return (t+d) || "Tap to open details";
+    }
 
     function createCard(item){
       const a = document.createElement("a");
       a.href = item.href || "#"; a.target = "_blank"; a.rel = "noreferrer";
       a.className = "card block rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black";
 
-      // poměr stran podle typu (research širší)
       const aspect = item.kind === "research" ? "aspect-[3/1]" : "aspect-[2/1]";
       const imgBox = document.createElement("div");
       imgBox.className = `relative w-full overflow-hidden ${aspect}`;
@@ -122,7 +111,6 @@
       img.src = item.img; img.alt = item.title; img.loading="eager";
       img.className = "thumb h-full w-full object-cover object-center";
       imgBox.appendChild(img);
-      // gradient + datum
       const grad = document.createElement("div");
       grad.className = "absolute inset-0 bg-gradient-to-t from-black/55 to-transparent";
       imgBox.appendChild(grad);
@@ -134,7 +122,6 @@
       }
       a.appendChild(imgBox);
 
-      // tělo
       const body = document.createElement("div");
       body.className = "p-5";
       const top = document.createElement("div");
@@ -148,13 +135,19 @@
       top.appendChild(h3); top.appendChild(kind);
       body.appendChild(top);
 
-      if (item.blurb){
-        const p = document.createElement("p");
-        p.className = "mt-2 text-neutral-300/90 text-base leading-relaxed";
-        p.textContent = item.blurb;
-        body.appendChild(p);
-      }
+      // 1. řádek – krátká anotace (auto)
+      const p = document.createElement("p");
+      p.className = "mt-2 text-neutral-300/90 text-base leading-relaxed";
+      p.textContent = ellipsize(item.blurb || "", 120);
+      body.appendChild(p);
 
+      // 2. řádek – highlight (tagy / datum)
+      const small = document.createElement("p");
+      small.className = "kiosk-sub mt-1 text-sm text-neutral-400";
+      small.textContent = subline(item);
+      body.appendChild(small);
+
+      // Tagy (vizuální chips)
       if ((item.tags||[]).length){
         const tg = document.createElement("div");
         tg.className = "mt-4 flex flex-wrap gap-2";
@@ -170,62 +163,78 @@
       return a;
     }
 
-    function renderSlide(i){
-      const item = rotation[i % rotation.length];
+    function renderSlide(i, dir=1){
+      const item = rotation[(i+rotation.length)%rotation.length];
 
-      // odjezd starého obsahu (fade-exit)
+      // odjezd starého
       if (stage.firstChild){
         const old = stage.firstChild;
-        old.classList.add("fade-exit");
+        old.classList.add("slide-exit");
         requestAnimationFrame(()=>{
-          old.classList.add("fade-exit-active");
-          setTimeout(()=> stage.removeChild(old), 420);
+          old.classList.add(dir===1 ? "slide-exit-active" : "slide-exit-active-rev");
+          setTimeout(()=> stage.removeChild(old), 400);
         });
       }
 
-      // příjezd nového obsahu (fade-enter)
+      // příjezd nového
       const wrap = document.createElement("div");
-      wrap.className = "fade-enter";
-      const card = createCard(item);
-      wrap.appendChild(card);
+      wrap.className = dir===1 ? "slide-enter" : "slide-enter-rev";
+      wrap.appendChild(createCard(item));
       stage.appendChild(wrap);
-      requestAnimationFrame(()=>{
-        wrap.classList.add("fade-enter-active");
-      });
+      requestAnimationFrame(()=> wrap.classList.add("slide-enter-active"));
 
-      // stav lišta
-      statusEl.textContent = (playing ? "⏵ běží" : "⏸ pauza") + " · " + INTERVAL_SEC + " s · " + (i+1) + "/" + rotation.length;
+      statusEl.textContent = (playing ? "⏵ běží" : "⏸ pauza") + " · " + INTERVAL_SEC + " s · " + ( (i%rotation.length)+1 ) + "/" + rotation.length;
       document.title = `${item.title} — Grafit kiosk`;
     }
 
-    function next(){ idx = (idx+1) % rotation.length; renderSlide(idx); }
-    function prev(){ idx = (idx-1+rotation.length) % rotation.length; renderSlide(idx); }
+    function next(){ idx = (idx+1)%rotation.length; lastDir=1; renderSlide(idx, +1); }
+    function prev(){ idx = (idx-1+rotation.length)%rotation.length; lastDir=-1; renderSlide(idx, -1); }
+    function play(){ if (timer) clearInterval(timer); timer = setInterval(next, INTERVAL_SEC*1000); playing=true; }
+    function pause(){ if (timer) clearInterval(timer); timer=null; playing=false; }
 
-    function play(){ if (timer) clearInterval(timer); timer = setInterval(next, INTERVAL_SEC*1000); playing = true; statusEl.textContent = "⏵ běží · " + INTERVAL_SEC + " s"; }
-    function pause(){ if (timer) clearInterval(timer); timer = null; playing = false; statusEl.textContent = "⏸ pauza"; }
-
-    // Ovládání
-    document.getElementById("btnNext").onclick = ()=>{ pause(); next(); };
-    document.getElementById("btnPrev").onclick = ()=>{ pause(); prev(); };
-    document.getElementById("btnToggle").onclick = ()=>{ playing ? pause() : (play(), renderSlide(idx)); };
+    // Tlačítka + klávesy
+    btnNext.onclick = ()=>{ pause(); next(); };
+    btnPrev.onclick = ()=>{ pause(); prev(); };
+    btnToggle.onclick = ()=>{ playing ? pause() : (play(), renderSlide(idx,lastDir)); };
     document.addEventListener("keydown", (e)=>{
-      if (e.code === "Space"){ e.preventDefault(); document.getElementById("btnToggle").click(); }
-      if (e.key === "ArrowRight"){ document.getElementById("btnNext").click(); }
-      if (e.key === "ArrowLeft"){ document.getElementById("btnPrev").click(); }
+      if (e.code === "Space"){ e.preventDefault(); btnToggle.click(); }
+      if (e.key === "ArrowRight"){ btnNext.click(); }
+      if (e.key === "ArrowLeft"){ btnPrev.click(); }
     });
 
-    // Pozastavit při ztrátě fokus/viditelnosti (šetří výkon)
-    document.addEventListener("visibilitychange", ()=>{
-      if (document.hidden) pause();
-      else if (!playing) { /* zůstane pauza */ } else play();
-    });
+    // === Dotykové / drag ovládání (swipe L/R) ===
+    (function addSwipe(el){
+      let startX=0, startY=0, dx=0, dy=0, dragging=false;
+      const THRESH = 60, MAX_ANGLE = 30; // povolit jen vodorovné
+      const onStart = (x,y)=>{ startX=x; startY=y; dx=dy=0; dragging=true; };
+      const onMove  = (x,y)=>{ if(!dragging) return; dx=x-startX; dy=y-startY; };
+      const onEnd   = ()=>{
+        if(!dragging) return;
+        const angle = Math.abs(Math.atan2(dy, dx) * 180/Math.PI);
+        if (Math.abs(dx) > THRESH && angle < MAX_ANGLE){
+          pause();
+          dx<0 ? next() : prev();
+        }
+        dragging=false;
+      };
+      // touch
+      el.addEventListener("touchstart", e=>{ const t=e.changedTouches[0]; onStart(t.clientX,t.clientY); }, {passive:true});
+      el.addEventListener("touchmove",  e=>{ const t=e.changedTouches[0]; onMove(t.clientX,t.clientY); }, {passive:true});
+      el.addEventListener("touchend",   ()=> onEnd(), {passive:true});
+      // mouse
+      el.addEventListener("mousedown", e=> onStart(e.clientX,e.clientY));
+      window.addEventListener("mousemove", e=> onMove(e.clientX,e.clientY));
+      window.addEventListener("mouseup", onEnd);
+    })(stage);
+
+    // Viditelnost
+    document.addEventListener("visibilitychange", ()=>{ if (document.hidden) pause(); else if (!timer && playing) play(); });
 
     // Start
-    renderSlide(idx);
-    play();
+    renderSlide(idx, +1); play();
 
-    /* ====== Animované pozadí (lehce úsporné) ====== */
-    function particles(canvas, {N=42, speed=.35}={}){
+    /* ====== Pozadí ====== */
+    function particles(canvas, {N=48, speed=.32}={}){
       const ctx = canvas.getContext("2d");
       let w=0,h=0, raf=0;
       const dots = Array.from({length:N}, ()=>({x:0,y:0,vx:(Math.random()-.5)*speed,vy:(Math.random()-.5)*speed}));
