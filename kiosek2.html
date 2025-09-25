@@ -41,7 +41,7 @@
 
   <canvas id="backCanvas" class="fixed inset-0 w-full h-full"></canvas>
 
-  <!-- FIXNÍ HEADER s ID pro výpočet výšky -->
+  <!-- FIXNÍ HEADER -->
   <header id="topbar" class="pointer-events-none fixed left-0 right-0 top-0 z-20">
     <div class="mx-auto max-w-[1400px] px-4 xl:px-6 py-4 flex items-center justify-between text-sm text-neutral-300/90">
       <div class="pointer-events-auto rounded-full border border-white/15 bg-black/30 px-3 py-1.5 backdrop-blur">
@@ -63,11 +63,12 @@
     </div>
   </header>
 
-  <!-- SHELL: výška = viewport minus header -->
+  <!-- STAGE -->
   <main id="shell" class="relative z-10 flex items-center justify-center px-4">
     <div id="stage" class="touch-pan-y select-none"></div>
   </main>
 
+  <!-- OVLÁDÁNÍ -->
   <div class="fixed right-4 bottom-4 z-20 flex gap-2">
     <button id="btnPrev" class="rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-sm hover:bg-white/10">← Předchozí</button>
     <button id="btnToggle" class="rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-sm hover:bg-white/10">⏸ Pauza</button>
@@ -75,309 +76,175 @@
   </div>
 
   <script>
-    /* ====== DATA (CZ/EN přeloženo; každá karta má title/blurb pro oba jazyky) ====== */
+    /* ====== DATA (bilingvní title/blurb) ====== */
     const EVENTS = [
-      {
-        id:"e-gamejam-2025",
+      { id:"e-gamejam-2025",
         title:{ cs:"GameJam 2025", en:"GameJam 2025" },
-        blurb:{
-          cs:"Další pokračování našich tradičních game jamů! Opět o Velikonocích, tentokrát se porotou z herních studií a velkých firem.",
-          en:"Another installment in our traditional game jams! Once again over Easter, this time with judges from game studios and major companies."
-        },
-        img:"/assets/projects/majak2.png",
-        tags:["event","gamejam","community"],
-        date:"Spring 2025"
-      },
-      {
-        id:"e-hellofit-2025",
+        blurb:{ cs:"Další pokračování našich tradičních game jamů! Opět o Velikonocích, tentokrát s porotou z herních studií a velkých firem.",
+                en:"Another installment in our traditional game jams! Once again over Easter, this time with judges from game studios and major companies." },
+        img:"/assets/projects/majak2.png", tags:["event","gamejam","community"], date:"Spring 2025" },
+      { id:"e-hellofit-2025",
         title:{ cs:"HelloFit 2025", en:"HelloFit 2025" },
-        blurb:{
-          cs:"Další akce pro prváky. Spolu s Fit++ jsme vítali nové studenty a zvali je do naší game design skupiny i do deskovkářského klubu STOH.",
-          en:"Part of our recurring freshmen events. Together with Fit++ we welcomed newcomers and invited them to our game design group and the STOH board-game club."
-        },
-        img:"/events/hellofit.jpg",
-        tags:["event","community","onboarding"],
-        date:"2025"
-      },
-      {
-        id:"e-gamejam-2024",
+        blurb:{ cs:"Akce pro prváky ve spolupráci s Fit++. Vítali jsme nové studenty a zvali je do naší game design skupiny i klubu STOH.",
+                en:"Freshmen-focused event with Fit++. We welcomed newcomers and invited them to our game design group and STOH board-game club." },
+        img:"/events/hellofit.jpg", tags:["event","community","onboarding"], date:"2025" },
+      { id:"e-gamejam-2024",
         title:{ cs:"GameJam 2024", en:"GameJam 2024" },
-        blurb:{
-          cs:"Vánoční edice s porotci z herních studií a velkých firem.",
-          en:"Christmas edition with industry judges from game studios and major companies."
-        },
-        img:"/assets/projects/gamejam_2024b_logo.jpg",
-        tags:["event","gamejam"],
-        date:"Dec 2024"
-      },
-      {
-        id:"e-gexpo-2025",
+        blurb:{ cs:"Vánoční edice s porotci z herních studií a velkých firem.",
+                en:"Christmas edition with industry judges from game studios and major companies." },
+        img:"/assets/projects/gamejam_2024b_logo.jpg", tags:["event","gamejam"], date:"Dec 2024" },
+      { id:"e-gexpo-2025",
         title:{ cs:"GEXPO 2025", en:"GEXPO 2025" },
-        blurb:{
-          cs:"Přehlídka studentských úspěchů v herním vývoji, VR i závěrečných projektech. 60+ účastníků a večerní program.",
-          en:"Graphics Expo showcasing student achievements in game development, VR, and final projects. 60+ participants and an evening program."
-        },
-        img:"/assets/projects/gexpo_logo.jpg",
-        tags:["event","expo","students","vr","games"],
-        date:"2025"
-      },
-      {
-        id:"e-researchers-night-2025",
+        blurb:{ cs:"Přehlídka studentských úspěchů v herním vývoji, VR i závěrečných projektech. 60+ účastníků a večerní program.",
+                en:"Showcase of student achievements in game dev, VR and capstones. 60+ participants and an evening program." },
+        img:"/assets/projects/gexpo_logo.jpg", tags:["event","expo","students","vr","games"], date:"2025" },
+      { id:"e-researchers-night-2025",
         title:{ cs:"Noc vědců 2025", en:"Researchers’ Night 2025" },
-        blurb:{
-          cs:"Oslava 20 let Noci vědců v ČR – více než 50 měst, pátek 26. září 2025.",
-          en:"Celebrating 20 years of Researchers’ Night in the Czech Republic — 50+ cities, Friday 26 September 2025."
-        },
-        img:"/assets/projects/nocvedcu.png",
-        tags:["event","public","research"],
-        date:"26 Sep 2025"
-      },
-      {
-        id:"e-grafit-games-studio",
+        blurb:{ cs:"20 let Noci vědců v ČR — přes 50 měst, pátek 26. září 2025.",
+                en:"20 years of Researchers’ Night in the Czech Republic — 50+ cities, Friday 26 September 2025." },
+        img:"/assets/projects/nocvedcu.png", tags:["event","public","research"], date:"26 Sep 2025" },
+      { id:"e-grafit-games-studio",
         title:{ cs:"Grafit Games Studio", en:"Grafit Games Studio" },
-        blurb:{
-          cs:"Propojujeme špičkový výzkum s vývojem digitálních i deskových her.",
-          en:"Bridging cutting-edge research with development of both digital and board games."
-        },
-        img:"/assets/projects/grafitgames_logo.jpg",
-        tags:["studio","games","event"],
-        date:"ongoing"
-      }
+        blurb:{ cs:"Propojujeme výzkum s vývojem digitálních i deskových her.",
+                en:"We bridge research with the development of digital and board games." },
+        img:"/assets/projects/grafitgames_logo.jpg", tags:["studio","games","event"], date:"ongoing" }
     ];
 
     const RESEARCH = [
-      {
-        id:"r-politeia21",
+      { id:"r-politeia21",
         title:{ cs:"Politeia 21", en:"Politeia 21" },
-        blurb:{
-          cs:"Interdisciplinární VR projekt zkoumající Platónovy teze, etiku a chování lidí ve velké sociální simulaci.",
-          en:"An interdisciplinary VR project exploring Plato’s theses, ethics, and human behavior in a large-scale social simulation."
-        },
-        img:"/assets/projects/politeia.png",
-        tags:["vr","simulation","social","philosophy","research"]
-      },
-      {
-        id:"r-dowry-towns",
+        blurb:{ cs:"Interdisciplinární VR projekt zkoumající Platóna, etiku a chování lidí ve velké sociální simulaci.",
+                en:"Interdisciplinary VR project exploring Plato, ethics and human behavior in a large-scale social simulation." },
+        img:"/assets/projects/politeia.png", tags:["vr","simulation","social","philosophy","research"] },
+      { id:"r-dowry-towns",
         title:{ cs:"Věnná města českých královen", en:"Dowry Towns of Bohemian Queens" },
-        blurb:{
-          cs:"Mapování historického vývoje a digitalizace kulturního dědictví věnných měst; VR rekonstrukce a archivy.",
-          en:"Mapping historical development and digitizing cultural heritage of royal dowry towns; VR reconstructions and archives."
-        },
-        img:"/assets/projects/vennamesta.png",
-        tags:["heritage","mapping","history","vr"],
-        date:"2018–2022"
-      },
-      {
-        id:"r-game-design",
+        blurb:{ cs:"Mapování vývoje a digitalizace dědictví věnných měst; VR rekonstrukce a archivy.",
+                en:"Mapping development and digitizing heritage of royal dowry towns; VR reconstructions and archives." },
+        img:"/assets/projects/vennamesta.png", tags:["heritage","mapping","history","vr"], date:"2018–2022" },
+      { id:"r-game-design",
         title:{ cs:"Game design", en:"Game design" },
-        blurb:{
-          cs:"Teorie game designu: návrh světů, přístupnost pro znevýhodněné uživatele a kreativní psaní.",
-          en:"Game design theory: world design, accessibility for impaired users, and creative writing."
-        },
-        img:"/assets/projects/gamedesign.png",
-        tags:["games","design","accessibility","writing"]
-      },
-      {
-        id:"r-texture-modeling",
+        blurb:{ cs:"Teorie: návrh světů, přístupnost a kreativní psaní.",
+                en:"Theory: world design, accessibility and creative writing." },
+        img:"/assets/projects/gamedesign.png", tags:["games","design","accessibility","writing"] },
+      { id:"r-texture-modeling",
         title:{ cs:"Modelování textur", en:"Texture modeling" },
-        blurb:{
-          cs:"Ve spolupráci s ÚTIA AV ČR analyzujeme a modelujeme realistický vzhled materiálů (BRDF/BTF).",
-          en:"With the Institute of Information Theory and Automation (CAS), we analyze and model realistic material appearance (BRDF/BTF)."
-        },
-        img:"/assets/projects/textures.jpg",
-        tags:["materials","brdf","btf","collaboration"]
-      },
-      {
-        id:"r-most-city",
+        blurb:{ cs:"S ÚTIA AV ČR modelujeme realistický vzhled materiálů (BRDF/BTF).",
+                en:"With CAS (ÚTIA) we model realistic material appearance (BRDF/BTF)." },
+        img:"/assets/projects/textures.jpg", tags:["materials","brdf","btf","collaboration"] },
+      { id:"r-most-city",
         title:{ cs:"Most – město, které nezaniklo", en:"Most – city that did not disappear" },
-        blurb:{
-          cs:"Rekonstrukce historické podoby města Most před jeho rozsáhlou přestavbou.",
-          en:"Reconstruction of the historic appearance of the city of Most prior to its major redevelopment."
-        },
-        img:"/assets/projects/most.png",
-        tags:["heritage","reconstruction","city","3d"],
-        date:"2023–2027"
-      },
-      {
-        id:"r-tactile-wall",
+        blurb:{ cs:"Rekonstrukce historické podoby města Most před přestavbou.",
+                en:"Reconstruction of historic Most prior to redevelopment." },
+        img:"/assets/projects/most.png", tags:["heritage","reconstruction","city","3d"], date:"2023–2027" },
+      { id:"r-tactile-wall",
         title:{ cs:"Haptická rozhraní: interaktivní stěna", en:"Tactile interfaces: interactive wall" },
-        blurb:{
-          cs:"Zkoumání hapticky specifických rozhraní ve spolupráci s MIT, University of Tokyo, initi.org a CAMP.",
-          en:"Exploration of tactile-specific interfaces in collaboration with MIT, University of Tokyo, initi.org and CAMP."
-        },
-        img:"/assets/projects/intwall.png",
-        tags:["haptics","ui","installation","collaboration"]
-      }
+        blurb:{ cs:"Ve spolupráci s MIT, University of Tokyo, initi.org a CAMP.",
+                en:"In collaboration with MIT, University of Tokyo, initi.org and CAMP." },
+        img:"/assets/projects/intwall.png", tags:["haptics","ui","installation","collaboration"] }
     ];
 
     const SHOWCASE = [
-      {
-        id:"sc-wood-texture-generation",
+      { id:"sc-wood-texture-generation",
         title:{ cs:"Generování dřevěných textur", en:"Wood texture generation" },
         blurb:{ cs:"Plugin pro tvorbu umělé dřevěné textury.", en:"Plugin for creating artificial wood textures." },
-        img:"/assets/showcase/jechdrevo.png",
-        tags:["pga","texture","bachelor"]
-      },
-      {
-        id:"sc-ai-texture-to-3d",
+        img:"/assets/showcase/jechdrevo.png", tags:["pga","texture","bachelor"] },
+      { id:"sc-ai-texture-to-3d",
         title:{ cs:"AI textura → 3D", en:"AI Texture to 3D generation" },
         blurb:{ cs:"Generování AI textur pro 3D objekty.", en:"Generating AI textures for 3D objects." },
-        img:"/assets/showcase/stablegen.jpg",
-        tags:["pga","ai","texture","3d","bachelor"]
-      },
-      {
-        id:"sc-texture-editing",
+        img:"/assets/showcase/stablegen.jpg", tags:["pga","ai","texture","3d","bachelor"] },
+      { id:"sc-texture-editing",
         title:{ cs:"Úpravy textur", en:"Texture editing" },
         blurb:{ cs:"Content-aware fill jako plugin do GIMPu.", en:"Content-aware fill implemented as a GIMP plugin." },
-        img:"/assets/showcase/svabova.png",
-        tags:["pga","gimp","content-aware"]
-      },
-      {
-        id:"sc-elections-visualisation",
+        img:"/assets/showcase/svabova.png", tags:["pga","gimp","content-aware"] },
+      { id:"sc-elections-visualisation",
         title:{ cs:"Vizualizace voleb", en:"Elections visualisation" },
-        blurb:{ cs:"Parser + vizualizace parlamentních voleb (SAGE app).", en:"Parliament elections visualization + online parser (SAGE app)." },
-        img:"/assets/showcase/milec.png",
-        tags:["pga","visualization","sage","parser"]
-      },
-      {
-        id:"sc-edge-detectors",
+        blurb:{ cs:"Parser + vizualizace parlamentních voleb (SAGE).", en:"Parliament elections visualization + parser (SAGE)." },
+        img:"/assets/showcase/milec.png", tags:["pga","visualization","sage","parser"] },
+      { id:"sc-edge-detectors",
         title:{ cs:"Detektory hran", en:"Edge detectors" },
-        blurb:{ cs:"Sada detektorů hran, porovnání operátorů (GIMP plugin).", en:"A set of edge detectors and comparisons (GIMP plugin)." },
-        img:"/assets/showcase/hoskorad.jpg",
-        tags:["pga","gimp","edge-detection"]
-      },
-      {
-        id:"sc-3d-ft-visualisation",
+        blurb:{ cs:"Sada detektorů a porovnání (GIMP plugin).", en:"Set of edge detectors and comparisons (GIMP plugin)." },
+        img:"/assets/showcase/hoskorad.jpg", tags:["pga","gimp","edge-detection"] },
+      { id:"sc-3d-ft-visualisation",
         title:{ cs:"3D vizualizace FT", en:"3D FT visualisation" },
-        blurb:{ cs:"Vizualizace Fourierovy transformace (Blender plugin).", en:"Fourier transform visualization (Blender plugin)." },
-        img:"/assets/showcase/valko.png",
-        tags:["pga","blender","fourier","3d"]
-      },
-      {
-        id:"sc-parametric-towers",
+        blurb:{ cs:"Vizualizace Fourierovy transformace (Blender).", en:"Fourier transform visualization (Blender)." },
+        img:"/assets/showcase/valko.png", tags:["pga","blender","fourier","3d"] },
+      { id:"sc-parametric-towers",
         title:{ cs:"Parametrické věže", en:"Parametric towers generation" },
-        blurb:{ cs:"Procedurální generování objektů (Blender plugin).", en:"Procedural object generation (Blender plugin)." },
-        img:"/assets/showcase/trzasmar.jpg",
-        tags:["pga","blender","procedural"]
-      },
-      {
-        id:"sc-mandelbulb",
+        blurb:{ cs:"Procedurální generování objektů (Blender).", en:"Procedural object generation (Blender)." },
+        img:"/assets/showcase/trzasmar.jpg", tags:["pga","blender","procedural"] },
+      { id:"sc-mandelbulb",
         title:{ cs:"Mandelbulb", en:"Mandelbulb" },
-        blurb:{ cs:"Fraktální rendering (Blender plugin).", en:"Fractal rendering (Blender plugin)." },
-        img:"/assets/showcase/svejstil.jpg",
-        tags:["pga","blender","fractal"]
-      },
-      {
-        id:"sc-linky-animation",
+        blurb:{ cs:"Fraktální rendering (Blender).", en:"Fractal rendering (Blender)." },
+        img:"/assets/showcase/svejstil.jpg", tags:["pga","blender","fractal"] },
+      { id:"sc-linky-animation",
         title:{ cs:"Animace Linek", en:"Linky animation" },
-        blurb:{ cs:"Exportér 4×170 animací (GIMP plugin).", en:"4×170 animation exporter (GIMP plugin)." },
-        img:"/assets/showcase/cvut2.gif",
-        tags:["pga","gimp","animation"]
-      },
-      {
-        id:"sc-edge-detect-material",
+        blurb:{ cs:"Exportér 4×170 animací (GIMP).", en:"4×170 animation exporter (GIMP)." },
+        img:"/assets/showcase/cvut2.gif", tags:["pga","gimp","animation"] },
+      { id:"sc-edge-detect-material",
         title:{ cs:"Edge Detect Material", en:"Edge Detect Material" },
         blurb:{ cs:"Materiál/operátory v Blenderu.", en:"Material/operators in Blender." },
-        img:"/assets/showcase/poncaada.png",
-        tags:["pga","blender","material"]
-      },
-      {
-        id:"sc-seam-carving",
+        img:"/assets/showcase/poncaada.png", tags:["pga","blender","material"] },
+      { id:"sc-seam-carving",
         title:{ cs:"Seam carving", en:"Seam carving" },
-        blurb:{ cs:"Obsahově uvědomělá změna velikosti (GIMP plugin).", en:"Content-aware image resizing (GIMP plugin)." },
-        img:"/assets/showcase/kolemrad.png",
-        tags:["pga","gimp","seam-carving"]
-      },
-      {
-        id:"sc-gallifreyan-translator",
+        blurb:{ cs:"Obsahově uvědomělá změna velikosti (GIMP).", en:"Content-aware image resizing (GIMP)." },
+        img:"/assets/showcase/kolemrad.png", tags:["pga","gimp","seam-carving"] },
+      { id:"sc-gallifreyan-translator",
         title:{ cs:"Gallifreyský překladač", en:"Gallifreyan translator" },
         blurb:{ cs:"Simulace koroze a ceny materiálu (Blender).", en:"Corrosion & price simulation (Blender)." },
-        img:"/assets/showcase/kyselova.png",
-        tags:["blender","simulation","bachelor"]
-      },
-      {
-        id:"sc-blender-snow",
+        img:"/assets/showcase/kyselova.png", tags:["blender","simulation","bachelor"] },
+      { id:"sc-blender-snow",
         title:{ cs:"Blender Snow", en:"Blender Snow" },
-        blurb:{ cs:"Pokrývání modelu sněhem (Blender plugin).", en:"Covering a model with added snow (Blender plugin)." },
-        img:"/assets/showcase/kacer.jpg",
-        tags:["pga","blender","snow"]
-      },
-      {
-        id:"sc-decimation",
+        blurb:{ cs:"Pokrývání modelu sněhem (Blender).", en:"Covering model with snow (Blender)." },
+        img:"/assets/showcase/kacer.jpg", tags:["pga","blender","snow"] },
+        { id:"sc-decimation",
         title:{ cs:"Decimace", en:"Decimation" },
         blurb:{ cs:"Decimace shlukováním vrcholů (Blender).", en:"Decimation by vertex clustering (Blender)." },
-        img:"/assets/showcase/kvasnica.jpg",
-        tags:["pga","blender","decimation"]
-      },
-      {
-        id:"sc-magnificent-7",
+        img:"/assets/showcase/kvasnica.jpg", tags:["pga","blender","decimation"] },
+      { id:"sc-magnificent-7",
         title:{ cs:"Magnificent 7", en:"Magnificent 7" },
         blurb:{ cs:"Studentská hra v Unity s vícero konci.", en:"Student Unity game with multiple endings." },
-        img:"/assets/showcase/img_vhs_1.png",
-        tags:["vhs","unity","game"]
-      },
-      {
-        id:"sc-pointless-pointers",
+        img:"/assets/showcase/img_vhs_1.png", tags:["vhs","unity","game"] },
+      { id:"sc-pointless-pointers",
         title:{ cs:"Pointless Pointers", en:"Pointless Pointers" },
-        blurb:{ cs:"Pixel-art svět, mnoho dialogů a postav.", en:"Pixel-art living world with many dialogs and characters." },
-        img:"/assets/showcase/img_vhs_2.png",
-        tags:["vhs","pixel-art","game"]
-      },
-      {
-        id:"sc-strahov-gang",
+        blurb:{ cs:"Pixel-art svět s mnoha dialogy.", en:"Pixel-art world with many dialogs." },
+        img:"/assets/showcase/img_vhs_2.png", tags:["vhs","pixel-art","game"] },
+      { id:"sc-strahov-gang",
         title:{ cs:"Strahov Gang", en:"Strahov Gang" },
-        blurb:{ cs:"Unreal Engine hra ze života na FIT ČVUT.", en:"Unreal Engine game capturing student life at CTU FIT." },
-        img:"/assets/showcase/img_vhs_3.png",
-        tags:["vhs","unreal","game"]
-      },
-      {
-        id:"sc-golf-town",
+        blurb:{ cs:"Unreal Engine hra ze života na FIT ČVUT.", en:"Unreal Engine game about student life at CTU FIT." },
+        img:"/assets/showcase/img_vhs_3.png", tags:["vhs","unreal","game"] },
+      { id:"sc-golf-town",
         title:{ cs:"Golf Town", en:"Golf Town" },
-        blurb:{ cs:"Unity hra s western motivy + VR + Hide ’N Seek.", en:"Unity game with western motifs + VR + Hide ’N Seek." },
-        img:"/assets/showcase/img_vhs_4.png",
-        tags:["vhs","unity","vr","game"]
-      },
-      {
-        id:"sc-poe-ripoff",
+        blurb:{ cs:"Unity hra s western motivy + VR.", en:"Unity game with western motifs + VR." },
+        img:"/assets/showcase/img_vhs_4.png", tags:["vhs","unity","vr","game"] },
+      { id:"sc-poe-ripoff",
         title:{ cs:"Path of Exile Ripoff", en:"Path of Exile Ripoff" },
         blurb:{ cs:"Unity MMORPG s 20+ nepřáteli.", en:"Unity MMORPG with 20+ enemies." },
-        img:"/assets/showcase/img_vhs_5.png",
-        tags:["vhs","unity","mmorpg","game"]
-      },
-      {
-        id:"sc-ardaestra-magitech",
+        img:"/assets/showcase/img_vhs_5.png", tags:["vhs","unity","mmorpg","game"] },
+      { id:"sc-ardaestra-magitech",
         title:{ cs:"Ardaestra Magitech", en:"Ardaestra Magitech" },
         blurb:{ cs:"Single-player 3D akční RPG v Unity.", en:"3D single-player action RPG in Unity." },
-        img:"/assets/showcase/img_vhs_6.png",
-        tags:["vhs","unity","rpg","game"]
-      },
-      {
-        id:"sc-fitlife",
+        img:"/assets/showcase/img_vhs_6.png", tags:["vhs","unity","rpg","game"] },
+      { id:"sc-fitlife",
         title:{ cs:"FitLife", en:"FitLife" },
-        blurb:{ cs:"Hratelná pixel-art hra o životě na FIT (BP).", en:"Playable pixel-art game about living and studying at FIT (BSc thesis)." },
-        img:"/assets/showcase/FitLife.png",
-        tags:["bachelor","pixel-art","game"]
-      },
-      {
-        id:"sc-honza",
+        blurb:{ cs:"Hratelná pixel-art hra o životě na FIT.", en:"Playable pixel-art game about life at FIT." },
+        img:"/assets/showcase/FitLife.png", tags:["bachelor","pixel-art","game"] },
+      { id:"sc-honza",
         title:{ cs:"Honza", en:"Honza" },
         blurb:{ cs:"Pixel-art hra na motivy českých pohádek.", en:"Pixel-art game based on Czech fairytales." },
-        img:"/assets/showcase/honzaDetail.png",
-        tags:["vhs","pixel-art","game"]
-      }
+        img:"/assets/showcase/honzaDetail.png", tags:["vhs","pixel-art","game"] }
     ];
 
     /* ====== Nastavení ====== */
-    const INTERVAL_SEC = Number(new URLSearchParams(location.search).get("speed")) || 15;
-    const SHUFFLE = (new URLSearchParams(location.search).get("shuffle")) === "1";
-    const DOTS = Number(new URLSearchParams(location.search).get("dots")) || 120;
-    const SWIPE_LEFT_IS_PREV = true; // když true: doleva = předchozí, doprava = další
-    const DEFAULT_LANG = (new URLSearchParams(location.search).get("lang")) || "cs";
+    const QS = new URLSearchParams(location.search);
+    const INTERVAL_SEC = Number(QS.get("speed")) || 15;
+    const SHUFFLE = QS.get("shuffle")==="1";
+    const DOTS = Number(QS.get("dots")) || 120;
+    const SWIPE_LEFT_IS_PREV = true;
+    const DEFAULT_LANG = (QS.get("lang")) || "cs";
     let currentLang = (DEFAULT_LANG === "en" ? "en" : "cs");
 
     const stage = document.getElementById("stage");
     const statusEl = document.getElementById("status");
-    const shell = document.getElementById('shell');
     const topbar = document.getElementById('topbar');
 
     const btnPrev   = document.getElementById('btnPrev');
@@ -386,35 +253,20 @@
     const btnLangCS = document.getElementById('btnLangCS');
     const btnLangEN = document.getElementById('btnLangEN');
 
-    /* ====== UI texty dle jazyka ====== */
+    /* ====== UI texty ====== */
     const UI = {
-      cs: {
-        playing: "⏵ běží",
-        paused: "⏸ pauza",
-        sec: "s",
-        prev: "← Předchozí",
-        next: "Další →",
-        pause: "⏸ Pauza",
-        resume: "⏵ Spustit",
-        kinds: { event:"Akce", research:"Výzkum", showcase:"Showcase" },
-        titleSuffix: "— Grafit kiosk"
-      },
-      en: {
-        playing: "⏵ playing",
-        paused: "⏸ paused",
-        sec: "s",
-        prev: "← Previous",
-        next: "Next →",
-        pause: "⏸ Pause",
-        resume: "⏵ Play",
-        kinds: { event:"Event", research:"Research", showcase:"Showcase" },
-        titleSuffix: "— Grafit kiosk"
-      }
+      cs: { playing:"⏵ běží", paused:"⏸ pauza", sec:"s",
+            prev:"← Předchozí", next:"Další →", pause:"⏸ Pauza", resume:"⏵ Spustit",
+            kinds:{ event:"Akce", research:"Výzkum", showcase:"Showcase" }, titleSuffix:"— Grafit kiosk" },
+      en: { playing:"⏵ playing", paused:"⏸ paused", sec:"s",
+            prev:"← Previous", next:"Next →", pause:"⏸ Pause", resume:"⏵ Play",
+            kinds:{ event:"Event", research:"Research", showcase:"Showcase" }, titleSuffix:"— Grafit kiosk" }
     };
 
+    // Pozadí
     particles(document.getElementById("backCanvas"), { N: DOTS, speed: .30 });
 
-    // Layout: odečíst výšku headeru
+    // Layout vs header
     function relayout(){
       const h = topbar?.offsetHeight || 0;
       document.documentElement.style.setProperty('--header-h', h + 'px');
@@ -423,18 +275,16 @@
     new ResizeObserver(relayout).observe(topbar);
     relayout();
 
-    // === Rotace: každá položka se duplikuje pro oba jazyky (cs, en) ===
-    const baseRotation =
-      [
-        ...EVENTS.map(x => ({...x, kind:"event"})),
-        ...RESEARCH.map(x => ({...x, kind:"research"})),
-        ...SHOWCASE.map(x => ({...x, kind:"showcase"})),
-      ];
-    let rotation = baseRotation.flatMap(item => ([
-      {...item, lang:"cs"},
-      {...item, lang:"en"}
-    ]));
-    if (SHUFFLE) rotation = rotation.sort(()=>Math.random()-.5);
+    // Základní pořadí (jen jednou, bez duplikací)
+    const baseRotation = [
+      ...EVENTS.map(x => ({...x, kind:"event"})),
+      ...RESEARCH.map(x => ({...x, kind:"research"})),
+      ...SHOWCASE.map(x => ({...x, kind:"showcase"})),
+    ];
+    if (SHUFFLE) baseRotation.sort(()=>Math.random()-.5);
+
+    // Aktivní rotace = vždy jen jeden jazyk (stejný pořadník)
+    let rotation = baseRotation.slice();
 
     let idx = 0, timer = null;
     let firstRenderDone = false;
@@ -446,7 +296,7 @@
     };
 
     function localized(item, lang){
-      const L = (lang || item.lang || currentLang);
+      const L = lang || currentLang;
       return {
         title: (typeof item.title === "object" ? (item.title[L] || item.title.cs || item.title.en) : item.title),
         blurb: (typeof item.blurb === "object" ? (item.blurb[L] || item.blurb.cs || item.blurb.en) : (item.blurb||"")),
@@ -456,8 +306,8 @@
     }
 
     // Neklikací karta
-    function createCard(item){
-      const { title, blurb, kindLabel, lang } = localized(item, item.lang);
+    function createCard(item, langOverride){
+      const { title, blurb, kindLabel } = localized(item, langOverride);
 
       const article = document.createElement("article");
       article.className = "card block rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black cursor-default";
@@ -508,28 +358,21 @@
     function updateStatus(i){
       const L = UI[currentLang];
       const isPlaying = Boolean(timer);
-      const statusText = (isPlaying ? L.playing : L.paused) + " · " + INTERVAL_SEC + " " + L.sec + " · " + (((i%rotation.length)+1) + "/" + rotation.length);
-      statusEl.textContent = statusText;
-
+      statusEl.textContent = (isPlaying ? L.playing : L.paused) + " · " + INTERVAL_SEC + " " + L.sec + " · " + (((i%rotation.length)+1) + "/" + rotation.length);
       // tlačítka
       btnPrev.textContent   = L.prev;
       btnNext.textContent   = L.next;
       btnToggle.textContent = isPlaying ? L.pause : L.resume;
-
       // highlight jazyka
       btnLangCS.classList.toggle("bg-white/10", currentLang==="cs");
       btnLangEN.classList.toggle("bg-white/10", currentLang==="en");
     }
 
-    function renderSlide(i, dir=1, overrideLang=null){
-      const raw = rotation[(i+rotation.length)%rotation.length];
-      const item = overrideLang ? {...raw, lang: overrideLang} : raw;
-
-      // Nová vrstva
+    function renderSlide(i, dir=1, langOverride=null){
+      const item = rotation[(i+rotation.length)%rotation.length];
       const newWrap = document.createElement("div");
       newWrap.className = (firstRenderDone ? "slide-layer " : "initial ") + (dir===1 ? "slide-enter" : "slide-enter-rev");
-      const card = createCard(item);
-      newWrap.appendChild(card);
+      newWrap.appendChild(createCard(item, langOverride || currentLang));
       stage.appendChild(newWrap);
 
       if (!firstRenderDone) {
@@ -539,7 +382,6 @@
         firstRenderDone = true;
       }
 
-      // Starý slide
       const old = [...stage.children].find(el => el !== newWrap);
       if (old){
         old.classList.add("slide-exit");
@@ -553,8 +395,8 @@
       void newWrap.offsetWidth;
       newWrap.classList.add("slide-enter-active");
 
-      const loc = localized(item, item.lang);
-      document.title = `${loc.title} ${UI[item.lang].titleSuffix}`;
+      const { title } = localized(item, langOverride || currentLang);
+      document.title = `${title} ${UI[currentLang].titleSuffix}`;
       updateStatus(i);
     }
 
@@ -575,10 +417,11 @@
       if (e.key === "ArrowLeft"){ btnPrev.click(); }
     });
 
-    // Přepínač jazyka: okamžitý přerender aktuální karty v novém jazyce
+    // Přepnutí jazyka = zůstaň na stejném indexu, přerenderuj tu samou kartu v novém jazyce.
     function setLang(lang){
-      currentLang = (lang === "en" ? "en" : "cs");
-      // přerender stejné položky v novém jazyce (bez změny indexu)
+      const newLang = (lang === "en" ? "en" : "cs");
+      if (newLang === currentLang) return;
+      currentLang = newLang;
       renderSlide(idx, +1, currentLang);
     }
     btnLangCS.onclick = ()=> setLang("cs");
