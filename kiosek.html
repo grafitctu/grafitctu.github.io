@@ -31,13 +31,18 @@
       overflow:hidden;
     }
     .kiosk-sub { letter-spacing:.01em }
+
+    /* Centrovaní obsahu vůči fixnímu headeru */
+    :root{ --header-h: 0px; }
+    #shell{ min-height: calc(100vh - var(--header-h)); }
   </style>
 </head>
 <body class="min-h-screen bg-gradient-dark text-white">
 
   <canvas id="backCanvas" class="fixed inset-0 w-full h-full"></canvas>
 
-  <header class="pointer-events-none fixed left-0 right-0 top-0 z-20">
+  <!-- FIXNÍ HEADER s ID pro výpočet výšky -->
+  <header id="topbar" class="pointer-events-none fixed left-0 right-0 top-0 z-20">
     <div class="mx-auto max-w-[1400px] px-4 xl:px-6 py-4 flex items-center justify-between text-sm text-neutral-300/90">
       <div class="pointer-events-auto rounded-full border border-white/15 bg-black/30 px-3 py-1.5 backdrop-blur">
         Grafit Research Group — slideshow
@@ -48,7 +53,8 @@
     </div>
   </header>
 
-  <main class="relative z-10 min-h-screen flex items-center justify-center px-4">
+  <!-- SHELL: výška = viewport minus header -->
+  <main id="shell" class="relative z-10 flex items-center justify-center px-4">
     <div id="stage" class="touch-pan-y select-none"></div>
   </main>
 
@@ -59,7 +65,7 @@
   </div>
 
   <script>
-    /* ====== DATA (zkráceno pro ukázku – nahraď klidně plným seznamem) ====== */
+    /* ====== DATA (zkráceno pro ukázku – můžeš vložit celý seznam) ====== */
     const EVENTS = [
       { id:"e-gamejam-2025", title:"GameJam 2025", blurb:"Another installment in our series of traditional game jams! Once again over Easter, this time with a surprise – judges from game studios and major companies.", img:"/assets/projects/majak2.png", href:"https://itch.io/jam/gamejam-fit-2025a", tags:["event","gamejam","community"], date:"Spring 2025" },
       { id:"e-hellofit-2025", title:"HelloFit 2025", blurb:"Part of our traditional freshmen events. We teamed up with Fit++, welcomed new students and invited them to our game design group and the STOH board-game club.", img:"/events/hellofit.jpg", href:"https://www.klubfitpp.cz/events/2025/hello-fit-25/", tags:["event","community","onboarding"], date:"2025" },
@@ -79,7 +85,19 @@
     const SHUFFLE = (new URLSearchParams(location.search).get("shuffle")) === "1";
     const stage = document.getElementById("stage");
     const statusEl = document.getElementById("status");
+    const shell = document.getElementById('shell');
+    const topbar = document.getElementById('topbar');
 
+    // Layout: odečíst výšku headeru
+    function relayout(){
+      const h = topbar?.offsetHeight || 0;
+      document.documentElement.style.setProperty('--header-h', h + 'px');
+    }
+    addEventListener('resize', relayout);
+    new ResizeObserver(relayout).observe(topbar);
+    relayout();
+
+    // Rotace
     let rotation = [
       ...EVENTS.map(x => ({...x, kind:"event"})),
       ...RESEARCH.map(x => ({...x, kind:"research"})),
@@ -87,7 +105,7 @@
     ];
     if (SHUFFLE) rotation = rotation.sort(()=>Math.random()-.5);
 
-    let idx = 0, timer = null, playing = true, lastDir = 1; // 1=vpřed, -1=zpět
+    let idx = 0, timer = null, playing = true, lastDir = 1;
     let firstRenderDone = false;
 
     const subline = (item) => {
@@ -96,7 +114,7 @@
       return (t + d).trim();
     };
 
-    // Neklikací karta (article), žádné odkazy
+    // Neklikací karta
     function createCard(item){
       const article = document.createElement("article");
       article.className = "card block rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black cursor-default";
@@ -126,7 +144,6 @@
       top.appendChild(h3); top.appendChild(kind);
       body.appendChild(top);
 
-      /* NOVĚ: 3 řádky místo pevného počtu znaků */
       const p = Object.assign(document.createElement("p"), {className:"mt-2 text-neutral-300/90 text-base leading-relaxed clamp-3", textContent:(item.blurb||"")});
       body.appendChild(p);
 
@@ -148,14 +165,13 @@
     function renderSlide(i, dir=1){
       const item = rotation[(i+rotation.length)%rotation.length];
 
-      // NOVĚ: vytvoř vrstvu pro nový snímek a nastav stage výšku
+      // Nová vrstva
       const newWrap = document.createElement("div");
       newWrap.className = (firstRenderDone ? "slide-layer " : "initial ") + (dir===1 ? "slide-enter" : "slide-enter-rev");
       const card = createCard(item);
       newWrap.appendChild(card);
       stage.appendChild(newWrap);
 
-      // pokud je to první render, změříme výšku a zafixujeme ji
       if (!firstRenderDone) {
         stage.style.height = newWrap.offsetHeight + "px";
         newWrap.classList.remove("initial");
@@ -163,22 +179,18 @@
         firstRenderDone = true;
       }
 
-      // Odjezd starého (je-li)
+      // Starý slide
       const old = [...stage.children].find(el => el !== newWrap);
       if (old){
-        // zajisti překryv (absolutní vrstva)
         old.classList.add("slide-exit");
-        // reflow
-        void old.offsetWidth;
+        void old.offsetWidth; // reflow
         old.classList.add(dir===1 ? "slide-exit-active" : "slide-exit-active-rev");
-
         const cleanup = () => { if (old && old.parentNode === stage) stage.removeChild(old); };
         old.addEventListener("transitionend", cleanup, {once:true});
-        setTimeout(cleanup, 500); // fallback
+        setTimeout(cleanup, 500);
       }
 
       // Příjezd nového
-      // reflow
       void newWrap.offsetWidth;
       newWrap.classList.add("slide-enter-active");
 
