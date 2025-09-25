@@ -7,19 +7,29 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html,body { height:100%; }
+    .bg-gradient-dark { background: linear-gradient(#070b12,#0a0f18 55%,#090d14); }
     .card { transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
     .card .thumb { transform: scale(1.02); transition: transform 600ms cubic-bezier(.22,1,.36,1); }
     .card:hover .thumb { transform: scale(1.04); }
-    .bg-gradient-dark { background: linear-gradient(#070b12,#0a0f18 55%,#090d14); }
 
-    /* vodorovné přechody */
-    .slide-enter          { opacity: 0; transform: translateX(40px) scale(.995); }
-    .slide-enter-active   { opacity: 1; transform: translateX(0)    scale(1);    transition: opacity 450ms ease, transform 450ms ease; }
-    .slide-exit           { opacity: 1; transform: translateX(0)    scale(1); }
-    .slide-exit-active    { opacity: 0; transform: translateX(-40px) scale(.995); transition: opacity 380ms ease, transform 380ms ease; }
-    .slide-enter-rev      { opacity: 0; transform: translateX(-40px) scale(.995); }
-    .slide-exit-active-rev{ opacity: 0; transform: translateX(40px)  scale(.995); transition: opacity 380ms ease, transform 380ms ease; }
+    /* Stage + vrstvení snímků, aby se nezvětšovala výška stránky */
+    #stage { position: relative; width: min(1200px,95vw); }
+    .slide-layer { position: absolute; inset: 0; }
+    .slide-layer.initial { position: static; } /* první slide nastaví výšku stage */
 
+    /* Vodorovné přechody (vpřed i zpět) */
+    .slide-enter            { opacity: 0; transform: translateX(40px) scale(.995); }
+    .slide-enter-rev        { opacity: 0; transform: translateX(-40px) scale(.995); }
+    .slide-enter-active     { opacity: 1; transform: translateX(0)    scale(1);    transition: opacity 450ms ease, transform 450ms ease; }
+    .slide-exit             { opacity: 1; transform: translateX(0)    scale(1); }
+    .slide-exit-active      { opacity: 0; transform: translateX(-40px) scale(.995); transition: opacity 380ms ease, transform 380ms ease; }
+    .slide-exit-active-rev  { opacity: 0; transform: translateX(40px)  scale(.995); transition: opacity 380ms ease, transform 380ms ease; }
+
+    /* 3-řádkové zalomení anotace */
+    .clamp-3{
+      display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
     .kiosk-sub { letter-spacing:.01em }
   </style>
 </head>
@@ -39,7 +49,7 @@
   </header>
 
   <main class="relative z-10 min-h-screen flex items-center justify-center px-4">
-    <div id="stage" class="w-[min(1200px,95vw)] touch-pan-y select-none"></div>
+    <div id="stage" class="touch-pan-y select-none"></div>
   </main>
 
   <div class="fixed right-4 bottom-4 z-20 flex gap-2">
@@ -49,7 +59,7 @@
   </div>
 
   <script>
-    /* ====== DATA (zkráceno pro příklad – vlož si klidně celý seznam) ====== */
+    /* ====== DATA (zkráceno pro ukázku – nahraď klidně plným seznamem) ====== */
     const EVENTS = [
       { id:"e-gamejam-2025", title:"GameJam 2025", blurb:"Another installment in our series of traditional game jams! Once again over Easter, this time with a surprise – judges from game studios and major companies.", img:"/assets/projects/majak2.png", href:"https://itch.io/jam/gamejam-fit-2025a", tags:["event","gamejam","community"], date:"Spring 2025" },
       { id:"e-hellofit-2025", title:"HelloFit 2025", blurb:"Part of our traditional freshmen events. We teamed up with Fit++, welcomed new students and invited them to our game design group and the STOH board-game club.", img:"/events/hellofit.jpg", href:"https://www.klubfitpp.cz/events/2025/hello-fit-25/", tags:["event","community","onboarding"], date:"2025" },
@@ -78,18 +88,15 @@
     if (SHUFFLE) rotation = rotation.sort(()=>Math.random()-.5);
 
     let idx = 0, timer = null, playing = true, lastDir = 1; // 1=vpřed, -1=zpět
+    let firstRenderDone = false;
 
-    const ellipsize = (s="", n=120) => {
-      const t = s.trim().replace(/\s+/g," ");
-      return t.length <= n ? t : t.slice(0, n-1).trimEnd()+"…";
-    };
     const subline = (item) => {
       const t = (item.tags?.length ? "#"+item.tags.slice(0,3).join("  #") : "");
       const d = item.date ? ` · ${item.date}` : "";
       return (t + d).trim();
     };
 
-    // !!! NEklikací karta (article), žádné odkazy
+    // Neklikací karta (article), žádné odkazy
     function createCard(item){
       const article = document.createElement("article");
       article.className = "card block rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black cursor-default";
@@ -119,7 +126,8 @@
       top.appendChild(h3); top.appendChild(kind);
       body.appendChild(top);
 
-      const p = Object.assign(document.createElement("p"), {className:"mt-2 text-neutral-300/90 text-base leading-relaxed", textContent:ellipsize(item.blurb || "", 120)});
+      /* NOVĚ: 3 řádky místo pevného počtu znaků */
+      const p = Object.assign(document.createElement("p"), {className:"mt-2 text-neutral-300/90 text-base leading-relaxed clamp-3", textContent:(item.blurb||"")});
       body.appendChild(p);
 
       const small = Object.assign(document.createElement("p"), {className:"kiosk-sub mt-1 text-sm text-neutral-400", textContent:subline(item)});
@@ -140,36 +148,54 @@
     function renderSlide(i, dir=1){
       const item = rotation[(i+rotation.length)%rotation.length];
 
-      // odjezd starého
-      if (stage.firstChild){
-        const old = stage.firstChild;
-        old.classList.add("slide-exit");
-        requestAnimationFrame(()=>{
-          old.classList.add(dir===1 ? "slide-exit-active" : "slide-exit-active-rev");
-          setTimeout(()=> stage.removeChild(old), 400);
-        });
+      // NOVĚ: vytvoř vrstvu pro nový snímek a nastav stage výšku
+      const newWrap = document.createElement("div");
+      newWrap.className = (firstRenderDone ? "slide-layer " : "initial ") + (dir===1 ? "slide-enter" : "slide-enter-rev");
+      const card = createCard(item);
+      newWrap.appendChild(card);
+      stage.appendChild(newWrap);
+
+      // pokud je to první render, změříme výšku a zafixujeme ji
+      if (!firstRenderDone) {
+        stage.style.height = newWrap.offsetHeight + "px";
+        newWrap.classList.remove("initial");
+        newWrap.classList.add("slide-layer");
+        firstRenderDone = true;
       }
 
-      // příjezd nového
-      const wrap = document.createElement("div");
-      wrap.className = dir===1 ? "slide-enter" : "slide-enter-rev";
-      wrap.appendChild(createCard(item));
-      stage.appendChild(wrap);
-      requestAnimationFrame(()=> wrap.classList.add("slide-enter-active"));
+      // Odjezd starého (je-li)
+      const old = [...stage.children].find(el => el !== newWrap);
+      if (old){
+        // zajisti překryv (absolutní vrstva)
+        old.classList.add("slide-exit");
+        // reflow
+        void old.offsetWidth;
+        old.classList.add(dir===1 ? "slide-exit-active" : "slide-exit-active-rev");
 
-      statusEl.textContent = (playing ? "⏵ běží" : "⏸ pauza") + " · " + INTERVAL_SEC + " s · " + ( (i%rotation.length)+1 ) + "/" + rotation.length;
+        const cleanup = () => { if (old && old.parentNode === stage) stage.removeChild(old); };
+        old.addEventListener("transitionend", cleanup, {once:true});
+        setTimeout(cleanup, 500); // fallback
+      }
+
+      // Příjezd nového
+      // reflow
+      void newWrap.offsetWidth;
+      newWrap.classList.add("slide-enter-active");
+
+      statusEl.textContent = (timer ? "⏵ běží" : "⏸ pauza") + " · " + INTERVAL_SEC + " s · " + ( (i%rotation.length)+1 ) + "/" + rotation.length;
       document.title = `${item.title} — Grafit kiosk`;
     }
 
-    function next(){ idx = (idx+1)%rotation.length; lastDir=1; renderSlide(idx, +1); }
-    function prev(){ idx = (idx-1+rotation.length)%rotation.length; lastDir=-1; renderSlide(idx, -1); }
-    function play(){ if (timer) clearInterval(timer); timer = setInterval(next, INTERVAL_SEC*1000); playing=true; }
-    function pause(){ if (timer) clearInterval(timer); timer=null; playing=false; }
+    function next(){ idx = (idx+1)%rotation.length; renderSlide(idx, +1); }
+    function prev(){ idx = (idx-1+rotation.length)%rotation.length; renderSlide(idx, -1); }
+
+    function play(){ if (timer) clearInterval(timer); timer = setInterval(next, INTERVAL_SEC*1000); }
+    function pause(){ if (timer) clearInterval(timer); timer=null; }
 
     // Ovládání
     btnNext.onclick = ()=>{ pause(); next(); };
     btnPrev.onclick = ()=>{ pause(); prev(); };
-    btnToggle.onclick = ()=>{ playing ? pause() : (play(), renderSlide(idx,lastDir)); };
+    btnToggle.onclick = ()=>{ timer ? pause() : play(); statusEl.textContent = (timer ? "⏵ běží" : "⏸ pauza") + " · " + INTERVAL_SEC + " s"; };
     document.addEventListener("keydown", (e)=>{
       if (e.code === "Space"){ e.preventDefault(); btnToggle.click(); }
       if (e.key === "ArrowRight"){ btnNext.click(); }
@@ -185,10 +211,7 @@
       const onEnd   = ()=>{
         if(!dragging) return;
         const angle = Math.abs(Math.atan2(dy, dx) * 180/Math.PI);
-        if (Math.abs(dx) > THRESH && angle < MAX_ANGLE){
-          pause();
-          dx<0 ? next() : prev();
-        }
+        if (Math.abs(dx) > THRESH && angle < MAX_ANGLE){ pause(); (dx<0 ? next() : prev()); }
         dragging=false;
       };
       // touch
@@ -202,7 +225,7 @@
     })(stage);
 
     // Viditelnost
-    document.addEventListener("visibilitychange", ()=>{ if (document.hidden) pause(); else if (!timer && playing) play(); });
+    document.addEventListener("visibilitychange", ()=>{ if (document.hidden) pause(); else if (!timer) play(); });
 
     // Start
     renderSlide(idx, +1); play();
