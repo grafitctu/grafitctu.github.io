@@ -87,6 +87,8 @@
     const statusEl = document.getElementById("status");
     const shell = document.getElementById('shell');
     const topbar = document.getElementById('topbar');
+    const SWIPE_LEFT_IS_PREV = true; // když true: doleva = předchozí, doprava = další
+
 
     // Layout: odečíst výšku headeru
     function relayout(){
@@ -223,7 +225,15 @@
       const onEnd   = ()=>{
         if(!dragging) return;
         const angle = Math.abs(Math.atan2(dy, dx) * 180/Math.PI);
-        if (Math.abs(dx) > THRESH && angle < MAX_ANGLE){ pause(); (dx<0 ? next() : prev()); }
+        if (Math.abs(dx) > THRESH && angle < MAX_ANGLE){
+  pause();
+  if (dx < 0) { // swipe doleva
+    SWIPE_LEFT_IS_PREV ? prev() : next();
+  } else {      // swipe doprava
+    SWIPE_LEFT_IS_PREV ? next() : prev();
+  }
+}
+
         dragging=false;
       };
       // touch
