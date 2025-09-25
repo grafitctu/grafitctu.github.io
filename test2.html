@@ -11,13 +11,12 @@
   <style>
     :root { color-scheme: dark; }
     html, body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji"; }
-    /* Tooltip arrow */
+    /* Tooltip šipka pro skupinový seznam vyučujících */
     .tooltip::after{
       content:"";
       position:absolute;
-      left:50%;
+      left:16px;
       top:-6px;
-      transform:translateX(-50%);
       border-width:6px;
       border-style:solid;
       border-color:transparent transparent rgb(0 0 0 / .9) transparent;
@@ -27,7 +26,7 @@
 <body class="h-full bg-neutral-950 text-neutral-100">
   <header class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-3xl font-bold tracking-tight">Grafit – Courses & Lectures</h1>
-    <p class="mt-2 text-neutral-400">Testovací stránka s kompaktními kartami, avatary vyučujících a tagy.</p>
+    <p class="mt-2 text-neutral-400">Testovací stránka s kompaktními kartami, „teacher-chips“ a tagy.</p>
   </header>
 
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-20">
@@ -35,7 +34,7 @@
     <section>
       <div class="flex items-end justify-between gap-4">
         <h2 class="text-2xl font-semibold">Courses</h2>
-        <div class="text-sm text-neutral-400">Hover/focus na avataru zobrazí celé jméno vyučujícího.</div>
+        <div class="text-sm text-neutral-400">Najetí na „+N“ zobrazí celý seznam vyučujících.</div>
       </div>
 
       <div id="courses-grid" class="mt-6 grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-2"></div>
@@ -150,36 +149,67 @@
     ];
 
     // ----- UI HELPERS ----------------------------------------------------------
-    const initials = (name) => name.split(/\s+/).map(s=>s[0]).slice(0,2).join('').toUpperCase();
-
-    // (volitelné) deterministická barva avataru z jména
-    function avatarBg(name){
-      let h=0; for (let i=0;i<name.length;i++) h = (h*31 + name.charCodeAt(i)) % 360;
-      return `hsl(${h} 60% 22% / .9)`; // tmavý kruh, čitelnost v dark UI
+    // malé inline SVG – ikona osoby
+    function personIcon() {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 24 24");
+      svg.setAttribute("aria-hidden","true");
+      svg.classList.add("h-3.5","w-3.5","opacity-80");
+      const p1 = document.createElementNS(svg.namespaceURI,"path");
+      p1.setAttribute("d","M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z");
+      p1.setAttribute("fill","currentColor");
+      const p2 = document.createElementNS(svg.namespaceURI,"path");
+      p2.setAttribute("d","M4 22a8 8 0 0 1 16 0v1H4v-1z");
+      p2.setAttribute("fill","currentColor");
+      svg.appendChild(p1); svg.appendChild(p2);
+      return svg;
     }
 
-    function Avatar(name){
-      const el = document.createElement('button');
-      el.type = 'button';
-      el.className =
-        "relative group h-7 w-7 rounded-full ring-1 ring-white/15 text-[10px] " +
-        "font-semibold text-white flex items-center justify-center " +
-        "bg-white/10 hover:bg-white/15 focus:bg-white/15 focus:outline-none";
-      el.style.background = avatarBg(name);
-      el.setAttribute('aria-label', name);
-      el.title = name;
-      el.textContent = initials(name);
+    // chip se jménem vyučujícího
+    function teacherChip(name){
+      const chip = document.createElement('span');
+      chip.className =
+        "inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] " +
+        "font-medium bg-white/5 text-neutral-200 ring-1 ring-white/10";
+      chip.title = name;
+      chip.setAttribute('aria-label', name);
+      chip.appendChild(personIcon());
+      const t = document.createElement('span');
+      t.textContent = name;
+      chip.appendChild(t);
+      return chip;
+    }
 
-      const tip = document.createElement('span');
+    // zkrácený seznam + tooltip s plným výpisem (při > 2 jménech)
+    function teacherGroup(teachers=[]){
+      const wrap = document.createElement('div');
+      wrap.className = "relative group flex items-center gap-1.5";
+
+      if (teachers.length <= 2){
+        teachers.forEach(n => wrap.appendChild(teacherChip(n)));
+        return wrap;
+      }
+
+      wrap.appendChild(teacherChip(teachers[0]));
+      wrap.appendChild(teacherChip(teachers[1]));
+
+      const more = document.createElement('button');
+      more.type = "button";
+      more.className =
+        "relative rounded-md px-2 py-0.5 text-[11px] font-semibold " +
+        "bg-white/5 text-neutral-200 ring-1 ring-white/10 hover:bg-white/10 focus:outline-none";
+      more.textContent = `+${teachers.length - 2}`;
+      wrap.appendChild(more);
+
+      const tip = document.createElement('div');
       tip.className =
-        "tooltip pointer-events-none absolute left-1/2 top-full z-20 mt-2 -translate-x-1/2 " +
-        "whitespace-nowrap rounded-md bg-black/90 px-2 py-1 text-xs text-white " +
-        "opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus:opacity-100";
-      tip.setAttribute('role','tooltip');
-      tip.textContent = name;
-      el.appendChild(tip);
+        "tooltip pointer-events-none absolute left-0 top-full z-20 mt-2 " +
+        "rounded-md bg-black/90 px-3 py-2 text-xs text-white opacity-0 " +
+        "transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100";
+      tip.innerHTML = teachers.map(n => `• ${n}`).join("<br>");
+      wrap.appendChild(tip);
 
-      return el;
+      return wrap;
     }
 
     function chip(text){
@@ -221,10 +251,7 @@
       body.appendChild(meta);
 
       if (Array.isArray(c.teachers) && c.teachers.length){
-        const avs = document.createElement('div');
-        avs.className = "flex items-center gap-1.5";
-        c.teachers.forEach(t => avs.appendChild(Avatar(t)));
-        meta.appendChild(avs);
+        meta.appendChild(teacherGroup(c.teachers));
       }
 
       const tagbox = document.createElement('div');
