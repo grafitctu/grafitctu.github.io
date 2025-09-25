@@ -20,12 +20,9 @@
       transform: translateY(-6px) scale(1.02);
       box-shadow: 0 18px 40px rgba(0,0,0,0.25);
     }
-    .card .thumb {
-      transform: scale(1.02);
-      transition: transform 500ms cubic-bezier(.22,1,.36,1);
-    }
+    .card .thumb { transform: scale(1.02); transition: transform 500ms cubic-bezier(.22,1,.36,1); }
     .card:hover .thumb { transform: scale(1.08); }
-    /* Courses (slightly subtler) */
+    /* Courses */
     .course-card { transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease; }
     .course-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 16px 32px rgba(0,0,0,.22); }
     /* Tmavé/světlé přechody pozadí */
@@ -43,6 +40,16 @@
     @media (min-width: 1536px) { /* 2xl+ */
       .pill { padding: .15rem .55rem; font-size: .875rem; }
       .icon { width: .85rem; height: .85rem; }
+    }
+    /* Tooltip šipka pro skupinový seznam vyučujících */
+    .tooltip::after{
+      content:"";
+      position:absolute;
+      left:16px;
+      top:-6px;
+      border-width:6px;
+      border-style:solid;
+      border-color:transparent transparent rgb(0 0 0 / .9) transparent;
     }
   </style>
 </head>
@@ -83,7 +90,6 @@
   </section>
 
   <!-- QUICK NAV with icons (blur kept) -->
-  <!--<nav class="relative border-y border-white/10 bg-white/5 backdrop-blur">-->
   <nav class="sticky top-0 z-40 border-y border-white/10 bg-white/5 backdrop-blur">
     <div class="mx-auto max-w-none px-6 2xl:px-8 py-3 flex flex-wrap items-center justify-center gap-2 2xl:gap-2">
       <a href="#events"   class="pill" aria-label="Přejít na sekci Events"><i data-lucide="calendar" class="icon"></i><span>↓ Events</span></a>
@@ -187,41 +193,165 @@
       { id:"s-pointers", title:"Pointless Pointers", img:"https://grafitctu.github.io/assets/projects/gamedesign.png", href:"#", tags:["pixel-art","vhs"] },
       { id:"s-texture", title:"Texture Editing", img:"https://grafitctu.github.io/assets/projects/textures.jpg", href:"#", tags:["gimp","pga"] },
     ];
-const COURSES = [
-  { id:"c-mga", code:"BI-MGA", title:"Multimediální a grafické aplikace", blurb:"Introductory overview course where students learn to work with 2D and 3D graphics tools.", link:"https://bilakniha.cvut.cz", tags:["3rd semester","obligatory","4 ECTS"] },
-  { id:"c-vhs", code:"BI-VHS", title:"Virtuální herní světy", blurb:"A subject dedicated to game design, level design and the creation of the game world.", link:"https://bilakniha.cvut.cz", tags:["3rd & 5th semester","optional","4 ECTS"] },
-  { id:"c-ble", code:"BI-BLE", title:"Blender", blurb:"An advanced course following MGA, significantly deepening work in Blender.", link:"https://bilakniha.cvut.cz", tags:["summer semester","elective","4 ECTS"] },
-  { id:"c-pga", code:"BI-PGA", title:"Programování grafických aplikací", blurb:"Advanced course focused on developing plugins for GIMP and Blender.", link:"https://bilakniha.cvut.cz", tags:["5th semester","obligatory","4 ECTS"] },
-  { id:"c-mvt", code:"BI-MVT", title:"Moderní vizualizační technologie", blurb:"Overview of modern visualization technologies and hardware.", link:"https://bk.fit.cvut.cz", tags:["5th semester","optional","4 ECTS"] },
-  { id:"c-pvr", code:"BI-PVR", title:"Pokročilá virtuální realita", blurb:"Advanced virtual reality course in the Unity engine.", link:"https://bilakniha.cvut.cz", tags:["winter semester","optional","4 ECTS"] },
-  { id:"c-pg1", code:"NI-PG1", title:"Počítačová grafika 1", blurb:"Rendering, data structures for CG, and state-of-the-art realistic texturing.", link:"https://bilakniha.cvut.cz", tags:["summer semester","optional","4 ECTS"] },
-  { id:"c-roz", code:"NI-ROZ", title:"Rozpoznávání 1", blurb:"Advanced pattern recognition; lectures in cooperation with the Academy of Sciences.", link:"https://bilakniha.cvut.cz", tags:["winter semester","optional","4 ECTS"] },
-  { id:"c-ccc", code:"NI-CCC", title:"Creative Coding & Computational Art", blurb:"Project-oriented course spanning art, graphics and creative programming.", link:"https://bilakniha.cvut.cz", tags:["winter semester","optional","4 ECTS"] },
-];
+
+    /* ===== NOVÉ COURSES: s vyučujícími + tagy ===== */
+    const COURSES = [
+      {
+        id:"c-mga", code:"BI-MGA", title:"Multimediální a grafické aplikace",
+        blurb:"Introductory overview course where students learn to work with 2D and 3D graphics tools.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["J. Barták","L. Bartůněk","J. Chalupa"],
+        tags:["3rd semester","obligatory","4 ECTS"]
+      },
+      {
+        id:"c-vhs", code:"BI-VHS", title:"Virtuální herní světy",
+        blurb:"A subject dedicated to game design, level design and the creation of the game world.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["R. Richtr"],
+        tags:["3rd & 5th semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-ble", code:"BI-BLE", title:"Blender",
+        blurb:"An advanced course following MGA, significantly deepening work in Blender.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["L. Bartůněk"],
+        tags:["summer semester","elective","4 ECTS"]
+      },
+      {
+        id:"c-pga", code:"BI-PGA", title:"Programování grafických aplikací",
+        blurb:"Advanced course focused on developing plugins for GIMP and Blender.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["R. Richtr","J. Chalupa"],
+        tags:["5th semester","obligatory","4 ECTS"]
+      },
+      {
+        id:"c-mvt", code:"BI-MVT", title:"Moderní vizualizační technologie",
+        blurb:"Overview of modern visualization technologies and hardware.",
+        link:"https://bk.fit.cvut.cz",
+        teachers:["P. Pauli","J. Chalupa"],
+        tags:["5th semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-pvr", code:"BI-PVR", title:"Pokročilá virtuální realita",
+        blurb:"Advanced virtual reality course in the Unity engine.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["P. Pauli"],
+        tags:["winter semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-pg1", code:"NI-PG1", title:"Počítačová grafika 1",
+        blurb:"Rendering, data structures for CG, and state-of-the-art realistic texturing.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["R. Richtr","V. Tomaš"],
+        tags:["summer semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-roz", code:"NI-ROZ", title:"Rozpoznávání 1",
+        blurb:"Advanced pattern recognition; lectures in cooperation with the Academy of Sciences.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["M. Haindl","R. Richtr"],
+        tags:["winter semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-ccc", code:"NI-CCC", title:"Creative Coding & Computational Art",
+        blurb:"Project-oriented course spanning art, graphics and creative programming.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["A. Karten","V. Tomaš","R. Richtr"],
+        tags:["winter semester","optional","4 ECTS"]
+      },
+    ];
 
     // --- pomocné ---
     const $ = sel => document.querySelector(sel);
     const create = (tag, cls="", html="") => { const el = document.createElement(tag); if(cls) el.className = cls; if(html) el.innerHTML = html; return el; };
     const allTags = Array.from(new Set([...EVENTS, ...RESEARCH, ...SHOWCASE].flatMap(i => i.tags||[])));
 
-    // --- render karty ---
+    // === NOVÉ: UI HELPERY pro kurzy ===
+    // ikona osoby (malé inline SVG)
+    function personIcon() {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 24 24"); svg.setAttribute("aria-hidden","true");
+      svg.classList.add("h-3.5","w-3.5","opacity-80");
+      const p1 = document.createElementNS(svg.namespaceURI,"path");
+      p1.setAttribute("d","M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z");
+      p1.setAttribute("fill","currentColor");
+      const p2 = document.createElementNS(svg.namespaceURI,"path");
+      p2.setAttribute("d","M4 22a8 8 0 0 1 16 0v1H4v-1z");
+      p2.setAttribute("fill","currentColor");
+      svg.appendChild(p1); svg.appendChild(p2);
+      return svg;
+    }
+    // chip se jménem vyučujícího
+    function teacherChip(name){
+      const chip = document.createElement('span');
+      chip.className = "inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium bg-white/5 text-neutral-200 ring-1 ring-white/10";
+      chip.title = name; chip.setAttribute('aria-label', name);
+      chip.appendChild(personIcon());
+      const t = document.createElement('span'); t.textContent = name;
+      chip.appendChild(t);
+      return chip;
+    }
+    // zkrácený seznam + tooltip s plným výpisem (při > 2 jménech)
+    function teacherGroup(teachers=[]){
+      const wrap = document.createElement('div');
+      wrap.className = "relative group flex items-center gap-1.5";
+      if (teachers.length <= 2){
+        teachers.forEach(n => wrap.appendChild(teacherChip(n)));
+        return wrap;
+      }
+      wrap.appendChild(teacherChip(teachers[0]));
+      wrap.appendChild(teacherChip(teachers[1]));
+      const more = document.createElement('button');
+      more.type = "button";
+      more.className = "relative rounded-md px-2 py-0.5 text-[11px] font-semibold bg-white/5 text-neutral-200 ring-1 ring-white/10 hover:bg-white/10 focus:outline-none";
+      more.textContent = `+${teachers.length - 2}`;
+      wrap.appendChild(more);
+      const tip = document.createElement('div');
+      tip.className = "tooltip pointer-events-none absolute left-0 top-full z-20 mt-2 rounded-md bg-black/90 px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100";
+      tip.innerHTML = teachers.map(n => `• ${n}`).join("<br>");
+      wrap.appendChild(tip);
+      return wrap;
+    }
+    function chip(text){
+      const s = document.createElement('span');
+      s.className = "rounded-md px-2 py-0.5 text-[10px] font-medium bg-white/5 text-neutral-200 ring-1 ring-white/10";
+      s.textContent = text;
+      return s;
+    }
+    function courseCard(c){
+      const article = document.createElement('article');
+      article.className = "course-card rounded-2xl border p-4 border-white/10 bg-gradient-to-b from-neutral-900 to-black";
+      const row = document.createElement('div'); row.className = "flex items-start gap-3"; article.appendChild(row);
+      const code = document.createElement('span');
+      code.className = "shrink-0 inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-cyan-400/30 bg-cyan-500/20 text-cyan-200";
+      code.textContent = c.code; row.appendChild(code);
+      const body = document.createElement('div'); body.className = "min-w-0 flex-1"; row.appendChild(body);
+      const h3 = document.createElement('h3'); h3.className = "text-lg font-semibold text-neutral-100"; h3.textContent = c.title; body.appendChild(h3);
+      const p = document.createElement('p'); p.className = "text-sm text-neutral-300/90"; p.textContent = c.blurb || ""; body.appendChild(p);
+
+      const meta = document.createElement('div'); meta.className = "mt-2 flex items-center gap-3"; body.appendChild(meta);
+      if (Array.isArray(c.teachers) && c.teachers.length){ meta.appendChild(teacherGroup(c.teachers)); }
+      const tagbox = document.createElement('div'); tagbox.className = "ml-auto flex flex-wrap gap-2"; (c.tags || []).forEach(t => tagbox.appendChild(chip(t))); meta.appendChild(tagbox);
+
+      const a = document.createElement('a');
+      a.className = "mt-2 inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-200 text-sm";
+      a.href = c.link; a.target = "_blank"; a.rel = "noreferrer"; a.textContent = "Syllabus ↗";
+      body.appendChild(a);
+      return article;
+    }
+
+    // --- render karty (events/research/showcase zachováno) ---
     function card(item, kind){
       const a = create("a", "card group relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block", "");
       a.href = item.href || "#"; a.target = "_blank"; a.rel="noreferrer";
-
-      // poměr stran podle sekce: research 3:1, ostatní 2:1
       const aspect = (kind === "research") ? "aspect-[3/1]" : "aspect-[2/1]";
       const imgBox = create("div", `relative w-full overflow-hidden ${aspect}`, "");
-
       const img = create("img","thumb h-full w-full object-cover object-center", "");
-      img.src = item.img; img.alt = item.title;
-      img.loading = "lazy"; img.decoding = "async";
+      img.src = item.img; img.alt = item.title; img.loading = "lazy"; img.decoding = "async";
       imgBox.appendChild(img);
-
       imgBox.appendChild(create("div","absolute inset-0 bg-gradient-to-t from-black/50 to-transparent",""));
       if(item.date){ imgBox.appendChild(create("span","absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-neutral-200 border border-white/10","📅 "+item.date)); }
       a.appendChild(imgBox);
-
       const body = create("div","p-4","");
       body.appendChild(create("div","flex items-center justify-between",`<h3 class='text-lg font-semibold text-neutral-100'>${item.title}</h3><span class='text-neutral-400 text-xs uppercase tracking-wide'>${kind}</span>`));
       body.appendChild(create("p","mt-1 text-neutral-300/90 text-sm leading-relaxed",item.blurb||""));
@@ -231,33 +361,18 @@ const COURSES = [
     }
 
     function renderLists(filterFn){
-      // Events (xl 4 vedle sebe, 2:1)
+      // Events
       const E = $("#eventsGrid"); E.innerHTML = "";
       EVENTS.filter(filterFn).forEach(it=>E.appendChild(card(it,"event")));
-
-      // Research (3 vedle sebe, 3:1)
+      // Research
       const R = $("#researchGrid"); R.innerHTML = "";
       RESEARCH.filter(filterFn).forEach(it=>R.appendChild(card(it,"research")));
-
-      // Showcase (xl 4 vedle sebe, 2:1)
+      // Showcase
       const S = $("#showcaseGrid"); S.innerHTML = "";
       SHOWCASE.filter(filterFn).forEach(it=>S.appendChild(card(it,"showcase")));
-
-      // Courses
+      // Courses (NOVÝ RENDER)
       const C = $("#coursesGrid"); C.innerHTML = "";
-      COURSES.forEach(c=>{
-        const box = create("div","course-card rounded-2xl border p-4 border-white/10 bg-gradient-to-b from-neutral-900 to-black","");
-        box.innerHTML = `
-          <div class="flex items-start gap-3">
-            <span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-cyan-400/30 bg-cyan-500/20 text-cyan-200">${c.code}</span>
-            <div>
-              <h3 class="text-lg font-semibold text-neutral-100">${c.title}</h3>
-              <p class="text-sm text-neutral-300/90">${c.blurb||""}</p>
-              <a class="mt-2 inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-200 text-sm" href="${c.link}" target="_blank" rel="noreferrer">Syllabus ↗</a>
-            </div>
-          </div>`;
-        C.appendChild(box);
-      });
+      COURSES.forEach(c => C.appendChild(courseCard(c)));
     }
 
     // --- vyhledávání + tagy ---
@@ -272,7 +387,6 @@ const COURSES = [
       };
       renderLists(filterFn);
     }
-
     function renderTags(){
       const T = $("#tags"); T.innerHTML = `<span class="text-xs text-neutral-400">Filtr tagů:</span>`;
       allTags.forEach(t=>{
@@ -352,4 +466,3 @@ const COURSES = [
   </script>
 </body>
 </html>
-
