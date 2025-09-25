@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Grafit — Kiosk rotace karet</title>
+  <title>Grafit — Kiosk rotace karet (bez odkazů)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html,body { height:100%; }
     .card { transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
     .card .thumb { transform: scale(1.02); transition: transform 600ms cubic-bezier(.22,1,.36,1); }
-    .card:hover .thumb { transform: scale(1.06); }
+    .card:hover .thumb { transform: scale(1.04); }
     .bg-gradient-dark { background: linear-gradient(#070b12,#0a0f18 55%,#090d14); }
 
-    /* <-- nové: vodorovné přechody */
+    /* vodorovné přechody */
     .slide-enter          { opacity: 0; transform: translateX(40px) scale(.995); }
     .slide-enter-active   { opacity: 1; transform: translateX(0)    scale(1);    transition: opacity 450ms ease, transform 450ms ease; }
     .slide-exit           { opacity: 1; transform: translateX(0)    scale(1); }
@@ -20,7 +20,6 @@
     .slide-enter-rev      { opacity: 0; transform: translateX(-40px) scale(.995); }
     .slide-exit-active-rev{ opacity: 0; transform: translateX(40px)  scale(.995); transition: opacity 380ms ease, transform 380ms ease; }
 
-    /* malý podtitulek pod anotací (2. řádek) */
     .kiosk-sub { letter-spacing:.01em }
   </style>
 </head>
@@ -50,28 +49,19 @@
   </div>
 
   <script>
-    /* ====== DATA (zkráceno: použij svůj plný seznam) ====== */
+    /* ====== DATA (zkráceno pro příklad – vlož si klidně celý seznam) ====== */
     const EVENTS = [
       { id:"e-gamejam-2025", title:"GameJam 2025", blurb:"Another installment in our series of traditional game jams! Once again over Easter, this time with a surprise – judges from game studios and major companies.", img:"/assets/projects/majak2.png", href:"https://itch.io/jam/gamejam-fit-2025a", tags:["event","gamejam","community"], date:"Spring 2025" },
       { id:"e-hellofit-2025", title:"HelloFit 2025", blurb:"Part of our traditional freshmen events. We teamed up with Fit++, welcomed new students and invited them to our game design group and the STOH board-game club.", img:"/events/hellofit.jpg", href:"https://www.klubfitpp.cz/events/2025/hello-fit-25/", tags:["event","community","onboarding"], date:"2025" },
-      { id:"e-gamejam-2024", title:"GameJam 2024", blurb:"Another traditional jam. Christmas edition with industry judges from game studios and major companies.", img:"/assets/projects/gamejam_2024b_logo.jpg", href:"https://itch.io/jam/gamejam-fit-2024-vanocni", tags:["event","gamejam"], date:"Dec 2024" },
       { id:"e-gexpo-2025", title:"GEXPO 2025", blurb:"Graphics Expo showcasing achievements of our students in game development, VR, and final projects. 60+ participants and a packed evening program.", img:"/assets/projects/gexpo_logo.jpg", href:"events/gexpo/2025", tags:["event","expo","students","vr","games"], date:"2025" },
-      { id:"e-researchers-night-2025", title:"ResearchersNight 2025", blurb:"Celebrating 20 years of Researchers' Night in the Czech Republic across 50+ cities.", img:"/assets/projects/nocvedcu.png", href:"https://www.nocvedcu.cz/en", tags:["event","public","research"], date:"26 Sep 2025" },
-      { id:"e-grafit-games-studio", title:"Grafit Games Studio", blurb:"Bridging cutting-edge research with creative game development across digital and board games.", img:"/assets/projects/grafitgames_logo.jpg", href:"https://barushe22.itch.io/neckventure", tags:["studio","games","event"], date:"ongoing" }
     ];
     const RESEARCH = [
       { id:"r-politeia21", title:"Politeia 21", blurb:"Interdisciplinary VR project exploring Plato’s theses, ethics and human behavior in a large-scale social simulation.", img:"/assets/projects/politeia.png", href:"https://www.unihack.cz/project/8", tags:["vr","simulation","social","philosophy","research"] },
-      { id:"r-dowry-towns", title:"Dowry Towns of Bohemian Queens", blurb:"Projects mapping historical development and digitizing cultural heritage of royal dowry towns; VR reconstructions and archives.", img:"/assets/projects/vennamesta.png", href:"https://www.kralovskavennamesta.cz/", tags:["heritage","mapping","history","vr"], date:"2018–2022" },
-      { id:"r-game-design", title:"Game design", blurb:"Research in game design theory: world design, accessibility for impaired users, and creative writing.", img:"/assets/projects/gamedesign.png", href:"/projects/", tags:["games","design","accessibility","writing"] },
-      { id:"r-texture-modeling", title:"Texture modeling", blurb:"With the Institute of Information Theory and Automation (CAS), we analyze and model realistic material appearance (BRDF/BTF).", img:"/assets/projects/textures.jpg", href:"http://btf.utia.cas.cz/?brdf_dwn", tags:["materials","brdf","btf","collaboration"] },
       { id:"r-most-city", title:"Most – city that did not disappear", blurb:"Reconstruction of the historic appearance of the city of Most prior to its major redevelopment.", img:"/assets/projects/most.png", href:"https://www.vugtk.cz/en/home-page/", tags:["heritage","reconstruction","city","3d"], date:"2023–2027" },
-      { id:"r-tactile-wall", title:"Tactile interfaces: interactive wall", blurb:"Exploration of tactile-specific interfaces in collaboration with MIT, University of Tokyo, initi.org and CAMP.", img:"/assets/projects/intwall.png", href:"https://www.youtube.com/watch?v=3jvmoj7pLZU&ab_channel=IraWinder", tags:["haptics","ui","installation","collaboration"] }
     ];
     const SHOWCASE = [
-      { id:"sc-wood-texture-generation", title:"Wood texture generation", blurb:"Plugin for creating artificial wood texture.", img:"/assets/showcase/jechdrevo.png", href:"https://iga.ksi.fit.cvut.cz/bi-pga/b241/3d/jechjose?class=3d", tags:["pga","texture","bachelor"] },
-      { id:"sc-ai-texture-to-3d", title:"AI Texture to 3D generation", blurb:"Generate textures with AI and map them onto 3D assets.", img:"/assets/showcase/stablegen.jpg", href:"https://stablegen.ai", tags:["pga","ai","texture","3d","bachelor"] },
-      { id:"sc-texture-editing", title:"Texture editing", blurb:"Content-aware fill implemented as a GIMP plugin.", img:"/assets/showcase/svabova.png", href:"https://gitlab.fit.cvut.cz/BI-PGA/stud/svabosa1/blob/master/dokumentace1.adoc", tags:["pga","gimp","content-aware"] },
-      /* ... (ponech svůj kompletní seznam) ... */
+      { id:"sc-wood-texture-generation", title:"Wood texture generation", blurb:"Plugin for creating artificial wood texture.", img:"/assets/showcase/jechdrevo.png", href:"#", tags:["pga","texture","bachelor"] },
+      { id:"sc-texture-editing", title:"Texture editing", blurb:"Content-aware fill implemented as a GIMP plugin.", img:"/assets/showcase/svabova.png", href:"#", tags:["pga","gimp","content-aware"] },
     ];
 
     /* ====== Nastavení ====== */
@@ -89,20 +79,20 @@
 
     let idx = 0, timer = null, playing = true, lastDir = 1; // 1=vpřed, -1=zpět
 
-    function ellipsize(s="", n=120){
+    const ellipsize = (s="", n=120) => {
       const t = s.trim().replace(/\s+/g," ");
       return t.length <= n ? t : t.slice(0, n-1).trimEnd()+"…";
-    }
-    function subline(item){
+    };
+    const subline = (item) => {
       const t = (item.tags?.length ? "#"+item.tags.slice(0,3).join("  #") : "");
       const d = item.date ? ` · ${item.date}` : "";
-      return (t+d) || "Tap to open details";
-    }
+      return (t + d).trim();
+    };
 
+    // !!! NEklikací karta (article), žádné odkazy
     function createCard(item){
-      const a = document.createElement("a");
-      a.href = item.href || "#"; a.target = "_blank"; a.rel = "noreferrer";
-      a.className = "card block rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black";
+      const article = document.createElement("article");
+      article.className = "card block rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black cursor-default";
 
       const aspect = item.kind === "research" ? "aspect-[3/1]" : "aspect-[2/1]";
       const imgBox = document.createElement("div");
@@ -111,56 +101,40 @@
       img.src = item.img; img.alt = item.title; img.loading="eager";
       img.className = "thumb h-full w-full object-cover object-center";
       imgBox.appendChild(img);
-      const grad = document.createElement("div");
-      grad.className = "absolute inset-0 bg-gradient-to-t from-black/55 to-transparent";
-      imgBox.appendChild(grad);
+      imgBox.appendChild(Object.assign(document.createElement("div"), {className:"absolute inset-0 bg-gradient-to-t from-black/55 to-transparent"}));
       if (item.date){
         const badge = document.createElement("span");
         badge.className = "absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-neutral-200 border border-white/10";
         badge.textContent = "📅 " + item.date;
         imgBox.appendChild(badge);
       }
-      a.appendChild(imgBox);
+      article.appendChild(imgBox);
 
       const body = document.createElement("div");
       body.className = "p-5";
       const top = document.createElement("div");
       top.className = "flex items-baseline justify-between";
-      const h3 = document.createElement("h3");
-      h3.className = "text-2xl font-semibold text-neutral-100";
-      h3.textContent = item.title;
-      const kind = document.createElement("span");
-      kind.className = "rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs uppercase tracking-wide text-neutral-300";
-      kind.textContent = item.kind;
+      const h3 = Object.assign(document.createElement("h3"), {className:"text-2xl font-semibold text-neutral-100", textContent:item.title});
+      const kind = Object.assign(document.createElement("span"), {className:"rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs uppercase tracking-wide text-neutral-300", textContent:item.kind});
       top.appendChild(h3); top.appendChild(kind);
       body.appendChild(top);
 
-      // 1. řádek – krátká anotace (auto)
-      const p = document.createElement("p");
-      p.className = "mt-2 text-neutral-300/90 text-base leading-relaxed";
-      p.textContent = ellipsize(item.blurb || "", 120);
+      const p = Object.assign(document.createElement("p"), {className:"mt-2 text-neutral-300/90 text-base leading-relaxed", textContent:ellipsize(item.blurb || "", 120)});
       body.appendChild(p);
 
-      // 2. řádek – highlight (tagy / datum)
-      const small = document.createElement("p");
-      small.className = "kiosk-sub mt-1 text-sm text-neutral-400";
-      small.textContent = subline(item);
+      const small = Object.assign(document.createElement("p"), {className:"kiosk-sub mt-1 text-sm text-neutral-400", textContent:subline(item)});
       body.appendChild(small);
 
-      // Tagy (vizuální chips)
       if ((item.tags||[]).length){
-        const tg = document.createElement("div");
-        tg.className = "mt-4 flex flex-wrap gap-2";
+        const tg = Object.assign(document.createElement("div"), {className:"mt-4 flex flex-wrap gap-2"});
         item.tags.forEach(t=>{
-          const chip = document.createElement("span");
-          chip.className = "text-xs rounded-full border px-2 py-0.5 text-neutral-300 border-neutral-700/80";
-          chip.textContent = "#"+t;
+          const chip = Object.assign(document.createElement("span"), {className:"text-xs rounded-full border px-2 py-0.5 text-neutral-300 border-neutral-700/80", textContent:"#"+t});
           tg.appendChild(chip);
         });
         body.appendChild(tg);
       }
-      a.appendChild(body);
-      return a;
+      article.appendChild(body);
+      return article;
     }
 
     function renderSlide(i, dir=1){
@@ -192,7 +166,7 @@
     function play(){ if (timer) clearInterval(timer); timer = setInterval(next, INTERVAL_SEC*1000); playing=true; }
     function pause(){ if (timer) clearInterval(timer); timer=null; playing=false; }
 
-    // Tlačítka + klávesy
+    // Ovládání
     btnNext.onclick = ()=>{ pause(); next(); };
     btnPrev.onclick = ()=>{ pause(); prev(); };
     btnToggle.onclick = ()=>{ playing ? pause() : (play(), renderSlide(idx,lastDir)); };
@@ -202,10 +176,10 @@
       if (e.key === "ArrowLeft"){ btnPrev.click(); }
     });
 
-    // === Dotykové / drag ovládání (swipe L/R) ===
+    // Dotyk/drag — swipe L/R
     (function addSwipe(el){
       let startX=0, startY=0, dx=0, dy=0, dragging=false;
-      const THRESH = 60, MAX_ANGLE = 30; // povolit jen vodorovné
+      const THRESH = 60, MAX_ANGLE = 30;
       const onStart = (x,y)=>{ startX=x; startY=y; dx=dy=0; dragging=true; };
       const onMove  = (x,y)=>{ if(!dragging) return; dx=x-startX; dy=y-startY; };
       const onEnd   = ()=>{
