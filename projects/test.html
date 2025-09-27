@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="cs" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grafit — Games Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    html{scroll-behavior:smooth}
+    .icon{width:1rem;height:1rem}
+    .bg-gradient-dark{background:linear-gradient(#070b12,#0a0f18 55%,#090d14)}
+    .card{transition:transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease; box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    .card:hover{transform:translateY(-6px) scale(1.02); box-shadow:0 18px 40px rgba(0,0,0,.25)}
+    .thumb{transform:scale(1.02); transition:transform 500ms cubic-bezier(.22,1,.36,1)}
+    .card:hover .thumb{transform:scale(1.06)}
+    .pill{display:inline-flex;align-items:center;gap:.5rem;border-radius:9999px;padding:.25rem .75rem;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.9)}
+    .pill:hover{background:rgba(255,255,255,.08)}
+    .pill:focus-visible{outline:2px solid rgba(56,189,248,.9);outline-offset:2px}
+    @media (min-width:1280px){.pill{padding:.20rem .60rem;font-size:.9rem}.icon{width:.9rem;height:.9rem}}
+    @media (min-width:1536px){.pill{padding:.15rem .55rem;font-size:.875rem}.icon{width:.85rem;height:.85rem}}
+    /* HEX ikona (mask/clip) */
+    .hex{
+      width:72px;height:72px;display:inline-block;position:relative;isolation:isolate;
+      background:linear-gradient(180deg,#0f172a,#020617);
+      border:1px solid rgba(255,255,255,.10); border-radius:14px; /* soft corner fallback */
+      clip-path:polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.05), 0 10px 30px rgba(0,0,0,.25);
+    }
+    .hex::after{ /* jemný lesk */
+      content:"";position:absolute;inset:0;clip-path:inherit;pointer-events:none;
+      background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 40%);
+    }
+    .hex img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:12px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.35))}
+    /* tooltip pro +tagy (recyklace) */
+    .tooltip::after{content:"";position:absolute;left:16px;top:-6px;border-width:6px;border-style:solid;border-color:transparent transparent rgb(0 0 0 / .9) transparent}
+  </style>
+</head>
+<body class="min-h-screen text-neutral-900 dark:text-white bg-gradient-dark">
+
+  <!-- scroll progress -->
+  <div id="scrollbar" class="fixed left-0 top-0 h-1 w-0 bg-gradient-to-r from-blue-400 via-cyan-300 to-fuchsia-300 z-50"></div>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <canvas id="heroCanvas" class="absolute inset-0 w-full" style="height:56vh"></canvas>
+    <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-20 pb-16">
+      <div class="flex items-start gap-6">
+        <div class="hex shrink-0">
+          <img src="https://grafitctu.github.io/assets/logos/grafit_bw.png" alt="Grafit hex logo">
+        </div>
+        <div>
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Student & Research Games</h1>
+          <p class="mt-3 max-w-3xl text-neutral-300">
+            Rozcestník her z výuky, závěrek a experimentů — od malých prototypů po větší projekty. Krátká anotace u každé, klik pro detail, video a stáhnutí.
+          </p>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <a href="https://grafitctu.github.io/" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-neutral-200 hover:bg-white/10">← Zpět na web</a>
+            <button id="openFilters" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">🔎 Filtry</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK NAV -->
+  <nav class="sticky top-0 z-40 border-y border-white/10 bg-white/5 backdrop-blur">
+    <div class="mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-3 flex flex-wrap items-center justify-center gap-2">
+      <a href="#games" class="pill"><i data-lucide="gamepad-2" class="icon"></i><span>↓ Hry</span></a>
+      <span class="mx-2 h-5 w-px bg-white/10"></span>
+      <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer" class="pill"><i data-lucide="youtube" class="icon"></i><span>YouTube</span> ↗</a>
+      <a href="https://discord.gg/sfMx2nq7BQ" target="_blank" rel="noreferrer" class="pill"><i data-lucide="messages-square" class="icon"></i><span>Discord</span> ↗</a>
+      <a href="https://twitter.com/CtuGrafit" target="_blank" rel="noreferrer" class="pill"><i data-lucide="twitter" class="icon"></i><span>Twitter</span> ↗</a>
+    </div>
+  </nav>
+
+  <!-- obsah + částice -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <canvas id="areaCanvas" class="w-full h-full"></canvas>
+    </div>
+
+    <main class="relative z-10 mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-10">
+      <div class="mb-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎮</span>
+          <span class="text-sm uppercase tracking-wide text-neutral-400">Rozcestník studentských a experimentálních her</span>
+        </div>
+        <h2 id="games" class="mt-1 text-2xl font-bold tracking-tight">Hry</h2>
+      </div>
+
+      <!-- GRID HER -->
+      <div id="gamesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+
+      <!-- CTA -->
+      <div class="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-5 border-cyan-400/20 bg-cyan-500/10 text-neutral-200">
+        <div>
+          <h3 class="text-xl font-semibold text-cyan-200">Máte vlastní projekt?</h3>
+          <p class="text-neutral-300/90 text-sm">Dejte nám vědět na Discordu – rádi publikujeme i váš prototyp, video nebo stažitelnou verzi.</p>
+        </div>
+        <a href="https://discord.gg/sfMx2nq7BQ" class="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm hover:bg-white/10 border-white/15 bg-black/40">Discord ↗</a>
+      </div>
+
+      <footer class="mt-14 border-t py-8 text-center text-sm text-neutral-400 border-white/10">
+        © Grafit Research Group — rozcestník her (prototyp).
+      </footer>
+    </main>
+  </section>
+
+  <!-- Drawer s filtry -->
+  <div id="filterDrawer" class="fixed inset-0 z-50 hidden">
+    <div id="filterBackdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="relative mx-auto mt-10 w-[min(92%,1100px)] rounded-2xl border border-white/12 bg-neutral-900/90 p-4 sm:p-5 shadow-xl">
+      <div class="flex items-center justify-between gap-2">
+        <h3 class="text-base font-semibold text-white">Vyhledávání &amp; tagy</h3>
+        <button id="closeFilters" class="inline-flex items-center rounded-md border border-white/10 px-2 py-1 text-sm text-neutral-300 hover:bg-white/10">✕ Zavřít</button>
+      </div>
+      <div class="mt-3 flex items-center gap-2">
+        <span class="text-neutral-400 text-sm">🔎</span>
+        <input id="search" placeholder="Hledat podle názvu/popisu/tagů…"
+               class="px-3 py-2 rounded-md border border-white/10 bg-black/40 text-white placeholder:text-neutral-500 w-full"/>
+      </div>
+      <div id="tags" class="mt-3 flex flex-wrap items-center gap-2"></div>
+    </div>
+  </div>
+
+  <script>
+    // Lucide ikony
+    document.addEventListener('DOMContentLoaded',()=>{ if (window.lucide) lucide.createIcons(); });
+
+    // DATA — nahraď vlastními položkami (logo může být PNG/SVG s průhledností; šestiúhelník řeší masku)
+    const GAMES = [
+      {
+        id:"g-strahov-gang",
+        title:"Strahov Gang",
+        blurb:"3D horor v Unity o prvním dni na strahovských kolejích.",
+        logo:"/assets/showcase/img_vhs_3.png",
+        tags:["unity","vhs","3d","horror"],
+        href:"/projects/strahov-gang"      // detail interní stránka
+      },
+      {
+        id:"g-golf-town",
+        title:"Golf Town",
+        blurb:"Experimentální VR golfová městská hříčka s level-design twisty.",
+        logo:"/assets/showcase/img_vhs_4.png",
+        tags:["unity","vr","vhs"],
+        href:"https://www.youtube.com/watch?v=OB7_UmOI_2U&t=6s" // externí
+      },
+      {
+        id:"g-magnificent-7",
+        title:"Magnificent 7",
+        blurb:"Pixel-art akce s lehce absurdním humorem a překvapivými power-upy.",
+        logo:"/assets/showcase/img_vhs_1.png",
+        tags:["2d","pixel-art","vhs"],
+        href:"https://youtu.be/SN_Pse347iI"
+      },
+      {
+        id:"g-fitlife",
+        title:"FitLife",
+        blurb:"Studentský projekt — jednoduchá retro hříčka s webovým buildem.",
+        logo:"/assets/showcase/FitLife.png",
+        tags:["web","bachelor","game"],
+        href:"https://antik98.github.io/FitLife/"
+      },
+      {
+        id:"g-pointless-pointers",
+        title:"Pointless Pointers",
+        blurb:"Minimalistická reflexní arkáda s čistou estetikou a tempem na hraně.",
+        logo:"/assets/showcase/img_vhs_2.png",
+        tags:["2d","unity","vhs"],
+        href:"https://www.youtube.com/watch?v=4u3qrxFuULM&t=1s"
+      },
+      {
+        id:"g-ardaestra",
+        title:"Ardaestra Magitech",
+        blurb:"Prototyp RPG s „magitech“ stylizací a systémem schopností.",
+        logo:"/assets/showcase/img_vhs_6.png",
+        tags:["rpg","unity","vhs"],
+        href:"https://youtu.be/Zz09tvnLEuo?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m"
+      },
+      {
+        id:"g-poe-ripoff",
+        title:"Path of Exile (rip-off)",
+        blurb:"Studentský experiment s ARPG mechanikami a loot-spirálou.",
+        logo:"/assets/showcase/img_vhs_5.png",
+        tags:["arpg","unity","vhs"],
+        href:"https://www.youtube.com/watch?v=7P3N3s81QqU&t=20s"
+      },
+      {
+        id:"g-gallifreyan",
+        title:"Gallifreyan Translator (toy)",
+        blurb:"Neherní, ale roztomilý překladač do „Time Lord“ kruhů — protože proč ne.",
+        logo:"/assets/showcase/kyselova.png",
+        tags:["toy","web","ccc"],
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kyselba1"
+      }
+    ];
+
+    // --- helpers ---
+    const $=sel=>document.querySelector(sel);
+    const create=(tag,cls="",html="")=>{ const el=document.createElement(tag); if(cls) el.className=cls; if(html) el.innerHTML=html; return el; };
+    const allTags = Array.from(new Set(GAMES.flatMap(g=>g.tags||[])));
+
+    // karta hry
+    function gameCard(g){
+      const art = create("article","card group relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black flex flex-col");
+      const body = create("div","p-4 flex items-start gap-3");
+      // hex logo
+      const hex = create("span","hex shrink-0"); 
+      const img = new Image(); img.src = g.logo; img.alt = g.title+" logo"; img.loading="lazy"; img.decoding="async";
+      hex.appendChild(img);
+      body.appendChild(hex);
+
+      const text = create("div","min-w-0 flex-1");
+      text.appendChild(create("h3","text-lg font-semibold text-neutral-100",g.title));
+      if(g.blurb){ text.appendChild(create("p","mt-1 text-neutral-300/90 text-sm leading-relaxed", g.blurb)); }
+      // tagy
+      if((g.tags||[]).length){
+        const tg = create("div","mt-3 flex flex-wrap gap-2");
+        g.tags.forEach(t=> tg.appendChild(create("span","text-xs rounded-full border px-2 py-0.5 text-neutral-300 border-neutral-700/80","#"+t)));
+        text.appendChild(tg);
+      }
+      // CTA
+      const cta = create("div","mt-3");
+      const a = create("a","inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10","Otevřít detail ↗");
+      a.href=g.href||"#"; a.target="_blank"; a.rel="noreferrer";
+      cta.appendChild(a);
+      text.appendChild(cta);
+
+      body.appendChild(text);
+      art.appendChild(body);
+
+      return art;
+    }
+
+    function renderGames(filterFn){
+      const G = $("#gamesGrid"); G.innerHTML="";
+      GAMES.filter(filterFn).forEach(g=> G.appendChild(gameCard(g)));
+    }
+
+    // filtrace
+    let activeTags = new Set();
+    function applyFilter(){
+      const q = ($("#search")?.value || "").trim().toLowerCase();
+      const filterFn = (g)=>{
+        const hay = ((g.title||"")+" "+(g.blurb||"")+" "+(g.tags||[]).join(" ")).toLowerCase();
+        const matchQ = !q || hay.includes(q);
+        const matchTags = activeTags.size===0 || (g.tags||[]).some(t=>activeTags.has(t));
+        return matchQ && matchTags;
+      };
+      renderGames(filterFn);
+    }
+
+    function renderTags(){
+      const T = $("#tags"); if(!T) return;
+      T.innerHTML = `<span class="text-xs text-neutral-400">Filtr tagů:</span>`;
+      allTags.forEach(t=>{
+        const b = create("button","px-3 py-1 rounded-full border text-sm border-neutral-700 text-neutral-300 hover:border-neutral-500");
+        b.textContent=t;
+        b.onclick = ()=>{ activeTags.has(t) ? activeTags.delete(t) : activeTags.add(t); b.classList.toggle("bg-cyan-500/20"); b.classList.toggle("border-cyan-400"); applyFilter(); };
+        T.appendChild(b);
+      });
+      if(allTags.length){
+        const reset = create("button","ml-2 text-xs text-cyan-300 hover:text-cyan-200","Reset");
+        reset.onclick = ()=>{ activeTags=new Set(); renderTags(); applyFilter(); };
+        T.appendChild(reset);
+      }
+    }
+
+    // částice
+    function particles(canvas, opts){
+      const c=canvas, ctx=c.getContext("2d"); let w=0,h=0,raf=0;
+      const N=opts.N||42, speed=opts.speed||0.4;
+      function resize(){ const rect=canvas.parentElement.getBoundingClientRect(); w=c.width=Math.max(window.innerWidth,Math.ceil(rect.width||window.innerWidth)); h=c.height=Math.ceil(rect.height||520); }
+      const dots=Array.from({length:N},()=>({x:0,y:0,vx:(Math.random()-.5)*speed,vy:(Math.random()-.5)*speed}));
+      function reset(){ dots.forEach(d=>{ d.x=Math.random()*w; d.y=Math.random()*h; }); }
+      function draw(){
+        ctx.clearRect(0,0,w,h);
+        const grad=ctx.createLinearGradient(0,0,w,h); grad.addColorStop(0,"#0b1220"); grad.addColorStop(1,"#0b0f16");
+        ctx.fillStyle=grad; ctx.globalAlpha=.94; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1;
+        for(let i=0;i<N;i++){
+          const a=dots[i]; a.x+=a.vx; a.y+=a.vy;
+          if(a.x<0||a.x>w) a.vx*=-1; if(a.y<0||a.y>h) a.vy*=-1;
+          for(let j=i+1;j<N;j++){ const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+            if(d<120){ ctx.globalAlpha=1-d/120; ctx.strokeStyle="#60a5fa"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
+          }
+          ctx.fillStyle="#22d3ee"; ctx.beginPath(); ctx.arc(a.x,a.y,1.2,0,Math.PI*2); ctx.fill();
+        }
+        raf=requestAnimationFrame(draw);
+      }
+      function start(){ resize(); reset(); draw(); }
+      const ro = new ResizeObserver(()=>resize());
+      ro.observe(canvas.parentElement); window.addEventListener("resize",resize); start();
+      return {stop:()=>cancelAnimationFrame(raf), ro};
+    }
+
+    // scroll progress
+    window.addEventListener("scroll",()=>{
+      const s=document.documentElement.scrollTop||document.body.scrollTop;
+      const h=(document.documentElement.scrollHeight - document.documentElement.clientHeight) || 1;
+      $("#scrollbar").style.width=(Math.max(0,Math.min(1,s/h))*100)+"%";
+    });
+
+    // drawer logika
+    const drawer=$("#filterDrawer");
+    const openBtn=$("#openFilters");
+    const closeBtn=$("#closeFilters");
+    const backdrop=$("#filterBackdrop");
+    function openFilters(){ drawer.classList.remove("hidden"); setTimeout(()=>$("#search")?.focus(),50); }
+    function closeFilters(){ drawer.classList.add("hidden"); }
+    openBtn?.addEventListener("click",openFilters);
+    closeBtn?.addEventListener("click",closeFilters);
+    backdrop?.addEventListener("click",closeFilters);
+    document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeFilters(); });
+
+    // init
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    renderTags();
+    applyFilter();
+    if(!prefersReduced){
+      particles(document.getElementById("heroCanvas"),{N:40,speed:.35});
+      particles(document.getElementById("areaCanvas"),{N:46,speed:.33});
+    }
+  </script>
+</body>
+</html>
