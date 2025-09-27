@@ -68,7 +68,7 @@
     </div>
   </section>
 
-  <!-- QUICK NAV (jen hry + externí kanály) -->
+  <!-- QUICK NAV -->
   <nav class="sticky top-0 z-40 border-y border-white/10 bg-white/5 backdrop-blur">
     <div class="mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-3 flex flex-wrap items-center justify-center gap-2">
       <a href="#games" class="pill"><i data-lucide="joystick" class="icon"></i><span>↓ Hry</span></a>
@@ -130,92 +130,109 @@
   <script>
     document.addEventListener('DOMContentLoaded',()=>{ if (window.lucide) lucide.createIcons(); });
 
-    /* === DATA: uprav dle potřeby === */
-    const GAMES = [
-      {
-        id:"g-strahov-gang",
-        title:"Strahov Gang",
+    /* ====== RUČNÍ DATA (můžeš libovolně upravovat) ====== */
+    const GAMES_MANUAL = [
+      { id:"g-strahov-gang", title:"Strahov Gang",
         blurb:"3D horor v Unity o prvním dni na strahovských kolejích.",
-        logo:"/assets/showcase/img_vhs_3.png",
-        tags:["unity","3d","horror","vhs"],
-        href:"/projects/strahov-gang"   // interní detail
-      },
-      {
-        id:"g-golf-town",
-        title:"Golf Town",
+        logo:"/assets/showcase/img_vhs_3.png", tags:["unity","3d","horror","vhs"],
+        href:"/projects/strahov-gang" },
+
+      { id:"g-golf-town", title:"Golf Town",
         blurb:"Experimentální VR golfová městská hříčka s level-design twisty.",
-        logo:"/assets/showcase/img_vhs_4.png",
-        tags:["unity","vr","vhs"],
-        href:"https://www.youtube.com/watch?v=OB7_UmOI_2U&t=6s"
-      },
-      {
-        id:"g-magnificent-7",
-        title:"Magnificent 7",
+        logo:"/assets/showcase/img_vhs_4.png", tags:["unity","vr","vhs"],
+        href:"https://www.youtube.com/watch?v=OB7_UmOI_2U&t=6s" },
+
+      { id:"g-magnificent-7", title:"Magnificent 7",
         blurb:"Pixel-art akce s lehce absurdním humorem a power-upy.",
-        logo:"/assets/showcase/img_vhs_1.png",
-        tags:["2d","pixel-art","vhs"],
-        href:"https://youtu.be/SN_Pse347iI"
-      },
-      {
-        id:"g-fitlife",
-        title:"FitLife",
+        logo:"/assets/showcase/img_vhs_1.png", tags:["2d","pixel-art","vhs"],
+        href:"https://youtu.be/SN_Pse347iI" },
+
+      { id:"g-fitlife", title:"FitLife",
         blurb:"Retro webová hříčka s jednoduchou hratelností.",
-        logo:"/assets/showcase/FitLife.png",
-        tags:["web","bachelor","game"],
-        href:"https://antik98.github.io/FitLife/"
-      },
-      {
-        id:"g-pointless-pointers",
-        title:"Pointless Pointers",
+        logo:"/assets/showcase/FitLife.png", tags:["web","bachelor","game"],
+        href:"https://antik98.github.io/FitLife/" },
+
+      { id:"g-pointless-pointers", title:"Pointless Pointers",
         blurb:"Minimalistická reflexní arkáda s čistou estetikou.",
-        logo:"/assets/showcase/img_vhs_2.png",
-        tags:["2d","unity","vhs"],
-        href:"https://www.youtube.com/watch?v=4u3qrxFuULM&t=1s"
-      },
-      {
-        id:"g-ardaestra",
-        title:"Ardaestra Magitech",
+        logo:"/assets/showcase/img_vhs_2.png", tags:["2d","unity","vhs"],
+        href:"https://www.youtube.com/watch?v=4u3qrxFuULM&t=1s" },
+
+      { id:"g-ardaestra", title:"Ardaestra Magitech",
         blurb:"Prototyp RPG s „magitech“ stylizací a systémem schopností.",
-        logo:"/assets/showcase/img_vhs_6.png",
-        tags:["rpg","unity","vhs"],
-        href:"https://youtu.be/Zz09tvnLEuo?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m"
-      },
-      {
-        id:"g-poe-ripoff",
-        title:"Path of Exile (rip-off)",
+        logo:"/assets/showcase/img_vhs_6.png", tags:["rpg","unity","vhs"],
+        href:"https://youtu.be/Zz09tvnLEuo?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m" },
+
+      { id:"g-poe-ripoff", title:"Path of Exile (rip-off)",
         blurb:"Studentský experiment s ARPG mechanikami a loot-spirálou.",
-        logo:"/assets/showcase/img_vhs_5.png",
-        tags:["arpg","unity","vhs"],
-        href:"https://www.youtube.com/watch?v=7P3N3s81QqU&t=20s"
-      },
-      {
-        id:"g-gallifreyan",
-        title:"Gallifreyan Translator (toy)",
+        logo:"/assets/showcase/img_vhs_5.png", tags:["arpg","unity","vhs"],
+        href:"https://www.youtube.com/watch?v=7P3N3s81QqU&t=20s" },
+
+      { id:"g-gallifreyan", title:"Gallifreyan Translator (toy)",
         blurb:"Neherní, ale roztomilý překladač do „Time Lord“ kruhů.",
-        logo:"/assets/showcase/kyselova.png",
-        tags:["toy","web","ccc"],
-        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kyselba1",
-        fit:"contain" /* příklad: bez ořezu */
-      }
+        logo:"/assets/showcase/kyselova.png", tags:["toy","web","ccc"],
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kyselba1", fit:"contain" }
     ];
 
-    /* === Helpers === */
+    /* ====== AUTOIMPORT Z YOUTUBE PLAYLISTU (RSS) ======
+       - bez API klíče; z playlistu vytáhne název, link a náhled
+       - sloučí se s GAMES_MANUAL (deduplikace podle href)
+    ===================================================== */
+    const PLAYLIST_ID = "PLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF";
+    const PLAYLIST_RSS = `https://www.youtube.com/feeds/videos.xml?playlist_id=${PLAYLIST_ID}`;
+
+    // Helpers
     const $=sel=>document.querySelector(sel);
     const create=(tag,cls="",html="")=>{const el=document.createElement(tag); if(cls) el.className=cls; if(html) el.innerHTML=html; return el;};
-    const allTags = Array.from(new Set(GAMES.flatMap(g=>g.tags||[])));
+    const md5 = s => new TextEncoder().encode(s).reduce((a,b)=> (a=((a<<5)-a)+b) & 0xffffffff,0).toString(16).replace("-","m"); // tiny id helper (not real MD5)
 
+    function normalizeTitle(t){
+      // lehké čištění: „ | VHS | … | CTU FIT“
+      return (t||"").replace(/\s*\|\s*VHS.*$/i,"").trim();
+    }
+    function ytThumbFromId(id){ return `https://img.youtube.com/vi/${id}/hqdefault.jpg`; }
+
+    async function fetchPlaylistItems(){
+      try{
+        const res = await fetch(PLAYLIST_RSS);
+        if(!res.ok) throw new Error("Nelze načíst RSS feed.");
+        const xmlText = await res.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(xmlText, "application/xml");
+        const entries = Array.from(xml.querySelectorAll("entry"));
+        return entries.map(e=>{
+          const link = e.querySelector("link")?.getAttribute("href") || "";
+          const titleRaw = e.querySelector("title")?.textContent || "";
+          const title = normalizeTitle(titleRaw);
+          const videoId = e.querySelector("yt\\:videoId, videoId")?.textContent || (new URL(link).searchParams.get("v")||"");
+          const logo = ytThumbFromId(videoId);
+          return {
+            id: "yt-" + (videoId||md5(link)),
+            title,
+            blurb: "",                     // jednovětý popis můžeš doplnit ručně později
+            logo,
+            tags: ["vhs","video"],
+            href: link
+          };
+        });
+      }catch(err){
+        console.warn("Autoimport playlistu selhal:", err);
+        return [];
+      }
+    }
+
+    // karta hry
     function gameCard(g){
       const art = create("article","card group relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black");
       const body = create("div","p-4 flex items-start gap-3");
 
       const hex = create("span","hex shrink-0"+(g.fit==="contain"?" hex--contain":""));
-      const img = new Image(); img.src=g.logo; img.alt=g.title+" logo"; img.loading="lazy"; img.decoding="async";
+      const img = new Image(); img.src=g.logo; img.alt=(g.title||"")+" logo"; img.loading="lazy"; img.decoding="async";
       hex.appendChild(img);
       body.appendChild(hex);
 
       const text = create("div","min-w-0 flex-1");
-      text.appendChild(create("h3","text-lg font-semibold text-neutral-100",g.title));
-      if(g.blurb) text.appendChild(create("p","mt-1 text-neutral-300/90 text-sm leading-relaxed",g.blurb));
+      text.appendChild(create("h3","text-lg font-semibold text-neutral-100",g.title||"Bez názvu"));
+      if(g.blurb){ text.appendChild(create("p","mt-1 text-neutral-300/90 text-sm leading-relaxed",g.blurb)); }
 
       if((g.tags||[]).length){
         const tg=create("div","mt-3 flex flex-wrap gap-2");
@@ -232,35 +249,35 @@
       return art;
     }
 
-    function renderGames(filterFn){
+    function renderGames(list){
       const G=$("#gamesGrid"); G.innerHTML="";
-      GAMES.filter(filterFn).forEach(g=> G.appendChild(gameCard(g)));
+      list.forEach(g=> G.appendChild(gameCard(g)));
     }
 
     /* === Vyhledávání a tagy === */
     let activeTags=new Set();
-    function applyFilter(){
+    function applyFilter(base){
       const q=($("#search")?.value||"").trim().toLowerCase();
-      const filterFn=(g)=>{
+      const filtered = base.filter(g=>{
         const hay=((g.title||"")+" "+(g.blurb||"")+" "+(g.tags||[]).join(" ")).toLowerCase();
         const matchQ=!q || hay.includes(q);
         const matchTags=activeTags.size===0 || (g.tags||[]).some(t=>activeTags.has(t));
         return matchQ && matchTags;
-      };
-      renderGames(filterFn);
+      });
+      renderGames(filtered);
     }
-    function renderTags(){
+    function renderTags(allTags){
       const T=$("#tags"); if(!T) return;
       T.innerHTML=`<span class="text-xs text-neutral-400">Filtr tagů:</span>`;
       allTags.forEach(t=>{
         const b=create("button","px-3 py-1 rounded-full border text-sm border-neutral-700 text-neutral-300 hover:border-neutral-500");
         b.textContent=t;
-        b.onclick=()=>{ activeTags.has(t)?activeTags.delete(t):activeTags.add(t); b.classList.toggle("bg-cyan-500/20"); b.classList.toggle("border-cyan-400"); applyFilter(); };
+        b.onclick=()=>{ activeTags.has(t)?activeTags.delete(t):activeTags.add(t); b.classList.toggle("bg-cyan-500/20"); b.classList.toggle("border-cyan-400"); applyFilter(ALL_GAMES); };
         T.appendChild(b);
       });
       if(allTags.length){
         const reset=create("button","ml-2 text-xs text-cyan-300 hover:text-cyan-200","Reset");
-        reset.onclick=()=>{ activeTags=new Set(); renderTags(); applyFilter(); };
+        reset.onclick=()=>{ activeTags=new Set(); renderTags(allTags); applyFilter(ALL_GAMES); };
         T.appendChild(reset);
       }
     }
@@ -280,7 +297,7 @@
           const a=dots[i]; a.x+=a.vx; a.y+=a.vy;
           if(a.x<0||a.x>w) a.vx*=-1; if(a.y<0||a.y>h) a.vy*=-1;
           for(let j=i+1;j<N;j++){ const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
-            if(d<120){ ctx.globalAlpha=1-d/120; ctx.strokeStyle="#60a5fa"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b,x=b.y?b.y:b.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
+            if(d<120){ ctx.globalAlpha=1-d/120; ctx.strokeStyle="#60a5fa"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
           }
           ctx.fillStyle="#22d3ee"; ctx.beginPath(); ctx.arc(a.x,a.y,1.2,0,Math.PI*2); ctx.fill();
         }
@@ -311,10 +328,29 @@
     backdrop?.addEventListener("click",closeFilters);
     document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeFilters(); });
 
-    /* init */
+    /* ====== INIT: sloučení manuálních a autoimportovaných her ====== */
+    let ALL_GAMES = [...GAMES_MANUAL];
+
+    (async ()=>{
+      // načti položky z playlistu (RSS)
+      const fromYT = await fetchPlaylistItems();
+
+      // deduplikační mapa podle href
+      const seen = new Set(ALL_GAMES.map(g=>g.href));
+      const merged = [
+        ...ALL_GAMES,
+        ...fromYT.filter(x => x.href && !seen.has(x.href))
+      ];
+
+      // set + tagy pro filtr
+      ALL_GAMES = merged;
+      const allTags = Array.from(new Set(ALL_GAMES.flatMap(g=>g.tags||[])));
+      renderTags(allTags);
+      applyFilter(ALL_GAMES);
+    })();
+
+    // částice
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    renderTags();
-    applyFilter();
     if(!prefersReduced){
       particles(document.getElementById("heroCanvas"),{N:40,speed:.35});
       particles(document.getElementById("areaCanvas"),{N:46,speed:.33});
