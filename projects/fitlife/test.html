@@ -21,7 +21,33 @@
     .hero-btn{display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);padding:.6rem .9rem;border-radius:.8rem}
     .hero-btn:hover{background:rgba(255,255,255,.12)}
     .chip{display:inline-flex;align-items:center;gap:.4rem;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);padding:.25rem .55rem;border-radius:.55rem;font-size:.75rem}
-    .gallery img{border-radius:1rem;border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 30px rgba(0,0,0,.25)}
+
+    /* Carousel (galerie) */
+    #gallery { aspect-ratio: 16/9; }
+    #gallery .slide {
+      position:absolute; inset:0; opacity:0; transition:opacity .35s ease;
+      display:flex; align-items:center; justify-content:center;
+    }
+    #gallery .slide.active { opacity:1; }
+    #gallery img { width:100%; height:100%; object-fit:cover; }
+    .carousel-btn{
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:42px; height:42px; border-radius:.75rem; border:1px solid rgba(255,255,255,.2);
+      background:rgba(17,24,39,.55); backdrop-filter: blur(6px);
+      color:#fff; font-size:22px; line-height:1; display:flex; align-items:center; justify-content:center;
+      transition:background .2s ease, transform .2s ease;
+    }
+    .carousel-btn:hover{ background:rgba(17,24,39,.75); transform:translateY(-50%) scale(1.03); }
+    .carousel-btn.prev{ left:10px; }
+    .carousel-btn.next{ right:10px; }
+    #gallery .dots{
+      position:absolute; left:0; right:0; bottom:10px; display:flex; gap:6px; justify-content:center;
+    }
+    #gallery .dot{
+      width:9px; height:9px; border-radius:9999px; border:1px solid rgba(255,255,255,.7);
+      background:rgba(255,255,255,.15); cursor:pointer;
+    }
+    #gallery .dot.active{ background:#fff; }
   </style>
 </head>
 <body class="min-h-screen text-neutral-100 bg-gradient-dark">
@@ -56,12 +82,11 @@
             <a class="hero-btn" href="https://antik98.github.io/FitLife/" target="_blank" rel="noreferrer">
               <i data-lucide="play-circle" class="icon"></i> Spustit web build ↗
             </a>
-            <!-- pokud bude zip / release, přidej -->
-            <!-- <a class="hero-btn" href="/projects/fitlife/FitLife_win.zip"><i data-lucide='download' class='icon'></i> Stáhnout (Windows)</a> -->
+            <!-- pokud bude zip / release, přidej
+            <a class="hero-btn" href="/projects/fitlife/FitLife_win.zip"><i data-lucide='download' class='icon'></i> Stáhnout (Windows)</a> -->
             <a class="hero-btn" href="https://github.com/search?q=FitLife+cvut" target="_blank" rel="noreferrer">
               <i data-lucide="github" class="icon"></i> GitHub
             </a>
-            <!-- YouTube trailer – doplň skutečné video, pokud existuje -->
             <!-- <a class="hero-btn" href="https://www.youtube.com/watch?v=XXXXXXXX" target="_blank" rel="noreferrer"><i data-lucide="youtube" class="icon"></i> Trailer</a> -->
           </div>
 
@@ -99,18 +124,23 @@
             <iframe class="w-full h-full" src="about:blank"
               title="FitLife video" allowfullscreen loading="lazy" referrerpolicy="no-referrer"></iframe>
           </div>
-          <p class="mt-2 text-sm text-neutral-400">Nemáš video? Klidně tu sekci smaž, nebo vlož záznam ze showcase.</p>
+          <p class="mt-2 text-sm text-neutral-400">Nemáš video? Sekci klidně odstraň nebo vlož záznam ze showcase.</p>
         </article>
 
-        <!-- Gallery -->
+        <!-- Gallery (carousel) -->
         <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
           <h2 class="text-xl font-semibold mb-3">Galerie</h2>
-          <div class="gallery grid grid-cols-2 md:grid-cols-3 gap-3">
-            <img src="https://grafitctu.github.io/assets/showcase/FitLife.png" alt="FitLife screenshot 1" loading="lazy">
-            <img src="https://grafitctu.github.io/assets/showcase/img_vhs_1.png" alt="Placeholder 2" loading="lazy">
-            <img src="https://grafitctu.github.io/assets/showcase/img_vhs_2.png" alt="Placeholder 3" loading="lazy">
+
+          <div id="gallery" class="relative overflow-hidden rounded-xl border border-white/10 bg-black">
+            <!-- obrázky vloží skript -->
+            <button class="carousel-btn prev" aria-label="Předchozí obrázek">‹</button>
+            <button class="carousel-btn next" aria-label="Další obrázek">›</button>
+            <div class="dots" aria-label="Indikátory snímků"></div>
           </div>
-          <p class="mt-2 text-xs text-neutral-500">Nahraď placeholdery vlastními screenshoty (PNG/JPG).</p>
+
+          <p class="mt-2 text-xs text-neutral-500">
+            Přidávej/odebírej URL ve <code>GALLERY_IMAGES</code> níže – carousel zvládne libovolný počet obrázků.
+          </p>
         </article>
 
         <!-- Changelog -->
@@ -118,7 +148,8 @@
           <h2 class="text-xl font-semibold mb-3">Changelog</h2>
           <ul class="space-y-2 text-sm">
             <li><span class="text-neutral-400">2025-09-01:</span> Úvodní publikace stránky.</li>
-            <li><span class="text-neutral-400">2025-09-15:</span> Přidán webový build + lehké vizuální ladění.</li>
+            <li><span class="text-neutral-400">2025-09-15:</span> Přidán webový build + vizuální ladění.</li>
+            <li><span class="text-neutral-400">2025-09-28:</span> Galerie → carousel (šipky, tečky, klávesy, swipe).</li>
           </ul>
         </article>
       </section>
@@ -132,7 +163,7 @@
             <a class="hero-btn" href="https://antik98.github.io/FitLife/" target="_blank" rel="noreferrer">
               <i data-lucide="play" class="icon"></i> Spustit web build ↗
             </a>
-            <!-- přidej další platformy podle potřeby -->
+            <!-- přidej další platformy dle potřeby -->
             <!-- <a class="hero-btn" href="/projects/fitlife/FitLife_win.zip"><i data-lucide='download' class='icon'></i> Windows (ZIP)</a> -->
           </div>
         </div>
@@ -187,7 +218,84 @@
   <script>
     document.addEventListener('DOMContentLoaded',()=>{ if (window.lucide) lucide.createIcons(); });
 
-    /* particles (stejná estetika) */
+    /* ====== GALERIE: obrázky do carouselu (přidej kolik chceš) ====== */
+    const GALLERY_IMAGES = [
+      "https://grafitctu.github.io/assets/showcase/FitLife.png",
+      "https://grafitctu.github.io/assets/showcase/img_vhs_1.png",
+      "https://grafitctu.github.io/assets/showcase/img_vhs_2.png",
+      "https://grafitctu.github.io/assets/showcase/img_vhs_3.png",
+      "https://grafitctu.github.io/assets/showcase/img_vhs_4.png"
+    ];
+
+    /* ====== Carousel init ====== */
+    function initCarousel(elId, images){
+      const el = document.getElementById(elId);
+      if(!el || !images?.length) return;
+
+      // slides
+      images.forEach((src,i)=>{
+        const slide = document.createElement("div");
+        slide.className = "slide" + (i===0 ? " active" : "");
+        const img = new Image();
+        img.src = src; img.alt = "Screenshot "+(i+1);
+        img.loading = i>0 ? "lazy" : "eager";
+        slide.appendChild(img);
+        el.appendChild(slide);
+      });
+
+      // dots
+      const dotsWrap = el.querySelector(".dots");
+      const dots = images.map((_,i)=>{
+        const d=document.createElement("button");
+        d.className = "dot"+(i===0?" active":"");
+        d.setAttribute("aria-label","Snímek "+(i+1));
+        d.addEventListener("click",()=>go(i));
+        dotsWrap.appendChild(d);
+        return d;
+      });
+
+      // arrows
+      const prevBtn = el.querySelector(".carousel-btn.prev");
+      const nextBtn = el.querySelector(".carousel-btn.next");
+
+      let idx = 0;
+      const slides = Array.from(el.querySelectorAll(".slide"));
+
+      function go(n){
+        slides[idx].classList.remove("active");
+        dots[idx].classList.remove("active");
+        idx = (n+slides.length) % slides.length;
+        slides[idx].classList.add("active");
+        dots[idx].classList.add("active");
+        // preload okolních
+        const next = (idx+1)%slides.length, prev=(idx-1+slides.length)%slides.length;
+        [idx,next,prev].forEach(i=>{
+          const im = slides[i].querySelector("img");
+          if(im && im.loading==="lazy"){ im.loading="eager"; }
+        });
+      }
+
+      prevBtn?.addEventListener("click",()=>go(idx-1));
+      nextBtn?.addEventListener("click",()=>go(idx+1));
+
+      // klávesy
+      el.setAttribute("tabindex","0");
+      el.addEventListener("keydown",(e)=>{
+        if(e.key==="ArrowLeft") go(idx-1);
+        if(e.key==="ArrowRight") go(idx+1);
+      });
+
+      // swipe
+      let sx=0, sy=0;
+      el.addEventListener("touchstart",(e)=>{ sx=e.touches[0].clientX; sy=e.touches[0].clientY; }, {passive:true});
+      el.addEventListener("touchend",(e)=>{
+        const dx = (e.changedTouches[0].clientX - sx);
+        const dy = Math.abs(e.changedTouches[0].clientY - sy);
+        if(Math.abs(dx) > 40 && dy < 50){ dx>0 ? go(idx-1) : go(idx+1); }
+      });
+    }
+
+    /* ====== Particles ====== */
     function particles(canvas,opts){
       const c=canvas,ctx=c.getContext("2d"); let w=0,h=0,raf=0;
       const N=opts.N||38,speed=opts.speed||0.34;
@@ -221,12 +329,15 @@
       document.getElementById("scrollbar").style.width=(Math.max(0,Math.min(1,s/h))*100)+"%";
     });
 
-    /* init particles */
+    /* init */
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(!prefersReduced){
       particles(document.getElementById("heroCanvas"),{N:34,speed:.32});
       particles(document.getElementById("areaCanvas"),{N:44,speed:.30});
     }
+    document.addEventListener("DOMContentLoaded",()=>{
+      initCarousel("gallery", GALLERY_IMAGES);
+    });
   </script>
 </body>
 </html>
