@@ -1,4 +1,4 @@
-<!doctype html>
+  <!doctype html>
 <html lang="cs" class="dark">
 <head>
   <meta charset="utf-8" />
@@ -105,7 +105,7 @@
       </div>
 
       <footer class="mt-14 border-t py-8 text-center text-sm text-neutral-400 border-white/10">
-        © Grafit Research Group — hry (prototyp).
+        © Grafit Research Group — hry (statický rozcestník).
       </footer>
     </main>
   </section>
@@ -130,8 +130,8 @@
   <script>
     document.addEventListener('DOMContentLoaded',()=>{ if (window.lucide) lucide.createIcons(); });
 
-    /* ====== RUČNÍ DATA (můžeš libovolně upravovat) ====== */
-    const GAMES_MANUAL = [
+    /* ====== STATICKÁ DATA – rozšiř podle potřeby ====== */
+    const GAMES = [
       { id:"g-strahov-gang", title:"Strahov Gang",
         blurb:"3D horor v Unity o prvním dni na strahovských kolejích.",
         logo:"/assets/showcase/img_vhs_3.png", tags:["unity","3d","horror","vhs"],
@@ -143,88 +143,61 @@
         href:"https://www.youtube.com/watch?v=OB7_UmOI_2U&t=6s" },
 
       { id:"g-magnificent-7", title:"Magnificent 7",
-        blurb:"Pixel-art akce s lehce absurdním humorem a power-upy.",
+        blurb:"Pixel-art akční hříčka s přepínáním postav.",
         logo:"/assets/showcase/img_vhs_1.png", tags:["2d","pixel-art","vhs"],
         href:"https://youtu.be/SN_Pse347iI" },
-
-      { id:"g-fitlife", title:"FitLife",
-        blurb:"Retro webová hříčka s jednoduchou hratelností.",
-        logo:"/assets/showcase/FitLife.png", tags:["web","bachelor","game"],
-        href:"https://antik98.github.io/FitLife/" },
 
       { id:"g-pointless-pointers", title:"Pointless Pointers",
         blurb:"Minimalistická reflexní arkáda s čistou estetikou.",
         logo:"/assets/showcase/img_vhs_2.png", tags:["2d","unity","vhs"],
         href:"https://www.youtube.com/watch?v=4u3qrxFuULM&t=1s" },
 
+      { id:"g-poe-ripoff", title:"Path of Exile (rip-off)",
+        blurb:"Studentský experiment s ARPG mechanikami a loot spirálou.",
+        logo:"/assets/showcase/img_vhs_5.png", tags:["arpg","unity","vhs"],
+        href:"https://www.youtube.com/watch?v=7P3N3s81QqU&t=20s" },
+
       { id:"g-ardaestra", title:"Ardaestra Magitech",
         blurb:"Prototyp RPG s „magitech“ stylizací a systémem schopností.",
         logo:"/assets/showcase/img_vhs_6.png", tags:["rpg","unity","vhs"],
         href:"https://youtu.be/Zz09tvnLEuo?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m" },
 
-      { id:"g-poe-ripoff", title:"Path of Exile (rip-off)",
-        blurb:"Studentský experiment s ARPG mechanikami a loot-spirálou.",
-        logo:"/assets/showcase/img_vhs_5.png", tags:["arpg","unity","vhs"],
-        href:"https://www.youtube.com/watch?v=7P3N3s81QqU&t=20s" },
+      { id:"g-golf-town-vr", title:"Golf Town (VR)",
+        blurb:"Variace na Golf Town ve VR – experimentální level design.",
+        logo:"/assets/showcase/img_vhs_4.png", tags:["vr","unity","prototype"],
+        href:"https://www.youtube.com/watch?v=OB7_UmOI_2U&t=6s" },
+
+      { id:"g-fitlife", title:"FitLife",
+        blurb:"Retro webová hříčka s jednoduchou hratelností.",
+        logo:"/assets/showcase/FitLife.png", tags:["web","bachelor","game"],
+        href:"https://antik98.github.io/FitLife/" },
+
+      { id:"g-strahov-gang-yt", title:"Strahov Gang — video",
+        blurb:"Krátký průchod úrovní, představení atmosféry a mechanik.",
+        logo:"/assets/showcase/img_vhs_3.png", tags:["video","vhs","unity"],
+        href:"https://youtu.be/n1OENc6Fc2M?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m" },
 
       { id:"g-gallifreyan", title:"Gallifreyan Translator (toy)",
         blurb:"Neherní, ale roztomilý překladač do „Time Lord“ kruhů.",
         logo:"/assets/showcase/kyselova.png", tags:["toy","web","ccc"],
-        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kyselba1", fit:"contain" }
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kyselba1", fit:"contain" },
+
+      { id:"g-honza", title:"Honza",
+        blurb:"Pixel-art plošinovka z kurzu VHS.",
+        logo:"/assets/showcase/honzaDetail.png", tags:["2d","pixel-art","vhs"],
+        href:"https://www.youtube.com/watch?v=dhuMuopxlio&list=PLXhipPFpvUWEhSxw79CDOdjFFm5D6b3us&index=4" },
+
+      { id:"g-golf-town-alt", title:"Golf Town — showcase",
+        blurb:"Showcase z večera studentských her.",
+        logo:"/assets/showcase/img_vhs_4.png", tags:["showcase","video"],
+        href:"https://www.youtube.com/watch?v=OB7_UmOI_2U&t=6s" }
     ];
 
-
-
-
-    
-    /* ====== AUTOIMPORT Z YOUTUBE PLAYLISTU (RSS) ======
-       - bez API klíče; z playlistu vytáhne název, link a náhled
-       - sloučí se s GAMES_MANUAL (deduplikace podle href)
-    ===================================================== */
-    const PLAYLIST_ID = "PLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF";
-    const PLAYLIST_RSS = `https://www.youtube.com/feeds/videos.xml?playlist_id=${PLAYLIST_ID}`;
-
-    // Helpers
+    /* ====== Helpers ====== */
     const $=sel=>document.querySelector(sel);
     const create=(tag,cls="",html="")=>{const el=document.createElement(tag); if(cls) el.className=cls; if(html) el.innerHTML=html; return el;};
-    const md5 = s => new TextEncoder().encode(s).reduce((a,b)=> (a=((a<<5)-a)+b) & 0xffffffff,0).toString(16).replace("-","m"); // tiny id helper (not real MD5)
+    const allTags = Array.from(new Set(GAMES.flatMap(g=>g.tags||[])));
 
-    function normalizeTitle(t){
-      // lehké čištění: „ | VHS | … | CTU FIT“
-      return (t||"").replace(/\s*\|\s*VHS.*$/i,"").trim();
-    }
-    function ytThumbFromId(id){ return `https://img.youtube.com/vi/${id}/hqdefault.jpg`; }
-
-    async function fetchPlaylistItems(){
-      try{
-        const res = await fetch(PLAYLIST_RSS);
-        if(!res.ok) throw new Error("Nelze načíst RSS feed.");
-        const xmlText = await res.text();
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(xmlText, "application/xml");
-        const entries = Array.from(xml.querySelectorAll("entry"));
-        return entries.map(e=>{
-          const link = e.querySelector("link")?.getAttribute("href") || "";
-          const titleRaw = e.querySelector("title")?.textContent || "";
-          const title = normalizeTitle(titleRaw);
-          const videoId = e.querySelector("yt\\:videoId, videoId")?.textContent || (new URL(link).searchParams.get("v")||"");
-          const logo = ytThumbFromId(videoId);
-          return {
-            id: "yt-" + (videoId||md5(link)),
-            title,
-            blurb: "",                     // jednovětý popis můžeš doplnit ručně později
-            logo,
-            tags: ["vhs","video"],
-            href: link
-          };
-        });
-      }catch(err){
-        console.warn("Autoimport playlistu selhal:", err);
-        return [];
-      }
-    }
-
-    // karta hry
     function gameCard(g){
       const art = create("article","card group relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black");
       const body = create("div","p-4 flex items-start gap-3");
@@ -258,11 +231,11 @@
       list.forEach(g=> G.appendChild(gameCard(g)));
     }
 
-    /* === Vyhledávání a tagy === */
+    /* ====== Vyhledávání a tagy ====== */
     let activeTags=new Set();
-    function applyFilter(base){
+    function applyFilter(){
       const q=($("#search")?.value||"").trim().toLowerCase();
-      const filtered = base.filter(g=>{
+      const filtered = GAMES.filter(g=>{
         const hay=((g.title||"")+" "+(g.blurb||"")+" "+(g.tags||[]).join(" ")).toLowerCase();
         const matchQ=!q || hay.includes(q);
         const matchTags=activeTags.size===0 || (g.tags||[]).some(t=>activeTags.has(t));
@@ -270,23 +243,23 @@
       });
       renderGames(filtered);
     }
-    function renderTags(allTags){
+    function renderTags(){
       const T=$("#tags"); if(!T) return;
       T.innerHTML=`<span class="text-xs text-neutral-400">Filtr tagů:</span>`;
       allTags.forEach(t=>{
         const b=create("button","px-3 py-1 rounded-full border text-sm border-neutral-700 text-neutral-300 hover:border-neutral-500");
         b.textContent=t;
-        b.onclick=()=>{ activeTags.has(t)?activeTags.delete(t):activeTags.add(t); b.classList.toggle("bg-cyan-500/20"); b.classList.toggle("border-cyan-400"); applyFilter(ALL_GAMES); };
+        b.onclick=()=>{ activeTags.has(t)?activeTags.delete(t):activeTags.add(t); b.classList.toggle("bg-cyan-500/20"); b.classList.toggle("border-cyan-400"); applyFilter(); };
         T.appendChild(b);
       });
       if(allTags.length){
         const reset=create("button","ml-2 text-xs text-cyan-300 hover:text-cyan-200","Reset");
-        reset.onclick=()=>{ activeTags=new Set(); renderTags(allTags); applyFilter(ALL_GAMES); };
+        reset.onclick=()=>{ activeTags=new Set(); renderTags(); applyFilter(); };
         T.appendChild(reset);
       }
     }
 
-    /* === Částice === */
+    /* ====== Částice (opravena kresba linek) ====== */
     function particles(canvas,opts){
       const c=canvas,ctx=c.getContext("2d"); let w=0,h=0,raf=0;
       const N=opts.N||42, speed=opts.speed||0.4;
@@ -297,11 +270,17 @@
         ctx.clearRect(0,0,w,h);
         const grad=ctx.createLinearGradient(0,0,w,h); grad.addColorStop(0,"#0b1220"); grad.addColorStop(1,"#0b0f16");
         ctx.fillStyle=grad; ctx.globalAlpha=.94; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1;
+
         for(let i=0;i<N;i++){
           const a=dots[i]; a.x+=a.vx; a.y+=a.vy;
           if(a.x<0||a.x>w) a.vx*=-1; if(a.y<0||a.y>h) a.vy*=-1;
-          for(let j=i+1;j<N;j++){ const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
-            if(d<120){ ctx.globalAlpha=1-d/120; ctx.strokeStyle="#60a5fa"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
+
+          for(let j=i+1;j<N;j++){
+            const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+            if(d<120){
+              ctx.globalAlpha=1-d/120; ctx.strokeStyle="#60a5fa";
+              ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1;
+            }
           }
           ctx.fillStyle="#22d3ee"; ctx.beginPath(); ctx.arc(a.x,a.y,1.2,0,Math.PI*2); ctx.fill();
         }
@@ -332,29 +311,10 @@
     backdrop?.addEventListener("click",closeFilters);
     document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeFilters(); });
 
-    /* ====== INIT: sloučení manuálních a autoimportovaných her ====== */
-    let ALL_GAMES = [...GAMES_MANUAL];
-
-    (async ()=>{
-      // načti položky z playlistu (RSS)
-      const fromYT = await fetchPlaylistItems();
-
-      // deduplikační mapa podle href
-      const seen = new Set(ALL_GAMES.map(g=>g.href));
-      const merged = [
-        ...ALL_GAMES,
-        ...fromYT.filter(x => x.href && !seen.has(x.href))
-      ];
-
-      // set + tagy pro filtr
-      ALL_GAMES = merged;
-      const allTags = Array.from(new Set(ALL_GAMES.flatMap(g=>g.tags||[])));
-      renderTags(allTags);
-      applyFilter(ALL_GAMES);
-    })();
-
-    // částice
+    /* init */
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    renderTags();
+    applyFilter();
     if(!prefersReduced){
       particles(document.getElementById("heroCanvas"),{N:40,speed:.35});
       particles(document.getElementById("areaCanvas"),{N:46,speed:.33});
