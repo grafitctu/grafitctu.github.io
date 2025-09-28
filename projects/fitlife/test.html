@@ -14,7 +14,6 @@
     .pill:hover{background:rgba(255,255,255,.08)}
     .card{transition:transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease; box-shadow:0 10px 30px rgba(0,0,0,.15)}
     .card:hover{transform:translateY(-6px) scale(1.02); box-shadow:0 18px 40px rgba(0,0,0,.25)}
-    /* HEX (větší + zoom) */
     .hex{width:92px;height:92px;position:relative;isolation:isolate;background:linear-gradient(180deg,#0f172a,#020617);border:1px solid rgba(255,255,255,.1);border-radius:14px;clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0% 50%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 10px 30px rgba(0,0,0,.25)}
     .hex::after{content:"";position:absolute;inset:0;clip-path:inherit;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 40%)}
     .hex img{position:absolute;inset:0;width:100%;height:100%;padding:6px;object-fit:cover;transform:scale(1.12);transition:transform 300ms cubic-bezier(.22,1,.36,1);filter:drop-shadow(0 2px 8px rgba(0,0,0,.35))}
@@ -34,13 +33,20 @@
     <canvas id="heroCanvas" class="absolute inset-0 w-full" style="height:44vh"></canvas>
 
     <div class="relative mx-auto max-w-[1100px] px-4 xl:px-6 pt-14 pb-10">
-      <nav class="mb-6 text-sm text-neutral-400">
-        <a href="https://grafitctu.github.io/" class="hover:text-neutral-200">Grafit</a>
-        <span class="mx-2">/</span>
-        <a href="https://grafitctu.github.io/projects/" class="hover:text-neutral-200">Hry</a>
-        <span class="mx-2">/</span>
-        <span class="text-neutral-300">FitLife</span>
-      </nav>
+      <!-- top bar with breadcrumbs + language switch -->
+      <div class="mb-6 flex items-center justify-between gap-4">
+        <nav class="text-sm text-neutral-400">
+          <a data-i18n="bc.home" href="https://grafitctu.github.io/" class="hover:text-neutral-200">Grafit</a>
+          <span class="mx-2">/</span>
+          <a data-i18n="bc.games" href="https://grafitctu.github.io/projects/" class="hover:text-neutral-200">Hry</a>
+          <span class="mx-2">/</span>
+          <span class="text-neutral-300">FitLife</span>
+        </nav>
+        <button id="langSwitch" class="pill" type="button" aria-label="Switch language">
+          <i data-lucide="languages" class="icon"></i>
+          <span id="langSwitchLabel">English</span>
+        </button>
+      </div>
 
       <div class="flex items-start gap-5">
         <span class="hex shrink-0">
@@ -48,25 +54,25 @@
         </span>
         <div class="min-w-0">
           <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">FitLife</h1>
-          <p class="mt-2 text-neutral-300 max-w-2xl">
+          <p data-i18n="hero.pitch" class="mt-2 text-neutral-300 max-w-2xl">
             Retro webová hříčka — lehká, rychlá a hratelná přímo v prohlížeči.
           </p>
 
           <div class="mt-4 flex flex-wrap items-center gap-2">
             <a class="hero-btn" href="https://antik98.github.io/FitLife/" target="_blank" rel="noreferrer">
-              <i data-lucide="play-circle" class="icon"></i> Spustit web build ↗
+              <i data-lucide="play-circle" class="icon"></i> <span data-i18n="btn.play">Spustit web build ↗</span>
             </a>
-            <!-- <a class="hero-btn" href="/projects/fitlife/FitLife_win.zip"><i data-lucide='download' class='icon'></i> Stáhnout (Windows)</a> -->
+            <!-- <a class="hero-btn" href="/projects/fitlife/FitLife_win.zip"><i data-lucide='download' class='icon'></i> <span data-i18n="btn.win">Stáhnout (Windows)</span></a> -->
             <a class="hero-btn" href="https://github.com/search?q=FitLife+cvut" target="_blank" rel="noreferrer">
               <i data-lucide="github" class="icon"></i> GitHub
             </a>
           </div>
 
           <div class="mt-4 flex flex-wrap gap-2">
-            <span class="chip"><i data-lucide="monitor-play" class="icon"></i> Web (HTML5)</span>
-            <span class="chip"><i data-lucide="gamepad-2" class="icon"></i> 2D / Pixel-art</span>
-            <span class="chip"><i data-lucide="clock" class="icon"></i> 2024–2025</span>
-            <span class="chip"><i data-lucide="users" class="icon"></i> Student project (8 lidí)</span>
+            <span class="chip"><i data-lucide="monitor-play" class="icon"></i> <span data-i18n="chip.platform">Web (HTML5)</span></span>
+            <span class="chip"><i data-lucide="gamepad-2" class="icon"></i> <span data-i18n="chip.genre">2D / Pixel-art</span></span>
+            <span class="chip"><i data-lucide="clock" class="icon"></i> <span data-i18n="chip.year">2024–2025</span></span>
+            <span class="chip"><i data-lucide="users" class="icon"></i> <span data-i18n="chip.team">Student project (8 lidí)</span></span>
           </div>
         </div>
       </div>
@@ -81,8 +87,8 @@
 
         <!-- About -->
         <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h2 class="text-xl font-semibold mb-2">O hře</h2>
-          <p class="text-neutral-300">
+          <h2 data-i18n="sec.about.title" class="text-xl font-semibold mb-2">O hře</h2>
+          <p data-i18n="sec.about.text" class="text-neutral-300">
             FitLife vznikal přibližně <strong>rok</strong> napříč několika předměty a týmy. Na vývoji se postupně podílelo
             <strong>osm studentů</strong>. Zpočátku jsme se ani všichni neznali — projekt se rozběhl ve <strong>3. semestru</strong>
             pod vedením <strong>Ing. Marka Skotnicy</strong>. Chtěli jsme 2D pixel-art hru ve stylu Pokémonů a pár týdnů poté
@@ -92,54 +98,54 @@
 
         <!-- Development & Team -->
         <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h2 class="text-xl font-semibold mb-3">Vývoj &amp; tým</h2>
+          <h2 data-i18n="sec.dev.title" class="text-xl font-semibold mb-3">Vývoj &amp; tým</h2>
           <ul class="list-disc pl-5 space-y-2 text-neutral-300">
-            <li>Projekt běžel napříč několika předměty během cca 12 měsíců.</li>
-            <li>Zapojeno bylo celkem <strong>8 studentů</strong> v různých rolích (design, kód, grafika, testování).</li>
-            <li>Velká část vizuální stránky je součástí bakalářské práce <strong>Davida Mikulky</strong>.</li>
-            <li>Část <abbr title="Software Engineering">SI</abbr>, optimalizace a návrhové vzory řeší bakalářská práce <strong>Duc Minh Phama</strong>.</li>
+            <li data-i18n="sec.dev.li1">Projekt běžel napříč několika předměty během cca 12 měsíců.</li>
+            <li data-i18n="sec.dev.li2">Zapojeno bylo celkem <strong>8 studentů</strong> v různých rolích (design, kód, grafika, testování).</li>
+            <li data-i18n="sec.dev.li3">Velká část vizuální stránky je součástí bakalářské práce <strong>Davida Mikulky</strong>.</li>
+            <li data-i18n="sec.dev.li4">Část SI, optimalizace a návrhové vzory řeší bakalářská práce <strong>Duc Minh Phama</strong>.</li>
           </ul>
         </article>
 
         <!-- Post-mortem & Refactoring -->
         <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h2 class="text-xl font-semibold mb-2">Post-mortem &amp; refaktoring</h2>
-          <p class="text-neutral-300">
+          <h2 data-i18n="sec.pm.title" class="text-xl font-semibold mb-2">Post-mortem &amp; refaktoring</h2>
+          <p data-i18n="sec.pm.text" class="text-neutral-300">
             FitLife byl náš první větší projekt a to se podepsalo na procesu i kódu. Zpětně víme, že řada praktik byla
-            nešťastná: kód byl křehký, špatně udržitelný a obtížně rozšiřitelný. To je ale u juniorního týmu očekávatelné.
-            Následující kritika proto nemíří na jednotlivce — je to zdravá inventura a start
-            systematického <strong>přepracování workflow</strong> a <strong>refaktoringu</strong>. Obě bakalářské práce jsou tak
-            věnované <em>optimalizaci a finalizaci</em> hry.
+            nešťastná: kód byl křehký, špatně udržitelný a obtížně rozšiřitelný. To je u juniorního týmu očekávatelné.
+            Následující kritika proto nemíří na jednotlivce — je to zdravá inventura a start systematického
+            <strong>přepracování workflow</strong> a <strong>refaktoringu</strong>. Obě bakalářské práce jsou tak věnované
+            <em>optimalizaci a finalizaci</em> hry.
           </p>
         </article>
 
         <!-- Video -->
         <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h2 class="text-xl font-semibold mb-3">Video</h2>
+          <h2 data-i18n="sec.video.title" class="text-xl font-semibold mb-3">Video</h2>
           <div class="aspect-video rounded-xl overflow-hidden border border-white/10 bg-black">
             <!-- Nahraď src na skutečné YouTube ID, až bude -->
             <iframe class="w-full h-full" src="about:blank" title="FitLife video" allowfullscreen loading="lazy" referrerpolicy="no-referrer"></iframe>
           </div>
-          <p class="mt-2 text-sm text-neutral-400">Nemáš video? Sekci klidně smaž nebo vlož záznam ze showcase.</p>
+          <p data-i18n="sec.video.note" class="mt-2 text-sm text-neutral-400">Nemáš video? Sekci klidně smaž nebo vlož záznam ze showcase.</p>
         </article>
 
         <!-- Gallery -->
         <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h2 class="text-xl font-semibold mb-3">Galerie</h2>
+          <h2 data-i18n="sec.gallery.title" class="text-xl font-semibold mb-3">Galerie</h2>
           <div class="gallery grid grid-cols-2 md:grid-cols-3 gap-3">
             <img src="https://grafitctu.github.io/assets/showcase/FitLife.png" alt="FitLife — screenshot 1" loading="lazy">
             <img src="https://grafitctu.github.io/assets/showcase/img_vhs_1.png" alt="FitLife — placeholder 2" loading="lazy">
             <img src="https://grafitctu.github.io/assets/showcase/img_vhs_2.png" alt="FitLife — placeholder 3" loading="lazy">
           </div>
-          <p class="mt-2 text-xs text-neutral-500">Nahraď placeholdery vlastními screenshoty (PNG/JPG).</p>
+          <p data-i18n="sec.gallery.note" class="mt-2 text-xs text-neutral-500">Nahraď placeholdery vlastními screenshoty (PNG/JPG).</p>
         </article>
 
         <!-- Publications -->
         <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h2 class="text-xl font-semibold mb-3">Publikace</h2>
+          <h2 data-i18n="sec.pub.title" class="text-xl font-semibold mb-3">Publikace</h2>
           <ul class="space-y-2 text-neutral-300">
-            <li><strong>FitLife — game about studying at FIT (SI part)</strong>, <em>Duc Minh Pham</em>, bakalářská práce.</li>
-            <li><strong>FitLife — game about studying at FIT (graphics part)</strong>, <em>David Mikulka</em>, bakalářská práce.</li>
+            <li data-i18n="sec.pub.p1"><strong>FitLife — game about studying at FIT (SI part)</strong>, <em>Duc Minh Pham</em>, bakalářská práce.</li>
+            <li data-i18n="sec.pub.p2"><strong>FitLife — game about studying at FIT (graphics part)</strong>, <em>David Mikulka</em>, bakalářská práce.</li>
           </ul>
         </article>
       </section>
@@ -148,30 +154,215 @@
       <aside class="space-y-6">
         <!-- Download / Links card -->
         <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h3 class="text-lg font-semibold mb-3">Ke stažení / odkazy</h3>
+          <h3 data-i18n="aside.links.title" class="text-lg font-semibold mb-3">Ke stažení / odkazy</h3>
           <div class="flex flex-col gap-2">
             <a class="hero-btn" href="https://antik98.github.io/FitLife/" target="_blank" rel="noreferrer">
-              <i data-lucide="play" class="icon"></i> Spustit web build ↗
+              <i data-lucide="play" class="icon"></i> <span data-i18n="btn.play2">Spustit web build ↗</span>
             </a>
-            <!-- <a class="hero-btn" href="/projects/fitlife/FitLife_win.zip"><i data-lucide='download' class='icon'></i> Windows (ZIP)</a> -->
           </div>
         </div>
 
         <!-- Controls -->
         <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h3 class="text-lg font-semibold mb-3">Ovládání</h3>
+          <h3 data-i18n="aside.controls.title" class="text-lg font-semibold mb-3">Ovládání</h3>
           <ul class="grid grid-cols-1 gap-1 text-sm">
-            <li><span class="chip"><i data-lucide="keyboard" class="icon"></i> WASD</span> pohyb</li>
-            <li><span class="chip"><i data-lucide="mouse-pointer-2" class="icon"></i> Myš</span> míření/klik akce</li>
-            <li><span class="chip"><i data-lucide="rotate-ccw" class="icon"></i> R</span> restart</li>
-            <li><span class="chip"><i data-lucide="volume-2" class="icon"></i> M</span> mute</li>
+            <li><span class="chip"><i data-lucide="keyboard" class="icon"></i> WASD</span> <span data-i18n="aside.controls.wasd">pohyb</span></li>
+            <li><span class="chip"><i data-lucide="mouse-pointer-2" class="icon"></i> Mouse</span> <span data-i18n="aside.controls.mouse">míření / akce</span></li>
+            <li><span class="chip"><i data-lucide="rotate-ccw" class="icon"></i> R</span> <span data-i18n="aside.controls.r">restart</span></li>
+            <li><span class="chip"><i data-lucide="volume-2" class="icon"></i> M</span> <span data-i18n="aside.controls.m">mute</span></li>
           </ul>
-          <p class="text-xs text-neutral-500 mt-2">Uprav podle skutečných vstupů hry.</p>
+          <p data-i18n="aside.controls.note" class="text-xs text-neutral-500 mt-2">Uprav podle skutečných vstupů hry.</p>
         </div>
 
         <!-- Credits -->
         <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h3 class="text-lg font-semibold mb-3">Credits</h3>
+          <h3 data-i18n="aside.credits.title" class="text-lg font-semibold mb-3">Credits</h3>
           <ul class="space-y-1 text-sm">
-            <li><strong>Design &amp; Development:</strong> 8členný studentský tým (viz publikace)</li>
-            <li><strong>Veden
+            <li data-i18n="aside.credits.team"><strong>Design &amp; Development:</strong> 8členný studentský tým (viz publikace)</li>
+            <li data-i18n="aside.credits.lead"><strong>Vedení:</strong> Ing. Marek Skotnica</li>
+            <li data-i18n="aside.credits.art"><strong>Grafika:</strong> David Mikulka (BP)</li>
+            <li data-i18n="aside.credits.si"><strong>SI/optimalizace/vzory:</strong> Duc Minh Pham (BP)</li>
+            <li><strong>Mentoring:</strong> Grafit team</li>
+          </ul>
+        </div>
+
+        <!-- Meta -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h3 data-i18n="aside.info.title" class="text-lg font-semibold mb-3">Info</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="chip"><i data-lucide="calendar" class="icon"></i> <span data-i18n="chip.year2">2024–2025</span></span>
+            <span class="chip"><i data-lucide="cpu" class="icon"></i> <span data-i18n="aside.info.tech">WebGL/Canvas</span></span>
+            <span class="chip"><i data-lucide="tag" class="icon"></i> <span data-i18n="aside.info.tags">#pixelart #studentproject</span></span>
+            <span class="chip"><i data-lucide="graduation-cap" class="icon"></i> <span data-i18n="aside.info.org">FIT ČVUT / Grafit</span></span>
+          </div>
+        </div>
+
+        <!-- Contacts -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h3 data-i18n="aside.contacts.title" class="text-lg font-semibold mb-3">Kontakty</h3>
+          <ul class="space-y-1 text-sm">
+            <li><strong>Email:</strong> <a href="mailto:mikulda3@fit.cvut.cz" class="underline hover:no-underline">mikulda3@fit.cvut.cz</a></li>
+            <li><strong>Email:</strong> <a href="mailto:phamducm@fit.cvut.cz" class="underline hover:no-underline">phamducm@fit.cvut.cz</a></li>
+            <li><strong>Email:</strong> <a href="mailto:richtrad@fit.cvut.cz" class="underline hover:no-underline">richtrad@fit.cvut.cz</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <!-- back link -->
+    <div class="mt-10">
+      <a data-i18n="bc.back" href="https://grafitctu.github.io/projects/" class="pill"><i data-lucide="chevron-left" class="icon"></i> Zpět na všechny hry</a>
+    </div>
+  </main>
+
+  <!-- particles bg for content area -->
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <canvas id="areaCanvas" class="w-full h-full"></canvas>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded',()=>{ if (window.lucide) lucide.createIcons(); });
+
+    /* ====== i18n (CZ/EN) ====== */
+    const I18N = {
+      cs: {
+        "bc.home":"Grafit","bc.games":"Hry","bc.back":"Zpět na všechny hry",
+        "hero.pitch":"Retro webová hříčka — lehká, rychlá a hratelná přímo v prohlížeči.",
+        "btn.play":"Spustit web build ↗","btn.play2":"Spustit web build ↗","btn.win":"Stáhnout (Windows)",
+        "chip.platform":"Web (HTML5)","chip.genre":"2D / Pixel-art","chip.year":"2024–2025","chip.team":"Student project (8 lidí)","chip.year2":"2024–2025",
+        "sec.about.title":"O hře",
+        "sec.about.text":"FitLife vznikal přibližně <strong>rok</strong> napříč několika předměty a týmy. Na vývoji se postupně podílelo <strong>osm studentů</strong>. Zpočátku jsme se ani všichni neznali — projekt se rozběhl ve <strong>3. semestru</strong> pod vedením <strong>Ing. Marka Skotnicy</strong>. Chtěli jsme 2D pixel-art hru ve stylu Pokémonů a pár týdnů poté se cíl vykrystalizoval: <em>udělat hru, která pocitově zachytí první semestr studenta FIT</em>.",
+        "sec.dev.title":"Vývoj &amp; tým",
+        "sec.dev.li1":"Projekt běžel napříč několika předměty během cca 12 měsíců.",
+        "sec.dev.li2":"Zapojeno bylo celkem <strong>8 studentů</strong> v různých rolích (design, kód, grafika, testování).",
+        "sec.dev.li3":"Velká část vizuální stránky je součástí bakalářské práce <strong>Davida Mikulky</strong>.",
+        "sec.dev.li4":"Část SI, optimalizace a návrhové vzory řeší bakalářská práce <strong>Duc Minh Phama</strong>.",
+        "sec.pm.title":"Post-mortem &amp; refaktoring",
+        "sec.pm.text":"FitLife byl náš první větší projekt a to se podepsalo na procesu i kódu. Zpětně víme, že řada praktik byla nešťastná: kód byl křehký, špatně udržitelný a obtížně rozšiřitelný. To je u juniorního týmu očekávatelné. Následující kritika proto nemíří na jednotlivce — je to zdravá inventura a start systematického <strong>přepracování workflow</strong> a <strong>refaktoringu</strong>. Obě bakalářské práce jsou tak věnované <em>optimalizaci a finalizaci</em> hry.",
+        "sec.video.title":"Video","sec.video.note":"Nemáš video? Sekci klidně smaž nebo vlož záznam ze showcase.",
+        "sec.gallery.title":"Galerie","sec.gallery.note":"Nahraď placeholdery vlastními screenshoty (PNG/JPG).",
+        "sec.pub.title":"Publikace",
+        "sec.pub.p1":"<strong>FitLife — game about studying at FIT (SI part)</strong>, <em>Duc Minh Pham</em>, bakalářská práce.",
+        "sec.pub.p2":"<strong>FitLife — game about studying at FIT (graphics part)</strong>, <em>David Mikulka</em>, bakalářská práce.",
+        "aside.links.title":"Ke stažení / odkazy",
+        "aside.controls.title":"Ovládání",
+        "aside.controls.wasd":"pohyb","aside.controls.mouse":"míření / akce","aside.controls.r":"restart","aside.controls.m":"mute","aside.controls.note":"Uprav podle skutečných vstupů hry.",
+        "aside.credits.title":"Credits",
+        "aside.credits.team":"<strong>Design &amp; Development:</strong> 8členný studentský tým (viz publikace)",
+        "aside.credits.lead":"<strong>Vedení:</strong> Ing. Marek Skotnica",
+        "aside.credits.art":"<strong>Grafika:</strong> David Mikulka (BP)",
+        "aside.credits.si":"<strong>SI/optimalizace/vzory:</strong> Duc Minh Pham (BP)",
+        "aside.info.title":"Info","aside.info.tech":"WebGL/Canvas","aside.info.tags":"#pixelart #studentproject","aside.info.org":"FIT ČVUT / Grafit",
+        "aside.contacts.title":"Kontakty"
+      },
+      en: {
+        "bc.home":"Grafit","bc.games":"Games","bc.back":"Back to all games",
+        "hero.pitch":"A small retro web game — light, fast, and playable right in the browser.",
+        "btn.play":"Play web build ↗","btn.play2":"Play web build ↗","btn.win":"Download (Windows)",
+        "chip.platform":"Web (HTML5)","chip.genre":"2D / Pixel-art","chip.year":"2024–2025","chip.team":"Student project (8 people)","chip.year2":"2024–2025",
+        "sec.about.title":"About the game",
+        "sec.about.text":"FitLife was developed for about <strong>one year</strong> across several lectures and teams. In total, <strong>eight students</strong> contributed. Most of us didn’t even know each other at the start — the project began in the <strong>third semester</strong> under the supervision of <strong>Ing. Marek Skotnica</strong>. We aimed for a 2D pixel-art game inspired by Pokémon, and within a few weeks our goal crystallized: <em>build a game that captures how a FIT student feels in their first semester</em>.",
+        "sec.dev.title":"Development &amp; team",
+        "sec.dev.li1":"The project spanned multiple courses over roughly 12 months.",
+        "sec.dev.li2":"A total of <strong>8 students</strong> participated in various roles (design, code, art, testing).",
+        "sec.dev.li3":"Most of the visual side is covered by <strong>David Mikulka’s</strong> bachelor thesis.",
+        "sec.dev.li4":"The software-engineering part, optimization and design patterns are the focus of <strong>Duc Minh Pham’s</strong> bachelor thesis.",
+        "sec.pm.title":"Post-mortem &amp; refactoring",
+        "sec.pm.text":"FitLife was our first larger project, which showed in both process and code. In hindsight, many practices were sub-optimal: the code was brittle, hard to maintain, and painful to change. That’s expected for an inexperienced team. The following critique is not about blaming anyone — it’s a healthy inventory and the starting point for a systematic <strong>workflow overhaul</strong> and <strong>code refactoring</strong>. Both theses are therefore dedicated to <em>optimizing and finalizing</em> the game.",
+        "sec.video.title":"Video","sec.video.note":"No video yet? Remove this section or embed a showcase recording.",
+        "sec.gallery.title":"Gallery","sec.gallery.note":"Replace placeholders with real screenshots (PNG/JPG).",
+        "sec.pub.title":"Publications",
+        "sec.pub.p1":"<strong>FitLife — game about studying at FIT (SI part)</strong>, <em>Duc Minh Pham</em>, bachelor thesis.",
+        "sec.pub.p2":"<strong>FitLife — game about studying at FIT (graphics part)</strong>, <em>David Mikulka</em>, bachelor thesis.",
+        "aside.links.title":"Downloads / links",
+        "aside.controls.title":"Controls",
+        "aside.controls.wasd":"movement","aside.controls.mouse":"aim / action","aside.controls.r":"restart","aside.controls.m":"mute","aside.controls.note":"Adjust to the game’s actual input mapping.",
+        "aside.credits.title":"Credits",
+        "aside.credits.team":"<strong>Design &amp; Development:</strong> 8-member student team (see publications)",
+        "aside.credits.lead":"<strong>Supervision:</strong> Ing. Marek Skotnica",
+        "aside.credits.art":"<strong>Art:</strong> David Mikulka (BSc)",
+        "aside.credits.si":"<strong>SE/optimization/patterns:</strong> Duc Minh Pham (BSc)",
+        "aside.info.title":"Info","aside.info.tech":"WebGL/Canvas","aside.info.tags":"#pixelart #studentproject","aside.info.org":"CTU FIT / Grafit",
+        "aside.contacts.title":"Contacts"
+      }
+    };
+
+    function applyLang(lang){
+      const dict = I18N[lang] || I18N.cs;
+      document.documentElement.lang = lang;
+      document.title = `FitLife — ${lang==='en' ? 'Grafit' : 'Grafit'}`;
+      // replace text in [data-i18n]
+      document.querySelectorAll('[data-i18n]').forEach(el=>{
+        const key = el.getAttribute('data-i18n');
+        if(dict[key] != null){
+          el.innerHTML = dict[key];
+        }
+      });
+      // breadcrumbs second item url label swap (hrefs stay same)
+      document.getElementById('langSwitchLabel').textContent = (lang==='en' ? 'Čeština' : 'English');
+      // store
+      localStorage.setItem('lang', lang);
+      // optional: query param sync (non-destructive)
+      const url = new URL(window.location);
+      url.searchParams.set('lang', lang);
+      history.replaceState({}, '', url);
+    }
+
+    function detectInitialLang(){
+      const urlLang = new URLSearchParams(location.search).get('lang');
+      const stored = localStorage.getItem('lang');
+      const browser = (navigator.language || 'cs').toLowerCase().startsWith('en') ? 'en' : 'cs';
+      return urlLang || stored || browser;
+    }
+
+    const currentLang = detectInitialLang();
+    applyLang(currentLang);
+    document.getElementById('langSwitch').addEventListener('click', ()=>{
+      const next = (localStorage.getItem('lang')==='en') ? 'cs' : 'en';
+      applyLang(next);
+    });
+
+    /* ====== particles ====== */
+    function particles(canvas,opts){
+      const c=canvas,ctx=c.getContext("2d"); let w=0,h=0,raf=0;
+      const N=opts.N||38,speed=opts.speed||0.34;
+      function resize(){ const rect=canvas.parentElement.getBoundingClientRect(); w=c.width=Math.max(window.innerWidth,Math.ceil(rect.width||window.innerWidth)); h=c.height=Math.ceil(rect.height||420); }
+      const dots=Array.from({length:N},()=>({x:0,y:0,vx:(Math.random()-.5)*speed,vy:(Math.random()-.5)*speed}));
+      function reset(){ dots.forEach(d=>{ d.x=Math.random()*w; d.y=Math.random()*h; }); }
+      function draw(){
+        ctx.clearRect(0,0,w,h);
+        const grad=ctx.createLinearGradient(0,0,w,h); grad.addColorStop(0,"#0b1220"); grad.addColorStop(1,"#0b0f16");
+        ctx.fillStyle=grad; ctx.globalAlpha=.94; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1;
+        for(let i=0;i<N;i++){
+          const a=dots[i]; a.x+=a.vx; a.y+=a.vy;
+          if(a.x<0||a.x>w) a.vx*=-1; if(a.y<0||a.y>h) a.vy*=-1;
+          for(let j=i+1;j<N;j++){
+            const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+            if(d<120){ ctx.globalAlpha=1-d/120; ctx.strokeStyle="#60a5fa"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
+          }
+          ctx.fillStyle="#22d3ee"; ctx.beginPath(); ctx.arc(a.x,a.y,1.3,0,Math.PI*2); ctx.fill();
+        }
+        raf=requestAnimationFrame(draw);
+      }
+      function start(){ resize(); reset(); draw(); }
+      const ro=new ResizeObserver(()=>resize());
+      ro.observe(canvas.parentElement); window.addEventListener("resize",resize); start();
+      return {stop:()=>cancelAnimationFrame(raf), ro};
+    }
+
+    /* progress bar */
+    window.addEventListener("scroll",()=>{
+      const s=document.documentElement.scrollTop||document.body.scrollTop;
+      const h=(document.documentElement.scrollHeight - document.documentElement.clientHeight)||1;
+      document.getElementById("scrollbar").style.width=(Math.max(0,Math.min(1,s/h))*100)+"%";
+    });
+
+    /* init particles */
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(!prefersReduced){
+      particles(document.getElementById("heroCanvas"),{N:34,speed:.32});
+      particles(document.getElementById("areaCanvas"),{N:44,speed:.30});
+    }
+  </script>
+</body>
+</html>
