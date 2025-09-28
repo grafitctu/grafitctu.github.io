@@ -1,92 +1,232 @@
-<script>
-  // 3a) Obrázky galerie (přidej kolik chceš)
-  const GALLERY_IMAGES = [
-    "https://grafitctu.github.io/assets/showcase/FitLife.png",
-    "https://grafitctu.github.io/assets/showcase/img_vhs_1.png",
-    "https://grafitctu.github.io/assets/showcase/img_vhs_2.png",
-    "https://grafitctu.github.io/assets/showcase/img_vhs_3.png",
-    "https://grafitctu.github.io/assets/showcase/img_vhs_4.png"
-  ];
+<!doctype html>
+<html lang="cs" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitLife — Grafit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    html{scroll-behavior:smooth}
+    .icon{width:1rem;height:1rem}
+    .bg-gradient-dark{background:linear-gradient(#070b12,#0a0f18 55%,#090d14)}
+    .pill{display:inline-flex;align-items:center;gap:.5rem;border-radius:9999px;padding:.25rem .75rem;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.9)}
+    .pill:hover{background:rgba(255,255,255,.08)}
+    .card{transition:transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease; box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    .card:hover{transform:translateY(-6px) scale(1.02); box-shadow:0 18px 40px rgba(0,0,0,.25)}
+    /* HEX (větší + zoom) */
+    .hex{width:92px;height:92px;position:relative;isolation:isolate;background:linear-gradient(180deg,#0f172a,#020617);border:1px solid rgba(255,255,255,.1);border-radius:14px;clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0% 50%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 10px 30px rgba(0,0,0,.25)}
+    .hex::after{content:"";position:absolute;inset:0;clip-path:inherit;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 40%)}
+    .hex img{position:absolute;inset:0;width:100%;height:100%;padding:6px;object-fit:cover;transform:scale(1.12);transition:transform 300ms cubic-bezier(.22,1,.36,1);filter:drop-shadow(0 2px 8px rgba(0,0,0,.35))}
+    .hero-btn{display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);padding:.6rem .9rem;border-radius:.8rem}
+    .hero-btn:hover{background:rgba(255,255,255,.12)}
+    .chip{display:inline-flex;align-items:center;gap:.4rem;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);padding:.25rem .55rem;border-radius:.55rem;font-size:.75rem}
+    .gallery img{border-radius:1rem;border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 30px rgba(0,0,0,.25)}
+  </style>
+</head>
+<body class="min-h-screen text-neutral-100 bg-gradient-dark">
 
-  // 3b) Ultralehký carousel
-  function initCarousel(elId, images){
-    const el = document.getElementById(elId);
-    if(!el || !images?.length) return;
+  <!-- progress bar -->
+  <div id="scrollbar" class="fixed left-0 top-0 h-1 w-0 bg-gradient-to-r from-blue-400 via-cyan-300 to-fuchsia-300 z-50"></div>
 
-    // vytvoření slideů
-    images.forEach((src,i)=>{
-      const slide = document.createElement("div");
-      slide.className = "slide" + (i===0 ? " active" : "");
-      const img = new Image();
-      img.src = src; img.alt = "Screenshot "+(i+1);
-      img.loading = i>0 ? "lazy" : "eager";
-      slide.appendChild(img);
-      el.appendChild(slide);
-    });
+  <!-- HERO -->
+  <header class="relative overflow-hidden">
+    <canvas id="heroCanvas" class="absolute inset-0 w-full" style="height:44vh"></canvas>
 
-    // tečky
-    const dotsWrap = el.querySelector(".dots");
-    const dots = images.map((_,i)=>{
-      const d=document.createElement("button");
-      d.className = "dot"+(i===0?" active":"");
-      d.setAttribute("aria-label","Snímek "+(i+1));
-      d.addEventListener("click",()=>go(i));
-      dotsWrap.appendChild(d);
-      return d;
-    });
+    <div class="relative mx-auto max-w-[1100px] px-4 xl:px-6 pt-14 pb-10">
+      <nav class="mb-6 text-sm text-neutral-400">
+        <a href="https://grafitctu.github.io/" class="hover:text-neutral-200">Grafit</a>
+        <span class="mx-2">/</span>
+        <a href="https://grafitctu.github.io/projects/" class="hover:text-neutral-200">Hry</a>
+        <span class="mx-2">/</span>
+        <span class="text-neutral-300">FitLife</span>
+      </nav>
 
-    // šipky
-    const prevBtn = el.querySelector(".carousel-btn.prev");
-    const nextBtn = el.querySelector(".carousel-btn.next");
+      <div class="flex items-start gap-5">
+        <span class="hex shrink-0">
+          <img src="https://grafitctu.github.io/assets/showcase/FitLife.png" alt="FitLife logo">
+        </span>
+        <div class="min-w-0">
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">FitLife</h1>
+          <p class="mt-2 text-neutral-300 max-w-2xl">
+            Retro webová hříčka – lehká, rychlá a hratelná přímo v prohlížeči.
+          </p>
 
-    let idx = 0;
-    const slides = Array.from(el.querySelectorAll(".slide"));
+          <div class="mt-4 flex flex-wrap items-center gap-2">
+            <a class="hero-btn" href="https://antik98.github.io/FitLife/" target="_blank" rel="noreferrer">
+              <i data-lucide="play-circle" class="icon"></i> Spustit web build ↗
+            </a>
+            <!-- pokud bude zip / release, přidej -->
+            <!-- <a class="hero-btn" href="/projects/fitlife/FitLife_win.zip"><i data-lucide='download' class='icon'></i> Stáhnout (Windows)</a> -->
+            <a class="hero-btn" href="https://github.com/search?q=FitLife+cvut" target="_blank" rel="noreferrer">
+              <i data-lucide="github" class="icon"></i> GitHub
+            </a>
+            <!-- YouTube trailer – doplň skutečné video, pokud existuje -->
+            <!-- <a class="hero-btn" href="https://www.youtube.com/watch?v=XXXXXXXX" target="_blank" rel="noreferrer"><i data-lucide="youtube" class="icon"></i> Trailer</a> -->
+          </div>
 
-    function go(n){
-      slides[idx].classList.remove("active");
-      dots[idx].classList.remove("active");
-      idx = (n+slides.length) % slides.length;
-      slides[idx].classList.add("active");
-      dots[idx].classList.add("active");
-      // pre-load next/prev
-      const next = (idx+1)%slides.length, prev=(idx-1+slides.length)%slides.length;
-      [idx,next,prev].forEach(i=>{
-        const im = slides[i].querySelector("img");
-        if(im && im.loading==="lazy"){ im.loading="eager"; }
-      });
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="chip"><i data-lucide="monitor-play" class="icon"></i> Web (HTML5)</span>
+            <span class="chip"><i data-lucide="gamepad-2" class="icon"></i> Arcade / Mini</span>
+            <span class="chip"><i data-lucide="clock" class="icon"></i> 2024–2025</span>
+            <span class="chip"><i data-lucide="users" class="icon"></i> Student project</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="relative z-10 mx-auto max-w-[1100px] px-4 xl:px-6 pb-16">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- left column -->
+      <section class="lg:col-span-2 space-y-8">
+
+        <!-- About -->
+        <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h2 class="text-xl font-semibold mb-2">O hře</h2>
+          <p class="text-neutral-300">
+            FitLife je malá retro hříčka spustitelná přímo v prohlížeči. Cíl je jednoduchý a tempo svižné.
+            Projekt vznikl v rámci předmětu / studentského projektu Grafit. (Text klidně uprav a rozveď.)
+          </p>
+        </article>
+
+        <!-- Video -->
+        <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h2 class="text-xl font-semibold mb-3">Video</h2>
+          <!-- Vlož skutečné ID videa, pokud existuje -->
+          <div class="aspect-video rounded-xl overflow-hidden border border-white/10 bg-black">
+            <iframe class="w-full h-full" src="about:blank"
+              title="FitLife video" allowfullscreen loading="lazy" referrerpolicy="no-referrer"></iframe>
+          </div>
+          <p class="mt-2 text-sm text-neutral-400">Nemáš video? Klidně tu sekci smaž, nebo vlož záznam ze showcase.</p>
+        </article>
+
+        <!-- Gallery -->
+        <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h2 class="text-xl font-semibold mb-3">Galerie</h2>
+          <div class="gallery grid grid-cols-2 md:grid-cols-3 gap-3">
+            <img src="https://grafitctu.github.io/assets/showcase/FitLife.png" alt="FitLife screenshot 1" loading="lazy">
+            <img src="https://grafitctu.github.io/assets/showcase/img_vhs_1.png" alt="Placeholder 2" loading="lazy">
+            <img src="https://grafitctu.github.io/assets/showcase/img_vhs_2.png" alt="Placeholder 3" loading="lazy">
+          </div>
+          <p class="mt-2 text-xs text-neutral-500">Nahraď placeholdery vlastními screenshoty (PNG/JPG).</p>
+        </article>
+
+        <!-- Changelog -->
+        <article class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h2 class="text-xl font-semibold mb-3">Changelog</h2>
+          <ul class="space-y-2 text-sm">
+            <li><span class="text-neutral-400">2025-09-01:</span> Úvodní publikace stránky.</li>
+            <li><span class="text-neutral-400">2025-09-15:</span> Přidán webový build + lehké vizuální ladění.</li>
+          </ul>
+        </article>
+      </section>
+
+      <!-- right column -->
+      <aside class="space-y-6">
+        <!-- Download / Links card -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h3 class="text-lg font-semibold mb-3">Ke stažení / odkazy</h3>
+          <div class="flex flex-col gap-2">
+            <a class="hero-btn" href="https://antik98.github.io/FitLife/" target="_blank" rel="noreferrer">
+              <i data-lucide="play" class="icon"></i> Spustit web build ↗
+            </a>
+            <!-- přidej další platformy podle potřeby -->
+            <!-- <a class="hero-btn" href="/projects/fitlife/FitLife_win.zip"><i data-lucide='download' class='icon'></i> Windows (ZIP)</a> -->
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h3 class="text-lg font-semibold mb-3">Ovládání</h3>
+          <ul class="grid grid-cols-1 gap-1 text-sm">
+            <li><span class="chip"><i data-lucide="keyboard" class="icon"></i> WASD</span> pohyb</li>
+            <li><span class="chip"><i data-lucide="mouse-pointer-2" class="icon"></i> Myš</span> míření/klik akce</li>
+            <li><span class="chip"><i data-lucide="rotate-ccw" class="icon"></i> R</span> restart</li>
+            <li><span class="chip"><i data-lucide="volume-2" class="icon"></i> M</span> mute</li>
+          </ul>
+          <p class="text-xs text-neutral-500 mt-2">Uprav podle skutečných vstupů hry.</p>
+        </div>
+
+        <!-- Credits -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h3 class="text-lg font-semibold mb-3">Credits</h3>
+          <ul class="space-y-1 text-sm">
+            <li><strong>Design & Dev:</strong> Jméno 1, Jméno 2</li>
+            <li><strong>Art:</strong> …</li>
+            <li><strong>Audio:</strong> …</li>
+            <li><strong>Mentoring:</strong> Grafit team</li>
+          </ul>
+        </div>
+
+        <!-- Meta -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h3 class="text-lg font-semibold mb-3">Info</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="chip"><i data-lucide="calendar" class="icon"></i> 2024–2025</span>
+            <span class="chip"><i data-lucide="cpu" class="icon"></i> WebGL/Canvas</span>
+            <span class="chip"><i data-lucide="tag" class="icon"></i> #retro #arcade</span>
+            <span class="chip"><i data-lucide="graduation-cap" class="icon"></i> Grafit / FIT ČVUT</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- back link -->
+    <div class="mt-10">
+      <a href="https://grafitctu.github.io/projects/" class="pill"><i data-lucide="chevron-left" class="icon"></i> Zpět na všechny hry</a>
+    </div>
+  </main>
+
+  <!-- particles bg for content area -->
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <canvas id="areaCanvas" class="w-full h-full"></canvas>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded',()=>{ if (window.lucide) lucide.createIcons(); });
+
+    /* particles (stejná estetika) */
+    function particles(canvas,opts){
+      const c=canvas,ctx=c.getContext("2d"); let w=0,h=0,raf=0;
+      const N=opts.N||38,speed=opts.speed||0.34;
+      function resize(){ const rect=canvas.parentElement.getBoundingClientRect(); w=c.width=Math.max(window.innerWidth,Math.ceil(rect.width||window.innerWidth)); h=c.height=Math.ceil(rect.height||420); }
+      const dots=Array.from({length:N},()=>({x:0,y:0,vx:(Math.random()-.5)*speed,vy:(Math.random()-.5)*speed}));
+      function reset(){ dots.forEach(d=>{ d.x=Math.random()*w; d.y=Math.random()*h; }); }
+      function draw(){
+        ctx.clearRect(0,0,w,h);
+        const grad=ctx.createLinearGradient(0,0,w,h); grad.addColorStop(0,"#0b1220"); grad.addColorStop(1,"#0b0f16");
+        ctx.fillStyle=grad; ctx.globalAlpha=.94; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1;
+        for(let i=0;i<N;i++){
+          const a=dots[i]; a.x+=a.vx; a.y+=a.vy;
+          if(a.x<0||a.x>w) a.vx*=-1; if(a.y<0||a.y>h) a.vy*=-1;
+          for(let j=i+1;j<N;j++){ const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+            if(d<120){ ctx.globalAlpha=1-d/120; ctx.strokeStyle="#60a5fa"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
+          }
+          ctx.fillStyle="#22d3ee"; ctx.beginPath(); ctx.arc(a.x,a.y,1.3,0,Math.PI*2); ctx.fill();
+        }
+        raf=requestAnimationFrame(draw);
+      }
+      function start(){ resize(); reset(); draw(); }
+      const ro=new ResizeObserver(()=>resize());
+      ro.observe(canvas.parentElement); window.addEventListener("resize",resize); start();
+      return {stop:()=>cancelAnimationFrame(raf), ro};
     }
 
-    prevBtn?.addEventListener("click",()=>go(idx-1));
-    nextBtn?.addEventListener("click",()=>go(idx+1));
-
-    // klávesy
-    el.setAttribute("tabindex","0");
-    el.addEventListener("keydown",(e)=>{
-      if(e.key==="ArrowLeft") go(idx-1);
-      if(e.key==="ArrowRight") go(idx+1);
+    /* progress bar */
+    window.addEventListener("scroll",()=>{
+      const s=document.documentElement.scrollTop||document.body.scrollTop;
+      const h=(document.documentElement.scrollHeight - document.documentElement.clientHeight)||1;
+      document.getElementById("scrollbar").style.width=(Math.max(0,Math.min(1,s/h))*100)+"%";
     });
 
-    // swipe (touch)
-    let sx=0, sy=0;
-    el.addEventListener("touchstart",(e)=>{ sx=e.touches[0].clientX; sy=e.touches[0].clientY; }, {passive:true});
-    el.addEventListener("touchend",(e)=>{
-      const dx = (e.changedTouches[0].clientX - sx);
-      const dy = Math.abs(e.changedTouches[0].clientY - sy);
-      if(Math.abs(dx) > 40 && dy < 50){ dx>0 ? go(idx-1) : go(idx+1); }
-    });
-
-    // Auto-pause on reduced motion
+    /* init particles */
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(!prefersReduced){
-      // volitelně: auto-advance
-      // let timer = setInterval(()=>go(idx+1), 6000);
-      // el.addEventListener("mouseenter",()=>clearInterval(timer));
-      // el.addEventListener("mouseleave",()=> timer=setInterval(()=>go(idx+1),6000));
+      particles(document.getElementById("heroCanvas"),{N:34,speed:.32});
+      particles(document.getElementById("areaCanvas"),{N:44,speed:.30});
     }
-  }
-
-  // 3c) Spusť po načtení (po tvém ostatním initu)
-  document.addEventListener("DOMContentLoaded", ()=> {
-    initCarousel("gallery", GALLERY_IMAGES);
-  });
-</script>
+  </script>
+</body>
+</html>
