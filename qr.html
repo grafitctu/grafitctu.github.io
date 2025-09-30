@@ -1,27 +1,132 @@
 <!doctype html>
-<html lang="cs" class="dark">
+<html lang="cs">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QR Studio — Generátor (PNG/SVG)</title>
-  <meta name="description" content="Jednoduchý offline generátor QR kódů s logem uprostřed. Stáhne PNG i SVG." />
-  <!-- Tailwind CDN -->
+  <title>QR Studio — čistý JS (PNG/SVG)</title>
+  <meta name="description" content="Offline generátor QR kódů s možností loga uprostřed. Stáhne PNG i SVG.">
+  <!-- Tailwind pro vzhled (volitelné) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- React 18 + ReactDOM UMD -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Babel pro JSX -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- QRCode knihovna -->
+  <!-- QRCode knihovna (toCanvas/toString) -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <style>
+    html,body{height:100%}
+    .card{border-radius:1.5rem}
+  </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100">
-  <div id="app" class="min-h-screen"></div>
+<body class="min-h-screen bg-zinc-950 text-zinc-100">
+  <div class="mx-auto max-w-7xl px-4 py-8">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-semibold">QR Studio — čistý JS</h1>
+      <a href="https://grafitctu.github.io/" class="text-sm opacity-70 hover:opacity-100 underline">Grafit</a>
+    </div>
 
-  <script type="text/babel" data-presets="react">
-    const { useEffect, useRef, useState } = React;
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Ovládání -->
+      <div class="card p-5 border border-white/10 bg-white/5 backdrop-blur">
+        <label class="block text-sm font-medium mb-1">Text / URL</label>
+        <textarea id="inpText" placeholder="Zadej URL nebo libovolný text…" class="w-full rounded-xl px-3 py-2 bg-black/20 border border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[90px]">https://grafitctu.github.io/</textarea>
 
-    function roundRect(ctx, x, y, w, h, r){
+        <div class="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <label class="block text-sm mb-1">Velikost (px)</label>
+            <input id="inpSize" type="range" min="128" max="2048" step="32" value="512" class="w-full">
+            <div class="text-xs opacity-70 mt-1" id="labSize">512 px</div>
+          </div>
+          <div>
+            <label class="block text-sm mb-1">Okraj (modules)</label>
+            <input id="inpMargin" type="range" min="0" max="16" step="1" value="4" class="w-full">
+            <div class="text-xs opacity-70 mt-1" id="labMargin">4</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mt-4">
+          <div>
+            <label class="block text-sm mb-1">Korekce chyb</label>
+            <select id="inpECC" class="w-full rounded-xl px-3 py-2 bg-black/20 border border-white/10">
+              <option value="L">L (7%)</option>
+              <option value="M">M (15%)</option>
+              <option value="Q">Q (25%)</option>
+              <option value="H" selected>H (30%)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm mb-1">Barva (tmavá)</label>
+            <input id="inpFg" type="color" value="#000000" class="w-full h-10 rounded-xl bg-transparent cursor-pointer">
+          </div>
+          <div>
+            <label class="block text-sm mb-1">Pozadí (světlé)</label>
+            <input id="inpBg" type="color" value="#ffffff" class="w-full h-10 rounded-xl bg-transparent cursor-pointer">
+          </div>
+        </div>
+
+        <div class="mt-4 rounded-2xl border border-white/10 p-4">
+          <div class="text-sm font-medium mb-2">🖼️ Logo uprostřed (volitelné)</div>
+          <div class="flex items-center gap-3">
+            <input id="inpLogo" type="file" accept="image/*" class="text-sm">
+            <button id="btnLogoRemove" class="text-xs underline opacity-80 hidden">Odstranit</button>
+          </div>
+          <div id="logoControls" class="grid grid-cols-2 gap-4 mt-3 hidden">
+            <div>
+              <label class="block text-xs mb-1">Velikost loga</label>
+              <input id="inpLogoScale" type="range" min="0.10" max="0.40" step="0.01" value="0.20" class="w-full">
+              <div class="text-xs opacity-70 mt-1" id="labLogoScale">20 % šířky</div>
+            </div>
+            <div>
+              <label class="block text-xs mb-1">Zaoblení</label>
+              <input id="inpLogoRound" type="range" min="0" max="32" step="1" value="16" class="w-full">
+              <div class="text-xs opacity-70 mt-1" id="labLogoRound">16 px</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 flex flex-wrap gap-3">
+          <button id="btnPNG" class="rounded-2xl px-4 py-2 bg-indigo-600 hover:bg-indigo-500 transition">Stáhnout PNG</button>
+          <button id="btnSVG" class="rounded-2xl px-4 py-2 bg-indigo-600 hover:bg-indigo-500 transition">Stáhnout SVG</button>
+          <button id="btnReset" class="rounded-2xl px-4 py-2 border border-white/10 hover:bg-white/10 transition">Reset</button>
+        </div>
+      </div>
+
+      <!-- Náhled -->
+      <div class="card p-5 border border-white/10 bg-white/5 backdrop-blur flex items-center justify-center">
+        <div class="w-full max-w-[min(90vw,720px)]">
+          <div class="aspect-square w-full rounded-2xl overflow-hidden bg-white flex items-center justify-center p-3">
+            <canvas id="qrCanvas" width="512" height="512" class="w-full h-full"></canvas>
+          </div>
+          <div class="text-xs opacity-70 mt-3">Tip: Pro tisk používej SVG, pro web PNG. Vysoká korekce chyb (H) je lepší pro logo uprostřed.</div>
+          <div id="svgHolder" class="hidden"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="mt-8 text-xs opacity-60">Made with ❤️ for Grafit — čistě v prohlížeči, nic se nikam neodesílá.</footer>
+  </div>
+
+  <script>
+    // --- Stavy ---
+    let state = {
+      text: 'https://grafitctu.github.io/',
+      size: 512,
+      margin: 4,
+      ecc: 'H',
+      fg: '#000000',
+      bg: '#ffffff',
+      logoDataUrl: null,
+      logoScale: 0.20,
+      logoRound: 16,
+      svgMarkup: ''
+    };
+
+    // --- UI prvky ---
+    const el = (id)=>document.getElementById(id);
+    const canvas = el('qrCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Helpers ---
+    function safeFilename(s){
+      return (s || 'qr').replace(/[^a-z0-9]+/gi,'-').slice(0,40).toLowerCase();
+    }
+    function roundRectPath(ctx, x, y, w, h, r){
       const rr = Math.min(r, w/2, h/2);
       ctx.beginPath();
       ctx.moveTo(x + rr, y);
@@ -32,118 +137,145 @@
       ctx.closePath();
     }
 
-    function safeFilename(s){
-      return (s || 'qr').replace(/[^a-z0-9]+/gi,'-').slice(0,40).toLowerCase();
-    }
+    // --- Render QR na canvas + logo ---
+    async function drawQR(){
+      canvas.width = state.size;
+      canvas.height = state.size;
 
-    function QRStudio(){
-      const [text, setText] = useState('https://grafitctu.github.io/');
-      const [size, setSize] = useState(512);
-      const [margin, setMargin] = useState(4);
-      const [ecc, setEcc] = useState('H');
-      const [fg, setFg] = useState('#000000');
-      const [bg, setBg] = useState('#ffffff');
-      const [logo, setLogo] = useState(null);
-      const [logoScale, setLogoScale] = useState(0.2);
-      const [logoRound, setLogoRound] = useState(16);
-      const [svgMarkup, setSvgMarkup] = useState('');
-      const canvasRef = useRef(null);
+      await QRCode.toCanvas(canvas, state.text || '', {
+        errorCorrectionLevel: state.ecc,
+        margin: state.margin,
+        color: { dark: state.fg, light: state.bg },
+        width: state.size,
+        scale: 1,
+      });
 
-      async function drawQR(){
-        const canvas = canvasRef.current;
-        if(!canvas) return;
-        await QRCode.toCanvas(canvas, text || '', {
-          errorCorrectionLevel: ecc,
-          margin,
-          color: { dark: fg, light: bg },
-          width: size,
-          scale: 1,
-        });
-        if(logo){
-          const ctx = canvas.getContext('2d');
+      if(state.logoDataUrl){
+        await new Promise((resolve)=>{
           const img = new Image();
-          img.onload = () => {
-            const w = canvas.width * logoScale;
+          img.onload = ()=>{
+            const w = canvas.width * state.logoScale;
             const h = w;
             const x = (canvas.width - w)/2;
             const y = (canvas.height - h)/2;
-            const r = Math.min(logoRound, w/2, h/2);
+            const r = state.logoRound;
+
             ctx.save();
-            roundRect(ctx, x-8, y-8, w+16, h+16, r+8);
-            ctx.fillStyle = bg;
+            // bílý podklad pod logem (kvůli čitelnosti)
+            roundRectPath(ctx, x-8, y-8, w+16, h+16, r+8);
+            ctx.fillStyle = state.bg;
             ctx.fill();
-            roundRect(ctx, x, y, w, h, r);
+            // samotná maska pro logo
+            roundRectPath(ctx, x, y, w, h, r);
             ctx.clip();
             ctx.drawImage(img, x, y, w, h);
             ctx.restore();
+            resolve();
           };
-          img.src = logo;
-        }
-      }
-
-      async function buildSVG(){
-        const svg = await QRCode.toString(text || '', {
-          type: 'svg',
-          errorCorrectionLevel: ecc,
-          margin,
-          color: { dark: fg, light: bg },
-          width: size,
-          scale: 1,
+          img.src = state.logoDataUrl;
         });
-        setSvgMarkup(svg);
       }
-
-      useEffect(()=>{ drawQR(); buildSVG(); }, [text,size,margin,ecc,fg,bg,logo,logoScale,logoRound]);
-
-      function onPickLogo(e){
-        const f = e.target.files?.[0];
-        if(!f) return;
-        const reader = new FileReader();
-        reader.onload = () => setLogo(reader.result);
-        reader.readAsDataURL(f);
-      }
-
-      function downloadPNG(){
-        const canvas = canvasRef.current; if(!canvas) return;
-        const a = document.createElement('a');
-        a.href = canvas.toDataURL('image/png');
-        a.download = `qr-${safeFilename(text)}.png`;
-        a.click();
-      }
-
-      function downloadSVG(){
-        const blob = new Blob([svgMarkup], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = `qr-${safeFilename(text)}.svg`; a.click();
-        URL.revokeObjectURL(url);
-      }
-
-      function reset(){
-        setText(''); setFg('#000000'); setBg('#ffffff'); setEcc('H'); setMargin(4); setSize(512);
-        setLogo(null); setLogoRound(16); setLogoScale(0.2);
-      }
-
-      return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-100">
-          <div className="mx-auto max-w-7xl px-4 py-8">
-            <h1 className="text-2xl font-semibold mb-4">QR Studio</h1>
-            <textarea value={text} onChange={e=>setText(e.target.value)} className="w-full rounded px-2 py-1 text-black"/>
-            <div className="mt-3 flex gap-2">
-              <button onClick={downloadPNG} className="px-4 py-2 bg-indigo-600 rounded">Stáhnout PNG</button>
-              <button onClick={downloadSVG} className="px-4 py-2 bg-indigo-600 rounded">Stáhnout SVG</button>
-              <button onClick={reset} className="px-4 py-2 bg-gray-700 rounded">Reset</button>
-            </div>
-            <div className="mt-4">
-              <canvas ref={canvasRef} width={size} height={size} className="border rounded"/>
-            </div>
-          </div>
-        </div>
-      );
     }
 
-    const root = ReactDOM.createRoot(document.getElementById('app'));
-    root.render(<QRStudio />);
+    // --- Vytvoř SVG markup (pro download) ---
+    async function buildSVG(){
+      state.svgMarkup = await QRCode.toString(state.text || '', {
+        type: 'svg',
+        errorCorrectionLevel: state.ecc,
+        margin: state.margin,
+        color: { dark: state.fg, light: state.bg },
+        width: state.size,
+        scale: 1,
+      });
+      el('svgHolder').innerHTML = state.svgMarkup;
+    }
+
+    // --- Aktualizace UI labelů ---
+    function updateLabels(){
+      el('labSize').textContent = state.size + ' px';
+      el('labMargin').textContent = state.margin;
+      el('labLogoScale').textContent = Math.round(state.logoScale*100) + ' % šířky';
+      el('labLogoRound').textContent = state.logoRound + ' px';
+      const hasLogo = !!state.logoDataUrl;
+      el('logoControls').classList.toggle('hidden', !hasLogo);
+      el('btnLogoRemove').classList.toggle('hidden', !hasLogo);
+    }
+
+    // --- Handlery vstupů ---
+    el('inpText').addEventListener('input', (e)=>{ state.text = e.target.value; rerender(); });
+    el('inpSize').addEventListener('input', (e)=>{ state.size = parseInt(e.target.value,10); updateLabels(); rerender(); });
+    el('inpMargin').addEventListener('input', (e)=>{ state.margin = parseInt(e.target.value,10); updateLabels(); rerender(); });
+    el('inpECC').addEventListener('change', (e)=>{ state.ecc = e.target.value; rerender(); });
+    el('inpFg').addEventListener('input', (e)=>{ state.fg = e.target.value; rerender(); });
+    el('inpBg').addEventListener('input', (e)=>{ state.bg = e.target.value; rerender(); });
+
+    el('inpLogo').addEventListener('change', (e)=>{
+      const f = e.target.files?.[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{ state.logoDataUrl = reader.result; updateLabels(); rerender(); };
+      reader.readAsDataURL(f);
+    });
+    el('btnLogoRemove').addEventListener('click', ()=>{
+      state.logoDataUrl = null;
+      el('inpLogo').value = '';
+      updateLabels();
+      rerender();
+    });
+
+    el('inpLogoScale').addEventListener('input', (e)=>{ state.logoScale = parseFloat(e.target.value); updateLabels(); rerender(); });
+    el('inpLogoRound').addEventListener('input', (e)=>{ state.logoRound = parseInt(e.target.value,10); updateLabels(); rerender(); });
+
+    el('btnPNG').addEventListener('click', ()=>{
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = `qr-${safeFilename(state.text)}.png`;
+      a.click();
+    });
+    el('btnSVG').addEventListener('click', ()=>{
+      const blob = new Blob([state.svgMarkup], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `qr-${safeFilename(state.text)}.svg`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+    el('btnReset').addEventListener('click', ()=>{
+      state = {
+        text: '',
+        size: 512,
+        margin: 4,
+        ecc: 'H',
+        fg: '#000000',
+        bg: '#ffffff',
+        logoDataUrl: null,
+        logoScale: 0.20,
+        logoRound: 16,
+        svgMarkup: ''
+      };
+      // reset inputů
+      el('inpText').value = '';
+      el('inpSize').value = 512;
+      el('inpMargin').value = 4;
+      el('inpECC').value = 'H';
+      el('inpFg').value = '#000000';
+      el('inpBg').value = '#ffffff';
+      el('inpLogo').value = '';
+      el('inpLogoScale').value = 0.20;
+      el('inpLogoRound').value = 16;
+      updateLabels();
+      rerender();
+    });
+
+    async function rerender(){
+      await drawQR();
+      await buildSVG();
+    }
+
+    // start
+    updateLabels();
+    rerender();
   </script>
 </body>
 </html>
