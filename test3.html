@@ -253,10 +253,8 @@
     function card(item, kind){
       const a = create("a", "card group relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block", "");
       a.href = item.href || "#"; a.target = "_blank"; a.rel="noreferrer";
-      const aspect =
-        kind === "research" ? "aspect-[4/1]" :
-        kind === "events"   ? "aspect-[3/1]" :
-                              "aspect-[2/1]"; // fallback pro ostatní (např. showcase)
+      const aspect = (kind === "research") ? "aspect-[3/1]" : "aspect-[2/1]";
+
       const imgBox = create("div", `relative w-full overflow-hidden ${aspect}`, "");
       const img = create("img","thumb h-full w-full object-cover object-center", "");
       img.src = item.img; img.alt = item.title; img.loading = "lazy"; img.decoding = "async";
