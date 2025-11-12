@@ -1,0 +1,782 @@
+import React, { useEffect, useRef, useState } from "react";
+
+// Nekonečná smyčka: pomalé sněžení + občas velké, hezké vločky.
+// Klik na velkou vločku => rozpad na "prach" (částice), prskavky a zvoneček.
+// Vánoční mód: více girland se světýlky (poblikávání, větší rozmlžení).
+// Postupné namrzání skla, které se po kliknutí lokálně rozbije.
+// NOVĚ: občas místo vločky padá hexagon (logo Grafitu). Klik => velký ohňostroj.
+
+export default function SnowScreensaver() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const dprRef = useRef<number>(1);
+
+  const [hintVisible, setHintVisible] = useState(true);
+  const [xmasMode, setXmasMode] = useState(true);
+  const [soundOn, setSoundOn] = useState(true);
+  const [garlandCount, setGarlandCount] = useState(3); // ⚙️ uživatel může měnit
+  const [iceOn, setIceOn] = useState(true); // námraza zap/vyp
+  const [hexOn, setHexOn] = useState(true); // padání hexagonů
+
+  const xmasRef = useRef(true);
+  const soundRef = useRef(true);
+  const garlandCountRef = useRef(3);
+  const iceRef = useRef(true);
+  const hexRef = useRef(true);
+  useEffect(() => { xmasRef.current = xmasMode; }, [xmasMode]);
+  useEffect(() => { soundRef.current = soundOn; }, [soundOn]);
+  useEffect(() => { garlandCountRef.current = garlandCount; }, [garlandCount]);
+  useEffect(() => { iceRef.current = iceOn; }, [iceOn]);
+  useEffect(() => { hexRef.current = hexOn; }, [hexOn]);
+
+  // WebAudio – inicializace až po prvním kliknutí
+  const audioRef = useRef<AudioContext | null>(null);
+  function ensureAudio() {
+    if (!audioRef.current) {
+      const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (Ctx) audioRef.current = new Ctx();
+    }
+  }
+
+  useEffect(() => {
+    const canvas = canvasRef.current!;
+    const ctx = canvas.getContext("2d")!;
+
+    let width = 0;
+    let height = 0;
+    let last = performance.now();
+    let elapsed = 0;
+    let running = true;
+
+    const flakes: Flake[] = [];
+    const special: BigFlake[] = [];
+    const dust: DustParticle[] = [];
+    const sparks: Spark[] = [];
+    const shards: IceShard[] = [];
+    const logos: HexLogo[] = [];
+    const flashes: FlashBurst[] = [];
+    const shockwaves: Shockwave[] = [];
+
+    // Girlandy (generické)
+    type Garland = { bulbs: Bulb[]; yFunc: (x: number) => number };
+    const garlands: Garland[] = [];
+
+    // Námraza – offscreen vrstvy
+    let frostPatternCanvas: HTMLCanvasElement;
+    let frostPatternCtx: CanvasRenderingContext2D;
+    let frostCanvas: HTMLCanvasElement;
+    let frostCtx: CanvasRenderingContext2D;
+    const iceHoles: IceHole[] = [];
+    let frostAlpha = 0; // 0..~0.65
+
+    const targetFlakes = 300; // běžné vločky
+    const specialRate = 0.12; // průměrně ~1 velká vločka / 8 s
+    const logoRate = 0.025;   // průměrně ~1 hexagon / 40 s
+
+    // --- Utils ---
+    function resize() {
+      const parent = canvas.parentElement!;
+      const rect = parent.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dprRef.current = dpr;
+      width = Math.max(1, Math.floor(rect.width * dpr));
+      height = Math.max(1, Math.floor(rect.height * dpr));
+      canvas.width = width;
+      canvas.height = height;
+      canvas.style.width = rect.width + "px";
+      canvas.style.height = rect.height + "px";
+
+      layoutGarlands();
+      buildFrostLayers();
+    }
+
+    function rand(min: number, max: number) { return Math.random() * (max - min) + min; }
+
+    function addFlake() {
+      const r = Math.pow(Math.random(), 2) * 2.2 + 0.6; // malé častěji
+      flakes.push(new Flake(rand(0, width), -10, r));
+    }
+
+    function addSpecial() {
+      const r = rand(16, 30);
+      special.push(new BigFlake(rand(r + 10, width - r - 10), -40, r));
+    }
+
+    function addLogo() {
+      const r = rand(20, 34);
+      logos.push(new HexLogo(rand(r + 12, width - r - 12), -50, r));
+    }
+
+    // --- Classes ---
+    class Flake {
+      x: number; y: number; r: number; vy: number; drift: number; phase: number;
+      constructor(x: number, y: number, r: number) {
+        this.x = x; this.y = y; this.r = r;
+        this.vy = rand(8, 20) * (0.4 + r * 0.1); // rychlost podle velikosti
+        this.drift = rand(8, 18);
+        this.phase = Math.random() * Math.PI * 2;
+      }
+      update(dt: number) {
+        this.y += this.vy * dt;
+        this.x += Math.sin(this.phase + this.y * 0.01) * this.drift * dt;
+        if (this.y - this.r > height) { this.y = -10; this.x = rand(0, width); }
+        if (this.x < -20) this.x = width + 20;
+        if (this.x > width + 20) this.x = -20;
+      }
+      draw(ctx: CanvasRenderingContext2D) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.9)";
+        ctx.fill();
+      }
+    }
+
+    class BigFlake {
+      x: number; y: number; r: number; vy: number; spin: number; a: number; swayPhase: number; swayAmp: number;
+      constructor(x: number, y: number, r: number) {
+        this.x = x; this.y = y; this.r = r;
+        this.vy = rand(20, 35);
+        this.spin = rand(-0.6, 0.6);
+        this.a = rand(0, Math.PI * 2);
+        this.swayPhase = rand(0, Math.PI * 2);
+        this.swayAmp = rand(10, 28);
+      }
+      update(dt: number) {
+        this.y += this.vy * dt;
+        this.a += this.spin * dt;
+        this.x += Math.sin(this.swayPhase + this.y * 0.015) * this.swayAmp * dt;
+      }
+      isOff() { return this.y - this.r > height + 40; }
+      hit(px: number, py: number) {
+        const dx = px - this.x, dy = py - this.y;
+        return dx * dx + dy * dy <= (this.r + 6) * (this.r + 6);
+      }
+      draw(ctx: CanvasRenderingContext2D) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.a);
+        ctx.lineWidth = Math.max(1, this.r * 0.08);
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = "rgba(255,255,255,0.95)";
+        // šestiramenná vločka
+        for (let i = 0; i < 6; i++) {
+          const arm = (Math.PI * 2 * i) / 6;
+          drawArm(ctx, this.r, arm);
+        }
+        ctx.restore();
+      }
+    }
+
+    function drawArm(ctx: CanvasRenderingContext2D, r: number, rot: number) {
+      ctx.save();
+      ctx.rotate(rot);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, -r);
+      const t1 = -r * 0.55;
+      const t2 = -r * 0.8;
+      ctx.moveTo(0, t1); ctx.lineTo(r * 0.22, t1 + r * 0.18);
+      ctx.moveTo(0, t1); ctx.lineTo(-r * 0.22, t1 + r * 0.18);
+      ctx.moveTo(0, t2); ctx.lineTo(r * 0.18, t2 + r * 0.16);
+      ctx.moveTo(0, t2); ctx.lineTo(-r * 0.18, t2 + r * 0.16);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    class DustParticle {
+      x: number; y: number; vx: number; vy: number; life: number; maxLife: number;
+      constructor(x: number, y: number) {
+        this.x = x; this.y = y;
+        this.vx = rand(-60, 60);
+        this.vy = rand(-80, -10);
+        this.maxLife = rand(0.9, 1.8);
+        this.life = this.maxLife;
+      }
+      update(dt: number) {
+        this.vy += 120 * dt; // gravitace
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+        this.life -= dt;
+      }
+      draw(ctx: CanvasRenderingContext2D) {
+        const a = Math.max(0, this.life / this.maxLife);
+        ctx.fillStyle = `rgba(255,255,255,${0.9 * a})`;
+        ctx.fillRect(this.x, this.y, 1.5, 1.5);
+      }
+      dead() { return this.life <= 0; }
+    }
+
+    // --- Jiskry (prskavky) ---
+    class Spark {
+      x: number; y: number; px: number; py: number; vx: number; vy: number; life: number; maxLife: number;
+      constructor(x: number, y: number, speed=rand(60,160)) {
+        this.x = x; this.y = y; this.px = x; this.py = y;
+        const a = rand(0, Math.PI * 2);
+        this.vx = Math.cos(a) * speed;
+        this.vy = Math.sin(a) * speed - rand(0,40);
+        this.maxLife = rand(0.35, 0.9);
+        this.life = this.maxLife;
+      }
+      update(dt: number) {
+        this.px = this.x; this.py = this.y;
+        this.vx *= 0.985; this.vy *= 0.985; // lehké tření
+        this.vy += 80 * dt; // mírná gravitace
+        this.x += this.vx * dt; this.y += this.vy * dt;
+        this.life -= dt;
+      }
+      draw(ctx: CanvasRenderingContext2D) {
+        const a = Math.max(0, this.life / this.maxLife);
+        ctx.strokeStyle = `rgba(255, 220, 150, ${0.8 * a})`;
+        ctx.lineWidth = Math.max(1, 1.2 * dprRef.current);
+        ctx.beginPath();
+        ctx.moveTo(this.px, this.py);
+        ctx.lineTo(this.x, this.y);
+        ctx.stroke();
+        // malá jiskra na konci
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.7 * a})`;
+        ctx.fillRect(this.x - 0.7, this.y - 0.7, 1.4, 1.4);
+      }
+      dead() { return this.life <= 0; }
+    }
+
+    // --- Barevné jiskry pro ohňostroj ---
+    class BurstSpark extends Spark {
+      color: string;
+      constructor(x:number, y:number, speed:number, color:string) { super(x,y,speed); this.color = color; }
+      draw(ctx: CanvasRenderingContext2D) {
+        const a = Math.max(0, this.life / this.maxLife);
+        ctx.strokeStyle = this.color.replace("ALPHA", (0.85 * a).toFixed(3));
+        ctx.lineWidth = Math.max(1, 1.4 * dprRef.current);
+        ctx.beginPath();
+        ctx.moveTo(this.px, this.py);
+        ctx.lineTo(this.x, this.y);
+        ctx.stroke();
+      }
+    }
+
+    function spawnSparkBurst(cx: number, cy: number, count = 70) {
+      for (let i = 0; i < count; i++) sparks.push(new Spark(cx + rand(-1.5,1.5), cy + rand(-1.5,1.5)));
+    }
+
+    // --- Ohňostroj (velký výbuch) ---
+    const FW_COLORS = [
+      "rgba(255,120,120,ALPHA)", // červená
+      "rgba(255,220,120,ALPHA)", // zlatá
+      "rgba(120,220,255,ALPHA)", // modrá
+      "rgba(140,255,160,ALPHA)", // zelená
+      "rgba(220,140,255,ALPHA)", // fialová
+      "rgba(255,255,255,ALPHA)", // bílé jiskry
+    ];
+
+    class FlashBurst {
+      x:number; y:number; r:number; life:number; maxLife:number;
+      constructor(x:number,y:number){ this.x=x; this.y=y; this.r=10; this.maxLife=0.25; this.life=this.maxLife; }
+      update(dt:number){ this.r += 900*dt; this.life -= dt; }
+      draw(ctx:CanvasRenderingContext2D){ const a=Math.max(0,this.life/this.maxLife); const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r); g.addColorStop(0,`rgba(255,255,255,${0.8*a})`); g.addColorStop(1,'transparent'); ctx.save(); ctx.globalCompositeOperation='lighter'; ctx.fillStyle=g; ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fill(); ctx.restore(); }
+      dead(){ return this.life<=0; }
+    }
+
+    class Shockwave { x:number; y:number; r:number; life:number; maxLife:number; constructor(x:number,y:number){ this.x=x; this.y=y; this.r=0; this.maxLife=0.8; this.life=this.maxLife; } update(dt:number){ this.r += 420*dt; this.life -= dt; } draw(ctx:CanvasRenderingContext2D){ const a=Math.max(0,this.life/this.maxLife); ctx.save(); ctx.globalAlpha = 0.35*a; ctx.strokeStyle = `rgba(255,255,255,${0.8*a})`; ctx.lineWidth = Math.max(1.5, 2*dprRef.current); ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.stroke(); ctx.restore(); } dead(){ return this.life<=0; } }
+
+    function fireworkBoom(cx:number, cy:number) {
+      // barevný prstenec jisker
+      const N = Math.floor(200 + Math.random()*120);
+      const baseSpeed = rand(180, 360);
+      const palette = shuffle(FW_COLORS).slice(0, 3);
+      for (let i=0;i<N;i++) {
+        const color = palette[i % palette.length];
+        const s = baseSpeed * (0.7 + Math.random()*0.6);
+        sparks.push(new BurstSpark(cx, cy, s, color));
+      }
+      // záblesk a rázová vlna
+      flashes.push(new FlashBurst(cx, cy));
+      shockwaves.push(new Shockwave(cx, cy));
+      // nádech prachu
+      for (let i=0;i<80;i++) dust.push(new DustParticle(cx + rand(-2,2), cy + rand(-2,2)));
+    }
+
+    function shuffle<T>(arr:T[]):T[]{ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+    // --- Hexagon (logo Grafitu) ---
+    class HexLogo {
+      x:number; y:number; r:number; vy:number; a:number; va:number; sway:number; phase:number;
+      constructor(x:number,y:number,r:number){ this.x=x; this.y=y; this.r=r; this.vy=rand(26,40); this.a=rand(0,Math.PI*2); this.va=rand(-0.8,0.8); this.sway=rand(12,22); this.phase=rand(0,Math.PI*2); }
+      update(dt:number){ this.y += this.vy*dt; this.a += this.va*dt; this.x += Math.sin(this.phase + this.y*0.012)*this.sway*dt; }
+      isOff(){ return this.y - this.r > height + 50; }
+      hit(px:number, py:number){ const dx=px-this.x, dy=py-this.y; return dx*dx + dy*dy <= (this.r+6)*(this.r+6); }
+      draw(ctx:CanvasRenderingContext2D){ ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.a); const R=this.r; const r=R*0.88; // vnitřní
+        // záře pod logem
+        const g = ctx.createRadialGradient(0,0,0,0,0,R*2.6); g.addColorStop(0,'rgba(160,200,255,0.25)'); g.addColorStop(1,'transparent'); ctx.globalCompositeOperation='lighter'; ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,R*2.6,0,Math.PI*2); ctx.fill(); ctx.globalCompositeOperation='source-over';
+        // vnější šestiúhelník
+        hexPath(ctx, R);
+        ctx.lineWidth = Math.max(2, R*0.12);
+        ctx.strokeStyle = 'white';
+        ctx.stroke();
+        // vnitřní šestiúhelník (výplň)
+        hexPath(ctx, r);
+        const ig = ctx.createLinearGradient(-r,-r,r,r);
+        ig.addColorStop(0,'#87b5ff'); ig.addColorStop(1,'#d3e5ff');
+        ctx.fillStyle = ig;
+        ctx.fill();
+        ctx.restore(); }
+    }
+
+    function hexPath(ctx:CanvasRenderingContext2D, R:number){ ctx.beginPath(); for(let i=0;i<6;i++){ const ang = Math.PI/6 + i*Math.PI/3; const x = Math.cos(ang)*R; const y=Math.sin(ang)*R; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.closePath(); }
+
+    // --- Vánoční světýlka ---
+    type ColorPair = { fill: string; glow: string };
+    const COLORS: ColorPair[] = [
+      { fill: "rgb(255,78,78)", glow: "rgba(255,78,78,0.9)" },      // červená
+      { fill: "rgb(255,214,67)", glow: "rgba(255,214,67,0.9)" },    // zlatá
+      { fill: "rgb(67,192,255)", glow: "rgba(67,192,255,0.9)" },    // modrá
+      { fill: "rgb(120,255,120)", glow: "rgba(120,255,120,0.9)" },  // zelená
+      { fill: "rgb(194,120,255)", glow: "rgba(194,120,255,0.9)" },  // fialová
+    ];
+
+    class Bulb {
+      x: number; y: number; size: number; phase: number; speed: number; color: ColorPair;
+      constructor(x: number, y: number) {
+        this.x = x; this.y = y;
+        this.size = rand(6, 9) * Math.max(1, dprRef.current * 0.9);
+        this.phase = rand(0, Math.PI * 2);
+        this.speed = rand(1.2, 2.2);
+        this.color = COLORS[Math.floor(rand(0, COLORS.length))];
+      }
+      draw(ctx: CanvasRenderingContext2D, t: number) {
+        const flicker = 0.55 + 0.45 * Math.max(0, Math.sin(this.phase + t * this.speed));
+        // náhodné malé prskavky u žárovky
+        if (xmasRef.current && Math.random() < 0.25 * (1 + flicker) * 0.016) {
+          if (Math.random() < 0.35) spawnSparkBurst(this.x, this.y, Math.floor(rand(4, 9)));
+        }
+        // VĚTŠÍ ROZMLŽENÍ ZÁŘE
+        const glowR = this.size * 5.2; // zvětšeno (dříve ~3.5)
+        const rg = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, glowR);
+        rg.addColorStop(0, this.color.glow.replace("0.9", (0.72 * flicker).toFixed(3)));
+        rg.addColorStop(1, "transparent");
+        ctx.save();
+        ctx.globalCompositeOperation = "lighter";
+        ctx.fillStyle = rg;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, glowR, 0, Math.PI * 2);
+        ctx.fill();
+        // samotná žárovka + jemný shadowBlur
+        ctx.shadowBlur = this.size * 2.2;
+        ctx.shadowColor = this.color.glow;
+        ctx.fillStyle = this.color.fill;
+        ctx.beginPath();
+        ctx.ellipse(this.x, this.y, this.size * 0.7, this.size, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        // patice
+        ctx.fillStyle = "#2a3b48";
+        ctx.fillRect(this.x - this.size * 0.5, this.y - this.size * 1.2, this.size, this.size * 0.35);
+        ctx.restore();
+      }
+    }
+
+    function layoutGarlands() {
+      garlands.length = 0;
+      const count = Math.max(1, Math.min(6, garlandCountRef.current|0));
+      for (let i = 0; i < count; i++) {
+        const frac = count === 1 ? 0.5 : i / (count - 1);
+        const baseY = height * (0.12 + 0.72 * frac);
+        const amp = (18 + 10 * Math.sin(i * 1.7)) * dprRef.current;
+        const phase = i * Math.PI / 5;
+        const step = Math.max(58, Math.floor(width / 22));
+        const bulbs: Bulb[] = [];
+        for (let x = step * 0.5; x < width; x += step) {
+          const y = baseY + Math.sin((x / width) * Math.PI * 2 + phase) * amp;
+          bulbs.push(new Bulb(x, y));
+        }
+        const yFunc = (x: number) => baseY + Math.sin((x / width) * Math.PI * 2 + phase) * amp;
+        garlands.push({ bulbs, yFunc });
+      }
+    }
+
+    function drawGarlandWire(yFunc: (x: number) => number) {
+      ctx.save();
+      ctx.lineWidth = Math.max(1.5, 2.0 * dprRef.current);
+      ctx.strokeStyle = "#2a3b48"; // tmavý drát
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += 8) {
+        const y = yFunc(x);
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawGarlands(t: number) {
+      for (let g of garlands) {
+        drawGarlandWire(g.yFunc);
+        for (let i = 0; i < g.bulbs.length; i++) g.bulbs[i].draw(ctx, t * (1 + i * 0.002));
+      }
+    }
+
+    // --- Námraza (frost) ---
+    class IceHole { x:number; y:number; r:number; vr:number; life:number; maxLife:number; constructor(x:number,y:number){ this.x=x; this.y=y; this.r=6; this.vr=rand(140,260); this.maxLife=rand(0.9,1.6); this.life=this.maxLife; } update(dt:number){ this.r += this.vr*dt; this.vr *= 0.98; this.life -= dt; } dead(){ return this.life<=0; } }
+
+    class IceShard { x:number; y:number; vx:number; vy:number; a:number; va:number; life:number; maxLife:number; len:number;
+      constructor(x:number,y:number){ this.x=x; this.y=y; const sp=rand(80,200); const ang=rand(0,Math.PI*2); this.vx=Math.cos(ang)*sp; this.vy=Math.sin(ang)*sp - rand(0,50); this.a=rand(0,Math.PI*2); this.va=rand(-6,6); this.len=rand(6,16); this.maxLife=rand(0.5,1.2); this.life=this.maxLife; }
+      update(dt:number){ this.vx *= 0.985; this.vy = this.vy*0.985 + 120*dt; this.x += this.vx*dt; this.y += this.vy*dt; this.a += this.va*dt; this.life -= dt; }
+      draw(ctx:CanvasRenderingContext2D){ const k=Math.max(0,this.life/this.maxLife); ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.a); ctx.strokeStyle=`rgba(200,230,255,${0.9*k})`; ctx.lineWidth=Math.max(1,1.1*dprRef.current); ctx.beginPath(); ctx.moveTo(-this.len*0.5,0); ctx.lineTo(this.len*0.5,0); ctx.stroke(); ctx.restore(); }
+      dead(){ return this.life<=0; }
+    }
+
+    function buildFrostLayers() {
+      frostPatternCanvas = document.createElement('canvas');
+      frostPatternCanvas.width = width; frostPatternCanvas.height = height;
+      frostPatternCtx = frostPatternCanvas.getContext('2d')!;
+      frostPatternCtx.clearRect(0,0,width,height);
+
+      // základní krystalická textura (jemné linky + edge vignetting)
+      frostPatternCtx.globalCompositeOperation = 'lighter';
+      for (let i=0;i<1200;i++) {
+        const x = rand(0,width), y = rand(0,height);
+        const len = rand(4,18), ang = rand(0,Math.PI*2);
+        frostPatternCtx.strokeStyle = `rgba(210,235,255,${rand(0.03,0.08)})`;
+        frostPatternCtx.lineWidth = rand(0.6,1.2);
+        frostPatternCtx.beginPath();
+        frostPatternCtx.moveTo(x - Math.cos(ang)*len*0.5, y - Math.sin(ang)*len*0.5);
+        frostPatternCtx.lineTo(x + Math.cos(ang)*len*0.5, y + Math.sin(ang)*len*0.5);
+        frostPatternCtx.stroke();
+      }
+      frostPatternCtx.globalCompositeOperation = 'source-over';
+      // námrazové okraje
+      for (let i=0;i<10;i++) {
+        const r = Math.max(width,height) * rand(0.4,0.9);
+        const cx = rand(-width*0.2, width*1.2);
+        const cy = rand(-height*0.2, height*0.2);
+        const g = frostPatternCtx.createRadialGradient(cx,cy,0,cx,cy,r);
+        g.addColorStop(0, 'rgba(190,220,255,0.15)');
+        g.addColorStop(1, 'transparent');
+        frostPatternCtx.fillStyle=g;
+        frostPatternCtx.beginPath();
+        frostPatternCtx.arc(cx,cy,r,0,Math.PI*2);
+        frostPatternCtx.fill();
+      }
+
+      frostCanvas = document.createElement('canvas');
+      frostCanvas.width = width; frostCanvas.height = height;
+      frostCtx = frostCanvas.getContext('2d')!;
+      frostCtx.clearRect(0,0,width,height);
+    }
+
+    function drawFrostLayer(dt:number) {
+      const target = iceRef.current ? 0.65 : 0; // cílová intenzita
+      // plynulé přibližování
+      const rate = 0.15; // jak rychle se přibližuje k cíli
+      frostAlpha += (target - frostAlpha) * Math.min(1, rate * dt * 60);
+
+      if (frostAlpha < 0.01) return;
+      frostCtx.clearRect(0,0,width,height);
+      frostCtx.globalAlpha = frostAlpha;
+      frostCtx.drawImage(frostPatternCanvas, 0,0);
+
+      // vylamování děr
+      if (iceHoles.length) {
+        frostCtx.save();
+        frostCtx.globalCompositeOperation = 'destination-out';
+        for (let i=iceHoles.length-1;i>=0;i--) {
+          const h = iceHoles[i];
+          const rg = frostCtx.createRadialGradient(h.x,h.y, h.r*0.6, h.x,h.y, h.r);
+          rg.addColorStop(0, 'rgba(255,255,255,1)');
+          rg.addColorStop(1, 'rgba(255,255,255,0)');
+          frostCtx.fillStyle = rg;
+          frostCtx.beginPath();
+          frostCtx.arc(h.x,h.y,h.r,0,Math.PI*2);
+          frostCtx.fill();
+          h.update(dt);
+          if (h.dead()) iceHoles.splice(i,1);
+        }
+        frostCtx.restore();
+      }
+
+      // nakreslit jako overlay
+      ctx.drawImage(frostCanvas, 0,0);
+    }
+
+    function breakIce(px:number, py:number) {
+      // otvor do námrazy
+      iceHoles.push(new IceHole(px, py));
+      // ledové střepy + trochu prskavek
+      for (let i=0;i<Math.floor(rand(30,60));i++) shards.push(new IceShard(px,py));
+      if (Math.random() < 0.6) spawnSparkBurst(px, py, Math.floor(rand(10,20)));
+    }
+
+    // --- Drawing helpers ---
+    function drawBackground() {
+      // jemný noční gradient
+      const g = ctx.createLinearGradient(0, 0, 0, height);
+      g.addColorStop(0, "#0b1220");
+      g.addColorStop(1, "#162943");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, width, height);
+      // nenápadný závoj (mlžný šum)
+      ctx.globalAlpha = 0.08;
+      for (let i = 0; i < 3; i++) {
+        const cx = Math.random() * width;
+        const cy = Math.random() * height;
+        const r = Math.random() * 200 + 120;
+        const rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        rg.addColorStop(0, "#ffffff");
+        rg.addColorStop(1, "transparent");
+        ctx.fillStyle = rg;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // --- Audio: zvoneček ---
+    function playBell(panNorm: number) {
+      if (!soundRef.current) return;
+      const actx = audioRef.current; if (!actx) return;
+      const now = actx.currentTime;
+      const duration = 1.5;
+      const master = actx.createGain();
+      master.gain.setValueAtTime(0.0001, now);
+      master.gain.exponentialRampToValueAtTime(0.8, now + 0.01);
+      master.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      const pan = actx.createStereoPanner ? (actx.createStereoPanner() as StereoPannerNode) : null;
+      if (pan) pan.pan.setValueAtTime(Math.max(-1, Math.min(1, panNorm)), now);
+
+      const dest = pan ? pan : master;
+      if (pan) master.connect(pan);
+      (dest as any).connect(actx.destination);
+
+      const baseFreqs = [659.26, 783.99, 880.0, 987.77, 1046.5]; // E5, G5, A5, B5, C6
+      const f0 = baseFreqs[Math.floor(rand(0, baseFreqs.length))] * rand(0.98, 1.02);
+
+      function part(freqMul: number, gain0: number, dec: number, type: OscillatorType = "sine") {
+        const o = actx.createOscillator();
+        o.type = type; o.frequency.setValueAtTime(f0 * freqMul, now);
+        const g = actx.createGain();
+        g.gain.setValueAtTime(gain0, now);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + dec);
+        o.connect(g).connect(master);
+        o.start(now);
+        o.stop(now + dec);
+      }
+
+      part(1.0, 0.6, 1.2, "sine");
+      part(2.41, 0.25, 1.0, "sine");
+      part(3.79, 0.15, 0.9, "triangle");
+      part(5.2, 0.07, 0.6, "triangle");
+
+      // krátký náběhový "cink"
+      const click = actx.createOscillator();
+      const cg = actx.createGain();
+      click.type = "square"; click.frequency.setValueAtTime(f0 * 1.5, now);
+      cg.gain.setValueAtTime(0.12, now);
+      cg.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+      click.connect(cg).connect(master);
+      click.start(now); click.stop(now + 0.09);
+    }
+
+    // --- Click / tap ---
+    function onPointerDown(e: PointerEvent) {
+      ensureAudio();
+      setHintVisible(false);
+      const rect = canvas.getBoundingClientRect();
+      const px = (e.clientX - rect.left) * dprRef.current;
+      const py = (e.clientY - rect.top) * dprRef.current;
+
+      // nejdřív hexagon (je nejvzácnější a vizuálně velký cíl)
+      for (let i = logos.length - 1; i >= 0; i--) {
+        const L = logos[i];
+        if (L.hit(px, py)) {
+          fireworkBoom(L.x, L.y);
+          breakIce(L.x, L.y);
+          logos.splice(i, 1);
+          return;
+        }
+      }
+
+      let hitSpecial = false;
+      for (let i = special.length - 1; i >= 0; i--) {
+        const f = special[i];
+        if (f.hit(px, py)) {
+          shatter(f.x, f.y, f.r);
+          // zvoneček + prskavky + rozbití námrazy v okolí
+          const pan = (px / width) * 2 - 1;
+          playBell(pan);
+          spawnSparkBurst(f.x, f.y, Math.floor(60 + f.r * 3));
+          breakIce(f.x, f.y);
+          special.splice(i, 1);
+          hitSpecial = true;
+          break;
+        }
+      }
+      // i mimo vločku lze rozbít námrazu
+      if (!hitSpecial) breakIce(px, py);
+    }
+
+    function shatter(x: number, y: number, r: number) {
+      const n = Math.floor(60 + r * 2);
+      for (let i = 0; i < n; i++) dust.push(new DustParticle(x + rand(-2, 2), y + rand(-2, 2)));
+    }
+
+    // --- Loop ---
+    function loop(now: number) {
+      if (!running) return;
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      elapsed += dt;
+
+      // doplnění vloček
+      while (flakes.length < targetFlakes) addFlake();
+      if (Math.random() < specialRate * dt) addSpecial();
+      if (hexRef.current && Math.random() < logoRate * dt) addLogo();
+
+      // update
+      for (let i = 0; i < flakes.length; i++) flakes[i].update(dt);
+      for (let i = special.length - 1; i >= 0; i--) {
+        special[i].update(dt);
+        if (special[i].isOff()) special.splice(i, 1);
+      }
+      for (let i = logos.length - 1; i >= 0; i--) {
+        logos[i].update(dt);
+        if (logos[i].isOff()) logos.splice(i, 1);
+      }
+      for (let i = dust.length - 1; i >= 0; i--) {
+        dust[i].update(dt);
+        if (dust[i].dead()) dust.splice(i, 1);
+      }
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        sparks[i].update(dt);
+        if (sparks[i].dead()) sparks.splice(i, 1);
+      }
+      for (let i = shards.length - 1; i >= 0; i--) {
+        shards[i].update(dt);
+        if (shards[i].dead()) shards.splice(i, 1);
+      }
+      for (let i = flashes.length - 1; i >= 0; i--) {
+        flashes[i].update(dt);
+        if (flashes[i].dead()) flashes.splice(i, 1);
+      }
+      for (let i = shockwaves.length - 1; i >= 0; i--) {
+        shockwaves[i].update(dt);
+        if (shockwaves[i].dead()) shockwaves.splice(i, 1);
+      }
+
+      // draw
+      drawBackground();
+      if (xmasRef.current) drawGarlands(elapsed);
+      // sníh nad světýlky, ať působí prostorově
+      for (let i = 0; i < flakes.length; i++) flakes[i].draw(ctx);
+      for (let i = 0; i < special.length; i++) special[i].draw(ctx);
+      for (let i = 0; i < logos.length; i++) logos[i].draw(ctx);
+      for (let i = 0; i < dust.length; i++) dust[i].draw(ctx);
+
+      // ohňostroj – efekty
+      if (flashes.length || shockwaves.length || sparks.length) {
+        ctx.save();
+        // záblesk
+        for (let i=0;i<flashes.length;i++) flashes[i].draw(ctx);
+        // jiskry (additivní)
+        ctx.globalCompositeOperation = "lighter";
+        for (let i = 0; i < sparks.length; i++) sparks[i].draw(ctx);
+        ctx.restore();
+        // shockwaves přes normal
+        for (let i=0;i<shockwaves.length;i++) shockwaves[i].draw(ctx);
+      }
+
+      // námraza jako overlay (nahoře)
+      drawFrostLayer(dt);
+
+      // ledové střepy nad vším (vizuálně "na skle")
+      if (shards.length) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        for (let i=0;i<shards.length;i++) shards[i].draw(ctx);
+        ctx.restore();
+      }
+
+      // náhodné malé jiskry i mimo žárovky (atmosféra)
+      if (xmasRef.current && Math.random() < 0.02) {
+        spawnSparkBurst(rand(0, width), rand(height * 0.05, height * 0.2), Math.floor(rand(3, 6)));
+      }
+
+      // limity částic
+      if (sparks.length > 3000) sparks.splice(0, sparks.length - 3000);
+      if (shards.length > 1500) shards.splice(0, shards.length - 1500);
+
+      rafRef.current = requestAnimationFrame(loop);
+    }
+
+    // init
+    resize();
+    window.addEventListener("resize", resize);
+    canvas.addEventListener("pointerdown", onPointerDown);
+
+    function onVisibility() {
+      if (document.hidden) {
+        running = false;
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      } else {
+        running = true;
+        last = performance.now();
+        rafRef.current = requestAnimationFrame(loop);
+      }
+    }
+    document.addEventListener("visibilitychange", onVisibility);
+
+    rafRef.current = requestAnimationFrame(loop);
+
+    return () => {
+      running = false;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [xmasMode, soundOn, garlandCount, iceOn, hexOn]);
+
+  return (
+    <div className="relative w-full h-screen overflow-hidden bg-slate-900">
+      <canvas ref={canvasRef} className="absolute inset-0 block" />
+
+      {/* Ovládací prvky */}
+      <div className="absolute right-4 top-4 z-10 flex flex-wrap gap-2">
+        <button
+          onClick={() => setXmasMode(v => !v)}
+          className="rounded-xl bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20 border border-white/20"
+        >
+          {xmasMode ? "Vánoční mód: Zap" : "Vánoční mód: Vyp"}
+        </button>
+        <button
+          onClick={() => setSoundOn(v => !v)}
+          className="rounded-xl bg_WHITE/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20 border border-white/20"
+        >
+          {soundOn ? "Zvuk: Zap" : "Zvuk: Vyp"}
+        </button>
+        <div className="flex items-center gap-1 rounded-xl bg-white/10 px-2 py-2 text-xs text-white border border-white/20 backdrop-blur">
+          <span>Girlandy</span>
+          <button onClick={() => setGarlandCount(c => Math.max(1, c-1))} className="px-2 py-1 rounded bg-white/10">−</button>
+          <span className="min-w-[1.5rem] text-center">{garlandCount}</span>
+          <button onClick={() => setGarlandCount(c => Math.min(6, c+1))} className="px-2 py-1 rounded bg-white/10">＋</button>
+        </div>
+        <button
+          onClick={() => setIceOn(v => !v)}
+          className="rounded-xl bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20 border border-white/20"
+        >
+          {iceOn ? "Námraza: Zap" : "Námraza: Vyp"}
+        </button>
+        <button
+          onClick={() => setHexOn(v => !v)}
+          className="rounded-xl bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20 border border-white/20"
+        >
+          {hexOn ? "Hexagon: Zap" : "Hexagon: Vyp"}
+        </button>
+      </div>
+
+      {hintVisible && (
+        <div className="absolute inset-x-0 top-16 mx-auto w-fit rounded-2xl bg-black/30 px-4 py-2 text-sm text-white backdrop-blur-md pointer-events-none select-none">
+          Občas místo vločky padá <span className="font-semibold">hexagon Grafitu</span> — klik a 💥 ohňostroj. Klik kamkoliv také prorazí <span className="font-semibold">námrazu</span>. ❄️✨
+        </div>
+      )}
+    </div>
+  );
+}
