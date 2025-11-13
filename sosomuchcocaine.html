@@ -1,0 +1,885 @@
+import React, { useEffect, useRef, useState } from "react";
+
+export default function SnowScreensaver() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const dprRef = useRef<number>(1);
+
+  const [hintVisible, setHintVisible] = useState(true);
+  const [xmasMode, setXmasMode] = useState(true);
+  const [soundOn, setSoundOn] = useState(true);
+  const [garlandCount, setGarlandCount] = useState(3);
+  const [hexOn, setHexOn] = useState(true);
+  const [flakeCount, setFlakeCount] = useState(300);
+  const [uiVisible, setUiVisible] = useState(true);
+  const [depositScale, setDepositScale] = useState(1);
+
+  const flakeCountRef = useRef(300);
+  useEffect(() => { flakeCountRef.current = flakeCount; }, [flakeCount]);
+
+  const depositScaleRef = useRef(1);
+  useEffect(() => { depositScaleRef.current = depositScale; }, [depositScale]);
+
+  const xmasRef = useRef(true);
+  const soundRef = useRef(true);
+  const garlandCountRef = useRef(3);
+  const hexRef = useRef(true);
+  useEffect(() => { xmasRef.current = xmasMode; }, [xmasMode]);
+  useEffect(() => { soundRef.current = soundOn; }, [soundOn]);
+  useEffect(() => { garlandCountRef.current = garlandCount; }, [garlandCount]);
+  useEffect(() => { hexRef.current = hexOn; }, [hexOn]);
+
+  const audioRef = useRef<AudioContext | null>(null);
+  function ensureAudio() {
+    if (!audioRef.current) {
+      const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (Ctx) audioRef.current = new Ctx();
+    }
+  }
+
+  useEffect(() => {
+    const canvas = canvasRef.current!;
+    const ctx = canvas.getContext("2d")!;
+
+    let width = 0;
+    let height = 0;
+    let last = performance.now();
+    let elapsed = 0;
+    let running = true;
+
+    const flakes: Flake[] = [];
+    const special: BigFlake[] = [];
+    const dust: DustParticle[] = [];
+    const sparks: Spark[] = [];
+    const logos: HexLogo[] = [];
+    const flashes: FlashBurst[] = [];
+    const shockwaves: Shockwave[] = [];
+
+    // --- Sněhové závěje (zem)
+    let groundBins: number[] = [];
+    let groundBinW = 4;
+    function initGround() {
+      groundBinW = Math.max(2, Math.floor(4 * dprRef.current));
+      const n = Math.max(1, Math.ceil(width / groundBinW));
+      groundBins = new Array(n).fill(0);
+    }
+    function groundHAt(px: number) {
+      if (!groundBins.length) return 0;
+      const idx = Math.max(0, Math.min(groundBins.length - 1, Math.floor(px / groundBinW)));
+      return groundBins[idx];
+    }
+    // široké rozprostření malého množství sněhu (gaussovské váhy)
+    function addSnowWide(px: number, totalAmt: number, radiusBins = 10) {
+      if (!groundBins.length) return;
+      const idx0 = Math.floor(px / groundBinW);
+      const r = Math.max(3, Math.min(24, Math.floor(radiusBins)));
+      const sigma = r * 0.6;
+      let sum = 0;
+      for (let k = -r; k <= r; k++) sum += Math.exp(-(k * k) / (2 * sigma * sigma));
+      for (let k = -r; k <= r; k++) {
+        const j = idx0 + k;
+        if (j < 0 || j >= groundBins.length) continue;
+        const w = Math.exp(-(k * k) / (2 * sigma * sigma)) / sum;
+        groundBins[j] = Math.min(height * 0.45, groundBins[j] + totalAmt * depositScaleRef.current * w);
+      }
+    }
+    // lokálnější přidání (používá se pro některé efekty)
+    function addSnow(px: number, amt: number) {
+      if (!groundBins.length) return;
+      const idx = Math.floor(px / groundBinW);
+      for (let k = -2; k <= 2; k++) {
+        const j = idx + k;
+        if (j < 0 || j >= groundBins.length) continue;
+        const w = k === 0 ? 1 : (Math.abs(k) === 1 ? 0.6 : 0.3);
+        groundBins[j] = Math.min(height * 0.45, groundBins[j] + amt * depositScaleRef.current * w);
+      }
+      const j0 = Math.max(1, Math.min(groundBins.length - 2, idx));
+      groundBins[j0] = (groundBins[j0 - 1] + groundBins[j0] + groundBins[j0 + 1]) / 3;
+    }
+    function removeSnow(px: number, amt: number) {
+      if (!groundBins.length) return;
+      const idx = Math.floor(px / groundBinW);
+      for (let k = -3; k <= 3; k++) {
+        const j = idx + k;
+        if (j < 0 || j >= groundBins.length) continue;
+        const w = k === 0 ? 0.7 : (Math.abs(k) === 1 ? 0.6 : (Math.abs(k) === 2 ? 0.45 : 0.25));
+        groundBins[j] = Math.max(0, groundBins[j] - amt * w);
+      }
+      for (let i = 0; i < Math.floor(30 + amt * 2); i++) {
+        dust.push(new DustParticle(px + rand(-6, 6), height - groundHAt(px) + rand(-8, 2)));
+      }
+    }
+    function drawSnowGround() {
+      if (!groundBins.length) return;
+      ctx.save();
+
+      // Dynamický přechod ukotvený k NEJVYŠŠÍMU místu závěje
+      let maxSnow = 0;
+      for (let i = 0; i < groundBins.length; i++) if (groundBins[i] > maxSnow) maxSnow = groundBins[i];
+      const yTop = height - maxSnow; // y souřadnice nejvyšší kupky
+      const fadeLen = Math.max(60, Math.min(180, 40 + maxSnow * 0.35)); // víc sněhu => delší jemný přechod
+      const g = ctx.createLinearGradient(0, yTop + fadeLen, 0, yTop);
+      g.addColorStop(0, "rgba(255,255,255,0.95)");
+      g.addColorStop(1, "rgba(255,255,255,0.0)");
+      ctx.fillStyle = g;
+
+      // Vyplnění tvaru závěje
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+      for (let i = 0; i < groundBins.length; i++) {
+        const x = i * groundBinW;
+        const y = height - groundBins[i];
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      ctx.fill();
+
+      // Jemné zvýraznění hrany sněhu
+      ctx.globalCompositeOperation = "lighter";
+      ctx.strokeStyle = "rgba(255,255,255,0.6)";
+      ctx.lineWidth = Math.max(1, 1.2 * dprRef.current);
+      ctx.beginPath();
+      for (let i = 0; i < groundBins.length; i++) {
+        const x = i * groundBinW;
+        const y = height - groundBins[i];
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // --- Parallax hvězdy
+    type Star = { x: number; y: number; r: number; a: number };
+    const starLayers: Star[][] = [];
+    const starSpeeds = [0.02, 0.05, 0.09];
+    let pX = 0.5, pY = 0.5, tPX = 0.5, tPY = 0.5;
+    const phaseX = Math.random() * Math.PI * 2;
+    const phaseY = Math.random() * Math.PI * 2;
+    function buildParallax() {
+      starLayers.length = 0;
+      const area = (width * height) / (800 * 600);
+      const counts = [
+        Math.max(40, Math.floor(60 * area)),
+        Math.max(60, Math.floor(90 * area)),
+        Math.max(90, Math.floor(130 * area)),
+      ];
+      for (let l = 0; l < counts.length; l++) {
+        const arr: Star[] = [];
+        for (let i = 0; i < counts[l]; i++) {
+          arr.push({
+            x: Math.random() * width,
+            y: Math.random() * height * 0.6,
+            r: Math.random() * (l + 1) * 0.6 + 0.3,
+            a: Math.random() * 0.6 + 0.3,
+          });
+        }
+        starLayers.push(arr);
+      }
+    }
+    function drawParallax(t: number) {
+      ctx.save();
+      for (let l = 0; l < starLayers.length; l++) {
+        const arr = starLayers[l];
+        const sp = starSpeeds[l];
+        const offX = (pX - 0.5) * 30 + t * 10 * sp;
+        const offY = (pY - 0.5) * 12;
+        ctx.globalAlpha = 0.6;
+        for (let s of arr) {
+          let x = (s.x + offX) % width; if (x < 0) x += width;
+          let y = s.y + offY;
+          ctx.beginPath();
+          ctx.arc(x, y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+          ctx.fill();
+        }
+      }
+      ctx.restore();
+    }
+
+    // --- Girlandy
+    type Garland = { bulbs: Bulb[]; yFunc: (x: number) => number };
+    const garlands: Garland[] = [];
+
+    const specialRate = 0.12;
+    const logoRate = 0.025; // ~1/40 s průměr
+    const SMALL_DEPOSIT_MUL = 3; // malé vločky ukládají jemně
+    const BIG_WIDE_DEPOSIT_MUL = 6; // velká vločka ukládá málo, ale široce
+    const BIG_WIDE_RADIUS_BINS = 30; // ±30 košů ~ stovky px dle DPI
+
+    function resize() {
+      const parent = canvas.parentElement!;
+      const rect = parent.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dprRef.current = dpr;
+      width = Math.max(1, Math.floor(rect.width * dpr));
+      height = Math.max(1, Math.floor(rect.height * dpr));
+      canvas.width = width;
+      canvas.height = height;
+      canvas.style.width = rect.width + "px";
+      canvas.style.height = rect.height + "px";
+      layoutGarlands();
+      initGround();
+      buildParallax();
+    }
+
+    function rand(min: number, max: number) { return Math.random() * (max - min) + min; }
+
+    function addFlake() {
+      const r = Math.pow(Math.random(), 2) * 2.2 + 0.6;
+      flakes.push(new Flake(rand(0, width), -10, r));
+    }
+
+    function addSpecial() {
+      const r = rand(16, 30);
+      special.push(new BigFlake(rand(r + 10, width - r - 10), -40, r));
+    }
+
+    function addLogo() {
+      const r = rand(20, 34);
+      logos.push(new HexLogo(rand(r + 12, width - r - 12), -50, r));
+    }
+
+    class Flake {
+      x: number; y: number; r: number; vy: number; drift: number; phase: number;
+      constructor(x: number, y: number, r: number) {
+        this.x = x; this.y = y; this.r = r;
+        this.vy = rand(8, 20) * (0.4 + r * 0.1);
+        this.drift = rand(8, 18);
+        this.phase = Math.random() * Math.PI * 2;
+      }
+      update(dt: number) {
+        this.y += this.vy * dt;
+        this.x += Math.sin(this.phase + this.y * 0.01) * this.drift * dt;
+        const gh = groundHAt(this.x);
+        if (this.y + this.r >= height - gh) {
+          // malé vločky: málo sněhu na středně širokou oblast
+          addSnowWide(this.x, this.r * SMALL_DEPOSIT_MUL, 10);
+          this.y = -10; this.x = rand(0, width);
+        } else if (this.y - this.r > height + 10) {
+          this.y = -10; this.x = rand(0, width);
+        }
+        if (this.x < -20) this.x = width + 20;
+        if (this.x > width + 20) this.x = -20;
+      }
+      draw(ctx: CanvasRenderingContext2D) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.9)";
+        ctx.fill();
+      }
+    }
+
+    class BigFlake {
+      x: number; y: number; r: number; vy: number; spin: number; a: number; swayPhase: number; swayAmp: number;
+      constructor(x: number, y: number, r: number) {
+        this.x = x; this.y = y; this.r = r;
+        this.vy = rand(20, 35);
+        this.spin = rand(-0.6, 0.6);
+        this.a = rand(0, Math.PI * 2);
+        this.swayPhase = rand(0, Math.PI * 2);
+        this.swayAmp = rand(10, 28);
+      }
+      update(dt: number) {
+        this.y += this.vy * dt;
+        this.a += this.spin * dt;
+        this.x += Math.sin(this.swayPhase + this.y * 0.015) * this.swayAmp * dt;
+        // dopad velké vločky: malé množství sněhu široce rozprostřené
+        const gh = groundHAt(this.x);
+        if (this.y + this.r >= height - gh) {
+          addSnowWide(this.x, this.r * BIG_WIDE_DEPOSIT_MUL, BIG_WIDE_RADIUS_BINS);
+          for (let i = 0; i < Math.floor(20 + this.r * 2); i++) {
+            dust.push(new DustParticle(this.x + rand(-this.r * 0.5, this.r * 0.5), height - gh + rand(-6, 0)));
+          }
+          // respawn nad scénou
+          this.y = -40; this.x = rand(this.r + 10, width - this.r - 10);
+          this.a = rand(0, Math.PI * 2);
+        }
+      }
+      isOff() { return this.y - this.r > height + 40; }
+      hit(px: number, py: number) {
+        const dx = px - this.x, dy = py - this.y;
+        return dx * dx + dy * dy <= (this.r + 6) * (this.r + 6);
+      }
+      draw(ctx: CanvasRenderingContext2D) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.a);
+        ctx.lineWidth = Math.max(1, this.r * 0.08);
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = "rgba(255,255,255,0.95)";
+        for (let i = 0; i < 6; i++) {
+          const arm = (Math.PI * 2 * i) / 6;
+          drawArm(ctx, this.r, arm);
+        }
+        ctx.restore();
+      }
+    }
+
+    function drawArm(ctx: CanvasRenderingContext2D, r: number, rot: number) {
+      ctx.save();
+      ctx.rotate(rot);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, -r);
+      const t1 = -r * 0.55;
+      const t2 = -r * 0.8;
+      ctx.moveTo(0, t1); ctx.lineTo(r * 0.22, t1 + r * 0.18);
+      ctx.moveTo(0, t1); ctx.lineTo(-r * 0.22, t1 + r * 0.18);
+      ctx.moveTo(0, t2); ctx.lineTo(r * 0.18, t2 + r * 0.16);
+      ctx.moveTo(0, t2); ctx.lineTo(-r * 0.18, t2 + r * 0.16);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    class DustParticle {
+      x: number; y: number; vx: number; vy: number; life: number; maxLife: number;
+      constructor(x: number, y: number) {
+        this.x = x; this.y = y;
+        this.vx = rand(-60, 60);
+        this.vy = rand(-80, -10);
+        this.maxLife = rand(0.9, 1.8);
+        this.life = this.maxLife;
+      }
+      update(dt: number) {
+        this.vy += 120 * dt;
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+        this.life -= dt;
+      }
+      draw(ctx: CanvasRenderingContext2D) {
+        const a = Math.max(0, this.life / this.maxLife);
+        ctx.fillStyle = `rgba(255,255,255,${0.9 * a})`;
+        ctx.fillRect(this.x, this.y, 1.5, 1.5);
+      }
+      dead() { return this.life <= 0; }
+    }
+
+    class Spark {
+      x: number; y: number; px: number; py: number; vx: number; vy: number; life: number; maxLife: number;
+      constructor(x: number, y: number, speed = rand(60, 160)) {
+        this.x = x; this.y = y; this.px = x; this.py = y;
+        const a = rand(0, Math.PI * 2);
+        this.vx = Math.cos(a) * speed;
+        this.vy = Math.sin(a) * speed - rand(0, 40);
+        this.maxLife = rand(0.35, 0.9);
+        this.life = this.maxLife;
+      }
+      update(dt: number) {
+        this.px = this.x; this.py = this.y;
+        this.vx *= 0.985; this.vy *= 0.985;
+        this.vy += 80 * dt;
+        this.x += this.vx * dt; this.y += this.vy * dt;
+        this.life -= dt;
+      }
+      draw(ctx: CanvasRenderingContext2D) {
+        const a = Math.max(0, this.life / this.maxLife);
+        ctx.strokeStyle = `rgba(255, 220, 150, ${0.8 * a})`;
+        ctx.lineWidth = Math.max(1, 1.2 * dprRef.current);
+        ctx.beginPath();
+        ctx.moveTo(this.px, this.py);
+        ctx.lineTo(this.x, this.y);
+        ctx.stroke();
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.7 * a})`;
+        ctx.fillRect(this.x - 0.7, this.y - 0.7, 1.4, 1.4);
+      }
+      dead() { return this.life <= 0; }
+    }
+
+    class BurstSpark extends Spark {
+      color: string;
+      constructor(x: number, y: number, speed: number, color: string) {
+        super(x, y, speed); this.color = color;
+      }
+      draw(ctx: CanvasRenderingContext2D) {
+        const a = Math.max(0, this.life / this.maxLife);
+        ctx.strokeStyle = this.color.replace("ALPHA", (0.85 * a).toFixed(3));
+        ctx.lineWidth = Math.max(1, 1.4 * dprRef.current);
+        ctx.beginPath();
+        ctx.moveTo(this.px, this.py);
+        ctx.lineTo(this.x, this.y);
+        ctx.stroke();
+      }
+    }
+
+    function spawnSparkBurst(cx: number, cy: number, count = 70) {
+      for (let i = 0; i < count; i++) sparks.push(new Spark(cx + rand(-1.5, 1.5), cy + rand(-1.5, 1.5)));
+    }
+
+    const FW_COLORS = [
+      "rgba(255,120,120,ALPHA)",
+      "rgba(255,220,120,ALPHA)",
+      "rgba(120,220,255,ALPHA)",
+      "rgba(140,255,160,ALPHA)",
+      "rgba(220,140,255,ALPHA)",
+      "rgba(255,255,255,ALPHA)",
+    ];
+
+    class FlashBurst {
+      x: number; y: number; r: number; life: number; maxLife: number;
+      constructor(x: number, y: number) { this.x = x; this.y = y; this.r = 10; this.maxLife = 0.25; this.life = this.maxLife; }
+      update(dt: number) { this.r += 900 * dt; this.life -= dt; }
+      draw(ctx: CanvasRenderingContext2D) {
+        const a = Math.max(0, this.life / this.maxLife);
+        const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+        g.addColorStop(0, `rgba(255,255,255,${0.8 * a})`);
+        g.addColorStop(1, 'transparent');
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      dead() { return this.life <= 0; }
+    }
+
+    class Shockwave {
+      x: number; y: number; r: number; life: number; maxLife: number;
+      constructor(x: number, y: number) { this.x = x; this.y = y; this.r = 0; this.maxLife = 0.8; this.life = this.maxLife; }
+      update(dt: number) { this.r += 420 * dt; this.life -= dt; }
+      draw(ctx: CanvasRenderingContext2D) {
+        const a = Math.max(0, this.life / this.maxLife);
+        ctx.save();
+        ctx.globalAlpha = 0.35 * a;
+        ctx.strokeStyle = `rgba(255,255,255,${0.8 * a})`;
+        ctx.lineWidth = Math.max(1.5, 2 * dprRef.current);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+      dead() { return this.life <= 0; }
+    }
+
+    function fireworkBoom(cx: number, cy: number) {
+      const N = Math.floor(200 + Math.random() * 120);
+      const baseSpeed = rand(180, 360);
+      const palette = shuffle(FW_COLORS).slice(0, 3);
+      for (let i = 0; i < N; i++) {
+        const color = palette[i % palette.length];
+        const s = baseSpeed * (0.7 + Math.random() * 0.6);
+        sparks.push(new BurstSpark(cx, cy, s, color));
+      }
+      flashes.push(new FlashBurst(cx, cy));
+      shockwaves.push(new Shockwave(cx, cy));
+      for (let i = 0; i < 80; i++) dust.push(new DustParticle(cx + rand(-2, 2), cy + rand(-2, 2)));
+    }
+
+    function shuffle<T>(arr: T[]): T[] { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+    class HexLogo {
+      x: number; y: number; r: number; vy: number; a: number; va: number; sway: number; phase: number;
+      constructor(x: number, y: number, r: number) { this.x = x; this.y = y; this.r = r; this.vy = rand(26, 40); this.a = rand(0, Math.PI * 2); this.va = rand(-0.8, 0.8); this.sway = rand(12, 22); this.phase = rand(0, Math.PI * 2); }
+      update(dt: number) { this.y += this.vy * dt; this.a += this.va * dt; this.x += Math.sin(this.phase + this.y * 0.012) * this.sway * dt; }
+      isOff() { return this.y - this.r > height + 50; }
+      hit(px: number, py: number) { const dx = px - this.x, dy = py - this.y; return dx * dx + dy * dy <= (this.r + 6) * (this.r + 6); }
+      draw(ctx: CanvasRenderingContext2D) {
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.a);
+        const R = this.r; const r = R * 0.88;
+        const g = ctx.createRadialGradient(0, 0, 0, 0, 0, R * 2.6);
+        g.addColorStop(0, 'rgba(160,200,255,0.25)'); g.addColorStop(1, 'transparent');
+        ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, R * 2.6, 0, Math.PI * 2); ctx.fill();
+        ctx.globalCompositeOperation = 'source-over';
+        hexPath(ctx, R);
+        ctx.lineWidth = Math.max(2, R * 0.12);
+        ctx.strokeStyle = 'white';
+        ctx.stroke();
+        hexPath(ctx, r);
+        const ig = ctx.createLinearGradient(-r, -r, r, r);
+        ig.addColorStop(0, '#87b5ff'); ig.addColorStop(1, '#d3e5ff');
+        ctx.fillStyle = ig; ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function hexPath(ctx: CanvasRenderingContext2D, R: number) {
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const ang = Math.PI / 6 + i * Math.PI / 3;
+        const x = Math.cos(ang) * R; const y = Math.sin(ang) * R;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+    }
+
+    type ColorPair = { fill: string; glow: string };
+    const COLORS: ColorPair[] = [
+      { fill: "rgb(255,78,78)", glow: "rgba(255,78,78,0.9)" },
+      { fill: "rgb(255,214,67)", glow: "rgba(255,214,67,0.9)" },
+      { fill: "rgb(67,192,255)", glow: "rgba(67,192,255,0.9)" },
+      { fill: "rgb(120,255,120)", glow: "rgba(120,255,120,0.9)" },
+      { fill: "rgb(194,120,255)", glow: "rgba(194,120,255,0.9)" },
+    ];
+
+    class Bulb {
+      x: number; y: number; size: number; phase: number; speed: number; color: ColorPair;
+      constructor(x: number, y: number) {
+        this.x = x; this.y = y;
+        this.size = rand(6, 9) * Math.max(1, dprRef.current * 0.9);
+        this.phase = rand(0, Math.PI * 2);
+        this.speed = rand(1.2, 2.2);
+        this.color = COLORS[Math.floor(rand(0, COLORS.length))];
+      }
+      draw(ctx: CanvasRenderingContext2D, t: number) {
+        const flicker = 0.55 + 0.45 * Math.max(0, Math.sin(this.phase + t * this.speed));
+        if (xmasRef.current && Math.random() < 0.25 * (1 + flicker) * 0.016) {
+          if (Math.random() < 0.35) spawnSparkBurst(this.x, this.y, Math.floor(rand(4, 9)));
+        }
+        const glowR = this.size * 5.2;
+        const rg = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, glowR);
+        rg.addColorStop(0, this.color.glow.replace("0.9", (0.72 * flicker).toFixed(3)));
+        rg.addColorStop(1, "transparent");
+        ctx.save();
+        ctx.globalCompositeOperation = "lighter";
+        ctx.fillStyle = rg;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, glowR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = this.size * 2.2;
+        ctx.shadowColor = this.color.glow;
+        ctx.fillStyle = this.color.fill;
+        ctx.beginPath();
+        ctx.ellipse(this.x, this.y, this.size * 0.7, this.size, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#2a3b48";
+        ctx.fillRect(this.x - this.size * 0.5, this.y - this.size * 1.2, this.size, this.size * 0.35);
+        ctx.restore();
+      }
+    }
+
+    function layoutGarlands() {
+      garlands.length = 0;
+      const count = Math.max(1, Math.min(6, garlandCountRef.current | 0));
+      for (let i = 0; i < count; i++) {
+        const frac = count === 1 ? 0.5 : i / (count - 1);
+        const baseY = height * (0.12 + 0.72 * frac);
+        const amp = (18 + 10 * Math.sin(i * 1.7)) * dprRef.current;
+        const phase = i * Math.PI / 5;
+        const step = Math.max(58, Math.floor(width / 22));
+        const bulbs: Bulb[] = [];
+        for (let x = step * 0.5; x < width; x += step) {
+          const y = baseY + Math.sin((x / width) * Math.PI * 2 + phase) * amp;
+          bulbs.push(new Bulb(x, y));
+        }
+        const yFunc = (x: number) => baseY + Math.sin((x / width) * Math.PI * 2 + phase) * amp;
+        garlands.push({ bulbs, yFunc });
+      }
+    }
+
+    function drawGarlandWire(yFunc: (x: number) => number) {
+      ctx.save();
+      ctx.lineWidth = Math.max(1.5, 2.0 * dprRef.current);
+      ctx.strokeStyle = "#2a3b48";
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += 8) {
+        const y = yFunc(x);
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawGarlands(t: number) {
+      for (let g of garlands) {
+        drawGarlandWire(g.yFunc);
+        for (let i = 0; i < g.bulbs.length; i++) g.bulbs[i].draw(ctx, t * (1 + i * 0.002));
+      }
+    }
+
+    function drawBackground() {
+      const g = ctx.createLinearGradient(0, 0, 0, height);
+      g.addColorStop(0, "#0b1220");
+      g.addColorStop(1, "#162943");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, width, height);
+      drawParallax(elapsed);
+      ctx.globalAlpha = 0.08;
+      for (let i = 0; i < 3; i++) {
+        const cx = Math.random() * width;
+        const cy = Math.random() * height;
+        const r = Math.random() * 200 + 120;
+        const rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        rg.addColorStop(0, "#ffffff");
+        rg.addColorStop(1, "transparent");
+        ctx.fillStyle = rg;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function playBell(panNorm: number) {
+      if (!soundRef.current) return;
+      const actx = audioRef.current; if (!actx) return;
+      const now = actx.currentTime;
+      const duration = 1.5;
+      const master = actx.createGain();
+      master.gain.setValueAtTime(0.0001, now);
+      master.gain.exponentialRampToValueAtTime(0.8, now + 0.01);
+      master.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      const pan = actx.createStereoPanner ? (actx.createStereoPanner() as StereoPannerNode) : null;
+      if (pan) pan.pan.setValueAtTime(Math.max(-1, Math.min(1, panNorm)), now);
+      const dest = pan ? pan : master;
+      if (pan) master.connect(pan);
+      (dest as any).connect(actx.destination);
+      const baseFreqs = [659.26, 783.99, 880.0, 987.77, 1046.5];
+      const f0 = baseFreqs[Math.floor(rand(0, baseFreqs.length))] * rand(0.98, 1.02);
+      function part(freqMul: number, gain0: number, dec: number, type: OscillatorType = "sine") {
+        const o = actx.createOscillator();
+        o.type = type; o.frequency.setValueAtTime(f0 * freqMul, now);
+        const g = actx.createGain();
+        g.gain.setValueAtTime(gain0, now);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + dec);
+        o.connect(g).connect(master);
+        o.start(now);
+        o.stop(now + dec);
+      }
+      part(1.0, 0.6, 1.2, "sine");
+      part(2.41, 0.25, 1.0, "sine");
+      part(3.79, 0.15, 0.9, "triangle");
+      part(5.2, 0.07, 0.6, "triangle");
+      const click = actx.createOscillator();
+      const cg = actx.createGain();
+      click.type = "square"; click.frequency.setValueAtTime(f0 * 1.5, now);
+      cg.gain.setValueAtTime(0.12, now);
+      cg.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+      click.connect(cg).connect(master);
+      click.start(now); click.stop(now + 0.09);
+    }
+
+    function playTriadChime(panNorm: number) {
+      if (!soundRef.current) return;
+      const actx = audioRef.current; if (!actx) return;
+      const now = actx.currentTime;
+      const master = actx.createGain();
+      master.gain.setValueAtTime(0.0001, now);
+      master.gain.exponentialRampToValueAtTime(0.9, now + 0.01);
+      master.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+      const pan = actx.createStereoPanner ? (actx.createStereoPanner() as StereoPannerNode) : null;
+      if (pan) pan.pan.setValueAtTime(Math.max(-1, Math.min(1, panNorm)), now);
+      const dest = pan ? pan : master; if (pan) master.connect(pan); (dest as any).connect(actx.destination);
+      const roots = [587.33, 659.26, 739.99];
+      const root = roots[Math.floor(Math.random() * roots.length)] * rand(0.98, 1.02);
+      const triad = [1.0, 1.25, 1.5];
+      const offs = [0.0, 0.06, 0.12];
+      function bellAt(start: number, f0: number) {
+        function part(mul: number, gain0: number, dec: number, type: OscillatorType = "sine") {
+          const o = actx.createOscillator(); const g = actx.createGain();
+          o.type = type; o.frequency.setValueAtTime(f0 * mul, now + start);
+          g.gain.setValueAtTime(gain0, now + start);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + start + dec);
+          o.connect(g).connect(master); o.start(now + start); o.stop(now + start + dec);
+        }
+        part(1.0, 0.5, 1.2, "sine");
+        part(2.0, 0.18, 1.0, "sine");
+        part(3.0, 0.12, 0.9, "triangle");
+        const click = actx.createOscillator(); const cg = actx.createGain();
+        click.type = "square"; click.frequency.setValueAtTime(f0 * 1.5, now + start);
+        cg.gain.setValueAtTime(0.1, now + start);
+        cg.gain.exponentialRampToValueAtTime(0.0001, now + start + 0.08);
+        click.connect(cg).connect(master); click.start(now + start); click.stop(now + start + 0.09);
+      }
+      for (let i = 0; i < 3; i++) bellAt(offs[i], root * triad[i]);
+    }
+
+    function onPointerDown(e: PointerEvent) {
+      ensureAudio();
+      setHintVisible(false);
+      const rect = canvas.getBoundingClientRect();
+      const px = (e.clientX - rect.left) * dprRef.current;
+      const py = (e.clientY - rect.top) * dprRef.current;
+      tPX = px / width;
+      tPY = py / height;
+      for (let i = logos.length - 1; i >= 0; i--) {
+        const L = logos[i];
+        if (L.hit(px, py)) {
+          const pan = (px / width) * 2 - 1;
+          playTriadChime(pan);
+          fireworkBoom(L.x, L.y);
+          removeSnow(L.x, 16);
+          logos.splice(i, 1);
+          return;
+        }
+      }
+      let hitSpecial = false;
+      for (let i = special.length - 1; i >= 0; i--) {
+        const f = special[i];
+        if (f.hit(px, py)) {
+          shatter(f.x, f.y, f.r);
+          const pan = (px / width) * 2 - 1;
+          playBell(pan);
+          spawnSparkBurst(f.x, f.y, Math.floor(60 + f.r * 3));
+          removeSnow(f.x, Math.max(8, f.r));
+          special.splice(i, 1);
+          hitSpecial = true;
+          break;
+        }
+      }
+      if (!hitSpecial) { removeSnow(px, 8); }
+    }
+
+    function shatter(x: number, y: number, r: number) {
+      const n = Math.floor(60 + r * 2);
+      for (let i = 0; i < n; i++) dust.push(new DustParticle(x + rand(-2, 2), y + rand(-2, 2)));
+    }
+
+    function loop(now: number) {
+      if (!running) return;
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      elapsed += dt;
+      tPX = 0.5 + 0.10 * Math.sin(elapsed * 0.07 + phaseX);
+      tPY = 0.5 + 0.04 * Math.cos(elapsed * 0.11 + phaseY);
+      pX += (tPX - pX) * 0.02;
+      pY += (tPY - pY) * 0.02;
+      while (flakes.length < flakeCountRef.current) addFlake();
+      if (Math.random() < specialRate * dt) addSpecial();
+      if (hexRef.current && Math.random() < logoRate * dt) addLogo();
+      for (let i = 0; i < flakes.length; i++) flakes[i].update(dt);
+      for (let i = special.length - 1; i >= 0; i--) { special[i].update(dt); if (special[i].isOff()) special.splice(i, 1); }
+      for (let i = logos.length - 1; i >= 0; i--) { logos[i].update(dt); if (logos[i].isOff()) logos.splice(i, 1); }
+      for (let i = dust.length - 1; i >= 0; i--) { dust[i].update(dt); if (dust[i].dead()) dust.splice(i, 1); }
+      for (let i = sparks.length - 1; i >= 0; i--) { sparks[i].update(dt); if (sparks[i].dead()) sparks.splice(i, 1); }
+      for (let i = flashes.length - 1; i >= 0; i--) { flashes[i].update(dt); if (flashes[i].dead()) flashes.splice(i, 1); }
+      for (let i = shockwaves.length - 1; i >= 0; i--) { shockwaves[i].update(dt); if (shockwaves[i].dead()) shockwaves.splice(i, 1); }
+
+      drawBackground();
+      if (xmasRef.current) drawGarlands(elapsed);
+      for (let i = 0; i < flakes.length; i++) flakes[i].draw(ctx);
+      for (let i = 0; i < special.length; i++) special[i].draw(ctx);
+      for (let i = 0; i < logos.length; i++) logos[i].draw(ctx);
+      for (let i = 0; i < dust.length; i++) dust[i].draw(ctx);
+      if (flashes.length || shockwaves.length || sparks.length) {
+        ctx.save();
+        for (let i = 0; i < flashes.length; i++) flashes[i].draw(ctx);
+        ctx.globalCompositeOperation = "lighter";
+        for (let i = 0; i < sparks.length; i++) sparks[i].draw(ctx);
+        ctx.restore();
+        for (let i = 0; i < shockwaves.length; i++) shockwaves[i].draw(ctx);
+      }
+      drawSnowGround();
+      if (xmasRef.current && Math.random() < 0.02) {
+        spawnSparkBurst(rand(0, width), rand(height * 0.05, height * 0.2), Math.floor(rand(3, 6)));
+      }
+      if (sparks.length > 3000) sparks.splice(0, sparks.length - 3000);
+      rafRef.current = requestAnimationFrame(loop);
+    }
+
+    function onVisibility() {
+      if (document.hidden) {
+        running = false;
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      } else {
+        running = true;
+        last = performance.now();
+        rafRef.current = requestAnimationFrame(loop);
+      }
+    }
+
+    function runSelfTests() {
+      // keep original checks
+      const mid = Math.floor(width / 2);
+      const bi = Math.floor(mid / groundBinW);
+      const before = groundBins[bi];
+      addSnow(mid, 10);
+      const afterAdd = groundBins[bi];
+      removeSnow(mid, 5);
+      const afterRem = groundBins[bi];
+
+      // additional checks (non-destructive: restore state afterwards)
+      const saved = groundBins.slice();
+      const sumBefore = saved.reduce((a, b) => a + b, 0);
+      addSnowWide(mid, 6, 30);
+      const changedBins = groundBins.reduce((n, v, i) => n + (v !== saved[i] ? 1 : 0), 0);
+      const sumAfter = groundBins.reduce((a, b) => a + b, 0);
+      const wideAffectedMany = changedBins >= Math.max(10, Math.floor(BIG_WIDE_RADIUS_BINS * 1.5));
+      const wideIncreased = sumAfter > sumBefore;
+      groundBins = saved; // restore
+
+      const results = [
+        { test: 'canvas context', pass: !!ctx },
+        { test: 'ground bins exist', pass: groundBins.length > 0 },
+        { test: 'addSnow increases', pass: afterAdd > before },
+        { test: 'removeSnow decreases', pass: afterRem < afterAdd },
+        { test: 'addSnowWide affects many bins', pass: wideAffectedMany },
+        { test: 'addSnowWide increases total', pass: wideIncreased },
+        { test: 'audio ctx (after click)', pass: !!audioRef.current },
+      ];
+      try { console.table(results); } catch {}
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+    canvas.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("visibilitychange", onVisibility);
+    rafRef.current = requestAnimationFrame(loop);
+    runSelfTests();
+
+    return () => {
+      running = false;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [xmasMode, soundOn, garlandCount, hexOn]);
+
+  return (
+    <div className="relative w-full h-screen overflow-hidden bg-slate-900">
+      <canvas ref={canvasRef} className="absolute inset-0 block" />
+
+      {uiVisible ? (
+        <div className="absolute right-4 top-4 z-10 flex flex-wrap gap-2">
+          <button
+            onClick={() => setXmasMode(v => !v)}
+            className="rounded-xl bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20 border border-white/20"
+          >
+            {xmasMode ? "Vánoční mód: Zap" : "Vánoční mód: Vyp"}
+          </button>
+          <button
+            onClick={() => setSoundOn(v => !v)}
+            className="rounded-xl bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20 border border-white/20"
+          >
+            {soundOn ? "Zvuk: Zap" : "Zvuk: Vyp"}
+          </button>
+          <div className="flex items-center gap-1 rounded-xl bg-white/10 px-2 py-2 text-xs text-white border border-white/20 backdrop-blur">
+            <span>Ukládání</span>
+            <button onClick={() => setDepositScale(1)} className={`px-2 py-1 rounded ${depositScale === 1 ? 'bg-white/30' : 'bg-white/10'}`}>1×</button>
+            <button onClick={() => setDepositScale(0.1)} className={`px-2 py-1 rounded ${depositScale === 0.1 ? 'bg-white/30' : 'bg-white/10'}`}>10×</button>
+            <button onClick={() => setDepositScale(0.01)} className={`px-2 py-1 rounded ${depositScale === 0.01 ? 'bg-white/30' : 'bg-white/10'}`}>100×</button>
+            <button onClick={() => setDepositScale(0.001)} className={`px-2 py-1 rounded ${depositScale === 0.001 ? 'bg-white/30' : 'bg-white/10'}`}>1000×</button>
+            <button onClick={() => setDepositScale(0)} className={`px-2 py-1 rounded ${depositScale === 0 ? 'bg-white/30' : 'bg-white/10'}`}>0×</button>
+            <span className="ml-1 opacity-80">×{depositScale}</span>
+          </div>
+          <button
+            onClick={() => setUiVisible(false)}
+            title="Skrýt rozhraní"
+            className="rounded-xl bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20 border border-white/20"
+          >
+            👁️ Skrýt
+          </button>
+        </div>
+      ) : (
+        <div className="absolute right-4 top-4 z-10">
+          <button
+            onClick={() => setUiVisible(true)}
+            title="Zobrazit rozhraní"
+            className="rounded-full bg-white/10 p-2 text-white border border-white/20 backdrop-blur hover:bg-white/20"
+          >
+            👁️
+          </button>
+        </div>
+      )}
+
+      {hintVisible && (
+        <div className="absolute inset-x-0 bottom-8 z-10 mx-auto w-fit rounded-full bg-white/10 px-4 py-2 text-white text-xs border border-white/20 backdrop-blur">
+          Klikni kamkoliv: rozbiješ vločku/hexagon, jiskry a odmeteš sníh.
+        </div>
+      )}
+    </div>
+  );
+}
