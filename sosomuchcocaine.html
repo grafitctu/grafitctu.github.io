@@ -3,64 +3,61 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Snow Screensaver</title>
-  <meta name="description" content="Klikací vánoční sněhový spořič — React + Canvas v jednom HTML souboru" />
-  <style>html,body,#root{height:100%;margin:0}body{background:#0b1220}</style>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Snow Screensaver — Grafit</title>
+  <style>html,body,#root{height:100%;margin:0}body{background:#0b1220;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial}</style>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
   <div id="root"></div>
-  <!-- Všechno níže běží bez buildování: TSX je přeloženo v prohlížeči pomocí Babel Standalone. -->
-  <script type="text/babel" data-presets="typescript,react">
-    const { useEffect, useRef, useState } = React;
 
-    // === PŘENESENÁ KOMPONENTA ZE STÁVAJÍCÍHO KÓDU ===
-    function SnowScreensaver() {
+  <!-- Plain JS + JSX, no TypeScript. Runs via Babel Standalone. -->
+  <script type="text/babel" data-presets="env,react">
+    const {useEffect,useRef,useState} = React;
+
+    function SnowScreensaver(){
       const canvasRef = useRef(null);
       const rafRef = useRef(null);
       const dprRef = useRef(1);
 
-      const [hintVisible, setHintVisible] = useState(true);
-      const [xmasMode, setXmasMode] = useState(true);
-      const [soundOn, setSoundOn] = useState(true);
-      const [garlandCount, setGarlandCount] = useState(3);
-      const [hexOn, setHexOn] = useState(true);
-      const [flakeCount, setFlakeCount] = useState(300);
-      const [uiVisible, setUiVisible] = useState(true);
-      const [depositScale, setDepositScale] = useState(1);
+      const [hintVisible,setHintVisible] = useState(true);
+      const [xmasMode,setXmasMode] = useState(true);
+      const [soundOn,setSoundOn] = useState(true);
+      const [garlandCount,setGarlandCount] = useState(3);
+      const [hexOn,setHexOn] = useState(true);
+      const [flakeCount,setFlakeCount] = useState(300);
+      const [uiVisible,setUiVisible] = useState(true);
+      const [depositScale,setDepositScale] = useState(1);
 
-      const flakeCountRef = useRef(300);
-      useEffect(()=>{flakeCountRef.current = flakeCount;},[flakeCount]);
-      const depositScaleRef = useRef(1);
-      useEffect(()=>{depositScaleRef.current = depositScale;},[depositScale]);
-
-      const xmasRef = useRef(true), soundRef = useRef(true), garlandCountRef = useRef(3), hexRef = useRef(true);
-      useEffect(()=>{xmasRef.current = xmasMode;},[xmasMode]);
-      useEffect(()=>{soundRef.current = soundOn;},[soundOn]);
-      useEffect(()=>{garlandCountRef.current = garlandCount;},[garlandCount]);
-      useEffect(()=>{hexRef.current = hexOn;},[hexOn]);
+      const flakeCountRef = useRef(300); useEffect(()=>{flakeCountRef.current=flakeCount;},[flakeCount]);
+      const depositScaleRef = useRef(1); useEffect(()=>{depositScaleRef.current=depositScale;},[depositScale]);
+      const xmasRef = useRef(true); useEffect(()=>{xmasRef.current=xmasMode;},[xmasMode]);
+      const soundRef = useRef(true); useEffect(()=>{soundRef.current=soundOn;},[soundOn]);
+      const garlandCountRef = useRef(3); useEffect(()=>{garlandCountRef.current=garlandCount;},[garlandCount]);
+      const hexRef = useRef(true); useEffect(()=>{hexRef.current=hexOn;},[hexOn]);
 
       const audioRef = useRef(null);
-      function ensureAudio(){ if(!audioRef.current){ const Ctx = window.AudioContext || window.webkitAudioContext; if(Ctx) audioRef.current = new Ctx(); } }
+      function ensureAudio(){ if(!audioRef.current){ const Ctx = window.AudioContext||window.webkitAudioContext; if(Ctx) audioRef.current = new Ctx(); } }
 
       useEffect(()=>{
         const canvas = canvasRef.current; const ctx = canvas.getContext('2d');
-        let width=0, height=0, last=performance.now(), elapsed=0, running=true;
+        let width=0,height=0,last=performance.now(),elapsed=0,running=true;
+
         const flakes=[], special=[], dust=[], sparks=[], logos=[], flashes=[], shockwaves=[];
 
-        // --- ground bins ---
+        // --- ground accumulation ---
         let groundBins=[]; let groundBinW=4;
         function initGround(){ groundBinW=Math.max(2,Math.floor(4*dprRef.current)); const n=Math.max(1,Math.ceil(width/groundBinW)); groundBins=new Array(n).fill(0); }
-        function groundHAt(px){ if(!groundBins.length) return 0; const idx=Math.max(0,Math.min(groundBins.length-1,Math.floor(px/groundBinW))); return groundBins[idx]; }
-        function addSnowWide(px,totalAmt,radiusBins=10){ if(!groundBins.length) return; const idx0=Math.floor(px/groundBinW); const r=Math.max(3,Math.min(24,Math.floor(radiusBins))); const sigma=r*0.6; let sum=0; for(let k=-r;k<=r;k++) sum += Math.exp(-(k*k)/(2*sigma*sigma)); for(let k=-r;k<=r;k++){ const j=idx0+k; if(j<0||j>=groundBins.length) continue; const w=Math.exp(-(k*k)/(2*sigma*sigma))/sum; groundBins[j]=Math.min(height*0.45, groundBins[j] + totalAmt*depositScaleRef.current*w); } }
-        function addSnow(px,amt){ if(!groundBins.length) return; const idx=Math.floor(px/groundBinW); for(let k=-2;k<=2;k++){ const j=idx+k; if(j<0||j>=groundBins.length) continue; const w = k===0?1:(Math.abs(k)===1?0.6:0.3); groundBins[j]=Math.min(height*0.45, groundBins[j]+amt*depositScaleRef.current*w); } const j0=Math.max(1,Math.min(groundBins.length-2,idx)); groundBins[j0] = (groundBins[j0-1]+groundBins[j0]+groundBins[j0+1])/3; }
-        function removeSnow(px,amt){ if(!groundBins.length) return; const idx=Math.floor(px/groundBinW); for(let k=-3;k<=3;k++){ const j=idx+k; if(j<0||j>=groundBins.length) continue; const w = k===0?0.7:(Math.abs(k)===1?0.6:(Math.abs(k)===2?0.45:0.25)); groundBins[j]=Math.max(0, groundBins[j]-amt*w); } for(let i=0;i<Math.floor(30+amt*2);i++) dust.push(new DustParticle(px+rand(-6,6), height-groundHAt(px)+rand(-8,2))); }
-        function drawSnowGround(){ if(!groundBins.length) return; ctx.save(); let maxSnow=0; for(let i=0;i<groundBins.length;i++) if(groundBins[i]>maxSnow) maxSnow=groundBins[i]; const yTop=height-maxSnow; const fadeLen=Math.max(60, Math.min(180, 40+maxSnow*0.35)); const g=ctx.createLinearGradient(0, yTop+fadeLen, 0, yTop); g.addColorStop(0,'rgba(255,255,255,0.95)'); g.addColorStop(1,'rgba(255,255,255,0.0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(0,height); for(let i=0;i<groundBins.length;i++){ const x=i*groundBinW; const y=height-groundBins[i]; ctx.lineTo(x,y); } ctx.lineTo(width,height); ctx.closePath(); ctx.fill(); ctx.globalCompositeOperation='lighter'; ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.lineWidth=Math.max(1,1.2*dprRef.current); ctx.beginPath(); for(let i=0;i<groundBins.length;i++){ const x=i*groundBinW; const y=height-groundBins[i]; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.stroke(); ctx.restore(); }
+        function groundHAt(px){ if(!groundBins.length) return 0; const idx=Math.max(0,Math.min(groundBins.length-1, Math.floor(px/groundBinW))); return groundBins[idx]; }
+        function addSnowWide(px,totalAmt,radiusBins=10){ if(!groundBins.length) return; const idx0=Math.floor(px/groundBinW); const r=Math.max(3,Math.min(24,Math.floor(radiusBins))); const sigma=r*0.6; let sum=0; for(let k=-r;k<=r;k++) sum+=Math.exp(-(k*k)/(2*sigma*sigma)); for(let k=-r;k<=r;k++){ const j=idx0+k; if(j<0||j>=groundBins.length) continue; const w=Math.exp(-(k*k)/(2*sigma*sigma))/sum; groundBins[j]=Math.min(height*0.45, groundBins[j]+totalAmt*depositScaleRef.current*w); } }
+        function addSnow(px,amt){ if(!groundBins.length) return; const idx=Math.floor(px/groundBinW); for(let k=-2;k<=2;k++){ const j=idx+k; if(j<0||j>=groundBins.length) continue; const w=k===0?1:(Math.abs(k)===1?0.6:0.3); groundBins[j]=Math.min(height*0.45, groundBins[j]+amt*depositScaleRef.current*w); } const j0=Math.max(1,Math.min(groundBins.length-2,idx)); groundBins[j0]=(groundBins[j0-1]+groundBins[j0]+groundBins[j0+1])/3; }
+        function removeSnow(px,amt){ if(!groundBins.length) return; const idx=Math.floor(px/groundBinW); for(let k=-3;k<=3;k++){ const j=idx+k; if(j<0||j>=groundBins.length) continue; const w=k===0?0.7:(Math.abs(k)===1?0.6:(Math.abs(k)===2?0.45:0.25)); groundBins[j]=Math.max(0, groundBins[j]-amt*w);} for(let i=0;i<Math.floor(30+amt*2);i++){ dust.push(new DustParticle(px+rand(-6,6), height-groundHAt(px)+rand(-8,2))); } }
+        function drawSnowGround(){ if(!groundBins.length) return; ctx.save(); let maxSnow=0; for(let v of groundBins) if(v>maxSnow) maxSnow=v; const yTop=height-maxSnow; const fadeLen=Math.max(60, Math.min(180, 40+maxSnow*0.35)); const g=ctx.createLinearGradient(0,yTop+fadeLen,0,yTop); g.addColorStop(0,'rgba(255,255,255,0.95)'); g.addColorStop(1,'rgba(255,255,255,0.0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(0,height); for(let i=0;i<groundBins.length;i++){ const x=i*groundBinW, y=height-groundBins[i]; ctx.lineTo(x,y);} ctx.lineTo(width,height); ctx.closePath(); ctx.fill(); ctx.globalCompositeOperation='lighter'; ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.lineWidth=Math.max(1,1.2*dprRef.current); ctx.beginPath(); for(let i=0;i<groundBins.length;i++){ const x=i*groundBinW,y=height-groundBins[i]; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.stroke(); ctx.restore(); }
 
         // parallax stars
+        function rand(min,max){ return Math.random()*(max-min)+min; }
         const starLayers=[]; const starSpeeds=[0.02,0.05,0.09]; let pX=0.5,pY=0.5,tPX=0.5,tPY=0.5; const phaseX=Math.random()*Math.PI*2, phaseY=Math.random()*Math.PI*2;
         function buildParallax(){ starLayers.length=0; const area=(width*height)/(800*600); const counts=[Math.max(40,Math.floor(60*area)),Math.max(60,Math.floor(90*area)),Math.max(90,Math.floor(130*area))]; for(let l=0;l<counts.length;l++){ const arr=[]; for(let i=0;i<counts[l];i++){ arr.push({x:Math.random()*width, y:Math.random()*height*0.6, r:Math.random()*(l+1)*0.6+0.3, a:Math.random()*0.6+0.3}); } starLayers.push(arr);} }
         function drawParallax(t){ ctx.save(); for(let l=0;l<starLayers.length;l++){ const arr=starLayers[l]; const sp=starSpeeds[l]; const offX=(pX-0.5)*30 + t*10*sp; const offY=(pY-0.5)*12; ctx.globalAlpha=0.6; for(let s of arr){ let x=(s.x+offX)%width; if(x<0) x+=width; let y=s.y+offY; ctx.beginPath(); ctx.arc(x,y,s.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${s.a})`; ctx.fill(); } } ctx.restore(); }
@@ -78,11 +75,9 @@
         function drawGarlands(t){ for(const g of garlands){ drawGarlandWire(g.yFunc); for(let i=0;i<g.bulbs.length;i++) g.bulbs[i].draw(ctx, t*(1+i*0.002)); } }
 
         // visuals helpers
-        function rand(min,max){ return Math.random()*(max-min)+min; }
         function spawnSparkBurst(cx,cy,count=70){ for(let i=0;i<count;i++) sparks.push(new Spark(cx+rand(-1.5,1.5), cy+rand(-1.5,1.5))); }
         class DustParticle{ constructor(x,y){ this.x=x; this.y=y; this.vx=rand(-60,60); this.vy=rand(-80,-10); this.maxLife=rand(0.9,1.8); this.life=this.maxLife; } update(dt){ this.vy+=120*dt; this.x+=this.vx*dt; this.y+=this.vy*dt; this.life-=dt; } draw(ctx){ const a=Math.max(0,this.life/this.maxLife); ctx.fillStyle=`rgba(255,255,255,${0.9*a})`; ctx.fillRect(this.x,this.y,1.5,1.5);} dead(){return this.life<=0;} }
         class Spark{ constructor(x,y,speed=rand(60,160)){ this.x=x; this.y=y; this.px=x; this.py=y; const a=rand(0,Math.PI*2); this.vx=Math.cos(a)*speed; this.vy=Math.sin(a)*speed - rand(0,40); this.maxLife=rand(0.35,0.9); this.life=this.maxLife; } update(dt){ this.px=this.x; this.py=this.y; this.vx*=0.985; this.vy*=0.985; this.vy+=80*dt; this.x+=this.vx*dt; this.y+=this.vy*dt; this.life-=dt; } draw(ctx){ const a=Math.max(0,this.life/this.maxLife); ctx.strokeStyle=`rgba(255,220,150,${0.8*a})`; ctx.lineWidth=Math.max(1,1.2*dprRef.current); ctx.beginPath(); ctx.moveTo(this.px,this.py); ctx.lineTo(this.x,this.y); ctx.stroke(); ctx.fillStyle=`rgba(255,255,255,${0.7*a})`; ctx.fillRect(this.x-0.7,this.y-0.7,1.4,1.4);} dead(){return this.life<=0;} }
-
         class BurstSpark extends Spark{ constructor(x,y,speed,color){ super(x,y,speed); this.color=color; } draw(ctx){ const a=Math.max(0,this.life/this.maxLife); ctx.strokeStyle=this.color.replace('ALPHA',(0.85*a).toFixed(3)); ctx.lineWidth=Math.max(1,1.4*dprRef.current); ctx.beginPath(); ctx.moveTo(this.px,this.py); ctx.lineTo(this.x,this.y); ctx.stroke(); } }
         class FlashBurst{ constructor(x,y){ this.x=x; this.y=y; this.r=10; this.maxLife=0.25; this.life=this.maxLife;} update(dt){ this.r+=900*dt; this.life-=dt;} draw(ctx){ const a=Math.max(0,this.life/this.maxLife); const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r); g.addColorStop(0,`rgba(255,255,255,${0.8*a})`); g.addColorStop(1,'transparent'); ctx.save(); ctx.globalCompositeOperation='lighter'; ctx.fillStyle=g; ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fill(); ctx.restore(); } dead(){return this.life<=0;} }
         class Shockwave{ constructor(x,y){ this.x=x; this.y=y; this.r=0; this.maxLife=0.8; this.life=this.maxLife;} update(dt){ this.r+=420*dt; this.life-=dt;} draw(ctx){ const a=Math.max(0,this.life/this.maxLife); ctx.save(); ctx.globalAlpha=0.35*a; ctx.strokeStyle=`rgba(255,255,255,${0.8*a})`; ctx.lineWidth=Math.max(1.5,2*dprRef.current); ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.stroke(); ctx.restore(); } dead(){return this.life<=0;} }
@@ -95,11 +90,9 @@
         class HexLogo{ constructor(x,y,r){ this.x=x; this.y=y; this.r=r; this.vy=rand(26,40); this.a=rand(0,Math.PI*2); this.va=rand(-0.8,0.8); this.sway=rand(12,22); this.phase=rand(0,Math.PI*2);} update(dt){ this.y+=this.vy*dt; this.a+=this.va*dt; this.x+=Math.sin(this.phase+this.y*0.012)*this.sway*dt;} isOff(){ return this.y-this.r>height+50;} hit(px,py){ const dx=px-this.x, dy=py-this.y; return dx*dx+dy*dy <= (this.r+6)*(this.r+6);} draw(ctx){ ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.a); const R=this.r, r=R*0.88; const halo=ctx.createRadialGradient(0,0,0,0,0,R*2.6); halo.addColorStop(0,'rgba(160,200,255,0.25)'); halo.addColorStop(1,'transparent'); ctx.globalCompositeOperation='lighter'; ctx.fillStyle=halo; ctx.beginPath(); ctx.arc(0,0,R*2.6,0,Math.PI*2); ctx.fill(); ctx.globalCompositeOperation='source-over'; hexPath(ctx,R); ctx.lineWidth=Math.max(2,R*0.12); ctx.strokeStyle='white'; ctx.stroke(); hexPath(ctx,r); const ig=ctx.createLinearGradient(-r,-r, r,r); ig.addColorStop(0,'#87b5ff'); ig.addColorStop(1,'#d3e5ff'); ctx.fillStyle=ig; ctx.fill(); ctx.restore(); } }
         function hexPath(ctx,R){ ctx.beginPath(); for(let i=0;i<6;i++){ const ang=Math.PI/6 + i*Math.PI/3; const x=Math.cos(ang)*R, y=Math.sin(ang)*R; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.closePath(); }
 
-        const garlandCountRef = { get current(){ return garlandCount; } };
         const specialRate=0.12, logoRate=0.025;
 
         function resize(){ const parent=canvas.parentElement; const rect=parent.getBoundingClientRect(); const dpr=Math.min(window.devicePixelRatio||1,2); dprRef.current=dpr; width=Math.max(1,Math.floor(rect.width*dpr)); height=Math.max(1,Math.floor(rect.height*dpr)); canvas.width=width; canvas.height=height; canvas.style.width=rect.width+'px'; canvas.style.height=rect.height+'px'; layoutGarlands(); initGround(); buildParallax(); }
-
         function addFlake(){ const r=Math.pow(Math.random(),2)*2.2 + 0.6; flakes.push(new Flake(rand(0,width), -10, r)); }
         function addSpecial(){ const r=rand(16,30); special.push(new BigFlake(rand(r+10, width-r-10), -40, r)); }
         function addLogo(){ const r=rand(20,34); logos.push(new HexLogo(rand(r+12, width-r-12), -50, r)); }
@@ -109,23 +102,14 @@
         function playBell(pan){ if(!soundRef.current) return; const actx=audioRef.current; if(!actx) return; const now=actx.currentTime; const master=actx.createGain(); master.gain.setValueAtTime(0.0001,now); master.gain.exponentialRampToValueAtTime(0.8,now+0.01); master.gain.exponentialRampToValueAtTime(0.0001,now+1.5); const sp=actx.createStereoPanner?actx.createStereoPanner():null; if(sp) sp.pan.setValueAtTime(Math.max(-1,Math.min(1,pan)),now); const dest=sp||master; if(sp) master.connect(sp); dest.connect(actx.destination); const base=[659.26,783.99,880.0,987.77,1046.5]; const f0=base[Math.floor(Math.random()*base.length)]*rand(0.98,1.02); function part(m,g0,dec,t='sine'){ const o=actx.createOscillator(); o.type=t; o.frequency.setValueAtTime(f0*m,now); const g=actx.createGain(); g.gain.setValueAtTime(g0,now); g.gain.exponentialRampToValueAtTime(0.0001,now+dec); o.connect(g).connect(master); o.start(now); o.stop(now+dec);} part(1.0,0.6,1.2,'sine'); part(2.41,0.25,1.0,'sine'); part(3.79,0.15,0.9,'triangle'); part(5.2,0.07,0.6,'triangle'); const click=actx.createOscillator(); const cg=actx.createGain(); click.type='square'; click.frequency.setValueAtTime(f0*1.5,now); cg.gain.setValueAtTime(0.12,now); cg.gain.exponentialRampToValueAtTime(0.0001,now+0.08); click.connect(cg).connect(master); click.start(now); click.stop(now+0.09); }
         function playTriadChime(pan){ if(!soundRef.current) return; const actx=audioRef.current; if(!actx) return; const now=actx.currentTime; const master=actx.createGain(); master.gain.setValueAtTime(0.0001,now); master.gain.exponentialRampToValueAtTime(0.9,now+0.01); master.gain.exponentialRampToValueAtTime(0.0001,now+1.8); const sp=actx.createStereoPanner?actx.createStereoPanner():null; if(sp) sp.pan.setValueAtTime(Math.max(-1,Math.min(1,pan)),now); const dest=sp||master; if(sp) master.connect(sp); dest.connect(actx.destination); const roots=[587.33,659.26,739.99]; const root=roots[Math.floor(Math.random()*roots.length)]*rand(0.98,1.02); const tri=[1.0,1.25,1.5]; const offs=[0,0.06,0.12]; function bellAt(start,f0){ function part(m,g0,dec,t='sine'){ const o=actx.createOscillator(), g=actx.createGain(); o.type=t; o.frequency.setValueAtTime(f0*m, now+start); g.gain.setValueAtTime(g0, now+start); g.gain.exponentialRampToValueAtTime(0.0001, now+start+dec); o.connect(g).connect(master); o.start(now+start); o.stop(now+start+dec);} part(1.0,0.5,1.2,'sine'); part(2.0,0.18,1.0,'sine'); part(3.0,0.12,0.9,'triangle'); const click=actx.createOscillator(), cg=actx.createGain(); click.type='square'; click.frequency.setValueAtTime(f0*1.5, now+start); cg.gain.setValueAtTime(0.1, now+start); cg.gain.exponentialRampToValueAtTime(0.0001, now+start+0.08); click.connect(cg).connect(master); click.start(now+start); click.stop(now+start+0.09);} for(let i=0;i<3;i++) bellAt(offs[i], root*tri[i]); }
 
-        function onPointerDown(e){ ensureAudio(); setHintVisible(false); const rect=canvas.getBoundingClientRect(); const px=(e.clientX-rect.left)*dprRef.current; const py=(e.clientY-rect.top)*dprRef.current; tPX=px/width; tPY=py/height; for(let i=logos.length-1;i>=0;i--){ const L=logos[i]; if(L.hit(px,py)){ const pan=(px/width)*2-1; playTriadChime(pan); fireworkBoom(L.x,L.y); removeSnow(L.x,16); logos.splice(i,1); return; } } let hit=false; for(let i=special.length-1;i>=0;i--){ const f=special[i]; if(f.hit(px,py)){ shatter(f.x,f.y,f.r); const pan=(px/width)*2-1; playBell(pan); spawnSparkBurst(f.x,f.y,Math.floor(60+f.r*3)); removeSnow(f.x, Math.max(8,f.r)); special.splice(i,1); hit=true; break; } } if(!hit){ removeSnow(px,8); }
-        }
-
+        function onPointerDown(e){ ensureAudio(); setHintVisible(false); const rect=canvas.getBoundingClientRect(); const px=(e.clientX-rect.left)*dprRef.current; const py=(e.clientY-rect.top)*dprRef.current; tPX=px/width; tPY=py/height; for(let i=logos.length-1;i>=0;i--){ const L=logos[i]; if(L.hit(px,py)){ const pan=(px/width)*2-1; playTriadChime(pan); fireworkBoom(L.x,L.y); removeSnow(L.x,16); logos.splice(i,1); return; } } let hit=false; for(let i=special.length-1;i>=0;i--){ const f=special[i]; if(f.hit(px,py)){ shatter(f.x,f.y,f.r); const pan=(px/width)*2-1; playBell(pan); spawnSparkBurst(f.x,f.y,Math.floor(60+f.r*3)); removeSnow(f.x, Math.max(8,f.r)); special.splice(i,1); hit=true; break; } } if(!hit){ removeSnow(px,8); } }
         function shatter(x,y,r){ const n=Math.floor(60+r*2); for(let i=0;i<n;i++) dust.push(new DustParticle(x+rand(-2,2), y+rand(-2,2))); }
 
-        const specialRate=0.12, logoRate=0.025; // spawn rates
-
-        function loop(now){ if(!running) return; const dt=Math.min(0.05,(now-last)/1000); last=now; elapsed+=dt; tPX=0.5+0.10*Math.sin(elapsed*0.07+phaseX); tPY=0.5+0.04*Math.cos(elapsed*0.11+phaseY); pX+=(tPX-pX)*0.02; pY+=(tPY-pY)*0.02; while(flakes.length<flakeCountRef.current) addFlake(); if(Math.random() < specialRate*dt) addSpecial(); if(hexRef.current && Math.random() < logoRate*dt) addLogo(); for(let i=0;i<flakes.length;i++) flakes[i].update(dt); for(let i=special.length-1;i>=0;i--){ special[i].update(dt); if(special[i].isOff()) special.splice(i,1);} for(let i=logos.length-1;i>=0;i--){ logos[i].update(dt); if(logos[i].isOff()) logos.splice(i,1);} for(let i=dust.length-1;i>=0;i--){ dust[i].update(dt); if(dust[i].dead()) dust.splice(i,1);} for(let i=sparks.length-1;i>=0;i--){ sparks[i].update(dt); if(sparks[i].dead()) sparks.splice(i,1);} for(let i=flashes.length-1;i>=0;i--){ flashes[i].update(dt); if(flashes[i].dead()) flashes.splice(i,1);} for(let i=shockwaves.length-1;i>=0;i--){ shockwaves[i].update(dt); if(shockwaves[i].dead()) shockwaves.splice(i,1);} drawBackground(); if(xmasRef.current) drawGarlands(elapsed); for(let i=0;i<flakes.length;i++) flakes[i].draw(ctx); for(let i=0;i<special.length;i++) special[i].draw(ctx); for(let i=0;i<logos.length;i++) logos[i].draw(ctx); for(let i=0;i<dust.length;i++) dust[i].draw(ctx); if(flashes.length||shockwaves.length||sparks.length){ ctx.save(); for(let i=0;i<flashes.length;i++) flashes[i].draw(ctx); ctx.globalCompositeOperation='lighter'; for(let i=0;i<sparks.length;i++) sparks[i].draw(ctx); ctx.restore(); for(let i=0;i<shockwaves.length;i++) shockwaves[i].draw(ctx); } drawSnowGround(); if(xmasRef.current && Math.random()<0.02){ spawnSparkBurst(rand(0,width), rand(height*0.05,height*0.2), Math.floor(rand(3,6))); } if(sparks.length>3000) sparks.splice(0, sparks.length-3000); rafRef.current=requestAnimationFrame(loop); }
+        function loop(now){ if(!running) return; const dt=Math.min(0.05,(now-last)/1000); last=now; elapsed+=dt; tPX=0.5+0.10*Math.sin(elapsed*0.07+phaseX); tPY=0.5+0.04*Math.cos(elapsed*0.11+phaseY); pX+=(tPX-pX)*0.02; pY+=(tPY-pY)*0.02; while(flakes.length<flakeCountRef.current) addFlake(); if(Math.random() < 0.12*dt) addSpecial(); if(hexRef.current && Math.random() < 0.025*dt) addLogo(); for(let i=0;i<flakes.length;i++) flakes[i].update(dt); for(let i=special.length-1;i>=0;i--){ special[i].update(dt); if(special[i].isOff()) special.splice(i,1);} for(let i=logos.length-1;i>=0;i--){ logos[i].update(dt); if(logos[i].isOff()) logos.splice(i,1);} for(let i=dust.length-1;i>=0;i--){ dust[i].update(dt); if(dust[i].dead()) dust.splice(i,1);} for(let i=sparks.length-1;i>=0;i--){ sparks[i].update(dt); if(sparks[i].dead()) sparks.splice(i,1);} for(let i=flashes.length-1;i>=0;i--){ flashes[i].update(dt); if(flashes[i].dead()) flashes.splice(i,1);} for(let i=shockwaves.length-1;i>=0;i--){ shockwaves[i].update(dt); if(shockwaves[i].dead()) shockwaves.splice(i,1);} drawBackground(); if(xmasRef.current) drawGarlands(elapsed); for(let i=0;i<flakes.length;i++) flakes[i].draw(ctx); for(let i=0;i<special.length;i++) special[i].draw(ctx); for(let i=0;i<logos.length;i++) logos[i].draw(ctx); for(let i=0;i<dust.length;i++) dust[i].draw(ctx); if(flashes.length||shockwaves.length||sparks.length){ ctx.save(); for(let i=0;i<flashes.length;i++) flashes[i].draw(ctx); ctx.globalCompositeOperation='lighter'; for(let i=0;i<sparks.length;i++) sparks[i].draw(ctx); ctx.restore(); for(let i=0;i<shockwaves.length;i++) shockwaves[i].draw(ctx); } drawSnowGround(); if(xmasRef.current && Math.random()<0.02){ spawnSparkBurst(rand(0,width), rand(height*0.05,height*0.2), Math.floor(rand(3,6))); } if(sparks.length>3000) sparks.splice(0, sparks.length-3000); rafRef.current=requestAnimationFrame(loop); }
 
         function onVisibility(){ if(document.hidden){ running=false; if(rafRef.current) cancelAnimationFrame(rafRef.current); } else { running=true; last=performance.now(); rafRef.current=requestAnimationFrame(loop);} }
 
-        function rand(min,max){ return Math.random()*(max-min)+min; }
-
         function runSelfTests(){ const mid=Math.floor(width/2); const bi=Math.floor(mid/groundBinW); const before=groundBins[bi]; addSnow(mid,10); const afterAdd=groundBins[bi]; removeSnow(mid,5); const afterRem=groundBins[bi]; const saved=groundBins.slice(); const sumBefore=saved.reduce((a,b)=>a+b,0); addSnowWide(mid,6,30); const changed=groundBins.reduce((n,v,i)=>n+(v!==saved[i]?1:0),0); const sumAfter=groundBins.reduce((a,b)=>a+b,0); const wideMany = changed >= Math.max(10, Math.floor(30*1.5)); const wideUp = sumAfter > sumBefore; groundBins = saved; try{ console.table([{test:'canvas context',pass:!!ctx},{test:'ground bins exist',pass:groundBins.length>0},{test:'addSnow increases',pass:afterAdd>before},{test:'removeSnow decreases',pass:afterRem<afterAdd},{test:'addSnowWide affects many bins',pass:wideMany},{test:'addSnowWide increases total',pass:wideUp},{test:'audio ctx (after click)',pass:!!audioRef.current}]); }catch(e){} }
-
-        function resizeAll(){ resize(); }
-        function addSpecialMaybe(){ }
 
         resize(); window.addEventListener('resize', resize); canvas.addEventListener('pointerdown', onPointerDown); document.addEventListener('visibilitychange', onVisibility); rafRef.current=requestAnimationFrame(loop); runSelfTests();
         return ()=>{ running=false; if(rafRef.current) cancelAnimationFrame(rafRef.current); window.removeEventListener('resize', resize); canvas.removeEventListener('pointerdown', onPointerDown); document.removeEventListener('visibilitychange', onVisibility); };
@@ -155,16 +139,14 @@
             </div>
           )}
           {hintVisible && (
-            <div className="absolute inset-x-0 bottom-8 z-10 mx-auto w-fit rounded-full bg-white/10 px-4 py-2 text-white text-xs border border-white/20 backdrop-blur">
-              Klikni kamkoliv: rozbiješ vločku/hexagon, jiskry a odmeteš sníh.
-            </div>
+            <div className="absolute inset-x-0 bottom-8 z-10 mx-auto w-fit rounded-full bg-white/10 px-4 py-2 text-white text-xs border border-white/20 backdrop-blur">Klikni kamkoliv: rozbiješ vločku/hexagon, jiskry a odmeteš sníh.</div>
           )}
         </div>
       );
     }
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(React.createElement(SnowScreensaver));
+    root.render(<SnowScreensaver/>);
   </script>
 </body>
 </html>
