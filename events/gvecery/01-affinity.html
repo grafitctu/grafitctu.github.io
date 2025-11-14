@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="cs" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grafit – Affinity workshop</title>
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    .icon { width: 1rem; height: 1rem; }
+
+    /* karty */
+    .card {
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    }
+    .card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+    }
+
+    /* gradient pozadí */
+    .bg-gradient-dark {
+      background: radial-gradient(circle at top, #1f2937 0, #020617 52%, #020617 100%);
+    }
+
+    /* Quick nav pills */
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      border-radius:9999px;
+      padding:.25rem .75rem;
+      border:1px solid rgba(255,255,255,.1);
+      color:rgba(255,255,255,.9);
+    }
+    .pill:hover { background: rgba(255,255,255,.08); }
+    .pill:focus-visible {
+      outline: 2px solid rgba(56,189,248,.9);
+      outline-offset: 2px;
+    }
+
+    .tooltip::after{
+      content:"";
+      position:absolute;
+      left:16px;
+      top:-6px;
+      border-width:6px;
+      border-style:solid;
+      border-color:transparent transparent rgb(0 0 0 / .9) transparent;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-neutral-100 bg-gradient-dark">
+
+  <!-- horní progress bar -->
+  <div id="scrollbar" class="fixed left-0 top-0 h-1 w-0 bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-blue-400 z-50"></div>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <canvas id="heroCanvas" class="absolute inset-0 w-full pointer-events-none" style="height:50vh"></canvas>
+
+    <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-16 pb-14 space-y-8">
+      <!-- breadcrumb -->
+      <div class="flex items-center justify-between gap-3 text-xs text-neutral-400">
+        <a href="graphic-evenings.html"
+           class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 hover:bg-white/10">
+          <i data-lucide="arrow-left" class="icon"></i>
+          <span>Zpět na přehled Grafických večerů</span>
+        </a>
+        <span class="hidden sm:inline-flex items-center gap-1 text-[11px]">
+          <i data-lucide="sparkles" class="icon"></i>
+          <span>Grafické večery · Grafit Research Group</span>
+        </span>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-8 md:items-start">
+        <div class="flex-1 space-y-4">
+          <p class="text-xs uppercase tracking-[0.24em] text-cyan-300/80">
+            Grafické večery · Workshop
+          </p>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+            Affinity workshop – Základy tvorby fotomontáží
+          </h1>
+          <p class="max-w-2xl text-neutral-300">
+            Večerní praktický workshop zaměřený na základy fotomontáže v Affinity.
+            Od prvního otevření programu až po skládání fotografií do jednoho uceleného vizuálu.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm mt-2">
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="calendar" class="icon"></i>
+              <span>21. 11. 2025</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="clock" class="icon"></i>
+              <span>18:00–cca 20:00</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="map-pin" class="icon"></i>
+              <span>TH:A-1455 (ggLab)</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="user" class="icon"></i>
+              <span>Ondřej Václavík</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- plakát -->
+        <div class="w-full max-w-md md:w-80">
+          <div class="card overflow-hidden rounded-2xl border border-white/15 bg-black/50">
+            <img
+              src="/assets/events/graficke-vecery/affinity-workshop-2025-11-21.png"
+              alt="Plakát Grafické večery – Affinity workshop"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <p class="mt-2 text-[11px] text-neutral-500">
+            Plakát ke stažení: <a href="/assets/events/graficke-vecery/affinity-workshop-2025-11-21.png"
+            class="underline hover:text-cyan-300">PNG</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- rychlá navigace na sekce -->
+      <nav class="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+        <a href="#about"   class="pill text-xs" aria-label="O čem workshop je"><i data-lucide="info" class="icon"></i><span>O workshopu</span></a>
+        <a href="#program" class="pill text-xs" aria-label="Program večera"><i data-lucide="list-todo" class="icon"></i><span>Program</span></a>
+        <a href="#practical" class="pill text-xs" aria-label="Praktické informace"><i data-lucide="backpack" class="icon"></i><span>Praktické info</span></a>
+        <a href="#lecturer" class="pill text-xs" aria-label="Informace o lektorovi"><i data-lucide="user-circle" class="icon"></i><span>Lektor</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- obsah s druhým dynamickým pozadím -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <canvas id="areaCanvas" class="w-full h-full"></canvas>
+    </div>
+
+    <main class="relative z-10 mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-10 space-y-12">
+
+      <!-- O workshopu -->
+      <section id="about" aria-labelledby="about-heading" class="space-y-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">ℹ️</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">O čem to bude</p>
+            <h2 id="about-heading" class="text-2xl font-bold tracking-tight">Co se na Affinity workshopu naučíte</h2>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 text-sm text-neutral-300/90 leading-relaxed">
+          <p>
+            V průběhu workshopu se od základů naučíte používat <strong>Affinity</strong> pro účely manipulace s obrázky.
+            Zaměříme se na to, aby vám program přestal připadat „magický“ a stal se jen nástrojem, který máte pod kontrolou.
+          </p>
+          <p>
+            Kromě práce v samotném softwaru se budeme věnovat i obecným <strong>principům fotomontáže</strong>:
+            jak kombinovat zdrojové fotografie tak, aby výsledek nepůsobil „slepeně“, jak pracovat s perspektivou,
+            světlem a stíny a jak sjednocovat barvy napříč celým obrazem.
+          </p>
+          <p>
+            Ukážeme si praktické postupy pro <strong>přesný ořez objektů</strong>, práci s maskami, výběry a
+            vrstvami. Budeme řešit i výběr / pořízení vhodných fotografií – kompozice, nasvícení a perspektiva
+            často rozhodnou o tom, jestli bude montáž fungovat.
+          </p>
+          <p>
+            Vše bude vysvětleno tak, aby bylo <strong>přenositelné i do jiného softwaru</strong> (např. Adobe Photoshop,
+            GIMP apod.). Nebudeme lovit jen konkrétní tlačítka, ale hlavně myšlenku a workflow.
+          </p>
+        </div>
+      </section>
+
+      <!-- Program -->
+      <section id="program" aria-labelledby="program-heading" class="space-y-4 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">📋</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">Průběh večera</p>
+            <h2 id="program-heading" class="text-2xl font-bold tracking-tight">Přibližný program</h2>
+          </div>
+        </div>
+
+        <ol class="space-y-3 text-sm text-neutral-300/90">
+          <li class="flex gap-3">
+            <span class="mt-0.5 shrink-0 h-6 w-6 rounded-full bg-cyan-500/30 border border-cyan-300/60 flex items-center justify-center text-xs">1</span>
+            <div>
+              <p class="font-semibold text-neutral-100">Úvod do Affinity a rozhraní</p>
+              <p class="text-neutral-300/90">Krátké seznámení s prostředím, typy dokumentů, základní nastavení a tipy pro pohodlnou práci.</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-0.5 shrink-0 h-6 w-6 rounded-full bg-cyan-500/30 border border-cyan-300/60 flex items-center justify-center text-xs">2</span>
+            <div>
+              <p class="font-semibold text-neutral-100">Výběry, masky a přesný ořez objektů</p>
+              <p>Různé typy výběrů, maskování, jemné doladění hran, odstranění pozadí a typické chyby při ořezu.</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-0.5 shrink-0 h-6 w-6 rounded-full bg-cyan-500/30 border border-cyan-300/60 flex items-center justify-center text-xs">3</span>
+            <div>
+              <p class="font-semibold text-neutral-100">Skládání fotek do jednoho celku</p>
+              <p>Práce s perspektivou, měřítkem a světlem tak, aby postavy a objekty do prostředí opravdu zapadly.</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-0.5 shrink-0 h-6 w-6 rounded-full bg-cyan-500/30 border border-cyan-300/60 flex items-center justify-center text-xs">4</span>
+            <div>
+              <p class="font-semibold text-neutral-100">Barevné sjednocení a grading</p>
+              <p>Srovnání barev, tónů a kontrastu – úpravy, které vizuál „stmelí“ a udělají z montáže jednotný obrázek.</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-0.5 shrink-0 h-6 w-6 rounded-full bg-cyan-500/30 border border-cyan-300/60 flex items-center justify-center text-xs">5</span>
+            <div>
+              <p class="font-semibold text-neutral-100">Světelné efekty, stíny a Q&amp;A</p>
+              <p>Dodání světelných efektů, jemných stínů a závěrečné dotazy. Možnost krátce se podívat i na vaše vlastní projekty.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Praktické informace -->
+      <section id="practical" aria-labelledby="practical-heading" class="space-y-4 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎒</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">Praktické informace</p>
+            <h2 id="practical-heading" class="text-2xl font-bold tracking-tight">Co si vzít s sebou &amp; pro koho je akce</h2>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 text-sm text-neutral-300/90">
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-1 flex items-center gap-2">
+              <i data-lucide="laptop" class="icon"></i> Notebook
+            </h3>
+            <p>Ideálně si přineste vlastní notebook s nainstalovaným Affinity
+               (nebo jiným foto editorem), abyste si mohli vše rovnou zkoušet.</p>
+          </div>
+
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-1 flex items-center gap-2">
+              <i data-lucide="sparkles" class="icon"></i> Úroveň účastníků
+            </h3>
+            <p>Workshop je vhodný <strong>pro úplné začátečníky</strong>. Není potřeba předchozí
+               zkušenost s Affinity – projdeme vše krok za krokem.</p>
+          </div>
+
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-1 flex items-center gap-2">
+              <i data-lucide="message-circle" class="icon"></i> Přenositelné know-how
+            </h3>
+            <p>Principy, které si ukážeme, snadno využijete i v jiných programech
+               (například <strong>Adobe Photoshop</strong> nebo <strong>GIMP</strong>).</p>
+          </div>
+        </div>
+
+        <div class="mt-3 text-xs text-neutral-400">
+          Akce proběhne od <strong>18:00 v TH:A-1455 (ggLab)</strong>. Dorazit můžete i bez registrace
+          (pokud zavedeme registrační formulář, odkaz doplníme sem).
+        </div>
+      </section>
+
+      <!-- Lektor -->
+      <section id="lecturer" aria-labelledby="lecturer-heading" class="space-y-4 border-t border-white/10 pt-8 pb-6">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">👤</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">Lektor</p>
+            <h2 id="lecturer-heading" class="text-2xl font-bold tracking-tight">Kdo workshop povede</h2>
+          </div>
+        </div>
+
+        <div class="card flex flex-col sm:flex-row gap-4 rounded-2xl border border-white/10 bg-black/60 p-5">
+          <div class="flex items-center justify-center sm:justify-start">
+            <div class="h-16 w-16 rounded-full bg-gradient-to-br from-cyan-400 via-fuchsia-400 to-purple-700 flex items-center justify-center text-2xl font-bold">
+              O
+            </div>
+          </div>
+          <div class="flex-1 text-sm text-neutral-300/90 space-y-1">
+            <p class="font-semibold text-neutral-50 text-base">
+              Ondřej Václavík
+            </p>
+            <p>
+              Přednášející Grafických večerů zaměřených na fotomontáž a práci v Affinity.
+              Na workshopu ukáže své osvědčené postupy a typické triky, jak z obyčejných
+              zdrojových fotek vytěžit co nejvíc.
+            </p>
+            <p class="text-xs text-neutral-500">
+              (Krátký bio odstavec klidně uprav podle potřeby – zkušenosti, projekty, kontakt…)
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="border-t border-emerald-500/30 pt-6">
+        <div class="card flex flex-col md:flex-row items-start md:items-center justify-between gap-4 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-5 py-4">
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-100">Chcete dorazit?</h3>
+            <p class="text-sm text-neutral-200">
+              Stačí přijít včas do <strong>TH:A-1455 (ggLab)</strong>. Sledujte také Discord Grafitu
+              pro případné změny času nebo místnosti.
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <a href="https://discord.gg/sfMx2nq7BQ"
+               class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-2 text-sm hover:bg-white/10">
+              <i data-lucide="messages-square" class="icon"></i>
+              <span>Discord Grafit</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 text-center text-xs text-neutral-500 border-t border-white/10">
+        © Grafit Research Group — Grafické večery · Affinity workshop
+      </footer>
+    </main>
+  </section>
+
+  <script>
+    // lucide ikony
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) { window.lucide.createIcons(); }
+    });
+
+    // částicové pozadí
+    function particles(canvas, opts) {
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      let w = 0, h = 0, raf = 0;
+      const N = opts.N || 42;
+      const speed = opts.speed || 0.35;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width  = Math.max(window.innerWidth, Math.ceil(rect.width || window.innerWidth));
+        h = canvas.height = Math.ceil(rect.height || 320);
+      }
+
+      const dots = Array.from({length:N}, () => ({
+        x: 0, y: 0,
+        vx: (Math.random() - .5) * speed,
+        vy: (Math.random() - .5) * speed
+      }));
+
+      function resetDots() {
+        dots.forEach(d => {
+          d.x = Math.random() * w;
+          d.y = Math.random() * h;
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        const grad = ctx.createLinearGradient(0,0,w,h);
+        grad.addColorStop(0,"#020617");
+        grad.addColorStop(0.4,"#020617");
+        grad.addColorStop(1,"#0b1120");
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = .96;
+        ctx.fillRect(0,0,w,h);
+        ctx.globalAlpha = 1;
+
+        for (let i=0; i<N; i++) {
+          const a = dots[i];
+          a.x += a.vx;
+          a.y += a.vy;
+          if (a.x < 0 || a.x > w) a.vx *= -1;
+          if (a.y < 0 || a.y > h) a.vy *= -1;
+
+          for (let j=i+1; j<N; j++) {
+            const b = dots[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 140) {
+              ctx.globalAlpha = 1 - dist/140;
+              ctx.strokeStyle = "#22d3ee";
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
+          }
+
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(a.x, a.y, 1.4, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      function start() {
+        resize();
+        resetDots();
+        draw();
+      }
+
+      const ro = new ResizeObserver(() => resize());
+      ro.observe(canvas.parentElement);
+      window.addEventListener("resize", resize);
+      start();
+
+      return { stop: () => cancelAnimationFrame(raf), ro };
+    }
+
+    // scroll progress
+    window.addEventListener("scroll", () => {
+      const s = document.documentElement.scrollTop || document.body.scrollTop;
+      const h = (document.documentElement.scrollHeight - document.documentElement.clientHeight) || 1;
+      const pct = Math.max(0, Math.min(1, s / h));
+      const bar = document.getElementById("scrollbar");
+      if (bar) bar.style.width = (pct * 100) + "%";
+    });
+
+    // init částic
+    const prefersReduced = window.matchMedia &&
+                           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReduced) {
+      particles(document.getElementById("heroCanvas"), { N: 32, speed: .3 });
+      particles(document.getElementById("areaCanvas"), { N: 40, speed: .3 });
+    }
+  </script>
+</body>
+</html>
