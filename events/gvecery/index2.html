@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="cs" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grafit – Grafické večery</title>
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    .icon { width: 1rem; height: 1rem; }
+
+    /* Micro-motion hover pro karty */
+    .card {
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    }
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+    }
+    .card .thumb {
+      transform: scale(1.02);
+      transition: transform 500ms cubic-bezier(.22,1,.36,1);
+    }
+    .card:hover .thumb { transform: scale(1.08); }
+
+    /* Gradient pozadí */
+    .bg-gradient-dark {
+      background: radial-gradient(circle at top, #1f2937 0, #020617 52%, #020617 100%);
+    }
+
+    /* QuickNav pills */
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      border-radius:9999px;
+      padding:.25rem .75rem;
+      border:1px solid rgba(255,255,255,.1);
+      color:rgba(255,255,255,.9);
+    }
+    .pill:hover { background: rgba(255,255,255,.08); }
+    .pill:focus-visible {
+      outline: 2px solid rgba(56,189,248,.9);
+      outline-offset: 2px;
+    }
+
+    /* tooltip šipka (kdybys někdy chtěl použít .tooltip) */
+    .tooltip::after{
+      content:"";
+      position:absolute;
+      left:16px;
+      top:-6px;
+      border-width:6px;
+      border-style:solid;
+      border-color:transparent transparent rgb(0 0 0 / .9) transparent;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-neutral-100 bg-gradient-dark">
+
+  <!-- horní progress pruh -->
+  <div id="scrollbar" class="fixed left-0 top-0 h-1 w-0 bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-blue-400 z-50"></div>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <!-- dynamické pozadí -->
+    <canvas id="heroCanvas" class="absolute inset-0 w-full" style="height:60vh"></canvas>
+
+    <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-20 pb-20">
+      <div class="flex flex-col sm:flex-row sm:items-start gap-6">
+        <img src="https://grafitctu.github.io/assets/logos/grafit_bw.png"
+             alt="Grafit" class="h-14 w-14 rounded-xl border border-white/10 shadow">
+
+        <div class="relative flex-1">
+          <p class="text-xs uppercase tracking-[0.24em] text-cyan-300/80 mb-1">
+            Studentské workshopy • Grafika • Fotomontáž • Ilustrace
+          </p>
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">
+            Grafické večery
+          </h1>
+          <p class="mt-3 max-w-2xl text-neutral-300">
+            Série neformálních večerních workshopů o grafice, fotomontáži, Affinity,
+            Photoshopu a dalších nástrojích. Pro úplné začátečníky i mírně pokročilé.
+          </p>
+
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <a href="https://grafitctu.github.io/" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">
+              ← Zpět na hlavní web Grafit
+            </a>
+
+            <span class="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/20 px-3 py-1.5 text-xs text-emerald-100">
+              <span class="h-2 w-2 rounded-full bg-emerald-300 animate-pulse"></span>
+              První večer: Affinity workshop (21. 11. 2025)
+            </span>
+          </div>
+
+          <!-- Plovoucí tlačítko pro vyhledávání -->
+          <button id="openFilters"
+            class="absolute right-0 bottom-0 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-xs sm:text-sm text-neutral-200 hover:bg-white/10">
+            🔎 Hledat &nbsp; / &nbsp; Tagy
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK NAV -->
+  <nav class="sticky top-0 z-40 border-y border-white/10 bg-black/40 backdrop-blur">
+    <div class="mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-3 flex flex-wrap items-center justify-center gap-2">
+      <a href="#upcoming" class="pill" aria-label="Přejít na nadcházející večery">
+        <i data-lucide="sun-medium" class="icon"></i><span>↓ Nadcházející večery</span>
+      </a>
+      <a href="#archive" class="pill" aria-label="Přejít na archiv večerů">
+        <i data-lucide="archive" class="icon"></i><span>↓ Archiv</span>
+      </a>
+      <a href="#about" class="pill" aria-label="Přejít na informace o projektu">
+        <i data-lucide="info" class="icon"></i><span>↓ O projektu</span>
+      </a>
+
+      <span class="mx-2 h-5 w-px bg-white/10 hidden sm:inline-block"></span>
+
+      <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer" class="pill" aria-label="YouTube Grafit">
+        <i data-lucide="youtube" class="icon"></i><span>YouTube</span> ↗
+      </a>
+      <a href="https://discord.gg/sfMx2nq7BQ" target="_blank" rel="noreferrer" class="pill" aria-label="Discord Grafit">
+        <i data-lucide="messages-square" class="icon"></i><span>Discord</span> ↗
+      </a>
+    </div>
+  </nav>
+
+  <!-- Spodní sekce s částicovým pozadím -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <canvas id="areaCanvas" class="w-full h-full"></canvas>
+    </div>
+
+    <main class="relative z-10 mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-10 space-y-12">
+
+      <!-- Nadcházející večery -->
+      <section aria-labelledby="upcoming-heading">
+        <div class="mb-4">
+          <div class="flex items-center gap-2 text-neutral-300">
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🌙</span>
+            <span class="text-sm uppercase tracking-wide text-neutral-400">Co nás čeká</span>
+          </div>
+          <h2 id="upcoming" class="mt-1 text-2xl font-bold tracking-tight">Nadcházející grafické večery</h2>
+          <p class="mt-1 text-sm text-neutral-400">
+            Přehled plánovaných večerů. Detaily a zadání se mohou ještě lehce měnit.
+          </p>
+        </div>
+
+        <div id="upcomingGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+        <p id="upcomingEmpty" class="hidden text-sm text-neutral-400">
+          Zatím tu nic není – sleduj Discord a hlavní web Grafit pro čerstvé termíny.
+        </p>
+      </section>
+
+      <!-- Archiv -->
+      <section aria-labelledby="archive-heading" class="border-t border-white/10 pt-10">
+        <div class="mb-4 flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">📚</span>
+          <div>
+            <span class="text-sm uppercase tracking-wide text-neutral-400">Už proběhlo</span>
+            <h2 id="archive" class="mt-1 text-2xl font-bold tracking-tight">Archiv grafických večerů</h2>
+          </div>
+        </div>
+
+        <div id="archiveGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+        <p class="mt-2 text-xs text-neutral-500">
+          Tip: použij 🔎 vyhledávání nahoře pro filtrování podle nástrojů (Affinity, Photoshop, ilustrace…)
+        </p>
+      </section>
+
+      <!-- O projektu -->
+      <section id="about" class="border-t border-white/10 pt-10">
+        <div class="flex items-center gap-2 text-neutral-300 mb-3">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">ℹ️</span>
+          <span class="text-sm uppercase tracking-wide text-neutral-400">O projektu</span>
+        </div>
+        <h2 class="text-2xl font-bold tracking-tight mb-2">Co jsou Grafické večery?</h2>
+        <div class="grid md:grid-cols-2 gap-6 text-sm text-neutral-300/90 leading-relaxed">
+          <p>
+            Grafické večery jsou volně navazující workshopy pořádané studenty FIT pod patronáží
+            skupiny Grafit. Cílem je nabídnout bezpečný prostor, kde si můžeš v klidu vyzkoušet
+            grafické nástroje, naučit se základy fotomontáže, retuší, ilustrace nebo typografie
+            a ptát se na všechno, na co v klasické výuce nezbyde čas.
+          </p>
+          <p>
+            Formát je jednoduchý: krátký úvod, ukázka pracovního postupu a pak hodně praktického
+            hraní si. Workshopy jsou koncipované tak, aby byly použitelné napříč softwarem –
+            principy z Affinity většinou snadno přeneseš i do Photoshopu, GIMPu nebo jiných nástrojů.
+          </p>
+        </div>
+        <div class="mt-4 text-sm text-neutral-400">
+          Chceš nějaký večer vést, nebo máš nápad na téma? Ozvi se na Discordu Grafitu nebo
+          přímo vyučujícím z grafických předmětů.
+        </div>
+
+        <footer class="mt-10 border-t border-white/10 pt-6 text-center text-xs text-neutral-500">
+          © Grafit Research Group — pracovní prototyp stránky pro Grafické večery.
+        </footer>
+      </section>
+    </main>
+  </section>
+
+  <!-- Drawer s filtry (skrytý) -->
+  <div id="filterDrawer" class="fixed inset-0 z-50 hidden">
+    <div id="filterBackdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="relative mx-auto mt-10 w-[min(92%,1100px)] rounded-2xl border border-white/12 bg-neutral-900/95 p-4 sm:p-5 shadow-xl">
+      <div class="flex items-center justify-between gap-2">
+        <h3 class="text-base font-semibold text-white">Vyhledávání &amp; tagy</h3>
+        <button id="closeFilters"
+          class="inline-flex items-center rounded-md border border-white/10 px-2 py-1 text-sm text-neutral-300 hover:bg-white/10">✕ Zavřít</button>
+      </div>
+      <div class="mt-3 flex items-center gap-2">
+        <span class="text-neutral-400 text-sm">🔎</span>
+        <input id="search" placeholder="Hledat podle názvu, popisu, tagů…"
+               class="px-3 py-2 rounded-md border border-white/10 bg-black/40 text-white placeholder:text-neutral-500 w-full"/>
+      </div>
+      <div id="tags" class="mt-3 flex flex-wrap items-center gap-2"></div>
+    </div>
+  </div>
+
+  <script>
+    // Lucide ikony po načtení
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) { window.lucide.createIcons(); }
+    });
+
+    // --- DATA: grafické večery ---
+    const EVENINGS = [
+      {
+        id: "gv-affinity-2025-11-21",
+        title: "Affinity workshop – Základy tvorby fotomontáží",
+        dateLabel: "21. 11. 2025 • 18:00",
+        dateSort: "2025-11-21",
+        room: "TH:A-1455 (ggLab)",
+        lecturer: "Ondřej Václavík",
+        img: "/assets/events/graficke-vecery/affinity-workshop-2025-11-21.png",
+        tags: ["workshop","fotomontáž","affinity","začátečníci"],
+        upcoming: true,
+        blurb: "Večerní workshop zaměřený na základy fotomontáže v Affinity – od přesného ořezu objektů po barevné sjednocení a světelné efekty.",
+        detailsHtml: `
+          <p>Již v <strong>pátek 21. 11.</strong> se můžete těšit na workshop věnovaný tvorbě fotomontáží v Affinity v rámci Grafických večerů organizovaných
+          studenty FIT pod patronáží skupiny Grafit.</p>
+
+          <p>V průběhu <strong>workshopu</strong> se od základů naučíte používat <strong>Affinity</strong> pro účely manipulace s obrázky. Kromě toho se také zaměříme
+          na principy a zásady, jejichž dodržování povede k co možná nejlepším výsledkům při skládání fotografií do jednoho celku. Jedná se o záležitosti jako
+          přesný ořez objektů, výběr/pořízení fotografií s vhodným osvětlením a perspektivou, barevné sjednocení, dodání světelných efektů a stínů apod.</p>
+
+          <p>Workshop je určen i <strong>pro úplné začátečníky</strong>, kteří s prezentovaným softwarem dosud nemají zkušenost. Zároveň budou informace
+          <strong>obecné natolik, aby byly aplikovatelné na libovolný software podobného rázu</strong> (velice rád např. poradím s Adobe Photoshop).</p>
+
+          <p>Akce proběhne od <strong>18:00 v TH:A-1455 (ggLab)</strong>. Doporučuji si přinést notebook s Affinity (případně jiným foto editorem), abyste si
+          přednášené principy mohli vyzkoušet na místě.</p>
+        `
+      },
+
+      // sem můžeš časem doplňovat další večery ve stejném formátu
+      // {
+      //   id: "gv-illustration-2026-03-15",
+      //   title: "Digitální ilustrace pro úplné začátečníky",
+      //   dateLabel: "15. 3. 2026 • 18:00",
+      //   dateSort: "2026-03-15",
+      //   room: "TH:A-1455 (ggLab)",
+      //   lecturer: "Jméno lektora",
+      //   img: "cesta-k-obrazku.png",
+      //   tags: ["workshop","ilustrace","tablet"],
+      //   upcoming: false,
+      //   blurb: "Úvod do digitální ilustrace – základní vrstvy, štětce a workflow.",
+      //   detailsHtml: `...`
+      // },
+    ];
+
+    // --- pomocné ---
+    const $ = sel => document.querySelector(sel);
+    const create = (tag, cls="", html="") => {
+      const el = document.createElement(tag);
+      if (cls) el.className = cls;
+      if (html) el.innerHTML = html;
+      return el;
+    };
+
+    const allTags = Array.from(new Set(EVENINGS.flatMap(e => e.tags || [])));
+
+    // --- rendering karet ---
+    function eveningCard(ev) {
+      const article = create("article",
+        "card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black flex flex-col");
+
+      // obrázek / plakát
+      const imgBox = create("div","relative w-full overflow-hidden aspect-[3/1]");
+      const img = create("img","thumb h-full w-full object-cover object-center");
+      img.src = ev.img;
+      img.alt = ev.title;
+      img.loading = "lazy";
+      img.decoding = "async";
+      imgBox.appendChild(img);
+
+      const gradient = create("div","absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent");
+      imgBox.appendChild(gradient);
+
+      // Datum + místnost
+      if (ev.dateLabel) {
+        imgBox.appendChild(
+          create("span",
+            "absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-neutral-100 border border-white/15",
+            `📅 ${ev.dateLabel}`)
+        );
+      }
+      if (ev.room) {
+        imgBox.appendChild(
+          create("span",
+            "absolute right-3 bottom-3 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-neutral-100 border border-white/15",
+            `📍 ${ev.room}`)
+        );
+      }
+
+      article.appendChild(imgBox);
+
+      // tělo karty
+      const body = create("div","p-4 flex-1 flex flex-col");
+      const titleRow = create("div","flex items-start justify-between gap-2");
+      titleRow.appendChild(
+        create("h3","text-lg font-semibold text-neutral-50 leading-snug",ev.title)
+      );
+      if (ev.lecturer) {
+        titleRow.appendChild(
+          create("span","text-[11px] text-neutral-400 whitespace-nowrap",
+            `👤 ${ev.lecturer}`)
+        );
+      }
+      body.appendChild(titleRow);
+
+      if (ev.blurb) {
+        body.appendChild(
+          create("p","mt-1 text-sm text-neutral-300/90 leading-relaxed",ev.blurb)
+        );
+      }
+
+      if ((ev.tags || []).length) {
+        const tg = create("div","mt-3 flex flex-wrap gap-2");
+        ev.tags.forEach(t => {
+          tg.appendChild(
+            create("span",
+              "text-[11px] rounded-full border px-2 py-0.5 text-neutral-300 border-neutral-700/80 bg-white/5",
+              `#${t}`)
+          );
+        });
+        body.appendChild(tg);
+      }
+
+      if (ev.detailsHtml) {
+        const details = create("details","mt-3 text-sm text-neutral-300/90");
+        const summary = create("summary",
+          "cursor-pointer text-cyan-300 hover:text-cyan-200 list-none flex items-center gap-1",
+          "<span>Podrobnosti &amp; anotace</span>"
+        );
+        details.appendChild(summary);
+
+        const inner = create("div","mt-2 space-y-2");
+        inner.innerHTML = ev.detailsHtml;
+        details.appendChild(inner);
+        body.appendChild(details);
+      }
+
+      article.appendChild(body);
+      return article;
+    }
+
+    function renderEvenings(filterFn) {
+      const upcomingGrid = $("#upcomingGrid");
+      const archiveGrid  = $("#archiveGrid");
+      const upcomingEmpty = $("#upcomingEmpty");
+      upcomingGrid.innerHTML = "";
+      archiveGrid.innerHTML = "";
+
+      const upcomingList = EVENINGS
+        .filter(e => e.upcoming)
+        .filter(filterFn)
+        .sort((a,b) => a.dateSort.localeCompare(b.dateSort));
+
+      const archiveList = EVENINGS
+        .filter(e => !e.upcoming)
+        .filter(filterFn)
+        .sort((a,b) => b.dateSort.localeCompare(a.dateSort));
+
+      if (upcomingList.length) {
+        upcomingList.forEach(ev => upcomingGrid.appendChild(eveningCard(ev)));
+        upcomingEmpty.classList.add("hidden");
+      } else {
+        upcomingEmpty.classList.remove("hidden");
+      }
+
+      if (archiveList.length) {
+        archiveList.forEach(ev => archiveGrid.appendChild(eveningCard(ev)));
+      }
+    }
+
+    // --- vyhledávání + tagy ---
+    let activeTags = new Set();
+
+    function applyFilter() {
+      const searchEl = $("#search");
+      const q = (searchEl?.value || "").trim().toLowerCase();
+
+      const filterFn = (ev) => {
+        const text =
+          ((ev.title||"") + " " +
+           (ev.blurb||"") + " " +
+           (ev.lecturer||"") + " " +
+           (ev.tags||[]).join(" ")
+          ).toLowerCase();
+
+        const matchQ = !q || text.includes(q);
+        const matchTags = activeTags.size === 0 ||
+                          (ev.tags || []).some(t => activeTags.has(t));
+        return matchQ && matchTags;
+      };
+
+      renderEvenings(filterFn);
+    }
+
+    function renderTags() {
+      const T = $("#tags");
+      if (!T) return;
+      T.innerHTML = `<span class="text-xs text-neutral-400 mr-1">Filtr podle tagů:</span>`;
+
+      allTags.forEach(t => {
+        const b = create("button",
+          "px-3 py-1 rounded-full border text-xs border-neutral-700 text-neutral-300 hover:border-neutral-400");
+        b.textContent = t;
+        if (activeTags.has(t)) {
+          b.classList.add("bg-cyan-500/20","border-cyan-400");
+        }
+        b.onclick = () => {
+          activeTags.has(t) ? activeTags.delete(t) : activeTags.add(t);
+          renderTags();
+          applyFilter();
+        };
+        T.appendChild(b);
+      });
+
+      if (allTags.length) {
+        const reset = create("button",
+          "ml-2 text-xs text-cyan-300 hover:text-cyan-200");
+        reset.textContent = "Reset";
+        reset.onclick = () => {
+          activeTags = new Set();
+          renderTags();
+          applyFilter();
+        };
+        T.appendChild(reset);
+      }
+    }
+
+    // --- částice (canvas) --- //
+    function particles(canvas, opts) {
+      const ctx = canvas.getContext("2d");
+      let w = 0, h = 0, raf = 0;
+      const N = opts.N || 42;
+      const speed = opts.speed || 0.35;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width  = Math.max(window.innerWidth, Math.ceil(rect.width || window.innerWidth));
+        h = canvas.height = Math.ceil(rect.height || 520);
+      }
+
+      const dots = Array.from({length:N}, () => ({
+        x: 0, y: 0,
+        vx: (Math.random() - .5) * speed,
+        vy: (Math.random() - .5) * speed
+      }));
+
+      function resetDots() {
+        dots.forEach(d => {
+          d.x = Math.random() * w;
+          d.y = Math.random() * h;
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        const grad = ctx.createLinearGradient(0,0,w,h);
+        grad.addColorStop(0,"#020617");
+        grad.addColorStop(0.4,"#020617");
+        grad.addColorStop(1,"#0b1120");
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = .96;
+        ctx.fillRect(0,0,w,h);
+        ctx.globalAlpha = 1;
+
+        for (let i=0; i<N; i++) {
+          const a = dots[i];
+          a.x += a.vx;
+          a.y += a.vy;
+          if (a.x < 0 || a.x > w) a.vx *= -1;
+          if (a.y < 0 || a.y > h) a.vy *= -1;
+
+          for (let j=i+1; j<N; j++) {
+            const b = dots[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 140) {
+              ctx.globalAlpha = 1 - dist/140;
+              ctx.strokeStyle = "#22d3ee";
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
+          }
+
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(a.x, a.y, 1.4, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      function start() {
+        resize();
+        resetDots();
+        draw();
+      }
+
+      const ro = new ResizeObserver(() => resize());
+      ro.observe(canvas.parentElement);
+      window.addEventListener("resize", resize);
+      start();
+
+      return { stop: () => cancelAnimationFrame(raf), ro };
+    }
+
+    // --- scroll progress ---
+    window.addEventListener("scroll", () => {
+      const s = document.documentElement.scrollTop || document.body.scrollTop;
+      const h = (document.documentElement.scrollHeight - document.documentElement.clientHeight) || 1;
+      const pct = Math.max(0, Math.min(1, s / h));
+      $("#scrollbar").style.width = (pct * 100) + "%";
+    });
+
+    // --- filter drawer ---
+    const drawer   = document.getElementById("filterDrawer");
+    const openBtn  = document.getElementById("openFilters");
+    const closeBtn = document.getElementById("closeFilters");
+    const backdrop = document.getElementById("filterBackdrop");
+
+    function openFilters() {
+      drawer.classList.remove("hidden");
+      setTimeout(() => document.getElementById("search")?.focus(), 80);
+    }
+    function closeFilters() {
+      drawer.classList.add("hidden");
+    }
+
+    openBtn?.addEventListener("click", openFilters);
+    closeBtn?.addEventListener("click", closeFilters);
+    backdrop?.addEventListener("click", closeFilters);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeFilters(); });
+
+    // --- init ---
+    const prefersReduced = window.matchMedia &&
+                           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    renderTags();
+    applyFilter();
+
+    if (!prefersReduced) {
+      particles(document.getElementById("heroCanvas"), { N: 40, speed: .35 });
+      particles(document.getElementById("areaCanvas"), { N: 50, speed: .32 });
+    }
+  </script>
+</body>
+</html>
