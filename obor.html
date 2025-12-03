@@ -1,32 +1,57 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" class="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Průchod magisterským oborem – grafické schéma</title>
-    <style>
-      html, body, #root {
-        height: 100%;
-        margin: 0;
-      }
-      body {
-        background: #020617; /* slate-950 */
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, Helvetica, Arial, sans-serif;
-      }
-      canvas {
-        touch-action: manipulation;
-      }
-    </style>
+    <title>Průchod magisterským oborem – interaktivní schéma</title>
+
     <!-- React + ReactDOM (UMD) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <!-- Babel for inline JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Tailwind (for rychlé stylování kolem canvasu) -->
+    <!-- Tailwind (Play CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      html, body, #root {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      /* Gradient pozadí jako na Grafit webu */
+      .bg-gradient-dark {
+        background: radial-gradient(circle at top, #1f2937 0, #020617 52%, #020617 100%);
+      }
+
+      canvas {
+        touch-action: manipulation;
+      }
+
+      /* Micro-motion hover pro karty (převzato z Grafických večerů) */
+      .card {
+        transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      }
+      .card:hover {
+        transform: translateY(-4px) scale(1.01);
+        box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+      }
+      .card .thumb {
+        transform: scale(1.02);
+        transition: transform 500ms cubic-bezier(.22,1,.36,1);
+      }
+      .card:hover .thumb { transform: scale(1.06); }
+    </style>
   </head>
-  <body>
+  <body class="min-h-screen text-neutral-100 bg-gradient-dark">
     <div id="root"></div>
 
     <script type="text/babel">
@@ -51,30 +76,31 @@
         { row: 3, label: "2. ročník – letní" },
       ];
 
+      // barvy ladící s Grafit webem
       const COURSE_TYPES = {
         core: {
           label: "Povinný předmět programu",
-          color: "#7093C6", // modrá
+          color: "#1d4ed8", // sytě modrá
         },
         specialization: {
           label: "Povinný předmět specializace",
-          color: "#B5A9F6", // fialová
+          color: "#7c3aed", // fialová
         },
         graphicsElective: {
-          label: "Předmět z grafického bloku (v každém semestru alespoň jeden)",
-          color: "#B5D2FE", // světle modrá na oranžovém pásu
+          label: "Předmět z grafického bloku",
+          color: "#0ea5e9", // cyan
         },
         programElective: {
           label: "Povinný předmět programu / jiný slot (např. NUR)",
-          color: "#FEF9C3", // žlutá
+          color: "#eab308", // žlutá
         },
         openElective: {
           label: "Zcela volitelný předmět (např. CCC, TVR)",
-          color: "#FEF9C3", // žlutá
+          color: "#eab308", // stejná žlutá
         },
         thesis: {
           label: "Diplomová práce",
-          color: "#7093C6",
+          color: "#22c55e", // zelená
         },
       };
 
@@ -180,7 +206,6 @@
           description:
             "GPGPU, compute shadery a efektivní využití moderních GPU.",
         },
-        // Příklad volitelného slotu (grafika)
         {
           id: "CCC",
           short: "např. CCC",
@@ -293,7 +318,6 @@
           description:
             "Sítě a protokoly pro real-time přenosy, streaming a interaktivní aplikace.",
         },
-        // Příklad volitelného slotu – LS
         {
           id: "TVR",
           short: "např. TVR",
@@ -375,10 +399,8 @@
       // --- RENDERING HELPERS --------------------------------------------------
 
       function getRectForCourse(course) {
-        const x =
-          H_MARGIN + course.col * (RECT_W + H_GAP);
-        const y =
-          V_MARGIN + course.row * (RECT_H + V_GAP);
+        const x = H_MARGIN + course.col * (RECT_W + H_GAP);
+        const y = V_MARGIN + course.row * (RECT_H + V_GAP);
         return { x, y, w: RECT_W, h: RECT_H };
       }
 
@@ -405,53 +427,32 @@
       }
 
       function drawTrack(ctx, selectedIds, courseRectsRef) {
-        // pozadí
-        ctx.fillStyle = "#f9fafb";
+        // tmavé pozadí
+        const grad = ctx.createLinearGradient(0, 0, 0, BASE_HEIGHT);
+        grad.addColorStop(0, "#020617");
+        grad.addColorStop(1, "#020617");
+        ctx.fillStyle = grad;
         ctx.fillRect(0, 0, BASE_WIDTH, BASE_HEIGHT);
 
-        // dvě velké "bubliny" pro ročníky
-        const bubbleRadius = 28;
-        const bubbleX = H_MARGIN - 70;
-        const bubbleW = BASE_WIDTH - 2 * (H_MARGIN - 50);
-
-        const firstBubbleY = V_MARGIN - 60;
-        const firstBubbleH = 2 * RECT_H + V_GAP + 120;
-
-        const secondBubbleY = firstBubbleY + firstBubbleH + 40;
-        const secondBubbleH = 2 * RECT_H + V_GAP + 80;
-
-        drawRoundedRect(
-          ctx,
-          bubbleX,
-          firstBubbleY,
-          bubbleW,
-          firstBubbleH,
-          bubbleRadius,
-          "#e5e7eb",
-          "#d1d5db"
-        );
-        drawRoundedRect(
-          ctx,
-          bubbleX,
-          secondBubbleY,
-          bubbleW,
-          secondBubbleH,
-          bubbleRadius,
-          "#e5e7eb",
-          "#d1d5db"
-        );
+        // horizontální jemné předěly mezi ročníky
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.25)"; // slate-400 s průhledem
+        ctx.lineWidth = 1;
+        SEMESTERS.forEach((sem) => {
+          const y = V_MARGIN + sem.row * (RECT_H + V_GAP) - 24;
+          ctx.beginPath();
+          ctx.moveTo(H_MARGIN - 60, y);
+          ctx.lineTo(BASE_WIDTH - H_MARGIN + 40, y);
+          ctx.stroke();
+        });
 
         // popisky semestrů
         ctx.font = "14px system-ui";
         ctx.textAlign = "right";
         ctx.textBaseline = "middle";
-        ctx.fillStyle = "#b45309"; // oranžová
+        ctx.fillStyle = "#fbbf24"; // amber-400
 
         SEMESTERS.forEach((sem) => {
-          const cy =
-            V_MARGIN +
-            sem.row * (RECT_H + V_GAP) +
-            RECT_H / 2;
+          const cy = V_MARGIN + sem.row * (RECT_H + V_GAP) + RECT_H / 2;
           ctx.fillText(sem.label, H_MARGIN - 40, cy);
         });
 
@@ -467,8 +468,9 @@
           const courseType = COURSE_TYPES[course.type];
           const isSelected = selectedIds.includes(course.id);
 
-          // speciální podklad pro grafické volitelné – oranžový "slot"
           let clickableRect = { ...rect };
+
+          // grafické volitelné – slabý cyan podklad
           if (course.type === "graphicsElective") {
             const outer = {
               x: rect.x - 10,
@@ -483,8 +485,8 @@
               outer.w,
               outer.h,
               18,
-              "#fed7aa",
-              "#fdba74"
+              "rgba(8, 47, 73, 0.9)",
+              "rgba(45, 212, 191, 0.8)"
             );
             clickableRect = outer;
           }
@@ -501,7 +503,7 @@
               rect.w + 8,
               rect.h + 8,
               10,
-              "#fef9c3",
+              "#1e293b",
               "#facc15"
             );
             clickableRect = {
@@ -521,7 +523,7 @@
             rect.h,
             12,
             courseType.color,
-            "#111827"
+            "#020617"
           );
 
           // zvýraznění výběru
@@ -541,7 +543,7 @@
           }
 
           // text – kód předmětu
-          ctx.fillStyle = "#0f172a";
+          ctx.fillStyle = "#e5e7eb";
           ctx.fillText(
             course.short,
             rect.x + rect.w / 2,
@@ -558,9 +560,9 @@
       function CourseDetailPanel({ selectedIds }) {
         if (!selectedIds.length) {
           return (
-            <p className="mt-4 text-sm text-slate-300">
-              Klepni na libovolný předmět v horním schématu – tady se ti
-              zobrazí základní informace.
+            <p className="mt-4 text-sm text-neutral-300/80">
+              Klepni na libovolný předmět v horním schématu – tady se ti zobrazí
+              základní informace v kartě ve stylu Grafických večerů.
             </p>
           );
         }
@@ -570,38 +572,59 @@
         );
 
         return (
-          <div className="mt-6 space-y-4">
+          <div className="mt-6 grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
             {selectedCourses.map((course) => {
               const typeInfo = COURSE_TYPES[course.type];
               return (
-                <section
+                <article
                   key={course.id}
-                  className="bg-slate-900/80 border border-slate-700 rounded-xl p-4 shadow-md"
+                  className="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black flex flex-col"
                 >
-                  <header className="flex flex-wrap items-baseline gap-2">
-                    <h2 className="text-lg font-semibold tracking-tight">
-                      {course.short} – {course.name}
-                    </h2>
-                    <span className="inline-flex items-center rounded-full border border-slate-600 px-2 py-0.5 text-[11px] uppercase tracking-wide text-slate-200">
-                      {typeInfo.label}
-                    </span>
-                  </header>
-                  <p className="mt-2 text-sm text-slate-200">
-                    {course.description || "Popis předmětu bude doplněn."}
-                  </p>
-                  <dl className="mt-3 grid grid-cols-2 gap-y-1 gap-x-4 text-xs text-slate-300">
-                    <div>
-                      <dt className="font-medium text-slate-400">Ročník</dt>
-                      <dd>{course.year}. ročník</dd>
+                  {/* horní "thumb" pruh (bez obrázku, jen gradient + kód) */}
+                  <div className="relative w-full overflow-hidden aspect-[3/1] bg-gradient-to-r from-sky-500 via-fuchsia-500 to-emerald-400">
+                    <div className="thumb absolute inset-0 mix-blend-screen opacity-70" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+                    <div className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-neutral-100 border border-white/15">
+                      <span className="font-mono">{course.short}</span>
                     </div>
-                    <div>
-                      <dt className="font-medium text-slate-400">Semestr</dt>
-                      <dd>
-                        {course.semester === "ZS" ? "zimní" : "letní"} semestr
-                      </dd>
+                    <div className="absolute right-3 bottom-3 inline-flex items-center gap-2 rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-neutral-100 border border-white/15">
+                      <span>
+                        {course.year}. ročník · {course.semester === "ZS" ? "zimní" : "letní"} semestr
+                      </span>
                     </div>
-                  </dl>
-                </section>
+                  </div>
+
+                  {/* tělo karty */}
+                  <div className="p-4 flex-1 flex flex-col">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-lg font-semibold text-neutral-50 leading-snug">
+                        {course.name}
+                      </h3>
+                      <span className="text-[11px] text-neutral-400 whitespace-nowrap">
+                        {typeInfo.label}
+                      </span>
+                    </div>
+
+                    <p className="mt-2 text-sm text-neutral-300/90 leading-relaxed">
+                      {course.description || "Popis předmětu bude doplněn."}
+                    </p>
+
+                    <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-neutral-300">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-neutral-700/80 bg-white/5 px-2 py-0.5">
+                        📚 <span>Kód: {course.short}</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full border border-neutral-700/80 bg-white/5 px-2 py-0.5">
+                        🎓 <span>{course.year}. ročník</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full border border-neutral-700/80 bg-white/5 px-2 py-0.5">
+                        🕒 <span>{course.semester === "ZS" ? "Zimní" : "Letní"} semestr</span>
+                      </span>
+                    </div>
+
+                    {/* tady lze časem přidat odkaz na detail kurzu na Grafit / katalogu */}
+                  </div>
+                </article>
               );
             })}
           </div>
@@ -680,28 +703,31 @@
             );
           } else {
             setSelectedIds((prev) =>
-              prev.length === 1 && prev[0] === clickedId
-                ? []
-                : [clickedId]
+              prev.length === 1 && prev[0] === clickedId ? [] : [clickedId]
             );
           }
         };
 
         return (
           <div ref={containerRef} className="w-full">
-            <div className="relative overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/80 shadow-xl">
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-xl">
               <div className="px-4 pt-4 pb-2 sm:px-6 sm:pt-5">
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-300">
-                  Průchod magisterským oborem – interaktivní schéma
+                <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-cyan-300/80 mb-1">
+                  Magisterský obor • Počítačová grafika a vizualizace
                 </p>
-                <p className="mt-1 text-xs text-slate-400">
-                  Modře jsou povinné předměty programu, fialově povinné
-                  předměty specializace, oranžové pásy představují grafický
-                  blok volitelných předmětů, žluté lístečky jsou sloty pro
-                  další volitelné předměty.
+                <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
+                  Průchod magisterským oborem (interaktivní mapa)
+                </h2>
+                <p className="mt-2 max-w-3xl text-xs sm:text-sm text-neutral-300">
+                  Každý obdélník v horním schématu reprezentuje jeden předmět. Barvy
+                  odpovídají typu předmětu (povinný, specializace, grafický blok,
+                  volitelný slot). Po kliknutí na předmět se níže zobrazí karta ve
+                  stylu Grafických večerů. Na desktopu můžeš držet
+                  <span className="font-mono"> Shift / Ctrl </span>
+                  pro výběr více předmětů.
                 </p>
               </div>
-              <div className="px-2 pb-4 sm:px-4">
+              <div className="px-2 pb-4 sm:px-4 bg-gradient-to-b from-slate-900/80 to-black/90">
                 <canvas
                   ref={canvasRef}
                   width={width}
@@ -710,7 +736,7 @@
                     width: width + "px",
                     height: height + "px",
                     display: "block",
-                    margin: "0 auto 0.5rem auto",
+                    margin: "0 auto 0.75rem auto",
                   }}
                   onClick={handleCanvasClick}
                 />
@@ -724,20 +750,18 @@
 
       function App() {
         return (
-          <div className="min-h-screen text-slate-50">
+          <div className="min-h-screen text-neutral-100 bg-gradient-dark">
             <main className="px-4 py-6 sm:px-6 lg:px-8">
               <div className="mx-auto flex max-w-6xl flex-col gap-6">
                 <header className="space-y-2">
-                  <h1 className="text-2xl font-semibold tracking-tight">
-                    Magisterský obor – průchod předměty
+                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                    Magisterský obor – vizuální průchod předměty
                   </h1>
-                  <p className="max-w-3xl text-sm text-slate-300">
-                    Schéma vychází z oficiálního plánu oboru. Každý malý
-                    obdélník představuje jeden předmět; po kliknutí se níže
-                    zobrazí jeho základní informace. Na dotykovém displeji
-                    stačí ťuknout, na desktopu můžeš držet{" "}
-                    <span className="font-mono">Shift/Ctrl</span> pro výběr
-                    více předmětů.
+                  <p className="max-w-3xl text-sm text-neutral-300/90">
+                    Tato stránka je prototyp interaktivního schématu ve stylu Grafit
+                    webu. Horní canvas bude možné vložit do šablony studijního plánu,
+                    spodní karty pak mohou kopírovat detail předmětu podobně jako
+                    položky Grafických večerů.
                   </p>
                 </header>
 
