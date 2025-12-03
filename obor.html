@@ -17,7 +17,9 @@
       html {
         scroll-behavior: smooth;
       }
-      html, body, #root {
+      html,
+      body,
+      #root {
         height: 100%;
         margin: 0;
       }
@@ -37,18 +39,20 @@
 
       /* Micro-motion hover pro karty (převzato z Grafických večerů) */
       .card {
-        transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 300ms ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       }
       .card:hover {
         transform: translateY(-4px) scale(1.01);
-        box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
       }
       .card .thumb {
         transform: scale(1.02);
-        transition: transform 500ms cubic-bezier(.22,1,.36,1);
+        transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
       }
-      .card:hover .thumb { transform: scale(1.06); }
+      .card:hover .thumb {
+        transform: scale(1.06);
+      }
     </style>
   </head>
   <body class="min-h-screen text-neutral-100 bg-gradient-dark">
@@ -445,13 +449,50 @@
           ctx.stroke();
         });
 
+        // podkladové pásy pro grafický blok (VGA/PVR/GPU a SSD/BSO/IRT)
+        const graphicsRows = Array.from(
+          new Set(
+            COURSES.filter((c) => c.type === "graphicsElective").map(
+              (c) => c.row
+            )
+          )
+        );
+
+        graphicsRows.forEach((row) => {
+          const rowCourses = COURSES.filter(
+            (c) => c.type === "graphicsElective" && c.row === row
+          ).sort((a, b) => a.col - b.col);
+          if (!rowCourses.length) return;
+
+          const firstRect = getRectForCourse(rowCourses[0]);
+          const lastRect = getRectForCourse(rowCourses[rowCourses.length - 1]);
+
+          const x = firstRect.x - 16;
+          const y = firstRect.y - 18;
+          const w = lastRect.x + lastRect.w + 16 - x;
+          const h = RECT_H + 36;
+
+          drawRoundedRect(
+            ctx,
+            x,
+            y,
+            w,
+            h,
+            22,
+            "rgba(8, 47, 73, 0.9)",
+            "rgba(45, 212, 191, 0.8)"
+          );
+        });
+
         // popisky semestrů
-        ctx.font = "14px system-ui";
+        // zmenšíme font a zarovnáme doprava tak, aby se celý text vešel
+        // do prostoru vlevo od prvního sloupce předmětů
+        ctx.font = "10px system-ui";
         ctx.textAlign = "right";
         ctx.textBaseline = "middle";
         ctx.fillStyle = "#fbbf24"; // amber-400
 
-        SEMESTERS.forEach((sem) => {
+        SEMESTERS.forEach((sem) => {((sem) => {
           const cy = V_MARGIN + sem.row * (RECT_H + V_GAP) + RECT_H / 2;
           ctx.fillText(sem.label, H_MARGIN - 40, cy);
         });
@@ -459,7 +500,6 @@
         // předměty
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.font = "16px system-ui";
 
         courseRectsRef.current = {};
 
@@ -469,27 +509,6 @@
           const isSelected = selectedIds.includes(course.id);
 
           let clickableRect = { ...rect };
-
-          // grafické volitelné – slabý cyan podklad
-          if (course.type === "graphicsElective") {
-            const outer = {
-              x: rect.x - 10,
-              y: rect.y - 12,
-              w: rect.w + 20,
-              h: rect.h + 24,
-            };
-            drawRoundedRect(
-              ctx,
-              outer.x,
-              outer.y,
-              outer.w,
-              outer.h,
-              18,
-              "rgba(8, 47, 73, 0.9)",
-              "rgba(45, 212, 191, 0.8)"
-            );
-            clickableRect = outer;
-          }
 
           // sticky look pro žluté sloty
           if (
@@ -542,13 +561,25 @@
             ctx.lineWidth = 1;
           }
 
-          // text – kód předmětu
+          // text – kód + malý název předmětu (dvě řádky)
+          const centerX = rect.x + rect.w / 2;
+          const centerY = rect.y + rect.h / 2;
+
+          // clip dovnitř obdélníku, aby název nepřetékal
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(rect.x + 4, rect.y + 4, rect.w - 8, rect.h - 8);
+          ctx.clip();
+
           ctx.fillStyle = "#e5e7eb";
-          ctx.fillText(
-            course.short,
-            rect.x + rect.w / 2,
-            rect.y + rect.h / 2
-          );
+          ctx.font = "16px system-ui";
+          ctx.fillText(course.short, centerX, centerY - 6);
+
+          ctx.font = "8px system-ui";
+          ctx.fillStyle = "#e5e7ebb3"; // lehce průhledná
+          ctx.fillText(course.name, centerX, centerY + 7);
+
+          ctx.restore();
 
           // uložení klikacího rectu
           courseRectsRef.current[course.id] = clickableRect;
