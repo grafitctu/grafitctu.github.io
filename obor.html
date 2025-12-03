@@ -384,6 +384,54 @@
           description:
             "Slot pro jiný povinný předmět specializace (např. NUR).",
         },
+        {
+          id: "ANI-DID",
+          short: "ANI-DID",
+          name: "Digital drawing",
+          type: "openElective",
+          year: 2,
+          semester: "ZS",
+          row: 2,
+          col: 4,
+          description:
+            "Digital drawing (2 kredity, lze zapsat v ZS i LS) – základy kreativního kreslení na tabletu.",
+        },
+        {
+          id: "ANI-UEE",
+          short: "ANI-UEE",
+          name: "Unreal Engine – environmental design",
+          type: "openElective",
+          year: 2,
+          semester: "ZS",
+          row: 2,
+          col: 5,
+          description:
+            "Blokový předmět (2 kredity) zaměřený na tvorbu herních prostředí v Unreal Engine.",
+        },
+        {
+          id: "ANI-GJ",
+          short: "ANI-GJ",
+          name: "GameJam FIT",
+          type: "openElective",
+          year: 2,
+          semester: "ZS",
+          row: 2,
+          col: 6,
+          description:
+            "Gamejam (0 kreditů) – velikonoční herní jam, krátký intenzivní projektový předmět.",
+        },
+        {
+          id: "ANI-DVD",
+          short: "ANI-DVD",
+          name: "Design vlastních deskových her",
+          type: "openElective",
+          year: 2,
+          semester: "ZS",
+          row: 2,
+          col: 7,
+          description:
+            "Design vlastních deskových her (4 kredity) – od nápadu po funkční prototyp.",
+        },
 
         // 2. ročník – letní
         {
@@ -484,17 +532,60 @@
           );
         });
 
-        // popisky semestrů
-        // zmenšíme font a zarovnáme doprava tak, aby se celý text vešel
-        // do prostoru vlevo od prvního sloupce předmětů
+        // podkladové pásy pro žluté volitelné předměty (NUR, ANI-DID, ...)
+        const yellowCourses = COURSES.filter(
+          (c) => c.type === "programElective" || c.type === "openElective"
+        );
+        const yellowRowCounts = {};
+        yellowCourses.forEach((c) => {
+          yellowRowCounts[c.row] = (yellowRowCounts[c.row] || 0) + 1;
+        });
+
+        const yellowRows = Object.keys(yellowRowCounts).map((r) =>
+          parseInt(r, 10)
+        );
+
+        yellowRows.forEach((row) => {
+          const rowCourses = COURSES.filter(
+            (c) =>
+              (c.type === "programElective" || c.type === "openElective") &&
+              c.row === row
+          ).sort((a, b) => a.col - b.col);
+          if (!rowCourses.length) return;
+
+          // pokud je v řádku jen jeden žlutý předmět, nechceme dodatečný společný rámeček
+          if (yellowRowCounts[row] <= 1) return;
+
+          const firstRect = getRectForCourse(rowCourses[0]);
+          const lastRect = getRectForCourse(rowCourses[rowCourses.length - 1]);
+
+          const x = firstRect.x - 16;
+          const y = firstRect.y - 18;
+          const w = lastRect.x + lastRect.w + 16 - x;
+          const h = RECT_H + 36;
+
+          drawRoundedRect(
+            ctx,
+            x,
+            y,
+            w,
+            h,
+            22,
+            "rgba(24, 24, 15, 0.9)",
+            "rgba(250, 204, 21, 0.9)" // amber-400
+          );
+        });
+
+        // popisky semestrů – zarovnání doprava vlevo od prvního sloupce
         ctx.font = "10px system-ui";
         ctx.textAlign = "right";
         ctx.textBaseline = "middle";
         ctx.fillStyle = "#fbbf24"; // amber-400
 
-        SEMESTERS.forEach((sem) => {((sem) => {
+        SEMESTERS.forEach((sem) => {
           const cy = V_MARGIN + sem.row * (RECT_H + V_GAP) + RECT_H / 2;
-          ctx.fillText(sem.label, H_MARGIN - 40, cy);
+          const x = H_MARGIN - 10; // těsně vlevo od prvního sloupce
+          ctx.fillText(sem.label, x, cy);
         });
 
         // předměty
@@ -510,10 +601,11 @@
 
           let clickableRect = { ...rect };
 
-          // sticky look pro žluté sloty
+          // sticky look pro žluté sloty – pouze pokud je v daném řádku jen jeden žlutý předmět
           if (
-            course.type === "programElective" ||
-            course.type === "openElective"
+            (course.type === "programElective" ||
+              course.type === "openElective") &&
+            yellowRowCounts[course.row] === 1
           ) {
             drawRoundedRect(
               ctx,
