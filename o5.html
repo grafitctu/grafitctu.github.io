@@ -405,4 +405,119 @@ function App() {
     selectedCodes.includes(c.code)
   );
 
-  c
+  const row1z = COURSES.filter((c) => c.year === 1 && c.term === "zimní");
+  const row1l = COURSES.filter((c) => c.year === 1 && c.term === "letní");
+  const row2z = COURSES.filter((c) => c.year === 2 && c.term === "zimní");
+  const row2l = COURSES.filter((c) => c.year === 2 && c.term === "letní");
+
+  // >>> změna: wide = celá šířka obrazovky
+  const containerClasses = wide
+    ? "w-full px-4 md:px-8"
+    : "max-w-6xl mx-auto px-4 md:px-6";
+
+  return (
+    <div className={containerClasses + " py-6 space-y-6"}>
+      <header className="space-y-4">
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+          Magisterský obor – vizuální průchod předměty
+        </h1>
+        <p className="text-sm text-slate-300 max-w-3xl">
+          Tato stránka je prototyp interaktivního schématu ve stylu Grafit webu.
+          Horní část je mapa předmětů, spodní karty kopírují styl Grafických
+          večerů. Na desktopu můžeš při klikání na předměty držet{" "}
+          <strong>Shift / Ctrl</strong> pro výběr více předmětů.
+        </p>
+
+        <div className="flex flex-wrap gap-3 items-center justify-between">
+          <span className="text-xs text-slate-400">
+            MAGISTERSKÝ OBOR · POČÍTAČOVÁ GRAFIKA A VIZUALIZACE
+          </span>
+
+          <div className="flex flex-wrap gap-3 items-center">
+            <button
+              onClick={() => setWide((w) => !w)}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-xs text-slate-100 hover:bg-slate-800"
+            >
+              {wide
+                ? "Kompaktní režim (užší sloupec)"
+                : "Široký režim (celá šířka obrazovky)"}
+            </button>
+
+            <label className="flex items-center gap-2 text-xs text-slate-300">
+              <span>Styl schématu nahoře:</span>
+              <select
+                value={schemeStyle}
+                onChange={(e) => setSchemeStyle(e.target.value)}
+                className="bg-slate-900/90 border border-slate-700 rounded-full px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-cyan-400"
+              >
+                {SCHEME_STYLE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </div>
+      </header>
+
+      <section className="bg-slate-950/90 border border-slate-800 rounded-3xl px-4 py-6 md:px-8 md:py-8 space-y-8">
+        <h2 className="text-xl font-semibold mb-2">
+          Průchod magisterským oborem (interaktivní mapa)
+        </h2>
+        <p className="text-xs text-slate-300 mb-4 max-w-2xl">
+          Každý obdélník (nebo obrázek) v horním schématu reprezentuje jeden
+          předmět. V režimu PNG se zobrazují předpřipravené kartičky, jedinými
+          dodatečnými prvky jsou azurový a žlutý rámec kolem bloků.
+        </p>
+
+        <div className="space-y-8">
+          <MapRow
+            label="1. ročník – zimní"
+            courses={row1z}
+            selectedCodes={selectedCodes}
+            onToggle={handleToggleCourse}
+            schemeStyle={schemeStyle}
+          />
+          <MapRow
+            label="1. ročník – letní"
+            courses={row1l}
+            selectedCodes={selectedCodes}
+            onToggle={handleToggleCourse}
+            schemeStyle={schemeStyle}
+          />
+          <MapRow
+            label="2. ročník – zimní"
+            courses={row2z}
+            selectedCodes={selectedCodes}
+            onToggle={handleToggleCourse}
+            schemeStyle={schemeStyle}
+          />
+          <MapRow
+            label="2. ročník – letní"
+            courses={row2l}
+            selectedCodes={selectedCodes}
+            onToggle={handleToggleCourse}
+            schemeStyle={schemeStyle}
+          />
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">Detail vybraných předmětů</h2>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {selectedCourses.map((c) => (
+            <CourseDetailCard key={c.code} course={c} />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+
+</script>
+</body>
+</html>
