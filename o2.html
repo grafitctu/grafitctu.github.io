@@ -664,11 +664,36 @@
 
     function StudyTrackExplorer() {
       const [selectedIds, setSelectedIds] = useState(["ANI-KOP"]);
-      const [wide, setWide] = useState(false);
 
-      const containerClass = wide
-        ? "mx-auto max-w-[1600px] px-6"
-        : "mx-auto max-w-5xl px-4";
+      // layout: "normal" (úzký), "wide" (max 1600px), "full" (od kraje ke kraji)
+      const [layout, setLayout] = useState("normal");
+
+      const containerClass = useMemo(() => {
+        switch (layout) {
+          case "wide":
+            return "mx-auto max-w-[1600px] px-6";
+          case "full":
+            // přes celou šířku obrazovky, jen s vnitřním paddingem
+            return "w-full px-4 sm:px-6 lg:px-10";
+          default:
+            return "mx-auto max-w-5xl px-4";
+        }
+      }, [layout]);
+
+      const toggleLayout = () => {
+        setLayout(prev =>
+          prev === "normal" ? "wide" :
+          prev === "wide"   ? "full" :
+                              "normal"
+        );
+      };
+
+      const layoutLabel =
+        layout === "normal"
+          ? "Široký režim (větší šířka obsahu)"
+          : layout === "wide"
+          ? "Režim přes celou šířku obrazovky"
+          : "Kompaktní režim (užší sloupec uprostřed)";
 
       const onCourseClick = (event, id) => {
         const multi = event.shiftKey || event.ctrlKey || event.metaKey;
@@ -698,10 +723,10 @@
             <div className="mt-4">
               <button
                 type="button"
-                onClick={() => setWide((w) => !w)}
+                onClick={toggleLayout}
                 className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs sm:text-sm text-neutral-200 hover:bg-white/10"
               >
-                {wide ? "Kompaktní režim (užší sloupec)" : "Široký režim (celá šířka obrazovky)"}
+                {layoutLabel}
               </button>
             </div>
 
