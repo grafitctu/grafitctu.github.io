@@ -774,17 +774,18 @@
       // --- HLAVNÍ KOMPONENTA S CANVASEM --------------------------------------
 
       function StudyTrackExplorer() {
-        const [selectedIds, setSelectedIds] = useState(["ANI-KOP"]);
-        const containerRef = useRef(null);
-        const canvasRef = useRef(null);
-        const courseRectsRef = useRef({});
-        const [canvasWidth, setCanvasWidth] = useState(900);
+        const canvasRef = React.useRef(null);
+        const containerRef = React.useRef(null);
+        const courseRectsRef = React.useRef({});
 
-        // sledování šířky containeru
-        useEffect(() => {
+        const [selectedIds, setSelectedIds] = React.useState(["ANI-KOP"]);
+        const [canvasWidth, setCanvasWidth] = React.useState(1100);
+
+        // přepočet šířky canvasu podle rodičovského containeru
+        React.useEffect(() => {
           function handleResize() {
             if (!containerRef.current) return;
-            const w = containerRef.current.clientWidth;
+            const w = containerRef.current.clientWidth || window.innerWidth || 1100;
             setCanvasWidth(Math.max(600, w));
           }
           handleResize();
@@ -792,99 +793,87 @@
           return () => window.removeEventListener("resize", handleResize);
         }, []);
 
-        const aspect = BASE_HEIGHT / BASE_WIDTH;
-        const width = canvasWidth;
-        const height = width * aspect;
-        const scale = width / BASE_WIDTH;
-
-        // překreslení canvasu
-        useEffect(() => {
+        // překreslení canvasu při změně výběru nebo rozměrů
+        React.useEffect(() => {
           const canvas = canvasRef.current;
           if (!canvas) return;
           const ctx = canvas.getContext("2d");
-          const dpr = window.devicePixelRatio || 1;
-
-          canvas.width = width * dpr;
-          canvas.height = height * dpr;
-
-          ctx.setTransform(1, 0, 0, 1, 0, 0);
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.scale(dpr * scale, dpr * scale);
-
+          canvas.width = canvasWidth;
+          canvas.height = BASE_HEIGHT;
           drawTrack(ctx, selectedIds, courseRectsRef);
-        }, [width, height, scale, selectedIds]);
+        }, [canvasWidth, selectedIds]);
 
-        // obsluha kliknutí
-        const handleCanvasClick = (event) => {
+        // click handler na canvas
+        React.useEffect(() => {
           const canvas = canvasRef.current;
           if (!canvas) return;
-          const rect = canvas.getBoundingClientRect();
-          const x = (event.clientX - rect.left) / scale;
-          const y = (event.clientY - rect.top) / scale;
 
-          let clickedId = null;
-          for (const course of COURSES) {
-            const r = courseRectsRef.current[course.id];
-            if (!r) continue;
-            if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) {
-              clickedId = course.id;
-              break;
+          function handleClick(ev) {
+            const rect = canvas.getBoundingClientRect();
+            const x = ev.clientX - rect.left;
+            const y = ev.clientY - rect.top;
+
+            let clickedId = null;
+            for (const [id, r] of Object.entries(courseRectsRef.current)) {
+              if (
+                x >= r.x &&
+                x <= r.x + r.w &&
+                y >= r.y &&
+                y <= r.y + r.h
+              ) {
+                clickedId = id;
+                break;
+              }
             }
+            if (!clickedId) return;
+
+            setSelectedIds((prev) => {
+              const multi = ev.shiftKey || ev.ctrlKey || ev.metaKey;
+              if (!multi) return [clickedId];
+              if (prev.includes(clickedId)) {
+                return prev.filter((p) => p !== clickedId);
+              }
+              return [...prev, clickedId];
+            });
           }
 
-          if (!clickedId) return;
+          canvas.addEventListener("click", handleClick);
+          return () => canvas.removeEventListener("click", handleClick);
+        }, []);
 
-          // multi-výběr s Ctrl/Meta/Shift, jinak single
-          if (event.shiftKey || event.ctrlKey || event.metaKey) {
-            setSelectedIds((prev) =>
-              prev.includes(clickedId)
-                ? prev.filter((id) => id !== clickedId)
-                : [...prev, clickedId]
-            );
-          } else {
-            setSelectedIds((prev) =>
-              prev.length === 1 && prev[0] === clickedId ? [] : [clickedId]
-            );
-          }
-        };
+        const selectedCourses = COURSES.filter((c) => selectedIds.includes(c.id));
 
         return (
-          <div ref={containerRef} className="w-full">
-            <div className="relative overflow-hidden rounded-2xl bg-black/40">
-              <div className="px-4 pt-4 pb-2 sm:px-6 sm:pt-5">
-                <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-cyan-300/80 mb-1">
-                  Magisterský obor • Počítačová grafika a vizualizace
-                </p>
-                <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
-                  Průchod magisterským oborem (interaktivní mapa)
-                </h2>
-                <p className="mt-2 max-w-3xl text-xs sm:text-sm text-neutral-300">
-                  Každý obdélník v horním schématu reprezentuje jeden předmět. Barvy
-                  odpovídají typu předmětu (povinný, specializace, grafický blok,
-                  volitelný slot). Po kliknutí na předmět se níže zobrazí karta ve
-                  stylu Grafických večerů. Na desktopu můžeš držet
-                  <span className="font-mono"> Shift / Ctrl </span>
-                  pro výběr více předmětů.
-                </p>
-              </div>
-              <div className="px-2 pb-4 sm:px-4 bg-gradient-to-b from-slate-900/80 to-black/90">
-                <canvas
-                  ref={canvasRef}
-                  width={width}
-                  height={height}
-                  style={{
-                    width: width + "px",
-                    height: height + "px",
-                    display: "block",
-                    margin: "0 auto 0.75rem auto",
-                  }}
-                  onClick={handleCanvasClick}
-                />
-              </div>
+          <section className="mt-6" ref={containerRef}>
+            <header className="mb-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-cyan-300/80 mb-1">
+                MAGISTERSKÝ OBOR · POČÍTAČOVÁ GRAFIKA A VIZUALIZACE
+              </p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Průchod magisterským oborem (interaktivní mapa)
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm text-neutral-300/90">
+                Každý obdélník v horním schématu reprezentuje jeden předmět. Barvy
+                odpovídají typu předmětu (povinný, specializace, grafický blok,
+                volitelný slot). Po kliknutí na předmět se níže zobrazí karta ve
+                stylu Grafických večerů. Na desktopu můžeš držet <kbd>Shift</kbd> /
+                <kbd>Ctrl</kbd> pro výběr více předmětů.
+              </p>
+            </header>
+
+            <div className="w-full overflow-x-auto">
+              <canvas
+                ref={canvasRef}
+                style={{ width: "100%", display: "block" }}
+              />
             </div>
 
-            <CourseDetailPanel selectedIds={selectedIds} />
-          </div>
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {selectedCourses.map((course) => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
+          </section>
         );
       }
 
