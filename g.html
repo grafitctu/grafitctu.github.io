@@ -120,14 +120,14 @@
       };
 
       const CourseBadge = React.forwardRef(function CourseBadge(
-        { prefix, code, title, variant = "glass", color = "blue" },
+        { role, code, title, variant = "glass", color = "blue" },
         ref
       ) {
         const palette = COLOR_SCHEMES[color] || COLOR_SCHEMES.blue;
         const dotClass = DOT_COLORS[color] || DOT_COLORS.blue;
         const overlayFrom = OVERLAY_GRADIENT[color] || OVERLAY_GRADIENT.blue;
 
-        const displayPrefix = (prefix || "").toUpperCase();
+        const displayRole = (role || "").toUpperCase();
         const displayCode = (code || "").toUpperCase();
 
         let wrapperClasses =
@@ -270,8 +270,10 @@
               }
             `}</style>
             <div className={backgroundClasses + " " + innerClasses}>
+              {/* variant-specific fleky / beams */}
               <div className={accentPatchClasses}></div>
               {extraDecor}
+              {/* společná horní linka */}
               <div className={highlightBarClasses}></div>
 
               <div className="flex items-center justify-between z-10">
@@ -279,7 +281,7 @@
                   <span
                     className={"w-1 h-1 rounded-full " + dotClass}
                   ></span>
-                  <span>{displayPrefix || "XXX"}</span>
+                  <span>{displayRole || "ROLE"}</span>
                 </span>
                 <span className="text-[0.6rem] uppercase tracking-[0.28em] text-slate-400/80">
                   CTU · FIT
@@ -289,13 +291,8 @@
               <div className="flex-1 flex items-center z-10">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-baseline gap-3 mt-1">
-                    {displayPrefix && displayCode && (
-                      <span className="text-sm uppercase tracking-[0.3em] text-sky-200/80">
-                        {displayPrefix}
-                      </span>
-                    )}
                     <span className={mainTextClasses}>
-                      {displayCode || displayPrefix || "XXX"}
+                      {displayCode || "XXX-000"}
                     </span>
                   </div>
                   {title && (
@@ -326,8 +323,8 @@
       });
 
       function App() {
-        const [prefix, setPrefix] = useState("ANI");
-        const [code, setCode] = useState("KOP");
+        const [role, setRole] = useState("ANI");
+        const [code, setCode] = useState("ANI-KOP");
         const [title, setTitle] = useState("Kombinovaná optika");
         const [variant, setVariant] = useState("glass");
         const [color, setColor] = useState("blue");
@@ -349,7 +346,7 @@
             });
             const link = document.createElement("a");
             const baseCode =
-              `${prefix || ""}-${code || ""}`
+              (code || "")
                 .replace(/[^A-Za-z0-9_-]+/g, "")
                 .replace(/^[-_]+|[-_]+$/g, "") || "course";
             link.download = `${baseCode}-${variant}-${color}.png`;
@@ -362,14 +359,46 @@
         };
 
         const sampleCourses = [
-          { prefix: "ANI", code: "KOP", title: "Kombinovaná optika" },
-          { prefix: "ANI", code: "DID", title: "Digital Drawing" },
-          { prefix: "ANI", code: "UEE", title: "Unreal Engine Env. Design" },
-          { prefix: "ANI", code: "GJ", title: "GameJam" },
-          { prefix: "ANI", code: "DVD", title: "Design vlastních deskových her" },
-          { prefix: "NUR", code: "PGR", title: "Pokročilá grafika" },
-          { prefix: "NI", code: "CCC", title: "Creative Coding" },
-          { prefix: "PGM", code: "GPU", title: "GPU Programming" },
+          {
+            role: "ANI",
+            code: "ANI-KOP",
+            title: "Kombinovaná optika",
+          },
+          {
+            role: "ANI",
+            code: "ANI-DID",
+            title: "Digital Drawing",
+          },
+          {
+            role: "ANI",
+            code: "ANI-UEE",
+            title: "Unreal Engine Env. Design",
+          },
+          {
+            role: "ANI",
+            code: "ANI-GJ",
+            title: "GameJam",
+          },
+          {
+            role: "ANI",
+            code: "ANI-DVD",
+            title: "Design vlastních deskových her",
+          },
+          {
+            role: "NUR",
+            code: "NUR-PGR",
+            title: "Pokročilá grafika",
+          },
+          {
+            role: "NI",
+            code: "NI-CCC",
+            title: "Creative Coding",
+          },
+          {
+            role: "PGM",
+            code: "PGM-GPU",
+            title: "GPU Programming",
+          },
         ];
 
         return (
@@ -379,9 +408,11 @@
                 Triviální grafika předmětů – badge maker
               </h1>
               <p className="text-slate-300 text-sm max-w-2xl">
-                Zadej zkratku oboru (např.{" "}
-                <span className="font-mono">ANI</span>), kód předmětu (např.{" "}
-                <span className="font-mono">KOP</span>) a název předmětu.
+                Zadej{" "}
+                <strong>roli</strong> (např.{" "}
+                <span className="font-mono">ANI</span>,{" "}
+                <span className="font-mono">VOLIT</span>), kód předmětu (např.{" "}
+                <span className="font-mono">ANI-KOP</span>) a název předmětu.
                 Výsledek můžeš použít jako jednoduchý „obrázek“ pro kartu
                 předmětu.
               </p>
@@ -397,13 +428,13 @@
                   <div className="flex flex-col gap-3">
                     <label className="flex flex-col gap-1 text-sm">
                       <span className="text-slate-300">
-                        Zkratka oboru (vlevo nahoře)
+                        Role (vlevo nahoře)
                       </span>
                       <input
-                        value={prefix}
-                        onChange={(e) => setPrefix(e.target.value)}
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
                         className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono tracking-[0.2em] uppercase outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                        placeholder="např. ANI"
+                        placeholder="např. ANI / VOLIT / CORE"
                       />
                     </label>
 
@@ -414,8 +445,8 @@
                       <input
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
-                        className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono tracking-[0.3em] uppercase outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                        placeholder="např. KOP"
+                        className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono tracking-[0.25em] uppercase outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                        placeholder="např. ANI-KOP"
                       />
                     </label>
 
@@ -469,7 +500,7 @@
                   </h2>
                   <CourseBadge
                     ref={badgeRef}
-                    prefix={prefix}
+                    role={role}
                     code={code}
                     title={title}
                     variant={variant}
@@ -484,8 +515,8 @@
                   </button>
                   <p className="text-[0.7rem] text-slate-400 mt-2 text-center">
                     PNG export používá knihovnu{" "}
-                    <span className="font-mono">html2canvas</span> načtenou
-                    z CDN.
+                    <span className="font-mono">html2canvas</span> načtenou z
+                    CDN.
                   </p>
                 </div>
               </div>
@@ -503,8 +534,8 @@
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {sampleCourses.map((c, i) => (
                     <CourseBadge
-                      key={c.prefix + "-" + c.code}
-                      prefix={c.prefix}
+                      key={c.code}
+                      role={c.role}
                       code={c.code}
                       title={c.title}
                       variant={VARIANTS[i % VARIANTS.length]}
