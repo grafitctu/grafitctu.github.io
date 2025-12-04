@@ -1,589 +1,435 @@
-<!doctype html>
-<html lang="cs">
-  <head>
-    <meta charset="utf-8" />
-    <title>Grafit – Course Badge Generator</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+import React, { useState, useRef } from "react";
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+// Hlavní varianty vzhledu badge
+const VARIANTS = ["glass", "solid", "outline", "neon", "tubes", "tubes-color", "slabs"];
 
-    <!-- React 18 UMD -->
-    <script
-      crossorigin
-      src="https://unpkg.com/react@18/umd/react.production.min.js"
-    ></script>
-    <script
-      crossorigin
-      src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
-    ></script>
+// Nabídka barev
+const COLOR_OPTIONS = ["blue", "purple", "cyan", "yellow", "green", "orange"];
 
-    <!-- Babel pro JSX v prohlížeči -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+// Základní barevná schémata (bez barevných outline kolem celé karty)
+const COLOR_SCHEMES = {
+  blue: {
+    solidBg:
+      "bg-gradient-to-br from-sky-500 via-indigo-500 to-slate-900 shadow-xl shadow-sky-900/60",
+    highlight: "from-sky-200/80 via-cyan-100/70 to-transparent",
+    bottom: "from-sky-400 via-cyan-300 to-emerald-300",
+  },
+  purple: {
+    solidBg:
+      "bg-gradient-to-br from-violet-500 via-fuchsia-500 to-slate-900 shadow-xl shadow-fuchsia-900/60",
+    highlight: "from-violet-200/80 via-fuchsia-100/70 to-transparent",
+    bottom: "from-violet-400 via-fuchsia-300 to-pink-300",
+  },
+  cyan: {
+    solidBg:
+      "bg-gradient-to-br from-cyan-500 via-sky-500 to-slate-900 shadow-xl shadow-cyan-900/60",
+    highlight: "from-cyan-200/80 via-sky-100/70 to-transparent",
+    bottom: "from-cyan-400 via-sky-300 to-slate-200",
+  },
+  yellow: {
+    solidBg:
+      "bg-gradient-to-br from-amber-400 via-yellow-500 to-slate-900 shadow-xl shadow-amber-900/60",
+    highlight: "from-amber-200/80 via-yellow-100/70 to-transparent",
+    bottom: "from-amber-300 via-yellow-300 to-emerald-300",
+  },
+  green: {
+    solidBg:
+      "bg-gradient-to-br from-emerald-500 via-teal-500 to-slate-900 shadow-xl shadow-emerald-900/60",
+    highlight: "from-emerald-200/80 via-teal-100/70 to-transparent",
+    bottom: "from-emerald-400 via-teal-300 to-sky-300",
+  },
+  orange: {
+    solidBg:
+      "bg-gradient-to-br from-orange-500 via-amber-500 to-slate-900 shadow-xl shadow-orange-900/60",
+    highlight: "from-orange-200/80 via-amber-100/70 to-transparent",
+    bottom: "from-orange-300 via-amber-300 to-yellow-300",
+  },
+};
 
-    <!-- html2canvas pro PNG export -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+// Jednoduchá mapka pro barvu bullet tečky podle zvolené barvy
+const DOT_COLORS = {
+  blue: "bg-sky-300",
+  purple: "bg-fuchsia-300",
+  cyan: "bg-cyan-300",
+  yellow: "bg-amber-300",
+  green: "bg-emerald-300",
+  orange: "bg-orange-300",
+};
 
-    <style>
-      body {
-        background: #020617;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
+// Jemný barevný overlay pro tubes-color – mění jen jednu složku gradientu
+const OVERLAY_GRADIENT = {
+  blue: "from-sky-500/20",
+  purple: "from-fuchsia-500/20",
+  cyan: "from-cyan-400/20",
+  yellow: "from-amber-400/20",
+  green: "from-emerald-400/20",
+  orange: "from-orange-400/20",
+};
 
-    <script type="text/babel" data-presets="env,react">
-      const { useState, useRef } = React;
+const CourseBadge = React.forwardRef(function CourseBadge(
+  { prefix, code, title, variant = "glass", color = "blue" },
+  ref
+) {
+  const palette = COLOR_SCHEMES[color] || COLOR_SCHEMES.blue;
+  const dotClass = DOT_COLORS[color] || DOT_COLORS.blue;
+  const overlayFrom = OVERLAY_GRADIENT[color] || OVERLAY_GRADIENT.blue;
 
-      // Hlavní varianty vzhledu badge
-      const VARIANTS = [
-        "glass",
-        "solid",
-        "outline",
-        "neon",
-        "tubes",
-        "tubes-color",
-        "slabs",
-      ];
+  const displayPrefix = (prefix || "").toUpperCase();
+  const displayCode = (code || "").toUpperCase();
 
-      // Nabídka barev
-      const COLOR_OPTIONS = [
-        "blue",
-        "purple",
-        "cyan",
-        "yellow",
-        "green",
-        "orange",
-      ];
+  let wrapperClasses =
+    "relative rounded-2xl overflow-hidden w-64 aspect-[16/9] flex items-center justify-center select-none";
+  let innerClasses =
+    "relative w-full h-full flex flex-col justify-between px-4 py-3";
 
-      // Základní barevná schémata (bez barevných outline kolem celé karty)
-      const COLOR_SCHEMES = {
-        blue: {
-          solidBg:
-            "bg-gradient-to-br from-sky-500 via-indigo-500 to-slate-900 shadow-xl shadow-sky-900/60",
-          highlight: "from-sky-200/80 via-cyan-100/70 to-transparent",
-          bottom: "from-sky-400 via-cyan-300 to-emerald-300",
-        },
-        purple: {
-          solidBg:
-            "bg-gradient-to-br from-violet-500 via-fuchsia-500 to-slate-900 shadow-xl shadow-fuchsia-900/60",
-          highlight: "from-violet-200/80 via-fuchsia-100/70 to-transparent",
-          bottom: "from-violet-400 via-fuchsia-300 to-pink-300",
-        },
-        cyan: {
-          solidBg:
-            "bg-gradient-to-br from-cyan-500 via-sky-500 to-slate-900 shadow-xl shadow-cyan-900/60",
-          highlight: "from-cyan-200/80 via-sky-100/70 to-transparent",
-          bottom: "from-cyan-400 via-sky-300 to-slate-200",
-        },
-        yellow: {
-          solidBg:
-            "bg-gradient-to-br from-amber-400 via-yellow-500 to-slate-900 shadow-xl shadow-amber-900/60",
-          highlight: "from-amber-200/80 via-yellow-100/70 to-transparent",
-          bottom: "from-amber-300 via-yellow-300 to-emerald-300",
-        },
-        green: {
-          solidBg:
-            "bg-gradient-to-br from-emerald-500 via-teal-500 to-slate-900 shadow-xl shadow-emerald-900/60",
-          highlight: "from-emerald-200/80 via-teal-100/70 to-transparent",
-          bottom: "from-emerald-400 via-teal-300 to-sky-300",
-        },
-        orange: {
-          solidBg:
-            "bg-gradient-to-br from-orange-500 via-amber-500 to-slate-900 shadow-xl shadow-orange-900/60",
-          highlight: "from-orange-200/80 via-amber-100/70 to-transparent",
-          bottom: "from-orange-300 via-amber-300 to-yellow-300",
-        },
-      };
+  let backgroundClasses = "";
+  let accentPatchClasses = "";
+  let extraDecor = null;
+  let highlightBarClasses =
+    "absolute inset-x-6 top-2 h-px bg-gradient-to-r " + palette.highlight;
+  let chipClasses = "";
+  let mainTextClasses =
+    "tracking-[0.25em] font-semibold text-2xl badge-text-3d";
+  let subTextClasses =
+    "text-xs uppercase tracking-[0.25em] text-slate-300/80";
 
-      // Jednoduchá mapka pro barvu bullet tečky podle zvolené barvy
-      const DOT_COLORS = {
-        blue: "bg-sky-300",
-        purple: "bg-fuchsia-300",
-        cyan: "bg-cyan-300",
-        yellow: "bg-amber-300",
-        green: "bg-emerald-300",
-        orange: "bg-orange-300",
-      };
+  switch (variant) {
+    case "glass":
+      backgroundClasses =
+        "bg-gradient-to-br from-slate-900/70 via-slate-950 to-slate-900/90 backdrop-blur-md shadow-[0_0_40px_rgba(15,23,42,0.8)]";
+      accentPatchClasses =
+        "absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(56,189,248,0.3),transparent_55%),radial-gradient(circle_at_100%_100%,rgba(129,140,248,0.25),transparent_55%)] opacity-80";
+      chipClasses =
+        "inline-flex items-center gap-1 rounded-full bg-slate-900/80 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.25em] text-sky-100/90 border border-slate-700/80";
+      break;
 
-      // Jemný barevný overlay pro tubes-color – mění jen jednu složku gradientu
-      const OVERLAY_GRADIENT = {
-        blue: "from-sky-500/20",
-        purple: "from-fuchsia-500/20",
-        cyan: "from-cyan-400/20",
-        yellow: "from-amber-400/20",
-        green: "from-emerald-400/20",
-        orange: "from-orange-400/20",
-      };
+    case "solid":
+      backgroundClasses = palette.solidBg;
+      chipClasses =
+        "inline-flex items-center gap-1 rounded-md bg-slate-950/40 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.3em] text-sky-50";
+      mainTextClasses += " text-sky-50";
+      subTextClasses =
+        "text-[0.65rem] uppercase tracking-[0.25em] text-sky-100/80";
+      break;
 
-      const CourseBadge = React.forwardRef(function CourseBadge(
-        { role, code, title, variant = "glass", color = "blue" },
-        ref
-      ) {
-        const palette = COLOR_SCHEMES[color] || COLOR_SCHEMES.blue;
-        const dotClass = DOT_COLORS[color] || DOT_COLORS.blue;
-        const overlayFrom = OVERLAY_GRADIENT[color] || OVERLAY_GRADIENT.blue;
+    case "outline":
+      backgroundClasses =
+        "bg-slate-950/80 border border-slate-700/80 shadow-[0_0_0_1px_rgba(15,23,42,1),0_0_30px_rgba(15,23,42,0.8)]";
+      accentPatchClasses =
+        "absolute -left-6 top-3 h-10 w-[3px] bg-gradient-to-b from-slate-500 via-slate-300 to-slate-600 opacity-80";
+      chipClasses =
+        "inline-flex items-center gap-1 rounded-full border border-slate-500/70 px-2 py-0.5 text-[0.6rem] uppercase tracking-[0.25em] text-slate-100/90";
+      mainTextClasses += " text-slate-100";
+      subTextClasses =
+        "text-[0.6rem] uppercase tracking-[0.3em] text-slate-200/90";
+      break;
 
-        const displayRole = (role || "").toUpperCase();
-        const displayCode = (code || "").toUpperCase();
+    case "neon":
+      backgroundClasses =
+        "bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 shadow-[0_0_25px_rgba(56,189,248,0.7)]";
+      accentPatchClasses =
+        "absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(56,189,248,0.25),transparent_55%),radial-gradient(circle_at_100%_100%,rgba(129,140,248,0.2),transparent_55%)] opacity-90";
+      chipClasses =
+        "inline-flex items-center gap-1 rounded-full bg-sky-500/15 border border-sky-300/70 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.28em] text-sky-100/95";
+      mainTextClasses =
+        "tracking-[0.32em] font-semibold text-2xl text-sky-100 badge-text-neon";
+      subTextClasses =
+        "text-[0.65rem] uppercase tracking-[0.3em] text-sky-100/80";
+      break;
 
-        let wrapperClasses =
-          "relative rounded-2xl overflow-hidden w-64 aspect-[16/9] flex items-center justify-center select-none";
-        let innerClasses =
-          "relative w-full h-full flex flex-col justify-between px-4 py-3";
+    case "tubes":
+      backgroundClasses =
+        "bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 shadow-[0_0_35px_rgba(56,189,248,0.65)]";
+      accentPatchClasses =
+        "absolute inset-0 bg-[radial-gradient(circle_at_12%_90%,rgba(56,189,248,0.6),transparent_55%),radial-gradient(circle_at_45%_90%,rgba(236,72,153,0.55),transparent_55%),radial-gradient(circle_at_75%_90%,rgba(59,130,246,0.55),transparent_55%),radial-gradient(circle_at_95%_90%,rgba(250,204,21,0.65),transparent_55%)] opacity-80";
+      chipClasses =
+        "inline-flex items-center gap-1 rounded-full bg-slate-950/70 border border-slate-700/80 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.26em] text-slate-100";
+      mainTextClasses =
+        "tracking-[0.3em] font-semibold text-2xl text-slate-50 badge-text-neon";
+      subTextClasses =
+        "text-[0.65rem] uppercase tracking-[0.3em] text-slate-200/90";
+      extraDecor = (
+        <div className="absolute inset-x-10 top-4 h-[2px] bg-gradient-to-r from-sky-300 via-fuchsia-300 to-amber-300 opacity-80 rounded-full" />
+      );
+      break;
 
-        let backgroundClasses = "";
-        let accentPatchClasses = "";
-        let extraDecor = null;
-        let highlightBarClasses =
-          "absolute inset-x-6 top-2 h-px bg-gradient-to-r " +
-          palette.highlight;
-        let chipClasses = "";
-        let mainTextClasses =
-          "tracking-[0.25em] font-semibold text-2xl badge-text-3d";
-        let subTextClasses =
-          "text-xs uppercase tracking-[0.25em] text-slate-300/80";
+    case "tubes-color":
+      // Jemnější verze tubes – základní tmavý gradient + jemný barevný overlay podle barvy
+      backgroundClasses =
+        "bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 shadow-[0_0_30px_rgba(15,23,42,0.9)]";
+      accentPatchClasses =
+        "absolute inset-0 bg-[radial-gradient(circle_at_15%_90%,rgba(148,163,184,0.22),transparent_60%),radial-gradient(circle_at_85%_90%,rgba(15,23,42,0.55),transparent_65%)] opacity-70";
+      chipClasses =
+        "inline-flex items-center gap-1 rounded-full bg-slate-950/70 border border-slate-700/80 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.26em] text-slate-100";
+      mainTextClasses =
+        "tracking-[0.3em] font-semibold text-2xl text-slate-50 badge-text-neon";
+      subTextClasses =
+        "text-[0.65rem] uppercase tracking-[0.3em] text-slate-200/90";
+      extraDecor = (
+        <div
+          className={
+            "absolute inset-0 bg-gradient-to-br " +
+            overlayFrom +
+            " via-transparent to-transparent opacity-75"
+          }
+        />
+      );
+      break;
 
-        switch (variant) {
-          case "glass":
-            backgroundClasses =
-              "bg-gradient-to-br from-slate-900/70 via-slate-950 to-slate-900/90 backdrop-blur-md shadow-[0_0_40px_rgba(15,23,42,0.8)]";
-            accentPatchClasses =
-              "absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(56,189,248,0.3),transparent_55%),radial-gradient(circle_at_100%_100%,rgba(129,140,248,0.25),transparent_55%)] opacity-80";
-            chipClasses =
-              "inline-flex items-center gap-1 rounded-full bg-slate-900/80 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.25em] text-sky-100/90 border border-slate-700/80";
-            break;
+    $1
 
-          case "solid":
-            backgroundClasses = palette.solidBg;
-            chipClasses =
-              "inline-flex items-center gap-1 rounded-md bg-slate-950/40 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.3em] text-sky-50";
-            mainTextClasses += " text-sky-50";
-            subTextClasses =
-              "text-[0.65rem] uppercase tracking-[0.25em] text-sky-100/80";
-            break;
+    default:
+      backgroundClasses = "bg-slate-900 border border-slate-700 shadow-xl";
+  }
 
-          case "outline":
-            backgroundClasses =
-              "bg-slate-950/80 border border-slate-700/80 shadow-[0_0_0_1px_rgba(15,23,42,1),0_0_30px_rgba(15,23,42,0.8)]";
-            accentPatchClasses =
-              "absolute -left-6 top-3 h-10 w-[3px] bg-gradient-to-b from-slate-500 via-slate-300 to-slate-600 opacity-80";
-            chipClasses =
-              "inline-flex items-center gap-1 rounded-full border border-slate-500/70 px-2 py-0.5 text-[0.6rem] uppercase tracking-[0.25em] text-slate-100/90";
-            mainTextClasses += " text-slate-100";
-            subTextClasses =
-              "text-[0.6rem] uppercase tracking-[0.3em] text-slate-200/90";
-            break;
+  return (
+    <div className={wrapperClasses} ref={ref}>
+      <style>{`
+        .badge-text-3d {
+          text-shadow:
+            0 1px 0 rgba(15,23,42,0.9),
+            0 2px 4px rgba(15,23,42,0.8),
+            0 8px 18px rgba(15,23,42,0.9);
+        }
+        .badge-text-neon {
+          text-shadow:
+            0 0 6px rgba(56,189,248,0.8),
+            0 0 16px rgba(56,189,248,0.9),
+            0 0 32px rgba(56,189,248,1);
+        }
+      `}</style>
+      <div className={backgroundClasses + " " + innerClasses}>
+        {/* variant-specific fleky / beams */}
+        <div className={accentPatchClasses}></div>
+        {extraDecor}
+        {/* společná horní linka */}
+        <div className={highlightBarClasses}></div>
 
-          case "neon":
-            backgroundClasses =
-              "bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 shadow-[0_0_25px_rgba(56,189,248,0.7)]";
-            accentPatchClasses =
-              "absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(56,189,248,0.25),transparent_55%),radial-gradient(circle_at_100%_100%,rgba(129,140,248,0.2),transparent_55%)] opacity-90";
-            chipClasses =
-              "inline-flex items-center gap-1 rounded-full bg-sky-500/15 border border-sky-300/70 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.28em] text-sky-100/95";
-            mainTextClasses =
-              "tracking-[0.32em] font-semibold text-2xl text-sky-100 badge-text-neon";
-            subTextClasses =
-              "text-[0.65rem] uppercase tracking-[0.3em] text-sky-100/80";
-            break;
+        <div className="flex items-center justify-between z-10">
+          <span className={chipClasses}>
+            <span className={"w-1 h-1 rounded-full " + dotClass}></span>
+            <span>{displayPrefix || "XXX"}</span>
+          </span>
+          <span className="text-[0.6rem] uppercase tracking-[0.28em] text-slate-400/80">
+            CTU · FIT
+          </span>
+        </div>
 
-          case "tubes":
-            backgroundClasses =
-              "bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 shadow-[0_0_35px_rgba(56,189,248,0.65)]";
-            accentPatchClasses =
-              "absolute inset-0 bg-[radial-gradient(circle_at_12%_90%,rgba(56,189,248,0.6),transparent_55%),radial-gradient(circle_at_45%_90%,rgba(236,72,153,0.55),transparent_55%),radial-gradient(circle_at_75%_90%,rgba(59,130,246,0.55),transparent_55%),radial-gradient(circle_at_95%_90%,rgba(250,204,21,0.65),transparent_55%)] opacity-80";
-            chipClasses =
-              "inline-flex items-center gap-1 rounded-full bg-slate-950/70 border border-slate-700/80 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.26em] text-slate-100";
-            mainTextClasses =
-              "tracking-[0.3em] font-semibold text-2xl text-slate-50 badge-text-neon";
-            subTextClasses =
-              "text-[0.65rem] uppercase tracking-[0.3em] text-slate-200/90";
-            extraDecor = (
-              <div className="absolute inset-x-10 top-4 h-[2px] bg-gradient-to-r from-sky-300 via-fuchsia-300 to-amber-300 opacity-80 rounded-full" />
-            );
-            break;
-
-          case "tubes-color":
-            backgroundClasses =
-              "bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 shadow-[0_0_30px_rgba(15,23,42,0.9)]";
-            accentPatchClasses =
-              "absolute inset-0 bg-[radial-gradient(circle_at_15%_90%,rgba(148,163,184,0.22),transparent_60%),radial-gradient(circle_at_85%_90%,rgba(15,23,42,0.55),transparent_65%)] opacity-70";
-            chipClasses =
-              "inline-flex items-center gap-1 rounded-full bg-slate-950/70 border border-slate-700/80 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.26em] text-slate-100";
-            mainTextClasses =
-              "tracking-[0.3em] font-semibold text-2xl text-slate-50 badge-text-neon";
-            subTextClasses =
-              "text-[0.65rem] uppercase tracking-[0.3em] text-slate-200/90";
-            extraDecor = (
+        <div className="flex-1 flex items-center z-10">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-baseline gap-3 mt-1">
+              {displayPrefix && displayCode && (
+                <span className="text-sm uppercase tracking-[0.3em] text-sky-200/80">
+                  {displayPrefix}
+                </span>
+              )}
+              <span className={mainTextClasses}>
+                {displayCode || displayPrefix || "XXX"}
+              </span>
+            </div>
+            {title && (
               <div
                 className={
-                  "absolute inset-0 bg-gradient-to-br " +
-                  overlayFrom +
-                  " via-transparent to-transparent opacity-75"
+                  subTextClasses +
+                  " normal-case tracking-normal text-[0.75rem] opacity-90"
                 }
-              />
-            );
-            break;
-
-          case "slabs":
-            backgroundClasses =
-              "bg-slate-950 border border-slate-800 shadow-[0_16px_40px_rgba(15,23,42,0.95)]";
-            accentPatchClasses =
-              "absolute inset-0 bg-[linear-gradient(135deg,rgba(148,163,184,0.25)_1px,transparent_1px)] opacity-40";
-            chipClasses =
-              "inline-flex items-center gap-1 rounded-full bg-slate-900 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-sky-100 shadow-[0_8px_18px_rgba(15,23,42,0.9),0_0_0_1px_rgba(148,163,184,0.4)]";
-            mainTextClasses =
-              "tracking-[0.28em] font-semibold text-2xl text-sky-100 badge-text-3d";
-            subTextClasses =
-              "text-[0.65rem] uppercase tracking-[0.28em] text-slate-300/90";
-            extraDecor = (
-              <div className="absolute inset-x-8 bottom-3 flex gap-2 opacity-70">
-                <div className="h-1 flex-1 rounded-full bg-gradient-to-r from-slate-500/80 via-slate-100/80 to-slate-500/80 shadow-[0_6px_14px_rgba(15,23,42,0.9)]" />
-                <div className="h-1 flex-[0.6] rounded-full bg-gradient-to-r from-slate-600/80 via-slate-200/80 to-slate-500/80 shadow-[0_6px_14px_rgba(15,23,42,0.9)]" />
+              >
+                {title}
               </div>
-            );
-            break;
+            )}
+          </div>
+        </div>
 
-          default:
-            backgroundClasses =
-              "bg-slate-900 border border-slate-700 shadow-xl";
-        }
+        <div className="relative mt-2 z-10">
+          <div className="h-[2px] w-full bg-slate-800/80 rounded-full overflow-hidden">
+            <div
+              className={"h-full w-1/3 bg-gradient-to-r " + palette.bottom}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
 
-        return (
-          <div className={wrapperClasses} ref={ref}>
-            <style>{`
-              .badge-text-3d {
-                text-shadow:
-                  0 1px 0 rgba(15,23,42,0.9),
-                  0 2px 4px rgba(15,23,42,0.8),
-                  0 8px 18px rgba(15,23,42,0.9);
-              }
-              .badge-text-neon {
-                text-shadow:
-                  0 0 6px rgba(56,189,248,0.8),
-                  0 0 16px rgba(56,189,248,0.9),
-                  0 0 32px rgba(56,189,248,1);
-              }
-            `}</style>
-            <div className={backgroundClasses + " " + innerClasses}>
-              {/* variant-specific fleky / beams */}
-              <div className={accentPatchClasses}></div>
-              {extraDecor}
-              {/* společná horní linka */}
-              <div className={highlightBarClasses}></div>
+export default function App() {
+  const [prefix, setPrefix] = useState("ANI");
+  const [code, setCode] = useState("KOP");
+  const [title, setTitle] = useState("Kombinovaná optika");
+  const [variant, setVariant] = useState("glass");
+  const [color, setColor] = useState("blue");
+  const badgeRef = useRef(null);
 
-              <div className="flex items-center justify-between z-10">
-                <span className={chipClasses}>
-                  <span
-                    className={"w-1 h-1 rounded-full " + dotClass}
-                  ></span>
-                  <span>{displayRole || "ROLE"}</span>
-                </span>
-                <span className="text-[0.6rem] uppercase tracking-[0.28em] text-slate-400/80">
-                  CTU · FIT
-                </span>
-              </div>
+  const handleDownloadPng = async () => {
+    if (!badgeRef.current) return;
+    const html2canvas = window.html2canvas;
+    if (!html2canvas) {
+      alert(
+        'Pro export do PNG je potřeba načíst html2canvas, např. přes <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>.'
+      );
+      return;
+    }
+    try {
+      const canvas = await html2canvas(badgeRef.current, {
+        backgroundColor: null,
+        scale: 3,
+      });
+      const link = document.createElement("a");
+      const baseCode = `${prefix || ""}-${code || ""}`.replace(/[^A-Za-z0-9_-]+/g, "").replace(/^[-_]+|[-_]+$/g, "") || "course";
+      link.download = `${baseCode}-${variant}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (err) {
+      console.error(err);
+      alert("Export do PNG se nezdařil.");
+    }
+  };
 
-              <div className="flex-1 flex items-center z-10">
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-baseline gap-3 mt-1">
-                    <span className={mainTextClasses}>
-                      {displayCode || "XXX-000"}
-                    </span>
-                  </div>
-                  {title && (
-                    <div
-                      className={
-                        subTextClasses +
-                        " normal-case tracking-normal text-[0.75rem] opacity-90"
-                      }
-                    >
-                      {title}
-                    </div>
-                  )}
-                </div>
-              </div>
+  const sampleCourses = [
+    { prefix: "ANI", code: "KOP", title: "Kombinovaná optika" },
+    { prefix: "ANI", code: "DID", title: "Digital Drawing" },
+    { prefix: "ANI", code: "UEE", title: "Unreal Engine Env. Design" },
+    { prefix: "ANI", code: "GJ", title: "GameJam" },
+    { prefix: "ANI", code: "DVD", title: "Design vlastních deskových her" },
+    { prefix: "NUR", code: "PGR", title: "Pokročilá grafika" },
+    { prefix: "NI", code: "CCC", title: "Creative Coding" },
+    { prefix: "PGM", code: "GPU", title: "GPU Programming" },
+  ];
 
-              <div className="relative mt-2 z-10">
-                <div className="h-[2px] w-full bg-slate-800/80 rounded-full overflow-hidden">
-                  <div
-                    className={
-                      "h-full w-1/3 bg-gradient-to-r " + palette.bottom
-                    }
-                  />
-                </div>
-              </div>
+  return (
+    <div className="min-h-screen flex flex-col items-center py-8 px-4 gap-8 bg-slate-950 text-slate-100">
+      <header className="w-full max-w-5xl flex flex-col gap-3">
+        <h1 className="text-2xl font-semibold tracking-wide">
+          Triviální grafika předmětů – badge maker
+        </h1>
+        <p className="text-slate-300 text-sm max-w-2xl">
+          Zadej zkratku oboru (např. <span className="font-mono">ANI</span>),
+          kód předmětu (např. <span className="font-mono">KOP</span>) a název
+          předmětu. Výsledek můžeš použít jako jednoduchý „obrázek“ pro kartu
+          předmětu.
+        </p>
+      </header>
+
+      <main className="w-full max-w-5xl grid gap-8 md:grid-cols-[auto,1fr] items-start">
+        {/* levý sloupec – nastavení + náhled */}
+        <div className="flex flex-col gap-4">
+          <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-4 shadow-xl shadow-slate-950/50">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300 mb-3">
+              Nastavení
+            </h2>
+            <div className="flex flex-col gap-3">
+              <label className="flex flex-col gap-1 text-sm">
+                <span className="text-slate-300">Zkratka oboru (vlevo nahoře)</span>
+                <input
+                  value={prefix}
+                  onChange={(e) => setPrefix(e.target.value)}
+                  className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono tracking-[0.2em] uppercase outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  placeholder="např. ANI"
+                />
+              </label>
+
+              <label className="flex flex-col gap-1 text-sm">
+                <span className="text-slate-300">Kód předmětu (velké písmo)</span>
+                <input
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono tracking-[0.3em] uppercase outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  placeholder="např. KOP"
+                />
+              </label>
+
+              <label className="flex flex-col gap-1 text-sm">
+                <span className="text-slate-300">Název předmětu (pod kódem)</span>
+                <input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  placeholder="např. Kombinovaná optika"
+                />
+              </label>
+
+              <label className="flex flex-col gap-1 text-sm">
+                <span className="text-slate-300">Varianta</span>
+                <select
+                  value={variant}
+                  onChange={(e) => setVariant(e.target.value)}
+                  className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                >
+                  {VARIANTS.map((v) => (
+                    <option key={v} value={v}>
+                      {v}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="flex flex-col gap-1 text-sm">
+                <span className="text-slate-300">Barva</span>
+                <select
+                  value={color}
+                  onChange={(e) => setColor(e.target.value)}
+                  className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                >
+                  {COLOR_OPTIONS.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
           </div>
-        );
-      });
 
-      function App() {
-        const [role, setRole] = useState("ANI");
-        const [code, setCode] = useState("ANI-KOP");
-        const [title, setTitle] = useState("Kombinovaná optika");
-        const [color, setColor] = useState("blue");
-
-        // refs pro 7 variant náhledu
-        const previewRefs = useRef([]);
-
-        const downloadBadgePng = async (element, variantName, html2canvas) => {
-          if (!element) return;
-          try {
-            const canvas = await html2canvas(element, {
-              backgroundColor: null,
-              scale: 3,
-            });
-            const link = document.createElement("a");
-            const baseCode =
-              (code || "")
-                .replace(/[^A-Za-z0-9_-]+/g, "")
-                .replace(/^[-_]+|[-_]+$/g, "") || "course";
-            link.download = `${baseCode}-${variantName}-${color}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-          } catch (err) {
-            console.error(err);
-            alert("Export do PNG se nezdařil.");
-          }
-        };
-
-        const handleDownloadOne = async (index, variantName) => {
-          const html2canvas = window.html2canvas;
-          if (!html2canvas) {
-            alert(
-              "Pro export do PNG je potřeba mít na stránce načtenou knihovnu html2canvas (například z CDN)."
-            );
-            return;
-          }
-          const el = previewRefs.current[index];
-          await downloadBadgePng(el, variantName, html2canvas);
-        };
-
-        const handleDownloadAll = async () => {
-          const html2canvas = window.html2canvas;
-          if (!html2canvas) {
-            alert(
-              "Pro export do PNG je potřeba mít na stránce načtenou knihovnu html2canvas (například z CDN)."
-            );
-            return;
-          }
-          for (let i = 0; i < VARIANTS.length; i++) {
-            const el = previewRefs.current[i];
-            if (!el) continue;
-            await downloadBadgePng(el, VARIANTS[i], html2canvas);
-          }
-        };
-
-        const sampleCourses = [
-          {
-            role: "ANI",
-            code: "ANI-KOP",
-            title: "Kombinovaná optika",
-          },
-          {
-            role: "ANI",
-            code: "ANI-DID",
-            title: "Digital Drawing",
-          },
-          {
-            role: "ANI",
-            code: "ANI-UEE",
-            title: "Unreal Engine Env. Design",
-          },
-          {
-            role: "ANI",
-            code: "ANI-GJ",
-            title: "GameJam",
-          },
-          {
-            role: "ANI",
-            code: "ANI-DVD",
-            title: "Design vlastních deskových her",
-          },
-          {
-            role: "NUR",
-            code: "NUR-PGR",
-            title: "Pokročilá grafika",
-          },
-          {
-            role: "NI",
-            code: "NI-CCC",
-            title: "Creative Coding",
-          },
-          {
-            role: "PGM",
-            code: "PGM-GPU",
-            title: "GPU Programming",
-          },
-        ];
-
-        return (
-          <div className="min-h-screen flex flex-col items-center py-8 px-4 gap-8 bg-slate-950 text-slate-100">
-            <header className="w-full max-w-5xl flex flex-col gap-3">
-              <h1 className="text-2xl font-semibold tracking-wide">
-                Triviální grafika předmětů – badge maker
-              </h1>
-              <p className="text-slate-300 text-sm max-w-2xl">
-                Zadej{" "}
-                <strong>roli</strong> (např.{" "}
-                <span className="font-mono">ANI</span>,{" "}
-                <span className="font-mono">VOLIT</span>), kód předmětu (např.{" "}
-                <span className="font-mono">ANI-KOP</span>) a název předmětu.
-                Výsledek můžeš použít jako jednoduchý „obrázek“ pro kartu
-                předmětu.
-              </p>
-            </header>
-
-            <main className="w-full max-w-5xl grid gap-8 md:grid-cols-[auto,1fr] items-start">
-              {/* levý sloupec – nastavení + náhled */}
-              <div className="flex flex-col gap-4">
-                <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-4 shadow-xl shadow-slate-950/50">
-                  <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300 mb-3">
-                    Nastavení
-                  </h2>
-                  <div className="flex flex-col gap-3">
-                    <label className="flex flex-col gap-1 text-sm">
-                      <span className="text-slate-300">
-                        Role (vlevo nahoře)
-                      </span>
-                      <input
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                        className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono tracking-[0.2em] uppercase outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                        placeholder="např. ANI / VOLIT / CORE"
-                      />
-                    </label>
-
-                    <label className="flex flex-col gap-1 text-sm">
-                      <span className="text-slate-300">
-                        Kód předmětu (velké písmo)
-                      </span>
-                      <input
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono tracking-[0.25em] uppercase outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                        placeholder="např. ANI-KOP"
-                      />
-                    </label>
-
-                    <label className="flex flex-col gap-1 text-sm">
-                      <span className="text-slate-300">
-                        Název předmětu (pod kódem)
-                      </span>
-                      <input
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                        placeholder="např. Kombinovaná optika"
-                      />
-                    </label>
-
-                    <label className="flex flex-col gap-1 text-sm">
-                      <span className="text-slate-300">Barva</span>
-                      <select
-                        value={color}
-                        onChange={(e) => setColor(e.target.value)}
-                        className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                      >
-                        {COLOR_OPTIONS.map((c) => (
-                          <option key={c} value={c}>
-                            {c}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  </div>
-                </div>
-
-                <div className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 flex flex-col gap-3 shadow-xl shadow-slate-950/60">
-                  <div className="flex items-center justify-between mb-1">
-                    <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300">
-                      Náhled – všechny varianty
-                    </h2>
-                    <span className="text-[0.65rem] text-slate-500 uppercase tracking-[0.25em]">
-                      7 vzhledů, stejná data
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {VARIANTS.map((v, idx) => (
-                      <div
-                        key={v}
-                        className="flex flex-col items-center gap-2"
-                      >
-                        <CourseBadge
-                          ref={(el) => (previewRefs.current[idx] = el)}
-                          role={role}
-                          code={code}
-                          title={title}
-                          variant={v}
-                          color={color}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleDownloadOne(idx, v)}
-                          className="px-2 py-1 rounded-lg border border-sky-500/70 text-[0.65rem] uppercase tracking-[0.2em] text-sky-100 bg-slate-950/60 hover:bg-sky-500/10 transition"
-                        >
-                          Stáhnout PNG – {v}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleDownloadAll}
-                    className="mt-2 self-center px-3 py-1.5 rounded-lg border border-emerald-500/80 text-[0.7rem] uppercase tracking-[0.22em] text-emerald-100 bg-slate-950/70 hover:bg-emerald-500/10 transition"
-                  >
-                    Stáhnout všech 7 PNG
-                  </button>
-
-                  <p className="text-[0.7rem] text-slate-400 mt-2 text-center">
-                    PNG export používá knihovnu{" "}
-                    <span className="font-mono">html2canvas</span> načtenou z
-                    CDN.
-                  </p>
-                </div>
-              </div>
-
-              {/* pravý sloupec – ukázkové badge */}
-              <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 shadow-xl shadow-slate-950/60">
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300">
-                    Ukázkové předměty
-                  </h2>
-                  <span className="text-[0.65rem] text-slate-500 uppercase tracking-[0.25em]">
-                    různé varianty a barvy
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {sampleCourses.map((c, i) => (
-                    <CourseBadge
-                      key={c.code}
-                      role={c.role}
-                      code={c.code}
-                      title={c.title}
-                      variant={VARIANTS[i % VARIANTS.length]}
-                      color={COLOR_OPTIONS[i % COLOR_OPTIONS.length]}
-                    />
-                  ))}
-                </div>
-              </section>
-            </main>
+          <div className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 flex flex-col items-center gap-3 shadow-xl shadow-slate-950/60">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300 mb-2">
+              Náhled
+            </h2>
+            <CourseBadge
+              ref={badgeRef}
+              prefix={prefix}
+              code={code}
+              title={title}
+              variant={variant}
+              color={color}
+            />
+            <button
+              type="button"
+              onClick={handleDownloadPng}
+              className="mt-2 px-3 py-1.5 rounded-lg border border-sky-500/70 text-[0.7rem] uppercase tracking-[0.22em] text-sky-100 bg-slate-950/60 hover:bg-sky-500/10 transition"
+            >
+              Stáhnout PNG
+            </button>
+            <p className="text-[0.7rem] text-slate-400 mt-2 text-center">
+              Pro export do PNG je v reálném HTML potřeba mít na stránce
+              načtenou knihovnu <span className="font-mono">html2canvas</span>.
+            </p>
           </div>
-        );
-      }
+        </div>
 
-      const rootEl = document.getElementById("root");
-      if (rootEl) {
-        const root = ReactDOM.createRoot(rootEl);
-        root.render(<App />);
-      }
-    </script>
-  </body>
-</html>
+        {/* pravý sloupec – ukázkové badge */}
+        <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 shadow-xl shadow-slate-950/60">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300">
+              Ukázkové předměty
+            </h2>
+            <span className="text-[0.65rem] text-slate-500 uppercase tracking-[0.25em]">
+              různé varianty a barvy
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sampleCourses.map((c, i) => (
+              <CourseBadge
+                key={`${c.prefix}-${c.code}`}
+                prefix={c.prefix}
+                code={c.code}
+                title={c.title}
+                variant={VARIANTS[i % VARIANTS.length]}
+                color={COLOR_OPTIONS[i % COLOR_OPTIONS.length]}
+              />
+            ))}
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
