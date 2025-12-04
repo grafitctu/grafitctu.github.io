@@ -199,20 +199,22 @@ function PillCSS({ course, selected, onClick }) {
 function PillPNG({ course, selected, onClick, schemeStyle }) {
   const suffix = SUFFIX_MAP[schemeStyle] || "solid";
   const src = `assets/${course.code}-${suffix}.png`;
-  const border = selected
-    ? "ring-2 ring-amber-300"
-    : "border border-slate-800/80";
+
+  // když je vybrán, přidáme jen ring okolo, žádné další rámečky
+  const ringClasses = selected ? "ring-2 ring-amber-300 rounded-3xl" : "";
 
   return (
     <button
       onClick={onClick}
-      className={"inline-flex items-stretch rounded-2xl overflow-hidden bg-slate-900/60 " + border}
       title={course.code}
+      // žádné pozadí, žádné paddingy – element má přesně velikost obrázku
+      className={`inline-block overflow-hidden ${ringClasses}`}
     >
       <img
         src={src}
         alt={course.code}
-        className="h-24 w-auto object-contain"
+        // obrázek se zmenší, ale zachová poměr stran, bez volného místa dole
+        className="block h-auto max-h-32 w-auto"
       />
     </button>
   );
