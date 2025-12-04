@@ -19,12 +19,6 @@
       min-height: 64px;
       border-radius: 18px;
     }
-
-    /* Spojovací rámeček pro bloky VGA/PVR/GPU apod. */
-    .group-outline {
-      border-radius: 26px;
-      box-shadow: 0 0 0 2px rgba(45,212,191,0.5);
-    }
   </style>
 </head>
 <body class="min-h-screen text-slate-50">
@@ -78,21 +72,21 @@ const COURSES = [
     name: "Architektura počítačových her",
     subtitle: "Návrh architektury komplexních herních systémů.",
     year: 1, term: "zimní", type: "grafický",
-    row: 0, col: 5, color: "cyan", group: "gfx1"
+    row: 0, col: 5, color: "cyan"
   },
   {
     code: "PVR",
     name: "Pokročilá virtuální realita",
     subtitle: "Pokročilé techniky VR a interakce.",
     year: 1, term: "zimní", type: "grafický",
-    row: 0, col: 6, color: "cyan", group: "gfx1"
+    row: 0, col: 6, color: "cyan"
   },
   {
     code: "GPU",
     name: "Ovládání a architektury grafických procesorů",
     subtitle: "Moderní GPU a programovací modely.",
     year: 1, term: "zimní", type: "grafický",
-    row: 0, col: 7, color: "cyan", group: "gfx1"
+    row: 0, col: 7, color: "cyan"
   },
   {
     code: "CCC",
@@ -138,21 +132,21 @@ const COURSES = [
     name: "Příběhový a herní design",
     subtitle: "Design herních mechanik, příběhů a hráčského zážitku.",
     year: 1, term: "letní", type: "grafický",
-    row: 1, col: 4, color: "cyan", group: "gfx2"
+    row: 1, col: 4, color: "cyan"
   },
   {
     code: "BSO",
     name: "Biosignály a data",
     subtitle: "Zpracování biosignálů pro vizualizaci a diagnostiku.",
     year: 1, term: "letní", type: "grafický",
-    row: 1, col: 5, color: "cyan", group: "gfx2"
+    row: 1, col: 5, color: "cyan"
   },
   {
     code: "IRT",
     name: "Internet a přenos v reálném čase",
     subtitle: "Streaming, latence, synchronizace a real-time.",
     year: 1, term: "letní", type: "grafický",
-    row: 1, col: 6, color: "cyan", group: "gfx2"
+    row: 1, col: 6, color: "cyan"
   },
   {
     code: "TVR",
@@ -188,38 +182,38 @@ const COURSES = [
   // blok NUR + DID + UEE + GJ + DVD
   {
     code: "NUR",
-    name: "Další povinný předmět (slot NUR)",
+    name: "Slot pro další povinný předmět",
     subtitle: "Slot pro nepovinně povinný předmět podle zaměření.",
     year: 2, term: "zimní", type: "žlutý-blok",
-    row: 2, col: 3, color: "amber", group: "nur"
+    row: 2, col: 3, color: "amber"
   },
   {
     code: "ANI-DID",
     name: "Digital drawing",
     subtitle: "Základy kreativního digitálního kreslení.",
     year: 2, term: "zimní", type: "žlutý-blok",
-    row: 2, col: 4, color: "amber", group: "nur"
+    row: 2, col: 4, color: "amber"
   },
   {
     code: "ANI-UEE",
     name: "UE – environmental design",
     subtitle: "Tvorba prostředí v Unreal Enginu.",
     year: 2, term: "zimní", type: "žlutý-blok",
-    row: 2, col: 5, color: "amber", group: "nur"
+    row: 2, col: 5, color: "amber"
   },
   {
     code: "ANI-GJ",
     name: "GameJam FIT (0 kreditů)",
     subtitle: "Blokový předmět postavený na gamejamu.",
     year: 2, term: "zimní", type: "žlutý-blok",
-    row: 2, col: 6, color: "amber", group: "nur"
+    row: 2, col: 6, color: "amber"
   },
   {
     code: "ANI-DVD",
     name: "Design vlastních deskových her",
     subtitle: "Návrh a prototypování deskových her.",
     year: 2, term: "zimní", type: "žlutý-blok",
-    row: 2, col: 7, color: "amber", group: "nur"
+    row: 2, col: 7, color: "amber"
   },
 
   // 2. ročník – letní
@@ -232,8 +226,8 @@ const COURSES = [
   }
 ];
 
-const DETAIL_STYLE_OPTIONS = [
-  { value: "css",        label: "Canvas + hero" },
+const SCHEME_STYLE_OPTIONS = [
+  { value: "css",        label: "Původní gradient" },
   { value: "glass",      label: "PNG: glass" },
   { value: "neon",       label: "PNG: neon" },
   { value: "outline",    label: "PNG: outline" },
@@ -268,27 +262,61 @@ function yearTermLabel(course) {
 
 // --- komponenty -------------------------------------------------------
 
-function MapCoursePill({ course, selected, onClick }) {
+function MapCoursePill({ course, selected, onClick, schemeStyle }) {
   const gradient = colorClasses(course.color);
   const border = selected ? "ring-2 ring-amber-300 shadow-xl" : "border border-slate-800/80";
   const textSize = course.code.length > 7 ? "text-xs" : "text-sm";
 
+  const useCss = schemeStyle === "css";
+
+  const styleSuffixMap = {
+    glass: "glass",
+    neon: "neon",
+    outline: "outline",
+    slabs: "slabs",
+    solid: "solid",
+    tubes: "tubes",
+    tubesColor: "tubes-color"
+  };
+
+  let bgStyle = {};
+  if (!useCss) {
+    const suffix = styleSuffixMap[schemeStyle] || "glass";
+    const pngUrl = `assets/${course.code}-${suffix}.png`;
+    bgStyle = {
+      backgroundImage: `linear-gradient(135deg, rgba(15,23,42,0.55), rgba(15,23,42,0.9)), url('${pngUrl}')`,
+      backgroundSize: "cover",
+      backgroundPosition: "center top"
+    };
+  }
+
   return (
     <button
       onClick={onClick}
-      className={`course-pill bg-gradient-to-br ${gradient} ${border} px-3 py-2 text-left text-white flex flex-col justify-center shadow-md transition-transform hover:-translate-y-0.5`}
+      className={
+        "course-pill relative overflow-hidden bg-slate-900/90 " +
+        border +
+        " text-left text-white flex flex-col justify-center shadow-md transition-transform hover:-translate-y-0.5"
+      }
+      style={bgStyle}
     >
-      <div className={`font-semibold leading-tight ${textSize}`}>
-        {course.code}
-      </div>
-      <div className="mt-0.5 text-[11px] leading-snug opacity-90">
-        {course.name}
+      {useCss && (
+        <div className={"absolute inset-0 bg-gradient-to-br " + gradient} />
+      )}
+
+      <div className="relative z-10 flex flex-col justify-center">
+        <div className={"font-semibold leading-tight " + textSize}>
+          {course.code}
+        </div>
+        <div className="mt-0.5 text-[11px] leading-snug opacity-90">
+          {course.name}
+        </div>
       </div>
     </button>
   );
 }
 
-function MapRow({ label, courses, selectedCodes, onToggle }) {
+function MapRow({ label, courses, selectedCodes, onToggle, schemeStyle }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3 text-xs text-amber-300">
@@ -303,6 +331,7 @@ function MapRow({ label, courses, selectedCodes, onToggle }) {
             course={c}
             selected={selectedCodes.includes(c.code)}
             onClick={(e) => onToggle(c.code, e)}
+            schemeStyle={schemeStyle}
           />
         ))}
       </div>
@@ -310,45 +339,22 @@ function MapRow({ label, courses, selectedCodes, onToggle }) {
   );
 }
 
-function CourseDetailCard({ course, detailStyle }) {
-  const isCss = detailStyle === "css";
-
-  // hero obrázek pro CSS verzi – anikop.png, aniarc.png, ...
+function CourseDetailCard({ course }) {
+  // spodní karta – vždy jedna PNG varianta anikop.png / aniarc.png ...
   const heroBaseName = course.code.toLowerCase().replace("-", "");
-  const cssHeroUrl = `assets/${heroBaseName}.png`;
-
-  // PNG verze – ANI-KOP-glass.png, ANI-KOP-neon.png, ...
-  const styleSuffixMap = {
-    glass: "glass",
-    neon: "neon",
-    outline: "outline",
-    slabs: "slabs",
-    solid: "solid",
-    tubes: "tubes",
-    tubesColor: "tubes-color"
-  };
-  const suffix = styleSuffixMap[detailStyle] || "glass";
-  const pngUrl = `assets/${course.code}-${suffix}.png`;
+  const heroUrl = `assets/${heroBaseName}.png`;
 
   return (
     <article className="bg-slate-950/80 border border-slate-800 rounded-3xl overflow-hidden shadow-xl flex flex-col">
       <div className="relative h-40 w-full overflow-hidden">
-        {isCss ? (
-          <div
-            className="absolute inset-0 bg-cover bg-top"
-            style={{
-              backgroundImage: `linear-gradient(120deg, rgba(15,23,42,0.2), rgba(15,23,42,0.92)), url('${cssHeroUrl}')`
-            }}
-          />
-        ) : (
-          <img
-            src={pngUrl}
-            alt={course.code}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )}
+        <div
+          className="absolute inset-0 bg-cover bg-top"
+          style={{
+            backgroundImage: `linear-gradient(120deg, rgba(15,23,42,0.2), rgba(15,23,42,0.92)), url('${heroUrl}')`
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/95" />
 
-        {/* horní badge vrstvička */}
         <div className="relative z-10 flex justify-between items-start px-4 pt-3">
           <span className="px-3 py-1 rounded-full bg-slate-900/70 text-xs font-semibold tracking-wide">
             {course.code}
@@ -363,8 +369,6 @@ function CourseDetailCard({ course, detailStyle }) {
             {course.name}
           </h3>
         </div>
-
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/95" />
       </div>
 
       <div className="p-4 flex flex-col gap-3 text-sm text-slate-200">
@@ -396,7 +400,7 @@ function CourseDetailCard({ course, detailStyle }) {
 
 function App() {
   const [wide, setWide] = React.useState(false);
-  const [detailStyle, setDetailStyle] = React.useState("css");
+  const [schemeStyle, setSchemeStyle] = React.useState("css");
   const [selectedCodes, setSelectedCodes] = React.useState(["ANI-KOP"]);
 
   const handleToggleCourse = (code, mouseEvent) => {
@@ -453,15 +457,15 @@ function App() {
               {wide ? "Kompaktní režim (užší sloupec)" : "Široký režim (celá šířka obrazovky)"}
             </button>
 
-            {/* přepínač stylu detailu */}
+            {/* přepínač stylu schématu */}
             <label className="flex items-center gap-2 text-xs text-slate-300">
-              <span>Styl detailu:</span>
+              <span>Styl schématu nahoře:</span>
               <select
-                value={detailStyle}
-                onChange={(e) => setDetailStyle(e.target.value)}
+                value={schemeStyle}
+                onChange={(e) => setSchemeStyle(e.target.value)}
                 className="bg-slate-900/90 border border-slate-700 rounded-full px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-cyan-400"
               >
-                {DETAIL_STYLE_OPTIONS.map((opt) => (
+                {SCHEME_STYLE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
@@ -490,24 +494,28 @@ function App() {
             courses={row1z}
             selectedCodes={selectedCodes}
             onToggle={handleToggleCourse}
+            schemeStyle={schemeStyle}
           />
           <MapRow
             label="1. ročník – letní"
             courses={row1l}
             selectedCodes={selectedCodes}
             onToggle={handleToggleCourse}
+            schemeStyle={schemeStyle}
           />
           <MapRow
             label="2. ročník – zimní"
             courses={row2z}
             selectedCodes={selectedCodes}
             onToggle={handleToggleCourse}
+            schemeStyle={schemeStyle}
           />
           <MapRow
             label="2. ročník – letní"
             courses={row2l}
             selectedCodes={selectedCodes}
             onToggle={handleToggleCourse}
+            schemeStyle={schemeStyle}
           />
         </div>
       </section>
@@ -518,10 +526,9 @@ function App() {
           Detail vybraných předmětů
         </h2>
         <p className="text-xs text-slate-400 mb-2">
-          Klikni nahoře na jeden nebo více předmětů. Karty dole používají buď
-          CSS hero s obrázkem <code>anikop.png</code>, nebo PNG balíček
-          (<code>ANI-KOP-glass.png</code>, <code>-neon</code>, …) podle
-          přepínače „Styl detailu“.
+          Klikni nahoře na jeden nebo více předmětů. Karty dole vždy používají
+          jednu PNG variantu uloženou jako <code>assets/anikop.png</code>,
+          <code>aniarc.png</code>, …
         </p>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -529,7 +536,6 @@ function App() {
             <CourseDetailCard
               key={c.code}
               course={c}
-              detailStyle={detailStyle}
             />
           ))}
         </div>
