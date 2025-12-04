@@ -117,6 +117,16 @@
         orange: "from-orange-400/20",
       };
 
+      // --- helper na "P O V I N N É" místo velkého letter-spacing ---
+      function spacedUpper(text) {
+        if (!text) return "";
+        return text
+          .toUpperCase()
+          .split("")
+          .join(" ")
+          .replace(/\s+/g, " ");
+      }
+
       const CourseBadge = React.forwardRef(function CourseBadge(
         { role, code, title, variant = "glass", color = "blue" },
         ref
@@ -125,7 +135,7 @@
         const dotClass = DOT_COLORS[color] || DOT_COLORS.blue;
         const overlayFrom = OVERLAY_GRADIENT[color] || OVERLAY_GRADIENT.blue;
 
-        const displayRole = (role || "").toUpperCase();
+        const displayRole = spacedUpper(role);
         const displayCode = (code || "").toUpperCase();
 
         let wrapperClasses =
@@ -152,16 +162,16 @@
             accentPatchClasses =
               "absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(56,189,248,0.3),transparent_55%),radial-gradient(circle_at_100%_100%,rgba(129,140,248,0.25),transparent_55%)] opacity-80";
             chipClasses =
-              "inline-flex items-center gap-1 rounded-full bg-slate-900/80 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.25em] text-sky-100/90 border border-slate-700/80";
+              "inline-flex items-center gap-1 rounded-full bg-slate-900/80 px-3 py-0.5 text-[0.65rem] uppercase tracking-normal text-sky-100/90 border border-slate-700/80";
             break;
 
           case "solid":
             backgroundClasses = palette.solidBg;
             chipClasses =
-              "inline-flex items-center gap-1 rounded-md bg-slate-950/40 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.3em] text-sky-50";
+              "inline-flex items-center gap-1 rounded-md bg-slate-950/40 px-3 py-0.5 text-[0.65rem] uppercase tracking-normal text-sky-50";
             mainTextClasses += " text-sky-50";
             subTextClasses =
-              "text-[0.65rem] uppercase tracking-[0.25em] text-sky-100/80";
+              "text-[0.65rem] uppercase tracking-[0.1em] text-sky-100/80";
             break;
 
           case "outline":
@@ -170,10 +180,10 @@
             accentPatchClasses =
               "absolute -left-6 top-3 h-10 w-[3px] bg-gradient-to-b from-slate-500 via-slate-300 to-slate-600 opacity-80";
             chipClasses =
-              "inline-flex items-center gap-1 rounded-full border border-slate-500/70 px-2 py-0.5 text-[0.6rem] uppercase tracking-[0.25em] text-slate-100/90";
+              "inline-flex items-center gap-1 rounded-full border border-slate-500/70 px-3 py-0.5 text-[0.6rem] uppercase tracking-normal text-slate-100/90";
             mainTextClasses += " text-slate-100";
             subTextClasses =
-              "text-[0.6rem] uppercase tracking-[0.3em] text-slate-200/90";
+              "text-[0.6rem] uppercase tracking-[0.1em] text-slate-200/90";
             break;
 
           case "neon":
@@ -182,11 +192,11 @@
             accentPatchClasses =
               "absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(56,189,248,0.25),transparent_55%),radial-gradient(circle_at_100%_100%,rgba(129,140,248,0.2),transparent_55%)] opacity-90";
             chipClasses =
-              "inline-flex items-center gap-1 rounded-full bg-sky-500/15 border border-sky-300/70 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.28em] text-sky-100/95";
+              "inline-flex items-center gap-1 rounded-full bg-sky-500/15 border border-sky-300/70 px-3 py-0.5 text-[0.65rem] uppercase tracking-normal text-sky-100/95";
             mainTextClasses =
               "tracking-[0.32em] font-semibold text-2xl text-sky-100 badge-text-neon";
             subTextClasses =
-              "text-[0.65rem] uppercase tracking-[0.3em] text-sky-100/80";
+              "text-[0.65rem] uppercase tracking-[0.1em] text-sky-100/80";
             break;
 
           case "tubes":
@@ -195,11 +205,11 @@
             accentPatchClasses =
               "absolute inset-0 bg-[radial-gradient(circle_at_12%_90%,rgba(56,189,248,0.6),transparent_55%),radial-gradient(circle_at_45%_90%,rgba(236,72,153,0.55),transparent_55%),radial-gradient(circle_at_75%_90%,rgba(59,130,246,0.55),transparent_55%),radial-gradient(circle_at_95%_90%,rgba(250,204,21,0.65),transparent_55%)] opacity-80";
             chipClasses =
-              "inline-flex items-center gap-1 rounded-full bg-slate-950/70 border border-slate-700/80 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.26em] text-slate-100";
+              "inline-flex items-center gap-1 rounded-full bg-slate-950/70 border border-slate-700/80 px-3 py-0.5 text-[0.65rem] uppercase tracking-normal text-slate-100";
             mainTextClasses =
               "tracking-[0.3em] font-semibold text-2xl text-slate-50 badge-text-neon";
             subTextClasses =
-              "text-[0.65rem] uppercase tracking-[0.3em] text-slate-200/90";
+              "text-[0.65rem] uppercase tracking-[0.1em] text-slate-200/90";
             extraDecor = (
               <div className="absolute inset-x-10 top-4 h-[2px] bg-gradient-to-r from-sky-300 via-fuchsia-300 to-amber-300 opacity-80 rounded-full" />
             );
@@ -211,11 +221,11 @@
             accentPatchClasses =
               "absolute inset-0 bg-[radial-gradient(circle_at_15%_90%,rgba(148,163,184,0.22),transparent_60%),radial-gradient(circle_at_85%_90%,rgba(15,23,42,0.55),transparent_65%)] opacity-70";
             chipClasses =
-              "inline-flex items-center gap-1 rounded-full bg-slate-950/70 border border-slate-700/80 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.26em] text-slate-100";
+              "inline-flex items-center gap-1 rounded-full bg-slate-950/70 border border-slate-700/80 px-3 py-0.5 text-[0.65rem] uppercase tracking-normal text-slate-100";
             mainTextClasses =
               "tracking-[0.3em] font-semibold text-2xl text-slate-50 badge-text-neon";
             subTextClasses =
-              "text-[0.65rem] uppercase tracking-[0.3em] text-slate-200/90";
+              "text-[0.65rem] uppercase tracking-[0.1em] text-slate-200/90";
             extraDecor = (
               <div
                 className={
@@ -233,11 +243,11 @@
             accentPatchClasses =
               "absolute inset-0 bg-[linear-gradient(135deg,rgba(148,163,184,0.25)_1px,transparent_1px)] opacity-40";
             chipClasses =
-              "inline-flex items-center gap-1 rounded-full bg-slate-900 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-sky-100 shadow-[0_8px_18px_rgba(15,23,42,0.9),0_0_0_1px_rgba(148,163,184,0.4)]";
+              "inline-flex items-center gap-1 rounded-full bg-slate-900 px-3 py-1 text-[0.65rem] uppercase tracking-normal text-sky-100 shadow-[0_8px_18px_rgba(15,23,42,0.9),0_0_0_1px_rgba(148,163,184,0.4)]";
             mainTextClasses =
               "tracking-[0.28em] font-semibold text-2xl text-sky-100 badge-text-3d";
             subTextClasses =
-              "text-[0.65rem] uppercase tracking-[0.28em] text-slate-300/90";
+              "text-[0.65rem] uppercase tracking-[0.1em] text-slate-300/90";
             extraDecor = (
               <div className="absolute inset-x-8 bottom-3 flex gap-2 opacity-70">
                 <div className="h-1 flex-1 rounded-full bg-gradient-to-r from-slate-500/80 via-slate-100/80 to-slate-500/80 shadow-[0_6px_14px_rgba(15,23,42,0.9)]" />
@@ -491,6 +501,7 @@
             </header>
 
             <main className="w-full max-w-5xl grid gap-8 md:grid-cols-[auto,1fr] items-start">
+              {/* levý sloupec – nastavení + náhled */}
               <div className="flex flex-col gap-4">
                 <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-4 shadow-xl shadow-slate-950/50">
                   <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300 mb-3">
@@ -560,45 +571,45 @@
                     </span>
                   </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-  {VARIANTS.map((v, idx) => (
-    <div
-      key={v}
-      className="flex flex-col items-center gap-2"
-    >
-      {/* Wrapper bez stínu – tohle se exportuje do PNG/SVG */}
-      <div
-        className="p-3"
-        ref={(el) => (previewRefs.current[idx] = el)}
-      >
-        <CourseBadge
-          role={role}
-          code={code}
-          title={title}
-          variant={v}
-          color={color}
-        />
-      </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {VARIANTS.map((v, idx) => (
+                      <div
+                        key={v}
+                        className="flex flex-col items-center gap-2"
+                      >
+                        {/* wrapper bez stínu, ten se exportuje */}
+                        <div
+                          className="p-3"
+                          ref={(el) => (previewRefs.current[idx] = el)}
+                        >
+                          <CourseBadge
+                            role={role}
+                            code={code}
+                            title={title}
+                            variant={v}
+                            color={color}
+                          />
+                        </div>
 
-      <div className="flex flex-col gap-1 items-center">
-        <button
-          type="button"
-          onClick={() => handleDownloadOnePng(idx, v)}
-          className="px-2 py-1 rounded-lg border border-sky-500/70 text-[0.65rem] uppercase tracking-[0.2em] text-sky-100 bg-slate-950/60 hover:bg-sky-500/10 transition"
-        >
-          Stáhnout PNG – {v}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleDownloadOneSvg(idx, v)}
-          className="px-2 py-1 rounded-lg border border-emerald-500/70 text-[0.65rem] uppercase tracking-[0.2em] text-emerald-100 bg-slate-950/60 hover:bg-emerald-500/10 transition"
-        >
-          Stáhnout SVG – {v}
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
+                        <div className="flex flex-col gap-1 items-center">
+                          <button
+                            type="button"
+                            onClick={() => handleDownloadOnePng(idx, v)}
+                            className="px-2 py-1 rounded-lg border border-sky-500/70 text-[0.65rem] uppercase tracking-[0.2em] text-sky-100 bg-slate-950/60 hover:bg-sky-500/10 transition"
+                          >
+                            Stáhnout PNG – {v}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDownloadOneSvg(idx, v)}
+                            className="px-2 py-1 rounded-lg border border-emerald-500/70 text-[0.65rem] uppercase tracking-[0.2em] text-emerald-100 bg-slate-950/60 hover:bg-emerald-500/10 transition"
+                          >
+                            Stáhnout SVG – {v}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
 
                   <div className="mt-3 flex flex-col items-center gap-2">
                     <button
@@ -626,6 +637,7 @@
                 </div>
               </div>
 
+              {/* pravý sloupec – ukázkové badge */}
               <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 shadow-xl shadow-slate-950/60">
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300">
