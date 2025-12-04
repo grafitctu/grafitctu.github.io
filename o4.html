@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="cs" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <title>Magisterský obor – vizuální průchod předměty</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    html { scroll-behavior:smooth; }
+    body { background:#020617; }
+
+    /* Normalizovaný blok v mapě */
+    .course-pill {
+      width: 190px;
+      min-height: 64px;
+      border-radius: 18px;
+    }
+
+    /* Spojovací rámeček pro bloky VGA/PVR/GPU apod. */
+    .group-outline {
+      border-radius: 26px;
+      box-shadow: 0 0 0 2px rgba(45,212,191,0.5);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-50">
+<div id="root"></div>
+
+<script type="text/babel">
+
+// --- data --------------------------------------------------------------
+
+const COURSES = [
+  // 1. ročník – zimní
+  {
+    code: "ANI-KOP",
+    name: "Kombinatorická optimalizace",
+    subtitle: "Moderní metody kombinatorických optimalizačních úloh a jejich aplikace v informatice.",
+    year: 1, term: "zimní", type: "povinný",
+    row: 0, col: 0, color: "blue"
+  },
+  {
+    code: "ANI-ARC",
+    name: "Moderní procesorové architektury",
+    subtitle: "Architektury CPU a GPU z pohledu programátora.",
+    year: 1, term: "zimní", type: "povinný",
+    row: 0, col: 1, color: "blue"
+  },
+  {
+    code: "ANI-DZO",
+    name: "Digitální zpracování obrazu",
+    subtitle: "Filtrace, segmentace a další metody zpracování obrazu.",
+    year: 1, term: "zimní", type: "povinný",
+    row: 0, col: 2, color: "violet"
+  },
+  {
+    code: "ANI-DVG",
+    name: "Diskrétní výpočetní geometrie",
+    subtitle: "Geometrické algoritmy pro grafiku a vizualizaci.",
+    year: 1, term: "zimní", type: "povinný",
+    row: 0, col: 3, color: "violet"
+  },
+  {
+    code: "ANI-EGG",
+    name: "Enginy pro hry a grafiku",
+    subtitle: "Enginy, scény, asset pipeline, runtime systémy.",
+    year: 1, term: "zimní", type: "povinný",
+    row: 0, col: 4, color: "violet"
+  },
+
+  // grafický blok 1. ročník – zimní
+  {
+    code: "VGA",
+    name: "Architektura počítačových her",
+    subtitle: "Návrh architektury komplexních herních systémů.",
+    year: 1, term: "zimní", type: "grafický",
+    row: 0, col: 5, color: "cyan", group: "gfx1"
+  },
+  {
+    code: "PVR",
+    name: "Pokročilá virtuální realita",
+    subtitle: "Pokročilé techniky VR a interakce.",
+    year: 1, term: "zimní", type: "grafický",
+    row: 0, col: 6, color: "cyan", group: "gfx1"
+  },
+  {
+    code: "GPU",
+    name: "Ovládání a architektury grafických procesorů",
+    subtitle: "Moderní GPU a programovací modely.",
+    year: 1, term: "zimní", type: "grafický",
+    row: 0, col: 7, color: "cyan", group: "gfx1"
+  },
+  {
+    code: "CCC",
+    name: "Kreativní programování",
+    subtitle: "Generativní grafika, live-coding, experimentální projekty.",
+    year: 1, term: "zimní", type: "volitelný",
+    row: 0, col: 8, color: "amber"
+  },
+
+  // 1. ročník – letní
+  {
+    code: "ANI-MLM",
+    name: "Metody strojového učení",
+    subtitle: "Vybrané metody ML se zaměřením na grafiku a obraz.",
+    year: 1, term: "letní", type: "povinný",
+    row: 1, col: 0, color: "blue"
+  },
+  {
+    code: "ANI-SAI",
+    name: "Praktická statistika",
+    subtitle: "Praktické statistické metody pro informatiku.",
+    year: 1, term: "letní", type: "povinný",
+    row: 1, col: 1, color: "blue"
+  },
+  {
+    code: "ANI-TPA",
+    name: "Týmový projekt A",
+    subtitle: "Projekt zaměřený na grafiku / vizualizaci.",
+    year: 1, term: "letní", type: "povinný",
+    row: 1, col: 2, color: "blue"
+  },
+  {
+    code: "ANI-PG1",
+    name: "Základy počítačové grafiky",
+    subtitle: "Shrnutí a rozšíření bakalářské grafiky.",
+    year: 1, term: "letní", type: "povinný",
+    row: 1, col: 3, color: "violet"
+  },
+
+  // grafický blok 1. ročník – letní
+  {
+    code: "SSD",
+    name: "Příběhový a herní design",
+    subtitle: "Design herních mechanik, příběhů a hráčského zážitku.",
+    year: 1, term: "letní", type: "grafický",
+    row: 1, col: 4, color: "cyan", group: "gfx2"
+  },
+  {
+    code: "BSO",
+    name: "Biosignály a data",
+    subtitle: "Zpracování biosignálů pro vizualizaci a diagnostiku.",
+    year: 1, term: "letní", type: "grafický",
+    row: 1, col: 5, color: "cyan", group: "gfx2"
+  },
+  {
+    code: "IRT",
+    name: "Internet a přenos v reálném čase",
+    subtitle: "Streaming, latence, synchronizace a real-time.",
+    year: 1, term: "letní", type: "grafický",
+    row: 1, col: 6, color: "cyan", group: "gfx2"
+  },
+  {
+    code: "TVR",
+    name: "Technologie virtuální reality",
+    subtitle: "Hardwarové a softwarové technologie VR.",
+    year: 1, term: "letní", type: "volitelný",
+    row: 1, col: 7, color: "amber"
+  },
+
+  // 2. ročník – zimní
+  {
+    code: "ANI-TPb",
+    name: "Týmový projekt B",
+    subtitle: "Pokračování projektu A, důraz na dokončení produktu.",
+    year: 2, term: "zimní", type: "povinný",
+    row: 2, col: 0, color: "blue"
+  },
+  {
+    code: "ANI-ROZ",
+    name: "Rozpoznávání",
+    subtitle: "Klasifikace, detekce, rozpoznávání obrazů a signálů.",
+    year: 2, term: "zimní", type: "povinný",
+    row: 2, col: 1, color: "violet"
+  },
+  {
+    code: "ANI-PIV",
+    name: "Počítačové vidění",
+    subtitle: "Analýza obrazu, 3D rekonstrukce a tracking.",
+    year: 2, term: "zimní", type: "povinný",
+    row: 2, col: 2, color: "violet"
+  },
+
+  // blok NUR + DID + UEE + GJ + DVD
+  {
+    code: "NUR",
+    name: "Další povinný předmět (slot NUR)",
+    subtitle: "Slot pro nepovinně povinný předmět podle zaměření.",
+    year: 2, term: "zimní", type: "žlutý-blok",
+    row: 2, col: 3, color: "amber", group: "nur"
+  },
+  {
+    code: "ANI-DID",
+    name: "Digital drawing",
+    subtitle: "Základy kreativního digitálního kreslení.",
+    year: 2, term: "zimní", type: "žlutý-blok",
+    row: 2, col: 4, color: "amber", group: "nur"
+  },
+  {
+    code: "ANI-UEE",
+    name: "UE – environmental design",
+    subtitle: "Tvorba prostředí v Unreal Enginu.",
+    year: 2, term: "zimní", type: "žlutý-blok",
+    row: 2, col: 5, color: "amber", group: "nur"
+  },
+  {
+    code: "ANI-GJ",
+    name: "GameJam FIT (0 kreditů)",
+    subtitle: "Blokový předmět postavený na gamejamu.",
+    year: 2, term: "zimní", type: "žlutý-blok",
+    row: 2, col: 6, color: "amber", group: "nur"
+  },
+  {
+    code: "ANI-DVD",
+    name: "Design vlastních deskových her",
+    subtitle: "Návrh a prototypování deskových her.",
+    year: 2, term: "zimní", type: "žlutý-blok",
+    row: 2, col: 7, color: "amber", group: "nur"
+  },
+
+  // 2. ročník – letní
+  {
+    code: "ANI-DIP",
+    name: "Diplomová práce",
+    subtitle: "Samostatná závěrečná práce v oblasti grafiky / vizualizace.",
+    year: 2, term: "letní", type: "povinný",
+    row: 3, col: 0, color: "emerald"
+  }
+];
+
+const DETAIL_STYLE_OPTIONS = [
+  { value: "css",        label: "Canvas + hero" },
+  { value: "glass",      label: "PNG: glass" },
+  { value: "neon",       label: "PNG: neon" },
+  { value: "outline",    label: "PNG: outline" },
+  { value: "slabs",      label: "PNG: slabs" },
+  { value: "solid",      label: "PNG: solid" },
+  { value: "tubes",      label: "PNG: tubes" },
+  { value: "tubesColor", label: "PNG: tubes-color" }
+];
+
+// --- pomocné ----------------------------------------------------------
+
+function colorClasses(color) {
+  switch (color) {
+    case "blue":
+      return "from-sky-500 to-blue-600";
+    case "violet":
+      return "from-fuchsia-500 to-violet-500";
+    case "cyan":
+      return "from-cyan-400 to-sky-500";
+    case "emerald":
+      return "from-emerald-400 to-emerald-500";
+    case "amber":
+      return "from-amber-400 to-amber-500";
+    default:
+      return "from-slate-500 to-slate-700";
+  }
+}
+
+function yearTermLabel(course) {
+  return `${course.year}. ročník · ${course.term} semestr`;
+}
+
+// --- komponenty -------------------------------------------------------
+
+function MapCoursePill({ course, selected, onClick }) {
+  const gradient = colorClasses(course.color);
+  const border = selected ? "ring-2 ring-amber-300 shadow-xl" : "border border-slate-800/80";
+  const textSize = course.code.length > 7 ? "text-xs" : "text-sm";
+
+  return (
+    <button
+      onClick={onClick}
+      className={`course-pill bg-gradient-to-br ${gradient} ${border} px-3 py-2 text-left text-white flex flex-col justify-center shadow-md transition-transform hover:-translate-y-0.5`}
+    >
+      <div className={`font-semibold leading-tight ${textSize}`}>
+        {course.code}
+      </div>
+      <div className="mt-0.5 text-[11px] leading-snug opacity-90">
+        {course.name}
+      </div>
+    </button>
+  );
+}
+
+function MapRow({ label, courses, selectedCodes, onToggle }) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-3 text-xs text-amber-300">
+        <span className="w-28 text-right font-semibold">{label}</span>
+        <div className="h-px flex-1 bg-slate-800/70" />
+      </div>
+
+      <div className="flex gap-4 flex-wrap pl-32">
+        {courses.map((c) => (
+          <MapCoursePill
+            key={c.code}
+            course={c}
+            selected={selectedCodes.includes(c.code)}
+            onClick={(e) => onToggle(c.code, e)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CourseDetailCard({ course, detailStyle }) {
+  const isCss = detailStyle === "css";
+
+  // hero obrázek pro CSS verzi – anikop.png, aniarc.png, ...
+  const heroBaseName = course.code.toLowerCase().replace("-", "");
+  const cssHeroUrl = `assets/${heroBaseName}.png`;
+
+  // PNG verze – ANI-KOP-glass.png, ANI-KOP-neon.png, ...
+  const styleSuffixMap = {
+    glass: "glass",
+    neon: "neon",
+    outline: "outline",
+    slabs: "slabs",
+    solid: "solid",
+    tubes: "tubes",
+    tubesColor: "tubes-color"
+  };
+  const suffix = styleSuffixMap[detailStyle] || "glass";
+  const pngUrl = `assets/${course.code}-${suffix}.png`;
+
+  return (
+    <article className="bg-slate-950/80 border border-slate-800 rounded-3xl overflow-hidden shadow-xl flex flex-col">
+      <div className="relative h-40 w-full overflow-hidden">
+        {isCss ? (
+          <div
+            className="absolute inset-0 bg-cover bg-top"
+            style={{
+              backgroundImage: `linear-gradient(120deg, rgba(15,23,42,0.2), rgba(15,23,42,0.92)), url('${cssHeroUrl}')`
+            }}
+          />
+        ) : (
+          <img
+            src={pngUrl}
+            alt={course.code}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
+
+        {/* horní badge vrstvička */}
+        <div className="relative z-10 flex justify-between items-start px-4 pt-3">
+          <span className="px-3 py-1 rounded-full bg-slate-900/70 text-xs font-semibold tracking-wide">
+            {course.code}
+          </span>
+          <span className="px-3 py-1 rounded-full bg-slate-900/70 text-[11px]">
+            {yearTermLabel(course)}
+          </span>
+        </div>
+
+        <div className="relative z-10 px-4 pb-3 pt-6">
+          <h3 className="text-lg font-semibold tracking-wide">
+            {course.name}
+          </h3>
+        </div>
+
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/95" />
+      </div>
+
+      <div className="p-4 flex flex-col gap-3 text-sm text-slate-200">
+        <p className="leading-relaxed">
+          {course.subtitle}
+        </p>
+        <div className="flex flex-wrap gap-2 text-[11px] text-slate-200">
+          <span className="px-2.5 py-1 rounded-full bg-slate-800/80">
+            Kód: {course.code}
+          </span>
+          <span className="px-2.5 py-1 rounded-full bg-slate-800/80">
+            {course.year}. ročník
+          </span>
+          <span className="px-2.5 py-1 rounded-full bg-slate-800/80">
+            {course.term} semestr
+          </span>
+          <span className="px-2.5 py-1 rounded-full bg-slate-800/80">
+            Typ: {course.type === "grafický" ? "předmět z grafického bloku" :
+                  course.type === "žlutý-blok" ? "blok volitelných předmětů" :
+                  course.type}
+          </span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// --- hlavní App --------------------------------------------------------
+
+function App() {
+  const [wide, setWide] = React.useState(false);
+  const [detailStyle, setDetailStyle] = React.useState("css");
+  const [selectedCodes, setSelectedCodes] = React.useState(["ANI-KOP"]);
+
+  const handleToggleCourse = (code, mouseEvent) => {
+    const multi = mouseEvent.shiftKey || mouseEvent.ctrlKey || mouseEvent.metaKey;
+    setSelectedCodes((prev) => {
+      if (multi) {
+        if (prev.includes(code)) {
+          return prev.filter((c) => c !== code);
+        }
+        return [...prev, code];
+      } else {
+        return prev.includes(code) && prev.length === 1 ? prev : [code];
+      }
+    });
+  };
+
+  const selectedCourses = COURSES.filter((c) => selectedCodes.includes(c.code));
+
+  const row1z = COURSES.filter((c) => c.year === 1 && c.term === "zimní");
+  const row1l = COURSES.filter((c) => c.year === 1 && c.term === "letní");
+  const row2z = COURSES.filter((c) => c.year === 2 && c.term === "zimní");
+  const row2l = COURSES.filter((c) => c.year === 2 && c.term === "letní");
+
+  const containerClasses = wide
+    ? "max-w-[1400px] mx-auto px-4 md:px-6"
+    : "max-w-6xl mx-auto px-4 md:px-6";
+
+  return (
+    <div className={containerClasses + " py-6 space-y-6"}>
+      {/* hlavička */}
+      <header className="space-y-4">
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+          Magisterský obor – vizuální průchod předměty
+        </h1>
+        <p className="text-sm text-slate-300 max-w-3xl">
+          Tato stránka je prototyp interaktivního schématu ve stylu Grafit webu.
+          Horní canvas bude možné vložit do šablony studijního plánu, spodní
+          karty pak mohou kopírovat detail předmětu podobně jako položky
+          Grafických večerů. Na desktopu můžeš při klikání na předměty držet{" "}
+          <strong>Shift / Ctrl</strong> pro výběr více předmětů.
+        </p>
+
+        <div className="flex flex-wrap gap-3 items-center justify-between">
+          <span className="text-xs text-slate-400">
+            MAGISTERSKÝ OBOR · POČÍTAČOVÁ GRAFIKA A VIZUALIZACE
+          </span>
+
+          <div className="flex flex-wrap gap-3 items-center">
+            {/* přepínač šířky */}
+            <button
+              onClick={() => setWide((w) => !w)}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-xs text-slate-100 hover:bg-slate-800"
+            >
+              {wide ? "Kompaktní režim (užší sloupec)" : "Široký režim (celá šířka obrazovky)"}
+            </button>
+
+            {/* přepínač stylu detailu */}
+            <label className="flex items-center gap-2 text-xs text-slate-300">
+              <span>Styl detailu:</span>
+              <select
+                value={detailStyle}
+                onChange={(e) => setDetailStyle(e.target.value)}
+                className="bg-slate-900/90 border border-slate-700 rounded-full px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-cyan-400"
+              >
+                {DETAIL_STYLE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </div>
+      </header>
+
+      {/* mapa */}
+      <section className="bg-slate-950/90 border border-slate-800 rounded-3xl px-4 py-6 md:px-8 md:py-8 space-y-8">
+        <h2 className="text-xl font-semibold mb-2">
+          Průchod magisterským oborem (interaktivní mapa)
+        </h2>
+        <p className="text-xs text-slate-300 mb-4 max-w-2xl">
+          Každý obdélník v horním schématu reprezentuje jeden předmět. Barvy
+          odpovídají typu předmětu (povinný, specializace, grafický blok,
+          volitelný slot). Po kliknutí na předmět se níže zobrazí karta ve stylu
+          Grafických večerů.
+        </p>
+
+        <div className="space-y-8">
+          <MapRow
+            label="1. ročník – zimní"
+            courses={row1z}
+            selectedCodes={selectedCodes}
+            onToggle={handleToggleCourse}
+          />
+          <MapRow
+            label="1. ročník – letní"
+            courses={row1l}
+            selectedCodes={selectedCodes}
+            onToggle={handleToggleCourse}
+          />
+          <MapRow
+            label="2. ročník – zimní"
+            courses={row2z}
+            selectedCodes={selectedCodes}
+            onToggle={handleToggleCourse}
+          />
+          <MapRow
+            label="2. ročník – letní"
+            courses={row2l}
+            selectedCodes={selectedCodes}
+            onToggle={handleToggleCourse}
+          />
+        </div>
+      </section>
+
+      {/* detailové karty */}
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">
+          Detail vybraných předmětů
+        </h2>
+        <p className="text-xs text-slate-400 mb-2">
+          Klikni nahoře na jeden nebo více předmětů. Karty dole používají buď
+          CSS hero s obrázkem <code>anikop.png</code>, nebo PNG balíček
+          (<code>ANI-KOP-glass.png</code>, <code>-neon</code>, …) podle
+          přepínače „Styl detailu“.
+        </p>
+
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {selectedCourses.map((c) => (
+            <CourseDetailCard
+              key={c.code}
+              course={c}
+              detailStyle={detailStyle}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// mount
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+
+</script>
+</body>
+</html>
