@@ -24,8 +24,8 @@
     <!-- html2canvas pro PNG export -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-    <!-- html-to-image pro SVG export -->
-    <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+    <!-- dom-to-image-more pro SVG export (global: domtoimage) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image-more/3.7.1/dom-to-image-more.min.js"></script>
 
     <style>
       body {
@@ -41,7 +41,6 @@
     <script type="text/babel" data-presets="env,react">
       const { useState, useRef } = React;
 
-      // Hlavní varianty vzhledu badge
       const VARIANTS = [
         "glass",
         "solid",
@@ -52,7 +51,6 @@
         "slabs",
       ];
 
-      // Nabídka barev
       const COLOR_OPTIONS = [
         "blue",
         "purple",
@@ -62,7 +60,6 @@
         "orange",
       ];
 
-      // Základní barevná schémata (bez barevných outline kolem celé karty)
       const COLOR_SCHEMES = {
         blue: {
           solidBg:
@@ -102,7 +99,6 @@
         },
       };
 
-      // Jednoduchá mapka pro barvu bullet tečky podle zvolené barvy
       const DOT_COLORS = {
         blue: "bg-sky-300",
         purple: "bg-fuchsia-300",
@@ -112,7 +108,6 @@
         orange: "bg-orange-300",
       };
 
-      // Jemný barevný overlay pro tubes-color – mění jen jednu složku gradientu
       const OVERLAY_GRADIENT = {
         blue: "from-sky-500/20",
         purple: "from-fuchsia-500/20",
@@ -273,10 +268,8 @@
               }
             `}</style>
             <div className={backgroundClasses + " " + innerClasses}>
-              {/* variant-specific fleky / beams */}
               <div className={accentPatchClasses}></div>
               {extraDecor}
-              {/* společná horní linka */}
               <div className={highlightBarClasses}></div>
 
               <div className="flex items-center justify-between z-10">
@@ -329,12 +322,55 @@
         const [role, setRole] = useState("ANI");
         const [code, setCode] = useState("ANI-KOP");
         const [title, setTitle] = useState("Kombinovaná optika");
-        const [variant, setVariant] = useState("glass");
         const [color, setColor] = useState("blue");
-        const badgeRef = useRef(null);
 
-        const handleDownloadPng = async () => {
-          if (!badgeRef.current) return;
+        const previewRefs = useRef([]);
+
+        function getBaseCode() {
+          return (
+            (code || "")
+              .replace(/[^A-Za-z0-9_-]+/g, "")
+              .replace(/^[-_]+|[-_]+$/g, "") || "course"
+          );
+        }
+
+        function downloadBadgePng(element, variantName, html2canvas) {
+          if (!element) return Promise.resolve();
+          const baseCode = getBaseCode();
+          return html2canvas(element, {
+            backgroundColor: null,
+            scale: 3,
+          })
+            .then(function (canvas) {
+              const link = document.createElement("a");
+              link.download = baseCode + "-" + variantName + ".png";
+              link.href = canvas.toDataURL("image/png");
+              link.click();
+            })
+            .catch(function (err) {
+              console.error(err);
+              alert("Export do PNG se nezdařil.");
+            });
+        }
+
+        function downloadBadgeSvg(element, variantName, domtoimage) {
+          if (!element) return Promise.resolve();
+          const baseCode = getBaseCode();
+          return domtoimage
+            .toSvg(element, { bgcolor: "transparent" })
+            .then(function (dataUrl) {
+              const link = document.createElement("a");
+              link.download = baseCode + "-" + variantName + ".svg";
+              link.href = dataUrl;
+              link.click();
+            })
+            .catch(function (err) {
+              console.error(err);
+              alert("Export do SVG se nezdařil.");
+            });
+        }
+
+        function handleDownloadOnePng(index, variantName) {
           const html2canvas = window.html2canvas;
           if (!html2canvas) {
             alert(
@@ -342,51 +378,57 @@
             );
             return;
           }
-          try {
-            const canvas = await html2canvas(badgeRef.current, {
-              backgroundColor: null,
-              scale: 3,
-            });
-            const link = document.createElement("a");
-            const baseCode =
-              (code || "")
-                .replace(/[^A-Za-z0-9_-]+/g, "")
-                .replace(/^[\-_]+|[\-_]+$/g, "") || "course";
-            link.download = `${baseCode}-${variant}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-          } catch (err) {
-            console.error(err);
-            alert("Export do PNG se nezdařil.");
-          }
-        };
+          const el = previewRefs.current[index];
+          downloadBadgePng(el, variantName, html2canvas);
+        }
 
-        const handleDownloadSvg = async () => {
-          if (!badgeRef.current) return;
-          const htmlToImage = window.htmlToImage;
-          if (!htmlToImage || !htmlToImage.toSvg) {
+        function handleDownloadOneSvg(index, variantName) {
+          const domtoimage = window.domtoimage;
+          if (!domtoimage) {
             alert(
-              "Pro export do SVG je potřeba mít na stránce načtenou knihovnu html-to-image (například z CDN)."
+              "Pro export do SVG je potřeba mít na stránce načtenou knihovnu dom-to-image-more (například z CDN)."
             );
             return;
           }
-          try {
-            const baseCode =
-              (code || "")
-                .replace(/[^A-Za-z0-9_-]+/g, "")
-                .replace(/^[\-_]+|[\-_]+$/g, "") || "course";
-            const dataUrl = await htmlToImage.toSvg(badgeRef.current, {
-              backgroundColor: "transparent",
-            });
-            const link = document.createElement("a");
-            link.download = `${baseCode}-${variant}.svg`;
-            link.href = dataUrl;
-            link.click();
-          } catch (err) {
-            console.error(err);
-            alert("Export do SVG se nezdařil.");
+          const el = previewRefs.current[index];
+          downloadBadgeSvg(el, variantName, domtoimage);
+        }
+
+        function handleDownloadAllPng() {
+          const html2canvas = window.html2canvas;
+          if (!html2canvas) {
+            alert(
+              "Pro export do PNG je potřeba mít na stránce načtenou knihovnu html2canvas (například z CDN)."
+            );
+            return;
           }
-        };
+          let chain = Promise.resolve();
+          VARIANTS.forEach(function (v, i) {
+            const el = previewRefs.current[i];
+            if (!el) return;
+            chain = chain.then(function () {
+              return downloadBadgePng(el, v, html2canvas);
+            });
+          });
+        }
+
+        function handleDownloadAllSvg() {
+          const domtoimage = window.domtoimage;
+          if (!domtoimage) {
+            alert(
+              "Pro export do SVG je potřeba mít na stránce načtenou knihovnu dom-to-image-more (například z CDN)."
+            );
+            return;
+          }
+          let chain = Promise.resolve();
+          VARIANTS.forEach(function (v, i) {
+            const el = previewRefs.current[i];
+            if (!el) return;
+            chain = chain.then(function () {
+              return downloadBadgeSvg(el, v, domtoimage);
+            });
+          });
+        }
 
         const sampleCourses = [
           {
@@ -449,7 +491,6 @@
             </header>
 
             <main className="w-full max-w-5xl grid gap-8 md:grid-cols-[auto,1fr] items-start">
-              {/* levý sloupec – nastavení + náhled */}
               <div className="flex flex-col gap-4">
                 <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-4 shadow-xl shadow-slate-950/50">
                   <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300 mb-3">
@@ -493,21 +534,6 @@
                     </label>
 
                     <label className="flex flex-col gap-1 text-sm">
-                      <span className="text-slate-300">Varianta</span>
-                      <select
-                        value={variant}
-                        onChange={(e) => setVariant(e.target.value)}
-                        className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                      >
-                        {VARIANTS.map((v) => (
-                          <option key={v} value={v}>
-                            {v}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-
-                    <label className="flex flex-col gap-1 text-sm">
                       <span className="text-slate-300">Barva</span>
                       <select
                         value={color}
@@ -524,44 +550,76 @@
                   </div>
                 </div>
 
-                <div className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 flex flex-col items-center gap-3 shadow-xl shadow-slate-950/60">
-                  <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300 mb-2">
-                    Náhled
-                  </h2>
-                  <CourseBadge
-                    ref={badgeRef}
-                    role={role}
-                    code={code}
-                    title={title}
-                    variant={variant}
-                    color={color}
-                  />
-                  <div className="mt-2 flex flex-col gap-2 items-center">
+                <div className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 flex flex-col gap-3 shadow-xl shadow-slate-950/60">
+                  <div className="flex items-center justify-between mb-1">
+                    <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300">
+                      Náhled – všechny varianty
+                    </h2>
+                    <span className="text-[0.65rem] text-slate-500 uppercase tracking-[0.25em]">
+                      7 vzhledů, stejná data
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {VARIANTS.map((v, idx) => (
+                      <div
+                        key={v}
+                        className="flex flex-col items-center gap-2"
+                      >
+                        <CourseBadge
+                          ref={(el) => (previewRefs.current[idx] = el)}
+                          role={role}
+                          code={code}
+                          title={title}
+                          variant={v}
+                          color={color}
+                        />
+                        <div className="flex flex-col gap-1 items-center">
+                          <button
+                            type="button"
+                            onClick={() => handleDownloadOnePng(idx, v)}
+                            className="px-2 py-1 rounded-lg border border-sky-500/70 text-[0.65rem] uppercase tracking-[0.2em] text-sky-100 bg-slate-950/60 hover:bg-sky-500/10 transition"
+                          >
+                            Stáhnout PNG – {v}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDownloadOneSvg(idx, v)}
+                            className="px-2 py-1 rounded-lg border border-emerald-500/70 text-[0.65rem] uppercase tracking-[0.2em] text-emerald-100 bg-slate-950/60 hover:bg-emerald-500/10 transition"
+                          >
+                            Stáhnout SVG – {v}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-3 flex flex-col items-center gap-2">
                     <button
                       type="button"
-                      onClick={handleDownloadPng}
-                      className="px-3 py-1.5 rounded-lg border border-sky-500/70 text-[0.7rem] uppercase tracking-[0.22em] text-sky-100 bg-slate-950/60 hover:bg-sky-500/10 transition"
+                      onClick={handleDownloadAllPng}
+                      className="px-3 py-1.5 rounded-lg border border-sky-500/80 text-[0.7rem] uppercase tracking-[0.22em] text-sky-100 bg-slate-950/70 hover:bg-sky-500/10 transition"
                     >
-                      Stáhnout PNG
+                      Stáhnout všech 7 PNG
                     </button>
                     <button
                       type="button"
-                      onClick={handleDownloadSvg}
-                      className="px-3 py-1.5 rounded-lg border border-emerald-500/70 text-[0.7rem] uppercase tracking-[0.22em] text-emerald-100 bg-slate-950/60 hover:bg-emerald-500/10 transition"
+                      onClick={handleDownloadAllSvg}
+                      className="px-3 py-1.5 rounded-lg border border-emerald-500/80 text-[0.7rem] uppercase tracking-[0.22em] text-emerald-100 bg-slate-950/70 hover:bg-emerald-500/10 transition"
                     >
-                      Stáhnout SVG
+                      Stáhnout všech 7 SVG
                     </button>
                   </div>
+
                   <p className="text-[0.7rem] text-slate-400 mt-2 text-center">
                     PNG export používá knihovnu{" "}
-                    <span className="font-mono">html2canvas</span> a export do SVG knihovnu{" "}
-                    <span className="font-mono">html-to-image</span> načtené z CDN.
-                  </p>
+                    <span className="font-mono">html2canvas</span>, SVG export
+                    knihovnu <span className="font-mono">dom-to-image-more</span>{" "}
+                    načtené z CDN.
                   </p>
                 </div>
               </div>
 
-              {/* pravý sloupec – ukázkové badge */}
               <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 shadow-xl shadow-slate-950/60">
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300">
