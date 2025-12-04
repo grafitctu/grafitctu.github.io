@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Games, Design & Students (GDS) – Studentské hry Grafitu</title>
+
+  <!-- společné styly Grafitu -->
+  <link rel="stylesheet" href="/single.css" />
+  <link rel="stylesheet" href="/footer.css" />
+  <script src="/w3.js"></script>
+
+  <!-- specifické styly pro GDS stránky -->
+  <style>
+    body {
+      background: #050814;
+      color: #f5f5f5;
+    }
+
+    .page-header {
+      padding: 3rem 1.5rem 1rem;
+      background: radial-gradient(circle at top, #182a5a 0, #050814 55%);
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-header h1 {
+      font-size: 2.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      max-width: 40rem;
+      color: #c9d1e3;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    /* Sekce her */
+    #grafit-games {
+      background: #050814;
+      color: #f5f5f5;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    #grafit-games h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #grafit-games .section-lead {
+      max-width: 40rem;
+      margin-bottom: 2rem;
+      color: #c9d1e3;
+    }
+
+    /* Grid karet */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.75rem;
+    }
+
+    /* Jednotlivá karta */
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      background: #0b1022;
+      border-radius: 12px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+      transition: transform 160ms ease, box-shadow 160ms ease,
+        border-color 160ms ease;
+    }
+
+    .game-card:hover,
+    .game-card:focus-visible {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 55px rgba(0, 0, 0, 0.6);
+      border-color: rgba(123, 176, 255, 0.7);
+    }
+
+    .game-card__image-wrap {
+      position: relative;
+      padding-top: 56.25%; /* 16:9 */
+      overflow: hidden;
+    }
+
+    .game-card__image-wrap img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .game-card__body {
+      padding: 1rem 1.1rem 1.1rem;
+    }
+
+    .game-card__title {
+      font-size: 1.1rem;
+      margin: 0 0 0.3rem;
+    }
+
+    .game-card__platforms {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #89a4ff;
+      margin: 0 0 0.6rem;
+    }
+
+    .game-card__blurb {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #d6d9e5;
+    }
+
+    @media (max-width: 600px) {
+      .page-header {
+        padding-top: 2.5rem;
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- menu -->
+  <div w3-include-html="/menu.html"></div>
+
+  <main>
+    <header class="page-header">
+      <div class="section-inner">
+        <h1>Games, Design &amp; Students (GDS)</h1>
+        <p>
+          Výběr studentských her z bakalářek, diplomek a gamejamů na ČVUT&nbsp;FIT.
+          Každá karta odkazuje na build, webovou verzi nebo video ukázku hry.
+        </p>
+      </div>
+    </header>
+
+    <section id="grafit-games">
+      <div class="section-inner">
+        <h2>Studentské hry Grafitu</h2>
+        <p class="section-lead">
+          Kliknutím na kartu otevřeš stránku s hrou v novém okně.
+        </p>
+        <div id="games-grid" class="games-grid">
+          <!-- karty se doplní skriptem níže -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- patička -->
+  <div w3-include-html="/footer.html"></div>
+
+  <script>
+    w3.includeHTML();
+
+    const GAMES = [
+      {
+        id: "sladka-pomsta",
+        title: "Sladká pomsta",
+        platforms: "Web / Windows",
+        img: "/assets/games/sladka-pomsta.jpg", // TODO: uprav cestu
+        url: "https://pospec.itch.io/sladka-pomsta",
+        blurb:
+          "Karetní RPG hra s hromadou medu, kde hrajete za medvěda. Brum."
+      },
+      {
+        id: "chrysalis",
+        title: "Chrysalis",
+        platforms: "Linux / Windows / Web",
+        img: "/assets/games/chrysalis.png",
+        url: "https://pospec.itch.io/sladka-pomsta", // TODO: nejspíš jiný odkaz
+        blurb:
+          "Narativní top-down pixelovka – bojujte se svou depresí, OCD a strachem."
+      },
+      {
+        id: "hallmark",
+        title: "HaLLMark",
+        platforms: "Linux / Windows",
+        img: "/assets/games/hallmark.png",
+        url: "https://mogula99.itch.io/hallmark",
+        blurb:
+          "LLM-řízená správa království. Vládněte navzdory všem náhodně generovaným útrapám."
+      },
+      {
+        id: "fit-life",
+        title: "FIT Life",
+        platforms: "Web",
+        img: "/assets/games/fit-life.png",
+        url: "https://antik98.github.io/FitLife/",
+        blurb:
+          "Poslední tři hektické dny prvního semestru na ČVUT FIT v jedné hře."
+      },
+      {
+        id: "kolejenku-pls",
+        title: "Kolejenku Pls",
+        platforms: "Windows (video ukázka)",
+        img: "/assets/games/kolejenku-pls.jpg",
+        url: "https://www.youtube.com/watch?v=AQNmMeknEpM&list=PLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF&index=13",
+        blurb:
+          "Simulace života kolejbáby s jasnou inspirací a smrtelně realistickým humorem."
+      },
+      {
+        id: "bear-cafe",
+        title: "Bear Café",
+        platforms: "Web",
+        img: "/assets/games/bear-cafe.jpg",
+        url: "https://play.unity.com/en/games/dfd180ed-7a16-4601-961f-ee8e8ca2ba76/bear-cafe-2",
+        blurb:
+          "Cozy medvědí kavárna. Bez medu, zato s pořádnou dávkou kafe. Pandy included."
+      },
+      {
+        id: "strahov",
+        title: "Strahov",
+        platforms: "Windows (video ukázka)",
+        img: "/assets/games/strahov.jpg",
+        url: "https://www.youtube.com/watch?v=gE93zi4wl0E&list=PLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF&index=22",
+        blurb:
+          "Ubytujte se na Strahově a přežijte zdejší specifické prostředí. Škola, Strahov, alkohol, zoufalství."
+      },
+      {
+        id: "liminal",
+        title: "Liminal",
+        platforms: "Windows",
+        img: "/assets/games/liminal.jpg", // TODO: vlastní screenshot
+        url: "https://hypercubic-studio.itch.io/liminal",
+        blurb: "Logická hra. Od alkoholiků, pro alkoholiky."
+      },
+      {
+        id: "galaxy-golf",
+        title: "Galaxy Golf",
+        platforms: "Linux / Windows",
+        img: "/assets/games/galaxy-golf.png",
+        url: "https://lukydrum.itch.io/galaxy-golf",
+        blurb:
+          "Jeden člověk, jeden víkend a spousta planet, které je třeba uklidit do černých děr."
+      },
+      {
+        id: "utek-z-brna",
+        title: "Útěk z Brna",
+        platforms: "Windows / Web",
+        img: "/assets/games/utek-z-brna.jpg",
+        url: "https://trampod.itch.io/escape-from-brno",
+        blurb:
+          "Dokumentární biografická hra o Pražákovi, který se snaží uniknout kruté realitě místa zvaného Brno."
+      },
+      {
+        id: "whitenoise",
+        title: "Whitenoise",
+        platforms: "Windows",
+        img: "/assets/games/whitenoise.jpg",
+        url: "https://belonzik.itch.io/whitenoise",
+        blurb:
+          "2D puzzle-platformer, kde překážky jsou vaše vzpomínky. Srovnejte se s nimi – nebo je obětujte."
+      },
+      {
+        id: "barman",
+        title: "Barman – Drinking with the Devil",
+        platforms: "Web",
+        img: "/assets/games/barman.png",
+        url: "https://simonstrikesback.itch.io/drinking-with-the-devil",
+        blurb:
+          "Jste barmanem v pekle, který čeká na soud. Dokážete zjistit, jak porazit pekelného právníka?"
+      },
+      {
+        id: "princess-game",
+        title: "The Princess Game",
+        platforms: "Windows",
+        img: "/assets/games/princess-game.png",
+        url: "https://floatwave.itch.io/the-princess-game",
+        blurb:
+          "Nešťastná princezna toužící po svobodě a útěku od tyranského otce. Jeden z vítězů FIT GameJamu."
+      },
+      {
+        id: "unikovka",
+        title: "Únikovka FIT",
+        platforms: "Fyzická escape hra",
+        img: "/assets/games/unikovka.jpg",
+        url: "https://grafit.games/",
+        blurb:
+          "Nejen počítačové hry – stavíme i únikové hry. Najdete ji v kontejneru před budovou FIT v Dejvicích."
+      },
+      {
+        id: "drakuluv-hrad",
+        title: "Drákulův hrad",
+        platforms: "Desková hra",
+        img: "/assets/games/drakuluv-hrad.jpg",
+        url: "https://bremondr.itch.io/muj-dum-drakulv-hrad",
+        blurb:
+          "Navrhujeme a hrajeme i deskovky. Zkuste z vlastního hradu vyhnat samotného Drákulu."
+      },
+      {
+        id: "adventni-kalendar",
+        title: "Adventní kalendář (bonus)",
+        platforms: "Sada webových her",
+        img: "/assets/games/adventni-kalendar.jpg",
+        url: "https://grafit.games/",
+        blurb:
+          "Nemáte rádi čokoládu, ale milujete Vánoce? Herní adventní kalendář – každý den jeden level."
+      }
+    ];
+
+    (function renderGames() {
+      const grid = document.getElementById("games-grid");
+      if (!grid) return;
+
+      grid.innerHTML = GAMES.map((game) => {
+        return `
+          <a class="game-card" href="${game.url}" target="_blank" rel="noopener">
+            <div class="game-card__image-wrap">
+              <img src="${game.img}" alt="${game.title}" loading="lazy" />
+            </div>
+            <div class="game-card__body">
+              <h3 class="game-card__title">${game.title}</h3>
+              <p class="game-card__platforms">${game.platforms}</p>
+              <p class="game-card__blurb">${game.blurb}</p>
+            </div>
+          </a>
+        `;
+      }).join("");
+    })();
+  </script>
+</body>
+</html>
