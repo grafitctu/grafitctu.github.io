@@ -326,21 +326,15 @@
         const [role, setRole] = useState("ANI");
         const [code, setCode] = useState("ANI-KOP");
         const [title, setTitle] = useState("Kombinovaná optika");
-        const [variant, setVariant] = useState("glass");
         const [color, setColor] = useState("blue");
-        const badgeRef = useRef(null);
 
-        const handleDownloadPng = async () => {
-          if (!badgeRef.current) return;
-          const html2canvas = window.html2canvas;
-          if (!html2canvas) {
-            alert(
-              "Pro export do PNG je potřeba mít na stránce načtenou knihovnu html2canvas (například z CDN)."
-            );
-            return;
-          }
+        // refs pro 7 variant náhledu
+        const previewRefs = useRef([]);
+
+        const downloadBadgePng = async (element, variantName, html2canvas) => {
+          if (!element) return;
           try {
-            const canvas = await html2canvas(badgeRef.current, {
+            const canvas = await html2canvas(element, {
               backgroundColor: null,
               scale: 3,
             });
@@ -349,12 +343,39 @@
               (code || "")
                 .replace(/[^A-Za-z0-9_-]+/g, "")
                 .replace(/^[-_]+|[-_]+$/g, "") || "course";
-            link.download = `${baseCode}-${variant}-${color}.png`;
+            link.download = `${baseCode}-${variantName}-${color}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
           } catch (err) {
             console.error(err);
             alert("Export do PNG se nezdařil.");
+          }
+        };
+
+        const handleDownloadOne = async (index, variantName) => {
+          const html2canvas = window.html2canvas;
+          if (!html2canvas) {
+            alert(
+              "Pro export do PNG je potřeba mít na stránce načtenou knihovnu html2canvas (například z CDN)."
+            );
+            return;
+          }
+          const el = previewRefs.current[index];
+          await downloadBadgePng(el, variantName, html2canvas);
+        };
+
+        const handleDownloadAll = async () => {
+          const html2canvas = window.html2canvas;
+          if (!html2canvas) {
+            alert(
+              "Pro export do PNG je potřeba mít na stránce načtenou knihovnu html2canvas (například z CDN)."
+            );
+            return;
+          }
+          for (let i = 0; i < VARIANTS.length; i++) {
+            const el = previewRefs.current[i];
+            if (!el) continue;
+            await downloadBadgePng(el, VARIANTS[i], html2canvas);
           }
         };
 
@@ -463,21 +484,6 @@
                     </label>
 
                     <label className="flex flex-col gap-1 text-sm">
-                      <span className="text-slate-300">Varianta</span>
-                      <select
-                        value={variant}
-                        onChange={(e) => setVariant(e.target.value)}
-                        className="bg-slate-950/80 border border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                      >
-                        {VARIANTS.map((v) => (
-                          <option key={v} value={v}>
-                            {v}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-
-                    <label className="flex flex-col gap-1 text-sm">
                       <span className="text-slate-300">Barva</span>
                       <select
                         value={color}
@@ -494,25 +500,49 @@
                   </div>
                 </div>
 
-                <div className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 flex flex-col items-center gap-3 shadow-xl shadow-slate-950/60">
-                  <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300 mb-2">
-                    Náhled
-                  </h2>
-                  <CourseBadge
-                    ref={badgeRef}
-                    role={role}
-                    code={code}
-                    title={title}
-                    variant={variant}
-                    color={color}
-                  />
+                <div className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 flex flex-col gap-3 shadow-xl shadow-slate-950/60">
+                  <div className="flex items-center justify-between mb-1">
+                    <h2 className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-300">
+                      Náhled – všechny varianty
+                    </h2>
+                    <span className="text-[0.65rem] text-slate-500 uppercase tracking-[0.25em]">
+                      7 vzhledů, stejná data
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {VARIANTS.map((v, idx) => (
+                      <div
+                        key={v}
+                        className="flex flex-col items-center gap-2"
+                      >
+                        <CourseBadge
+                          ref={(el) => (previewRefs.current[idx] = el)}
+                          role={role}
+                          code={code}
+                          title={title}
+                          variant={v}
+                          color={color}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleDownloadOne(idx, v)}
+                          className="px-2 py-1 rounded-lg border border-sky-500/70 text-[0.65rem] uppercase tracking-[0.2em] text-sky-100 bg-slate-950/60 hover:bg-sky-500/10 transition"
+                        >
+                          Stáhnout PNG – {v}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
                   <button
                     type="button"
-                    onClick={handleDownloadPng}
-                    className="mt-2 px-3 py-1.5 rounded-lg border border-sky-500/70 text-[0.7rem] uppercase tracking-[0.22em] text-sky-100 bg-slate-950/60 hover:bg-sky-500/10 transition"
+                    onClick={handleDownloadAll}
+                    className="mt-2 self-center px-3 py-1.5 rounded-lg border border-emerald-500/80 text-[0.7rem] uppercase tracking-[0.22em] text-emerald-100 bg-slate-950/70 hover:bg-emerald-500/10 transition"
                   >
-                    Stáhnout PNG
+                    Stáhnout všech 7 PNG
                   </button>
+
                   <p className="text-[0.7rem] text-slate-400 mt-2 text-center">
                     PNG export používá knihovnu{" "}
                     <span className="font-mono">html2canvas</span> načtenou z
