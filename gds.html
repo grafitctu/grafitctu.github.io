@@ -65,24 +65,28 @@
       color: #c9d1e3;
     }
 
-    /* Grid karet – vždy 3 na řádku na větších displejích */
-    .games-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1.75rem;
-    }
+   /* Grid karet – 3 na řádku, ale karty mají rozumnou minimální šířku */
+.games-grid {
+  display: grid;
+  justify-content: center;                 /* zarovnání doprostřed */
+  grid-template-columns: repeat(3, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-    @media (max-width: 960px) {
-      .games-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
+@media (max-width: 1100px) {
+  .games-grid {
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+  }
+}
 
-    @media (max-width: 640px) {
-      .games-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+@media (max-width: 720px) {
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 
     /* Jednotlivá karta */
     .game-card {
