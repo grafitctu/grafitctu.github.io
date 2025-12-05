@@ -18,13 +18,25 @@
     }
 
     .page-header {
-      padding: 3rem 1.5rem 1rem;
+      padding: 3rem 1.5rem 1.5rem;
       background: radial-gradient(circle at top, #182a5a 0, #050814 55%);
     }
 
     .section-inner {
       max-width: 1200px;
       margin: 0 auto;
+    }
+
+    /* layout horního headeru – vlevo text, vpravo QR */
+    .header-layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 2.5rem;
+    }
+
+    .header-text {
+      flex: 1 1 0;
+      min-width: 0;
     }
 
     .page-header h1 {
@@ -47,6 +59,43 @@
       line-height: 1.5;
     }
 
+    /* QR karta v headeru */
+    .header-qr {
+      flex: 0 0 auto;
+      background: #0b1022;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1.2rem 1.3rem 1.4rem;
+      text-align: center;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .header-qr-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin: 0 0 0.6rem;
+      color: #e6ecff;
+    }
+
+    .header-qr img {
+      width: 160px;
+      height: 160px;
+      background: #ffffff;
+      padding: 0.3rem;
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .header-qr small {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: #c9d1e3;
+    }
+
     /* Sekce her */
     #grafit-games {
       background: #050814;
@@ -65,28 +114,27 @@
       color: #c9d1e3;
     }
 
-   /* Grid karet – 3 na řádku, ale karty mají rozumnou minimální šířku */
-.games-grid {
-  display: grid;
-  justify-content: center;                 /* zarovnání doprostřed */
-  grid-template-columns: repeat(3, minmax(320px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+    /* Grid karet – 3 na řádku, min šířka */
+    .games-grid {
+      display: grid;
+      justify-content: center;                 /* zarovnání doprostřed */
+      grid-template-columns: repeat(3, minmax(320px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-@media (max-width: 1100px) {
-  .games-grid {
-    grid-template-columns: repeat(2, minmax(280px, 1fr));
-  }
-}
+    @media (max-width: 1100px) {
+      .games-grid {
+        grid-template-columns: repeat(2, minmax(280px, 1fr));
+      }
+    }
 
-@media (max-width: 720px) {
-  .games-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
+    @media (max-width: 720px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
     /* Jednotlivá karta */
     .game-card {
@@ -147,7 +195,7 @@
       color: #d6d9e5;
     }
 
-    /* QR sekce */
+    /* QR sekce dole */
     #gds-qr {
       background: #050814;
       color: #f5f5f5;
@@ -203,6 +251,17 @@
       border-radius: 8px;
     }
 
+    @media (max-width: 900px) {
+      .header-layout {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .header-qr {
+        margin-top: 1.5rem;
+      }
+    }
+
     @media (max-width: 640px) {
       .page-header {
         padding-top: 2.5rem;
@@ -221,14 +280,27 @@
 
   <main>
     <header class="page-header">
-      <div class="section-inner">
-        <h1>ČVUT FIT – STUDENTSKÉ HRY</h1>
-        <p class="subheading">grafit games</p>
-        <p>
-          Výběr studentských her (semestrální práce) a her z FIT gamejamu.
-          Webové hry lze hrát po prokliknutí. Windows a Linux hry vždy na jednom
-          z připravených PC.
-        </p>
+      <div class="section-inner header-layout">
+        <div class="header-text">
+          <h1>ČVUT FIT – STUDENTSKÉ HRY</h1>
+          <p class="subheading">grafit games</p>
+          <p>
+            Výběr studentských her (semestrální práce) a her z FIT gamejamu.
+            Webové hry lze hrát po prokliknutí. Windows a Linux hry vždy na jednom
+            z připravených PC.
+          </p>
+        </div>
+
+        <div class="header-qr">
+          <div class="header-qr-title">Menu her: web verze</div>
+          <a href="https://grafitctu.github.io/gds" target="_blank" rel="noopener">
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fgrafitctu.github.io%2Fgds"
+              alt="QR kód – Menu her: web verze (grafitctu.github.io/gds)"
+            />
+          </a>
+          <small>Otevře tuto stránku s menu her.</small>
+        </div>
       </div>
     </header>
 
