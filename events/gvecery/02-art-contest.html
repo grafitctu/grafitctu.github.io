@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="cs" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grafit – Grafický večer: art contest</title>
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    .icon { width: 1rem; height: 1rem; }
+
+    .card {
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    }
+    .card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+    }
+
+    .bg-gradient-dark {
+      background: radial-gradient(circle at top, #1f2937 0, #020617 52%, #020617 100%);
+    }
+
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      border-radius:9999px;
+      padding:.25rem .75rem;
+      border:1px solid rgba(255,255,255,.1);
+      color:rgba(255,255,255,.9);
+    }
+    .pill:hover { background: rgba(255,255,255,.08); }
+    .pill:focus-visible {
+      outline: 2px solid rgba(56,189,248,.9);
+      outline-offset: 2px;
+    }
+
+    .tooltip::after{
+      content:"";
+      position:absolute;
+      left:16px;
+      top:-6px;
+      border-width:6px;
+      border-style:solid;
+      border-color:transparent transparent rgb(0 0 0 / .9) transparent;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-neutral-100 bg-gradient-dark">
+
+  <!-- horní progress bar -->
+  <div id="scrollbar" class="fixed left-0 top-0 h-1 w-0 bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-blue-400 z-50"></div>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <canvas id="heroCanvas" class="absolute inset-0 w-full pointer-events-none" style="height:50vh"></canvas>
+
+    <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-16 pb-14 space-y-8">
+      <!-- breadcrumb -->
+      <div class="flex items-center justify-between gap-3 text-xs text-neutral-400">
+        <a href="index.html"
+           class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 hover:bg-white/10">
+          <i data-lucide="arrow-left" class="icon"></i>
+          <span>Zpět na přehled Grafických večerů</span>
+        </a>
+        <span class="hidden sm:inline-flex items-center gap-1 text-[11px]">
+          <i data-lucide="sparkles" class="icon"></i>
+          <span>Grafické večery · Grafit Research Group</span>
+        </span>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-8 md:items-start">
+        <div class="flex-1 space-y-4">
+          <p class="text-xs uppercase tracking-[0.24em] text-cyan-300/80">
+            Grafické večery · Vánoční speciál
+          </p>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+            Grafický večer – art contest
+          </h1>
+          <p class="max-w-2xl text-neutral-300">
+            Vánočně laděná výtvarná soutěž podle jednoduchého kompozičního zadání.
+            Tvořit můžete digitálně i tradičně, ve 2D i ve 3D – hlavní je kreativita a chuť si hrát.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm mt-2">
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="calendar" class="icon"></i>
+              <span>pátek 12. 12.</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="clock" class="icon"></i>
+              <span>17:00–cca 20:00</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="map-pin" class="icon"></i>
+              <span>TH:A-1455 (ggLab), 14. patro</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-emerald-400/60 bg-emerald-500/20 px-3 py-1">
+              <i data-lucide="users" class="icon"></i>
+              <span>Otevřeno i pro ne-FIT veřejnost</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- banner -->
+        <div class="w-full max-w-md md:w-80">
+          <div class="card overflow-hidden rounded-2xl border border-white/15 bg-black/50">
+            <img
+              src="/assets/events/graficke-vecery/art-contest-2025-12-12.png"
+              alt="Grafické večery – art contest"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <p class="mt-2 text-[11px] text-neutral-500">
+            Plakát ke stažení: <a href="/assets/events/graficke-vecery/art-contest-2025-12-12.png"
+            class="underline hover:text-cyan-300">PNG</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- rychlá navigace na sekce -->
+      <nav class="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+        <a href="#about"      class="pill text-xs" aria-label="O čem je akce"><i data-lucide="info" class="icon"></i><span>O akci</span></a>
+        <a href="#how"        class="pill text-xs" aria-label="Jak soutěž probíhá"><i data-lucide="list-todo" class="icon"></i><span>Jak soutěž probíhá</span></a>
+        <a href="#practical"  class="pill text-xs" aria-label="Praktické informace"><i data-lucide="backpack" class="icon"></i><span>Praktické info</span></a>
+        <a href="#who"        class="pill text-xs" aria-label="Kdo může přijít"><i data-lucide="users" class="icon"></i><span>Pro koho</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- obsah + druhé dynamické pozadí -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <canvas id="areaCanvas" class="w-full h-full"></canvas>
+    </div>
+
+    <main class="relative z-10 mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-10 space-y-12">
+
+      <!-- O akci -->
+      <section id="about" aria-labelledby="about-heading" class="space-y-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎄</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">Vánoční grafický večer</p>
+            <h2 id="about-heading" class="text-2xl font-bold tracking-tight">Co je vánoční art contest?</h2>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 text-sm text-neutral-300/90 leading-relaxed">
+          <p>
+            Pokud touto dobou kromě vánočního ducha pociťujete i ducha kreativního, neváhejte se
+            v <strong>pátek 12. 12.</strong> zúčastnit vánočně laděného <strong>art contestu</strong> v ggLabu.
+            Dostanete <strong>jednoduchý kompoziční podklad</strong> a vaším úkolem bude vytvořit podle něj
+            vlastní dílo.
+          </p>
+          <p>
+            Kreativitě se meze nekladou – tvořit můžete <strong>digitálně i tradičně, ve 2D i ve 3D</strong>.
+            Můžete přijít s tabletem, skicákem, akvarely, i s 3D modelovacím softwarem. Důležité je,
+            abyste si večer užili a zkusili něco nového.
+          </p>
+        </div>
+      </section>
+
+      <!-- Jak soutěž probíhá -->
+      <section id="how" aria-labelledby="how-heading" class="space-y-4 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">📋</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">Průběh večera</p>
+            <h2 id="how-heading" class="text-2xl font-bold tracking-tight">Jak bude art contest vypadat</h2>
+          </div>
+        </div>
+
+        <ol class="space-y-3 text-sm text-neutral-300/90">
+          <li class="flex gap-3">
+            <span class="mt-0.5 shrink-0 h-6 w-6 rounded-full bg-cyan-500/30 border border-cyan-300/60 flex items-center justify-center text-xs">1</span>
+            <div>
+              <p class="font-semibold text-neutral-100">Zadání &amp; kompoziční podklad</p>
+              <p>Na začátku večera společně projdeme jednoduchý kompoziční „template“, ze kterého budeme vycházet. Vysvětlíme si, co je závazné a kde máte volnou ruku.</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-0.5 shrink-0 h-6 w-6 rounded-full bg-cyan-500/30 border border-cyan-300/60 flex items-center justify-center text-xs">2</span>
+            <div>
+              <p class="font-semibold text-neutral-100">Tvorba na místě</p>
+              <p>
+                Následuje hlavní část večera: <strong>tvoření</strong>. Každý pracuje vlastním tempem a v preferovaném médiu – digitální malba, kresba na papír, koláž, 3D model, cokoliv.
+              </p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-0.5 shrink-0 h-6 w-6 rounded-full bg-cyan-500/30 border border-cyan-300/60 flex items-center justify-center text-xs">3</span>
+            <div>
+              <p class="font-semibold text-neutral-100">Prezentace a hlasování</p>
+              <p>
+                Na konci večera krátce představíme hotová díla. Proběhne neformální hlasování
+                (např. „cena publika“), ale důraz je hlavně na sdílení nápadů, ne na soutěžení.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Praktické informace -->
+      <section id="practical" aria-labelledby="practical-heading" class="space-y-4 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎒</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">Praktické informace</p>
+            <h2 id="practical-heading" class="text-2xl font-bold tracking-tight">Co si vzít s sebou a co bude k dispozici</h2>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 text-sm text-neutral-300/90">
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-1 flex items-center gap-2">
+              <i data-lucide="pencil" class="icon"></i> Vlastní pomůcky
+            </h3>
+            <p>
+              Vezměte si své <strong>oblíbené výtvarné pomůcky</strong> – skicák, tužky, fixy, barvy,
+              tablet, notebook… cokoliv, v čem se vám dobře tvoří.
+            </p>
+          </div>
+
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-1 flex items-center gap-2">
+              <i data-lucide="tablet" class="icon"></i> iPady k zapůjčení
+            </h3>
+            <p>
+              Na místě bude k dispozici <strong>několik iPadů s Apple Pencil</strong>, které si můžete na část večera půjčit. Ideální, pokud si chcete digitální kreslení jen vyzkoušet.
+            </p>
+          </div>
+
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-1 flex items-center gap-2">
+              <i data-lucide="gift" class="icon"></i> Možné překvapení
+            </h3>
+            <p>
+              Kromě dobré atmosféry možná čeká účastníky i <strong>malé překvapení</strong> – nechceme prozrazovat dopředu, ale vyplatí se zůstat až do konce.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-3 text-xs text-neutral-400 space-y-1">
+          <p>
+            Akce se uskuteční v <strong>pátek 12. 12. od 17:00 v TH-A:1455 (ggLab)</strong>.
+          </p>
+          <p>
+            Místo konání: <strong>Budova A Fakulty stavební ČVUT, 14. patro, prostor ggLabu</strong>,
+            kampus Dejvice (Thákurova ulice, Praha 6). Budova formálně patří Fakultě stavební, ale
+            v horních patrech sídlí i FIT – nenechte se tím zmást a jeďte výtahem až nahoru.
+          </p>
+        </div>
+      </section>
+
+      <!-- Pro koho -->
+      <section id="who" aria-labelledby="who-heading" class="space-y-4 border-t border-white/10 pt-8 pb-6">
+        <div class="flex items-center gap-2 text-neutral
