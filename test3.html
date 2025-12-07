@@ -4,35 +4,96 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Grafit – test</title>
+
   <!-- Tailwind (Play CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
   <style>
-    html { scroll-behavior: smooth; }
-    .icon { width: 1rem; height: 1rem; }
+    html {
+      scroll-behavior: smooth;
+    }
+    .icon {
+      width: 1rem;
+      height: 1rem;
+    }
+
     /* Micro-motion hover for cards */
-    .card { transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-    .card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 18px 40px rgba(0,0,0,0.25); }
-    .card .thumb { transform: scale(1.02); transition: transform 500ms cubic-bezier(.22,1,.36,1); }
-    .card:hover .thumb { transform: scale(1.08); }
+    .card {
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+    }
+    .card .thumb {
+      transform: scale(1.02);
+      transition: transform 500ms cubic-bezier(.22,1,.36,1);
+    }
+    .card:hover .thumb {
+      transform: scale(1.08);
+    }
+
     /* Courses */
-    .course-card { transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease; }
-    .course-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 16px 32px rgba(0,0,0,.22); }
+    .course-card {
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+    }
+    .course-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 16px 32px rgba(0,0,0,.22);
+    }
+
     /* Tmavé/světlé přechody pozadí */
-    .bg-gradient-dark { background: linear-gradient(#070b12,#0a0f18 55%,#090d14); }
-    .bg-gradient-light{ background: linear-gradient(#f9fafb,#f4f6f8 55%,#eef2f7); }
+    .bg-gradient-dark {
+      background: linear-gradient(#070b12,#0a0f18 55%,#090d14);
+    }
+    .bg-gradient-light{
+      background: linear-gradient(#f9fafb,#f4f6f8 55%,#eef2f7);
+    }
+
     /* QuickNav pills */
-    .pill { display:inline-flex; align-items:center; gap:.5rem; border-radius:9999px; padding:.25rem .75rem; border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.9); }
-    .pill:hover { background: rgba(255,255,255,.08); }
-    .pill:focus-visible { outline: 2px solid rgba(56,189,248,.9); outline-offset: 2px; }
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      border-radius:9999px;
+      padding:.25rem .75rem;
+      border:1px solid rgba(255,255,255,.1);
+      color:rgba(255,255,255,.9);
+    }
+    .pill:hover {
+      background: rgba(255,255,255,.08);
+    }
+    .pill:focus-visible {
+      outline: 2px solid rgba(56,189,248,.9);
+      outline-offset: 2px;
+    }
+
     /* Wide-screen compaction */
-    @media (min-width: 1280px) { .pill { padding: .20rem .60rem; font-size: .9rem; } .icon { width: .9rem; height: .9rem; } }
-    @media (min-width: 1536px) { .pill { padding: .15rem .55rem; font-size: .875rem; } .icon { width: .85rem; height: .85rem; } }
+    @media (min-width: 1280px) {
+      .pill { padding: .20rem .60rem; font-size: .9rem; }
+      .icon { width: .9rem; height: .9rem; }
+    }
+    @media (min-width: 1536px) {
+      .pill { padding: .15rem .55rem; font-size: .875rem; }
+      .icon { width: .85rem; height: .85rem; }
+    }
+
     /* Tooltip šipka pro skupinový seznam vyučujících */
-    .tooltip::after{ content:""; position:absolute; left:16px; top:-6px; border-width:6px; border-style:solid; border-color:transparent transparent rgb(0 0 0 / .9) transparent; }
+    .tooltip::after{
+      content:"";
+      position:absolute;
+      left:16px;
+      top:-6px;
+      border-width:6px;
+      border-style:solid;
+      border-color:transparent transparent rgb(0 0 0 / .9) transparent;
+    }
   </style>
 </head>
+
 <body class="min-h-screen text-neutral-900 dark:text-white bg-gradient-dark dark:bg-gradient-dark">
 
   <!-- horní progress pruh -->
@@ -45,20 +106,26 @@
 
     <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-24 pb-24">
       <div class="flex items-start gap-6">
-        <img src="https://grafitctu.github.io/assets/logos/grafit_bw.png" alt="Grafit" class="h-14 w-14 rounded-xl border border-white/10 shadow">
+        <img src="https://grafitctu.github.io/assets/logos/grafit_bw.png"
+             alt="Grafit"
+             class="h-14 w-14 rounded-xl border border-white/10 shadow">
         <div>
-          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Grafit Research Group</h1>
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">
+            Grafit Research Group
+          </h1>
           <p class="mt-3 max-w-3xl text-neutral-300">
             Pro programátory, designéry a umělce. VR/AR, počítačová grafika, UX/UI, rozpoznávání vzorů a game design.
           </p>
           <div class="mt-4 flex flex-wrap items-center gap-3">
-            <a href="https://grafitctu.github.io/" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-neutral-200 hover:bg-white/10">Live web ↗</a>
-            <!-- (tlačítko světlo/tma odstraněno) -->
+            <a href="https://grafitctu.github.io/"
+               class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-neutral-200 hover:bg-white/10">
+              Live web ↗
+            </a>
           </div>
 
           <!-- Plovoucí tlačítko pro otevření filtrů -->
           <button id="openFilters"
-            class="absolute right-6 bottom-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">
+                  class="absolute right-6 bottom-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">
             🔎 Filtry
           </button>
         </div>
@@ -69,17 +136,45 @@
   <!-- QUICK NAV -->
   <nav class="sticky top-0 z-40 border-y border-white/10 bg-white/5 backdrop-blur">
     <div class="mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-3 flex flex-wrap items-center justify-center gap-2 2xl:gap-2">
-      <a href="#events"   class="pill" aria-label="Přejít na sekci Events"><i data-lucide="calendar" class="icon"></i><span>↓ Events</span></a>
-      <a href="#research" class="pill" aria-label="Přejít na sekci Research"><i data-lucide="flask-conical" class="icon"></i><span>↓ Research</span></a>
-      <a href="#showcase" class="pill" aria-label="Přejít na sekci Students showcase"><i data-lucide="gamepad-2" class="icon"></i><span>↓ Showcase</span></a>
-      <a href="#courses"  class="pill" aria-label="Přejít na sekci Courses"><i data-lucide="graduation-cap" class="icon"></i><span>↓ Courses</span></a>
+      <a href="#events" class="pill" aria-label="Přejít na sekci Events">
+        <i data-lucide="calendar" class="icon"></i><span>↓ Events</span>
+      </a>
+      <a href="#research" class="pill" aria-label="Přejít na sekci Research">
+        <i data-lucide="flask-conical" class="icon"></i><span>↓ Research</span>
+      </a>
+      <a href="#showcase" class="pill" aria-label="Přejít na sekci Students showcase">
+        <i data-lucide="gamepad-2" class="icon"></i><span>↓ Showcase</span>
+      </a>
+      <a href="#courses" class="pill" aria-label="Přejít na sekci Courses">
+        <i data-lucide="graduation-cap" class="icon"></i><span>↓ Courses</span>
+      </a>
+
       <span class="mx-2 h-5 w-px bg-white/10"></span>
-      <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít YouTube kanál Grafit"><i data-lucide="youtube" class="icon"></i><span>YouTube</span> ↗</a>
-      <a href="https://discord.gg/sfMx2nq7BQ" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít Discord Grafit"><i data-lucide="gamepad-2" class="icon"></i><span>Discord</span> ↗</a>
-      <a href="https://twitter.com/CtuGrafit" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít Twitter Grafit"><i data-lucide="twitter" class="icon"></i><span>Twitter</span> ↗</a>
-      <a href="https://sagelab.cesnet.cz/" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít SAGElab"><i data-lucide="flask-conical" class="icon"></i><span>SAGElab</span> ↗</a>
-      <a href="#" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít ggLab"><i data-lucide="cpu" class="icon"></i><span>ggLab</span> ↗</a>
-      <a href="#" target="_blank" rel="noreferrer" class="pill" aria-label="Otevřít UXlab"><i data-lucide="mouse-pointer-2" class="icon"></i><span>UXlab</span> ↗</a>
+
+      <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer"
+         class="pill" aria-label="Otevřít YouTube kanál Grafit">
+        <i data-lucide="youtube" class="icon"></i><span>YouTube</span> ↗
+      </a>
+      <a href="https://discord.gg/sfMx2nq7BQ" target="_blank" rel="noreferrer"
+         class="pill" aria-label="Otevřít Discord Grafit">
+        <i data-lucide="gamepad-2" class="icon"></i><span>Discord</span> ↗
+      </a>
+      <a href="https://twitter.com/CtuGrafit" target="_blank" rel="noreferrer"
+         class="pill" aria-label="Otevřít Twitter Grafit">
+        <i data-lucide="twitter" class="icon"></i><span>Twitter</span> ↗
+      </a>
+      <a href="https://sagelab.cesnet.cz/" target="_blank" rel="noreferrer"
+         class="pill" aria-label="Otevřít SAGElab">
+        <i data-lucide="flask-conical" class="icon"></i><span>SAGElab</span> ↗
+      </a>
+      <a href="#" target="_blank" rel="noreferrer"
+         class="pill" aria-label="Otevřít ggLab">
+        <i data-lucide="cpu" class="icon"></i><span>ggLab</span> ↗
+      </a>
+      <a href="#" target="_blank" rel="noreferrer"
+         class="pill" aria-label="Otevřít UXlab">
+        <i data-lucide="mouse-pointer-2" class="icon"></i><span>UXlab</span> ↗
+      </a>
     </div>
   </nav>
 
@@ -88,7 +183,9 @@
     <div class="absolute inset-0 pointer-events-none z-0">
       <canvas id="areaCanvas" class="w-full h-full"></canvas>
     </div>
+
     <main class="relative z-10 mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-10">
+
       <!-- Events -->
       <div class="mb-4">
         <div class="flex items-center gap-2 text-neutral-300">
@@ -129,15 +226,37 @@
       </div>
       <div id="coursesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
 
+      <!-- Master Courses (nová sekce pro ANI-… předměty) -->
+      <div class="mt-10 mb-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎓</span>
+          <span class="text-sm uppercase tracking-wide text-neutral-400">
+            Magisterské předměty
+          </span>
+        </div>
+        <h2 id="mastercourses" class="mt-1 text-2xl font-bold tracking-tight">
+          Master Courses
+        </h2>
+      </div>
+      <div id="masterCoursesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+
       <!-- CTA -->
       <div class="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-5 border-cyan-400/20 bg-cyan-500/10 text-neutral-200">
         <div>
           <h3 class="text-xl font-semibold text-cyan-200">Chcete vědět víc?</h3>
-          <p class="text-neutral-300/90 text-sm">Navštivte naš komunitní discord server. Najdete tam učitele, studenty a další, kteří vám rádi a ochotně odpoví na vaše otázky.</p>
+          <p class="text-neutral-300/90 text-sm">
+            Navštivte naš komunitní discord server. Najdete tam učitele, studenty a další, kteří vám rádi a ochotně odpoví na vaše otázky.
+          </p>
         </div>
         <div class="flex gap-2">
-          <a href="https://discord.gg/sfMx2nq7BQ" class="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm hover:bg-white/10 border-white/15 bg-black/40">Discord ↗</a>
-          <a href="https://www.youtube.com/@grafitctufitprague9978" class="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm hover:bg-white/10 border-white/15 bg-white/10">YT ↗</a>
+          <a href="https://discord.gg/sfMx2nq7BQ"
+             class="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm hover:bg-white/10 border-white/15 bg-black/40">
+            Discord ↗
+          </a>
+          <a href="https://www.youtube.com/@grafitctufitprague9978"
+             class="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm hover:bg-white/10 border-white/15 bg-white/10">
+            YT ↗
+          </a>
         </div>
       </div>
 
@@ -154,13 +273,18 @@
       <div class="flex items-center justify-between gap-2">
         <h3 class="text-base font-semibold text-white">Vyhledávání &amp; tagy</h3>
         <button id="closeFilters"
-          class="inline-flex items-center rounded-md border border-white/10 px-2 py-1 text-sm text-neutral-300 hover:bg-white/10">✕ Zavřít</button>
+                class="inline-flex items-center rounded-md border border-white/10 px-2 py-1 text-sm text-neutral-300 hover:bg-white/10">
+          ✕ Zavřít
+        </button>
       </div>
+
       <div class="mt-3 flex items-center gap-2">
         <span class="text-neutral-400 text-sm">🔎</span>
-        <input id="search" placeholder="Hledat v events/research/showcase…"
+        <input id="search"
+               placeholder="Hledat v events/research/showcase…"
                class="px-3 py-2 rounded-md border border-white/10 bg-black/40 text-white placeholder:text-neutral-500 w-full"/>
       </div>
+
       <div id="tags" class="mt-3 flex flex-wrap items-center gap-2"></div>
     </div>
   </div>
@@ -168,26 +292,121 @@
   <script>
     // Po načtení nahradit lucide ikony
     document.addEventListener('DOMContentLoaded', () => {
-      if (window.lucide) { window.lucide.createIcons(); }
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
     });
 
     // --- DATA ---
+
     const EVENTS = [
-      { id:"e-gamejam-2025", title:"GameJam 2025", blurb:"Another installment in our series of traditional game jams! Once again over Easter, this time with a surprise – judges from game studios and major companies.", img:"/assets/projects/majak2.png", href:"https://itch.io/jam/gamejam-fit-2025a", tags:["event","gamejam","community"], date:"Spring 2025" },
-      { id:"e-hellofit-2025", title:"HelloFit 2025", blurb:"Part of our traditional freshmen events. We teamed up with Fit++, welcomed new students and invited them to our game design group and the STOH board-game club.", img:"/events/hellofit.jpg", href:"https://www.klubfitpp.cz/events/2025/hello-fit-25/", tags:["event","community","onboarding"], date:"2025" },
-      { id:"e-gamejam-2024", title:"GameJam 2024", blurb:"Another traditional jam. Christmas edition with industry judges from game studios and major companies.", img:"/assets/projects/gamejam_2024b_logo.jpg", href:"https://itch.io/jam/gamejam-fit-2024-vanocni", tags:["event","gamejam"], date:"Dec 2024" },
-      { id:"e-gexpo-2025", title:"GEXPO 2025", blurb:"Graphics Expo showcasing achievements of our students in game development, VR, and final projects. 60+ participants and a packed evening program.", img:"/assets/projects/gexpo_logo.jpg", href:"events/gexpo/2025", tags:["event","expo","students","vr","games"], date:"2025" },
-      { id:"e-researchers-night-2025", title:"ResearchersNight 2025", blurb:"Celebrating 20 years of Researchers' Night in the Czech Republic across 50+ cities.", img:"/assets/projects/nocvedcu.png", href:"https://www.nocvedcu.cz/en", tags:["event","public","research"], date:"26 Sep 2025" },
-      { id:"e-grafit-games-studio", title:"Grafit Games Studio", blurb:"Bridging cutting-edge research with creative game development across digital and board games.", img:"/assets/projects/grafitgames_logo.jpg", href:"https://barushe22.itch.io/neckventure", tags:["studio","games","event"], date:"ongoing" }
+      {
+        id:"e-gamejam-2025",
+        title:"GameJam 2025",
+        blurb:"Another installment in our series of traditional game jams! Once again over Easter, this time with a surprise – judges from game studios and major companies.",
+        img:"/assets/projects/majak2.png",
+        href:"https://itch.io/jam/gamejam-fit-2025a",
+        tags:["event","gamejam","community"],
+        date:"Spring 2025"
+      },
+      {
+        id:"e-hellofit-2025",
+        title:"HelloFit 2025",
+        blurb:"Part of our traditional freshmen events. We teamed up with Fit++, welcomed new students and invited them to our game design group and the STOH board-game club.",
+        img:"/events/hellofit.jpg",
+        href:"https://www.klubfitpp.cz/events/2025/hello-fit-25/",
+        tags:["event","community","onboarding"],
+        date:"2025"
+      },
+      {
+        id:"e-gamejam-2024",
+        title:"GameJam 2024",
+        blurb:"Another traditional jam. Christmas edition with industry judges from game studios and major companies.",
+        img:"/assets/projects/gamejam_2024b_logo.jpg",
+        href:"https://itch.io/jam/gamejam-fit-2024-vanocni",
+        tags:["event","gamejam"],
+        date:"Dec 2024"
+      },
+      {
+        id:"e-gexpo-2025",
+        title:"GEXPO 2025",
+        blurb:"Graphics Expo showcasing achievements of our students in game development, VR, and final projects. 60+ participants and a packed evening program.",
+        img:"/assets/projects/gexpo_logo.jpg",
+        href:"events/gexpo/2025",
+        tags:["event","expo","students","vr","games"],
+        date:"2025"
+      },
+      {
+        id:"e-researchers-night-2025",
+        title:"ResearchersNight 2025",
+        blurb:"Celebrating 20 years of Researchers' Night in the Czech Republic across 50+ cities.",
+        img:"/assets/projects/nocvedcu.png",
+        href:"https://www.nocvedcu.cz/en",
+        tags:["event","public","research"],
+        date:"26 Sep 2025"
+      },
+      {
+        id:"e-grafit-games-studio",
+        title:"Grafit Games Studio",
+        blurb:"Bridging cutting-edge research with creative game development across digital and board games.",
+        img:"/assets/projects/grafitgames_logo.jpg",
+        href:"https://barushe22.itch.io/neckventure",
+        tags:["studio","games","event"],
+        date:"ongoing"
+      }
     ];
 
     const RESEARCH = [
-      { id:"r-politeia21", title:"Politeia 21", blurb:"Interdisciplinary VR project exploring Plato’s theses, ethics and human behavior in a large-scale social simulation.", img:"/assets/projects/politeia.png", href:"https://www.unihack.cz/project/8", tags:["vr","simulation","social","philosophy","research"] },
-      { id:"r-dowry-towns", title:"Dowry Towns of Bohemian Queens", blurb:"Projects mapping historical development and digitizing cultural heritage of royal dowry towns; VR reconstructions and archives.", img:"/assets/projects/vennamesta.png", href:"https://www.kralovskavennamesta.cz/", tags:["heritage","mapping","history","vr"], date:"2018–2022" },
-      { id:"r-game-design", title:"Game design", blurb:"Research in game design theory: world design, accessibility for impaired users, and creative writing.", img:"/assets/projects/gamedesign.png", href:"/projects/", tags:["games","design","accessibility","writing"] },
-      { id:"r-texture-modeling", title:"Texture modeling", blurb:"With the Institute of Information Theory and Automation (CAS), we analyze and model realistic material appearance (BRDF/BTF).", img:"/assets/projects/textures.jpg", href:"http://btf.utia.cas.cz/?brdf_dwn", tags:["materials","brdf","btf","collaboration"] },
-      { id:"r-most-city", title:"Most – city that did not disappear", blurb:"Reconstruction of the historic appearance of the city of Most prior to its major redevelopment.", img:"/assets/projects/most.png", href:"https://www.vugtk.cz/en/home-page/", tags:["heritage","reconstruction","city","3d"], date:"2023–2027" },
-      { id:"r-tactile-wall", title:"Tactile interfaces: interactive wall", blurb:"Exploration of tactile-specific interfaces in collaboration with MIT, University of Tokyo, initi.org and CAMP.", img:"/assets/projects/intwall.png", href:"https://www.youtube.com/watch?v=3jvmoj7pLZU&ab_channel=IraWinder", tags:["haptics","ui","installation","collaboration"] }
+      {
+        id:"r-politeia21",
+        title:"Politeia 21",
+        blurb:"Interdisciplinary VR project exploring Plato’s theses, ethics and human behavior in a large-scale social simulation.",
+        img:"/assets/projects/politeia.png",
+        href:"https://www.unihack.cz/project/8",
+        tags:["vr","simulation","social","philosophy","research"]
+      },
+      {
+        id:"r-dowry-towns",
+        title:"Dowry Towns of Bohemian Queens",
+        blurb:"Projects mapping historical development and digitizing cultural heritage of royal dowry towns; VR reconstructions and archives.",
+        img:"/assets/projects/vennamesta.png",
+        href:"https://www.kralovskavennamesta.cz/",
+        tags:["heritage","mapping","history","vr"],
+        date:"2018–2022"
+      },
+      {
+        id:"r-game-design",
+        title:"Game design",
+        blurb:"Research in game design theory: world design, accessibility for impaired users, and creative writing.",
+        img:"/assets/projects/gamedesign.png",
+        href:"/projects/",
+        tags:["games","design","accessibility","writing"]
+      },
+      {
+        id:"r-texture-modeling",
+        title:"Texture modeling",
+        blurb:"With the Institute of Information Theory and Automation (CAS), we analyze and model realistic material appearance (BRDF/BTF).",
+        img:"/assets/projects/textures.jpg",
+        href:"http://btf.utia.cas.cz/?brdf_dwn",
+        tags:["materials","brdf","btf","collaboration"]
+      },
+      {
+        id:"r-most-city",
+        title:"Most – city that did not disappear",
+        blurb:"Reconstruction of the historic appearance of the city of Most prior to its major redevelopment.",
+        img:"/assets/projects/most.png",
+        href:"https://www.vugtk.cz/en/home-page/",
+        tags:["heritage","reconstruction","city","3d"],
+        date:"2023–2027"
+      },
+      {
+        id:"r-tactile-wall",
+        title:"Tactile interfaces: interactive wall",
+        blurb:"Exploration of tactile-specific interfaces in collaboration with MIT, University of Tokyo, initi.org and CAMP.",
+        img:"/assets/projects/intwall.png",
+        href:"https://www.youtube.com/watch?v=3jvmoj7pLZU&ab_channel=IraWinder",
+        tags:["haptics","ui","installation","collaboration"]
+      }
     ];
 
     const SHOWCASE = [
@@ -224,91 +443,482 @@
     ];
 
     const COURSES = [
-      { id:"c-mga", code:"BI-MGA", title:"Multimediální a grafické aplikace", blurb:"Introductory overview course where students learn to work with 2D and 3D graphics tools.", link:"https://bilakniha.cvut.cz", teachers:["J. Buriánek","L. Bařinka","J. Chludil"], tags:["3rd semester","obligatory","4 ECTS"] },
-      { id:"c-vhs", code:"BI-VHS", title:"Virtuální herní světy", blurb:"A subject dedicated to game design, level design and the creation of the game world.", link:"https://bilakniha.cvut.cz", teachers:["R. Richtr"], tags:["3rd or 5th semester","optional","4 ECTS"] },
-      { id:"c-ble", code:"BI-BLE", title:"Blender", blurb:"An advanced course following MGA, significantly deepening work in Blender.", link:"https://bilakniha.cvut.cz", teachers:["L. Bařinka"], tags:["summer semester","elective","4 ECTS"] },
-      { id:"c-pga", code:"BI-PGA", title:"Programování grafických aplikací", blurb:"Advanced course focused on developing plugins for GIMP and Blender.", link:"https://bilakniha.cvut.cz", teachers:["R. Richtr","J. Chludil"], tags:["5th semester","obligatory","4 ECTS"] },
-      { id:"c-mvt", code:"BI-MVT", title:"Moderní vizualizační technologie", blurb:"Overview of modern visualization technologies and hardware.", link:"https://bk.fit.cvut.cz", teachers:["P. Pauš","J. Chludil"], tags:["5th semester","optional","4 ECTS"] },
-      { id:"c-pvr", code:"BI-PVR", title:"Pokročilá virtuální realita", blurb:"Advanced virtual reality course in the Unity engine.", link:"https://bilakniha.cvut.cz", teachers:["P. Pauš"], tags:["winter semester","optional","4 ECTS"] },
-      { id:"c-pg1", code:"NI-PG1", title:"Počítačová grafika 1", blurb:"Rendering, data structures for CG, and state-of-the-art realistic texturing.", link:"https://bilakniha.cvut.cz", teachers:["R. Richtr","V. Tomas"], tags:["summer semester","optional","4 ECTS"] },
-      { id:"c-roz", code:"NI-ROZ", title:"Rozpoznávání 1", blurb:"Advanced pattern recognition; lectures in cooperation with the Academy of Sciences.", link:"https://bilakniha.cvut.cz", teachers:["M. Haindl","R. Richtr"], tags:["winter semester","obligatory","4 ECTS"] },
-      { id:"c-ccc", code:"NI-CCC", title:"Creative Coding & Computational Art", blurb:"Project-oriented course spanning art, graphics and creative programming.", link:"https://bilakniha.cvut.cz", teachers:["A. Kortan","J. Šebele","R. Richtr"], tags:["winter semester","elective","4 ECTS"] },
-      { id:"c-vga", code:"NI-VGA", title:"Video Games Architecture", blurb:"Game oriented course, engine agnostic.", link:"https://bilakniha.cvut.cz", teachers:["J. Matoušek, R. Richtr"], tags:["winter semester","elective","4 ECTS"] },
-      { id:"c-egg", code:"NI-EGG", title:"Engines for Games and Graphics", blurb:"Engine course, Unity and Godot.", link:"https://bilakniha.cvut.cz", teachers:["P. pauš, J. Matoušek"], tags:["summer semester","elective","4 ECTS"] }
+      {
+        id:"c-mga",
+        code:"BI-MGA",
+        title:"Multimediální a grafické aplikace",
+        blurb:"Introductory overview course where students learn to work with 2D and 3D graphics tools.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["J. Buriánek","L. Bařinka","J. Chludil"],
+        tags:["3rd semester","obligatory","4 ECTS"]
+      },
+      {
+        id:"c-vhs",
+        code:"BI-VHS",
+        title:"Virtuální herní světy",
+        blurb:"A subject dedicated to game design, level design and the creation of the game world.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["R. Richtr"],
+        tags:["3rd or 5th semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-ble",
+        code:"BI-BLE",
+        title:"Blender",
+        blurb:"An advanced course following MGA, significantly deepening work in Blender.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["L. Bařinka"],
+        tags:["summer semester","elective","4 ECTS"]
+      },
+      {
+        id:"c-pga",
+        code:"BI-PGA",
+        title:"Programování grafických aplikací",
+        blurb:"Advanced course focused on developing plugins for GIMP and Blender.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["R. Richtr","J. Chludil"],
+        tags:["5th semester","obligatory","4 ECTS"]
+      },
+      {
+        id:"c-mvt",
+        code:"BI-MVT",
+        title:"Moderní vizualizační technologie",
+        blurb:"Overview of modern visualization technologies and hardware.",
+        link:"https://bk.fit.cvut.cz",
+        teachers:["P. Pauš","J. Chludil"],
+        tags:["5th semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-pvr",
+        code:"BI-PVR",
+        title:"Pokročilá virtuální realita",
+        blurb:"Advanced virtual reality course in the Unity engine.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["P. Pauš"],
+        tags:["winter semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-pg1",
+        code:"NI-PG1",
+        title:"Počítačová grafika 1",
+        blurb:"Rendering, data structures for CG, and state-of-the-art realistic texturing.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["R. Richtr","V. Tomas"],
+        tags:["summer semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-roz",
+        code:"NI-ROZ",
+        title:"Rozpoznávání 1",
+        blurb:"Advanced pattern recognition; lectures in cooperation with the Academy of Sciences.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["M. Haindl","R. Richtr"],
+        tags:["winter semester","obligatory","4 ECTS"]
+      },
+      {
+        id:"c-ccc",
+        code:"NI-CCC",
+        title:"Creative Coding & Computational Art",
+        blurb:"Project-oriented course spanning art, graphics and creative programming.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["A. Kortan","J. Šebele","R. Richtr"],
+        tags:["winter semester","elective","4 ECTS"]
+      },
+      {
+        id:"c-vga",
+        code:"NI-VGA",
+        title:"Video Games Architecture",
+        blurb:"Game oriented course, engine agnostic.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["J. Matoušek","R. Richtr"],
+        tags:["winter semester","elective","4 ECTS"]
+      },
+      {
+        id:"c-egg",
+        code:"NI-EGG",
+        title:"Engines for Games and Graphics",
+        blurb:"Engine course, Unity and Godot.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["P. Pauš","J. Matoušek"],
+        tags:["summer semester","elective","4 ECTS"]
+      }
+    ];
+
+    // NOVÉ: magisterské (ANI-...) předměty – samostatná sekce
+    // Všechny nově přidané mají prefix ANI-...
+    const MASTER_COURSES = [
+      {
+        id:"m-ani-pg1",
+        code:"ANI-PG1",
+        title:"Počítačová grafika 1",
+        blurb:"Magisterská varianta kurzu Počítačová grafika 1 v rámci programu ANI – zaměřená na rendering, datové struktury a realistické texturování.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["R. Richtr","V. Tomas"],
+        tags:["ANI","summer semester","4 ECTS"]
+      },
+      {
+        id:"m-ani-vga",
+        code:"ANI-VGA",
+        title:"Video Games Architecture",
+        blurb:"Koncepční architektura herních enginů a velkých herních projektů v novém magisterském oboru ANI.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["J. Matoušek","R. Richtr"],
+        tags:["ANI","winter semester","4 ECTS"]
+      },
+      {
+        id:"m-ani-egg",
+        code:"ANI-EGG",
+        title:"Engines for Games and Graphics",
+        blurb:"Magisterský kurz zaměřený na herní enginy (Unity, Godot) a jejich použití v oblasti her i interaktivní grafiky.",
+        link:"https://bilakniha.cvut.cz",
+        teachers:["P. Pauš","J. Matoušek"],
+        tags:["ANI","summer semester","4 ECTS"]
+      }
     ];
 
     // --- pomocné ---
     const $ = sel => document.querySelector(sel);
-    const create = (tag, cls="", html="") => { const el = document.createElement(tag); if(cls) el.className = cls; if(html) el.innerHTML = html; return el; };
-    const allTags = Array.from(new Set([...EVENTS, ...RESEARCH, ...SHOWCASE].flatMap(i => i.tags||[])));
+    const create = (tag, cls="", html="") => {
+      const el = document.createElement(tag);
+      if(cls) el.className = cls;
+      if(html) el.innerHTML = html;
+      return el;
+    };
+
+    const allTags = Array.from(
+      new Set([...EVENTS, ...RESEARCH, ...SHOWCASE].flatMap(i => i.tags || []))
+    );
 
     // === UI HELPERY pro kurzy ===
-    function personIcon(){ const svg=document.createElementNS("http://www.w3.org/2000/svg","svg"); svg.setAttribute("viewBox","0 0 24 24"); svg.classList.add("h-3.5","w-3.5","opacity-80"); const p1=document.createElementNS(svg.namespaceURI,"path"); p1.setAttribute("d","M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z"); p1.setAttribute("fill","currentColor"); const p2=document.createElementNS(svg.namespaceURI,"path"); p2.setAttribute("d","M4 22a8 8 0 0 1 16 0v1H4v-1z"); p2.setAttribute("fill","currentColor"); svg.appendChild(p1); svg.appendChild(p2); return svg; }
-    function teacherChip(name){ const chip=document.createElement('span'); chip.className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium bg-white/5 text-neutral-200 ring-1 ring-white/10"; chip.title=name; chip.appendChild(personIcon()); const t=document.createElement('span'); t.textContent=name; chip.appendChild(t); return chip; }
-    function teacherGroup(teachers=[]){ const wrap=document.createElement('div'); wrap.className="relative group flex items-center gap-1.5"; if(teachers.length<=2){ teachers.forEach(n=>wrap.appendChild(teacherChip(n))); return wrap; } wrap.appendChild(teacherChip(teachers[0])); wrap.appendChild(teacherChip(teachers[1])); const more=document.createElement('button'); more.type="button"; more.className="relative rounded-md px-2 py-0.5 text-[11px] font-semibold bg-white/5 text-neutral-200 ring-1 ring-white/10 hover:bg-white/10"; more.textContent=`+${teachers.length-2}`; wrap.appendChild(more); const tip=document.createElement('div'); tip.className="tooltip pointer-events-none absolute left-0 top-full z-20 mt-2 rounded-md bg-black/90 px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100"; tip.innerHTML=teachers.map(n=>`• ${n}`).join("<br>"); wrap.appendChild(tip); return wrap; }
-    function chip(text){ const s=document.createElement('span'); s.className="rounded-md px-2 py-0.5 text-[10px] font-medium bg-white/5 text-neutral-200 ring-1 ring-white/10"; s.textContent=text; return s; }
-    function courseCard(c){ const article=document.createElement('article'); article.className="course-card rounded-2xl border p-4 border-white/10 bg-gradient-to-b from-neutral-900 to-black"; const row=document.createElement('div'); row.className="flex items-start gap-3"; article.appendChild(row); const code=document.createElement('span'); code.className="shrink-0 inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-cyan-400/30 bg-cyan-500/20 text-cyan-200"; code.textContent=c.code; row.appendChild(code); const body=document.createElement('div'); body.className="min-w-0 flex-1"; row.appendChild(body); const h3=document.createElement('h3'); h3.className="text-lg font-semibold text-neutral-100"; h3.textContent=c.title; body.appendChild(h3); const p=document.createElement('p'); p.className="text-sm text-neutral-300/90"; p.textContent=c.blurb||""; body.appendChild(p); const meta=document.createElement('div'); meta.className="mt-2 flex items-center gap-3"; body.appendChild(meta); if(Array.isArray(c.teachers)&&c.teachers.length){ meta.appendChild(teacherGroup(c.teachers)); } const tagbox=document.createElement('div'); tagbox.className="ml-auto flex flex-wrap gap-2"; (c.tags||[]).forEach(t=>tagbox.appendChild(chip(t))); meta.appendChild(tagbox); const a=document.createElement('a'); a.className="mt-2 inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-200 text-sm"; a.href=c.link; a.target="_blank"; a.rel="noreferrer"; a.textContent="Syllabus ↗"; body.appendChild(a); return article; }
+    function personIcon(){
+      const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 24 24");
+      svg.classList.add("h-3.5","w-3.5","opacity-80");
+      const p1=document.createElementNS(svg.namespaceURI,"path");
+      p1.setAttribute("d","M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z");
+      p1.setAttribute("fill","currentColor");
+      const p2=document.createElementNS(svg.namespaceURI,"path");
+      p2.setAttribute("d","M4 22a8 8 0 0 1 16 0v1H4v-1z");
+      p2.setAttribute("fill","currentColor");
+      svg.appendChild(p1);
+      svg.appendChild(p2);
+      return svg;
+    }
 
-    // --- render karty ---
+    function teacherChip(name){
+      const chip=document.createElement('span');
+      chip.className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium bg-white/5 text-neutral-200 ring-1 ring-white/10";
+      chip.title=name;
+      chip.appendChild(personIcon());
+      const t=document.createElement('span');
+      t.textContent=name;
+      chip.appendChild(t);
+      return chip;
+    }
+
+    function teacherGroup(teachers=[]){
+      const wrap=document.createElement('div');
+      wrap.className="relative group flex items-center gap-1.5";
+
+      if(teachers.length<=2){
+        teachers.forEach(n=>wrap.appendChild(teacherChip(n)));
+        return wrap;
+      }
+
+      wrap.appendChild(teacherChip(teachers[0]));
+      wrap.appendChild(teacherChip(teachers[1]));
+
+      const more=document.createElement('button');
+      more.type="button";
+      more.className="relative rounded-md px-2 py-0.5 text-[11px] font-semibold bg-white/5 text-neutral-200 ring-1 ring-white/10 hover:bg-white/10";
+      more.textContent = `+${teachers.length-2}`;
+      wrap.appendChild(more);
+
+      const tip=document.createElement('div');
+      tip.className="tooltip pointer-events-none absolute left-0 top-full z-20 mt-2 rounded-md bg-black/90 px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100";
+      tip.innerHTML = teachers.map(n=>`• ${n}`).join("<br>");
+      wrap.appendChild(tip);
+
+      return wrap;
+    }
+
+    function chip(text){
+      const s=document.createElement('span');
+      s.className="rounded-md px-2 py-0.5 text-[10px] font-medium bg-white/5 text-neutral-200 ring-1 ring-white/10";
+      s.textContent=text;
+      return s;
+    }
+
+    function courseCard(c){
+      const article=document.createElement('article');
+      article.className="course-card rounded-2xl border p-4 border-white/10 bg-gradient-to-b from-neutral-900 to-black";
+
+      const row=document.createElement('div');
+      row.className="flex items-start gap-3";
+      article.appendChild(row);
+
+      const code=document.createElement('span');
+      code.className="shrink-0 inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-cyan-400/30 bg-cyan-500/20 text-cyan-200";
+      code.textContent=c.code;
+      row.appendChild(code);
+
+      const body=document.createElement('div');
+      body.className="min-w-0 flex-1";
+      row.appendChild(body);
+
+      const h3=document.createElement('h3');
+      h3.className="text-lg font-semibold text-neutral-100";
+      h3.textContent=c.title;
+      body.appendChild(h3);
+
+      const p=document.createElement('p');
+      p.className="text-sm text-neutral-300/90";
+      p.textContent=c.blurb||"";
+      body.appendChild(p);
+
+      const meta=document.createElement('div');
+      meta.className="mt-2 flex items-center gap-3";
+      body.appendChild(meta);
+
+      if(Array.isArray(c.teachers) && c.teachers.length){
+        meta.appendChild(teacherGroup(c.teachers));
+      }
+
+      const tagbox=document.createElement('div');
+      tagbox.className="ml-auto flex flex-wrap gap-2";
+      (c.tags||[]).forEach(t=>tagbox.appendChild(chip(t)));
+      meta.appendChild(tagbox);
+
+      const a=document.createElement('a');
+      a.className="mt-2 inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-200 text-sm";
+      a.href=c.link;
+      a.target="_blank";
+      a.rel="noreferrer";
+      a.textContent="Syllabus ↗";
+      body.appendChild(a);
+
+      return article;
+    }
+
+    // NOVÉ: karta pro magisterské (ANI-…) kurzy s fialovým štítkem
+    function masterCourseCard(c){
+      const article=document.createElement('article');
+      article.className="course-card rounded-2xl border p-4 border-white/10 bg-gradient-to-b from-neutral-900 to-black";
+
+      const row=document.createElement('div');
+      row.className="flex items-start gap-3";
+      article.appendChild(row);
+
+      const code=document.createElement('span');
+      code.className="shrink-0 inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-fuchsia-400/40 bg-fuchsia-500/20 text-fuchsia-100";
+      code.textContent=c.code;
+      row.appendChild(code);
+
+      const body=document.createElement('div');
+      body.className="min-w-0 flex-1";
+      row.appendChild(body);
+
+      const h3=document.createElement('h3');
+      h3.className="text-lg font-semibold text-neutral-100";
+      h3.textContent=c.title;
+      body.appendChild(h3);
+
+      const p=document.createElement('p');
+      p.className="text-sm text-neutral-300/90";
+      p.textContent=c.blurb||"";
+      body.appendChild(p);
+
+      const meta=document.createElement('div');
+      meta.className="mt-2 flex items-center gap-3";
+      body.appendChild(meta);
+
+      if(Array.isArray(c.teachers) && c.teachers.length){
+        meta.appendChild(teacherGroup(c.teachers));
+      }
+
+      const tagbox=document.createElement('div');
+      tagbox.className="ml-auto flex flex-wrap gap-2";
+      (c.tags||[]).forEach(t=>tagbox.appendChild(chip(t)));
+      meta.appendChild(tagbox);
+
+      const a=document.createElement('a');
+      a.className="mt-2 inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-200 text-sm";
+      a.href=c.link;
+      a.target="_blank";
+      a.rel="noreferrer";
+      a.textContent="Syllabus ↗";
+      body.appendChild(a);
+
+      return article;
+    }
+
     function card(item, kind){
-      const a = create("a", "card group relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block", "");
-      a.href = item.href || "#"; a.target = "_blank"; a.rel="noreferrer";
-      const aspect = (kind === "EVENTS") ? "aspect-[4/1]" : "aspect-[2/1]";
+      const a = create(
+        "a",
+        "card group relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block",
+        ""
+      );
+      a.href = item.href || "#";
+      a.target = "_blank";
+      a.rel = "noreferrer";
 
-      const imgBox = create("div", `relative w-full overflow-hidden ${aspect}`, "");
-      const img = create("img","thumb h-full w-full object-cover object-center", "");
-      img.src = item.img; img.alt = item.title; img.loading = "lazy"; img.decoding = "async";
+      const aspect = (kind === "event") ? "aspect-[4/1]" : "aspect-[2/1]";
+      const imgBox = create(
+        "div",
+        `relative w-full overflow-hidden ${aspect}`,
+        ""
+      );
+
+      const img = create("img","thumb h-full w-full object-cover object-center","");
+      img.src = item.img;
+      img.alt = item.title;
+      img.loading = "lazy";
+      img.decoding = "async";
       imgBox.appendChild(img);
-      imgBox.appendChild(create("div","absolute inset-0 bg-gradient-to-t from-black/50 to-transparent",""));
-      if(item.date){ imgBox.appendChild(create("span","absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-neutral-200 border border-white/10","📅 "+item.date)); }
+
+      imgBox.appendChild(
+        create("div","absolute inset-0 bg-gradient-to-t from-black/50 to-transparent","")
+      );
+
+      if(item.date){
+        imgBox.appendChild(
+          create(
+            "span",
+            "absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-neutral-200 border border-white/10",
+            "📅 " + item.date
+          )
+        );
+      }
+
       a.appendChild(imgBox);
+
       const body = create("div","p-4","");
-      body.appendChild(create("div","flex items-center justify-between",`<h3 class='text-lg font-semibold text-neutral-100'>${item.title}</h3><span class='text-neutral-400 text-xs uppercase tracking-wide'>${kind}</span>`));
-      body.appendChild(create("p","mt-1 text-neutral-300/90 text-sm leading-relaxed",item.blurb||""));
-      if((item.tags||[]).length){ const tg = create("div","mt-3 flex flex-wrap gap-2",""); (item.tags||[]).forEach(t=> tg.appendChild(create("span","text-xs rounded-full border px-2 py-0.5 text-neutral-300 border-neutral-700/80","#"+t))); body.appendChild(tg); }
+      const headerRow = document.createElement("div");
+      headerRow.className = "flex items-center justify-between";
+
+      const h3 = document.createElement("h3");
+      h3.className = "text-lg font-semibold text-neutral-100";
+      h3.textContent = item.title;
+
+      const spanKind = document.createElement("span");
+      spanKind.className = "text-neutral-400 text-xs uppercase tracking-wide";
+      spanKind.textContent = kind;
+
+      headerRow.appendChild(h3);
+      headerRow.appendChild(spanKind);
+      body.appendChild(headerRow);
+
+      body.appendChild(
+        create("p","mt-1 text-neutral-300/90 text-sm leading-relaxed", item.blurb || "")
+      );
+
+      if((item.tags || []).length){
+        const tg = create("div","mt-3 flex flex-wrap gap-2","");
+        (item.tags || []).forEach(t =>
+          tg.appendChild(
+            create(
+              "span",
+              "text-xs rounded-full border px-2 py-0.5 text-neutral-300 border-neutral-700/80",
+              "#" + t
+            )
+          )
+        );
+        body.appendChild(tg);
+      }
+
       a.appendChild(body);
       return a;
     }
 
     function renderLists(filterFn){
-      const E = $("#eventsGrid"); E.innerHTML = "";
-      EVENTS.filter(filterFn).forEach(it=>E.appendChild(card(it,"event")));
+      const E = $("#eventsGrid");
+      if (E) {
+        E.innerHTML = "";
+        EVENTS.filter(filterFn).forEach(it => E.appendChild(card(it,"event")));
+      }
 
-      const R = $("#researchGrid"); R.innerHTML = "";
-      RESEARCH.filter(filterFn).forEach(it=>R.appendChild(card(it,"research")));
+      const R = $("#researchGrid");
+      if (R) {
+        R.innerHTML = "";
+        RESEARCH.filter(filterFn).forEach(it => R.appendChild(card(it,"research")));
+      }
 
-      const S = $("#showcaseGrid"); S.innerHTML = "";
-      SHOWCASE.filter(filterFn).forEach(it=>S.appendChild(card(it,"showcase")));
+      const S = $("#showcaseGrid");
+      if (S) {
+        S.innerHTML = "";
+        SHOWCASE.filter(filterFn).forEach(it => S.appendChild(card(it,"showcase")));
+      }
 
-      const C = $("#coursesGrid"); C.innerHTML = "";
-      COURSES.forEach(c => C.appendChild(courseCard(c)));
+      const C = $("#coursesGrid");
+      if (C) {
+        C.innerHTML = "";
+        COURSES.forEach(c => C.appendChild(courseCard(c)));
+      }
+
+      const MC = $("#masterCoursesGrid");
+      if (MC) {
+        MC.innerHTML = "";
+        MASTER_COURSES.forEach(c => MC.appendChild(masterCourseCard(c)));
+      }
     }
 
     // --- vyhledávání + tagy (v draweru) ---
     let activeTags = new Set();
+
     function applyFilter(){
       const searchEl = $("#search");
       const q = (searchEl?.value || "").trim().toLowerCase();
+
       const filterFn = (item) => {
-        const text = ((item.title||"")+" "+(item.blurb||"")+" "+(item.tags||[]).join(" ")).toLowerCase();
+        const text = (
+          (item.title || "") + " " +
+          (item.blurb || "") + " " +
+          (item.tags || []).join(" ")
+        ).toLowerCase();
+
         const matchQ = !q || text.includes(q);
-        const matchTags = activeTags.size===0 || (item.tags||[]).some(t => activeTags.has(t));
+        const matchTags =
+          activeTags.size === 0 ||
+          (item.tags || []).some(t => activeTags.has(t));
+
         return matchQ && matchTags;
       };
+
       renderLists(filterFn);
     }
+
     function renderTags(){
-      const T = $("#tags"); if(!T) return;
-      T.innerHTML = `<span class="text-xs text-neutral-400">Filtr tagů:</span>`;
+      const T = $("#tags");
+      if(!T) return;
+      T.innerHTML = '<span class="text-xs text-neutral-400">Filtr tagů:</span>';
+
       allTags.forEach(t=>{
-        const b = create("button","px-3 py-1 rounded-full border text-sm border-neutral-700 text-neutral-300 hover:border-neutral-500","");
+        const b = create(
+          "button",
+          "px-3 py-1 rounded-full border text-sm border-neutral-700 text-neutral-300 hover:border-neutral-500",
+          ""
+        );
         b.textContent = t;
-        b.onclick = () => { activeTags.has(t) ? activeTags.delete(t) : activeTags.add(t); b.classList.toggle("bg-cyan-500/20"); b.classList.toggle("border-cyan-400"); applyFilter(); };
+        b.onclick = () => {
+          activeTags.has(t) ? activeTags.delete(t) : activeTags.add(t);
+          b.classList.toggle("bg-cyan-500/20");
+          b.classList.toggle("border-cyan-400");
+          applyFilter();
+        };
         T.appendChild(b);
       });
+
       if(allTags.length){
-        const reset = create("button","ml-2 text-xs text-cyan-300 hover:text-cyan-200","Reset");
-        reset.onclick = () => { activeTags = new Set(); renderTags(); applyFilter(); };
+        const reset = create(
+          "button",
+          "ml-2 text-xs text-cyan-300 hover:text-cyan-200",
+          "Reset"
+        );
+        reset.onclick = () => {
+          activeTags = new Set();
+          renderTags();
+          applyFilter();
+        };
         T.appendChild(reset);
       }
     }
@@ -319,29 +929,71 @@
       let w=0,h=0, raf=0;
       const N = opts.N || 42;
       const speed = opts.speed || 0.4;
+
       function resize(){
         const rect = canvas.parentElement.getBoundingClientRect();
         w = c.width = Math.max(window.innerWidth, Math.ceil(rect.width||window.innerWidth));
         h = c.height = Math.ceil(rect.height || 520);
       }
-      const dots = Array.from({length:N}, ()=>({x:0,y:0,vx:(Math.random()-.5)*speed,vy:(Math.random()-.5)*speed}));
-      function reset(){ dots.forEach(d=>{ d.x=Math.random()*w; d.y=Math.random()*h; }); }
+
+      const dots = Array.from({length:N}, ()=>({
+        x:0,
+        y:0,
+        vx:(Math.random()-.5)*speed,
+        vy:(Math.random()-.5)*speed
+      }));
+
+      function reset(){
+        dots.forEach(d=>{
+          d.x=Math.random()*w;
+          d.y=Math.random()*h;
+        });
+      }
+
       function draw(){
         ctx.clearRect(0,0,w,h);
         const grad = ctx.createLinearGradient(0,0,w,h);
-        grad.addColorStop(0,"#0b1220"); grad.addColorStop(1,"#0b0f16");
-        ctx.fillStyle=grad; ctx.globalAlpha=.94; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1;
+        grad.addColorStop(0,"#0b1220");
+        grad.addColorStop(1,"#0b0f16");
+        ctx.fillStyle=grad;
+        ctx.globalAlpha=.94;
+        ctx.fillRect(0,0,w,h);
+        ctx.globalAlpha=1;
+
         for(let i=0;i<N;i++){
-          const a=dots[i]; a.x+=a.vx; a.y+=a.vy;
-          if(a.x<0||a.x>w) a.vx*=-1; if(a.y<0||a.y>h) a.vy*=-1;
-          for(let j=i+1;j<N;j++){ const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
-            if(d<120){ ctx.globalAlpha = 1 - d/120; ctx.strokeStyle = "#60a5fa"; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
+          const a=dots[i];
+          a.x+=a.vx;
+          a.y+=a.vy;
+          if(a.x<0||a.x>w) a.vx*=-1;
+          if(a.y<0||a.y>h) a.vy*=-1;
+
+          for(let j=i+1;j<N;j++){
+            const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+            if(d<120){
+              ctx.globalAlpha = 1 - d/120;
+              ctx.strokeStyle = "#60a5fa";
+              ctx.beginPath();
+              ctx.moveTo(a.x,a.y);
+              ctx.lineTo(b.x,b.y);
+              ctx.stroke();
+              ctx.globalAlpha=1;
+            }
           }
-          ctx.fillStyle="#22d3ee"; ctx.beginPath(); ctx.arc(a.x,a.y,1.2,0,Math.PI*2); ctx.fill();
+
+          ctx.fillStyle="#22d3ee";
+          ctx.beginPath();
+          ctx.arc(a.x,a.y,1.2,0,Math.PI*2);
+          ctx.fill();
         }
         raf = requestAnimationFrame(draw);
       }
-      function start(){ resize(); reset(); draw(); }
+
+      function start(){
+        resize();
+        reset();
+        draw();
+      }
+
       const ro = new ResizeObserver(()=>{ resize(); });
       ro.observe(canvas.parentElement);
       window.addEventListener("resize", resize);
@@ -362,12 +1014,28 @@
     const openBtn = document.getElementById("openFilters");
     const closeBtn = document.getElementById("closeFilters");
     const backdrop = document.getElementById("filterBackdrop");
-    function openFilters(){ drawer.classList.remove("hidden"); setTimeout(()=> document.getElementById("search")?.focus(), 50); }
-    function closeFilters(){ drawer.classList.add("hidden"); }
+
+    function openFilters(){
+      drawer.classList.remove("hidden");
+      setTimeout(()=> document.getElementById("search")?.focus(), 50);
+    }
+    function closeFilters(){
+      drawer.classList.add("hidden");
+    }
+
     openBtn?.addEventListener("click", openFilters);
     closeBtn?.addEventListener("click", closeFilters);
     backdrop?.addEventListener("click", closeFilters);
-    document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeFilters(); });
+    document.addEventListener("keydown", (e)=>{
+      if(e.key==="Escape") closeFilters();
+    });
+
+    // event na vyhledávací input
+    document.addEventListener("input", (e)=>{
+      if (e.target && e.target.id === "search") {
+        applyFilter();
+      }
+    });
 
     // init
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
