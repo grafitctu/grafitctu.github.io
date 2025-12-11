@@ -92,7 +92,26 @@
 
         const specialRate=0.12, logoRate=0.025;
 
-        function resize(){ const parent=canvas.parentElement; const rect=parent.getBoundingClientRect(); const dpr=Math.min(window.devicePixelRatio||1,2); dprRef.current=dpr; width=Math.max(1,Math.floor(rect.width*dpr)); height=Math.max(1,Math.floor(rect.height*dpr)); canvas.width=width; canvas.height=height; canvas.style.width=rect.width+'px'; canvas.style.height=rect.height+'px'; layoutGarlands(); initGround(); buildParallax(); }
+        function resize(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  dprRef.current = dpr;
+
+  const cssW = window.innerWidth;
+  const cssH = window.innerHeight;
+
+  width  = Math.max(1, Math.floor(cssW * dpr));
+  height = Math.max(1, Math.floor(cssH * dpr));
+
+  canvas.width  = width;
+  canvas.height = height;
+  canvas.style.width  = cssW + 'px';
+  canvas.style.height = cssH + 'px';
+
+  layoutGarlands();
+  initGround();
+  buildParallax();
+}
+
         function addFlake(){ const r=Math.pow(Math.random(),2)*2.2 + 0.6; flakes.push(new Flake(rand(0,width), -10, r)); }
         function addSpecial(){ const r=rand(16,30); special.push(new BigFlake(rand(r+10, width-r-10), -40, r)); }
         function addLogo(){ const r=rand(20,34); logos.push(new HexLogo(rand(r+12, width-r-12), -50, r)); }
@@ -116,8 +135,8 @@
       }, [xmasMode, soundOn, garlandCount, hexOn]);
 
       return (
-        <div className="relative w-full h-screen overflow-hidden bg-slate-900">
-          <canvas ref={canvasRef} className="absolute inset-0 block" />
+<div className="fixed inset-0 overflow-hidden bg-slate-900">
+  <canvas ref={canvasRef} className="absolute inset-0 block" />
           {uiVisible ? (
             <div className="absolute right-4 top-4 z-10 flex flex-wrap gap-2">
               <button onClick={()=>setXmasMode(v=>!v)} className="rounded-xl bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20 border border-white/20">{xmasMode?"Vánoční mód: Zap":"Vánoční mód: Vyp"}</button>
