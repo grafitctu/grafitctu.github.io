@@ -7,9 +7,9 @@
 
   <style>
     :root{
-      --bg0:#020617;         /* slate-950 */
-      --bg1:#0b1120;         /* deep blue */
-      --card:#050914cc;      /* translucent */
+      --bg0:#020617;
+      --bg1:#0b1120;
+      --card:#050914cc;
       --line:rgba(255,255,255,.10);
       --line2:rgba(255,255,255,.14);
       --text:rgba(255,255,255,.92);
@@ -23,7 +23,6 @@
       --blur: blur(10px);
       --shadow: 0 12px 34px rgba(0,0,0,.35);
       --radius: 18px;
-      --max: 1200px;
       --maxXL: 1400px;
     }
 
@@ -38,14 +37,14 @@
       overflow-x:hidden;
     }
 
-    /* Top scroll progress bar (1:1) */
+    /* Top scroll progress bar */
     #scrollbar{
       position:fixed; left:0; top:0; height:4px; width:0%;
       background: linear-gradient(90deg, #e879f9, #67e8f9, #60a5fa);
       z-index:999;
     }
 
-    /* ===== HERO (1:1) ===== */
+    /* ===== HERO ===== */
     .hero{
       position:relative;
       overflow:hidden;
@@ -120,7 +119,7 @@
       line-height: 1.6;
     }
 
-    /* Info pills row (1:1) */
+    /* Info pills row */
     .info-row{
       margin-top: 14px;
       display:flex;
@@ -167,7 +166,7 @@
     }
     .ico svg{ width:16px; height:16px; display:block; stroke: currentColor; }
 
-    /* ===== Quick nav (sticky) (1:1) ===== */
+    /* ===== Quick nav (sticky) ===== */
     .quicknav{
       position:sticky;
       top:0;
@@ -208,7 +207,7 @@
       gap: 34px;
     }
 
-    /* Section header like gvecery detail */
+    /* Section header */
     .section-head{
       display:flex;
       align-items:center;
@@ -238,7 +237,7 @@
       color: rgba(255,255,255,.94);
     }
 
-    /* Cards (micro-motion like gvecery) */
+    /* Cards */
     .card{
       border: 1px solid rgba(255,255,255,.10);
       border-radius: 20px;
@@ -291,7 +290,7 @@
       border:0; display:block;
     }
 
-    /* Gallery thumbs (small, square) */
+    /* Gallery thumbs */
     .gallery{
       display:grid;
       grid-template-columns: repeat(6, 1fr);
@@ -308,6 +307,7 @@
       background: rgba(255,255,255,.04);
       aspect-ratio: 1 / 1;
       position:relative;
+      cursor: zoom-in;
     }
     .thumb img{
       width:100%; height:100%;
@@ -334,9 +334,139 @@
       font-size: 12px;
     }
 
-    /* Ensure links look like gvecery (subtle) */
     a{ color: rgba(255,255,255,.90); }
     a:hover{ color: rgba(255,255,255,.98); }
+
+    /* ===== LIGHTBOX ===== */
+    .lb{
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(0,0,0,.68);
+      backdrop-filter: blur(10px);
+    }
+    .lb.open{ display:flex; }
+
+    .lb-panel{
+      width: min(96vw, 1200px);
+      height: min(86vh, 860px);
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(2,6,23,.78), rgba(0,0,0,.74));
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lb-top{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.35);
+    }
+    .lb-title{
+      font-size: 11px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.55);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      max-width: 70%;
+    }
+    .lb-actions{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+    .lb-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.38);
+      color: rgba(255,255,255,.88);
+      cursor: pointer;
+      user-select: none;
+    }
+    .lb-btn:hover{ background: rgba(255,255,255,.08); }
+    .lb-btn:active{ transform: translateY(1px); }
+    .lb-btn svg{ width:16px; height:16px; stroke: currentColor; fill:none; stroke-width:2; }
+
+    .lb-body{
+      position: relative;
+      flex: 1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: radial-gradient(circle at 30% 10%, rgba(56,189,248,.10), transparent 45%),
+                  radial-gradient(circle at 70% 30%, rgba(34,211,238,.08), transparent 42%),
+                  linear-gradient(180deg, rgba(2,6,23,.35), rgba(0,0,0,.45));
+    }
+
+    .lb-img{
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display:block;
+      user-select: none;
+      -webkit-user-drag: none;
+      cursor: zoom-out;
+    }
+
+    .lb-nav{
+      position:absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.40);
+      backdrop-filter: blur(10px);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+    }
+    .lb-nav:hover{ background: rgba(255,255,255,.10); }
+    .lb-prev{ left: 12px; }
+    .lb-next{ right: 12px; }
+    .lb-nav svg{ width:18px; height:18px; stroke: rgba(255,255,255,.92); fill:none; stroke-width:2.2; }
+
+    .lb-bottom{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.30);
+      color: rgba(255,255,255,.70);
+      font-size: 13px;
+    }
+    .lb-hint{
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 560px){
+      .lb-panel{ height: min(88vh, 820px); }
+      .lb-title{ max-width: 56%; }
+      .lb-hint{ display:none; }
+    }
   </style>
 </head>
 
@@ -607,19 +737,20 @@
           </div>
         </div>
 
-        <div class="gallery">
-          <a class="thumb" href="/assets/events/GEXPO/2025/g1r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g1r.jpg" alt="GEXPO Foto 1" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g2r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g2r.jpg" alt="GEXPO Foto 2" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g3r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g3r.jpg" alt="GEXPO Foto 3" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g4r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g4r.jpg" alt="GEXPO Foto 4" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g5r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g5r.jpg" alt="GEXPO Foto 5" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g6r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g6r.jpg" alt="GEXPO Foto 6" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g7r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g7r.jpg" alt="GEXPO Foto 7" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g8r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g8r.jpg" alt="GEXPO Foto 8" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g9r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g9r.jpg" alt="GEXPO Foto 9" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g10r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g10r.jpg" alt="GEXPO Foto 10" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g11r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g11r.jpg" alt="GEXPO Foto 11" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g12r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 12" loading="lazy"></a>
+        <!-- NOTE: href nechávám jako fallback (když je JS vypnutý) -->
+        <div class="gallery" id="gallery">
+          <a class="thumb" href="/assets/events/GEXPO/2025/g1r.jpg"  data-caption="GEXPO Foto 1"><img src="/assets/events/GEXPO/2025/g1r.jpg"  alt="GEXPO Foto 1"  loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g2r.jpg"  data-caption="GEXPO Foto 2"><img src="/assets/events/GEXPO/2025/g2r.jpg"  alt="GEXPO Foto 2"  loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g3r.jpg"  data-caption="GEXPO Foto 3"><img src="/assets/events/GEXPO/2025/g3r.jpg"  alt="GEXPO Foto 3"  loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g4r.jpg"  data-caption="GEXPO Foto 4"><img src="/assets/events/GEXPO/2025/g4r.jpg"  alt="GEXPO Foto 4"  loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g5r.jpg"  data-caption="GEXPO Foto 5"><img src="/assets/events/GEXPO/2025/g5r.jpg"  alt="GEXPO Foto 5"  loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g6r.jpg"  data-caption="GEXPO Foto 6"><img src="/assets/events/GEXPO/2025/g6r.jpg"  alt="GEXPO Foto 6"  loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g7r.jpg"  data-caption="GEXPO Foto 7"><img src="/assets/events/GEXPO/2025/g7r.jpg"  alt="GEXPO Foto 7"  loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g8r.jpg"  data-caption="GEXPO Foto 8"><img src="/assets/events/GEXPO/2025/g8r.jpg"  alt="GEXPO Foto 8"  loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g9r.jpg"  data-caption="GEXPO Foto 9"><img src="/assets/events/GEXPO/2025/g9r.jpg"  alt="GEXPO Foto 9"  loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g10r.jpg" data-caption="GEXPO Foto 10"><img src="/assets/events/GEXPO/2025/g10r.jpg" alt="GEXPO Foto 10" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g11r.jpg" data-caption="GEXPO Foto 11"><img src="/assets/events/GEXPO/2025/g11r.jpg" alt="GEXPO Foto 11" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g12r.jpg" data-caption="GEXPO Foto 12"><img src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 12" loading="lazy"></a>
         </div>
 
         <div class="card" style="margin-top:18px;">
@@ -637,6 +768,43 @@
     </main>
   </section>
 
+  <!-- LIGHTBOX overlay -->
+  <div class="lb" id="lb" aria-hidden="true">
+    <div class="lb-panel" role="dialog" aria-modal="true" aria-label="Fotogalerie">
+      <div class="lb-top">
+        <div class="lb-title" id="lbTitle">FOTOGALERIE</div>
+        <div class="lb-actions">
+          <button class="lb-btn" id="lbDownload" type="button" title="Otevřít obrázek v novém okně (fallback)">
+            <svg viewBox="0 0 24 24"><path d="M12 3v10"/><path d="M7 13l5 5 5-5"/><path d="M5 21h14"/></svg>
+            Otevřít
+          </button>
+          <button class="lb-btn" id="lbClose" type="button" title="Zavřít (Esc)">
+            <svg viewBox="0 0 24 24"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+            Zavřít
+          </button>
+        </div>
+      </div>
+
+      <div class="lb-body" id="lbBody">
+        <button class="lb-nav lb-prev" id="lbPrev" type="button" title="Předchozí (←)">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+
+        <img class="lb-img" id="lbImg" alt="Zvětšená fotka">
+
+        <button class="lb-nav lb-next" id="lbNext" type="button" title="Další (→)">
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+
+      <div class="lb-bottom">
+        <div id="lbCaption">—</div>
+        <div class="lb-hint">←/→ listování • Esc zavřít • klik mimo zavře</div>
+        <div id="lbCount">1 / 1</div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // scroll progress
     window.addEventListener("scroll", () => {
@@ -646,7 +814,7 @@
       document.getElementById("scrollbar").style.width = (pct * 100) + "%";
     });
 
-    // Constellation background (like gvecery)
+    // Constellation background
     function particles(canvas, opts) {
       const ctx = canvas.getContext("2d", { alpha: true });
       let w = 0, h = 0, raf = 0;
@@ -659,7 +827,6 @@
         const parent = canvas.parentElement;
         const rect = parent.getBoundingClientRect();
         w = canvas.width  = Math.max(1, Math.floor(rect.width));
-        // For hero we want fixed "60vh"; for area it's full section height:
         h = canvas.height = Math.max(1, Math.floor(rect.height));
       }
 
@@ -673,7 +840,6 @@
       function draw() {
         ctx.clearRect(0, 0, w, h);
 
-        // dark gradient underlay (subtle)
         const grad = ctx.createLinearGradient(0,0,w,h);
         grad.addColorStop(0, "#020617");
         grad.addColorStop(1, "#0b1120");
@@ -682,7 +848,6 @@
         ctx.fillRect(0,0,w,h);
         ctx.globalAlpha = 1;
 
-        // update + draw links
         for (let i = 0; i < N; i++) {
           const a = dots[i];
           a.x += a.vx / w;
@@ -715,7 +880,6 @@
             }
           }
 
-          // dot
           ctx.fillStyle = "#38bdf8";
           ctx.beginPath();
           ctx.arc(ax, ay, 1.4, 0, Math.PI * 2);
@@ -735,23 +899,124 @@
       return { stop: () => cancelAnimationFrame(raf), ro };
     }
 
-    // Respect reduced motion
     const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     if (!prefersReduced) {
       particles(document.getElementById("heroCanvas"), { N: 42, speed: 0.45, linkDist: 170 });
       particles(document.getElementById("areaCanvas"), { N: 54, speed: 0.40, linkDist: 165 });
-    } else {
-      // if reduced motion, at least paint background once so it’s not blank
-      const c = document.getElementById("heroCanvas");
-      const ctx = c.getContext("2d");
-      const rect = c.parentElement.getBoundingClientRect();
-      c.width = Math.max(1, Math.floor(rect.width));
-      c.height = Math.max(1, Math.floor(rect.height));
-      const g = ctx.createLinearGradient(0,0,c.width,c.height);
-      g.addColorStop(0,"#020617"); g.addColorStop(1,"#0b1120");
-      ctx.fillStyle = g; ctx.fillRect(0,0,c.width,c.height);
     }
+
+    // ===== LIGHTBOX (gallery) =====
+    (function(){
+      const lb = document.getElementById("lb");
+      const lbImg = document.getElementById("lbImg");
+      const lbCaption = document.getElementById("lbCaption");
+      const lbCount = document.getElementById("lbCount");
+      const lbTitle = document.getElementById("lbTitle");
+      const lbClose = document.getElementById("lbClose");
+      const lbPrev = document.getElementById("lbPrev");
+      const lbNext = document.getElementById("lbNext");
+      const lbBody = document.getElementById("lbBody");
+      const lbDownload = document.getElementById("lbDownload");
+
+      const items = Array.from(document.querySelectorAll("#gallery a.thumb"));
+      if (!items.length) return;
+
+      let idx = 0;
+      let lastActive = null;
+
+      const data = items.map(a => ({
+        href: a.getAttribute("href"),
+        caption: a.getAttribute("data-caption") || a.querySelector("img")?.alt || "Foto",
+      }));
+
+      function setImage(i){
+        idx = (i + data.length) % data.length;
+        const item = data[idx];
+
+        lbImg.src = item.href;
+        lbImg.alt = item.caption;
+        lbCaption.textContent = item.caption;
+        lbCount.textContent = `${idx + 1} / ${data.length}`;
+        lbTitle.textContent = "FOTOGALERIE · GEXPO 2025";
+        lbDownload.onclick = () => window.open(item.href, "_blank", "noreferrer");
+
+        // jemný preload sousedů (rychlejší listování)
+        const prev = data[(idx - 1 + data.length) % data.length].href;
+        const next = data[(idx + 1) % data.length].href;
+        const p1 = new Image(); p1.src = prev;
+        const p2 = new Image(); p2.src = next;
+      }
+
+      function open(i, fromEl){
+        lastActive = fromEl || document.activeElement;
+        lb.classList.add("open");
+        lb.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        setImage(i);
+
+        // focus na zavírací tlačítko
+        setTimeout(() => lbClose.focus(), 0);
+      }
+
+      function close(){
+        lb.classList.remove("open");
+        lb.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        lbImg.src = "";
+        if (lastActive && typeof lastActive.focus === "function") lastActive.focus();
+      }
+
+      function prev(){ setImage(idx - 1); }
+      function next(){ setImage(idx + 1); }
+
+      // klik na thumbs
+      items.forEach((a, i) => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          open(i, a);
+        });
+      });
+
+      // ovládání
+      lbClose.addEventListener("click", close);
+      lbPrev.addEventListener("click", prev);
+      lbNext.addEventListener("click", next);
+
+      // klik mimo panel zavře (jen pozadí)
+      lb.addEventListener("click", (e) => {
+        if (e.target === lb) close();
+      });
+
+      // klik na obrázek také zavře (rychlé)
+      lbImg.addEventListener("click", close);
+
+      // klávesnice
+      document.addEventListener("keydown", (e) => {
+        if (!lb.classList.contains("open")) return;
+
+        if (e.key === "Escape") { e.preventDefault(); close(); }
+        else if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
+        else if (e.key === "ArrowRight") { e.preventDefault(); next(); }
+      });
+
+      // základní swipe na mobilu (volitelné, jednoduché)
+      let startX = null;
+      lbBody.addEventListener("touchstart", (e) => {
+        if (!lb.classList.contains("open")) return;
+        startX = e.touches?.[0]?.clientX ?? null;
+      }, { passive: true });
+
+      lbBody.addEventListener("touchend", (e) => {
+        if (startX === null) return;
+        const endX = e.changedTouches?.[0]?.clientX ?? null;
+        if (endX === null) return;
+        const dx = endX - startX;
+        startX = null;
+        if (Math.abs(dx) > 50) {
+          dx > 0 ? prev() : next();
+        }
+      }, { passive: true });
+    })();
   </script>
 </body>
 </html>
