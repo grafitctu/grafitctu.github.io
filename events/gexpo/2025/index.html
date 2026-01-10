@@ -27,26 +27,90 @@
       line-height: 1.55;
     }
 
-    header{
+    /* --- Standardní Grafit hlavička (inline) --- */
+    .site-header{
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 50;
       backdrop-filter: blur(10px);
-      background: rgba(10, 14, 28, 0.55);
+      background: rgba(10, 14, 28, 0.62);
       border-bottom: 1px solid var(--line);
     }
-    header > div{
+    .header-inner{
       max-width: 1100px;
       margin: 0 auto;
       padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
     }
-    header a{
-      color: var(--link);
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      min-width: 220px;
+    }
+    .brand-mark{
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(120,80,255,0.45), rgba(0,180,255,0.35));
+      border: 1px solid var(--line);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+    .brand-text{
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+    .brand-name{
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      font-size: 0.95rem;
+    }
+    .brand-sub{
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .nav{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .nav a{
+      color: var(--muted);
       text-decoration: none;
       font-weight: 600;
+      font-size: 0.92rem;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px solid transparent;
     }
-    header a:hover{ text-decoration: underline; }
+    .nav a:hover{
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(255,255,255,0.04);
+    }
 
+    @media (max-width: 720px){
+      .header-inner{ align-items: flex-start; flex-direction: column; }
+      .brand{ min-width: unset; }
+      .nav{ justify-content: flex-start; gap: 10px; }
+    }
+
+    /* --- Obsah --- */
     #main{
       max-width: 1100px;
       margin: 0 auto;
@@ -71,6 +135,14 @@
     }
     li{ margin: 6px 0; }
 
+    .block{
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
     /* --- Video grid --- */
     .video-grid{
       display: grid;
@@ -90,7 +162,6 @@
       display: block;
       border: 0;
     }
-
     @media (max-width: 980px){
       .video-grid{ grid-template-columns: repeat(2, 1fr); }
       .video-item iframe{ height: 220px; }
@@ -100,7 +171,7 @@
       .video-item iframe{ height: 230px; }
     }
 
-    /* --- Galerie: malé náhledy, rozumné rozměry --- */
+    /* --- Galerie: malé náhledy --- */
     .gallery{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -121,22 +192,27 @@
       transform: scale(1.02);
       filter: brightness(1.05);
     }
-
-    /* malé “karty” pro textové bloky (volitelné, ale hezké) */
-    .block{
-      margin-top: 14px;
-      padding: 14px 16px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-    }
   </style>
 </head>
 
 <body>
-  <header>
-    <div>
-      <a href="../../">Zpět na Grafit</a>
+  <!-- Standardní hlavička Grafitu -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../../" aria-label="Grafit">
+        <span class="brand-mark" aria-hidden="true">⌬</span>
+        <span class="brand-text">
+          <span class="brand-name">GRAFIT</span>
+          <span class="brand-sub">ČVUT · FIT</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Navigace">
+        <a href="../../">Domů</a>
+        <a href="../../events/">Události</a>
+        <a href="../../projects/">Projekty</a>
+        <a href="../../team/">Tým</a>
+      </nav>
     </div>
   </header>
 
@@ -232,20 +308,18 @@
 
     <h3>Fotogalerie</h3>
     <div class="gallery">
-      <!-- původní -->
-      <img src="/assets/events/GEXPO/2025/g1r.jpg" alt="GEXPO Foto 1" loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g2r.jpg"  alt="GEXPO Foto 6"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g3r.jpg"  alt="GEXPO Foto 7"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g4r.jpg"  alt="GEXPO Foto 8"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g5r.jpg"  alt="GEXPO Foto 9"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g6r.jpg"  alt="GEXPO Foto 10" loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g7r.jpg"  alt="GEXPO Foto 11" loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g8r.jpg"  alt="GEXPO Foto 12" loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g9r.jpg"  alt="GEXPO Foto 13" loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g10r.jpg" alt="GEXPO Foto 14" loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g11r.jpg" alt="GEXPO Foto 15" loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 16" loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g13r.jpg" alt="GEXPO Foto 17" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g1r.jpg"  alt="GEXPO Foto 1"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g2r.jpg"  alt="GEXPO Foto 2"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g3r.jpg"  alt="GEXPO Foto 3"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g4r.jpg"  alt="GEXPO Foto 4"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g5r.jpg"  alt="GEXPO Foto 5"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g6r.jpg"  alt="GEXPO Foto 6"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g7r.jpg"  alt="GEXPO Foto 7"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g8r.jpg"  alt="GEXPO Foto 8"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g9r.jpg"  alt="GEXPO Foto 9"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g10r.jpg" alt="GEXPO Foto 10" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g11r.jpg" alt="GEXPO Foto 11" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 12" loading="lazy">
     </div>
 
     <h3>Přijďte příště!</h3>
