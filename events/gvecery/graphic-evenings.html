@@ -1,644 +1,552 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" class="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Grafické EXPO (GEXPO)</title>
 
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
   <style>
-    :root{
-      --bg0:#020617;         /* slate-950 */
-      --bg1:#0b1120;         /* deep blue */
-      --card:#050914cc;      /* translucent */
-      --line:rgba(255,255,255,.10);
-      --line2:rgba(255,255,255,.14);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.72);
-      --muted2:rgba(255,255,255,.56);
-      --cyan:#22d3ee;
-      --cyan2:#38bdf8;
-      --emerald:#34d399;
-      --emeraldBg:rgba(16,185,129,.18);
-      --pillBg:rgba(0,0,0,.40);
-      --blur: blur(10px);
-      --shadow: 0 12px 34px rgba(0,0,0,.35);
-      --radius: 18px;
-      --max: 1200px;
-      --maxXL: 1400px;
+    html { scroll-behavior: smooth; }
+    .icon { width: 1rem; height: 1rem; }
+
+    /* Gradient pozadí (stejné jako gvecery) */
+    .bg-gradient-dark {
+      background: radial-gradient(circle at top, #1f2937 0, #020617 52%, #020617 100%);
     }
 
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-    body{
-      margin:0;
-      min-height:100vh;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      color: var(--text);
-      background: radial-gradient(circle at top, #1f2937 0, var(--bg0) 52%, var(--bg0) 100%);
-      overflow-x:hidden;
-    }
-
-    /* Top scroll progress bar (1:1) */
-    #scrollbar{
-      position:fixed; left:0; top:0; height:4px; width:0%;
-      background: linear-gradient(90deg, #e879f9, #67e8f9, #60a5fa);
-      z-index:999;
-    }
-
-    /* ===== HERO (1:1) ===== */
-    .hero{
-      position:relative;
-      overflow:hidden;
-      padding: 70px 0 54px;
-    }
-    #heroCanvas{
-      position:absolute; inset:0;
-      width:100%;
-      height:60vh;
-      pointer-events:none;
-    }
-    .wrap{
-      position:relative;
-      margin:0 auto;
-      max-width: var(--maxXL);
-      padding: 0 18px;
-    }
-    .hero-inner{
-      display:flex;
-      gap:22px;
-      align-items:flex-start;
-    }
-    .logo{
-      width:56px; height:56px;
-      border-radius:14px;
-      background: rgba(255,255,255,.02);
-      border:1px solid rgba(255,255,255,.08);
-      display:grid; place-items:center;
-      box-shadow: 0 0 18px rgba(56,189,248,.45);
-      filter: invert(1);
-      overflow:hidden;
-      flex: 0 0 auto;
-    }
-    .logo img{ width:100%; height:100%; object-fit:contain; padding:10px; }
-
-    .back-pill{
+    /* QuickNav pills */
+    .pill {
       display:inline-flex;
       align-items:center;
-      gap:10px;
-      padding:7px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.35);
-      color: rgba(255,255,255,.85);
-      text-decoration:none;
-      font-size: 13px;
-      backdrop-filter: var(--blur);
+      gap:.5rem;
+      border-radius:9999px;
+      padding:.25rem .75rem;
+      border:1px solid rgba(255,255,255,.1);
+      color:rgba(255,255,255,.9);
     }
-    .back-pill:hover{ background: rgba(255,255,255,.07); }
-
-    .eyebrow{
-      margin-top: 6px;
-      font-size: 12px;
-      letter-spacing: .24em;
-      text-transform: uppercase;
-      color: rgba(34,211,238,.80);
+    .pill:hover { background: rgba(255,255,255,.08); }
+    .pill:focus-visible {
+      outline: 2px solid rgba(56,189,248,.9);
+      outline-offset: 2px;
     }
 
-    h1{
-      margin: 10px 0 10px;
-      font-size: clamp(34px, 4.2vw, 56px);
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      font-weight: 900;
-      color: rgba(255,255,255,.96);
-    }
-    .lead{
-      margin:0;
-      max-width: 72ch;
-      color: var(--muted);
-      font-size: 15.5px;
-      line-height: 1.6;
-    }
-
-    /* Info pills row (1:1) */
-    .info-row{
-      margin-top: 14px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:9px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.38);
-      color: rgba(255,255,255,.90);
-      font-size: 13px;
-      backdrop-filter: var(--blur);
-      text-decoration:none;
-      white-space: nowrap;
-    }
-    .pill:hover{ background: rgba(255,255,255,.07); }
-    .pill.green{
-      border-color: rgba(52,211,153,.55);
-      background: rgba(16,185,129,.18);
-      color: rgba(236,253,245,.92);
-    }
-    .dot{
-      width:8px; height:8px; border-radius:999px;
-      background: rgba(52,211,153,.92);
-      box-shadow: 0 0 12px rgba(52,211,153,.45);
-      animation: pulse 1.6s ease-in-out infinite;
-    }
-    @keyframes pulse{
-      0%,100%{ transform: scale(1); opacity: .9; }
-      50%{ transform: scale(1.25); opacity: .55; }
-    }
-
-    .ico{
-      width:16px; height:16px;
-      display:inline-block;
-      color: rgba(255,255,255,.85);
-      opacity:.95;
-    }
-    .ico svg{ width:16px; height:16px; display:block; stroke: currentColor; }
-
-    /* ===== Quick nav (sticky) (1:1) ===== */
-    .quicknav{
-      position:sticky;
-      top:0;
-      z-index:80;
-      border-top: 1px solid rgba(255,255,255,.10);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.40);
-      backdrop-filter: var(--blur);
-    }
-    .quicknav .wrap{
-      padding-top: 10px;
-      padding-bottom: 10px;
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      flex-wrap:wrap;
-    }
-
-    /* ===== Main section with second canvas bg ===== */
-    .area{
-      position:relative;
-      overflow:hidden;
-    }
-    #areaCanvas{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      pointer-events:none;
-      opacity: .9;
-    }
-    main{
-      position:relative;
-      z-index:2;
-      margin:0 auto;
-      max-width: var(--maxXL);
-      padding: 28px 18px 60px;
-      display:flex;
-      flex-direction:column;
-      gap: 34px;
-    }
-
-    /* Section header like gvecery detail */
-    .section-head{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom: 10px;
-      color: rgba(255,255,255,.82);
-    }
-    .badge{
-      width:34px; height:34px;
-      border-radius: 10px;
-      display:grid; place-items:center;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      box-shadow: 0 10px 30px rgba(0,0,0,.18);
-    }
-    .kicker{
-      font-size: 12px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.45);
-    }
-    h2{
-      margin: 2px 0 0;
-      font-size: 26px;
-      letter-spacing: -0.01em;
-      font-weight: 800;
-      color: rgba(255,255,255,.94);
-    }
-
-    /* Cards (micro-motion like gvecery) */
-    .card{
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 20px;
-      background: linear-gradient(180deg, rgba(23,23,23,.22), rgba(0,0,0,.55));
-      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    /* Micro-motion hover pro karty (gvecery vibe) */
+    .card {
       transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
-      overflow:hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
     }
-    .card:hover{
-      transform: translateY(-6px) scale(1.01);
-      box-shadow: 0 18px 40px rgba(0,0,0,.30);
-    }
-    .pad{ padding: 18px 18px; }
-    .text{ color: var(--muted); font-size: 14.8px; line-height: 1.7; }
-    .text strong{ color: rgba(255,255,255,.92); }
-
-    .grid2{
-      display:grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 16px;
-    }
-    @media (max-width: 980px){
-      .hero-inner{ flex-direction:column; }
-      .grid2{ grid-template-columns: 1fr; }
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.3);
     }
 
-    /* Program list */
-    ul{ margin: 0; padding-left: 18px; }
-    li{ margin: 8px 0; color: rgba(255,255,255,.78); }
-    .time{ color: rgba(255,255,255,.94); font-weight: 800; }
-
-    /* Videos */
-    .video-grid{
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-    @media (max-width: 1100px){ .video-grid{ grid-template-columns: repeat(2, 1fr);} }
-    @media (max-width: 560px){ .video-grid{ grid-template-columns: 1fr;} }
-
-    .video{
-      border-radius: 18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.35);
-      aspect-ratio: 16 / 9;
-    }
-    .video iframe{
-      width:100%; height:100%;
-      border:0; display:block;
-    }
-
-    /* Gallery thumbs (small, square) */
-    .gallery{
-      display:grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 12px;
-    }
-    @media (max-width: 1100px){ .gallery{ grid-template-columns: repeat(3, 1fr);} }
-    @media (max-width: 560px){ .gallery{ grid-template-columns: repeat(2, 1fr);} }
-
-    .thumb{
-      display:block;
-      border-radius: 18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      aspect-ratio: 1 / 1;
-      position:relative;
-    }
-    .thumb img{
-      width:100%; height:100%;
-      object-fit: cover;
-      transform: scale(1.02);
+    /* Náhledy v galerii – rozumné, ne obří */
+    .thumbimg {
+      transform: scale(1.01);
       transition: transform 500ms cubic-bezier(.22,1,.36,1);
-      display:block;
     }
-    .thumb:hover img{ transform: scale(1.08); }
-    .thumb::after{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,.25));
-      opacity:.75;
-      pointer-events:none;
-    }
-
-    footer{
-      margin-top: 34px;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255,255,255,.10);
-      text-align:center;
-      color: rgba(255,255,255,.45);
-      font-size: 12px;
-    }
-
-    /* Ensure links look like gvecery (subtle) */
-    a{ color: rgba(255,255,255,.90); }
-    a:hover{ color: rgba(255,255,255,.98); }
+    .card:hover .thumbimg { transform: scale(1.08); }
   </style>
 </head>
 
-<body>
-  <div id="scrollbar"></div>
+<body class="min-h-screen text-neutral-100 bg-gradient-dark">
+
+  <!-- horní progress pruh -->
+  <div id="scrollbar" class="fixed left-0 top-0 h-1 w-0 bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-blue-400 z-50"></div>
 
   <!-- HERO -->
-  <section class="hero">
-    <canvas id="heroCanvas"></canvas>
+  <section class="relative overflow-hidden">
+    <!-- dynamické pozadí (síť) -->
+    <canvas id="heroCanvas" class="absolute inset-0 w-full" style="height:60vh"></canvas>
 
-    <div class="wrap">
-      <a class="back-pill" href="../../events/">
-        <span class="ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </span>
-        Zpět na přehled událostí
-      </a>
+    <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-20 pb-16">
+      <div class="flex flex-col sm:flex-row sm:items-start gap-6">
+        <img
+          src="https://grafitctu.github.io/assets/logos/grafit_bw.png"
+          alt="Grafit"
+          class="h-14 w-14 invert drop-shadow-[0_0_18px_rgba(56,189,248,0.5)]"
+        />
 
-      <div class="hero-inner" style="margin-top:14px;">
-        <div class="logo">
-          <img src="https://grafitctu.github.io/assets/logos/grafit_bw.png" alt="Grafit">
-        </div>
-
-        <div style="flex:1;">
-          <div class="eyebrow">GRAFIT · SHOWCASE · STUDENTSKÉ PROJEKTY</div>
-          <h1>Grafické EXPO (GEXPO)</h1>
-          <p class="lead">
-            Semestrální přehlídka projektů z VHS a dalších grafických kurzů na FIT ČVUT.
-            Hry, VR, vizualizace i digitální kresba – přijďte si to osahat a pobavit se s autory.
+        <div class="relative flex-1">
+          <p class="text-xs uppercase tracking-[0.24em] text-cyan-300/80 mb-1">
+            Události • Studentské projekty • Grafika • Game design
           </p>
 
-          <div class="info-row">
-            <span class="pill">
-              <span class="ico" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
-                </svg>
-              </span>
-              Pátek 14.&nbsp;2.
-            </span>
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">
+            Grafické EXPO (GEXPO)
+          </h1>
 
-            <span class="pill">
-              <span class="ico" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                  <circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/>
-                </svg>
-              </span>
-              13:00–17:00+
-            </span>
+          <p class="mt-3 max-w-3xl text-neutral-300">
+            Semestrální přehlídka studentských projektů z VHS a dalších grafických kurzů na FIT ČVUT.
+            Přijďte si zahrát hry, prohlédnout VR a vizualizace, potkat autory a dát jim zpětnou vazbu.
+          </p>
 
-            <span class="pill">
-              <span class="ico" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                  <path d="M12 22s7-4.5 7-12a7 7 0 0 0-14 0c0 7.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>
-                </svg>
-              </span>
-              TH:A-1455 (ggLab), 14.&nbsp;patro + 1435
-            </span>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <a href="../../events/"
+               class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">
+              ← Zpět na přehled událostí
+            </a>
 
-            <span class="pill green">
-              <span class="dot" aria-hidden="true"></span>
-              Otevřené i pro ne-FIT veřejnost
+            <a href="../../"
+               class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">
+              ← Zpět na hlavní web Grafit
+            </a>
+
+            <span class="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/20 px-3 py-1.5 text-xs text-emerald-100">
+              <span class="h-2 w-2 rounded-full bg-emerald-300 animate-pulse"></span>
+              Semestrální showcase
             </span>
           </div>
+
+          <!-- INFO PILLS (jako na detailu gvecery) -->
+          <div class="mt-5 flex flex-wrap items-center gap-2">
+            <span class="pill bg-black/35 backdrop-blur">
+              <i data-lucide="calendar" class="icon"></i>
+              <span>Pátek 14. 2.</span>
+            </span>
+            <span class="pill bg-black/35 backdrop-blur">
+              <i data-lucide="clock-3" class="icon"></i>
+              <span>13:00–17:00+</span>
+            </span>
+            <span class="pill bg-black/35 backdrop-blur">
+              <i data-lucide="map-pin" class="icon"></i>
+              <span>TH:A — ggLab &amp; 1435 (14. patro)</span>
+            </span>
+            <span class="pill border-emerald-400/40 bg-emerald-500/20">
+              <i data-lucide="users" class="icon"></i>
+              <span>Otevřené studentům i zájemcům</span>
+            </span>
+          </div>
+
+          <!-- Plovoucí tlačítko (volitelné) -->
+          <a href="#program"
+             class="absolute right-0 -bottom-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-xs sm:text-sm text-neutral-200 hover:bg-white/10">
+            ↓ Program &nbsp;/&nbsp; Sekce
+          </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- QUICK NAV (sticky) -->
-  <nav class="quicknav">
-    <div class="wrap">
-      <a class="pill" href="#o-akci">
-        <span class="ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-            <circle cx="12" cy="12" r="9"/><path d="M12 10v7"/><path d="M12 7h.01"/>
-          </svg>
-        </span>
-        O akci
+  <!-- QUICK NAV -->
+  <nav class="sticky top-0 z-40 border-y border-white/10 bg-black/40 backdrop-blur">
+    <div class="mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-3 flex flex-wrap items-center justify-center gap-2">
+      <a href="#program" class="pill" aria-label="Přejít na program">
+        <i data-lucide="list" class="icon"></i><span>↓ Program</span>
+      </a>
+      <a href="#ukazky" class="pill" aria-label="Přejít na ukázky her">
+        <i data-lucide="play" class="icon"></i><span>↓ Ukázky her</span>
+      </a>
+      <a href="#networking" class="pill" aria-label="Přejít na networking">
+        <i data-lucide="messages-square" class="icon"></i><span>↓ Networking</span>
+      </a>
+      <a href="#fotky" class="pill" aria-label="Přejít na fotogalerii">
+        <i data-lucide="image" class="icon"></i><span>↓ Fotogalerie</span>
       </a>
 
-      <a class="pill" href="#program">
-        <span class="ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-            <path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>
-          </svg>
-        </span>
-        Program
-      </a>
+      <span class="mx-2 h-5 w-px bg-white/10 hidden sm:inline-block"></span>
 
-      <a class="pill" href="#ukazky">
-        <span class="ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-            <path d="M10 8l6 4-6 4V8z"/><rect x="3" y="5" width="18" height="14" rx="2"/>
-          </svg>
-        </span>
-        Ukázky her
+      <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer" class="pill" aria-label="YouTube Grafit">
+        <i data-lucide="youtube" class="icon"></i><span>YouTube</span> ↗
       </a>
-
-      <a class="pill" href="#networking">
-        <span class="ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
-          </svg>
-        </span>
-        Networking
-      </a>
-
-      <a class="pill" href="#fotky">
-        <span class="ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-            <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 13l2-2 4 4 2-2 3 3"/>
-          </svg>
-        </span>
-        Fotogalerie
+      <a href="https://discord.gg/sfMx2nq7BQ" target="_blank" rel="noreferrer" class="pill" aria-label="Discord Grafit">
+        <i data-lucide="messages-square" class="icon"></i><span>Discord</span> ↗
       </a>
     </div>
   </nav>
 
-  <!-- AREA with second canvas -->
-  <section class="area">
-    <canvas id="areaCanvas"></canvas>
+  <!-- Spodní sekce s částicovým pozadím -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <canvas id="areaCanvas" class="w-full h-full"></canvas>
+    </div>
 
-    <main>
-      <!-- O AKCI -->
-      <section id="o-akci">
-        <div class="section-head">
-          <div class="badge">🎓</div>
-          <div>
-            <div class="kicker">GEXPO</div>
-            <h2>Co je Grafické EXPO?</h2>
-          </div>
-        </div>
-
-        <div class="grid2">
-          <div class="card">
-            <div class="pad">
-              <div class="text">
-                Každý semestr se v rámci předmětu <strong>VHS</strong> a dalších grafických kurzů na FIT ČVUT rodí mnoho
-                zajímavých projektů. <strong>Grafické EXPO</strong> dává prostor tyto práce ukázat: hry, VR, vizualizace,
-                digitální kresba i experimenty.
-                <br><br>
-                Přijďte si projekty vyzkoušet, pobavit se s autory a dát jim zpětnou vazbu.
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="pad">
-              <div class="text">
-                <strong>Pro koho:</strong> studenti, vyučující i zájemci zvenku.<br>
-                <strong>Co uvidíš:</strong> hry, VR, vizualizace, kresbu.<br>
-                <strong>Co získáš:</strong> inspiraci, kontakty, feedback.
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <main class="relative z-10 mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-10 space-y-12">
 
       <!-- PROGRAM -->
-      <section id="program">
-        <div class="section-head">
-          <div class="badge">🗓️</div>
-          <div>
-            <div class="kicker">Harmonogram</div>
-            <h2>Program</h2>
+      <section id="program" aria-labelledby="program-heading">
+        <div class="mb-4">
+          <div class="flex items-center gap-2 text-neutral-300">
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🗓️</span>
+            <span class="text-sm uppercase tracking-wide text-neutral-400">Harmonogram</span>
           </div>
+          <h2 id="program-heading" class="mt-1 text-2xl font-bold tracking-tight">Program</h2>
+          <p class="mt-1 text-sm text-neutral-400">
+            Orientační časový plán (může se lehce měnit podle průběhu).
+          </p>
         </div>
 
-        <div class="card">
-          <div class="pad">
-            <ul>
-              <li><span class="time">13:00</span> – Úvodní slovo a zahájení</li>
-              <li><span class="time">13:15</span> – Prezentace studentských her z předmětu VHS</li>
-              <li><span class="time">14:00</span> – Kolaborativní VR projekt Politeia 21</li>
-              <li><span class="time">14:30</span> – Digitální rekonstrukce Starého Mostu a věnných měst českých královen</li>
-              <li><span class="time">15:00</span> – Interaktivní Dotyková zeď (Spaceship Shenanigans, Na frontě není klid…)</li>
-              <li><span class="time">15:30</span> – Ukázky digitální kresby z předmětu DID</li>
-              <li><span class="time">16:00</span> – Studentské projekty a bakalářské práce</li>
-              <li><span class="time">17:00</span> – Volná diskuze, testování her a networking</li>
-            </ul>
-          </div>
+        <div class="card rounded-2xl border border-white/10 bg-gradient-to-b from-neutral-900 to-black p-5">
+          <ul class="text-neutral-300 space-y-2">
+            <li><span class="text-neutral-100 font-semibold">13:00</span> – Úvodní slovo a zahájení</li>
+            <li><span class="text-neutral-100 font-semibold">13:15</span> – Prezentace studentských her z předmětu VHS</li>
+            <li><span class="text-neutral-100 font-semibold">14:00</span> – Kolaborativní VR projekt Politeia 21</li>
+            <li><span class="text-neutral-100 font-semibold">14:30</span> – Digitální rekonstrukce Starého Mostu a věnných měst českých královen</li>
+            <li><span class="text-neutral-100 font-semibold">15:00</span> – Interaktivní Dotyková zeď (Spaceship Shenanigans, Na frontě není klid…)</li>
+            <li><span class="text-neutral-100 font-semibold">15:30</span> – Ukázky digitální kresby z předmětu DID</li>
+            <li><span class="text-neutral-100 font-semibold">16:00</span> – Studentské projekty a bakalářské práce</li>
+            <li><span class="text-neutral-100 font-semibold">17:00</span> – Volná diskuze, testování her a networking</li>
+          </ul>
         </div>
       </section>
 
-      <!-- UKÁZKY -->
-      <section id="ukazky">
-        <div class="section-head">
-          <div class="badge">🎮</div>
-          <div>
-            <div class="kicker">Ukázky</div>
-            <h2>Ukázky her</h2>
+      <!-- UKÁZKY HER -->
+      <section id="ukazky" aria-labelledby="ukazky-heading" class="border-t border-white/10 pt-10">
+        <div class="mb-4">
+          <div class="flex items-center gap-2 text-neutral-300">
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎮</span>
+            <span class="text-sm uppercase tracking-wide text-neutral-400">Video</span>
           </div>
+          <h2 id="ukazky-heading" class="mt-1 text-2xl font-bold tracking-tight">Ukázky her</h2>
+          <p class="mt-1 text-sm text-neutral-400">
+            Krátké ukázky vybraných projektů (YouTube embed).
+          </p>
         </div>
 
-        <div class="video-grid">
-          <div class="video"><iframe src="https://www.youtube.com/embed/lUawOXPqS8w" allowfullscreen></iframe></div>
-          <div class="video"><iframe src="https://www.youtube.com/embed/EwUPtQEL2Sg" allowfullscreen></iframe></div>
-          <div class="video"><iframe src="https://www.youtube.com/embed/nvQPpK9XxKc" allowfullscreen></iframe></div>
-          <div class="video"><iframe src="https://www.youtube.com/embed/IT9bUmlOFiM" allowfullscreen></iframe></div>
-          <div class="video"><iframe src="https://www.youtube.com/embed/kDnPp82q_Io" allowfullscreen></iframe></div>
-          <div class="video"><iframe src="https://www.youtube.com/embed/AQNmMeknEpM" allowfullscreen></iframe></div>
-          <div class="video"><iframe src="https://www.youtube.com/embed/npbAVKckvlo" allowfullscreen></iframe></div>
-          <div class="video"><iframe src="https://www.youtube.com/embed/7zAAhZsvwEY" allowfullscreen></iframe></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <!-- každé video jako karta -->
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/lUawOXPqS8w"
+                title="GEXPO video 1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/EwUPtQEL2Sg"
+                title="GEXPO video 2"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/nvQPpK9XxKc"
+                title="GEXPO video 3"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/IT9bUmlOFiM"
+                title="GEXPO video 4"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/kDnPp82q_Io"
+                title="GEXPO video 5"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/AQNmMeknEpM"
+                title="GEXPO video 6"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/npbAVKckvlo"
+                title="GEXPO video 7"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/7zAAhZsvwEY"
+                title="GEXPO video 8"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- NETWORKING -->
-      <section id="networking">
-        <div class="section-head">
-          <div class="badge">💬</div>
-          <div>
-            <div class="kicker">Diskuze</div>
-            <h2>Networking a sdílení zkušeností</h2>
+      <section id="networking" aria-labelledby="networking-heading" class="border-t border-white/10 pt-10">
+        <div class="mb-4">
+          <div class="flex items-center gap-2 text-neutral-300">
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">💬</span>
+            <span class="text-sm uppercase tracking-wide text-neutral-400">Neformálně</span>
           </div>
+          <h2 id="networking-heading" class="mt-1 text-2xl font-bold tracking-tight">Networking a sdílení zkušeností</h2>
         </div>
 
-        <div class="card">
-          <div class="pad">
-            <div class="text">
-              Po skončení hlavního programu akce zdaleka nekončila. Účastníci zůstali na místě další hodiny a akce se přirozeně přelila
-              do neformálních diskuzí. Studenti si mezi sebou zkoušeli hry, sdíleli dojmy a navzájem si dávali zpětnou vazbu.
-              Probírali nejen konkrétní technické a vizuální aspekty svých projektů, ale i širší témata související s herním průmyslem
-              a grafickým designem.
+        <div class="card rounded-2xl border border-white/10 bg-gradient-to-b from-neutral-900 to-black p-5">
+          <p class="text-neutral-300 leading-relaxed">
+            Po skončení hlavního programu akce zdaleka nekončila. Účastníci zůstali na místě další hodiny a akce se přirozeně přelila
+            do neformálních diskuzí. Studenti si mezi sebou zkoušeli hry, sdíleli dojmy a navzájem si dávali zpětnou vazbu.
+            Probírali nejen konkrétní technické a vizuální aspekty svých projektů, ale i širší témata související s herním průmyslem
+            a grafickým designem.
+          </p>
+
+          <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4 text-neutral-300">
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div class="flex items-center gap-2 text-neutral-200 font-semibold">
+                <i data-lucide="users" class="icon"></i> Témata, která se řešila
+              </div>
+              <ul class="mt-2 space-y-2 text-sm text-neutral-300/90">
+                <li>Jak funguje týmová práce ve vývoji her a interaktivních aplikací?</li>
+                <li>Jak se připravují a testují bakalářské a diplomové práce?</li>
+                <li>Jaké jsou nejlepší způsoby playtestingu a získání kvalitní zpětné vazby?</li>
+                <li>Jak se dostat do herního průmyslu a co čekat od prvních projektů?</li>
+                <li>Jaké technologie a nástroje jsou nejvhodnější pro grafické aplikace?</li>
+              </ul>
             </div>
 
-            <div style="height:12px;"></div>
-
-            <div class="grid2">
-              <div class="card" style="border-radius:16px;">
-                <div class="pad">
-                  <div class="text">
-                    <strong>Témata, která se často řeší:</strong>
-                    <ul style="margin-top:10px;">
-                      <li>Jak funguje týmová práce ve vývoji her a interaktivních aplikací?</li>
-                      <li>Jak se připravují a testují bakalářské a diplomové práce?</li>
-                      <li>Jaké jsou nejlepší způsoby playtestingu a získání zpětné vazby?</li>
-                      <li>Jak se dostat do herního průmyslu a co čekat od prvních projektů?</li>
-                      <li>Jaké technologie a nástroje jsou nejvhodnější pro grafické aplikace?</li>
-                    </ul>
-                  </div>
-                </div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div class="flex items-center gap-2 text-neutral-200 font-semibold">
+                <i data-lucide="sparkles" class="icon"></i> Proč přijít
               </div>
-
-              <div class="card" style="border-radius:16px;">
-                <div class="pad">
-                  <div class="text">
-                    <strong>Tip:</strong> Přijď i později — „volná část“ po programu bývá nejzajímavější na otázky,
-                    prohlížení buildů a hledání spolupráce.
-                  </div>
-                </div>
-              </div>
+              <ul class="mt-2 space-y-2 text-sm text-neutral-300/90">
+                <li>Uvidíš špičkové studentské práce naživo.</li>
+                <li>Potkáš autory a můžeš se zeptat na workflow.</li>
+                <li>Získáš inspiraci pro vlastní semestrální projekt / BP / DP.</li>
+                <li>Networking: lidi, kteří dělají hry, VR i grafiku.</li>
+              </ul>
             </div>
-
           </div>
         </div>
       </section>
 
-      <!-- FOTKY -->
-      <section id="fotky">
-        <div class="section-head">
-          <div class="badge">📸</div>
+      <!-- FOTOGALERIE -->
+      <section id="fotky" aria-labelledby="fotky-heading" class="border-t border-white/10 pt-10">
+        <div class="mb-4 flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">📸</span>
           <div>
-            <div class="kicker">Galerie</div>
-            <h2>Fotogalerie</h2>
+            <span class="text-sm uppercase tracking-wide text-neutral-400">Fotky</span>
+            <h2 id="fotky-heading" class="mt-1 text-2xl font-bold tracking-tight">Fotogalerie</h2>
           </div>
         </div>
 
-        <div class="gallery">
-          <a class="thumb" href="/assets/events/GEXPO/2025/g1r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g1r.jpg" alt="GEXPO Foto 1" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g2r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g2r.jpg" alt="GEXPO Foto 2" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g3r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g3r.jpg" alt="GEXPO Foto 3" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g4r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g4r.jpg" alt="GEXPO Foto 4" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g5r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g5r.jpg" alt="GEXPO Foto 5" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g6r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g6r.jpg" alt="GEXPO Foto 6" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g7r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g7r.jpg" alt="GEXPO Foto 7" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g8r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g8r.jpg" alt="GEXPO Foto 8" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g9r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g9r.jpg" alt="GEXPO Foto 9" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g10r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g10r.jpg" alt="GEXPO Foto 10" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g11r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g11r.jpg" alt="GEXPO Foto 11" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2025/g12r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 12" loading="lazy"></a>
-        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+          <!-- každý obrázek jako karta -->
+          <!-- klik otevře plnou fotku v novém okně -->
+          <!-- g1r–g12r pouze lokální -->
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g1r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g1r.jpg" alt="GEXPO Foto 1" loading="lazy" decoding="async">
+            </div>
+          </a>
 
-        <div class="card" style="margin-top:18px;">
-          <div class="pad">
-            <h2 style="margin:0; font-size:22px;">Přijďte příště!</h2>
-            <p class="text" style="margin:10px 0 0;">
-              Ať jste grafik, negrafik, student či učitel — pokud vás něco z toho zajímá, příště se stavte!
-              Rádi vás uvidíme na dalším ročníku Grafického EXPA.
-            </p>
-          </div>
-        </div>
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g2r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g2r.jpg" alt="GEXPO Foto 2" loading="lazy" decoding="async">
+            </div>
+          </a>
 
-        <footer>© Grafit Research Group — Grafické EXPO (GEXPO).</footer>
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g3r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g3r.jpg" alt="GEXPO Foto 3" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g4r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g4r.jpg" alt="GEXPO Foto 4" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g5r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g5r.jpg" alt="GEXPO Foto 5" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g6r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g6r.jpg" alt="GEXPO Foto 6" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g7r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g7r.jpg" alt="GEXPO Foto 7" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g8r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g8r.jpg" alt="GEXPO Foto 8" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g9r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g9r.jpg" alt="GEXPO Foto 9" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g10r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g10r.jpg" alt="GEXPO Foto 10" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g11r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g11r.jpg" alt="GEXPO Foto 11" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g12r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 12" loading="lazy" decoding="async">
+            </div>
+          </a>
+        </div>
       </section>
+
+      <!-- CTA -->
+      <section class="border-t border-white/10 pt-10">
+        <div class="card rounded-2xl border border-white/10 bg-gradient-to-b from-neutral-900 to-black p-6 text-center">
+          <h2 class="text-2xl font-bold tracking-tight">Přijďte příště!</h2>
+          <p class="mt-2 text-neutral-300">
+            Ať jste grafik, negrafik, student či učitel – pokud vás to zajímá, příště se stavte.
+            Rádi vás uvidíme na dalším ročníku Grafického EXPA.
+          </p>
+        </div>
+
+        <footer class="mt-10 border-t border-white/10 pt-6 text-center text-xs text-neutral-500">
+          © Grafit Research Group — Grafické EXPO (GEXPO).
+        </footer>
+      </section>
+
     </main>
   </section>
 
   <script>
-    // scroll progress
+    // Lucide ikony po načtení
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) { window.lucide.createIcons(); }
+    });
+
+    // --- částice (canvas) --- //
+    function particles(canvas, opts) {
+      const ctx = canvas.getContext("2d");
+      let w = 0, h = 0, raf = 0;
+      const N = opts.N || 42;
+      const speed = opts.speed || 0.35;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width  = Math.max(window.innerWidth, Math.ceil(rect.width || window.innerWidth));
+        h = canvas.height = Math.ceil(rect.height || 520);
+      }
+
+      const dots = Array.from({length:N}, () => ({
+        x: 0, y: 0,
+        vx: (Math.random() - .5) * speed,
+        vy: (Math.random() - .5) * speed
+      }));
+
+      function resetDots() {
+        dots.forEach(d => {
+          d.x = Math.random() * w;
+          d.y = Math.random() * h;
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        const grad = ctx.createLinearGradient(0,0,w,h);
+        grad.addColorStop(0,"#020617");
+        grad.addColorStop(0.4,"#020617");
+        grad.addColorStop(1,"#0b1120");
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = .96;
+        ctx.fillRect(0,0,w,h);
+        ctx.globalAlpha = 1;
+
+        for (let i=0; i<N; i++) {
+          const a = dots[i];
+          a.x += a.vx;
+          a.y += a.vy;
+          if (a.x < 0 || a.x > w) a.vx *= -1;
+          if (a.y < 0 || a.y > h) a.vy *= -1;
+
+          for (let j=i+1; j<N; j++) {
+            const b = dots[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 140) {
+              ctx.globalAlpha = 1 - dist/140;
+              ctx.strokeStyle = "#22d3ee";
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
+          }
+
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(a.x, a.y, 1.4, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      function start() {
+        resize();
+        resetDots();
+        draw();
+      }
+
+      const ro = new ResizeObserver(() => resize());
+      ro.observe(canvas.parentElement);
+      window.addEventListener("resize", resize);
+      start();
+
+      return { stop: () => cancelAnimationFrame(raf), ro };
+    }
+
+    // --- scroll progress --- //
     window.addEventListener("scroll", () => {
       const s = document.documentElement.scrollTop || document.body.scrollTop;
       const h = (document.documentElement.scrollHeight - document.documentElement.clientHeight) || 1;
@@ -646,111 +554,13 @@
       document.getElementById("scrollbar").style.width = (pct * 100) + "%";
     });
 
-    // Constellation background (like gvecery)
-    function particles(canvas, opts) {
-      const ctx = canvas.getContext("2d", { alpha: true });
-      let w = 0, h = 0, raf = 0;
-
-      const N = opts.N || 44;
-      const speed = opts.speed || 0.35;
-      const linkDist = opts.linkDist || 150;
-
-      function resize() {
-        const parent = canvas.parentElement;
-        const rect = parent.getBoundingClientRect();
-        w = canvas.width  = Math.max(1, Math.floor(rect.width));
-        // For hero we want fixed "60vh"; for area it's full section height:
-        h = canvas.height = Math.max(1, Math.floor(rect.height));
-      }
-
-      const dots = Array.from({ length: N }, () => ({
-        x: Math.random(),
-        y: Math.random(),
-        vx: (Math.random() - .5) * speed,
-        vy: (Math.random() - .5) * speed
-      }));
-
-      function draw() {
-        ctx.clearRect(0, 0, w, h);
-
-        // dark gradient underlay (subtle)
-        const grad = ctx.createLinearGradient(0,0,w,h);
-        grad.addColorStop(0, "#020617");
-        grad.addColorStop(1, "#0b1120");
-        ctx.globalAlpha = 0.96;
-        ctx.fillStyle = grad;
-        ctx.fillRect(0,0,w,h);
-        ctx.globalAlpha = 1;
-
-        // update + draw links
-        for (let i = 0; i < N; i++) {
-          const a = dots[i];
-          a.x += a.vx / w;
-          a.y += a.vy / h;
-
-          if (a.x < 0 || a.x > 1) a.vx *= -1;
-          if (a.y < 0 || a.y > 1) a.vy *= -1;
-
-          const ax = a.x * w;
-          const ay = a.y * h;
-
-          for (let j = i + 1; j < N; j++) {
-            const b = dots[j];
-            const bx = b.x * w;
-            const by = b.y * h;
-            const dx = ax - bx;
-            const dy = ay - by;
-            const dist = Math.hypot(dx, dy);
-
-            if (dist < linkDist) {
-              const alpha = 1 - dist / linkDist;
-              ctx.globalAlpha = alpha * 0.9;
-              ctx.strokeStyle = "#22d3ee";
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(ax, ay);
-              ctx.lineTo(bx, by);
-              ctx.stroke();
-              ctx.globalAlpha = 1;
-            }
-          }
-
-          // dot
-          ctx.fillStyle = "#38bdf8";
-          ctx.beginPath();
-          ctx.arc(ax, ay, 1.4, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        raf = requestAnimationFrame(draw);
-      }
-
-      resize();
-      draw();
-
-      const ro = new ResizeObserver(resize);
-      ro.observe(canvas.parentElement);
-      window.addEventListener("resize", resize);
-
-      return { stop: () => cancelAnimationFrame(raf), ro };
-    }
-
-    // Respect reduced motion
-    const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // --- init --- //
+    const prefersReduced = window.matchMedia &&
+                           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (!prefersReduced) {
-      particles(document.getElementById("heroCanvas"), { N: 42, speed: 0.45, linkDist: 170 });
-      particles(document.getElementById("areaCanvas"), { N: 54, speed: 0.40, linkDist: 165 });
-    } else {
-      // if reduced motion, at least paint background once so it’s not blank
-      const c = document.getElementById("heroCanvas");
-      const ctx = c.getContext("2d");
-      const rect = c.parentElement.getBoundingClientRect();
-      c.width = Math.max(1, Math.floor(rect.width));
-      c.height = Math.max(1, Math.floor(rect.height));
-      const g = ctx.createLinearGradient(0,0,c.width,c.height);
-      g.addColorStop(0,"#020617"); g.addColorStop(1,"#0b1120");
-      ctx.fillStyle = g; ctx.fillRect(0,0,c.width,c.height);
+      particles(document.getElementById("heroCanvas"), { N: 40, speed: .35 });
+      particles(document.getElementById("areaCanvas"), { N: 50, speed: .32 });
     }
   </script>
 </body>
