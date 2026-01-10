@@ -1,45 +1,163 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grafické EXPO (GEXPO)</title>
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/title.css">
-    <script src="/scrolll.js"></script>
-    <script src="/img.js"></script>
-    <style>
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            justify-content: center;
-        }
-        .video-item {
-            text-align: center;
-        }
-        .video-item iframe {
-            width: 100%;
-            height: 200px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grafické EXPO (GEXPO)</title>
+
+  <style>
+    :root{
+      --bg: #0b1020;
+      --card: rgba(255,255,255,0.06);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.72);
+      --line: rgba(255,255,255,0.12);
+      --link: rgba(140, 205, 255, 0.95);
+    }
+
+    *{ box-sizing: border-box; }
+
+    body{
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(120,80,255,0.25), transparent 60%),
+                  radial-gradient(900px 600px at 90% 10%, rgba(0,180,255,0.18), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(10, 14, 28, 0.55);
+      border-bottom: 1px solid var(--line);
+    }
+    header > div{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 18px;
+    }
+    header a{
+      color: var(--link);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    header a:hover{ text-decoration: underline; }
+
+    #main{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 22px 18px 40px;
+    }
+
+    h2{
+      margin: 10px 0 12px;
+      font-size: 1.9rem;
+      letter-spacing: 0.2px;
+    }
+    h3{
+      margin: 26px 0 10px;
+      font-size: 1.25rem;
+    }
+    p{ color: var(--muted); margin: 10px 0; }
+    strong{ color: var(--text); }
+
+    ul{
+      margin: 10px 0 0 18px;
+      color: var(--muted);
+    }
+    li{ margin: 6px 0; }
+
+    /* --- Video grid --- */
+    .video-grid{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .video-item{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .video-item iframe{
+      width: 100%;
+      height: 190px;
+      display: block;
+      border: 0;
+    }
+
+    @media (max-width: 980px){
+      .video-grid{ grid-template-columns: repeat(2, 1fr); }
+      .video-item iframe{ height: 220px; }
+    }
+    @media (max-width: 560px){
+      .video-grid{ grid-template-columns: 1fr; }
+      .video-item iframe{ height: 230px; }
+    }
+
+    /* --- Galerie: malé náhledy, rozumné rozměry --- */
+    .gallery{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .gallery img{
+      width: 100%;
+      height: 140px;      /* náhledy NE obří */
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      display: block;
+      transition: transform 120ms ease, filter 120ms ease;
+    }
+    .gallery img:hover{
+      transform: scale(1.02);
+      filter: brightness(1.05);
+    }
+
+    /* malé “karty” pro textové bloky (volitelné, ale hezké) */
+    .block{
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+  </style>
 </head>
+
 <body>
-<header>
+  <header>
     <div>
-        <a href="../../">Zpět na Grafit</a>
+      <a href="../../">Zpět na Grafit</a>
     </div>
-</header>
-<section id="main">
+  </header>
+
+  <section id="main">
     <h2>Grafické EXPO (GEXPO)</h2>
-    <p><strong>Datum:</strong> Pátek 14. 2.<br>
-       <strong>Místo:</strong> 14. patro: ggLab a 1435</p>
-    <p>Každý semestr se v rámci předmětu VHS a dalších grafických kurzů na FIT ČVUT rodí mnoho zajímavých projektů. 
-       Grafické EXPO nabízí studentům i zájemcům možnost vidět výsledky práce svých kolegů, seznámit se s inspirativními nápady 
-       a zjistit, co je možné v rámci těchto předmětů vytvořit.</p>
-    
-    <h3>Program</h2>
-    <ul>
+
+    <div class="block">
+      <p>
+        <strong>Datum:</strong> Pátek 14. 2.<br>
+        <strong>Místo:</strong> 14. patro: ggLab a 1435
+      </p>
+      <p>
+        Každý semestr se v rámci předmětu VHS a dalších grafických kurzů na FIT ČVUT rodí mnoho zajímavých projektů.
+        Grafické EXPO nabízí studentům i zájemcům možnost vidět výsledky práce svých kolegů, seznámit se s inspirativními nápady
+        a zjistit, co je možné v rámci těchto předmětů vytvořit.
+      </p>
+    </div>
+
+    <h3>Program</h3>
+    <div class="block">
+      <ul>
         <li>13:00 - Úvodní slovo a zahájení</li>
         <li>13:15 - Prezentace studentských her z předmětu VHS</li>
         <li>14:00 - Kolaborativní VR projekt Politeia 21</li>
@@ -48,69 +166,97 @@
         <li>15:30 - Ukázky digitální kresby z předmětu DID</li>
         <li>16:00 - Studentské projekty a bakalářské práce</li>
         <li>17:00 - Volná diskuze, testování her a networking</li>
-    </ul>
-    
-    <h3>Ukázky her</h2>
-    <div class="video-grid">
-        <div class="video-item">
-            <iframe src="https://www.youtube.com/embed/lUawOXPqS8w" frameborder="0" allowfullscreen></iframe>
-            
-        </div>
-        <div class="video-item">
-            <iframe src="https://www.youtube.com/embed/EwUPtQEL2Sg" frameborder="0" allowfullscreen></iframe>
-            
-        </div>
-        <div class="video-item">
-            <iframe src="https://www.youtube.com/embed/nvQPpK9XxKc" frameborder="0" allowfullscreen></iframe>
-            
-        </div>
-        <div class="video-item">
-            <iframe src="https://www.youtube.com/embed/IT9bUmlOFiM" frameborder="0" allowfullscreen></iframe>
-            
-        </div>
-        <div class="video-item">
-            <iframe src="https://www.youtube.com/embed/kDnPp82q_Io" frameborder="0" allowfullscreen></iframe>
-            
-        </div>
-        <div class="video-item">
-            <iframe src="https://www.youtube.com/embed/AQNmMeknEpM" frameborder="0" allowfullscreen></iframe>
-            
-        </div>
-        <div class="video-item">
-            <iframe src="https://www.youtube.com/embed/npbAVKckvlo" frameborder="0" allowfullscreen></iframe>
-            
-        </div>
-        <div class="video-item">
-           <iframe src="https://www.youtube.com/embed/7zAAhZsvwEY" frameborder="0" allowfullscreen></iframe>
-            
-        </div>
+      </ul>
     </div>
-    <h3>Networking a sdílení zkušeností</h2>
-    <p>Po skončení hlavního programu akce zdaleka nekončila. Účastníci zůstali na místě další hodiny a akce se přirozeně přelila
-       do neformálních diskuzí. Studenti si mezi sebou zkoušeli hry, sdíleli dojmy a navzájem si dávali zpětnou vazbu.
-       Probírali nejen konkrétní technické a vizuální aspekty svých projektů, ale i širší témata související s herním průmyslem
-       a grafickým designem.</p>
-    <ul>
+
+    <h3>Ukázky her</h3>
+    <div class="video-grid">
+      <div class="video-item">
+        <iframe src="https://www.youtube.com/embed/lUawOXPqS8w"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+      <div class="video-item">
+        <iframe src="https://www.youtube.com/embed/EwUPtQEL2Sg"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+      <div class="video-item">
+        <iframe src="https://www.youtube.com/embed/nvQPpK9XxKc"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+      <div class="video-item">
+        <iframe src="https://www.youtube.com/embed/IT9bUmlOFiM"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+      <div class="video-item">
+        <iframe src="https://www.youtube.com/embed/kDnPp82q_Io"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+      <div class="video-item">
+        <iframe src="https://www.youtube.com/embed/AQNmMeknEpM"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+      <div class="video-item">
+        <iframe src="https://www.youtube.com/embed/npbAVKckvlo"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+      <div class="video-item">
+        <iframe src="https://www.youtube.com/embed/7zAAhZsvwEY"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <h3>Networking a sdílení zkušeností</h3>
+    <div class="block">
+      <p>
+        Po skončení hlavního programu akce zdaleka nekončila. Účastníci zůstali na místě další hodiny a akce se přirozeně přelila
+        do neformálních diskuzí. Studenti si mezi sebou zkoušeli hry, sdíleli dojmy a navzájem si dávali zpětnou vazbu.
+        Probírali nejen konkrétní technické a vizuální aspekty svých projektů, ale i širší témata související s herním průmyslem
+        a grafickým designem.
+      </p>
+      <ul>
         <li>Jak funguje týmová práce ve vývoji her a interaktivních aplikací?</li>
         <li>Jak se připravují a testují bakalářské a diplomové práce?</li>
         <li>Jaké jsou nejlepší způsoby testování her a zajištění kvalitní zpětné vazby?</li>
         <li>Jak se dostat do herního průmyslu a co očekávat od prvních projektů?</li>
         <li>Jaké technologie a nástroje jsou nejvhodnější pro grafické aplikace?</li>
-    </ul>
-    
-    <h3>Fotogalerie</h2>
-    <div class="gallery">
-        <img src="/assets/events/GEXPO/2025/g1r.jpg" alt="GEXPO Foto 1">
-        <img src="https://lh3.googleusercontent.com/..." alt="GEXPO Foto 2">
-        <img src="https://lh3.googleusercontent.com/..." alt="GEXPO Foto 3">
-        <img src="https://lh3.googleusercontent.com/..." alt="GEXPO Foto 4">
-        <img src="https://lh3.googleusercontent.com/..." alt="GEXPO Foto 5">
+      </ul>
     </div>
-    
-    <h3>Přijďte příště!</h2>
-    <p>Ať jste grafik, negrafik, student či učitel, pokud vás něco z toho zajímá, příště se stavte! Rádi vás uvidíme na dalším ročníku Grafického EXPA.</p>
-</section>
-<footer>
-</footer>
+
+    <h3>Fotogalerie</h3>
+    <div class="gallery">
+      <!-- původní -->
+      <img src="/assets/events/GEXPO/2025/g1r.jpg" alt="GEXPO Foto 1" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g2r.jpg"  alt="GEXPO Foto 6"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g3r.jpg"  alt="GEXPO Foto 7"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g4r.jpg"  alt="GEXPO Foto 8"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g5r.jpg"  alt="GEXPO Foto 9"  loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g6r.jpg"  alt="GEXPO Foto 10" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g7r.jpg"  alt="GEXPO Foto 11" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g8r.jpg"  alt="GEXPO Foto 12" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g9r.jpg"  alt="GEXPO Foto 13" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g10r.jpg" alt="GEXPO Foto 14" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g11r.jpg" alt="GEXPO Foto 15" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 16" loading="lazy">
+      <img src="/assets/events/GEXPO/2025/g13r.jpg" alt="GEXPO Foto 17" loading="lazy">
+    </div>
+
+    <h3>Přijďte příště!</h3>
+    <div class="block">
+      <p>
+        Ať jste grafik, negrafik, student či učitel, pokud vás něco z toho zajímá, příště se stavte!
+        Rádi vás uvidíme na dalším ročníku Grafického EXPA.
+      </p>
+    </div>
+  </section>
+
+  <footer></footer>
 </body>
 </html>
