@@ -1,389 +1,757 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Grafické EXPO (GEXPO)</title>
 
   <style>
     :root{
-      --bg: #fbfbfd;
-      --text: #0f172a;        /* slate-900 */
-      --muted: #475569;       /* slate-600 */
-      --muted2: #64748b;      /* slate-500 */
-      --border: #e5e7eb;      /* gray-200 */
-      --card: #ffffff;
-      --link: #0f172a;
-      --pill-bg: #f1f5f9;     /* slate-100 */
-      --pill-border: #e2e8f0; /* slate-200 */
-      --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      --bg0:#020617;         /* slate-950 */
+      --bg1:#0b1120;         /* deep blue */
+      --card:#050914cc;      /* translucent */
+      --line:rgba(255,255,255,.10);
+      --line2:rgba(255,255,255,.14);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.72);
+      --muted2:rgba(255,255,255,.56);
+      --cyan:#22d3ee;
+      --cyan2:#38bdf8;
+      --emerald:#34d399;
+      --emeraldBg:rgba(16,185,129,.18);
+      --pillBg:rgba(0,0,0,.40);
+      --blur: blur(10px);
+      --shadow: 0 12px 34px rgba(0,0,0,.35);
+      --radius: 18px;
+      --max: 1200px;
+      --maxXL: 1400px;
     }
 
-    *{ box-sizing: border-box; }
-
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
     body{
-      margin: 0;
+      margin:0;
+      min-height:100vh;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      background:
-        radial-gradient(900px 420px at 20% 0%, rgba(15, 23, 42, 0.06), transparent 60%),
-        radial-gradient(800px 420px at 85% 10%, rgba(15, 23, 42, 0.05), transparent 55%),
-        var(--bg);
       color: var(--text);
-      line-height: 1.55;
+      background: radial-gradient(circle at top, #1f2937 0, var(--bg0) 52%, var(--bg0) 100%);
+      overflow-x:hidden;
     }
 
-    a{ color: var(--link); text-decoration: none; }
-    a:hover{ text-decoration: underline; }
-
-    /* ====== Header “Grafické večery” vibe ====== */
-    header{
-      border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.75);
-      backdrop-filter: blur(10px);
+    /* Top scroll progress bar (1:1) */
+    #scrollbar{
+      position:fixed; left:0; top:0; height:4px; width:0%;
+      background: linear-gradient(90deg, #e879f9, #67e8f9, #60a5fa);
+      z-index:999;
     }
 
+    /* ===== HERO (1:1) ===== */
+    .hero{
+      position:relative;
+      overflow:hidden;
+      padding: 70px 0 54px;
+    }
+    #heroCanvas{
+      position:absolute; inset:0;
+      width:100%;
+      height:60vh;
+      pointer-events:none;
+    }
     .wrap{
-      max-width: 1100px;
-      margin: 0 auto;
+      position:relative;
+      margin:0 auto;
+      max-width: var(--maxXL);
       padding: 0 18px;
     }
-
-    .topbar{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 0;
-      font-size: 0.95rem;
-      color: var(--muted2);
+    .hero-inner{
+      display:flex;
+      gap:22px;
+      align-items:flex-start;
     }
-
-    .topbar .back{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .topbar .meta{
-      color: var(--muted2);
-      white-space: nowrap;
-    }
-
-    .hero{
-      padding: 18px 0 22px;
-      text-align: left;
-    }
-
-    .brandline{
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 10px;
-    }
-
     .logo{
-      width: 64px;
-      height: 64px;
-      object-fit: contain;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: #fff;
-      padding: 8px;
-      box-shadow: 0 8px 20px rgba(15,23,42,0.06);
+      width:56px; height:56px;
+      border-radius:14px;
+      background: rgba(255,255,255,.02);
+      border:1px solid rgba(255,255,255,.08);
+      display:grid; place-items:center;
+      box-shadow: 0 0 18px rgba(56,189,248,.45);
+      filter: invert(1);
+      overflow:hidden;
+      flex: 0 0 auto;
     }
+    .logo img{ width:100%; height:100%; object-fit:contain; padding:10px; }
 
-    .tagline{
-      font-size: 0.95rem;
-      color: var(--muted2);
-      letter-spacing: 0.02em;
+    .back-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:7px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.35);
+      color: rgba(255,255,255,.85);
+      text-decoration:none;
+      font-size: 13px;
+      backdrop-filter: var(--blur);
+    }
+    .back-pill:hover{ background: rgba(255,255,255,.07); }
+
+    .eyebrow{
+      margin-top: 6px;
+      font-size: 12px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: rgba(34,211,238,.80);
     }
 
     h1{
-      margin: 10px 0 8px;
-      font-size: 2.2rem;
+      margin: 10px 0 10px;
+      font-size: clamp(34px, 4.2vw, 56px);
+      line-height: 1.05;
       letter-spacing: -0.02em;
-      line-height: 1.1;
+      font-weight: 900;
+      color: rgba(255,255,255,.96);
     }
-
     .lead{
-      margin: 0;
+      margin:0;
+      max-width: 72ch;
       color: var(--muted);
-      max-width: 80ch;
+      font-size: 15.5px;
+      line-height: 1.6;
     }
 
-    .pills{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+    /* Info pills row (1:1) */
+    .info-row{
       margin-top: 14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
     }
-
     .pill{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+      padding: 7px 12px;
       border-radius: 999px;
-      border: 1px solid var(--pill-border);
-      background: var(--pill-bg);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 0.92rem;
-      text-decoration: none;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.38);
+      color: rgba(255,255,255,.90);
+      font-size: 13px;
+      backdrop-filter: var(--blur);
+      text-decoration:none;
+      white-space: nowrap;
     }
-    .pill:hover{
-      text-decoration: none;
-      filter: brightness(0.98);
+    .pill:hover{ background: rgba(255,255,255,.07); }
+    .pill.green{
+      border-color: rgba(52,211,153,.55);
+      background: rgba(16,185,129,.18);
+      color: rgba(236,253,245,.92);
     }
-
-    @media (max-width: 720px){
-      .topbar{
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .topbar .meta{ white-space: normal; }
-      .brandline{ align-items: flex-start; }
-      h1{ font-size: 1.85rem; }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: rgba(52,211,153,.92);
+      box-shadow: 0 0 12px rgba(52,211,153,.45);
+      animation: pulse 1.6s ease-in-out infinite;
     }
-
-    /* ====== Main content ====== */
-    #main{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 22px 18px 44px;
+    @keyframes pulse{
+      0%,100%{ transform: scale(1); opacity: .9; }
+      50%{ transform: scale(1.25); opacity: .55; }
     }
 
+    .ico{
+      width:16px; height:16px;
+      display:inline-block;
+      color: rgba(255,255,255,.85);
+      opacity:.95;
+    }
+    .ico svg{ width:16px; height:16px; display:block; stroke: currentColor; }
+
+    /* ===== Quick nav (sticky) (1:1) ===== */
+    .quicknav{
+      position:sticky;
+      top:0;
+      z-index:80;
+      border-top: 1px solid rgba(255,255,255,.10);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.40);
+      backdrop-filter: var(--blur);
+    }
+    .quicknav .wrap{
+      padding-top: 10px;
+      padding-bottom: 10px;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    /* ===== Main section with second canvas bg ===== */
+    .area{
+      position:relative;
+      overflow:hidden;
+    }
+    #areaCanvas{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      pointer-events:none;
+      opacity: .9;
+    }
+    main{
+      position:relative;
+      z-index:2;
+      margin:0 auto;
+      max-width: var(--maxXL);
+      padding: 28px 18px 60px;
+      display:flex;
+      flex-direction:column;
+      gap: 34px;
+    }
+
+    /* Section header like gvecery detail */
+    .section-head{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom: 10px;
+      color: rgba(255,255,255,.82);
+    }
+    .badge{
+      width:34px; height:34px;
+      border-radius: 10px;
+      display:grid; place-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    }
+    .kicker{
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+    }
     h2{
-      margin: 24px 0 10px;
-      font-size: 1.35rem;
+      margin: 2px 0 0;
+      font-size: 26px;
       letter-spacing: -0.01em;
+      font-weight: 800;
+      color: rgba(255,255,255,.94);
     }
 
-    p{ color: var(--muted); margin: 10px 0; }
-    strong{ color: var(--text); }
-
-    ul{
-      margin: 10px 0 0 18px;
-      color: var(--muted);
-    }
-    li{ margin: 6px 0; }
-
+    /* Cards (micro-motion like gvecery) */
     .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px 16px;
-      box-shadow: 0 6px 18px rgba(15,23,42,0.05);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(23,23,23,.22), rgba(0,0,0,.55));
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+      overflow:hidden;
     }
+    .card:hover{
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(0,0,0,.30);
+    }
+    .pad{ padding: 18px 18px; }
+    .text{ color: var(--muted); font-size: 14.8px; line-height: 1.7; }
+    .text strong{ color: rgba(255,255,255,.92); }
 
-    /* --- Video grid --- */
-    .video-grid{
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 10px;
+    .grid2{
+      display:grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
     }
-    .video-item{
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 6px 16px rgba(15,23,42,0.06);
-    }
-    .video-item iframe{
-      width: 100%;
-      height: 190px;
-      display: block;
-      border: 0;
-    }
-
     @media (max-width: 980px){
-      .video-grid{ grid-template-columns: repeat(2, 1fr); }
-      .video-item iframe{ height: 220px; }
-    }
-    @media (max-width: 560px){
-      .video-grid{ grid-template-columns: 1fr; }
-      .video-item iframe{ height: 230px; }
+      .hero-inner{ flex-direction:column; }
+      .grid2{ grid-template-columns: 1fr; }
     }
 
-    /* --- Galerie: rozumné náhledy --- */
+    /* Program list */
+    ul{ margin: 0; padding-left: 18px; }
+    li{ margin: 8px 0; color: rgba(255,255,255,.78); }
+    .time{ color: rgba(255,255,255,.94); font-weight: 800; }
+
+    /* Videos */
+    .video-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 1100px){ .video-grid{ grid-template-columns: repeat(2, 1fr);} }
+    @media (max-width: 560px){ .video-grid{ grid-template-columns: 1fr;} }
+
+    .video{
+      border-radius: 18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.35);
+      aspect-ratio: 16 / 9;
+    }
+    .video iframe{
+      width:100%; height:100%;
+      border:0; display:block;
+    }
+
+    /* Gallery thumbs (small, square) */
     .gallery{
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      display:grid;
+      grid-template-columns: repeat(6, 1fr);
       gap: 12px;
-      margin-top: 10px;
     }
-    .gallery img{
-      width: 100%;
-      height: 140px;
+    @media (max-width: 1100px){ .gallery{ grid-template-columns: repeat(3, 1fr);} }
+    @media (max-width: 560px){ .gallery{ grid-template-columns: repeat(2, 1fr);} }
+
+    .thumb{
+      display:block;
+      border-radius: 18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      aspect-ratio: 1 / 1;
+      position:relative;
+    }
+    .thumb img{
+      width:100%; height:100%;
       object-fit: cover;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: #fff;
-      display: block;
-      transition: transform 120ms ease, filter 120ms ease;
-      box-shadow: 0 6px 16px rgba(15,23,42,0.06);
+      transform: scale(1.02);
+      transition: transform 500ms cubic-bezier(.22,1,.36,1);
+      display:block;
     }
-    .gallery img:hover{
-      transform: scale(1.015);
-      filter: contrast(1.02);
+    .thumb:hover img{ transform: scale(1.08); }
+    .thumb::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,.25));
+      opacity:.75;
+      pointer-events:none;
     }
 
     footer{
-      padding: 24px 18px 40px;
-      color: var(--muted2);
-      text-align: center;
-      border-top: 1px solid var(--border);
-      background: rgba(255,255,255,0.6);
+      margin-top: 34px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      text-align:center;
+      color: rgba(255,255,255,.45);
+      font-size: 12px;
     }
+
+    /* Ensure links look like gvecery (subtle) */
+    a{ color: rgba(255,255,255,.90); }
+    a:hover{ color: rgba(255,255,255,.98); }
   </style>
 </head>
 
 <body>
-  <header>
+  <div id="scrollbar"></div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <canvas id="heroCanvas"></canvas>
+
     <div class="wrap">
-      <div class="topbar">
-        <a class="back" href="../../">← Zpět na hlavní web Grafit</a>
-        <div class="meta">Události · Grafit Research Group</div>
-      </div>
+      <a class="back-pill" href="../../events/">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </span>
+        Zpět na přehled událostí
+      </a>
 
-      <div class="hero">
-        <div class="brandline">
-          <img class="logo" src="/assets/logos/grafit_bw.png" alt="Grafit logo">
-          <div class="tagline">Studentské workshopy • Přednášky • Grafika • Design</div>
+      <div class="hero-inner" style="margin-top:14px;">
+        <div class="logo">
+          <img src="https://grafitctu.github.io/assets/logos/grafit_bw.png" alt="Grafit">
         </div>
 
-        <h1>Grafické EXPO (GEXPO)</h1>
-        <p class="lead">
-          Každý semestr se v rámci předmětu VHS a dalších grafických kurzů na FIT ČVUT rodí mnoho zajímavých projektů.
-          Grafické EXPO nabízí možnost vidět výsledky práce, pobavit se nad hrami a potkat lidi, kteří to dělají.
-        </p>
+        <div style="flex:1;">
+          <div class="eyebrow">GRAFIT · SHOWCASE · STUDENTSKÉ PROJEKTY</div>
+          <h1>Grafické EXPO (GEXPO)</h1>
+          <p class="lead">
+            Semestrální přehlídka projektů z VHS a dalších grafických kurzů na FIT ČVUT.
+            Hry, VR, vizualizace i digitální kresba – přijďte si to osahat a pobavit se s autory.
+          </p>
 
-        <div class="pills">
-          <a class="pill" href="#info">Praktické info</a>
-          <a class="pill" href="#program">Program</a>
-          <a class="pill" href="#ukazky">Ukázky her</a>
-          <a class="pill" href="#fotky">Fotogalerie</a>
+          <div class="info-row">
+            <span class="pill">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
+              </span>
+              Pátek 14.&nbsp;2.
+            </span>
+
+            <span class="pill">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                  <circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/>
+                </svg>
+              </span>
+              13:00–17:00+
+            </span>
+
+            <span class="pill">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                  <path d="M12 22s7-4.5 7-12a7 7 0 0 0-14 0c0 7.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>
+                </svg>
+              </span>
+              TH:A-1455 (ggLab), 14.&nbsp;patro + 1435
+            </span>
+
+            <span class="pill green">
+              <span class="dot" aria-hidden="true"></span>
+              Otevřené i pro ne-FIT veřejnost
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-  </header>
-
-  <section id="main">
-    <h2 id="info">Praktické info</h2>
-    <div class="card">
-      <p>
-        <strong>Datum:</strong> Pátek 14. 2.<br>
-        <strong>Místo:</strong> 14. patro: ggLab a 1435
-      </p>
-      <p>
-        Grafické EXPO je neformální přehlídka studentských projektů – hry, VR, digitální rekonstrukce, kresba a další ukázky.
-        Přijďte si zahrát, zeptat se na proces a pobavit se s autory.
-      </p>
-    </div>
-
-    <h2 id="program">Program</h2>
-    <div class="card">
-      <ul>
-        <li>13:00 - Úvodní slovo a zahájení</li>
-        <li>13:15 - Prezentace studentských her z předmětu VHS</li>
-        <li>14:00 - Kolaborativní VR projekt Politeia 21</li>
-        <li>14:30 - Digitální rekonstrukce Starého Mostu a věnných měst českých královen</li>
-        <li>15:00 - Interaktivní Dotyková zeď s hrami jako Spaceship Shenanigans a Na frontě není klid</li>
-        <li>15:30 - Ukázky digitální kresby z předmětu DID</li>
-        <li>16:00 - Studentské projekty a bakalářské práce</li>
-        <li>17:00 - Volná diskuze, testování her a networking</li>
-      </ul>
-    </div>
-
-    <h2 id="ukazky">Ukázky her</h2>
-    <div class="video-grid">
-      <div class="video-item">
-        <iframe src="https://www.youtube.com/embed/lUawOXPqS8w"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
-      </div>
-      <div class="video-item">
-        <iframe src="https://www.youtube.com/embed/EwUPtQEL2Sg"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
-      </div>
-      <div class="video-item">
-        <iframe src="https://www.youtube.com/embed/nvQPpK9XxKc"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
-      </div>
-      <div class="video-item">
-        <iframe src="https://www.youtube.com/embed/IT9bUmlOFiM"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
-      </div>
-      <div class="video-item">
-        <iframe src="https://www.youtube.com/embed/kDnPp82q_Io"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
-      </div>
-      <div class="video-item">
-        <iframe src="https://www.youtube.com/embed/AQNmMeknEpM"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
-      </div>
-      <div class="video-item">
-        <iframe src="https://www.youtube.com/embed/npbAVKckvlo"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
-      </div>
-      <div class="video-item">
-        <iframe src="https://www.youtube.com/embed/7zAAhZsvwEY"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
-      </div>
-    </div>
-
-    <h2>Networking a sdílení zkušeností</h2>
-    <div class="card">
-      <p>
-        Po skončení hlavního programu akce zdaleka nekončila. Účastníci zůstali na místě další hodiny a akce se přirozeně přelila
-        do neformálních diskuzí. Studenti si mezi sebou zkoušeli hry, sdíleli dojmy a navzájem si dávali zpětnou vazbu.
-      </p>
-      <ul>
-        <li>Jak funguje týmová práce ve vývoji her a interaktivních aplikací?</li>
-        <li>Jak se připravují a testují bakalářské a diplomové práce?</li>
-        <li>Jaké jsou nejlepší způsoby testování her a zajištění kvalitní zpětné vazby?</li>
-        <li>Jak se dostat do herního průmyslu a co očekávat od prvních projektů?</li>
-        <li>Jaké technologie a nástroje jsou nejvhodnější pro grafické aplikace?</li>
-      </ul>
-    </div>
-
-    <h2 id="fotky">Fotogalerie</h2>
-    <div class="gallery">
-      <img src="/assets/events/GEXPO/2025/g1r.jpg"  alt="GEXPO Foto 1"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g2r.jpg"  alt="GEXPO Foto 2"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g3r.jpg"  alt="GEXPO Foto 3"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g4r.jpg"  alt="GEXPO Foto 4"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g5r.jpg"  alt="GEXPO Foto 5"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g6r.jpg"  alt="GEXPO Foto 6"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g7r.jpg"  alt="GEXPO Foto 7"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g8r.jpg"  alt="GEXPO Foto 8"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g9r.jpg"  alt="GEXPO Foto 9"  loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g10r.jpg" alt="GEXPO Foto 10" loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g11r.jpg" alt="GEXPO Foto 11" loading="lazy">
-      <img src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 12" loading="lazy">
-    </div>
-
-    <h2>Přijďte příště!</h2>
-    <div class="card">
-      <p>
-        Ať jste grafik, negrafik, student či učitel, pokud vás něco z toho zajímá, příště se stavte!
-        Rádi vás uvidíme na dalším ročníku Grafického EXPA.
-      </p>
     </div>
   </section>
 
-  <footer>
-    © Grafit Research Group — Grafické EXPO (GEXPO)
-  </footer>
+  <!-- QUICK NAV (sticky) -->
+  <nav class="quicknav">
+    <div class="wrap">
+      <a class="pill" href="#o-akci">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/><path d="M12 10v7"/><path d="M12 7h.01"/>
+          </svg>
+        </span>
+        O akci
+      </a>
+
+      <a class="pill" href="#program">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>
+          </svg>
+        </span>
+        Program
+      </a>
+
+      <a class="pill" href="#ukazky">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <path d="M10 8l6 4-6 4V8z"/><rect x="3" y="5" width="18" height="14" rx="2"/>
+          </svg>
+        </span>
+        Ukázky her
+      </a>
+
+      <a class="pill" href="#networking">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+          </svg>
+        </span>
+        Networking
+      </a>
+
+      <a class="pill" href="#fotky">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 13l2-2 4 4 2-2 3 3"/>
+          </svg>
+        </span>
+        Fotogalerie
+      </a>
+    </div>
+  </nav>
+
+  <!-- AREA with second canvas -->
+  <section class="area">
+    <canvas id="areaCanvas"></canvas>
+
+    <main>
+      <!-- O AKCI -->
+      <section id="o-akci">
+        <div class="section-head">
+          <div class="badge">🎓</div>
+          <div>
+            <div class="kicker">GEXPO</div>
+            <h2>Co je Grafické EXPO?</h2>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="pad">
+              <div class="text">
+                Každý semestr se v rámci předmětu <strong>VHS</strong> a dalších grafických kurzů na FIT ČVUT rodí mnoho
+                zajímavých projektů. <strong>Grafické EXPO</strong> dává prostor tyto práce ukázat: hry, VR, vizualizace,
+                digitální kresba i experimenty.
+                <br><br>
+                Přijďte si projekty vyzkoušet, pobavit se s autory a dát jim zpětnou vazbu.
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="pad">
+              <div class="text">
+                <strong>Pro koho:</strong> studenti, vyučující i zájemci zvenku.<br>
+                <strong>Co uvidíš:</strong> hry, VR, vizualizace, kresbu.<br>
+                <strong>Co získáš:</strong> inspiraci, kontakty, feedback.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROGRAM -->
+      <section id="program">
+        <div class="section-head">
+          <div class="badge">🗓️</div>
+          <div>
+            <div class="kicker">Harmonogram</div>
+            <h2>Program</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="pad">
+            <ul>
+              <li><span class="time">13:00</span> – Úvodní slovo a zahájení</li>
+              <li><span class="time">13:15</span> – Prezentace studentských her z předmětu VHS</li>
+              <li><span class="time">14:00</span> – Kolaborativní VR projekt Politeia 21</li>
+              <li><span class="time">14:30</span> – Digitální rekonstrukce Starého Mostu a věnných měst českých královen</li>
+              <li><span class="time">15:00</span> – Interaktivní Dotyková zeď (Spaceship Shenanigans, Na frontě není klid…)</li>
+              <li><span class="time">15:30</span> – Ukázky digitální kresby z předmětu DID</li>
+              <li><span class="time">16:00</span> – Studentské projekty a bakalářské práce</li>
+              <li><span class="time">17:00</span> – Volná diskuze, testování her a networking</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- UKÁZKY -->
+      <section id="ukazky">
+        <div class="section-head">
+          <div class="badge">🎮</div>
+          <div>
+            <div class="kicker">Ukázky</div>
+            <h2>Ukázky her</h2>
+          </div>
+        </div>
+
+        <div class="video-grid">
+          <div class="video"><iframe src="https://www.youtube.com/embed/lUawOXPqS8w" allowfullscreen></iframe></div>
+          <div class="video"><iframe src="https://www.youtube.com/embed/EwUPtQEL2Sg" allowfullscreen></iframe></div>
+          <div class="video"><iframe src="https://www.youtube.com/embed/nvQPpK9XxKc" allowfullscreen></iframe></div>
+          <div class="video"><iframe src="https://www.youtube.com/embed/IT9bUmlOFiM" allowfullscreen></iframe></div>
+          <div class="video"><iframe src="https://www.youtube.com/embed/kDnPp82q_Io" allowfullscreen></iframe></div>
+          <div class="video"><iframe src="https://www.youtube.com/embed/AQNmMeknEpM" allowfullscreen></iframe></div>
+          <div class="video"><iframe src="https://www.youtube.com/embed/npbAVKckvlo" allowfullscreen></iframe></div>
+          <div class="video"><iframe src="https://www.youtube.com/embed/7zAAhZsvwEY" allowfullscreen></iframe></div>
+        </div>
+      </section>
+
+      <!-- NETWORKING -->
+      <section id="networking">
+        <div class="section-head">
+          <div class="badge">💬</div>
+          <div>
+            <div class="kicker">Diskuze</div>
+            <h2>Networking a sdílení zkušeností</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="pad">
+            <div class="text">
+              Po skončení hlavního programu akce zdaleka nekončila. Účastníci zůstali na místě další hodiny a akce se přirozeně přelila
+              do neformálních diskuzí. Studenti si mezi sebou zkoušeli hry, sdíleli dojmy a navzájem si dávali zpětnou vazbu.
+              Probírali nejen konkrétní technické a vizuální aspekty svých projektů, ale i širší témata související s herním průmyslem
+              a grafickým designem.
+            </div>
+
+            <div style="height:12px;"></div>
+
+            <div class="grid2">
+              <div class="card" style="border-radius:16px;">
+                <div class="pad">
+                  <div class="text">
+                    <strong>Témata, která se často řeší:</strong>
+                    <ul style="margin-top:10px;">
+                      <li>Jak funguje týmová práce ve vývoji her a interaktivních aplikací?</li>
+                      <li>Jak se připravují a testují bakalářské a diplomové práce?</li>
+                      <li>Jaké jsou nejlepší způsoby playtestingu a získání zpětné vazby?</li>
+                      <li>Jak se dostat do herního průmyslu a co čekat od prvních projektů?</li>
+                      <li>Jaké technologie a nástroje jsou nejvhodnější pro grafické aplikace?</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" style="border-radius:16px;">
+                <div class="pad">
+                  <div class="text">
+                    <strong>Tip:</strong> Přijď i později — „volná část“ po programu bývá nejzajímavější na otázky,
+                    prohlížení buildů a hledání spolupráce.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- FOTKY -->
+      <section id="fotky">
+        <div class="section-head">
+          <div class="badge">📸</div>
+          <div>
+            <div class="kicker">Galerie</div>
+            <h2>Fotogalerie</h2>
+          </div>
+        </div>
+
+        <div class="gallery">
+          <a class="thumb" href="/assets/events/GEXPO/2025/g1r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g1r.jpg" alt="GEXPO Foto 1" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g2r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g2r.jpg" alt="GEXPO Foto 2" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g3r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g3r.jpg" alt="GEXPO Foto 3" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g4r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g4r.jpg" alt="GEXPO Foto 4" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g5r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g5r.jpg" alt="GEXPO Foto 5" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g6r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g6r.jpg" alt="GEXPO Foto 6" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g7r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g7r.jpg" alt="GEXPO Foto 7" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g8r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g8r.jpg" alt="GEXPO Foto 8" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g9r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g9r.jpg" alt="GEXPO Foto 9" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g10r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g10r.jpg" alt="GEXPO Foto 10" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g11r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g11r.jpg" alt="GEXPO Foto 11" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2025/g12r.jpg" target="_blank" rel="noreferrer"><img src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 12" loading="lazy"></a>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <div class="pad">
+            <h2 style="margin:0; font-size:22px;">Přijďte příště!</h2>
+            <p class="text" style="margin:10px 0 0;">
+              Ať jste grafik, negrafik, student či učitel — pokud vás něco z toho zajímá, příště se stavte!
+              Rádi vás uvidíme na dalším ročníku Grafického EXPA.
+            </p>
+          </div>
+        </div>
+
+        <footer>© Grafit Research Group — Grafické EXPO (GEXPO).</footer>
+      </section>
+    </main>
+  </section>
+
+  <script>
+    // scroll progress
+    window.addEventListener("scroll", () => {
+      const s = document.documentElement.scrollTop || document.body.scrollTop;
+      const h = (document.documentElement.scrollHeight - document.documentElement.clientHeight) || 1;
+      const pct = Math.max(0, Math.min(1, s / h));
+      document.getElementById("scrollbar").style.width = (pct * 100) + "%";
+    });
+
+    // Constellation background (like gvecery)
+    function particles(canvas, opts) {
+      const ctx = canvas.getContext("2d", { alpha: true });
+      let w = 0, h = 0, raf = 0;
+
+      const N = opts.N || 44;
+      const speed = opts.speed || 0.35;
+      const linkDist = opts.linkDist || 150;
+
+      function resize() {
+        const parent = canvas.parentElement;
+        const rect = parent.getBoundingClientRect();
+        w = canvas.width  = Math.max(1, Math.floor(rect.width));
+        // For hero we want fixed "60vh"; for area it's full section height:
+        h = canvas.height = Math.max(1, Math.floor(rect.height));
+      }
+
+      const dots = Array.from({ length: N }, () => ({
+        x: Math.random(),
+        y: Math.random(),
+        vx: (Math.random() - .5) * speed,
+        vy: (Math.random() - .5) * speed
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+
+        // dark gradient underlay (subtle)
+        const grad = ctx.createLinearGradient(0,0,w,h);
+        grad.addColorStop(0, "#020617");
+        grad.addColorStop(1, "#0b1120");
+        ctx.globalAlpha = 0.96;
+        ctx.fillStyle = grad;
+        ctx.fillRect(0,0,w,h);
+        ctx.globalAlpha = 1;
+
+        // update + draw links
+        for (let i = 0; i < N; i++) {
+          const a = dots[i];
+          a.x += a.vx / w;
+          a.y += a.vy / h;
+
+          if (a.x < 0 || a.x > 1) a.vx *= -1;
+          if (a.y < 0 || a.y > 1) a.vy *= -1;
+
+          const ax = a.x * w;
+          const ay = a.y * h;
+
+          for (let j = i + 1; j < N; j++) {
+            const b = dots[j];
+            const bx = b.x * w;
+            const by = b.y * h;
+            const dx = ax - bx;
+            const dy = ay - by;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist < linkDist) {
+              const alpha = 1 - dist / linkDist;
+              ctx.globalAlpha = alpha * 0.9;
+              ctx.strokeStyle = "#22d3ee";
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(ax, ay);
+              ctx.lineTo(bx, by);
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
+          }
+
+          // dot
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(ax, ay, 1.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      resize();
+      draw();
+
+      const ro = new ResizeObserver(resize);
+      ro.observe(canvas.parentElement);
+      window.addEventListener("resize", resize);
+
+      return { stop: () => cancelAnimationFrame(raf), ro };
+    }
+
+    // Respect reduced motion
+    const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!prefersReduced) {
+      particles(document.getElementById("heroCanvas"), { N: 42, speed: 0.45, linkDist: 170 });
+      particles(document.getElementById("areaCanvas"), { N: 54, speed: 0.40, linkDist: 165 });
+    } else {
+      // if reduced motion, at least paint background once so it’s not blank
+      const c = document.getElementById("heroCanvas");
+      const ctx = c.getContext("2d");
+      const rect = c.parentElement.getBoundingClientRect();
+      c.width = Math.max(1, Math.floor(rect.width));
+      c.height = Math.max(1, Math.floor(rect.height));
+      const g = ctx.createLinearGradient(0,0,c.width,c.height);
+      g.addColorStop(0,"#020617"); g.addColorStop(1,"#0b1120");
+      ctx.fillStyle = g; ctx.fillRect(0,0,c.width,c.height);
+    }
+  </script>
 </body>
 </html>
