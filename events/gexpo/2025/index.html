@@ -9,20 +9,12 @@
     :root{
       --bg0:#020617;
       --bg1:#0b1120;
-      --card:#050914cc;
       --line:rgba(255,255,255,.10);
-      --line2:rgba(255,255,255,.14);
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.72);
-      --muted2:rgba(255,255,255,.56);
       --cyan:#22d3ee;
       --cyan2:#38bdf8;
-      --emerald:#34d399;
-      --emeraldBg:rgba(16,185,129,.18);
-      --pillBg:rgba(0,0,0,.40);
       --blur: blur(10px);
-      --shadow: 0 12px 34px rgba(0,0,0,.35);
-      --radius: 18px;
       --maxXL: 1400px;
     }
 
@@ -66,6 +58,7 @@
       display:flex;
       gap:22px;
       align-items:flex-start;
+      margin-top:14px;
     }
     .logo{
       width:56px; height:56px;
@@ -290,7 +283,7 @@
       border:0; display:block;
     }
 
-    /* Gallery thumbs */
+    /* Gallery thumbs on page */
     .gallery{
       display:grid;
       grid-template-columns: repeat(6, 1fr);
@@ -445,6 +438,66 @@
     .lb-next{ right: 12px; }
     .lb-nav svg{ width:18px; height:18px; stroke: rgba(255,255,255,.92); fill:none; stroke-width:2.2; }
 
+    /* ===== LIGHTBOX: thumbnail strip (profi) ===== */
+    .lb-strip{
+      display:flex;
+      gap:10px;
+      padding: 10px 12px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.26);
+      overflow-x:auto;
+      overflow-y:hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,.25) transparent;
+    }
+    .lb-strip::-webkit-scrollbar{ height: 10px; }
+    .lb-strip::-webkit-scrollbar-track{ background: transparent; }
+    .lb-strip::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.18);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .lb-thumb{
+      flex: 0 0 auto;
+      width: 84px;
+      height: 56px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      padding: 0;
+      overflow:hidden;
+      cursor:pointer;
+      position: relative;
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+      transition: transform 200ms cubic-bezier(.2,.8,.2,1), border-color 200ms ease, box-shadow 200ms ease;
+    }
+    .lb-thumb:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.22);
+      box-shadow: 0 16px 34px rgba(0,0,0,.34);
+    }
+    .lb-thumb img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      transform: scale(1.03);
+    }
+
+    .lb-thumb.active{
+      border-color: rgba(34,211,238,.85);
+      box-shadow: 0 0 0 2px rgba(34,211,238,.25), 0 18px 44px rgba(0,0,0,.42);
+    }
+    .lb-thumb.active::after{
+      content:"";
+      position:absolute; inset:0;
+      border-radius: 14px;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,.15));
+      pointer-events:none;
+    }
+
     .lb-bottom{
       display:flex;
       justify-content: space-between;
@@ -487,7 +540,7 @@
         Zpět na přehled událostí
       </a>
 
-      <div class="hero-inner" style="margin-top:14px;">
+      <div class="hero-inner">
         <div class="logo">
           <img src="https://grafitctu.github.io/assets/logos/grafit_bw.png" alt="Grafit">
         </div>
@@ -797,6 +850,9 @@
         </button>
       </div>
 
+      <!-- Profi thumbnail strip -->
+      <div class="lb-strip" id="lbStrip" aria-label="Náhledy fotogalerie"></div>
+
       <div class="lb-bottom">
         <div id="lbCaption">—</div>
         <div class="lb-hint">←/→ listování • Esc zavřít • klik mimo zavře</div>
@@ -905,7 +961,7 @@
       particles(document.getElementById("areaCanvas"), { N: 54, speed: 0.40, linkDist: 165 });
     }
 
-    // ===== LIGHTBOX (gallery) =====
+    // ===== LIGHTBOX (gallery) with "profi" thumbs =====
     (function(){
       const lb = document.getElementById("lb");
       const lbImg = document.getElementById("lbImg");
@@ -917,6 +973,7 @@
       const lbNext = document.getElementById("lbNext");
       const lbBody = document.getElementById("lbBody");
       const lbDownload = document.getElementById("lbDownload");
+      const lbStrip = document.getElementById("lbStrip");
 
       const items = Array.from(document.querySelectorAll("#gallery a.thumb"));
       if (!items.length) return;
@@ -929,6 +986,140 @@
         caption: a.getAttribute("data-caption") || a.querySelector("img")?.alt || "Foto",
       }));
 
+      // --- "profi" thumbs: generování miniatur přes canvas + cache v sessionStorage ---
+      const THUMB_W = 240;
+      const THUMB_H = 160;
+      const THUMB_Q = 0.72;
+      const thumbCache = new Map(); // url -> Promise<string>
+
+      function thumbKey(url){ return "gexpo_thumb_v1::" + url; }
+
+      function loadImage(url){
+        return new Promise((resolve, reject) => {
+          const im = new Image();
+          im.crossOrigin = "anonymous";
+          im.decoding = "async";
+          im.onload = () => resolve(im);
+          im.onerror = reject;
+          im.src = url;
+        });
+      }
+
+      function coverCrop(imgW, imgH, outW, outH){
+        const inAR = imgW / imgH;
+        const outAR = outW / outH;
+
+        let sx=0, sy=0, sw=imgW, sh=imgH;
+        if (inAR > outAR) {
+          sw = Math.round(imgH * outAR);
+          sx = Math.round((imgW - sw) / 2);
+        } else {
+          sh = Math.round(imgW / outAR);
+          sy = Math.round((imgH - sh) / 2);
+        }
+        return { sx, sy, sw, sh };
+      }
+
+      async function createThumb(url){
+        try {
+          const cached = sessionStorage.getItem(thumbKey(url));
+          if (cached) return cached;
+        } catch {}
+
+        try {
+          const img = await loadImage(url);
+          const w = img.naturalWidth || img.width;
+          const h = img.naturalHeight || img.height;
+          const { sx, sy, sw, sh } = coverCrop(w, h, THUMB_W, THUMB_H);
+
+          const canvas = document.createElement("canvas");
+          canvas.width = THUMB_W;
+          canvas.height = THUMB_H;
+
+          const ctx = canvas.getContext("2d", { alpha: false });
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+
+          ctx.drawImage(img, sx, sy, sw, sh, 0, 0, THUMB_W, THUMB_H);
+
+          let dataUrl;
+          try {
+            dataUrl = canvas.toDataURL("image/jpeg", THUMB_Q);
+          } catch {
+            return url; // canvas tainted (CORS) -> fallback
+          }
+
+          try { sessionStorage.setItem(thumbKey(url), dataUrl); } catch {}
+          return dataUrl;
+        } catch {
+          return url;
+        }
+      }
+
+      function getThumb(url){
+        if (thumbCache.has(url)) return thumbCache.get(url);
+        const p = createThumb(url);
+        thumbCache.set(url, p);
+        return p;
+      }
+
+      function placeholderThumb(){
+        const svg =
+          `<svg xmlns="http://www.w3.org/2000/svg" width="${THUMB_W}" height="${THUMB_H}">
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#020617"/>
+                <stop offset="1" stop-color="#0b1120"/>
+              </linearGradient>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#g)"/>
+            <circle cx="60" cy="50" r="2" fill="#38bdf8" opacity=".9"/>
+            <circle cx="120" cy="80" r="2" fill="#22d3ee" opacity=".85"/>
+            <circle cx="180" cy="60" r="2" fill="#38bdf8" opacity=".7"/>
+          </svg>`;
+        return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      }
+
+      function primeThumbsAround(index){
+        const n = data.length;
+        const ids = [
+          (index - 2 + n) % n,
+          (index - 1 + n) % n,
+          (index + 1) % n,
+          (index + 2) % n
+        ];
+        ids.forEach(i => { void getThumb(data[i].href); });
+      }
+
+      function renderStrip(){
+        if (!lbStrip) return;
+        lbStrip.innerHTML = "";
+
+        const ph = placeholderThumb();
+
+        data.forEach((item, i) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "lb-thumb";
+          b.setAttribute("aria-label", `Otevřít: ${item.caption}`);
+          b.dataset.index = String(i);
+
+          const im = document.createElement("img");
+          im.alt = item.caption;
+          im.decoding = "async";
+          im.loading = "lazy";
+          im.src = ph;
+
+          b.appendChild(im);
+          b.addEventListener("click", () => setImage(i));
+          lbStrip.appendChild(b);
+
+          getThumb(item.href).then((thumbSrc) => {
+            im.src = thumbSrc;
+          });
+        });
+      }
+
       function setImage(i){
         idx = (i + data.length) % data.length;
         const item = data[idx];
@@ -940,7 +1131,18 @@
         lbTitle.textContent = "FOTOGALERIE · GEXPO 2025";
         lbDownload.onclick = () => window.open(item.href, "_blank", "noreferrer");
 
-        // jemný preload sousedů (rychlejší listování)
+        // active thumb highlight + scroll to center
+        if (lbStrip) {
+          const thumbs = lbStrip.querySelectorAll(".lb-thumb");
+          thumbs.forEach((t, k) => t.classList.toggle("active", k === idx));
+          const active = lbStrip.querySelector(".lb-thumb.active");
+          active?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        }
+
+        // preload neighboring thumbs
+        primeThumbsAround(idx);
+
+        // preload neighbors full images for smoother nav
         const prev = data[(idx - 1 + data.length) % data.length].href;
         const next = data[(idx + 1) % data.length].href;
         const p1 = new Image(); p1.src = prev;
@@ -952,9 +1154,10 @@
         lb.classList.add("open");
         lb.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
+
+        if (lbStrip && !lbStrip.children.length) renderStrip();
         setImage(i);
 
-        // focus na zavírací tlačítko
         setTimeout(() => lbClose.focus(), 0);
       }
 
@@ -969,7 +1172,7 @@
       function prev(){ setImage(idx - 1); }
       function next(){ setImage(idx + 1); }
 
-      // klik na thumbs
+      // click thumbs on page -> open
       items.forEach((a, i) => {
         a.addEventListener("click", (e) => {
           e.preventDefault();
@@ -977,20 +1180,20 @@
         });
       });
 
-      // ovládání
+      // controls
       lbClose.addEventListener("click", close);
       lbPrev.addEventListener("click", prev);
       lbNext.addEventListener("click", next);
 
-      // klik mimo panel zavře (jen pozadí)
+      // click outside panel closes
       lb.addEventListener("click", (e) => {
         if (e.target === lb) close();
       });
 
-      // klik na obrázek také zavře (rychlé)
+      // click image closes
       lbImg.addEventListener("click", close);
 
-      // klávesnice
+      // keyboard
       document.addEventListener("keydown", (e) => {
         if (!lb.classList.contains("open")) return;
 
@@ -999,7 +1202,7 @@
         else if (e.key === "ArrowRight") { e.preventDefault(); next(); }
       });
 
-      // základní swipe na mobilu (volitelné, jednoduché)
+      // basic swipe
       let startX = null;
       lbBody.addEventListener("touchstart", (e) => {
         if (!lb.classList.contains("open")) return;
@@ -1016,6 +1219,7 @@
           dx > 0 ? prev() : next();
         }
       }, { passive: true });
+
     })();
   </script>
 </body>
