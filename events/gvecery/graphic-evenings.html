@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Grafit – Grafické večery</title>
+  <title>Grafické EXPO (GEXPO)</title>
 
   <!-- Tailwind (Play CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -14,22 +14,7 @@
     html { scroll-behavior: smooth; }
     .icon { width: 1rem; height: 1rem; }
 
-    /* Micro-motion hover pro karty */
-    .card {
-      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-    }
-    .card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.3);
-    }
-    .card .thumb {
-      transform: scale(1.02);
-      transition: transform 500ms cubic-bezier(.22,1,.36,1);
-    }
-    .card:hover .thumb { transform: scale(1.08); }
-
-    /* Gradient pozadí */
+    /* Gradient pozadí (stejné jako gvecery) */
     .bg-gradient-dark {
       background: radial-gradient(circle at top, #1f2937 0, #020617 52%, #020617 100%);
     }
@@ -50,16 +35,22 @@
       outline-offset: 2px;
     }
 
-    /* tooltip šipka (kdybys někdy chtěl použít .tooltip) */
-    .tooltip::after{
-      content:"";
-      position:absolute;
-      left:16px;
-      top:-6px;
-      border-width:6px;
-      border-style:solid;
-      border-color:transparent transparent rgb(0 0 0 / .9) transparent;
+    /* Micro-motion hover pro karty (gvecery vibe) */
+    .card {
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
     }
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+    }
+
+    /* Náhledy v galerii – rozumné, ne obří */
+    .thumbimg {
+      transform: scale(1.01);
+      transition: transform 500ms cubic-bezier(.22,1,.36,1);
+    }
+    .card:hover .thumbimg { transform: scale(1.08); }
   </style>
 </head>
 
@@ -70,43 +61,73 @@
 
   <!-- HERO -->
   <section class="relative overflow-hidden">
-    <!-- dynamické pozadí -->
+    <!-- dynamické pozadí (síť) -->
     <canvas id="heroCanvas" class="absolute inset-0 w-full" style="height:60vh"></canvas>
 
-    <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-20 pb-20">
+    <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-20 pb-16">
       <div class="flex flex-col sm:flex-row sm:items-start gap-6">
-<img src="https://grafitctu.github.io/assets/logos/grafit_bw.png"
-     alt="Grafit"
-     class="h-14 w-14 invert drop-shadow-[0_0_18px_rgba(56,189,248,0.5)]">
+        <img
+          src="https://grafitctu.github.io/assets/logos/grafit_bw.png"
+          alt="Grafit"
+          class="h-14 w-14 invert drop-shadow-[0_0_18px_rgba(56,189,248,0.5)]"
+        />
 
         <div class="relative flex-1">
           <p class="text-xs uppercase tracking-[0.24em] text-cyan-300/80 mb-1">
-            Studentské workshopy • Přednášky • Grafika • Design
+            Události • Studentské projekty • Grafika • Game design
           </p>
+
           <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">
-            Grafické večery
+            Grafické EXPO (GEXPO)
           </h1>
-          <p class="mt-3 max-w-2xl text-neutral-300">
-            Série neformálních večerních přednášek, workshopů a zábavných akcí o grafice a designu.
-            Akce pořádají studenti FIT s podporou skupiny Grafit pro studenty a veřejnost.
+
+          <p class="mt-3 max-w-3xl text-neutral-300">
+            Semestrální přehlídka studentských projektů z VHS a dalších grafických kurzů na FIT ČVUT.
+            Přijďte si zahrát hry, prohlédnout VR a vizualizace, potkat autory a dát jim zpětnou vazbu.
           </p>
 
           <div class="mt-4 flex flex-wrap items-center gap-3">
-            <a href="https://grafitctu.github.io/" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">
+            <a href="../../events/"
+               class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">
+              ← Zpět na přehled událostí
+            </a>
+
+            <a href="../../"
+               class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">
               ← Zpět na hlavní web Grafit
             </a>
 
             <span class="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/20 px-3 py-1.5 text-xs text-emerald-100">
               <span class="h-2 w-2 rounded-full bg-emerald-300 animate-pulse"></span>
-              Druhý večer: Vánoční art contest! (12. 12. 2025)
+              Semestrální showcase
             </span>
           </div>
 
-          <!-- Plovoucí tlačítko pro vyhledávání -->
-          <button id="openFilters"
-            class="absolute right-0 bottom-0 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-xs sm:text-sm text-neutral-200 hover:bg-white/10">
-            🔎 Hledat &nbsp; / &nbsp; Tagy
-          </button>
+          <!-- INFO PILLS (jako na detailu gvecery) -->
+          <div class="mt-5 flex flex-wrap items-center gap-2">
+            <span class="pill bg-black/35 backdrop-blur">
+              <i data-lucide="calendar" class="icon"></i>
+              <span>Pátek 14. 2.</span>
+            </span>
+            <span class="pill bg-black/35 backdrop-blur">
+              <i data-lucide="clock-3" class="icon"></i>
+              <span>13:00–17:00+</span>
+            </span>
+            <span class="pill bg-black/35 backdrop-blur">
+              <i data-lucide="map-pin" class="icon"></i>
+              <span>TH:A — ggLab &amp; 1435 (14. patro)</span>
+            </span>
+            <span class="pill border-emerald-400/40 bg-emerald-500/20">
+              <i data-lucide="users" class="icon"></i>
+              <span>Otevřené studentům i zájemcům</span>
+            </span>
+          </div>
+
+          <!-- Plovoucí tlačítko (volitelné) -->
+          <a href="#program"
+             class="absolute right-0 -bottom-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-xs sm:text-sm text-neutral-200 hover:bg-white/10">
+            ↓ Program &nbsp;/&nbsp; Sekce
+          </a>
         </div>
       </div>
     </div>
@@ -115,14 +136,17 @@
   <!-- QUICK NAV -->
   <nav class="sticky top-0 z-40 border-y border-white/10 bg-black/40 backdrop-blur">
     <div class="mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-3 flex flex-wrap items-center justify-center gap-2">
-      <a href="#upcoming" class="pill" aria-label="Přejít na nadcházející večery">
-        <i data-lucide="sun-medium" class="icon"></i><span>↓ Nadcházející večery</span>
+      <a href="#program" class="pill" aria-label="Přejít na program">
+        <i data-lucide="list" class="icon"></i><span>↓ Program</span>
       </a>
-      <a href="#archive" class="pill" aria-label="Přejít na archiv večerů">
-        <i data-lucide="archive" class="icon"></i><span>↓ Archiv</span>
+      <a href="#ukazky" class="pill" aria-label="Přejít na ukázky her">
+        <i data-lucide="play" class="icon"></i><span>↓ Ukázky her</span>
       </a>
-      <a href="#about" class="pill" aria-label="Přejít na informace o projektu">
-        <i data-lucide="info" class="icon"></i><span>↓ O projektu</span>
+      <a href="#networking" class="pill" aria-label="Přejít na networking">
+        <i data-lucide="messages-square" class="icon"></i><span>↓ Networking</span>
+      </a>
+      <a href="#fotky" class="pill" aria-label="Přejít na fotogalerii">
+        <i data-lucide="image" class="icon"></i><span>↓ Fotogalerie</span>
       </a>
 
       <span class="mx-2 h-5 w-px bg-white/10 hidden sm:inline-block"></span>
@@ -144,357 +168,300 @@
 
     <main class="relative z-10 mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-10 space-y-12">
 
-      <!-- Nadcházející večery -->
-      <section aria-labelledby="upcoming-heading">
+      <!-- PROGRAM -->
+      <section id="program" aria-labelledby="program-heading">
         <div class="mb-4">
           <div class="flex items-center gap-2 text-neutral-300">
-            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🌙</span>
-            <span class="text-sm uppercase tracking-wide text-neutral-400">Co nás čeká</span>
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🗓️</span>
+            <span class="text-sm uppercase tracking-wide text-neutral-400">Harmonogram</span>
           </div>
-          <h2 id="upcoming" class="mt-1 text-2xl font-bold tracking-tight">Nadcházející grafické večery</h2>
+          <h2 id="program-heading" class="mt-1 text-2xl font-bold tracking-tight">Program</h2>
           <p class="mt-1 text-sm text-neutral-400">
-            Přehled plánovaných večerů. Detaily a zadání se mohou ještě lehce měnit.
+            Orientační časový plán (může se lehce měnit podle průběhu).
           </p>
         </div>
 
-        <div id="upcomingGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-        <p id="upcomingEmpty" class="hidden text-sm text-neutral-400">
-          Zatím tu nic není – sleduj Discord a hlavní web Grafit pro čerstvé termíny.
-        </p>
+        <div class="card rounded-2xl border border-white/10 bg-gradient-to-b from-neutral-900 to-black p-5">
+          <ul class="text-neutral-300 space-y-2">
+            <li><span class="text-neutral-100 font-semibold">13:00</span> – Úvodní slovo a zahájení</li>
+            <li><span class="text-neutral-100 font-semibold">13:15</span> – Prezentace studentských her z předmětu VHS</li>
+            <li><span class="text-neutral-100 font-semibold">14:00</span> – Kolaborativní VR projekt Politeia 21</li>
+            <li><span class="text-neutral-100 font-semibold">14:30</span> – Digitální rekonstrukce Starého Mostu a věnných měst českých královen</li>
+            <li><span class="text-neutral-100 font-semibold">15:00</span> – Interaktivní Dotyková zeď (Spaceship Shenanigans, Na frontě není klid…)</li>
+            <li><span class="text-neutral-100 font-semibold">15:30</span> – Ukázky digitální kresby z předmětu DID</li>
+            <li><span class="text-neutral-100 font-semibold">16:00</span> – Studentské projekty a bakalářské práce</li>
+            <li><span class="text-neutral-100 font-semibold">17:00</span> – Volná diskuze, testování her a networking</li>
+          </ul>
+        </div>
       </section>
 
-      <!-- Archiv -->
-      <section aria-labelledby="archive-heading" class="border-t border-white/10 pt-10">
+      <!-- UKÁZKY HER -->
+      <section id="ukazky" aria-labelledby="ukazky-heading" class="border-t border-white/10 pt-10">
+        <div class="mb-4">
+          <div class="flex items-center gap-2 text-neutral-300">
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎮</span>
+            <span class="text-sm uppercase tracking-wide text-neutral-400">Video</span>
+          </div>
+          <h2 id="ukazky-heading" class="mt-1 text-2xl font-bold tracking-tight">Ukázky her</h2>
+          <p class="mt-1 text-sm text-neutral-400">
+            Krátké ukázky vybraných projektů (YouTube embed).
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <!-- každé video jako karta -->
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/lUawOXPqS8w"
+                title="GEXPO video 1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/EwUPtQEL2Sg"
+                title="GEXPO video 2"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/nvQPpK9XxKc"
+                title="GEXPO video 3"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/IT9bUmlOFiM"
+                title="GEXPO video 4"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/kDnPp82q_Io"
+                title="GEXPO video 5"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/AQNmMeknEpM"
+                title="GEXPO video 6"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/npbAVKckvlo"
+                title="GEXPO video 7"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black">
+            <div class="aspect-video">
+              <iframe class="w-full h-full"
+                src="https://www.youtube.com/embed/7zAAhZsvwEY"
+                title="GEXPO video 8"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NETWORKING -->
+      <section id="networking" aria-labelledby="networking-heading" class="border-t border-white/10 pt-10">
+        <div class="mb-4">
+          <div class="flex items-center gap-2 text-neutral-300">
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">💬</span>
+            <span class="text-sm uppercase tracking-wide text-neutral-400">Neformálně</span>
+          </div>
+          <h2 id="networking-heading" class="mt-1 text-2xl font-bold tracking-tight">Networking a sdílení zkušeností</h2>
+        </div>
+
+        <div class="card rounded-2xl border border-white/10 bg-gradient-to-b from-neutral-900 to-black p-5">
+          <p class="text-neutral-300 leading-relaxed">
+            Po skončení hlavního programu akce zdaleka nekončila. Účastníci zůstali na místě další hodiny a akce se přirozeně přelila
+            do neformálních diskuzí. Studenti si mezi sebou zkoušeli hry, sdíleli dojmy a navzájem si dávali zpětnou vazbu.
+            Probírali nejen konkrétní technické a vizuální aspekty svých projektů, ale i širší témata související s herním průmyslem
+            a grafickým designem.
+          </p>
+
+          <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4 text-neutral-300">
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div class="flex items-center gap-2 text-neutral-200 font-semibold">
+                <i data-lucide="users" class="icon"></i> Témata, která se řešila
+              </div>
+              <ul class="mt-2 space-y-2 text-sm text-neutral-300/90">
+                <li>Jak funguje týmová práce ve vývoji her a interaktivních aplikací?</li>
+                <li>Jak se připravují a testují bakalářské a diplomové práce?</li>
+                <li>Jaké jsou nejlepší způsoby playtestingu a získání kvalitní zpětné vazby?</li>
+                <li>Jak se dostat do herního průmyslu a co čekat od prvních projektů?</li>
+                <li>Jaké technologie a nástroje jsou nejvhodnější pro grafické aplikace?</li>
+              </ul>
+            </div>
+
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div class="flex items-center gap-2 text-neutral-200 font-semibold">
+                <i data-lucide="sparkles" class="icon"></i> Proč přijít
+              </div>
+              <ul class="mt-2 space-y-2 text-sm text-neutral-300/90">
+                <li>Uvidíš špičkové studentské práce naživo.</li>
+                <li>Potkáš autory a můžeš se zeptat na workflow.</li>
+                <li>Získáš inspiraci pro vlastní semestrální projekt / BP / DP.</li>
+                <li>Networking: lidi, kteří dělají hry, VR i grafiku.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOTOGALERIE -->
+      <section id="fotky" aria-labelledby="fotky-heading" class="border-t border-white/10 pt-10">
         <div class="mb-4 flex items-center gap-2 text-neutral-300">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">📚</span>
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">📸</span>
           <div>
-            <span class="text-sm uppercase tracking-wide text-neutral-400">Už proběhlo</span>
-            <h2 id="archive" class="mt-1 text-2xl font-bold tracking-tight">Archiv Grafických večerů</h2>
+            <span class="text-sm uppercase tracking-wide text-neutral-400">Fotky</span>
+            <h2 id="fotky-heading" class="mt-1 text-2xl font-bold tracking-tight">Fotogalerie</h2>
           </div>
         </div>
 
-        <div id="archiveGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-        <p class="mt-2 text-xs text-neutral-500">
-          Tip: použij 🔎 vyhledávání nahoře pro filtrování podle tagů
-        </p>
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+          <!-- každý obrázek jako karta -->
+          <!-- klik otevře plnou fotku v novém okně -->
+          <!-- g1r–g12r pouze lokální -->
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g1r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g1r.jpg" alt="GEXPO Foto 1" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g2r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g2r.jpg" alt="GEXPO Foto 2" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g3r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g3r.jpg" alt="GEXPO Foto 3" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g4r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g4r.jpg" alt="GEXPO Foto 4" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g5r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g5r.jpg" alt="GEXPO Foto 5" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g6r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g6r.jpg" alt="GEXPO Foto 6" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g7r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g7r.jpg" alt="GEXPO Foto 7" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g8r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g8r.jpg" alt="GEXPO Foto 8" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g9r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g9r.jpg" alt="GEXPO Foto 9" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g10r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g10r.jpg" alt="GEXPO Foto 10" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g11r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g11r.jpg" alt="GEXPO Foto 11" loading="lazy" decoding="async">
+            </div>
+          </a>
+
+          <a class="card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block"
+             href="/assets/events/GEXPO/2025/g12r.jpg" target="_blank" rel="noreferrer">
+            <div class="aspect-square overflow-hidden">
+              <img class="thumbimg h-full w-full object-cover" src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 12" loading="lazy" decoding="async">
+            </div>
+          </a>
+        </div>
       </section>
 
-      <!-- O projektu -->
-      <section id="about" class="border-t border-white/10 pt-10">
-        <div class="flex items-center gap-2 text-neutral-300 mb-3">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">ℹ️</span>
-          <span class="text-sm uppercase tracking-wide text-neutral-400">O projektu</span>
-        </div>
-        <h2 class="text-2xl font-bold tracking-tight mb-2">Co jsou Grafické večery?</h2>
-        <div class="text-sm text-neutral-300/90 leading-relaxed">
-          <p>
-            Grafické večery jsou akce pořádané studenty FIT pod patronáží skupiny Grafit. Akce se věnují grafice a designu a jsou určené pro kohokoliv, kdo se o grafiku zajímá.<br><br>
-            <strong>Co přesně od Grafických večerů čekat?</strong><br>
+      <!-- CTA -->
+      <section class="border-t border-white/10 pt-10">
+        <div class="card rounded-2xl border border-white/10 bg-gradient-to-b from-neutral-900 to-black p-6 text-center">
+          <h2 class="text-2xl font-bold tracking-tight">Přijďte příště!</h2>
+          <p class="mt-2 text-neutral-300">
+            Ať jste grafik, negrafik, student či učitel – pokud vás to zajímá, příště se stavte.
+            Rádi vás uvidíme na dalším ročníku Grafického EXPA.
           </p>
-        </div>
-        <div class="text-sm text-neutral-300/90 leading-relaxed">
-          <p>
-            - Přednášky od odborníků z praxe,<br>
-            - workshopy,<br>
-            - kreativní soutěže, rozbory uměleckých děl atd.,<br>
-            - ukázky studentských prací,<br>
-            - přednášky od nadšených studentů<br>
-            - a další...
-          </p>
-        </div>
-        <div class="mt-4 text-sm text-neutral-400">
-          Chceš nějaký večer vést, nebo máš nápad na téma? Ozvi se na Discordu Grafitu nebo
-          nám pošli svůj nápad skrz formulář <a href="https://forms.gle/uPm8hjDv6AdWD4HP7">(klikni zde)</a>.
         </div>
 
         <footer class="mt-10 border-t border-white/10 pt-6 text-center text-xs text-neutral-500">
-          © Grafit Research Group — Grafické večery.
+          © Grafit Research Group — Grafické EXPO (GEXPO).
         </footer>
       </section>
+
     </main>
   </section>
-
-  <!-- Drawer s filtry (skrytý) -->
-  <div id="filterDrawer" class="fixed inset-0 z-50 hidden">
-    <div id="filterBackdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
-    <div class="relative mx-auto mt-10 w-[min(92%,1100px)] rounded-2xl border border-white/12 bg-neutral-900/95 p-4 sm:p-5 shadow-xl">
-      <div class="flex items-center justify-between gap-2">
-        <h3 class="text-base font-semibold text-white">Vyhledávání &amp; tagy</h3>
-        <button id="closeFilters"
-          class="inline-flex items-center rounded-md border border-white/10 px-2 py-1 text-sm text-neutral-300 hover:bg-white/10">✕ Zavřít</button>
-      </div>
-      <div class="mt-3 flex items-center gap-2">
-        <span class="text-neutral-400 text-sm">🔎</span>
-        <input id="search" placeholder="Hledat podle názvu, popisu, tagů…"
-               class="px-3 py-2 rounded-md border border-white/10 bg-black/40 text-white placeholder:text-neutral-500 w-full"/>
-      </div>
-      <div id="tags" class="mt-3 flex flex-wrap items-center gap-2"></div>
-    </div>
-  </div>
 
   <script>
     // Lucide ikony po načtení
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) { window.lucide.createIcons(); }
     });
-
-    // --- DATA: grafické večery ---
-    const EVENINGS = [
-      {
-        id: "gv-affinity-2025-11-21",
-    title: "Affinity workshop",
-    dateLabel: "21. 11. 2025 • 18:00",
-    dateSort: "2025-11-21",
-    room: "TH:A-1455 (ggLab)",
-    lecturer: "Ondřej Václavík",
-    img: "/assets/events/graficke-vecery/affinity-workshop-pozvanka-v2-16-9.png",
-    tags: ["workshop","fotomontáž","affinity","začátečníci"],
-    upcoming: false,
-    blurb: "základy tvorby fotomontáží",
-    detailUrl: "01-affinity.html",   // ⬅⬅⬅ tady
-        detailsHtml: `
-          <p>Již v <strong>pátek 21. 11.</strong> se můžete těšit na workshop věnovaný tvorbě fotomontáží v Affinity v rámci Grafických večerů organizovaných
-          studenty FIT pod patronáží skupiny Grafit.</p>
-
-          <p>V průběhu <strong>workshopu</strong> se od základů naučíte používat <strong>Affinity</strong> pro účely manipulace s obrázky. Kromě toho se také zaměříme
-          na principy a zásady, jejichž dodržování povede k co možná nejlepším výsledkům při skládání fotografií do jednoho celku. Jedná se o záležitosti jako
-          přesný ořez objektů, výběr/pořízení fotografií s vhodným osvětlením a perspektivou, barevné sjednocení, dodání světelných efektů a stínů apod.</p>
-
-          <p>Workshop je určen i <strong>pro úplné začátečníky</strong>, kteří s prezentovaným softwarem dosud nemají zkušenost. Zároveň budou informace
-          <strong>obecné natolik, aby byly aplikovatelné na libovolný software podobného rázu</strong> (velice rád např. poradím s Adobe Photoshop).</p>
-
-          <p>Akce proběhne od <strong>18:00 v TH:A-1455 (ggLab)</strong>. Doporučuji si přinést notebook s Affinity (případně jiným foto editorem), abyste si
-          přednášené principy mohli vyzkoušet na místě.</p>
-        `
-      },
-  {
-    id: "gv-art-contest-2025-12-12",
-    title: "Grafický večer – art contest",
-    dateLabel: "12. 12. 2025 • 17:00",
-    dateSort: "2025-12-12",
-    room: "TH:A-1455 (ggLab)",
-    lecturer: "Grafit team",
-    img: "/assets/events/graficke-vecery/art-contest-2025-12-12.png", // uprav cestu k obrázku
-    tags: ["soutěž","art","vánoce","kreslení"],
-    upcoming: true,
-    blurb: "Vánočně laděný art contest: na základě jednoduchého kompozičního podkladu vytvoříte vlastní dílo v libovolné technice – digitálně i tradičně, 2D i 3D.",
-    detailUrl: "02-art-contest.html",
-    detailsHtml: `
-      <p>Pokud touto dobou kromě vánočního ducha pociťujete i ducha kreativního, neváhejte se v <strong>pátek 12. 12.</strong> zúčastnit vánočně laděného art contestu!</p>
-
-      <p>Jedná se o výtvarně-uměleckou soutěž, kde budete mít za úkol vytvořit dílo na základě <strong>jednoduchého kompozičního podkladu</strong>.
-      Kreativitě se přitom meze nekladou – ať už tvoříte raději digitálně či tradičně, ve 2D či ve 3D, všechny přístupy jsou vítány.</p>
-
-      <p>Akce se uskuteční v <strong>pátek 12. 12. od 17:00 v TH-A:1455 (ggLab)</strong>. Nezapomeňte si s sebou vzít své oblíbené výtvarné pomůcky.</p>
-
-  
-    `
-  }
-      // sem můžeš časem doplňovat další večery ve stejném formátu
-      // {
-      //   id: "gv-illustration-2026-03-15",
-      //   title: "Digitální ilustrace pro úplné začátečníky",
-      //   dateLabel: "15. 3. 2026 • 18:00",
-      //   dateSort: "2026-03-15",
-      //   room: "TH:A-1455 (ggLab)",
-      //   lecturer: "Jméno lektora",
-      //   img: "cesta-k-obrazku.png",
-      //   tags: ["workshop","ilustrace","tablet"],
-      //   upcoming: false,
-      //   blurb: "Úvod do digitální ilustrace – základní vrstvy, štětce a workflow.",
-      //   detailsHtml: `...`
-      // },
-    ];
-
-    // --- pomocné ---
-    const $ = sel => document.querySelector(sel);
-    const create = (tag, cls="", html="") => {
-      const el = document.createElement(tag);
-      if (cls) el.className = cls;
-      if (html) el.innerHTML = html;
-      return el;
-    };
-
-    const allTags = Array.from(new Set(EVENINGS.flatMap(e => e.tags || [])));
-
-    // --- rendering karet ---
-    function eveningCard(ev) {
-      const article = create("article",
-        "card rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black flex flex-col");
-
-      // obrázek / plakát
-      const imgBox = create("div","relative w-full overflow-hidden aspect-[3/1]");
-      const img = create("img","thumb h-full w-full object-cover object-center");
-      img.src = ev.img;
-      img.alt = ev.title;
-      img.loading = "lazy";
-      img.decoding = "async";
-      imgBox.appendChild(img);
-
-      const gradient = create("div","absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent");
-      imgBox.appendChild(gradient);
-
-      // Datum + místnost
-      if (ev.dateLabel) {
-        imgBox.appendChild(
-          create("span",
-            "absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-neutral-100 border border-white/15",
-            `📅 ${ev.dateLabel}`)
-        );
-      }
-      if (ev.room) {
-        imgBox.appendChild(
-          create("span",
-            "absolute right-3 bottom-3 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-neutral-100 border border-white/15",
-            `📍 ${ev.room}`)
-        );
-      }
-
-      article.appendChild(imgBox);
-
-      // tělo karty
-      const body = create("div","p-4 flex-1 flex flex-col");
-      const titleRow = create("div","flex items-start justify-between gap-2");
-      titleRow.appendChild(
-        create("h3","text-lg font-semibold text-neutral-50 leading-snug",ev.title)
-      );
-      if (ev.lecturer) {
-        titleRow.appendChild(
-          create("span","text-[11px] text-neutral-400 whitespace-nowrap",
-            `👤 ${ev.lecturer}`)
-        );
-      }
-      body.appendChild(titleRow);
-
-      if (ev.blurb) {
-        body.appendChild(
-          create("p","mt-1 text-sm text-neutral-300/90 leading-relaxed",ev.blurb)
-        );
-      }
-
-      if ((ev.tags || []).length) {
-        const tg = create("div","mt-3 flex flex-wrap gap-2");
-        ev.tags.forEach(t => {
-          tg.appendChild(
-            create("span",
-              "text-[11px] rounded-full border px-2 py-0.5 text-neutral-300 border-neutral-700/80 bg-white/5",
-              `#${t}`)
-          );
-        });
-        body.appendChild(tg);
-      }
-
-      if (ev.detailsHtml) {
-        const details = create("details","mt-3 text-sm text-neutral-300/90");
-        const summary = create("summary",
-          "cursor-pointer text-cyan-300 hover:text-cyan-200 list-none flex items-center gap-1",
-          "<span>Podrobnosti &amp; anotace</span>"
-        );
-        details.appendChild(summary);
-
-        const inner = create("div","mt-2 space-y-2");
-        inner.innerHTML = ev.detailsHtml;
-        details.appendChild(inner);
-        body.appendChild(details);
-      }
-if (ev.detailUrl) {
-    const link = create(
-      "a",
-      "mt-4 inline-flex items-center gap-2 self-start rounded-full border border-cyan-400/60 bg-cyan-500/15 px-3 py-1.5 text-xs sm:text-sm text-cyan-100 hover:bg-cyan-500/25",
-      "Detail akce ↗"
-    );
-    link.href = ev.detailUrl;
-    body.appendChild(link);
-  }
-      article.appendChild(body);
-      return article;
-    }
-
-    function renderEvenings(filterFn) {
-      const upcomingGrid = $("#upcomingGrid");
-      const archiveGrid  = $("#archiveGrid");
-      const upcomingEmpty = $("#upcomingEmpty");
-      upcomingGrid.innerHTML = "";
-      archiveGrid.innerHTML = "";
-
-      const upcomingList = EVENINGS
-        .filter(e => e.upcoming)
-        .filter(filterFn)
-        .sort((a,b) => a.dateSort.localeCompare(b.dateSort));
-
-      const archiveList = EVENINGS
-        .filter(e => !e.upcoming)
-        .filter(filterFn)
-        .sort((a,b) => b.dateSort.localeCompare(a.dateSort));
-
-      if (upcomingList.length) {
-        upcomingList.forEach(ev => upcomingGrid.appendChild(eveningCard(ev)));
-        upcomingEmpty.classList.add("hidden");
-      } else {
-        upcomingEmpty.classList.remove("hidden");
-      }
-
-      if (archiveList.length) {
-        archiveList.forEach(ev => archiveGrid.appendChild(eveningCard(ev)));
-      }
-    }
-
-    // --- vyhledávání + tagy ---
-    let activeTags = new Set();
-
-    function applyFilter() {
-      const searchEl = $("#search");
-      const q = (searchEl?.value || "").trim().toLowerCase();
-
-      const filterFn = (ev) => {
-        const text =
-          ((ev.title||"") + " " +
-           (ev.blurb||"") + " " +
-           (ev.lecturer||"") + " " +
-           (ev.tags||[]).join(" ")
-          ).toLowerCase();
-
-        const matchQ = !q || text.includes(q);
-        const matchTags = activeTags.size === 0 ||
-                          (ev.tags || []).some(t => activeTags.has(t));
-        return matchQ && matchTags;
-      };
-
-      renderEvenings(filterFn);
-    }
-
-    function renderTags() {
-      const T = $("#tags");
-      if (!T) return;
-      T.innerHTML = `<span class="text-xs text-neutral-400 mr-1">Filtr podle tagů:</span>`;
-
-      allTags.forEach(t => {
-        const b = create("button",
-          "px-3 py-1 rounded-full border text-xs border-neutral-700 text-neutral-300 hover:border-neutral-400");
-        b.textContent = t;
-        if (activeTags.has(t)) {
-          b.classList.add("bg-cyan-500/20","border-cyan-400");
-        }
-        b.onclick = () => {
-          activeTags.has(t) ? activeTags.delete(t) : activeTags.add(t);
-          renderTags();
-          applyFilter();
-        };
-        T.appendChild(b);
-      });
-
-      if (allTags.length) {
-        const reset = create("button",
-          "ml-2 text-xs text-cyan-300 hover:text-cyan-200");
-        reset.textContent = "Reset";
-        reset.onclick = () => {
-          activeTags = new Set();
-          renderTags();
-          applyFilter();
-        };
-        T.appendChild(reset);
-      }
-    }
 
     // --- částice (canvas) --- //
     function particles(canvas, opts) {
@@ -579,39 +546,17 @@ if (ev.detailUrl) {
       return { stop: () => cancelAnimationFrame(raf), ro };
     }
 
-    // --- scroll progress ---
+    // --- scroll progress --- //
     window.addEventListener("scroll", () => {
       const s = document.documentElement.scrollTop || document.body.scrollTop;
       const h = (document.documentElement.scrollHeight - document.documentElement.clientHeight) || 1;
       const pct = Math.max(0, Math.min(1, s / h));
-      $("#scrollbar").style.width = (pct * 100) + "%";
+      document.getElementById("scrollbar").style.width = (pct * 100) + "%";
     });
 
-    // --- filter drawer ---
-    const drawer   = document.getElementById("filterDrawer");
-    const openBtn  = document.getElementById("openFilters");
-    const closeBtn = document.getElementById("closeFilters");
-    const backdrop = document.getElementById("filterBackdrop");
-
-    function openFilters() {
-      drawer.classList.remove("hidden");
-      setTimeout(() => document.getElementById("search")?.focus(), 80);
-    }
-    function closeFilters() {
-      drawer.classList.add("hidden");
-    }
-
-    openBtn?.addEventListener("click", openFilters);
-    closeBtn?.addEventListener("click", closeFilters);
-    backdrop?.addEventListener("click", closeFilters);
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeFilters(); });
-
-    // --- init ---
+    // --- init --- //
     const prefersReduced = window.matchMedia &&
                            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    renderTags();
-    applyFilter();
 
     if (!prefersReduced) {
       particles(document.getElementById("heroCanvas"), { N: 40, speed: .35 });
