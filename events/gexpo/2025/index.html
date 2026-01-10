@@ -7,12 +7,16 @@
 
   <style>
     :root{
-      --bg: #0b1020;
-      --card: rgba(255,255,255,0.06);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.72);
-      --line: rgba(255,255,255,0.12);
-      --link: rgba(140, 205, 255, 0.95);
+      --bg: #fbfbfd;
+      --text: #0f172a;        /* slate-900 */
+      --muted: #475569;       /* slate-600 */
+      --muted2: #64748b;      /* slate-500 */
+      --border: #e5e7eb;      /* gray-200 */
+      --card: #ffffff;
+      --link: #0f172a;
+      --pill-bg: #f1f5f9;     /* slate-100 */
+      --pill-border: #e2e8f0; /* slate-200 */
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
     }
 
     *{ box-sizing: border-box; }
@@ -20,112 +24,143 @@
     body{
       margin: 0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      background: radial-gradient(1200px 600px at 20% 0%, rgba(120,80,255,0.25), transparent 60%),
-                  radial-gradient(900px 600px at 90% 10%, rgba(0,180,255,0.18), transparent 55%),
-                  var(--bg);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(15, 23, 42, 0.06), transparent 60%),
+        radial-gradient(800px 420px at 85% 10%, rgba(15, 23, 42, 0.05), transparent 55%),
+        var(--bg);
       color: var(--text);
       line-height: 1.55;
     }
 
-    /* --- Standardní Grafit hlavička (inline) --- */
-    .site-header{
-      position: sticky;
-      top: 0;
-      z-index: 50;
+    a{ color: var(--link); text-decoration: none; }
+    a:hover{ text-decoration: underline; }
+
+    /* ====== Header “Grafické večery” vibe ====== */
+    header{
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.75);
       backdrop-filter: blur(10px);
-      background: rgba(10, 14, 28, 0.62);
-      border-bottom: 1px solid var(--line);
     }
-    .header-inner{
+
+    .wrap{
       max-width: 1100px;
       margin: 0 auto;
-      padding: 12px 18px;
+      padding: 0 18px;
+    }
+
+    .topbar{
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-    }
-    .brand{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--text);
-      min-width: 220px;
-    }
-    .brand-mark{
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, rgba(120,80,255,0.45), rgba(0,180,255,0.35));
-      border: 1px solid var(--line);
-      font-weight: 900;
-      letter-spacing: 0.02em;
-    }
-    .brand-text{
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-    }
-    .brand-name{
-      font-weight: 800;
-      letter-spacing: 0.12em;
+      gap: 12px;
+      padding: 12px 0;
       font-size: 0.95rem;
-    }
-    .brand-sub{
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-top: 2px;
+      color: var(--muted2);
     }
 
-    .nav{
+    .topbar .back{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .topbar .meta{
+      color: var(--muted2);
+      white-space: nowrap;
+    }
+
+    .hero{
+      padding: 18px 0 22px;
+      text-align: left;
+    }
+
+    .brandline{
       display: flex;
       align-items: center;
       gap: 14px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+      margin-bottom: 10px;
     }
-    .nav a{
+
+    .logo{
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 8px;
+      box-shadow: 0 8px 20px rgba(15,23,42,0.06);
+    }
+
+    .tagline{
+      font-size: 0.95rem;
+      color: var(--muted2);
+      letter-spacing: 0.02em;
+    }
+
+    h1{
+      margin: 10px 0 8px;
+      font-size: 2.2rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .lead{
+      margin: 0;
       color: var(--muted);
-      text-decoration: none;
+      max-width: 80ch;
+    }
+
+    .pills{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--pill-border);
+      background: var(--pill-bg);
+      color: var(--text);
       font-weight: 600;
       font-size: 0.92rem;
-      padding: 6px 8px;
-      border-radius: 10px;
-      border: 1px solid transparent;
+      text-decoration: none;
     }
-    .nav a:hover{
-      color: var(--text);
-      border-color: var(--line);
-      background: rgba(255,255,255,0.04);
+    .pill:hover{
+      text-decoration: none;
+      filter: brightness(0.98);
     }
 
     @media (max-width: 720px){
-      .header-inner{ align-items: flex-start; flex-direction: column; }
-      .brand{ min-width: unset; }
-      .nav{ justify-content: flex-start; gap: 10px; }
+      .topbar{
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .topbar .meta{ white-space: normal; }
+      .brandline{ align-items: flex-start; }
+      h1{ font-size: 1.85rem; }
     }
 
-    /* --- Obsah --- */
+    /* ====== Main content ====== */
     #main{
       max-width: 1100px;
       margin: 0 auto;
-      padding: 22px 18px 40px;
+      padding: 22px 18px 44px;
     }
 
     h2{
-      margin: 10px 0 12px;
-      font-size: 1.9rem;
-      letter-spacing: 0.2px;
+      margin: 24px 0 10px;
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
     }
-    h3{
-      margin: 26px 0 10px;
-      font-size: 1.25rem;
-    }
+
     p{ color: var(--muted); margin: 10px 0; }
     strong{ color: var(--text); }
 
@@ -135,12 +170,12 @@
     }
     li{ margin: 6px 0; }
 
-    .block{
-      margin-top: 14px;
-      padding: 14px 16px;
+    .card{
       background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 6px 18px rgba(15,23,42,0.05);
     }
 
     /* --- Video grid --- */
@@ -151,10 +186,11 @@
       margin-top: 10px;
     }
     .video-item{
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
       overflow: hidden;
+      background: #fff;
+      box-shadow: 0 6px 16px rgba(15,23,42,0.06);
     }
     .video-item iframe{
       width: 100%;
@@ -162,6 +198,7 @@
       display: block;
       border: 0;
     }
+
     @media (max-width: 980px){
       .video-grid{ grid-template-columns: repeat(2, 1fr); }
       .video-item iframe{ height: 220px; }
@@ -171,7 +208,7 @@
       .video-item iframe{ height: 230px; }
     }
 
-    /* --- Galerie: malé náhledy --- */
+    /* --- Galerie: rozumné náhledy --- */
     .gallery{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -180,59 +217,75 @@
     }
     .gallery img{
       width: 100%;
-      height: 140px;      /* náhledy NE obří */
+      height: 140px;
       object-fit: cover;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #fff;
       display: block;
       transition: transform 120ms ease, filter 120ms ease;
+      box-shadow: 0 6px 16px rgba(15,23,42,0.06);
     }
     .gallery img:hover{
-      transform: scale(1.02);
-      filter: brightness(1.05);
+      transform: scale(1.015);
+      filter: contrast(1.02);
+    }
+
+    footer{
+      padding: 24px 18px 40px;
+      color: var(--muted2);
+      text-align: center;
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,0.6);
     }
   </style>
 </head>
 
 <body>
-  <!-- Standardní hlavička Grafitu -->
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="../../" aria-label="Grafit">
-        <span class="brand-mark" aria-hidden="true">⌬</span>
-        <span class="brand-text">
-          <span class="brand-name">GRAFIT</span>
-          <span class="brand-sub">ČVUT · FIT</span>
-        </span>
-      </a>
+  <header>
+    <div class="wrap">
+      <div class="topbar">
+        <a class="back" href="../../">← Zpět na hlavní web Grafit</a>
+        <div class="meta">Události · Grafit Research Group</div>
+      </div>
 
-      <nav class="nav" aria-label="Navigace">
-        <a href="../../">Domů</a>
-        <a href="../../events/">Události</a>
-        <a href="../../projects/">Projekty</a>
-        <a href="../../team/">Tým</a>
-      </nav>
+      <div class="hero">
+        <div class="brandline">
+          <img class="logo" src="/assets/logos/grafit_bw.png" alt="Grafit logo">
+          <div class="tagline">Studentské workshopy • Přednášky • Grafika • Design</div>
+        </div>
+
+        <h1>Grafické EXPO (GEXPO)</h1>
+        <p class="lead">
+          Každý semestr se v rámci předmětu VHS a dalších grafických kurzů na FIT ČVUT rodí mnoho zajímavých projektů.
+          Grafické EXPO nabízí možnost vidět výsledky práce, pobavit se nad hrami a potkat lidi, kteří to dělají.
+        </p>
+
+        <div class="pills">
+          <a class="pill" href="#info">Praktické info</a>
+          <a class="pill" href="#program">Program</a>
+          <a class="pill" href="#ukazky">Ukázky her</a>
+          <a class="pill" href="#fotky">Fotogalerie</a>
+        </div>
+      </div>
     </div>
   </header>
 
   <section id="main">
-    <h2>Grafické EXPO (GEXPO)</h2>
-
-    <div class="block">
+    <h2 id="info">Praktické info</h2>
+    <div class="card">
       <p>
         <strong>Datum:</strong> Pátek 14. 2.<br>
         <strong>Místo:</strong> 14. patro: ggLab a 1435
       </p>
       <p>
-        Každý semestr se v rámci předmětu VHS a dalších grafických kurzů na FIT ČVUT rodí mnoho zajímavých projektů.
-        Grafické EXPO nabízí studentům i zájemcům možnost vidět výsledky práce svých kolegů, seznámit se s inspirativními nápady
-        a zjistit, co je možné v rámci těchto předmětů vytvořit.
+        Grafické EXPO je neformální přehlídka studentských projektů – hry, VR, digitální rekonstrukce, kresba a další ukázky.
+        Přijďte si zahrát, zeptat se na proces a pobavit se s autory.
       </p>
     </div>
 
-    <h3>Program</h3>
-    <div class="block">
+    <h2 id="program">Program</h2>
+    <div class="card">
       <ul>
         <li>13:00 - Úvodní slovo a zahájení</li>
         <li>13:15 - Prezentace studentských her z předmětu VHS</li>
@@ -245,7 +298,7 @@
       </ul>
     </div>
 
-    <h3>Ukázky her</h3>
+    <h2 id="ukazky">Ukázky her</h2>
     <div class="video-grid">
       <div class="video-item">
         <iframe src="https://www.youtube.com/embed/lUawOXPqS8w"
@@ -289,13 +342,11 @@
       </div>
     </div>
 
-    <h3>Networking a sdílení zkušeností</h3>
-    <div class="block">
+    <h2>Networking a sdílení zkušeností</h2>
+    <div class="card">
       <p>
         Po skončení hlavního programu akce zdaleka nekončila. Účastníci zůstali na místě další hodiny a akce se přirozeně přelila
         do neformálních diskuzí. Studenti si mezi sebou zkoušeli hry, sdíleli dojmy a navzájem si dávali zpětnou vazbu.
-        Probírali nejen konkrétní technické a vizuální aspekty svých projektů, ale i širší témata související s herním průmyslem
-        a grafickým designem.
       </p>
       <ul>
         <li>Jak funguje týmová práce ve vývoji her a interaktivních aplikací?</li>
@@ -306,7 +357,7 @@
       </ul>
     </div>
 
-    <h3>Fotogalerie</h3>
+    <h2 id="fotky">Fotogalerie</h2>
     <div class="gallery">
       <img src="/assets/events/GEXPO/2025/g1r.jpg"  alt="GEXPO Foto 1"  loading="lazy">
       <img src="/assets/events/GEXPO/2025/g2r.jpg"  alt="GEXPO Foto 2"  loading="lazy">
@@ -322,8 +373,8 @@
       <img src="/assets/events/GEXPO/2025/g12r.jpg" alt="GEXPO Foto 12" loading="lazy">
     </div>
 
-    <h3>Přijďte příště!</h3>
-    <div class="block">
+    <h2>Přijďte příště!</h2>
+    <div class="card">
       <p>
         Ať jste grafik, negrafik, student či učitel, pokud vás něco z toho zajímá, příště se stavte!
         Rádi vás uvidíme na dalším ročníku Grafického EXPA.
@@ -331,6 +382,8 @@
     </div>
   </section>
 
-  <footer></footer>
+  <footer>
+    © Grafit Research Group — Grafické EXPO (GEXPO)
+  </footer>
 </body>
 </html>
