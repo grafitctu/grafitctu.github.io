@@ -9,24 +9,7 @@
       --bg0:#070A2B;
       --bg1:#0A0E3A;
       --bg2:#120B3A;
-      --cyan:#6FE7FF;
-      --cyan2:#4BC7FF;
-      --blueBox:#1B4B8A;
-      --blueBox2:#2A6BB2;
-      --purpleBox:#5A2A8F;
-      --purpleBox2:#8C4FD6;
-      --orangeBox:#A86A16;
-      --orangeBox2:#FFB34E;
-      --yellowBox:#B08A16;
-      --yellowBox2:#FFE07A;
       --ink:#DCEBFF;
-      --muted:#9CB3D9;
-      --stroke: rgba(140,210,255,.35);
-      --glow: rgba(111,231,255,.22);
-      --shadow: rgba(0,0,0,.45);
-      --radius: 16px;
-      --radius2: 12px;
-      --gap: 16px;
     }
 
     *{box-sizing:border-box}
@@ -245,7 +228,6 @@
       padding:10px 8px;
       font-weight:800;
       letter-spacing:.5px;
-      text-transform:none;
       box-shadow:
         0 14px 24px rgba(0,0,0,.26),
         inset 0 0 0 1px rgba(255,255,255,.10);
@@ -310,7 +292,7 @@
       box-shadow: 0 12px 20px rgba(0,0,0,.25);
     }
 
-    /* SVG overlay (now dynamically drawn) */
+    /* SVG overlay */
     .wires{
       position:absolute;
       inset:0;
@@ -390,10 +372,10 @@
 
         <section class="diagram">
           <div class="top-notes">
-            <div class="note"><strong>Povinné předměty programu</strong></div>
-            <div class="note"><strong>Povinné předměty specializace</strong></div>
-            <div class="note"><strong>V každém semestru alespoň jeden</strong><br/>předmět z celého bloku</div>
-            <div class="note"><strong>Volitelné předměty</strong> – tyto jsou příbuzné oboru, reálně ale zde může být <strong>cokoliv</strong> co splňuje počet kreditů!</div>
+            <div class="note" id="note-program"><strong>Povinné předměty programu</strong></div>
+            <div class="note" id="note-spec"><strong>Povinné předměty specializace</strong></div>
+            <div class="note" id="note-block"><strong>V každém semestru alespoň jeden</strong><br/>předmět z celého bloku</div>
+            <div class="note" id="note-opt"><strong>Volitelné předměty</strong> – tyto jsou příbuzné oboru, reálně ale zde může být <strong>cokoliv</strong> co splňuje počet kreditů!</div>
           </div>
 
           <div class="grid">
@@ -405,62 +387,63 @@
             </div>
 
             <div class="flow-frame" id="frame">
-              <!-- SVG overlay: arrows are drawn via JS (fix for the "volno..." arrow) -->
               <svg class="wires" id="wires" aria-hidden="true"></svg>
 
               <div class="rows">
+                <!-- Row 1 -->
                 <div class="row">
-                  <div class="box b-blue">ANI-KOP</div>
-                  <div class="box b-blue">ANI-ARC</div>
-                  <div class="box b-purple">ANI-DZO</div>
-                  <div class="box b-purple">ANI-DVG</div>
-                  <div class="box b-purple">ANI-EGG</div>
+                  <div class="box b-blue"   id="ani-kop">ANI-KOP</div>
+                  <div class="box b-blue"   id="ani-arc">ANI-ARC</div>
+                  <div class="box b-purple" id="ani-dzo">ANI-DZO</div>
+                  <div class="box b-purple" id="ani-dvg">ANI-DVG</div>
+                  <div class="box b-purple" id="ani-egg">ANI-EGG</div>
 
-                  <div class="group" title="Blok: v každém semestru alespoň jeden předmět z celého bloku">
-                    <div class="box b-orange">VGA</div>
-                    <div class="box b-orange">PVR</div>
-                    <div class="box b-orange">GPU</div>
+                  <div class="group" id="grp-block-1" title="Blok: v každém semestru alespoň jeden předmět z celého bloku">
+                    <div class="box b-orange" id="vga">VGA</div>
+                    <div class="box b-orange" id="pvr">PVR</div>
+                    <div class="box b-orange" id="gpu">GPU</div>
                   </div>
 
-                  <div class="box b-yellow">např. CCC</div>
+                  <div class="box b-yellow" id="ccc">např. CCC</div>
                 </div>
 
+                <!-- Row 2 -->
                 <div class="row">
-                  <div class="box b-blue">ANI-MLM</div>
-                  <div class="box b-blue">ANI-SAI</div>
-                  <div class="box b-blue">ANI-TPa</div>
-                  <div class="box b-purple">ANI-PG1</div>
-                  <div class="box b-purple">ANI-VIZ</div>
+                  <div class="box b-blue"   id="ani-mlm">ANI-MLM</div>
+                  <div class="box b-blue"   id="ani-sai">ANI-SAI</div>
+                  <div class="box b-blue"   id="ani-tpa">ANI-TPa</div>
+                  <div class="box b-purple" id="ani-pg1">ANI-PG1</div>
+                  <div class="box b-purple" id="ani-viz">ANI-VIZ</div>
 
-                  <div class="group">
-                    <div class="box b-orange">SSD</div>
-                    <div class="box b-orange">BSO</div>
-                    <div class="box b-orange">IRT</div>
+                  <div class="group" id="grp-block-2">
+                    <div class="box b-orange" id="ssd">SSD</div>
+                    <div class="box b-orange" id="bso">BSO</div>
+                    <div class="box b-orange" id="irt">IRT</div>
                   </div>
 
-                  <div class="box b-yellow">např. ESC</div>
-                  <div class="box b-yellow">např. TVR</div>
+                  <div class="box b-yellow" id="esc">např. ESC</div>
+                  <div class="box b-yellow" id="tvr">např. TVR</div>
                 </div>
 
+                <!-- Row 3 -->
                 <div class="row">
-                  <div class="box b-blue">ANI-TPb</div>
-                  <div class="box b-purple">ANI-ROZ</div>
-                  <div class="box b-purple">ANI-PIV</div>
-                  <div class="box b-yellow">např. NUR</div>
-                  <div class="box b-yellow">např. DID</div>
-                  <div class="box b-yellow">např. DVD</div>
-                  <div class="box b-yellow">např. UEE</div>
+                  <div class="box b-blue"   id="ani-tpb">ANI-TPb</div>
+                  <div class="box b-purple" id="ani-roz">ANI-ROZ</div>
+                  <div class="box b-purple" id="ani-piv">ANI-PIV</div>
+                  <div class="box b-yellow" id="nur">např. NUR</div>
+                  <div class="box b-yellow" id="did">např. DID</div>
+                  <div class="box b-yellow" id="dvd">např. DVD</div>
+                  <div class="box b-yellow" id="uee">např. UEE</div>
                   <div></div><div></div><div></div>
                 </div>
 
+                <!-- Row 4 -->
                 <div class="row">
-                  <!-- IMPORTANT: id used as arrow target -->
                   <div class="box b-blue" id="ani-dip">ANI-DIP</div>
                   <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                 </div>
               </div>
 
-              <!-- IMPORTANT: id used as arrow source -->
               <div class="free-note" id="note-dip">
                 <strong>volno na začátek diplomové práce</strong><br/>
                 a na zcela <strong>volitelné předměty</strong><br/>
@@ -533,8 +516,8 @@
       }
     }
 
-    function makeSmoothPath(a, b) {
-      const dx = Math.max(40, Math.abs(b.x - a.x) * 0.35);
+    function makeSmoothPath(a, b, bend = 0.35) {
+      const dx = Math.max(40, Math.abs(b.x - a.x) * bend);
       const c1 = { x: a.x + dx, y: a.y };
       const c2 = { x: b.x - dx, y: b.y };
       return `M ${a.x} ${a.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${b.x} ${b.y}`;
@@ -557,10 +540,14 @@
             <stop offset=".5" stop-color="rgba(180,110,255,.55)"></stop>
             <stop offset="1" stop-color="rgba(255,179,78,.45)"></stop>
           </linearGradient>
-<marker id="arrow" markerWidth="38" markerHeight="38" refX="15" refY="9" orient="auto">
-  <path d="M0,0 L18,9 L0,18 Z" fill="rgba(220,235,255,.85)"></path>
-</marker>
 
+          <!-- bigger, more visible arrowhead -->
+          <marker id="arrow" markerWidth="18" markerHeight="18" refX="15" refY="9" orient="auto">
+            <path d="M0,0 L18,9 L0,18 Z"
+              fill="rgba(220,235,255,.88)"
+              stroke="rgba(0,0,0,.30)"
+              stroke-width="1"></path>
+          </marker>
         </defs>
       `;
 
@@ -573,7 +560,7 @@
         const p2 = svgPointFromElement(toEl,   a.toSide   || "left",  svg);
 
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", makeSmoothPath(p1, p2));
+        path.setAttribute("d", makeSmoothPath(p1, p2, a.bend ?? 0.35));
         path.setAttribute("stroke", a.stroke || "url(#wire)");
         path.setAttribute("stroke-width", a.width || "2.2");
         path.setAttribute("fill", "none");
@@ -583,9 +570,54 @@
       }
     }
 
-    // ✅ Fix: "volno na začátek diplomové..." now points precisely to ANI-DIP
+    // Šipky podle nákresu:
     const ARROWS = [
-      { from: "#note-dip", to: "#ani-dip", fromSide: "left", toSide: "right", opacity: 0.9 }
+      // řádek 1 (sekvence)
+      { from:"#ani-kop", to:"#ani-arc", fromSide:"right", toSide:"left", opacity:0.80 },
+      { from:"#ani-arc", to:"#ani-dzo", fromSide:"right", toSide:"left", opacity:0.80 },
+      { from:"#ani-dzo", to:"#ani-dvg", fromSide:"right", toSide:"left", opacity:0.80 },
+      { from:"#ani-dvg", to:"#ani-egg", fromSide:"right", toSide:"left", opacity:0.80 },
+      { from:"#ani-egg", to:"#grp-block-1", fromSide:"right", toSide:"left", opacity:0.80, bend:0.25 },
+      { from:"#grp-block-1", to:"#ccc", fromSide:"right", toSide:"left", opacity:0.85, bend:0.25 },
+
+      // řádek 2 (sekvence)
+      { from:"#ani-mlm", to:"#ani-sai", fromSide:"right", toSide:"left", opacity:0.78 },
+      { from:"#ani-sai", to:"#ani-tpa", fromSide:"right", toSide:"left", opacity:0.78 },
+      { from:"#ani-tpa", to:"#ani-pg1", fromSide:"right", toSide:"left", opacity:0.78 },
+      { from:"#ani-pg1", to:"#ani-viz", fromSide:"right", toSide:"left", opacity:0.78 },
+      { from:"#ani-viz", to:"#grp-block-2", fromSide:"right", toSide:"left", opacity:0.78, bend:0.25 },
+      { from:"#grp-block-2", to:"#esc", fromSide:"right", toSide:"left", opacity:0.85, bend:0.25 },
+      { from:"#esc", to:"#tvr", fromSide:"right", toSide:"left", opacity:0.90, bend:0.20 },
+
+      // “volitelné” svislá šipka CCC -> TVR (dle nákresu)
+      { from:"#ccc", to:"#tvr", fromSide:"bottom", toSide:"top", opacity:0.75, bend:0.10 },
+
+      // řádek 3 (sekvence)
+      { from:"#ani-tpb", to:"#ani-roz", fromSide:"right", toSide:"left", opacity:0.78 },
+      { from:"#ani-roz", to:"#ani-piv", fromSide:"right", toSide:"left", opacity:0.78 },
+      { from:"#ani-piv", to:"#nur", fromSide:"right", toSide:"left", opacity:0.82 },
+      { from:"#nur", to:"#did", fromSide:"right", toSide:"left", opacity:0.82 },
+      { from:"#did", to:"#dvd", fromSide:"right", toSide:"left", opacity:0.82 },
+      { from:"#dvd", to:"#uee", fromSide:"right", toSide:"left", opacity:0.82 },
+
+      // křivka UEE -> “volno na začátek diplomové…”
+      { from:"#uee", to:"#note-dip", fromSide:"right", toSide:"left", opacity:0.85, bend:0.55 },
+
+      // dlouhá šipka “volno…” -> ANI-DIP (dle nákresu)
+      { from:"#note-dip", to:"#ani-dip", fromSide:"left", toSide:"right", opacity:0.92, bend:0.22, width:2.6 },
+
+      // svislá prereq šipka DVG -> PG1 (dle nákresu)
+      { from:"#ani-dvg", to:"#ani-pg1", fromSide:"bottom", toSide:"top", opacity:0.75, bend:0.10, width:2.0 },
+
+      // “popisky” nahoře (volitelné, ale odpovídá nákresu šipek z legendy)
+      { from:"#note-program", to:"#ani-kop", fromSide:"bottom", toSide:"top", opacity:0.55, bend:0.15, width:1.8 },
+      { from:"#note-program", to:"#ani-arc", fromSide:"bottom", toSide:"top", opacity:0.55, bend:0.20, width:1.8 },
+      { from:"#note-spec", to:"#ani-dzo", fromSide:"bottom", toSide:"top", opacity:0.55, bend:0.18, width:1.8 },
+      { from:"#note-spec", to:"#ani-dvg", fromSide:"bottom", toSide:"top", opacity:0.55, bend:0.22, width:1.8 },
+      { from:"#note-spec", to:"#ani-pg1", fromSide:"bottom", toSide:"top", opacity:0.50, bend:0.35, width:1.8 },
+      { from:"#note-block", to:"#grp-block-1", fromSide:"bottom", toSide:"top", opacity:0.50, bend:0.15, width:1.8 },
+      { from:"#note-opt", to:"#ccc", fromSide:"bottom", toSide:"top", opacity:0.45, bend:0.18, width:1.8 },
+      { from:"#note-opt", to:"#tvr", fromSide:"bottom", toSide:"top", opacity:0.45, bend:0.22, width:1.8 }
     ];
 
     function redraw() { drawArrows(ARROWS); }
