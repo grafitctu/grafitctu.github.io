@@ -9,7 +9,20 @@
       --bg0:#070A2B;
       --bg1:#0A0E3A;
       --bg2:#120B3A;
+
       --ink:#DCEBFF;
+
+      --blueA: rgba(70,140,220,.92);
+      --blueB: rgba(20,70,130,.92);
+
+      --purpleA: rgba(160,90,245,.90);
+      --purpleB: rgba(70,30,125,.92);
+
+      --orangeA: rgba(255,179,78,.92);
+      --orangeB: rgba(140,80,10,.92);
+
+      --yellowA: rgba(255,240,170,.92);
+      --yellowB: rgba(200,160,40,.92);
     }
 
     *{box-sizing:border-box}
@@ -126,32 +139,57 @@
     .diagram::before{
       content:"";
       position:absolute; inset:0;
-      background:
-        linear-gradient(90deg, rgba(111,231,255,.06), transparent 45%, rgba(255,179,78,.05));
+      background: linear-gradient(90deg, rgba(111,231,255,.06), transparent 45%, rgba(255,179,78,.05));
       pointer-events:none;
       opacity:.8;
     }
 
+    /* ===== Colored category blocks (replaces arrows) ===== */
     .top-notes{
       position:relative;
       display:grid;
-      grid-template-columns: 1.15fr 1.1fr 1.35fr 1.25fr;
+      grid-template-columns: 1.05fr 1.05fr 1.25fr 1.25fr;
       gap:12px;
-      align-items:start;
+      align-items:stretch;
       padding:2px 6px 10px;
       z-index:2;
       font-size: clamp(11px, 1.15vw, 14px);
-      color: rgba(220,235,255,.86);
     }
+
     .note{
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(140,210,255,.18);
-      border-radius: 12px;
-      padding:8px 10px;
+      border-radius: 14px;
+      padding:10px 12px;
       box-shadow: 0 10px 18px rgba(0,0,0,.20);
       backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,.14);
+      line-height:1.25;
     }
-    .note strong{ color: rgba(255,255,255,.92) }
+
+    .note.blue{
+      background: linear-gradient(180deg, var(--blueA), var(--blueB));
+      color: rgba(230,248,255,.98);
+      border-color: rgba(111,231,255,.35);
+      text-shadow: 0 0 10px rgba(111,231,255,.18);
+    }
+
+    .note.purple{
+      background: linear-gradient(180deg, var(--purpleA), var(--purpleB));
+      color: rgba(245,235,255,.98);
+      border-color: rgba(180,110,255,.40);
+      text-shadow: 0 0 10px rgba(180,110,255,.18);
+    }
+
+    .note.orange{
+      background: linear-gradient(180deg, var(--orangeA), var(--orangeB));
+      color: rgba(30,20,6,.92);
+      border-color: rgba(255,210,120,.42);
+    }
+
+    .note.yellow{
+      background: linear-gradient(180deg, var(--yellowA), var(--yellowB));
+      color: rgba(30,22,6,.92);
+      border-color: rgba(255,240,170,.52);
+    }
 
     .grid{
       position:relative;
@@ -237,24 +275,24 @@
     }
 
     .b-blue{
-      background: linear-gradient(180deg, rgba(70,140,220,.92), rgba(20,70,130,.92));
+      background: linear-gradient(180deg, var(--blueA), var(--blueB));
       border: 1px solid rgba(111,231,255,.35);
       color: rgba(230,248,255,.98);
       text-shadow: 0 0 12px rgba(111,231,255,.18);
     }
     .b-purple{
-      background: linear-gradient(180deg, rgba(160,90,245,.90), rgba(70,30,125,.92));
+      background: linear-gradient(180deg, var(--purpleA), var(--purpleB));
       border: 1px solid rgba(180,110,255,.40);
       color: rgba(245,235,255,.98);
       text-shadow: 0 0 12px rgba(180,110,255,.18);
     }
     .b-orange{
-      background: linear-gradient(180deg, rgba(255,179,78,.92), rgba(140,80,10,.92));
+      background: linear-gradient(180deg, var(--orangeA), var(--orangeB));
       border: 1px solid rgba(255,210,120,.42);
       color: rgba(30,20,6,.92);
     }
     .b-yellow{
-      background: linear-gradient(180deg, rgba(255,240,170,.92), rgba(200,160,40,.92));
+      background: linear-gradient(180deg, var(--yellowA), var(--yellowB));
       border: 1px solid rgba(255,240,170,.52);
       color: rgba(30,22,6,.92);
     }
@@ -290,16 +328,6 @@
       padding:10px 12px;
       backdrop-filter: blur(6px);
       box-shadow: 0 12px 20px rgba(0,0,0,.25);
-    }
-
-    /* SVG overlay */
-    .wires{
-      position:absolute;
-      inset:0;
-      z-index:1;
-      pointer-events:none;
-      opacity:.95;
-      filter: drop-shadow(0 0 10px rgba(111,231,255,.18));
     }
 
     .legend{
@@ -371,11 +399,21 @@
         </header>
 
         <section class="diagram">
+          <!-- ✅ Barevné bloky místo šipek -->
           <div class="top-notes">
-            <div class="note" id="note-program"><strong>Povinné předměty programu</strong></div>
-            <div class="note" id="note-spec"><strong>Povinné předměty specializace</strong></div>
-            <div class="note" id="note-block"><strong>V každém semestru alespoň jeden</strong><br/>předmět z celého bloku</div>
-            <div class="note" id="note-opt"><strong>Volitelné předměty</strong> – tyto jsou příbuzné oboru, reálně ale zde může být <strong>cokoliv</strong> co splňuje počet kreditů!</div>
+            <div class="note blue">
+              <strong>Povinné předměty programu</strong>
+            </div>
+            <div class="note purple">
+              <strong>Povinné předměty specializace</strong>
+            </div>
+            <div class="note orange">
+              <strong>V každém semestru alespoň jeden</strong><br/>
+              předmět z celého bloku
+            </div>
+            <div class="note yellow">
+              <strong>Volitelné předměty</strong> – tyto jsou příbuzné oboru, reálně ale zde může být <strong>cokoliv</strong> co splňuje počet kreditů!
+            </div>
           </div>
 
           <div class="grid">
@@ -386,65 +424,59 @@
               <div class="sem">Letní semestr</div>
             </div>
 
-            <div class="flow-frame" id="frame">
-              <svg class="wires" id="wires" aria-hidden="true"></svg>
-
+            <div class="flow-frame">
               <div class="rows">
-                <!-- Row 1 -->
                 <div class="row">
-                  <div class="box b-blue"   id="ani-kop">ANI-KOP</div>
-                  <div class="box b-blue"   id="ani-arc">ANI-ARC</div>
-                  <div class="box b-purple" id="ani-dzo">ANI-DZO</div>
-                  <div class="box b-purple" id="ani-dvg">ANI-DVG</div>
-                  <div class="box b-purple" id="ani-egg">ANI-EGG</div>
+                  <div class="box b-blue">ANI-KOP</div>
+                  <div class="box b-blue">ANI-ARC</div>
+                  <div class="box b-purple">ANI-DZO</div>
+                  <div class="box b-purple">ANI-DVG</div>
+                  <div class="box b-purple">ANI-EGG</div>
 
-                  <div class="group" id="grp-block-1" title="Blok: v každém semestru alespoň jeden předmět z celého bloku">
-                    <div class="box b-orange" id="vga">VGA</div>
-                    <div class="box b-orange" id="pvr">PVR</div>
-                    <div class="box b-orange" id="gpu">GPU</div>
+                  <div class="group" title="Blok: v každém semestru alespoň jeden předmět z celého bloku">
+                    <div class="box b-orange">VGA</div>
+                    <div class="box b-orange">PVR</div>
+                    <div class="box b-orange">GPU</div>
                   </div>
 
-                  <div class="box b-yellow" id="ccc">např. CCC</div>
+                  <div class="box b-yellow">např. CCC</div>
                 </div>
 
-                <!-- Row 2 -->
                 <div class="row">
-                  <div class="box b-blue"   id="ani-mlm">ANI-MLM</div>
-                  <div class="box b-blue"   id="ani-sai">ANI-SAI</div>
-                  <div class="box b-blue"   id="ani-tpa">ANI-TPa</div>
-                  <div class="box b-purple" id="ani-pg1">ANI-PG1</div>
-                  <div class="box b-purple" id="ani-viz">ANI-VIZ</div>
+                  <div class="box b-blue">ANI-MLM</div>
+                  <div class="box b-blue">ANI-SAI</div>
+                  <div class="box b-blue">ANI-TPa</div>
+                  <div class="box b-purple">ANI-PG1</div>
+                  <div class="box b-purple">ANI-VIZ</div>
 
-                  <div class="group" id="grp-block-2">
-                    <div class="box b-orange" id="ssd">SSD</div>
-                    <div class="box b-orange" id="bso">BSO</div>
-                    <div class="box b-orange" id="irt">IRT</div>
+                  <div class="group">
+                    <div class="box b-orange">SSD</div>
+                    <div class="box b-orange">BSO</div>
+                    <div class="box b-orange">IRT</div>
                   </div>
 
-                  <div class="box b-yellow" id="esc">např. ESC</div>
-                  <div class="box b-yellow" id="tvr">např. TVR</div>
+                  <div class="box b-yellow">např. ESC</div>
+                  <div class="box b-yellow">např. TVR</div>
                 </div>
 
-                <!-- Row 3 -->
                 <div class="row">
-                  <div class="box b-blue"   id="ani-tpb">ANI-TPb</div>
-                  <div class="box b-purple" id="ani-roz">ANI-ROZ</div>
-                  <div class="box b-purple" id="ani-piv">ANI-PIV</div>
-                  <div class="box b-yellow" id="nur">např. NUR</div>
-                  <div class="box b-yellow" id="did">např. DID</div>
-                  <div class="box b-yellow" id="dvd">např. DVD</div>
-                  <div class="box b-yellow" id="uee">např. UEE</div>
+                  <div class="box b-blue">ANI-TPb</div>
+                  <div class="box b-purple">ANI-ROZ</div>
+                  <div class="box b-purple">ANI-PIV</div>
+                  <div class="box b-yellow">např. NUR</div>
+                  <div class="box b-yellow">např. DID</div>
+                  <div class="box b-yellow">např. DVD</div>
+                  <div class="box b-yellow">např. UEE</div>
                   <div></div><div></div><div></div>
                 </div>
 
-                <!-- Row 4 -->
                 <div class="row">
-                  <div class="box b-blue" id="ani-dip">ANI-DIP</div>
+                  <div class="box b-blue">ANI-DIP</div>
                   <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                 </div>
               </div>
 
-              <div class="free-note" id="note-dip">
+              <div class="free-note">
                 <strong>volno na začátek diplomové práce</strong><br/>
                 a na zcela <strong>volitelné předměty</strong><br/>
                 (14 kreditů celkem)
@@ -493,140 +525,5 @@
       </div>
     </main>
   </div>
-
-  <script>
-    function svgPointFromElement(el, side, svgEl) {
-      const r = el.getBoundingClientRect();
-      const s = svgEl.getBoundingClientRect();
-
-      const xLeft  = r.left  - s.left;
-      const xRight = r.right - s.left;
-      const xMid   = r.left + r.width / 2 - s.left;
-
-      const yTop    = r.top    - s.top;
-      const yBottom = r.bottom - s.top;
-      const yMid    = r.top + r.height / 2 - s.top;
-
-      switch (side) {
-        case "left":   return { x: xLeft,  y: yMid };
-        case "right":  return { x: xRight, y: yMid };
-        case "top":    return { x: xMid,   y: yTop };
-        case "bottom": return { x: xMid,   y: yBottom };
-        default:       return { x: xRight, y: yMid };
-      }
-    }
-
-    function makeSmoothPath(a, b, bend = 0.35) {
-      const dx = Math.max(40, Math.abs(b.x - a.x) * bend);
-      const c1 = { x: a.x + dx, y: a.y };
-      const c2 = { x: b.x - dx, y: b.y };
-      return `M ${a.x} ${a.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${b.x} ${b.y}`;
-    }
-
-    function drawArrows(arrows) {
-      const svg = document.getElementById("wires");
-      const frame = document.getElementById("frame");
-      if (!svg || !frame) return;
-
-      const fr = frame.getBoundingClientRect();
-
-      svg.setAttribute("viewBox", `0 0 ${fr.width} ${fr.height}`);
-      svg.setAttribute("preserveAspectRatio", "none");
-
-      svg.innerHTML = `
-        <defs>
-          <linearGradient id="wire" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="rgba(111,231,255,.55)"></stop>
-            <stop offset=".5" stop-color="rgba(180,110,255,.55)"></stop>
-            <stop offset="1" stop-color="rgba(255,179,78,.45)"></stop>
-          </linearGradient>
-
-          <!-- bigger, more visible arrowhead -->
-          <marker id="arrow" markerWidth="18" markerHeight="18" refX="15" refY="9" orient="auto">
-            <path d="M0,0 L18,9 L0,18 Z"
-              fill="rgba(220,235,255,.88)"
-              stroke="rgba(0,0,0,.30)"
-              stroke-width="1"></path>
-          </marker>
-        </defs>
-      `;
-
-      for (const a of arrows) {
-        const fromEl = document.querySelector(a.from);
-        const toEl   = document.querySelector(a.to);
-        if (!fromEl || !toEl) continue;
-
-        const p1 = svgPointFromElement(fromEl, a.fromSide || "right", svg);
-        const p2 = svgPointFromElement(toEl,   a.toSide   || "left",  svg);
-
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", makeSmoothPath(p1, p2, a.bend ?? 0.35));
-        path.setAttribute("stroke", a.stroke || "url(#wire)");
-        path.setAttribute("stroke-width", a.width || "2.2");
-        path.setAttribute("fill", "none");
-        path.setAttribute("opacity", a.opacity ?? "0.85");
-        path.setAttribute("marker-end", "url(#arrow)");
-        svg.appendChild(path);
-      }
-    }
-
-    // Šipky podle nákresu:
-    const ARROWS = [
-      // řádek 1 (sekvence)
-      { from:"#ani-kop", to:"#ani-arc", fromSide:"right", toSide:"left", opacity:0.80 },
-      { from:"#ani-arc", to:"#ani-dzo", fromSide:"right", toSide:"left", opacity:0.80 },
-      { from:"#ani-dzo", to:"#ani-dvg", fromSide:"right", toSide:"left", opacity:0.80 },
-      { from:"#ani-dvg", to:"#ani-egg", fromSide:"right", toSide:"left", opacity:0.80 },
-      { from:"#ani-egg", to:"#grp-block-1", fromSide:"right", toSide:"left", opacity:0.80, bend:0.25 },
-      { from:"#grp-block-1", to:"#ccc", fromSide:"right", toSide:"left", opacity:0.85, bend:0.25 },
-
-      // řádek 2 (sekvence)
-      { from:"#ani-mlm", to:"#ani-sai", fromSide:"right", toSide:"left", opacity:0.78 },
-      { from:"#ani-sai", to:"#ani-tpa", fromSide:"right", toSide:"left", opacity:0.78 },
-      { from:"#ani-tpa", to:"#ani-pg1", fromSide:"right", toSide:"left", opacity:0.78 },
-      { from:"#ani-pg1", to:"#ani-viz", fromSide:"right", toSide:"left", opacity:0.78 },
-      { from:"#ani-viz", to:"#grp-block-2", fromSide:"right", toSide:"left", opacity:0.78, bend:0.25 },
-      { from:"#grp-block-2", to:"#esc", fromSide:"right", toSide:"left", opacity:0.85, bend:0.25 },
-      { from:"#esc", to:"#tvr", fromSide:"right", toSide:"left", opacity:0.90, bend:0.20 },
-
-      // “volitelné” svislá šipka CCC -> TVR (dle nákresu)
-      { from:"#ccc", to:"#tvr", fromSide:"bottom", toSide:"top", opacity:0.75, bend:0.10 },
-
-      // řádek 3 (sekvence)
-      { from:"#ani-tpb", to:"#ani-roz", fromSide:"right", toSide:"left", opacity:0.78 },
-      { from:"#ani-roz", to:"#ani-piv", fromSide:"right", toSide:"left", opacity:0.78 },
-      { from:"#ani-piv", to:"#nur", fromSide:"right", toSide:"left", opacity:0.82 },
-      { from:"#nur", to:"#did", fromSide:"right", toSide:"left", opacity:0.82 },
-      { from:"#did", to:"#dvd", fromSide:"right", toSide:"left", opacity:0.82 },
-      { from:"#dvd", to:"#uee", fromSide:"right", toSide:"left", opacity:0.82 },
-
-      // křivka UEE -> “volno na začátek diplomové…”
-      { from:"#uee", to:"#note-dip", fromSide:"right", toSide:"left", opacity:0.85, bend:0.55 },
-
-      // dlouhá šipka “volno…” -> ANI-DIP (dle nákresu)
-      { from:"#note-dip", to:"#ani-dip", fromSide:"left", toSide:"right", opacity:0.92, bend:0.22, width:2.6 },
-
-      // svislá prereq šipka DVG -> PG1 (dle nákresu)
-      { from:"#ani-dvg", to:"#ani-pg1", fromSide:"bottom", toSide:"top", opacity:0.75, bend:0.10, width:2.0 },
-
-      // “popisky” nahoře (volitelné, ale odpovídá nákresu šipek z legendy)
-      { from:"#note-program", to:"#ani-kop", fromSide:"bottom", toSide:"top", opacity:0.55, bend:0.15, width:1.8 },
-      { from:"#note-program", to:"#ani-arc", fromSide:"bottom", toSide:"top", opacity:0.55, bend:0.20, width:1.8 },
-      { from:"#note-spec", to:"#ani-dzo", fromSide:"bottom", toSide:"top", opacity:0.55, bend:0.18, width:1.8 },
-      { from:"#note-spec", to:"#ani-dvg", fromSide:"bottom", toSide:"top", opacity:0.55, bend:0.22, width:1.8 },
-      { from:"#note-spec", to:"#ani-pg1", fromSide:"bottom", toSide:"top", opacity:0.50, bend:0.35, width:1.8 },
-      { from:"#note-block", to:"#grp-block-1", fromSide:"bottom", toSide:"top", opacity:0.50, bend:0.15, width:1.8 },
-      { from:"#note-opt", to:"#ccc", fromSide:"bottom", toSide:"top", opacity:0.45, bend:0.18, width:1.8 },
-      { from:"#note-opt", to:"#tvr", fromSide:"bottom", toSide:"top", opacity:0.45, bend:0.22, width:1.8 }
-    ];
-
-    function redraw() { drawArrows(ARROWS); }
-
-    window.addEventListener("load", redraw);
-    window.addEventListener("resize", () => {
-      clearTimeout(window.__rt);
-      window.__rt = setTimeout(redraw, 60);
-    });
-  </script>
 </body>
 </html>
