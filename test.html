@@ -144,7 +144,7 @@
       opacity:.8;
     }
 
-    /* ===== Colored category blocks (replaces arrows) ===== */
+    /* ===== Colored category blocks ===== */
     .top-notes{
       position:relative;
       display:grid;
@@ -156,35 +156,38 @@
       font-size: clamp(11px, 1.15vw, 14px);
     }
 
+    /* 1) Center text vertically & horizontally in the category blocks */
     .note{
       border-radius: 14px;
-      padding:10px 12px;
+      padding:12px 12px;
       box-shadow: 0 10px 18px rgba(0,0,0,.20);
       backdrop-filter: blur(6px);
       border: 1px solid rgba(255,255,255,.14);
       line-height:1.25;
-    }
 
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      min-height: 64px;
+    }
     .note.blue{
       background: linear-gradient(180deg, var(--blueA), var(--blueB));
       color: rgba(230,248,255,.98);
       border-color: rgba(111,231,255,.35);
       text-shadow: 0 0 10px rgba(111,231,255,.18);
     }
-
     .note.purple{
       background: linear-gradient(180deg, var(--purpleA), var(--purpleB));
       color: rgba(245,235,255,.98);
       border-color: rgba(180,110,255,.40);
       text-shadow: 0 0 10px rgba(180,110,255,.18);
     }
-
     .note.orange{
       background: linear-gradient(180deg, var(--orangeA), var(--orangeB));
       color: rgba(30,20,6,.92);
       border-color: rgba(255,210,120,.42);
     }
-
     .note.yellow{
       background: linear-gradient(180deg, var(--yellowA), var(--yellowB));
       color: rgba(30,22,6,.92);
@@ -257,6 +260,7 @@
       min-height:64px;
     }
 
+    /* 2) Hover / click tooltip for course blocks */
     .box{
       position:relative;
       display:flex;
@@ -272,8 +276,80 @@
       user-select:none;
       white-space:nowrap;
       font-size: clamp(12px, 1.25vw, 16px);
+      cursor: default;
+      outline: none;
+      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+    }
+    .box:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+      box-shadow:
+        0 18px 30px rgba(0,0,0,.30),
+        inset 0 0 0 1px rgba(255,255,255,.14);
+    }
+    .box:focus-visible{
+      outline: 2px solid rgba(111,231,255,.55);
+      outline-offset: 2px;
     }
 
+    /* Tooltip bubble */
+    .box[data-full]::after{
+      content: attr(data-full);
+      position:absolute;
+      left:50%;
+      bottom: calc(100% + 10px);
+      transform: translateX(-50%) translateY(6px);
+      padding:10px 12px;
+      max-width: 260px;
+      width: max-content;
+      border-radius: 12px;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(140,210,255,.24);
+      color: rgba(240,250,255,.95);
+      font-weight: 650;
+      letter-spacing: .2px;
+      font-size: 13px;
+      line-height: 1.25;
+      text-align: center;
+      box-shadow: 0 18px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .14s ease, transform .14s ease;
+      z-index: 10;
+      white-space: normal;
+    }
+    .box[data-full]::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom: calc(100% + 3px);
+      transform: translateX(-50%) translateY(6px);
+      width: 0; height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid rgba(0,0,0,.55);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .14s ease, transform .14s ease;
+      z-index: 11;
+    }
+
+    /* Show tooltip on hover OR keyboard focus OR "pinned" via click on touch */
+    .box:hover::after,
+    .box:focus::after,
+    .box.is-open::after{
+      opacity:1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .box:hover::before,
+    .box:focus::before,
+    .box.is-open::before{
+      opacity:1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Category color styles for blocks */
     .b-blue{
       background: linear-gradient(180deg, var(--blueA), var(--blueB));
       border: 1px solid rgba(111,231,255,.35);
@@ -296,7 +372,6 @@
       border: 1px solid rgba(255,240,170,.52);
       color: rgba(30,22,6,.92);
     }
-
     .b-yellow, .b-orange{
       box-shadow:
         0 14px 24px rgba(0,0,0,.22),
@@ -372,6 +447,7 @@
       .top-notes{ grid-template-columns: 1fr; }
       .grid{ grid-template-columns: 1fr; }
       .sem-col{ display:none; }
+      .box[data-full]::after{ max-width: 220px; }
     }
 
     @page { size: A3 landscape; margin: 10mm; }
@@ -386,6 +462,8 @@
         border-radius: 0;
         box-shadow: none;
       }
+      /* tooltips in print don't make sense */
+      .box[data-full]::after, .box[data-full]::before{ display:none !important; }
     }
   </style>
 </head>
@@ -399,14 +477,10 @@
         </header>
 
         <section class="diagram">
-          <!-- ✅ Barevné bloky místo šipek -->
+          <!-- 1) Centered text blocks -->
           <div class="top-notes">
-            <div class="note blue">
-              <strong>Povinné předměty programu</strong>
-            </div>
-            <div class="note purple">
-              <strong>Povinné předměty specializace</strong>
-            </div>
+            <div class="note blue"><strong>Povinné předměty programu</strong></div>
+            <div class="note purple"><strong>Povinné předměty specializace</strong></div>
             <div class="note orange">
               <strong>V každém semestru alespoň jeden</strong><br/>
               předmět z celého bloku
@@ -427,51 +501,51 @@
             <div class="flow-frame">
               <div class="rows">
                 <div class="row">
-                  <div class="box b-blue">ANI-KOP</div>
-                  <div class="box b-blue">ANI-ARC</div>
-                  <div class="box b-purple">ANI-DZO</div>
-                  <div class="box b-purple">ANI-DVG</div>
-                  <div class="box b-purple">ANI-EGG</div>
+                  <div class="box b-blue"   tabindex="0" data-full="KOP: kombinatorická optimalizace">ANI-KOP</div>
+                  <div class="box b-blue"   tabindex="0" data-full="ARC: Pokročilé architektury počítačů">ANI-ARC</div>
+                  <div class="box b-purple" tabindex="0" data-full="DZO: Digitální zpracování obrazu">ANI-DZO</div>
+                  <div class="box b-purple" tabindex="0" data-full="DVG: Diskrétní výpočetní geometrie">ANI-DVG</div>
+                  <div class="box b-purple" tabindex="0" data-full="EGG: Enginy pro hry a grafiku">ANI-EGG</div>
 
                   <div class="group" title="Blok: v každém semestru alespoň jeden předmět z celého bloku">
-                    <div class="box b-orange">VGA</div>
-                    <div class="box b-orange">PVR</div>
-                    <div class="box b-orange">GPU</div>
+                    <div class="box b-orange" tabindex="0" data-full="VGA: Architektura počítačových her">VGA</div>
+                    <div class="box b-orange" tabindex="0" data-full="PVR: Pokročilá virtuální realita">PVR</div>
+                    <div class="box b-orange" tabindex="0" data-full="GPU: Programování a architektury GPU">GPU</div>
                   </div>
 
-                  <div class="box b-yellow">např. CCC</div>
+                  <div class="box b-yellow" tabindex="0" data-full="CCC: Kreativní kódování v umění">např. CCC</div>
                 </div>
 
                 <div class="row">
-                  <div class="box b-blue">ANI-MLM</div>
-                  <div class="box b-blue">ANI-SAI</div>
-                  <div class="box b-blue">ANI-TPa</div>
-                  <div class="box b-purple">ANI-PG1</div>
-                  <div class="box b-purple">ANI-VIZ</div>
+                  <div class="box b-blue"   tabindex="0" data-full="MLM: Metody strojového učení">ANI-MLM</div>
+                  <div class="box b-blue"   tabindex="0" data-full="SAI: Statistika pro aplikovanou informatiku">ANI-SAI</div>
+                  <div class="box b-blue"   tabindex="0" data-full="TP: dvousemestrální týmový projekt (část A)">ANI-TPa</div>
+                  <div class="box b-purple" tabindex="0" data-full="PG1: Počítačová grafika 1">ANI-PG1</div>
+                  <div class="box b-purple" tabindex="0" data-full="VIZ: Vizualizace">ANI-VIZ</div>
 
                   <div class="group">
-                    <div class="box b-orange">SSD</div>
-                    <div class="box b-orange">BSO</div>
-                    <div class="box b-orange">IRT</div>
+                    <div class="box b-orange" tabindex="0" data-full="SSD: Příběhový a herní design">SSD</div>
+                    <div class="box b-orange" tabindex="0" data-full="BSO: Biosignály a zpracování medicínských dat">BSO</div>
+                    <div class="box b-orange" tabindex="0" data-full="IRT: Internet a přenos v reálném čase">IRT</div>
                   </div>
 
-                  <div class="box b-yellow">např. ESC</div>
-                  <div class="box b-yellow">např. TVR</div>
+                  <div class="box b-yellow" tabindex="0" data-full="ESC: Únikové hry">např. ESC</div>
+                  <div class="box b-yellow" tabindex="0" data-full="TVR: Technologie VR">např. TVR</div>
                 </div>
 
                 <div class="row">
-                  <div class="box b-blue">ANI-TPb</div>
-                  <div class="box b-purple">ANI-ROZ</div>
-                  <div class="box b-purple">ANI-PIV</div>
-                  <div class="box b-yellow">např. NUR</div>
-                  <div class="box b-yellow">např. DID</div>
-                  <div class="box b-yellow">např. DVD</div>
-                  <div class="box b-yellow">např. UEE</div>
+                  <div class="box b-blue"   tabindex="0" data-full="TP: dvousemestrální týmový projekt (část B)">ANI-TPb</div>
+                  <div class="box b-purple" tabindex="0" data-full="ROZ: Rozpoznávání">ANI-ROZ</div>
+                  <div class="box b-purple" tabindex="0" data-full="PIV: Počítačové vidění">ANI-PIV</div>
+                  <div class="box b-yellow" tabindex="0" data-full="NUR: Návrh uživatelských rozhraní">např. NUR</div>
+                  <div class="box b-yellow" tabindex="0" data-full="DID: Digitální kreslení">např. DID</div>
+                  <div class="box b-yellow" tabindex="0" data-full="DVD: (volitelný předmět)">např. DVD</div>
+                  <div class="box b-yellow" tabindex="0" data-full="UEE: Unvironmentální design v UE">např. UEE</div>
                   <div></div><div></div><div></div>
                 </div>
 
                 <div class="row">
-                  <div class="box b-blue">ANI-DIP</div>
+                  <div class="box b-blue" tabindex="0" data-full="DIP: diplomová práce / diplomový projekt">ANI-DIP</div>
                   <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                 </div>
               </div>
@@ -525,5 +599,44 @@
       </div>
     </main>
   </div>
+
+  <script>
+    // Click/tap: "pin" the tooltip (good for touch). Click elsewhere closes it.
+    const boxes = Array.from(document.querySelectorAll(".box[data-full]"));
+
+    function closeAll(except = null){
+      for (const b of boxes){
+        if (b !== except) b.classList.remove("is-open");
+      }
+    }
+
+    boxes.forEach(b => {
+      b.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = b.classList.contains("is-open");
+        closeAll();
+        if (!isOpen) b.classList.add("is-open");
+      });
+
+      // Keyboard: Enter/Space toggles
+      b.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          const isOpen = b.classList.contains("is-open");
+          closeAll();
+          if (!isOpen) b.classList.add("is-open");
+        }
+        if (e.key === "Escape"){
+          b.classList.remove("is-open");
+          b.blur();
+        }
+      });
+    });
+
+    document.addEventListener("click", () => closeAll());
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeAll();
+    });
+  </script>
 </body>
 </html>
