@@ -1,665 +1,578 @@
 <!doctype html>
-<html lang="cs" class="dark">
+<html lang="cs">
 <head>
   <meta charset="utf-8" />
-  <title>Magisterský obor – vizuální průchod předměty</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Specializace: Visual Computing and Game Design</title>
   <style>
-    html { scroll-behavior:smooth; }
-    body { background:#020617; margin:0; }
-    .course-pill {
-      width: 190px;
-      min-height: 64px;
-      border-radius: 18px;
+    :root{
+      --bg0:#070A2B;
+      --bg1:#0A0E3A;
+      --bg2:#120B3A;
+      --cyan:#6FE7FF;
+      --cyan2:#4BC7FF;
+      --blueBox:#1B4B8A;
+      --blueBox2:#2A6BB2;
+      --purpleBox:#5A2A8F;
+      --purpleBox2:#8C4FD6;
+      --orangeBox:#A86A16;
+      --orangeBox2:#FFB34E;
+      --yellowBox:#B08A16;
+      --yellowBox2:#FFE07A;
+      --ink:#DCEBFF;
+      --muted:#9CB3D9;
+      --stroke: rgba(140,210,255,.35);
+      --glow: rgba(111,231,255,.22);
+      --shadow: rgba(0,0,0,.45);
+      --radius: 16px;
+      --radius2: 12px;
+      --gap: 16px;
     }
 
-    /* --- fullscreen auto-demo karta --- */
-    .fullscreen-wrapper {
-      perspective: 1600px;
+    /* ====== Base ====== */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background:
+        radial-gradient(1200px 700px at 15% 15%, rgba(111,231,255,.12), transparent 55%),
+        radial-gradient(900px 600px at 85% 20%, rgba(180,110,255,.10), transparent 50%),
+        radial-gradient(900px 600px at 70% 85%, rgba(255,179,78,.08), transparent 55%),
+        linear-gradient(135deg, var(--bg0), var(--bg2) 55%, var(--bg1));
+      overflow-x:hidden;
     }
-    .fullscreen-card {
-      transform-origin: center;
-      transform-style: preserve-3d;
-      animation: floatInOut 10s ease-in-out forwards;
+
+    /* Subtle “circuit/pixel” pattern */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      opacity:.22;
+      background:
+        /* tiny pixels */
+        radial-gradient(circle at 20% 30%, rgba(111,231,255,.28) 0 1px, transparent 2px),
+        radial-gradient(circle at 75% 22%, rgba(255,179,78,.22) 0 1px, transparent 2px),
+        radial-gradient(circle at 62% 84%, rgba(180,110,255,.22) 0 1px, transparent 2px),
+        radial-gradient(circle at 40% 78%, rgba(111,231,255,.22) 0 1px, transparent 2px),
+
+        /* “tracks” */
+        linear-gradient(90deg, rgba(111,231,255,.10), rgba(111,231,255,.10)) 6% 18% / 180px 1px no-repeat,
+        linear-gradient(180deg, rgba(111,231,255,.10), rgba(111,231,255,.10)) 21% 18% / 1px 140px no-repeat,
+        linear-gradient(90deg, rgba(180,110,255,.10), rgba(180,110,255,.10)) 66% 28% / 220px 1px no-repeat,
+        linear-gradient(180deg, rgba(180,110,255,.10), rgba(180,110,255,.10)) 86% 28% / 1px 160px no-repeat,
+        linear-gradient(90deg, rgba(255,179,78,.09), rgba(255,179,78,.09)) 55% 78% / 260px 1px no-repeat,
+        linear-gradient(180deg, rgba(255,179,78,.09), rgba(255,179,78,.09)) 55% 62% / 1px 200px no-repeat;
+      filter: blur(.2px);
     }
-    @keyframes floatInOut {
-      0% {
-        transform: translate3d(0,40px,-120px) scale(0.85) rotateX(12deg);
-        opacity: 0;
-      }
-      12% {
-        transform: translate3d(0,0,0) scale(1) rotateX(0deg);
-        opacity: 1;
-      }
-      85% {
-        transform: translate3d(0,-10px,20px) scale(1.03) rotateX(-3deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translate3d(0,50px,-140px) scale(0.8) rotateX(10deg);
-        opacity: 0;
+
+    /* ====== Poster frame (A3-ish + responsive) ====== */
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .poster{
+      width:min(1300px, 100%);
+      aspect-ratio: 4 / 3; /* podobné jako tvůj vizuál */
+      border-radius: 28px;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(800px 520px at 18% 20%, rgba(75,199,255,.12), transparent 60%),
+        radial-gradient(900px 620px at 75% 30%, rgba(180,110,255,.10), transparent 62%),
+        radial-gradient(900px 640px at 75% 86%, rgba(255,179,78,.08), transparent 60%),
+        linear-gradient(135deg, rgba(10,14,58,.92), rgba(8,10,35,.92));
+      box-shadow:
+        0 30px 80px rgba(0,0,0,.55),
+        inset 0 0 0 1px rgba(140,210,255,.18);
+    }
+
+    .poster::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 520px at 50% 0%, rgba(111,231,255,.10), transparent 65%),
+        radial-gradient(900px 520px at 50% 100%, rgba(255,179,78,.06), transparent 70%);
+      pointer-events:none;
+      mix-blend-mode:screen;
+      opacity:.8;
+    }
+
+    .content{
+      position:absolute; inset:0;
+      padding:28px 30px 26px;
+      display:grid;
+      grid-template-rows: auto 1fr auto;
+      gap:18px;
+      z-index:1;
+    }
+
+    /* ====== Title ====== */
+    .title{
+      text-align:center;
+      line-height:1.05;
+      padding-top:6px;
+      text-shadow: 0 0 18px rgba(111,231,255,.20);
+    }
+    .title .kicker{
+      font-size: clamp(18px, 2.1vw, 28px);
+      color: rgba(220,235,255,.85);
+      letter-spacing:.5px;
+    }
+    .title h1{
+      margin:6px 0 0;
+      font-weight:700;
+      font-size: clamp(32px, 4.5vw, 64px);
+      letter-spacing: .6px;
+      color: rgba(170,245,255,.95);
+      text-shadow:
+        0 0 26px rgba(111,231,255,.22),
+        0 0 2px rgba(255,255,255,.08);
+    }
+
+    /* ====== Diagram panel ====== */
+    .diagram{
+      position:relative;
+      border-radius: 22px;
+      padding:18px 18px 14px;
+      background: rgba(6,10,34,.25);
+      box-shadow:
+        inset 0 0 0 1px rgba(140,210,255,.18),
+        0 14px 30px rgba(0,0,0,.28);
+      overflow:hidden;
+    }
+
+    .diagram::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(90deg, rgba(111,231,255,.06), transparent 45%, rgba(255,179,78,.05));
+      pointer-events:none;
+      opacity:.8;
+    }
+
+    /* labels above rows */
+    .top-notes{
+      position:relative;
+      display:grid;
+      grid-template-columns: 1.15fr 1.1fr 1.35fr 1.25fr;
+      gap:12px;
+      align-items:start;
+      padding:2px 6px 10px;
+      z-index:2;
+      font-size: clamp(11px, 1.15vw, 14px);
+      color: rgba(220,235,255,.86);
+    }
+    .note{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(140,210,255,.18);
+      border-radius: 12px;
+      padding:8px 10px;
+      box-shadow: 0 10px 18px rgba(0,0,0,.20);
+      backdrop-filter: blur(6px);
+    }
+    .note strong{ color: rgba(255,255,255,.92) }
+
+    .grid{
+      position:relative;
+      display:grid;
+      grid-template-columns: 110px 1fr;
+      gap:12px;
+      align-items:stretch;
+      z-index:2;
+      margin-top:6px;
+    }
+
+    /* left semester labels */
+    .sem-col{
+      display:grid;
+      grid-template-rows: repeat(4, 1fr);
+      gap:12px;
+      padding-top:4px;
+    }
+    .sem{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      letter-spacing:.3px;
+      color: rgba(240,250,255,.9);
+      border-radius: 14px;
+      background: rgba(0,0,0,.20);
+      border: 1px solid rgba(140,210,255,.18);
+      box-shadow: 0 10px 18px rgba(0,0,0,.20);
+      text-align:center;
+      font-size: clamp(12px, 1.2vw, 15px);
+      padding:10px 8px;
+    }
+
+    /* main flow container with rounded frame */
+    .flow-frame{
+      position:relative;
+      border-radius: 20px;
+      background: rgba(10,14,58,.18);
+      border: 1px solid rgba(140,210,255,.22);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.22);
+      padding:14px 14px 12px;
+      overflow:hidden;
+    }
+
+    .flow-frame::before{
+      content:"";
+      position:absolute; inset:-40px;
+      background: radial-gradient(600px 320px at 35% 30%, rgba(75,199,255,.10), transparent 65%);
+      pointer-events:none;
+      opacity:.9;
+    }
+
+    .rows{
+      position:relative;
+      display:grid;
+      grid-template-rows: repeat(4, 1fr);
+      gap:12px;
+      z-index:2;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      gap:10px;
+      align-items:center;
+      min-height:64px;
+    }
+
+    /* course boxes */
+    .box{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 12px;
+      padding:10px 8px;
+      font-weight:800;
+      letter-spacing:.5px;
+      text-transform:none;
+      box-shadow:
+        0 14px 24px rgba(0,0,0,.26),
+        inset 0 0 0 1px rgba(255,255,255,.10);
+      user-select:none;
+      white-space:nowrap;
+      font-size: clamp(12px, 1.25vw, 16px);
+    }
+    .box small{
+      font-weight:700;
+      opacity:.9;
+    }
+
+    .b-blue{
+      background: linear-gradient(180deg, rgba(70,140,220,.92), rgba(20,70,130,.92));
+      border: 1px solid rgba(111,231,255,.35);
+      color: rgba(230,248,255,.98);
+      text-shadow: 0 0 12px rgba(111,231,255,.18);
+    }
+    .b-purple{
+      background: linear-gradient(180deg, rgba(160,90,245,.90), rgba(70,30,125,.92));
+      border: 1px solid rgba(180,110,255,.40);
+      color: rgba(245,235,255,.98);
+      text-shadow: 0 0 12px rgba(180,110,255,.18);
+    }
+    .b-orange{
+      background: linear-gradient(180deg, rgba(255,179,78,.92), rgba(140,80,10,.92));
+      border: 1px solid rgba(255,210,120,.42);
+      color: rgba(30,20,6,.92);
+    }
+    .b-yellow{
+      background: linear-gradient(180deg, rgba(255,240,170,.92), rgba(200,160,40,.92));
+      border: 1px solid rgba(255,240,170,.52);
+      color: rgba(30,22,6,.92);
+    }
+
+    .b-yellow, .b-orange{
+      box-shadow:
+        0 14px 24px rgba(0,0,0,.22),
+        inset 0 0 0 1px rgba(255,255,255,.20);
+    }
+
+    /* group glow borders like in the visual */
+    .group{
+      grid-column: span 3;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+      padding:10px;
+      border-radius: 14px;
+      background: rgba(255,179,78,.10);
+      border: 1px solid rgba(255,210,120,.35);
+      box-shadow: 0 0 0 2px rgba(255,179,78,.10), 0 0 22px rgba(255,179,78,.16);
+    }
+
+    /* Footer note inside frame */
+    .free-note{
+      position:absolute;
+      right:16px;
+      bottom:12px;
+      max-width: 320px;
+      font-size: clamp(11px, 1.1vw, 13px);
+      color: rgba(220,235,255,.85);
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(140,210,255,.18);
+      border-radius: 14px;
+      padding:10px 12px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 12px 20px rgba(0,0,0,.25);
+    }
+
+    /* connectors SVG */
+    .wires{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      opacity:.95;
+      filter: drop-shadow(0 0 10px rgba(111,231,255,.18));
+    }
+
+    /* ====== Legend ====== */
+    .legend{
+      display:grid;
+      grid-template-columns: 1.25fr 1.25fr 1.5fr 1.1fr;
+      gap:14px;
+    }
+    .legend .panel{
+      border-radius: 16px;
+      padding:12px 14px;
+      font-size: clamp(11px, 1.05vw, 13px);
+      line-height:1.35;
+      box-shadow: 0 14px 24px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.10);
+    }
+    .legend b{ letter-spacing:.2px }
+    .p-blue{
+      background: rgba(30,90,160,.30);
+      border: 1px solid rgba(111,231,255,.25);
+    }
+    .p-purple{
+      background: rgba(120,60,200,.26);
+      border: 1px solid rgba(180,110,255,.25);
+    }
+    .p-orange{
+      background: rgba(255,179,78,.26);
+      border: 1px solid rgba(255,210,120,.25);
+      color: rgba(30,22,8,.92);
+    }
+    .p-yellow{
+      background: rgba(255,240,170,.28);
+      border: 1px solid rgba(255,240,170,.30);
+      color: rgba(30,22,8,.92);
+    }
+
+    /* ====== Small helpers ====== */
+    .muted{ color: rgba(220,235,255,.75) }
+    .tiny{ font-size: .92em }
+
+    /* ====== Responsive tweaks ====== */
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 95px 1fr; }
+      .row{ grid-template-columns: repeat(8, minmax(0, 1fr)); }
+      /* compress: make some items span */
+      .span2{ grid-column: span 2; }
+      .span3{ grid-column: span 3; }
+    }
+    @media (max-width: 760px){
+      .poster{ aspect-ratio: 3 / 4; } /* na mobilu radši “plakát” na výšku */
+      .content{ grid-template-rows:auto auto 1fr; }
+      .legend{ grid-template-columns: 1fr; }
+      .top-notes{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
+      .sem-col{ display:none; }
+    }
+
+    /* ====== Print A3 landscape ====== */
+    @page { size: A3 landscape; margin: 10mm; }
+    @media print{
+      body{ background:#fff; }
+      body::before{ display:none; }
+      .wrap{ padding:0; }
+      .poster{
+        width: 100%;
+        height: auto;
+        aspect-ratio: 420 / 297;
+        border-radius: 0;
+        box-shadow: none;
       }
     }
   </style>
 </head>
-
-<body class="min-h-screen text-slate-50">
-<div id="root"></div>
-
-<script type="text/babel">
-
-// --------------------------------------------------
-// DATA
-// --------------------------------------------------
-
-const COURSES = [
-  // 1. ročník – zimní
-  { code: "ANI-KOP", name: "Kombinatorická optimalizace",
-    subtitle: "Moderní metody kombinatorických optimalizačních úloh a jejich aplikace v informatice.",
-    year: 1, term: "zimní", type: "povinný", row: 0, col: 0, color: "blue" },
-  { code: "ANI-ARC", name: "Moderní procesorové architektury",
-    subtitle: "Architektury CPU a GPU z pohledu programátora.",
-    year: 1, term: "zimní", type: "povinný", row: 0, col: 1, color: "blue" },
-  { code: "ANI-DZO", name: "Digitální zpracování obrazu",
-    subtitle: "Filtrace, segmentace a další metody zpracování obrazu 2D obrazu. Editace, deformace, kolorizace obrazu. Praktičtější kurz. Základní detekce objektů v obrazu (využije katedra kybernetiky).",
-    year: 1, term: "zimní", type: "povinný", row: 0, col: 2, color: "violet" },
-  { code: "ANI-DVG", name: "Diskrétní výpočetní geometrie",
-    subtitle: "Geometrické algoritmy pro grafiku a vizualizaci - voronoiovy diagramy, konvexni obálky, teselace, decimace a další přístupy vycházející z vizualizací jinak nevizuálních problémů (např. podobnost slov, vyhledávání v datech, apod.).",
-    year: 1, term: "zimní", type: "povinný", row: 0, col: 3, color: "violet" },
-  { code: "ANI-EGG", name: "Enginy pro hry a grafiku",
-    subtitle: "Enginy, scény, asset pipeline, runtime systémy. Společných šest přednášek dolněné cvičeními pro různé enginy. Každé cvičení jiný engine. Začínáme s Unity a Godotem.",
-    year: 1, term: "zimní", type: "povinný", row: 0, col: 4, color: "violet" },
-
-  // grafický blok – 1. ročník zimní
-  { code: "ANI-VGA", name: "Architektura počítačových her",
-    subtitle: "Návrh architektury herních systémů. Návrh vlastních her od píky v perfektně gamifikovaném předmětu, kde vaší první úlohou je sestavit si z karet vlastní semestrálku.",
-    year: 1, term: "zimní", type: "grafický", row: 0, col: 5, color: "cyan" },
-  { code: "ANI-PVR", name: "Pokročilé techniky VR a interakce.",
-    subtitle: "Pokročilá virtuální realita v Unity a Unreal engine. VR v prostředí webu. Herní, vizualizační i projekty digitalizace historie.",
-    year: 1, term: "zimní", type: "grafický", row: 0, col: 6, color: "cyan" },
-  { code: "ANI-GPU", name: "Moderní GPU a programovací modely.",
-    subtitle: "Ovládání a architektury grafických procesorů - programování na cuda a parelelizace jak grafických, tak výpočetních úloh.",
-    year: 1, term: "zimní", type: "grafický", row: 0, col: 7, color: "cyan" },
-
-  { code: "ANI-CCC", name: "Kreativní programování",
-    subtitle: "Generativní grafika, live-coding, experimentální projekty. Předmět, kde můžete vytvořit instalaci na Signál festival, do Národního muzea, spolupracovat s umělci, hudebníky, urbanisty. Extrémně atypické instalace, prostředí i způsoby interakce.",
-    year: 1, term: "zimní", type: "volitelný", row: 0, col: 8, color: "amber" },
-
-  // 1. ročník – letní
-  { code: "ANI-MLM", name: "Metody strojového učení",
-    subtitle: "Vybrané metody ML se zaměřením na AI, grafiku a obraz, velká data Široká základový předmět.",
-    year: 1, term: "letní", type: "povinný", row: 1, col: 0, color: "blue" },
-  { code: "ANI-SAI", name: "Praktická statistika pro AI.",
-    subtitle: "Praktické statistické metody pro informatiku (i AI).",
-    year: 1, term: "letní", type: "povinný", row: 1, col: 1, color: "blue" },
-  { code: "ANI-TPA", name: "Týmový projekt A",
-    subtitle: "Projekt zaměřený na dlouhodobou práci v týmu - se zadavateli ze školy, praxe, průmyslu, vlády. Cílem je poskytnout prostor pro velký praktický projekt ve většim, či malém týmu.",
-    year: 1, term: "letní", type: "povinný", row: 1, col: 2, color: "blue" },
-  { code: "ANI-PG1", name: "Základy počítačové grafiky",
-    subtitle: "Základní kameny počítačové grafiky - rendering, texturování, raytricing, BRDF, BTF, datové struktury v počítačoví grafice. Prakticky od základů až po realistické materiály a světlo.",
-    year: 1, term: "letní", type: "povinný", row: 1, col: 3, color: "violet" },
-
-  // grafický blok – 1. ročník letní
-  { code: "ANI-SSD", name: "Příběhový a herní design",
-    subtitle: "Design herních mechanik, příběhů a hráčského zážitku. Jak psát příběh, dialogy a dát hře život a osobnost. Game design od malých projektů po velké, od strategií, po rpg.",
-    year: 1, term: "letní", type: "grafický", row: 1, col: 4, color: "cyan" },
-  { code: "ANI-BSO", name: "Biosignály a data",
-    subtitle: "Zpracování biosignálů pro vizualizaci a diagnostiku. Zpracování hlasu, EKG, ale i elektrického pole těla na reálnách datech a případech ze zdravotnictví.",
-    year: 1, term: "letní", type: "grafický", row: 1, col: 5, color: "cyan" },
-  { code: "ANI-IRT", name: "Internet a přenos v reálném čase",
-    subtitle: "Streaming, latence, synchronizace a real-time. Přenos obrazu vy vysokém (8K a výš) rozlišení při nízké latenci. HW návrhy i progamová řešení - vše ve spolupráci s CESNETem.",
-    year: 1, term: "letní", type: "grafický", row: 1, col: 6, color: "cyan" },
-  { code: "ANI-TVR", name:  "Hardwarové a softwarové technologie VR.",
-    subtitle: "Technologie virtuální reality. HW rozbor fungování headsetů, snímačů rukou, pohybu, očí a dalších. Techničtejší předmět pro skutečná zájemce o VR a případný vývoj nejen v softwarové oblasti.",
-    year: 1, term: "letní", type: "volitelný", row: 1, col: 7, color: "amber" },
-
-  // 2. ročník – zimní
-  { code: "ANI-TPB", name: "Týmový projekt B",
-    subtitle: "Projekt zaměřený na dlouhodobou práci v týmu - se zadavateli ze školy, praxe, průmyslu, vlády. Cílem je poskytnout prostor pro velký praktický projekt ve většim, či malém týmu.",
-    year: 2, term: "zimní", type: "povinný", row: 2, col: 0, color: "blue" },
-  { code: "ANI-ROZ", name: "Rozpoznávání",
-    subtitle: "Klasifikace, detekce, rozpoznávání obrazů a obecných vícerozměrných signálů. Reálné úlohy od rozpoznávání očí, rakoviny v mamogramech, rakoviny na kůži, až po určení druhů stromu na základy kůry. State-of-the-art pattern recognition technik.",
-    year: 2, term: "zimní", type: "povinný", row: 2, col: 1, color: "violet" },
-  { code: "ANI-PIV", name: "Počítačové vidění",
-    subtitle: "Analýza a zpracování obrazu, 3D rekonstrukce a tracking. Detekce postav a objektů a to primárně s použitím AI v běžním videu a fotografii.",
-    year: 2, term: "zimní", type: "povinný", row: 2, col: 2, color: "violet" },
-
-  // žlutý blok
-  { code: "ANI-NUR", name: "Návrh uživatelského rozhraní",
-    subtitle: "Podrobný rozbor nývrhu UX pro aplikace všeho druhu. Testování a ověřování rozhraní.",
-    year: 2, term: "zimní", type: "žlutý-blok", row: 2, col: 3, color: "amber" },
-  { code: "ANI-DID", name: "Digital drawing",
-    subtitle: "Základy kreativního digitálního kreslení.",
-    year: 2, term: "zimní", type: "žlutý-blok", row: 2, col: 4, color: "amber" },
-  { code: "ANI-UEE", name: "UE – environmental design",
-    subtitle: "Blokový předmět vyučovaný v kooperaci s University of Purdue (USA). Environmentální design prakticky v Unreal Enginu.",
-    year: 2, term: "zimní", type: "žlutý-blok", row: 2, col: 5, color: "amber" },
-  { code: "ANI-GJ", name: "GameJam FIT (0 kreditů)",
-    subtitle: "Tradiční velikonoční Gamejam a rychlý vývoj.",
-    year: 2, term: "zimní", type: "žlutý-blok", row: 2, col: 6, color: "amber" },
-  { code: "ANI-DVD", name: "Design vlastních deskových her",
-    subtitle: "Návrh a prototypování deskových her. Podobnost s klasickým herním návrhem a hlavní odlišnosti.",
-    year: 2, term: "zimní", type: "žlutý-blok", row: 2, col: 7, color: "amber" },
-
-  // 2. ročník – letní
-  { code: "ANI-DIP", name: "Diplomová práce",
-    subtitle: "Samostatná závěrečná práce v oblasti grafiky a henrího designu. Může, nebo nemusí vycházet z dvousemestrálního týmovéh projektu.",
-    year: 2, term: "letní", type: "povinný", row: 3, col: 0, color: "emerald" },
-  { code: "ANI-ESC", name: "Únikové hry",
-    subtitle: "Experimentální a rozsáhlý projektový předmět (8 kreditů). Celá cvičení naplánuje a připraví unikovou hru, která je po následující rok k dispozici před budovou FITu v Dejvicích studentům i veřejnosti.",
-    year: 2, term: "letní", type: "volitelný", row: 3, col: 0, color: "yellow" }
-];
-
-const SCHEME_STYLE_OPTIONS = [
-  { value: "css",        label: "Původní gradient (textové bloky)" },
-  { value: "glass",      label: "PNG: glass" },
-  { value: "neon",       label: "PNG: neon" },
-  { value: "outline",    label: "PNG: outline" },
-  { value: "slabs",      label: "PNG: slabs" },
-  { value: "solid",      label: "PNG: solid" },
-  { value: "tubes",      label: "PNG: tubes" },
-  { value: "tubesColor", label: "PNG: tubes-color" }
-];
-
-function colorClasses(color) {
-  switch (color) {
-    case "blue":    return "from-sky-500 to-blue-600";
-    case "violet":  return "from-fuchsia-500 to-violet-500";
-    case "cyan":    return "from-cyan-400 to-sky-500";
-    case "emerald": return "from-emerald-400 to-emerald-500";
-    case "amber":   return "from-amber-400 to-amber-500";
-    default:        return "from-slate-500 to-slate-700";
-  }
-}
-
-function yearTermLabel(course) {
-  return `${course.year}. ročník · ${course.term} semestr`;
-}
-
-const SUFFIX_MAP = {
-  glass: "glass",
-  neon: "neon",
-  outline: "outline",
-  slabs: "slabs",
-  solid: "solid",
-  tubes: "tubes",
-  tubesColor: "tubes-color"
-};
-
-// --------------------------------------------------
-// MAP PILLS
-// --------------------------------------------------
-
-function PillCSS({ course, selected, onClick }) {
-  const gradient = colorClasses(course.color);
-  const border = selected
-    ? "ring-2 ring-amber-300 shadow-xl"
-    : "border border-slate-800/80";
-  const textSize = course.code.length > 7 ? "text-xs" : "text-sm";
-
-  return (
-    <button
-      onClick={onClick}
-      className={
-        "course-pill relative overflow-hidden bg-slate-900/90 " +
-        border +
-        " text-left text-white flex flex-col justify-center shadow-md transition-transform hover:-translate-y-0.5"
-      }
-    >
-      <div className={"absolute inset-0 bg-gradient-to-br " + gradient} />
-      <div className="relative z-10 flex flex-col justify-center">
-        <div className={"font-semibold leading-tight " + textSize}>
-          {course.code}
-        </div>
-        <div className="mt-0.5 text-[11px] leading-snug opacity-90">
-          {course.name}
-        </div>
-      </div>
-    </button>
-  );
-}
-
-function PillPNG({ course, selected, onClick, schemeStyle }) {
-  const suffix = SUFFIX_MAP[schemeStyle] || "solid";
-  const src = `assets/${course.code}-${suffix}.png`;
-  const ringClasses = selected ? "ring-2 ring-amber-300 rounded-3xl" : "";
-
-  return (
-    <button
-      onClick={onClick}
-      title={course.code}
-      className={`inline-block overflow-hidden ${ringClasses}`}
-    >
-      <img
-        src={src}
-        alt={course.code}
-        className="block h-auto max-h-32 w-auto"
-      />
-    </button>
-  );
-}
-
-function MapCoursePill({ course, selected, onClick, schemeStyle }) {
-  if (schemeStyle === "css") {
-    return <PillCSS course={course} selected={selected} onClick={onClick} />;
-  }
-  return (
-    <PillPNG
-      course={course}
-      selected={selected}
-      onClick={onClick}
-      schemeStyle={schemeStyle}
-    />
-  );
-}
-
-// --------------------------------------------------
-// GROUPING (azurový / žlutý rámec)
-// --------------------------------------------------
-
-function buildRowItems(courses) {
-  const items = [];
-  let i = 0;
-  while (i < courses.length) {
-    const c = courses[i];
-    if (c.type === "grafický" || c.type === "žlutý-blok") {
-      const type = c.type;
-      const group = [c];
-      let j = i + 1;
-      while (j < courses.length && courses[j].type === type) {
-        group.push(courses[j]);
-        j++;
-      }
-      items.push({ kind: "group", groupType: type, courses: group });
-      i = j;
-    } else {
-      items.push({ kind: "single", course: c });
-      i++;
-    }
-  }
-  return items;
-}
-
-function GroupBox({ groupType, children }) {
-  const isGraphic = groupType === "grafický";
-  const borderColor = isGraphic ? "border-cyan-400/80" : "border-amber-300/80";
-  const bgColor = isGraphic ? "bg-cyan-500/10" : "bg-amber-400/5";
-
-  return (
-    <div
-      className={
-        "flex items-center gap-3 px-3 py-3 rounded-3xl border " +
-        borderColor +
-        " " +
-        bgColor
-      }
-    >
-      {children}
-    </div>
-  );
-}
-
-function MapRow({ label, courses, selectedCodes, onToggle, schemeStyle }) {
-  const rowItems = buildRowItems(courses);
-
-  return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-3 text-xs text-amber-300">
-        <span className="w-28 text-right font-semibold">{label}</span>
-        <div className="h-px flex-1 bg-slate-800/70" />
-      </div>
-
-      <div className="flex gap-4 flex-wrap pl-32">
-        {rowItems.map((item, idx) => {
-          if (item.kind === "single") {
-            const c = item.course;
-            return (
-              <MapCoursePill
-                key={c.code}
-                course={c}
-                selected={selectedCodes.includes(c.code)}
-                onClick={(e) => onToggle(c.code, e)}
-                schemeStyle={schemeStyle}
-              />
-            );
-          }
-
-          return (
-            <GroupBox key={idx} groupType={item.groupType}>
-              {item.courses.map((c) => (
-                <MapCoursePill
-                  key={c.code}
-                  course={c}
-                  selected={selectedCodes.includes(c.code)}
-                  onClick={(e) => onToggle(c.code, e)}
-                  schemeStyle={schemeStyle}
-                />
-              ))}
-            </GroupBox>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// --------------------------------------------------
-// DETAILOVÁ KARTA DOLE
-// --------------------------------------------------
-
-function CourseDetailCard({ course }) {
-  const heroBaseName = course.code.toLowerCase().replace("-", "");
-  const heroUrl = `assets/${heroBaseName}.png`;
-
-  return (
-    <article className="bg-slate-950/80 border border-slate-800 rounded-3xl overflow-hidden shadow-xl flex flex-col relative">
-      <div className="relative h-40 w-full overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-top"
-          style={{
-            backgroundImage: `linear-gradient(120deg, rgba(15,23,42,0.2), rgba(15,23,42,0.92)), url('${heroUrl}')`
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/95" />
-
-        <div className="relative z-10 flex justify-between items-start px-4 pt-3">
-          <span className="px-3 py-1 rounded-full bg-slate-900/70 text-xs font-semibold tracking-wide">
-            {course.code}
-          </span>
-          <span className="px-3 py-1 rounded-full bg-slate-900/70 text-[11px]">
-            {yearTermLabel(course)}
-          </span>
-        </div>
-
-        <div className="relative z-10 px-4 pb-3 pt-6">
-          <h3 className="text-lg font-semibold tracking-wide">
-            {course.name}
-          </h3>
-        </div>
-      </div>
-
-      <div className="p-4 flex flex-col gap-3 text-sm text-slate-200">
-        <p className="leading-relaxed">{course.subtitle}</p>
-        <div className="flex flex-wrap gap-2 text-[11px] text-slate-200">
-          <span className="px-2.5 py-1 rounded-full bg-slate-800/80">
-            Kód: {course.code}
-          </span>
-          <span className="px-2.5 py-1 rounded-full bg-slate-800/80">
-            {course.year}. ročník
-          </span>
-          <span className="px-2.5 py-1 rounded-full bg-slate-800/80">
-            {course.term} semestr
-          </span>
-          <span className="px-2.5 py-1 rounded-full bg-slate-800/80">
-            Typ: {course.type === "grafický"
-              ? "předmět z grafického bloku"
-              : course.type === "žlutý-blok"
-              ? "blok volitelných předmětů"
-              : course.type}
-          </span>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-// --------------------------------------------------
-// FULLSCREEN AUTO-DEMO KARTA
-// --------------------------------------------------
-
-function FullscreenCourseShow({ course, onClose }) {
-  if (!course) return null;
-
-  return (
-    <div
-      className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div className="fullscreen-wrapper w-full max-w-5xl px-4 relative">
-        <div className="fullscreen-card">
-          <CourseDetailCard course={course} />
-          <div className="absolute bottom-4 right-6 text-[11px] text-slate-400">
-            Kliknutím zavřeš náhled
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// --------------------------------------------------
-// APP
-// --------------------------------------------------
-
-function App() {
-  const [wide, setWide] = React.useState(false);
-  const [schemeStyle, setSchemeStyle] = React.useState("css");
-  const [selectedCodes, setSelectedCodes] = React.useState(["ANI-KOP"]);
-
-  // auto demo stav
-  const [autoDemo, setAutoDemo] = React.useState(true);
-  const [lastInteraction, setLastInteraction] = React.useState(Date.now());
-  const [overlayCourse, setOverlayCourse] = React.useState(null);
-  const [autoIndex, setAutoIndex] = React.useState(0);
-
-  const touchInteraction = () => {
-    setLastInteraction(Date.now());
-  };
-
-  // klik na předmět = toggle; žádný Ctrl/Shift
-  const handleToggleCourse = (code) => {
-    touchInteraction();
-    setSelectedCodes((prev) =>
-      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
-    );
-  };
-
-  const handleSchemeChange = (e) => {
-    touchInteraction();
-    setSchemeStyle(e.target.value);
-  };
-
-  const handleToggleWide = () => {
-    touchInteraction();
-    setWide((w) => !w);
-  };
-
-  React.useEffect(() => {
-    const handler = () => touchInteraction();
-    window.addEventListener("scroll", handler);
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
-
-  // AUTO DEMO LOGIKA
-  React.useEffect(() => {
-    if (!autoDemo) return;
-
-    const idleMs = 12000;  // po 12 s nečinnosti
-    const stepMs = 14000;  // každých 14 s další karta
-
-    const timer = setInterval(() => {
-      const now = Date.now();
-      if (now - lastInteraction < idleMs) return;
-
-      setAutoIndex((prev) => {
-        const next = (prev + 1) % COURSES.length;
-        const course = COURSES[next];
-
-        setSelectedCodes((prevSel) => {
-          if (prevSel.includes(course.code)) return prevSel;
-          return [...prevSel, course.code];
-        });
-
-        setOverlayCourse(course);
-        return next;
-      });
-    }, stepMs);
-
-    return () => clearInterval(timer);
-  }, [autoDemo, lastInteraction]);
-
-  // fullscreen karta sama zmizí
-  React.useEffect(() => {
-    if (!overlayCourse) return;
-    const timeout = setTimeout(() => setOverlayCourse(null), 9000);
-    return () => clearTimeout(timeout);
-  }, [overlayCourse]);
-
-  const closeOverlay = () => {
-    touchInteraction();
-    setOverlayCourse(null);
-  };
-
-  const selectedCourses = COURSES.filter((c) =>
-    selectedCodes.includes(c.code)
-  );
-
-  const row1z = COURSES.filter((c) => c.year === 1 && c.term === "zimní");
-  const row1l = COURSES.filter((c) => c.year === 1 && c.term === "letní");
-  const row2z = COURSES.filter((c) => c.year === 2 && c.term === "zimní");
-  const row2l = COURSES.filter((c) => c.year === 2 && c.term === "letní");
-
-  const containerClasses = wide
-    ? "w-full px-4 md:px-8"
-    : "max-w-6xl mx-auto px-4 md:px-6";
-
-  return (
-    <>
-      <div className={containerClasses + " py-6 space-y-6"}>
-        {/* HLAVIČKA */}
-        <header className="space-y-4">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-            Magisterský obor – vizuální průchod předměty
-          </h1>
-          <p className="text-sm text-slate-300 max-w-3xl">
-            Horní část je interaktivní mapa předmětů. Když nic nevybíráš,
-            zapne se klidný automatický režim, který postupně ukazuje jednotlivé
-            předměty na velké kartě přes obrazovku. Kliknutí na mapu nebo
-            přepínače automatické přehrávání na chvíli uspí.
-          </p>
-
-          <div className="flex flex-wrap gap-3 items-center justify-between">
-            <span className="text-xs text-slate-400">
-              MAGISTERSKÝ OBOR · POČÍTAČOVÁ GRAFIKA A VIZUALIZACE
-            </span>
-
-            <div className="flex flex-wrap gap-3 items-center">
-              <button
-                onClick={handleToggleWide}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-xs text-slate-100 hover:bg-slate-800"
-              >
-                {wide
-                  ? "Kompaktní režim (užší sloupec)"
-                  : "Široký režim (celá šířka obrazovky)"}
-              </button>
-
-              <button
-                onClick={() => {
-                  touchInteraction();
-                  setAutoDemo((v) => !v);
-                }}
-                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs ${
-                  autoDemo
-                    ? "border-emerald-400/70 bg-emerald-500/10 text-emerald-200"
-                    : "border-slate-700 bg-slate-900/80 text-slate-200"
-                } hover:bg-slate-800`}
-              >
-                {autoDemo
-                  ? "Automatické demo: zapnuto"
-                  : "Automatické demo: vypnuto"}
-              </button>
-
-              <label className="flex items-center gap-2 text-xs text-slate-300">
-                <span>Styl schématu nahoře:</span>
-                <select
-                  value={schemeStyle}
-                  onChange={handleSchemeChange}
-                  className="bg-slate-900/90 border border-slate-700 rounded-full px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-cyan-400"
-                >
-                  {SCHEME_STYLE_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          </div>
+<body>
+  <div class="wrap">
+    <main class="poster" role="img" aria-label="Specializace Visual Computing and Game Design – přehled předmětů">
+      <div class="content">
+        <!-- TITLE -->
+        <header class="title">
+          <div class="kicker">Specializace:</div>
+          <h1>Visual Computing and Game Design</h1>
         </header>
 
-        {/* MAPA + DETAILY */}
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-          {/* MAPA OBORU */}
-          <section className="bg-slate-950/90 border border-slate-800 rounded-3xl px-4 py-6 md:px-8 md:py-8 space-y-8">
-            <h2 className="text-xl font-semibold mb-2">
-              Průchod magisterským oborem (interaktivní mapa)
-            </h2>
-            <p className="text-xs text-slate-300 mb-4 max-w-2xl">
-              Každý obdélník nebo obrázek reprezentuje jeden předmět. Kliknutím
-              jej vybereš nebo odznačíš; vybrané předměty se zobrazují vpravo
-              dole na kartách. Při nečinnosti se předměty začnou přehrávat
-              automaticky.
-            </p>
+        <!-- DIAGRAM -->
+        <section class="diagram">
+          <div class="top-notes">
+            <div class="note"><strong>Povinné předměty programu</strong></div>
+            <div class="note"><strong>Povinné předměty specializace</strong></div>
+            <div class="note"><strong>V každém semestru alespoň jeden</strong><br/>předmět z celého bloku</div>
+            <div class="note"><strong>Volitelné předměty</strong> – tyto jsou příbuzné oboru, reálně ale zde může být <strong>cokoliv</strong> co splňuje počet kreditů!</div>
+          </div>
 
-            <div className="space-y-8">
-              <MapRow
-                label="1. ročník – zimní"
-                courses={row1z}
-                selectedCodes={selectedCodes}
-                onToggle={handleToggleCourse}
-                schemeStyle={schemeStyle}
-              />
-              <MapRow
-                label="1. ročník – letní"
-                courses={row1l}
-                selectedCodes={selectedCodes}
-                onToggle={handleToggleCourse}
-                schemeStyle={schemeStyle}
-              />
-              <MapRow
-                label="2. ročník – zimní"
-                courses={row2z}
-                selectedCodes={selectedCodes}
-                onToggle={handleToggleCourse}
-                schemeStyle={schemeStyle}
-              />
-              <MapRow
-                label="2. ročník – letní"
-                courses={row2l}
-                selectedCodes={selectedCodes}
-                onToggle={handleToggleCourse}
-                schemeStyle={schemeStyle}
-              />
+          <div class="grid">
+            <div class="sem-col">
+              <div class="sem">Zimní semestr</div>
+              <div class="sem">Letní semestr</div>
+              <div class="sem">Zimní semestr</div>
+              <div class="sem">Letní semestr</div>
             </div>
-          </section>
 
-          {/* DETAILNÍ KARTY VPRAVO */}
-          <section className="space-y-4">
-            <h2 className="text-lg font-semibold">Detail vybraných předmětů</h2>
-            <div className="flex flex-col gap-4">
-              {selectedCourses.map((c) => (
-                <CourseDetailCard key={c.code} course={c} />
-              ))}
+            <div class="flow-frame" id="frame">
+              <!-- connector wires -->
+              <svg class="wires" viewBox="0 0 1200 520" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="wire" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="rgba(111,231,255,.55)"/>
+                    <stop offset=".5" stop-color="rgba(180,110,255,.55)"/>
+                    <stop offset="1" stop-color="rgba(255,179,78,.45)"/>
+                  </linearGradient>
+                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 Z" fill="rgba(220,235,255,.70)"/>
+                  </marker>
+                </defs>
+
+                <!-- A few stylized arrows (approximate, meant to look like the visual) -->
+                <path d="M85,120 C170,120 170,120 255,120" stroke="url(#wire)" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".85"/>
+                <path d="M255,120 C340,120 340,120 425,120" stroke="url(#wire)" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".85"/>
+                <path d="M425,120 C510,120 510,120 595,120" stroke="url(#wire)" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".85"/>
+
+                <path d="M85,235 C170,235 170,235 255,235" stroke="url(#wire)" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".75"/>
+                <path d="M255,235 C340,235 340,235 425,235" stroke="url(#wire)" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".75"/>
+                <path d="M425,235 C510,235 510,235 595,235" stroke="url(#wire)" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".75"/>
+
+                <!-- from orange group to optional -->
+                <path d="M760,150 C900,150 900,150 1040,150" stroke="url(#wire)" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".85"/>
+                <path d="M760,260 C900,260 900,260 1040,260" stroke="url(#wire)" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".85"/>
+
+                <!-- lower row to TVR -->
+                <path d="M1040,260 C1100,260 1100,305 1135,310" stroke="url(#wire)" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".85"/>
+
+                <!-- DIP long line -->
+                <path d="M115,410 C520,410 700,410 1000,410" stroke="rgba(220,235,255,.35)" stroke-width="2" fill="none" opacity=".7"/>
+                <path d="M1000,410 C1040,410 1080,410 1120,410" stroke="rgba(220,235,255,.35)" stroke-width="2" fill="none" opacity=".7"/>
+              </svg>
+
+              <div class="rows">
+                <!-- Row 1: Zimní -->
+                <div class="row">
+                  <div class="box b-blue">ANI-KOP</div>
+                  <div class="box b-blue">ANI-ARC</div>
+                  <div class="box b-purple">ANI-DZO</div>
+                  <div class="box b-purple">ANI-DVG</div>
+                  <div class="box b-purple">ANI-EGG</div>
+
+                  <div class="group" title="Blok: v každém semestru alespoň jeden předmět z celého bloku">
+                    <div class="box b-orange">VGA</div>
+                    <div class="box b-orange">PVR</div>
+                    <div class="box b-orange">GPU</div>
+                  </div>
+
+                  <div class="box b-yellow">např. CCC</div>
+                </div>
+
+                <!-- Row 2: Letní -->
+                <div class="row">
+                  <div class="box b-blue">ANI-MLM</div>
+                  <div class="box b-blue">ANI-SAI</div>
+                  <div class="box b-blue">ANI-TPa</div>
+                  <div class="box b-purple">ANI-PG1</div>
+                  <div class="box b-purple">ANI-VIZ</div>
+
+                  <div class="group">
+                    <div class="box b-orange">SSD</div>
+                    <div class="box b-orange">BSO</div>
+                    <div class="box b-orange">IRT</div>
+                  </div>
+
+                  <div class="box b-yellow">např. ESC</div>
+                  <div class="box b-yellow">např. TVR</div>
+                </div>
+
+                <!-- Row 3: Zimní -->
+                <div class="row">
+                  <div class="box b-blue">ANI-TPb</div>
+                  <div class="box b-purple">ANI-ROZ</div>
+                  <div class="box b-purple">ANI-PIV</div>
+                  <div class="box b-yellow">např. NUR</div>
+                  <div class="box b-yellow">např. DID</div>
+                  <div class="box b-yellow">např. DVD</div>
+                  <div class="box b-yellow">např. UEE</div>
+                  <div></div><div></div><div></div>
+                </div>
+
+                <!-- Row 4: Letní -->
+                <div class="row">
+                  <div class="box b-blue">ANI-DIP</div>
+                  <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                </div>
+              </div>
+
+              <div class="free-note">
+                <strong>volno na začátek diplomové práce</strong><br/>
+                a na zcela <strong>volitelné předměty</strong><br/>
+                (14 kreditů celkem)
+              </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
+
+        <!-- LEGEND -->
+        <footer class="legend">
+          <div class="panel p-blue">
+            <div><b>KOP</b>: kombinatorická optimalizace</div>
+            <div><b>ARC</b>: Pokročilé architektury počítačů</div>
+            <div><b>MLM</b>: Metody strojového učení</div>
+            <div><b>SAI</b>: Statistika pro aplikovanou informatiku</div>
+            <div><b>TP</b>: dvousemestrální týmový projekt</div>
+          </div>
+
+          <div class="panel p-purple">
+            <div><b>DZO</b>: Digitální zpracování obrazu</div>
+            <div><b>DVG</b>: Diskrétní výpočetní geometrie</div>
+            <div><b>EGG</b>: Enginy pro hry a grafiku</div>
+            <div><b>PG1</b>: Počítačová grafika 1</div>
+            <div><b>VIZ</b>: Vizualizace</div>
+            <div><b>ROZ</b>: Rozpoznávání</div>
+            <div><b>PIV</b>: Počítačové vidění</div>
+          </div>
+
+          <div class="panel p-orange">
+            <div><b>VGA</b>: Architektura počítačových her</div>
+            <div><b>PVR</b>: Pokročilá virtuální realita</div>
+            <div><b>IRT</b>: Internet a přenos v reálném čase</div>
+            <div><b>SSD</b>: Příběhový a herní design</div>
+            <div><b>BSO</b>: Biosignály a zpracování medicínských dat</div>
+            <div><b>GPU</b>: Programování a architektury GPU</div>
+          </div>
+
+          <div class="panel p-yellow">
+            <div><b>CCC</b>: Kreativní kódování v umění</div>
+            <div><b>TVR</b>: Technologie VR</div>
+            <div><b>NUR</b>: Návrh uživatelských rozhraní</div>
+            <div><b>DID</b>: Digitální kreslení</div>
+            <div><b>UEE</b>: Unvironmentální design v UE</div>
+            <div><b>ESC</b>: Únikové hry</div>
+          </div>
+        </footer>
       </div>
-
-      {/* FULLSCREEN AUTO-DEMO OVERLAY */}
-      <FullscreenCourseShow course={overlayCourse} onClose={closeOverlay} />
-    </>
-  );
-}
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
-
-</script>
+    </main>
+  </div>
 </body>
 </html>
