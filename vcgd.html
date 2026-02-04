@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Specializace: Visual Computing and Game Design</title>
+  <style>
+    :root{
+      --bg0:#070A2B;
+      --bg1:#0A0E3A;
+      --bg2:#120B3A;
+
+      --ink:#DCEBFF;
+
+      --blueA: rgba(70,140,220,.92);
+      --blueB: rgba(20,70,130,.92);
+
+      --purpleA: rgba(160,90,245,.90);
+      --purpleB: rgba(70,30,125,.92);
+
+      --orangeA: rgba(255,179,78,.92);
+      --orangeB: rgba(140,80,10,.92);
+
+      --yellowA: rgba(255,240,170,.92);
+      --yellowB: rgba(200,160,40,.92);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background:
+        radial-gradient(1200px 700px at 15% 15%, rgba(111,231,255,.12), transparent 55%),
+        radial-gradient(900px 600px at 85% 20%, rgba(180,110,255,.10), transparent 50%),
+        radial-gradient(900px 600px at 70% 85%, rgba(255,179,78,.08), transparent 55%),
+        linear-gradient(135deg, var(--bg0), var(--bg2) 55%, var(--bg1));
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      opacity:.22;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(111,231,255,.28) 0 1px, transparent 2px),
+        radial-gradient(circle at 75% 22%, rgba(255,179,78,.22) 0 1px, transparent 2px),
+        radial-gradient(circle at 62% 84%, rgba(180,110,255,.22) 0 1px, transparent 2px),
+        radial-gradient(circle at 40% 78%, rgba(111,231,255,.22) 0 1px, transparent 2px),
+
+        linear-gradient(90deg, rgba(111,231,255,.10), rgba(111,231,255,.10)) 6% 18% / 180px 1px no-repeat,
+        linear-gradient(180deg, rgba(111,231,255,.10), rgba(111,231,255,.10)) 21% 18% / 1px 140px no-repeat,
+        linear-gradient(90deg, rgba(180,110,255,.10), rgba(180,110,255,.10)) 66% 28% / 220px 1px no-repeat,
+        linear-gradient(180deg, rgba(180,110,255,.10), rgba(180,110,255,.10)) 86% 28% / 1px 160px no-repeat,
+        linear-gradient(90deg, rgba(255,179,78,.09), rgba(255,179,78,.09)) 55% 78% / 260px 1px no-repeat,
+        linear-gradient(180deg, rgba(255,179,78,.09), rgba(255,179,78,.09)) 55% 62% / 1px 200px no-repeat;
+      filter: blur(.2px);
+    }
+
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .poster{
+      width:min(1300px, 100%);
+      aspect-ratio: 4 / 3;
+      border-radius: 28px;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(800px 520px at 18% 20%, rgba(75,199,255,.12), transparent 60%),
+        radial-gradient(900px 620px at 75% 30%, rgba(180,110,255,.10), transparent 62%),
+        radial-gradient(900px 640px at 75% 86%, rgba(255,179,78,.08), transparent 60%),
+        linear-gradient(135deg, rgba(10,14,58,.92), rgba(8,10,35,.92));
+      box-shadow:
+        0 30px 80px rgba(0,0,0,.55),
+        inset 0 0 0 1px rgba(140,210,255,.18);
+    }
+
+    .poster::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 520px at 50% 0%, rgba(111,231,255,.10), transparent 65%),
+        radial-gradient(900px 520px at 50% 100%, rgba(255,179,78,.06), transparent 70%);
+      pointer-events:none;
+      mix-blend-mode:screen;
+      opacity:.8;
+    }
+
+    .content{
+      position:absolute; inset:0;
+      padding:28px 30px 26px;
+      display:grid;
+      grid-template-rows: auto 1fr auto;
+      gap:18px;
+      z-index:1;
+    }
+
+    .title{
+      text-align:center;
+      line-height:1.05;
+      padding-top:6px;
+      text-shadow: 0 0 18px rgba(111,231,255,.20);
+    }
+    .title .kicker{
+      font-size: clamp(18px, 2.1vw, 28px);
+      color: rgba(220,235,255,.85);
+      letter-spacing:.5px;
+    }
+    .title h1{
+      margin:6px 0 0;
+      font-weight:700;
+      font-size: clamp(32px, 4.5vw, 64px);
+      letter-spacing: .6px;
+      color: rgba(170,245,255,.95);
+      text-shadow:
+        0 0 26px rgba(111,231,255,.22),
+        0 0 2px rgba(255,255,255,.08);
+    }
+
+    .diagram{
+      position:relative;
+      border-radius: 22px;
+      padding:18px 18px 14px;
+      background: rgba(6,10,34,.25);
+      box-shadow:
+        inset 0 0 0 1px rgba(140,210,255,.18),
+        0 14px 30px rgba(0,0,0,.28);
+      overflow:hidden;
+    }
+
+    .diagram::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(90deg, rgba(111,231,255,.06), transparent 45%, rgba(255,179,78,.05));
+      pointer-events:none;
+      opacity:.8;
+    }
+
+    /* ===== Colored category blocks ===== */
+    .top-notes{
+      position:relative;
+      display:grid;
+      grid-template-columns: 1.05fr 1.05fr 1.25fr 1.25fr;
+      gap:12px;
+      align-items:stretch;
+      padding:2px 6px 10px;
+      z-index:2;
+      font-size: clamp(11px, 1.15vw, 14px);
+    }
+
+    .note{
+      border-radius: 14px;
+      padding:12px 12px;
+      box-shadow: 0 10px 18px rgba(0,0,0,.20);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,.14);
+      line-height:1.25;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      min-height: 64px;
+    }
+    .note.blue{
+      background: linear-gradient(180deg, var(--blueA), var(--blueB));
+      color: rgba(230,248,255,.98);
+      border-color: rgba(111,231,255,.35);
+      text-shadow: 0 0 10px rgba(111,231,255,.18);
+    }
+    .note.purple{
+      background: linear-gradient(180deg, var(--purpleA), var(--purpleB));
+      color: rgba(245,235,255,.98);
+      border-color: rgba(180,110,255,.40);
+      text-shadow: 0 0 10px rgba(180,110,255,.18);
+    }
+    .note.orange{
+      background: linear-gradient(180deg, var(--orangeA), var(--orangeB));
+      color: rgba(30,20,6,.92);
+      border-color: rgba(255,210,120,.42);
+    }
+    .note.yellow{
+      background: linear-gradient(180deg, var(--yellowA), var(--yellowB));
+      color: rgba(30,22,6,.92);
+      border-color: rgba(255,240,170,.52);
+    }
+
+    .grid{
+      position:relative;
+      display:grid;
+      grid-template-columns: 110px 1fr;
+      gap:12px;
+      align-items:stretch;
+      z-index:2;
+      margin-top:6px;
+    }
+
+    .sem-col{
+      display:grid;
+      grid-template-rows: repeat(4, 1fr);
+      gap:12px;
+      padding-top:58px;
+    }
+    .sem{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      letter-spacing:.3px;
+      color: rgba(240,250,255,.9);
+      border-radius: 14px;
+      background: rgba(0,0,0,.20);
+      border: 1px solid rgba(140,210,255,.18);
+      box-shadow: 0 10px 18px rgba(0,0,0,.20);
+      text-align:center;
+      font-size: clamp(12px, 1.2vw, 15px);
+      padding:10px 8px;
+    }
+
+    .flow-frame{
+      position:relative;
+      border-radius: 20px;
+      background: rgba(10,14,58,.18);
+      border: 1px solid rgba(140,210,255,.22);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.22);
+      padding:14px 14px 12px;
+      overflow:hidden;
+    }
+
+    .flow-frame::before{
+      content:"";
+      position:absolute; inset:-40px;
+      background: radial-gradient(600px 320px at 35% 30%, rgba(75,199,255,.10), transparent 65%);
+      pointer-events:none;
+      opacity:.9;
+    }
+
+    /* ✅ reserve space for the top tooltip */
+    .rows{
+      position:relative;
+      display:grid;
+      grid-template-rows: repeat(4, 1fr);
+      gap:12px;
+      z-index:2;
+      padding-top: 58px; /* space for tooltip row */
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      gap:10px;
+      align-items:center;
+      min-height:64px;
+    }
+
+    .box{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 12px;
+      padding:10px 8px;
+      font-weight:800;
+      letter-spacing:.5px;
+      box-shadow:
+        0 14px 24px rgba(0,0,0,.26),
+        inset 0 0 0 1px rgba(255,255,255,.10);
+      user-select:none;
+      white-space:nowrap;
+      font-size: clamp(12px, 1.25vw, 16px);
+      cursor: default;
+      outline: none;
+      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+    }
+    .box:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+      box-shadow:
+        0 18px 30px rgba(0,0,0,.30),
+        inset 0 0 0 1px rgba(255,255,255,.14);
+    }
+    .box:focus-visible{
+      outline: 2px solid rgba(111,231,255,.55);
+      outline-offset: 2px;
+    }
+
+    /* category colors for course blocks */
+    .b-blue{
+      background: linear-gradient(180deg, var(--blueA), var(--blueB));
+      border: 1px solid rgba(111,231,255,.35);
+      color: rgba(230,248,255,.98);
+      text-shadow: 0 0 12px rgba(111,231,255,.18);
+    }
+    .b-purple{
+      background: linear-gradient(180deg, var(--purpleA), var(--purpleB));
+      border: 1px solid rgba(180,110,255,.40);
+      color: rgba(245,235,255,.98);
+      text-shadow: 0 0 12px rgba(180,110,255,.18);
+    }
+    .b-orange{
+      background: linear-gradient(180deg, var(--orangeA), var(--orangeB));
+      border: 1px solid rgba(255,210,120,.42);
+      color: rgba(30,20,6,.92);
+    }
+    .b-yellow{
+      background: linear-gradient(180deg, var(--yellowA), var(--yellowB));
+      border: 1px solid rgba(255,240,170,.52);
+      color: rgba(30,22,6,.92);
+    }
+    .b-yellow, .b-orange{
+      box-shadow:
+        0 14px 24px rgba(0,0,0,.22),
+        inset 0 0 0 1px rgba(255,255,255,.20);
+    }
+
+    .group{
+      grid-column: span 3;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+      padding:10px;
+      border-radius: 14px;
+      background: rgba(255,179,78,.10);
+      border: 1px solid rgba(255,210,120,.35);
+      box-shadow: 0 0 0 2px rgba(255,179,78,.10), 0 0 22px rgba(255,179,78,.16);
+    }
+
+    .free-note{
+      position:absolute;
+      right:16px;
+      bottom:12px;
+      max-width: 320px;
+      font-size: clamp(11px, 1.1vw, 13px);
+      color: rgba(220,235,255,.85);
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(140,210,255,.18);
+      border-radius: 14px;
+      padding:10px 12px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 12px 20px rgba(0,0,0,.25);
+    }
+
+    /* ✅ GLOBAL TOP TOOLTIP (always at top) */
+    .top-tooltip{
+      position:absolute;
+      left:50%;
+      top:12px;
+      transform: translateX(-50%);
+      width: min(860px, calc(100% - 24px));
+      padding:12px 14px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(140,210,255,.24);
+      color: rgba(240,250,255,.95);
+      font-weight: 650;
+      letter-spacing:.2px;
+      text-align:center;
+      line-height:1.25;
+      box-shadow: 0 18px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .14s ease, transform .14s ease;
+      z-index: 20;
+    }
+    .top-tooltip.is-visible{
+      opacity:1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .top-tooltip .small{
+      display:block;
+      opacity:.78;
+      font-weight:600;
+      font-size: 12px;
+      margin-top:2px;
+    }
+
+    .legend{
+      display:grid;
+      grid-template-columns: 1.25fr 1.25fr 1.5fr 1.1fr;
+      gap:14px;
+    }
+    .legend .panel{
+      border-radius: 16px;
+      padding:12px 14px;
+      font-size: clamp(11px, 1.05vw, 13px);
+      line-height:1.35;
+      box-shadow: 0 14px 24px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.10);
+    }
+    .p-blue{ background: rgba(30,90,160,.30); border: 1px solid rgba(111,231,255,.25); }
+    .p-purple{ background: rgba(120,60,200,.26); border: 1px solid rgba(180,110,255,.25); }
+    .p-orange{ background: rgba(255,179,78,.26); border: 1px solid rgba(255,210,120,.25); color: rgba(30,22,8,.92); }
+    .p-yellow{ background: rgba(255,240,170,.28); border: 1px solid rgba(255,240,170,.30); color: rgba(30,22,8,.92); }
+
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 95px 1fr; }
+      .row{ grid-template-columns: repeat(8, minmax(0, 1fr)); }
+      .top-tooltip{ width: min(720px, calc(100% - 24px)); }
+    }
+    @media (max-width: 760px){
+      .poster{ aspect-ratio: 3 / 4; }
+      .content{ grid-template-rows:auto auto 1fr; }
+      .legend{ grid-template-columns: 1fr; }
+      .top-notes{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
+      .sem-col{ display:none; }
+      .rows{ padding-top: 66px; }
+      .top-tooltip{ width: calc(100% - 24px); }
+    }
+
+    @page { size: A3 landscape; margin: 10mm; }
+    @media print{
+      body{ background:#fff; }
+      body::before{ display:none; }
+      .wrap{ padding:0; }
+      .poster{
+        width: 100%;
+        height: auto;
+        aspect-ratio: 420 / 297;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .top-tooltip{ display:none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <main class="poster" role="img" aria-label="Specializace Visual Computing and Game Design – přehled předmětů">
+      <div class="content">
+        <header class="title">
+          <div class="kicker">Specializace:</div>
+          <h1>Visual Computing and Game Design</h1>
+        </header>
+
+        <section class="diagram">
+          <div class="top-notes">
+            <div class="note blue"><strong>Povinné předměty programu</strong></div>
+            <div class="note purple"><strong>Povinné předměty specializace</strong></div>
+            <div class="note orange">
+              <strong>Povinně volitelné předměty </strong> – V každém semestru alespoň jeden předmět z každého bloku
+            </div>
+            <div class="note yellow">
+               <strong>Volitelné předměty </strong> – tyto jsou příbuzné oboru, reálně ale zde může být cokoliv co splňuje počet kreditů. Těch je třeba získat zde alespon 12. 
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="sem-col">
+              <div class="sem">Zimní semestr</div>
+              <div class="sem">Letní semestr</div>
+              <div class="sem">Zimní semestr</div>
+              <div class="sem">Letní semestr</div>
+            </div>
+
+            <div class="flow-frame" id="flowFrame">
+              <!-- ✅ tooltip always at top -->
+              <div class="top-tooltip" id="topTooltip"></div>
+
+              <div class="rows">
+                <div class="row">
+                  <div class="box b-blue" tabindex="0" data-full="KOP: kombinatorická optimalizace (6 kreditů)">ANI-KOP</div>
+                  <div class="box b-blue" tabindex="0" data-full="ARC: Pokročilé architektury počítačů (5 kreditů)">ANI-ARC</div>
+                  <div class="box b-purple" tabindex="0" data-full="DZO: Digitální zpracování obrazu (6 kreditů)">ANI-DZO</div>
+                  <div class="box b-purple" tabindex="0" data-full="DVG: Diskrétní výpočetní geometrie  (5 kreditů)">ANI-DVG</div>
+                  <div class="box b-purple" tabindex="0" data-full="EGG: Enginy pro hry a grafiku  (4 kreditů)">ANI-EGG</div>
+
+                  <div class="group" title="Blok: v každém semestru alespoň jeden předmět z celého bloku">
+                    <div class="box b-orange" tabindex="0" data-full="VGA: Architektura počítačových her  (5 kredity)">VGA</div>
+                    <div class="box b-orange" tabindex="0" data-full="PVR: Pokročilá virtuální realita,  (5 kreditů)">PVR</div>
+                    <div class="box b-orange" tabindex="0" data-full="GPU: Programování a architektury GPU,  (5 kreditů)">GPU</div>
+                  </div>
+
+                  <div class="box b-yellow" tabindex="0" data-full="CCC: Kreativní kódování v umění,  (4 kredity)">např. CCC</div>
+                </div>
+
+                <div class="row">
+                  <div class="box b-blue" tabindex="0" data-full="MLM: Metody strojového učení,  (5 kreditů)">ANI-MLM</div>
+                  <div class="box b-blue" tabindex="0" data-full="SAI: Statistika pro aplikovanou informatiku,  (5 kreditů)">ANI-SAI</div>
+                  <div class="box b-blue" tabindex="0" data-full="TPa: dvousemestrální týmový projekt (část A),  (4 kredity)">ANI-TPa</div>
+                  <div class="box b-purple" tabindex="0" data-full="PG1: Počítačová grafika 1,  (5 kreditů)">ANI-PG1</div>
+                  <div class="box b-purple" tabindex="0" data-full="VIZ: Vizualizace,  (6 kreditů)">ANI-VIZ</div>
+
+                  <div class="group">
+                    <div class="box b-orange" tabindex="0" data-full="SSD: Příběhový a herní design,  (5 kreditů)">SSD</div>
+                    <div class="box b-orange" tabindex="0" data-full="BSO: Biosignály a zpracování medicínských dat,  (5 kreditů)">BSO</div>
+                    <div class="box b-orange" tabindex="0" data-full="IRT: Internet a přenos v reálném čase,  (5 kreditů)">IRT</div>
+                  </div>
+
+                  <div class="box b-yellow" tabindex="0" data-full="ESC: Únikové hry (8 kreditů)">např. ESC</div>
+                  <div class="box b-yellow" tabindex="0" data-full="TVR: Technologie VR,  (3 kredity)">např. TVR</div>
+                </div>
+
+                <div class="row">
+                  <div class="box b-blue" tabindex="0" data-full="TPb: dvousemestrální týmový projekt (část B) (7 kreditů)">ANI-TPb</div>
+                  <div class="box b-purple" tabindex="0" data-full="ROZ: Rozpoznávání (5 kreditů)">ANI-ROZ</div>
+                  <div class="box b-purple" tabindex="0" data-full="PIV: Počítačové vidění (5 kreditů)">ANI-PIV</div>
+                  <div class="box b-yellow" tabindex="0" data-full="NUR: Návrh uživatelských rozhraní (5 kreditů)">např. NUR</div>
+                  <div class="box b-yellow" tabindex="0" data-full="DID: Digitální kreslení (2 kredity)">např. DID</div>
+                  <div class="box b-yellow" tabindex="0" data-full="DVD: Design deskových her (5 kreditů)">např. DVD</div>
+                  <div class="box b-yellow" tabindex="0" data-full="UEE: Unvironmentální design v UE (2 kredity)">např. UEE</div>
+                  <div></div><div></div><div></div>
+                </div>
+
+                <div class="row">
+                  <div class="box b-blue" tabindex="0" data-full="DIP: diplomová práce  (30 kreditů)">ANI-DIP</div>
+                  <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                </div>
+              </div>
+
+              <div class="free-note">
+                <strong>Volno na začátek a průběh diplomové práce</strong><br/>
+                a na zcela <strong>volitelné předměty.</strong><br/>
+                 
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="legend">
+          <div class="panel p-blue">
+            <div><b>KOP</b>: Kombinatorická optimalizace</div>
+            <div><b>ARC</b>: Pokročilé architektury počítačů</div>
+            <div><b>MLM</b>: Metody strojového učení</div>
+            <div><b>SAI</b>: Statistika pro aplikovanou informatiku</div>
+            <div><b>TP</b>: Dvousemestrální týmový projekt</div>
+          </div>
+
+          <div class="panel p-purple">
+            <div><b>DZO</b>: Digitální zpracování obrazu</div>
+            <div><b>DVG</b>: Diskrétní výpočetní geometrie</div>
+            <div><b>EGG</b>: Enginy pro hry a grafiku</div>
+            <div><b>PG1</b>: Počítačová grafika 1</div>
+            <div><b>VIZ</b>: Vizualizace</div>
+            <div><b>ROZ</b>: Rozpoznávání</div>
+            <div><b>PIV</b>: Počítačové vidění</div>
+          </div>
+
+          <div class="panel p-orange">
+            <div><b>VGA</b>: Architektura počítačových her</div>
+            <div><b>PVR</b>: Pokročilá virtuální realita</div>
+            <div><b>IRT</b>: Internet a přenos v reálném čase</div>
+            <div><b>SSD</b>: Příběhový a herní design</div>
+            <div><b>BSO</b>: Biosignály a zpracování medicínských dat</div>
+            <div><b>GPU</b>: Programování a architektury GPU</div>
+          </div>
+
+          <div class="panel p-yellow">
+            <div><b>CCC</b>: Kreativní kódování v umění</div>
+            <div><b>TVR</b>: Technologie VR</div>
+            <div><b>NUR</b>: Návrh uživatelských rozhraní</div>
+            <div><b>DID</b>: Digitální kreslení</div>
+            <div><b>UEE</b>: Unvironmentální design v UE</div>
+            <div><b>ESC</b>: Únikové hry</div>
+            <div><b>DVD</b>: Design deskových her</div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const tooltip = document.getElementById("topTooltip");
+    const boxes = Array.from(document.querySelectorAll(".box[data-full]"));
+
+    let pinned = null;
+
+    function show(text){
+      tooltip.textContent = text;
+      tooltip.classList.add("is-visible");
+    }
+    function hide(){
+      tooltip.classList.remove("is-visible");
+      tooltip.textContent = "";
+    }
+
+    function openFor(el){
+      const text = el.getAttribute("data-full") || "";
+      if (text) show(text);
+    }
+
+    boxes.forEach(b => {
+      b.addEventListener("mouseenter", () => {
+        if (pinned) return;
+        openFor(b);
+      });
+      b.addEventListener("mouseleave", () => {
+        if (pinned) return;
+        hide();
+      });
+      b.addEventListener("focus", () => {
+        if (pinned) return;
+        openFor(b);
+      });
+      b.addEventListener("blur", () => {
+        if (pinned) return;
+        hide();
+      });
+
+      // click/tap = pin
+      b.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (pinned === b){
+          pinned = null;
+          hide();
+          return;
+        }
+        pinned = b;
+        openFor(b);
+      });
+
+      b.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          if (pinned === b){
+            pinned = null;
+            hide();
+          } else {
+            pinned = b;
+            openFor(b);
+          }
+        }
+        if (e.key === "Escape"){
+          pinned = null;
+          hide();
+          b.blur();
+        }
+      });
+    });
+
+    document.addEventListener("click", () => {
+      pinned = null;
+      hide();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape"){
+        pinned = null;
+        hide();
+      }
+    });
+  </script>
+</body>
+</html>
