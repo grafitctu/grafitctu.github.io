@@ -788,293 +788,284 @@ body::before { filter: none !important; }
 
     let selectedBox = null;
 
-    const COURSE_DETAILS = {
-      "ANI-KOP": {
-        code: "ANI-KOP",
-        name: "Kombinatorická optimalizace",
-        extent: "2P+2C",
-        credits: "6",
-        semester: "Z",
-        ending: "Z, ZK",
-        url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/00/00/00/08/56/92/p8569206.html",
-        sections: [
-          {
-            title: "Anotace",
-            type: "p",
-            content:
-`Studenti se naučí posoudit diskrétní problémy podle složitosti a podle účelu optimalizace (on-line, multikriteriální, atd.). Porozumí principům a vlastnostem heuristik a exaktních algoritmů. Dokáží vybrat, aplikovat a experimentálně vyhodnotit vhodné heuristiky pro praktické problémy.`
-          },
-          {
-            title: "Osnovy přednášek",
-            type: "ol",
-            content: [
-              "Kombinatorické problémy a algoritmy.",
-              "Experimentální práce s algoritmy",
-              "Třídy P a NP, komplementární problémy, polynomiální hierarchie.",
-              "NP-těžké a NP-úplné rozhodovací problémy. NP-těžké optimalizační problémy.",
-              "Prakticky významné rozhodovací problémy, převody a užití SAT, SMT.",
-              "Prakticky významné optimalizační problémy, převody a užití ILP, CSP",
-              "Stavový prostor, prostor prohledávání, pohyb ve stavovém prostoru, lokální heuristiky, metoda větví a hranic.",
-              "Randomizované algoritmy. Experimentální nasazení parametrizovaných heuristik.",
-              "Simulované ochlazování",
-              "Simulovaná evoluce I: přehled, genetické algoritmy, genetické programování.",
-              "Simulovaná evoluce II: evoluční strategie, fast messy GA. Stochastická optimalizace: modely a aplikace. Bayesovská optimalizace.",
-              "Globální metody, typy dekompozice. Exaktní a heuristické globální metody, algoritmus Davis-Putnam jako globální metoda.",
-              "Metody multikriteriální optimalizace"
-            ]
-          },
-          {
-            title: "Osnovy cvičení",
-            type: "ol",
-            content: [
-              "Úvod, problém splnitelnosti formule, problém plnění batohu.",
-              "Přehled problémů, hledání konfiguračních proměnných.",
-              "Jednoduché algoritmy splnitelnosti formule, experimenty na jedné instanci.",
-              "Jednoduché algoritmy splnitelnosti formule, experimenty na sadách instancí.",
-              "Třídy problémů P a NP, NPC, NPH.",
-              "Stavový prostor",
-              "Test",
-              "Nasazení simulovaného ochlazování I",
-              "Konzultace",
-              "Nasazení simulovaného ochlazování II.",
-              "Nasazení simulované evoluce I.",
-              "Nasazení simulované evoluce II.",
-              "Opravný a náhradní test"
-            ]
-          },
-          {
-            title: "Literatura",
-            type: "ol",
-            content: [
-              "Arora, S.: Computational Complexity: A Modern Approach. Cambridge University Press, 2017. ISBN 978-1316612156.",
-              "Hromkovič, J.: Algorithmics for Hard Problems: Introduction to Combinatorial Optimization, Randomization, Approximation, and Heuristics (2nd Edition). Springer, 2004. ISBN 978-3540441342.",
-              "Kučera, L.: Kombinatorické algoritmy. SNTL, 1993.",
-              "Ausiello, G. - Crescenzi, P. - Kann, V. - Gambosi, G. - Spaccamela, A. M.: Complexity and Approximation: Combinatorial Optimization Problems and Their Approximability Properties. Springer, 2003. ISBN 3540654313."
-            ]
-          },
-          {
-            title: "Požadavky",
-            type: "p",
-            content:
-`Algoritmus. Pojem výpočetní složitosti a asymptotické složitosti. Pojem formálního jazyka. Základy teorie grafů. Náhodná veličina. Booleova algebra. Metoda větví a hranic. Základy dynamického programování. Praktické programování v libovolném imperativním jazyce.`
-          }
+const COURSE_DETAILS = {
+  "ANI-KOP": {
+    code: "ANI-KOP",
+    name: "Kombinatorická optimalizace",
+    extent: "2P+2C",
+    credits: "6",
+    semester: "Z",
+    ending: "Z, ZK",
+    url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/00/00/00/08/56/92/p8569206.html",
+    sections: [
+      {
+        title: "Anotace",
+        type: "p",
+        content: `Studenti se naučí posoudit diskrétní problémy podle složitosti a podle účelu optimalizace (on-line, multikriteriální, atd.). Porozumí principům a vlastnostem heuristik a exaktních algoritmů. Dokáží vybrat, aplikovat a experimentálně vyhodnotit vhodné heuristiky pro praktické problémy.`
+      },
+      {
+        title: "Osnovy přednášek",
+        type: "ol",
+        content: [
+          "Kombinatorické problémy a algoritmy.",
+          "Experimentální práce s algoritmy",
+          "Třídy P a NP, komplementární problémy, polynomiální hierarchie.",
+          "NP-těžké a NP-úplné rozhodovací problémy. NP-těžké optimalizační problémy.",
+          "Prakticky významné rozhodovací problémy, převody a užití SAT, SMT.",
+          "Prakticky významné optimalizační problémy, převody a užití ILP, CSP",
+          "Stavový prostor, prostor prohledávání, pohyb ve stavovém prostoru, lokální heuristiky, metoda větví a hranic.",
+          "Randomizované algoritmy. Experimentální nasazení parametrizovaných heuristik.",
+          "Simulované ochlazování",
+          "Simulovaná evoluce I: přehled, genetické algoritmy, genetické programování.",
+          "Simulovaná evoluce II: evoluční strategie, fast messy GA. Stochastická optimalizace: modely a aplikace. Bayesovská optimalizace.",
+          "Globální metody, typy dekompozice. Exaktní a heuristické globální metody, algoritmus Davis-Putnam jako globální metoda.",
+          "Metody multikriteriální optimalizace"
+        ]
+      },
+      {
+        title: "Osnovy cvičení",
+        type: "ol",
+        content: [
+          "Úvod, problém splnitelnosti formule, problém plnění batohu.",
+          "Přehled problémů, hledání konfiguračních proměnných.",
+          "Jednoduché algoritmy splnitelnosti formule, experimenty na jedné instanci.",
+          "Jednoduché algoritmy splnitelnosti formule, experimenty na sadách instancí.",
+          "Třídy problémů P a NP, NPC, NPH.",
+          "Stavový prostor",
+          "Test",
+          "Nasazení simulovaného ochlazování I",
+          "Konzultace",
+          "Nasazení simulovaného ochlazování II.",
+          "Nasazení simulované evoluce I.",
+          "Nasazení simulované evoluce II.",
+          "Opravný a náhradní test"
+        ]
+      },
+      {
+        title: "Literatura",
+        type: "ol",
+        content: [
+          "Arora, S.: Computational Complexity: A Modern Approach. Cambridge University Press, 2017. ISBN 978-1316612156.",
+          "Hromkovič, J.: Algorithmics for Hard Problems: Introduction to Combinatorial Optimization, Randomization, Approximation, and Heuristics (2nd Edition). Springer, 2004. ISBN 978-3540441342.",
+          "Kučera, L.: Kombinatorické algoritmy. SNTL, 1993.",
+          "Ausiello, G. - Crescenzi, P. - Kann, V. - Gambosi, G. - Spaccamela, A. M.: Complexity and Approximation: Combinatorial Optimization Problems and Their Approximability Properties. Springer, 2003. ISBN 3540654313."
+        ]
+      },
+      {
+        title: "Požadavky",
+        type: "p",
+        content: `Algoritmus. Pojem výpočetní složitosti a asymptotické složitosti. Pojem formálního jazyka. Základy teorie grafů. Náhodná veličina. Booleova algebra. Metoda větví a hranic. Základy dynamického programování. Praktické programování v libovolném imperativním jazyce.`
+      }
+    ]
+  },
+
+  "ANI-ARC": {
+    code: "ANI-ARC",
+    name: "Pokročilá architektura počítačů",
+    extent: "2P+1C",
+    credits: "5",
+    semester: "",
+    ending: "Z,ZK",
+    url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/01/25/40/88/91/14/p1254088911405.html",
+    sections: [
+      {
+        title: "Anotace",
+        type: "p",
+        content: `Cílem předmětu je poskytnout studentům teoretický základ pro porozumění současným počítačovým systémům, na kterých běží reálné aplikace. Studenti se naučí pochopit technické výzvy (např. real-time, paralelismus, spolehlivost) a volit vhodné algoritmy a technologie pro jejich řešení.`
+      },
+      {
+        title: "Osnovy přednášek",
+        type: "ol",
+        content: [
+          "Infrastruktura cloudu, IaaS, SaaS, cloud computing, edge computing",
+          "Architektury distribuovaných výpočetních systémů",
+          "Koordinace a agreement, leader election",
+          "Distribuovaná cache, cache eviction strategie",
+          "Požadavky aplikací a technologické možnosti",
+          "Propustnost a latence, paralelismus, datové toky",
+          "Spolehlivost systémů, modely spolehlivosti",
+          "Realtimové systémy, predikovatelnost, verifikace",
+          "Víceprocesorové a heterogenní systémy",
+          "Sdílená paměť a koherence",
+          "Architektury pro akceleraci umělé inteligence",
+          "Metody snížení spotřeby energie"
+        ]
+      },
+      {
+        title: "Osnovy cvičení",
+        type: "p",
+        content: `Osnovy cvičení nejsou na stránce uvedeny.`
+      },
+      {
+        title: "Literatura",
+        type: "ol",
+        content: [
+          "Douglas Comer: The Cloud Computing Book: The Future of Computing Explained.",
+          "Hennessy J.L., Patterson D.A.: Computer Architecture: A Quantitative Approach (7th Edition).",
+          "Burns, B.: Designing Distributed Systems: Patterns and Paradigms."
+        ]
+      },
+      {
+        title: "Požadavky",
+        type: "p",
+        content: `Zápočet za řešení úloh a testy z teoretických a praktických znalostí během semestru.`
+      }
+    ]
+  },
+
+  "ANI-DVG": {
+    code: "ANI-DVG",
+    name: "Úvod do diskrétní a výpočetní geometrie",
+    extent: "2P+1C",
+    credits: "5",
+    semester: "L",
+    ending: "Z,ZK",
+    url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/00/00/00/08/56/70/p8567006.html",
+    sections: [
+      {
+        title: "Anotace",
+        type: "p",
+        content: `Cílem předmětu je seznámit studenty s disciplínou diskrétní a výpočetní geometrie a umožnit řešit jednoduché algoritmické úlohy této oblasti.`
+      },
+      {
+        title: "Osnovy přednášek",
+        type: "ol",
+        content: [
+          "Introduction to Discrete and Computational Geometry",
+          "Convexity: definition and separation theorem",
+          "Convex hull in two dimensions",
+          "Algorithms for convex hull (Graham, divide and conquer)",
+          "Polygon intersections",
+          "Triangulation and proximity structures",
+          "Voronoi diagrams and properties",
+          "Delaunay triangulations",
+          "Arrangements of lines",
+          "Point location and search structures"
+        ]
+      },
+      {
+        title: "Osnovy cvičení",
+        type: "p",
+        content: `Osnovy cvičení nejsou uvedeny (budou doplněny).`
+      },
+      {
+        title: "Literatura",
+        type: "ol",
+        content: [
+          "J. E. Goodman, O. Tóth: Handbook on Discrete and Computational Geometry.",
+          "J. O’Rourke: Computational Geometry Algorithms and Applications."
+        ]
+      },
+      {
+        title: "Požadavky",
+        type: "p",
+        content: `Studijní materiály jsou dostupné a předmět vyžaduje znalosti z kombinatoriky, teorie grafů a algoritmů.`
+      }
+    ]
+  },
+
+  "ANI-DZO": {
+    code: "ANI-DZO",
+    name: "Digitální zpracování obrazu",
+    extent: "2P+2C",
+    credits: "6",
+    semester: "L",
+    ending: "Z,ZK",
+    url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/00/00/00/08/56/71/p8567106.html",
+    sections: [
+      {
+        title: "Anotace",
+        type: "p",
+        content: `Předmět prezentuje moderní metody interaktivní editace digitálního obrazu a videa s důrazem na jednoduché implementovatelné algoritmy a jejich teoretické základy.`
+      },
+      {
+        title: "Osnovy přednášek",
+        type: "ol",
+        content: [
+          "Monadické operace",
+          "Fourierova transformace",
+          "Konvoluce",
+          "Lineární filtrace",
+          "Nelineární filtrace",
+          "Editace obrazu",
+          "Deformace obrazu",
+          "Registrace obrazu",
+          "Segmentace obrazu 1",
+          "Segmentace obrazu 2"
+        ]
+      },
+      {
+        title: "Osnovy cvičení",
+        type: "ol",
+        content: [
+          "Monadické operace",
+          "Fourierova transformace",
+          "Konvoluce",
+          "Nelineární filtrace",
+          "Editace obrazu",
+          "Segmentace obrazu"
+        ]
+      },
+      {
+        title: "Literatura",
+        type: "ol",
+        content: [
+          "He J., Kim C.-S., Kuo C.-C J.: Interactive Segmentation Techniques.",
+          "Radke R. J.: Computer Vision for Visual Effects.",
+          "Goshtasby A. A.: Algorithms and Applications in Computational Geometry."
+        ]
+      },
+      {
+        title: "Požadavky",
+        type: "p",
+        content: `Předmět je vyučován v angličtině a vyžaduje znalosti lineární algebry, pravděpodobnosti, statistiky, programování a grafových algoritmů.`
+      }
+    ]
+  },
+
+  "ANI-EGG": {
+    code: "ANI-EGG",
+    name: "Enginy pro hry a grafiku",
+    extent: "1P+2C",
+    credits: "4",
+    semester: "Z",
+    ending: "Z,ZK",
+    url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/01/25/40/88/92/04/p1254088920405.html",
+    sections: [
+      {
+        title: "Anotace",
+        type: "p",
+        content: `Prakticky zaměřený kurz nabízí úvod do herních engine a principů jejich využití v herním vývoji. Studenti pracují s enginy jako Unity nebo Godot a rozvíjejí semestrální projekty.`
+      },
+      {
+        title: "Osnovy přednášek",
+        type: "ol",
+        content: [
+          "Úvod do problematiky herních enginů",
+          "Editor a Asset Hub",
+          "Statické prvky a design scény",
+          "Dynamika a animace, particle efekty",
+          "Vnitřní logika akcí",
+          "Pokročilé metody engine"
+        ]
+      },
+      {
+        title: "Osnovy cvičení",
+        type: "p",
+        content: `Osnovy cvičení nejsou uvedeny (stránka uvádí 'bude doplněno').`
+      },
+      {
+        title: "Literatura",
+        type: "ol",
+        content: [
+          "Harrison Ferrone: Learning Design Patterns with Unity.",
+          "Jason Gregory: Game Engine Architecture, Third Edition."
         ]
       }
-    },
-      "ANI-ARC": {
-  code: "ANI-ARC",
-  name: "Pokročilá architektura počítačů",
-  extent: "2P+1C",
-  credits: "5",
-  semester: "",        // semestr není uveden
-  ending: "Z,ZK",
-  url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/01/25/40/88/91/14/p1254088911405.html",
-  sections: [
-    {
-      title: "Anotace",
-      type: "p",
-      content:
-`Cílem předmětu je poskytnout studentům teoretický základ pro porozumění současným počítačovým systémům, na kterých běží reálné aplikace. Studenti se naučí pochopit technické výzvy (např. real-time, paralelismus, spolehlivost) a volit vhodné algoritmy a technologie pro jejich řešení.`
-    },
-    {
-      title: "Osnovy přednášek",
-      type: "ol",
-      content: [
-        "Infrastruktura cloudu, IaaS, SaaS, cloud computing, edge computing",
-        "Architektury distribuovaných výpočetních systémů",
-        "Koordinace a agreement, leader election",
-        "Distribuovaná cache, cache eviction strategie",
-        "Požadavky aplikací a technologické možnosti",
-        "Propustnost a latence, paralelismus, datové toky",
-        "Spolehlivost systémů, modely spolehlivosti",
-        "Realtimové systémy, predikovatelnost, verifikace",
-        "Víceprocesorové a heterogenní systémy",
-        "Sdílená paměť a koherence",
-        "Architektury pro akceleraci umělé inteligence",
-        "Metody snížení spotřeby energie"
-      ]
-    },
-    {
-      title: "Osnovy cvičení",
-      type: "p",
-      content:
-`Osnovy cvičení nejsou na stránce uvedeny.`
-    },
-    {
-      title: "Literatura",
-      type: "ol",
-      content: [
-        "Douglas Comer: The Cloud Computing Book: The Future of Computing Explained.",
-        "Hennessy J.L., Patterson D.A.: Computer Architecture: A Quantitative Approach (7th Edition).",
-        "Burns, B.: Designing Distributed Systems: Patterns and Paradigms."
-      ]
-    },
-    {
-      title: "Požadavky",
-      type: "p",
-      content:
-`Zápočet za řešení úloh a testy z teoretických a praktických znalostí během semestru.`
-    }
-  ]
-},
-    "ANI-DVG": {
-  code: "ANI-DVG",
-  name: "Úvod do diskrétní a výpočetní geometrie",
-  extent: "2P+1C",
-  credits: "5",
-  semester: "L",
-  ending: "Z,ZK",
-  url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/00/00/00/08/56/70/p8567006.html",
-  sections: [
-    {
-      title: "Anotace",
-      type: "p",
-      content:
-`Cílem předmětu je seznámit studenty s disciplínou diskrétní a výpočetní geometrie a umožnit řešit jednoduché algoritmické úlohy této oblasti.`
-    },
-    {
-      title: "Osnovy přednášek",
-      type: "ol",
-      content: [
-        "Introduction to Discrete and Computational Geometry",
-        "Convexity: definition and separation theorem",
-        "Convex hull in two dimensions",
-        "Algorithms for convex hull (Graham, divide and conquer)",
-        "Polygon intersections",
-        "Triangulation and proximity structures",
-        "Voronoi diagrams and properties",
-        "Delaunay triangulations",
-        "Arrangements of lines",
-        "Point location and search structures"
-      ]
-    },
-    {
-      title: "Osnovy cvičení",
-      type: "p",
-      content:
-`Osnovy cvičení nejsou uvedeny (budou doplněny).`
-    },
-    {
-      title: "Literatura",
-      type: "ol",
-      content: [
-        "J. E. Goodman, O. Tóth: Handbook on Discrete and Computational Geometry.",
-        "J. O’Rourke: Computational Geometry Algorithms and Applications."
-      ]
-    },
-    {
-      title: "Požadavky",
-      type: "p",
-      content:
-`Studijní materiály jsou dostupné a předmět vyžaduje znalosti z kombinatoriky, teorie grafů a algoritmů.`
-    }
-  ]
-},
-"ANI-DZO": {
-  code: "ANI-DZO",
-  name: "Digitální zpracování obrazu",
-  extent: "2P+2C",
-  credits: "6",
-  semester: "L",
-  ending: "Z,ZK",
-  url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/00/00/00/08/56/71/p8567106.html",
-  sections: [
-    {
-      title: "Anotace",
-      type: "p",
-      content:
-`Předmět prezentuje moderní metody interaktivní editace digitálního obrazu a videa s důrazem na jednoduché implementovatelné algoritmy a jejich teoretické základy.`
-    },
-    {
-      title: "Osnovy přednášek",
-      type: "ol",
-      content: [
-        "Monadické operace",
-        "Fourierova transformace",
-        "Konvoluce",
-        "Lineární filtrace",
-        "Nelineární filtrace",
-        "Editace obrazu",
-        "Deformace obrazu",
-        "Registrace obrazu",
-        "Segmentace obrazu 1",
-        "Segmentace obrazu 2"
-      ]
-    },
-    {
-      title: "Osnovy cvičení",
-      type: "ol",
-      content: [
-        "Monadické operace",
-        "Fourierova transformace",
-        "Konvoluce",
-        "Nelineární filtrace",
-        "Editace obrazu",
-        "Segmentace obrazu"
-      ]
-    },
-    {
-      title: "Literatura",
-      type: "ol",
-      content: [
-        "He J., Kim C.-S., Kuo C.-C J.: Interactive Segmentation Techniques.",
-        "Radke R. J.: Computer Vision for Visual Effects.",
-        "Goshtasby A. A.: Algorithms and Applications in Computational Geometry."
-      ]
-    },
-    {
-      title: "Požadavky",
-      type: "p",
-      content:
-`Předmět je vyučován v angličtině a vyžaduje znalosti lineární algebry, pravděpodobnosti, statistiky, programování a grafových algoritmů.`
-    }
-  ]
-},
-"ANI-EGG": {
-  code: "ANI-EGG",
-  name: "Enginy pro hry a grafiku",
-  extent: "1P+2C",
-  credits: "4",
-  semester: "Z",
-  ending: "Z,ZK",
-  url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/01/25/40/88/92/04/p1254088920405.html",
-  sections: [
-    {
-      title: "Anotace",
-      type: "p",
-      content:
-`Prakticky zaměřený kurz nabízí úvod do herních engine a principů jejich využití v herním vývoji. Studenti pracují s enginy jako Unity nebo Godot a rozvíjejí semestrální projekty.`
-    },
-    {
-      title: "Osnovy přednášek",
-      type: "ol",
-      content: [
-        "Úvod do problematiky herních enginů",
-        "Editor a Asset Hub",
-        "Statické prvky a design scény",
-        "Dynamika a animace, particle efekty",
-        "Vnitřní logika akcí",
-        "Pokročilé metody engine"
-      ]
-    },
-    {
-      title: "Osnovy cvičení",
-      type: "p",
-      content:
-`Osnovy cvičení nejsou uvedeny (stránka uvádí 'bude doplněno').`
-    },
-    {
-      title: "Literatura",
-      type: "ol",
-      content: [
-        "Harrison Ferrone: Learning Design Patterns with Unity.",
-        "Jason Gregory: Game Engine Architecture, Third Edition."
-      ]
-    }
-  ]
-}
+    ]
+  }
+};
 
-;
 
     function el(tag, attrs = {}, children = []){
       const n = document.createElement(tag);
