@@ -25,11 +25,11 @@
       --yellowA: rgba(255,240,170,.92);
       --yellowB: rgba(200,160,40,.92);
 
-      --panelBg: rgba(0,0,0,.40);
-      --panelBorder: rgba(140,210,255,.22);
-      --panelInner: rgba(255,255,255,.10);
-
       --tooltipSpace: 58px;
+
+      /* right panel sizing */
+      --drawerW: 520px;
+      --drawerGap: 18px;
     }
 
     *{box-sizing:border-box}
@@ -88,6 +88,14 @@
       box-shadow:
         0 30px 80px rgba(0,0,0,.55),
         inset 0 0 0 1px rgba(140,210,255,.18);
+      transition: transform .26s ease, filter .26s ease;
+      will-change: transform;
+    }
+
+    /* ✅ when drawer open: slide poster left (outside "outer block" request) */
+    body.detail-open .poster{
+      transform: translateX(calc((var(--drawerW) + var(--drawerGap)) * -0.55));
+      filter: saturate(1.02);
     }
 
     .poster::after{
@@ -151,7 +159,6 @@
       opacity:.8;
     }
 
-    /* ===== Colored category blocks ===== */
     .top-notes{
       position:relative;
       display:grid;
@@ -170,7 +177,6 @@
       backdrop-filter: blur(6px);
       border: 1px solid rgba(255,255,255,.14);
       line-height:1.25;
-
       display:flex;
       align-items:center;
       justify-content:center;
@@ -200,29 +206,13 @@
       border-color: rgba(255,240,170,.52);
     }
 
-    /* ====== Layout wrapper inside diagram (left flow + right detail) ====== */
-    .diagram-body{
-      position:relative;
-      z-index:2;
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:14px;
-      transition: grid-template-columns .22s ease;
-    }
-
-    /* when detail is open => show 2 columns */
-    .diagram.detail-open .diagram-body{
-      grid-template-columns: minmax(560px, 1fr) minmax(360px, 0.72fr);
-      align-items:stretch;
-    }
-
-    /* left container (your original grid) */
     .grid{
       position:relative;
       display:grid;
       grid-template-columns: 110px 1fr;
       gap:12px;
       align-items:stretch;
+      z-index:2;
       margin-top:6px;
     }
 
@@ -321,7 +311,6 @@
         inset 0 0 0 2px rgba(111,231,255,.35);
     }
 
-    /* category colors for course blocks */
     .b-blue{
       background: linear-gradient(180deg, var(--blueA), var(--blueB));
       border: 1px solid rgba(111,231,255,.35);
@@ -378,7 +367,6 @@
       z-index: 5;
     }
 
-    /* ✅ GLOBAL TOP TOOLTIP (always at top) */
     .top-tooltip{
       position:absolute;
       left:50%;
@@ -406,22 +394,65 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* ====== Right detail panel ====== */
-    .detail-panel{
-      position:relative;
-      border-radius: 20px;
-      background: rgba(0,0,0,.24);
+    .legend{
+      display:grid;
+      grid-template-columns: 1.25fr 1.25fr 1.5fr 1.1fr;
+      gap:14px;
+    }
+    .legend .panel{
+      border-radius: 16px;
+      padding:12px 14px;
+      font-size: clamp(11px, 1.05vw, 13px);
+      line-height:1.35;
+      box-shadow: 0 14px 24px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.10);
+    }
+    .p-blue{ background: rgba(30,90,160,.30); border: 1px solid rgba(111,231,255,.25); }
+    .p-purple{ background: rgba(120,60,200,.26); border: 1px solid rgba(180,110,255,.25); }
+    .p-orange{ background: rgba(255,179,78,.26); border: 1px solid rgba(255,210,120,.25); color: rgba(30,22,8,.92); }
+    .p-yellow{ background: rgba(255,240,170,.28); border: 1px solid rgba(255,240,170,.30); color: rgba(30,22,8,.92); }
+
+    /* =========================
+       ✅ RIGHT DRAWER OVERLAY
+       ========================= */
+    #detailOverlay{
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+      pointer-events: none;
+    }
+    body.detail-open #detailOverlay{
+      display:block;
+      pointer-events: auto;
+    }
+
+    .overlay-backdrop{
+      position:absolute; inset:0;
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(2px);
+    }
+
+    .drawer{
+      position:absolute;
+      top: var(--drawerGap);
+      bottom: var(--drawerGap);
+      right: var(--drawerGap);
+      width: min(var(--drawerW), calc(100vw - 2*var(--drawerGap)));
+      border-radius: 22px;
+      background: rgba(0,0,0,.34);
       border: 1px solid rgba(140,210,255,.18);
       box-shadow:
-        0 18px 34px rgba(0,0,0,.32),
+        0 26px 60px rgba(0,0,0,.45),
         inset 0 0 0 1px rgba(255,255,255,.06);
       overflow:hidden;
-      display:none;
-      min-height: 420px;
-    }
-    .diagram.detail-open .detail-panel{
       display:flex;
       flex-direction:column;
+
+      transform: translateX(calc(100% + 40px));
+      transition: transform .26s ease;
+    }
+    body.detail-open .drawer{
+      transform: translateX(0);
     }
 
     .detail-head{
@@ -433,6 +464,7 @@
       background: linear-gradient(180deg, rgba(111,231,255,.10), rgba(0,0,0,0));
       border-bottom: 1px solid rgba(140,210,255,.12);
     }
+
     .detail-title{
       display:flex;
       flex-direction:column;
@@ -448,6 +480,7 @@
       text-shadow: 0 0 16px rgba(111,231,255,.14);
       word-break: break-word;
     }
+
     .detail-meta{
       display:flex;
       flex-wrap:wrap;
@@ -534,38 +567,14 @@
     }
     .detail-link:hover{ filter: brightness(1.08); }
 
-    /* ===== footer legend ===== */
-    .legend{
-      display:grid;
-      grid-template-columns: 1.25fr 1.25fr 1.5fr 1.1fr;
-      gap:14px;
-    }
-    .legend .panel{
-      border-radius: 16px;
-      padding:12px 14px;
-      font-size: clamp(11px, 1.05vw, 13px);
-      line-height:1.35;
-      box-shadow: 0 14px 24px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.10);
-    }
-    .p-blue{ background: rgba(30,90,160,.30); border: 1px solid rgba(111,231,255,.25); }
-    .p-purple{ background: rgba(120,60,200,.26); border: 1px solid rgba(180,110,255,.25); }
-    .p-orange{ background: rgba(255,179,78,.26); border: 1px solid rgba(255,210,120,.25); color: rgba(30,22,8,.92); }
-    .p-yellow{ background: rgba(255,240,170,.28); border: 1px solid rgba(255,240,170,.30); color: rgba(30,22,8,.92); }
-
     @media (max-width: 980px){
+      body.detail-open .poster{ transform:none; }
       .grid{ grid-template-columns: 95px 1fr; }
       .row{ grid-template-columns: repeat(8, minmax(0, 1fr)); }
       .top-tooltip{ width: min(720px, calc(100% - 24px)); }
-      .diagram.detail-open .diagram-body{
-        grid-template-columns: 1fr;
-      }
-      .diagram.detail-open .detail-panel{
-        display:flex;
-        margin-top: 10px;
-      }
     }
     @media (max-width: 760px){
-      :root{ --tooltipSpace: 66px; }
+      :root{ --tooltipSpace: 66px; --drawerW: 540px; }
       .poster{ aspect-ratio: 3 / 4; }
       .content{ grid-template-rows:auto auto 1fr; }
       .legend{ grid-template-columns: 1fr; }
@@ -577,7 +586,19 @@
 
     @page { size: A3 landscape; margin: 10mm; }
     @media print{
-      .detail-panel{ display:none !important; }
+      #detailOverlay{ display:none !important; }
+      body{ background:#fff; }
+      body::before{ display:none; }
+      .wrap{ padding:0; }
+      .poster{
+        width: 100%;
+        height: auto;
+        aspect-ratio: 420 / 297;
+        border-radius: 0;
+        box-shadow: none;
+        transform:none !important;
+        filter:none !important;
+      }
       .top-tooltip{ display:none !important; }
     }
   </style>
@@ -605,93 +626,73 @@
             </div>
           </div>
 
-          <div class="diagram-body">
-            <!-- LEFT: your original grid -->
-            <div class="left-pane">
-              <div class="grid">
-                <div class="sem-col">
-                  <div class="sem">Zimní semestr</div>
-                  <div class="sem">Letní semestr</div>
-                  <div class="sem">Zimní semestr</div>
-                  <div class="sem">Letní semestr</div>
-                </div>
-
-                <div class="flow-frame" id="flowFrame">
-                  <div class="top-tooltip" id="topTooltip"></div>
-
-                  <div class="rows">
-                    <div class="row">
-                      <div class="box b-blue" tabindex="0" data-code="ANI-KOP" data-full="KOP: kombinatorická optimalizace (6 kreditů)">ANI-KOP</div>
-                      <div class="box b-blue" tabindex="0" data-code="ANI-ARC" data-full="ARC: Pokročilé architektury počítačů (5 kreditů)">ANI-ARC</div>
-                      <div class="box b-purple" tabindex="0" data-code="ANI-DZO" data-full="DZO: Digitální zpracování obrazu (6 kreditů)">ANI-DZO</div>
-                      <div class="box b-purple" tabindex="0" data-code="ANI-DVG" data-full="DVG: Diskrétní výpočetní geometrie  (5 kreditů)">ANI-DVG</div>
-                      <div class="box b-purple" tabindex="0" data-code="ANI-EGG" data-full="EGG: Enginy pro hry a grafiku  (4 kreditů)">ANI-EGG</div>
-
-                      <div class="group" title="Blok: v každém semestru alespoň jeden předmět z celého bloku">
-                        <div class="box b-orange" tabindex="0" data-code="VGA" data-full="VGA: Architektura počítačových her  (5 kredity)">VGA</div>
-                        <div class="box b-orange" tabindex="0" data-code="PVR" data-full="PVR: Pokročilá virtuální realita,  (5 kreditů)">PVR</div>
-                        <div class="box b-orange" tabindex="0" data-code="GPU" data-full="GPU: Programování a architektury GPU,  (5 kreditů)">GPU</div>
-                      </div>
-
-                      <div class="box b-yellow" tabindex="0" data-code="CCC" data-full="CCC: Kreativní kódování v umění,  (4 kredity)">např. CCC</div>
-                    </div>
-
-                    <div class="row">
-                      <div class="box b-blue" tabindex="0" data-code="ANI-MLM" data-full="MLM: Metody strojového učení,  (5 kreditů)">ANI-MLM</div>
-                      <div class="box b-blue" tabindex="0" data-code="ANI-SAI" data-full="SAI: Statistika pro aplikovanou informatiku,  (5 kreditů)">ANI-SAI</div>
-                      <div class="box b-blue" tabindex="0" data-code="ANI-TPa" data-full="TPa: dvousemestrální týmový projekt (část A),  (4 kredity)">ANI-TPa</div>
-                      <div class="box b-purple" tabindex="0" data-code="ANI-PG1" data-full="PG1: Počítačová grafika 1,  (5 kreditů)">ANI-PG1</div>
-                      <div class="box b-purple" tabindex="0" data-code="ANI-VIZ" data-full="VIZ: Vizualizace,  (6 kreditů)">ANI-VIZ</div>
-
-                      <div class="group">
-                        <div class="box b-orange" tabindex="0" data-code="SSD" data-full="SSD: Příběhový a herní design,  (5 kreditů)">SSD</div>
-                        <div class="box b-orange" tabindex="0" data-code="BSO" data-full="BSO: Biosignály a zpracování medicínských dat,  (5 kreditů)">BSO</div>
-                        <div class="box b-orange" tabindex="0" data-code="IRT" data-full="IRT: Internet a přenos v reálném čase,  (5 kreditů)">IRT</div>
-                      </div>
-
-                      <div class="box b-yellow" tabindex="0" data-code="ESC" data-full="ESC: Únikové hry (8 kreditů)">např. ESC</div>
-                      <div class="box b-yellow" tabindex="0" data-code="TVR" data-full="TVR: Technologie VR,  (3 kredity)">např. TVR</div>
-                    </div>
-
-                    <div class="row">
-                      <div class="box b-blue" tabindex="0" data-code="ANI-TPb" data-full="TPb: dvousemestrální týmový projekt (část B) (7 kreditů)">ANI-TPb</div>
-                      <div class="box b-purple" tabindex="0" data-code="ANI-ROZ" data-full="ROZ: Rozpoznávání (5 kreditů)">ANI-ROZ</div>
-                      <div class="box b-purple" tabindex="0" data-code="ANI-PIV" data-full="PIV: Počítačové vidění (5 kreditů)">ANI-PIV</div>
-                      <div class="box b-yellow" tabindex="0" data-code="NUR" data-full="NUR: Návrh uživatelských rozhraní (5 kreditů)">např. NUR</div>
-                      <div class="box b-yellow" tabindex="0" data-code="DID" data-full="DID: Digitální kreslení (2 kredity)">např. DID</div>
-                      <div class="box b-yellow" tabindex="0" data-code="DVD" data-full="DVD: Design deskových her (5 kreditů)">např. DVD</div>
-                      <div class="box b-yellow" tabindex="0" data-code="UEE" data-full="UEE: Unvironmentální design v UE (2 kredity)">např. UEE</div>
-                      <div></div><div></div><div></div>
-                    </div>
-
-                    <div class="row">
-                      <div class="box b-blue" tabindex="0" data-code="ANI-DIP" data-full="DIP: diplomová práce  (30 kreditů)">ANI-DIP</div>
-                      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-                    </div>
-                  </div>
-
-                  <div class="free-note">
-                    <strong>Volno na začátek a průběh diplomové práce</strong><br/>
-                    a na zcela <strong>volitelné předměty.</strong><br/>
-                  </div>
-                </div>
-              </div>
+          <div class="grid">
+            <div class="sem-col">
+              <div class="sem">Zimní semestr</div>
+              <div class="sem">Letní semestr</div>
+              <div class="sem">Zimní semestr</div>
+              <div class="sem">Letní semestr</div>
             </div>
 
-            <!-- RIGHT: detail panel -->
-            <aside class="detail-panel" id="detailPanel" aria-live="polite">
-              <div class="detail-head">
-                <div class="detail-title">
-                  <h2 id="detailH2">Detail předmětu</h2>
-                  <div class="detail-meta" id="detailMeta"></div>
+            <div class="flow-frame" id="flowFrame">
+              <div class="top-tooltip" id="topTooltip"></div>
+
+              <div class="rows">
+                <div class="row">
+                  <div class="box b-blue" tabindex="0" data-code="ANI-KOP" data-full="KOP: kombinatorická optimalizace (6 kreditů)">ANI-KOP</div>
+                  <div class="box b-blue" tabindex="0" data-code="ANI-ARC" data-full="ARC: Pokročilé architektury počítačů (5 kreditů)">ANI-ARC</div>
+                  <div class="box b-purple" tabindex="0" data-code="ANI-DZO" data-full="DZO: Digitální zpracování obrazu (6 kreditů)">ANI-DZO</div>
+                  <div class="box b-purple" tabindex="0" data-code="ANI-DVG" data-full="DVG: Diskrétní výpočetní geometrie  (5 kreditů)">ANI-DVG</div>
+                  <div class="box b-purple" tabindex="0" data-code="ANI-EGG" data-full="EGG: Enginy pro hry a grafiku  (4 kreditů)">ANI-EGG</div>
+
+                  <div class="group">
+                    <div class="box b-orange" tabindex="0" data-code="VGA" data-full="VGA: Architektura počítačových her  (5 kredity)">VGA</div>
+                    <div class="box b-orange" tabindex="0" data-code="PVR" data-full="PVR: Pokročilá virtuální realita,  (5 kreditů)">PVR</div>
+                    <div class="box b-orange" tabindex="0" data-code="GPU" data-full="GPU: Programování a architektury GPU,  (5 kreditů)">GPU</div>
+                  </div>
+
+                  <div class="box b-yellow" tabindex="0" data-code="CCC" data-full="CCC: Kreativní kódování v umění,  (4 kredity)">např. CCC</div>
                 </div>
-                <button class="detail-close" id="detailClose" title="Zavřít (Esc)" aria-label="Zavřít detail">×</button>
+
+                <div class="row">
+                  <div class="box b-blue" tabindex="0" data-code="ANI-MLM" data-full="MLM: Metody strojového učení,  (5 kreditů)">ANI-MLM</div>
+                  <div class="box b-blue" tabindex="0" data-code="ANI-SAI" data-full="SAI: Statistika pro aplikovanou informatiku,  (5 kreditů)">ANI-SAI</div>
+                  <div class="box b-blue" tabindex="0" data-code="ANI-TPa" data-full="TPa: dvousemestrální týmový projekt (část A),  (4 kredity)">ANI-TPa</div>
+                  <div class="box b-purple" tabindex="0" data-code="ANI-PG1" data-full="PG1: Počítačová grafika 1,  (5 kreditů)">ANI-PG1</div>
+                  <div class="box b-purple" tabindex="0" data-code="ANI-VIZ" data-full="VIZ: Vizualizace,  (6 kreditů)">ANI-VIZ</div>
+
+                  <div class="group">
+                    <div class="box b-orange" tabindex="0" data-code="SSD" data-full="SSD: Příběhový a herní design,  (5 kreditů)">SSD</div>
+                    <div class="box b-orange" tabindex="0" data-code="BSO" data-full="BSO: Biosignály a zpracování medicínských dat,  (5 kreditů)">BSO</div>
+                    <div class="box b-orange" tabindex="0" data-code="IRT" data-full="IRT: Internet a přenos v reálném čase,  (5 kreditů)">IRT</div>
+                  </div>
+
+                  <div class="box b-yellow" tabindex="0" data-code="ESC" data-full="ESC: Únikové hry (8 kreditů)">např. ESC</div>
+                  <div class="box b-yellow" tabindex="0" data-code="TVR" data-full="TVR: Technologie VR,  (3 kredity)">např. TVR</div>
+                </div>
+
+                <div class="row">
+                  <div class="box b-blue" tabindex="0" data-code="ANI-TPb" data-full="TPb: dvousemestrální týmový projekt (část B) (7 kreditů)">ANI-TPb</div>
+                  <div class="box b-purple" tabindex="0" data-code="ANI-ROZ" data-full="ROZ: Rozpoznávání (5 kreditů)">ANI-ROZ</div>
+                  <div class="box b-purple" tabindex="0" data-code="ANI-PIV" data-full="PIV: Počítačové vidění (5 kreditů)">ANI-PIV</div>
+                  <div class="box b-yellow" tabindex="0" data-code="NUR" data-full="NUR: Návrh uživatelských rozhraní (5 kreditů)">např. NUR</div>
+                  <div class="box b-yellow" tabindex="0" data-code="DID" data-full="DID: Digitální kreslení (2 kredity)">např. DID</div>
+                  <div class="box b-yellow" tabindex="0" data-code="DVD" data-full="DVD: Design deskových her (5 kreditů)">např. DVD</div>
+                  <div class="box b-yellow" tabindex="0" data-code="UEE" data-full="UEE: Unvironmentální design v UE (2 kredity)">např. UEE</div>
+                  <div></div><div></div><div></div>
+                </div>
+
+                <div class="row">
+                  <div class="box b-blue" tabindex="0" data-code="ANI-DIP" data-full="DIP: diplomová práce  (30 kreditů)">ANI-DIP</div>
+                  <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                </div>
               </div>
 
-              <div class="detail-body" id="detailBody">
-                <!-- sections are injected by JS -->
+              <div class="free-note">
+                <strong>Volno na začátek a průběh diplomové práce</strong><br/>
+                a na zcela <strong>volitelné předměty.</strong><br/>
               </div>
-            </aside>
+            </div>
           </div>
         </section>
 
@@ -738,15 +739,27 @@
     </main>
   </div>
 
+  <!-- ✅ OUTSIDE POSTER: the right-side drawer -->
+  <div id="detailOverlay" aria-hidden="true">
+    <div class="overlay-backdrop" id="overlayBackdrop"></div>
+
+    <aside class="drawer" role="dialog" aria-modal="true" aria-label="Detail předmětu">
+      <div class="detail-head">
+        <div class="detail-title">
+          <h2 id="detailH2">Detail předmětu</h2>
+          <div class="detail-meta" id="detailMeta"></div>
+        </div>
+        <button class="detail-close" id="detailClose" title="Zavřít (Esc)" aria-label="Zavřít detail">×</button>
+      </div>
+
+      <div class="detail-body" id="detailBody"></div>
+    </aside>
+  </div>
+
   <script>
-    // ==============
-    //  Hover tooltip
-    // ==============
-    const diagram = document.getElementById("diagram");
+    // ===== Hover tooltip =====
     const tooltip = document.getElementById("topTooltip");
     const boxes = Array.from(document.querySelectorAll(".box[data-full]"));
-
-    let pinnedHover = null; // only for hover tooltip "pin" via click is no longer used (click opens detail)
 
     function showTooltip(text){
       tooltip.textContent = text;
@@ -761,10 +774,9 @@
       if (text) showTooltip(text);
     }
 
-    // ======================
-    //  Detail panel behavior
-    // ======================
-    const detailPanel = document.getElementById("detailPanel");
+    // ===== Drawer detail =====
+    const overlay = document.getElementById("detailOverlay");
+    const overlayBackdrop = document.getElementById("overlayBackdrop");
     const detailClose = document.getElementById("detailClose");
     const detailH2 = document.getElementById("detailH2");
     const detailMeta = document.getElementById("detailMeta");
@@ -772,7 +784,6 @@
 
     let selectedBox = null;
 
-    // ✅ Only ANI-KOP is filled (from your link). Add others later the same way.
     const COURSE_DETAILS = {
       "ANI-KOP": {
         code: "ANI-KOP",
@@ -780,8 +791,7 @@
         extent: "2P+2C",
         credits: "6",
         semester: "Z",
-        ending: "Z,ZK",
-        dept: "18103",
+        ending: "Z, ZK",
         url: "https://bk.fit.cvut.cz/cz/predmety/00/00/00/00/00/00/08/56/92/p8569206.html",
         sections: [
           {
@@ -834,7 +844,7 @@
             content: [
               "Arora, S.: Computational Complexity: A Modern Approach. Cambridge University Press, 2017. ISBN 978-1316612156.",
               "Hromkovič, J.: Algorithmics for Hard Problems: Introduction to Combinatorial Optimization, Randomization, Approximation, and Heuristics (2nd Edition). Springer, 2004. ISBN 978-3540441342.",
-              "Kučera, L.: Kombinatorické algoritmy. SNTL, 1993. ISBN xxxx.",
+              "Kučera, L.: Kombinatorické algoritmy. SNTL, 1993.",
               "Ausiello, G. - Crescenzi, P. - Kann, V. - Gambosi, G. - Spaccamela, A. M.: Complexity and Approximation: Combinatorial Optimization Problems and Their Approximability Properties. Springer, 2003. ISBN 3540654313."
             ]
           },
@@ -884,18 +894,13 @@
           box.appendChild(el("p", {text: sec.content || ""}));
         } else if (sec.type === "ol"){
           const ol = el("ol");
-          (sec.content || []).forEach(line => {
-            ol.appendChild(el("li", {text: line}));
-          });
+          (sec.content || []).forEach(line => ol.appendChild(el("li", {text: line})));
           box.appendChild(ol);
         } else if (sec.type === "ul"){
           const ul = el("ul");
-          (sec.content || []).forEach(line => {
-            ul.appendChild(el("li", {text: line}));
-          });
+          (sec.content || []).forEach(line => ul.appendChild(el("li", {text: line})));
           box.appendChild(ul);
         }
-
         detailBody.appendChild(box);
       });
 
@@ -924,59 +929,53 @@
     function openDetailFor(box){
       const code = box.getAttribute("data-code") || box.textContent.trim();
 
-      // select styling
       if (selectedBox) selectedBox.classList.remove("is-selected");
       selectedBox = box;
       selectedBox.classList.add("is-selected");
 
-      // show panel + shift layout
-      diagram.classList.add("detail-open");
+      document.body.classList.add("detail-open");
+      overlay.setAttribute("aria-hidden","false");
 
-      // tooltip off while open (optional, looks cleaner)
       hideTooltip();
-      pinnedHover = null;
 
-      // fill content
       const data = COURSE_DETAILS[code];
       if (data) renderDetail(data);
       else renderMissing(code);
 
-      // focus close for accessibility
       setTimeout(() => detailClose.focus(), 0);
     }
 
     function closeDetail(){
-      diagram.classList.remove("detail-open");
+      document.body.classList.remove("detail-open");
+      overlay.setAttribute("aria-hidden","true");
       if (selectedBox) selectedBox.classList.remove("is-selected");
       selectedBox = null;
     }
 
-    // Hover tooltip handlers
+    // Hover tooltip handlers (disabled when drawer open)
     boxes.forEach(b => {
       b.addEventListener("mouseenter", () => {
-        if (diagram.classList.contains("detail-open")) return;
+        if (document.body.classList.contains("detail-open")) return;
         tooltipFor(b);
       });
       b.addEventListener("mouseleave", () => {
-        if (diagram.classList.contains("detail-open")) return;
+        if (document.body.classList.contains("detail-open")) return;
         hideTooltip();
       });
       b.addEventListener("focus", () => {
-        if (diagram.classList.contains("detail-open")) return;
+        if (document.body.classList.contains("detail-open")) return;
         tooltipFor(b);
       });
       b.addEventListener("blur", () => {
-        if (diagram.classList.contains("detail-open")) return;
+        if (document.body.classList.contains("detail-open")) return;
         hideTooltip();
       });
 
-      // Click => open detail panel
       b.addEventListener("click", (e) => {
         e.stopPropagation();
         openDetailFor(b);
       });
 
-      // Keyboard: Enter/Space opens
       b.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " "){
           e.preventDefault();
@@ -985,23 +984,16 @@
       });
     });
 
-    // Close actions
     detailClose.addEventListener("click", (e) => {
       e.stopPropagation();
       closeDetail();
     });
 
-    document.addEventListener("click", (e) => {
-      // clicking outside the detail panel closes it
-      if (!diagram.classList.contains("detail-open")) return;
-      const insidePanel = detailPanel.contains(e.target);
-      const insideBox = e.target.closest && e.target.closest(".box");
-      if (!insidePanel && !insideBox) closeDetail();
-    });
+    overlayBackdrop.addEventListener("click", () => closeDetail());
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape"){
-        if (diagram.classList.contains("detail-open")) closeDetail();
+        if (document.body.classList.contains("detail-open")) closeDetail();
         hideTooltip();
       }
     });
