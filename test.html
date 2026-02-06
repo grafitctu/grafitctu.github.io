@@ -605,6 +605,225 @@
 * { backdrop-filter: none !important; }
 body::before { filter: none !important; }
 
+
+    /* =========================
+   ✅ MOBILE: akordeon po semestrech
+   ========================= */
+@media (max-width: 760px){
+  /* původní grid s řádky schováme */
+  .rows{ display:none; }
+
+  /* semestrální akordeon container (vloží ho JS) */
+  #mobileSemesters{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top: 8px;
+  }
+
+  .msem{
+    border-radius: 16px;
+    overflow:hidden;
+    border: 1px solid rgba(140,210,255,.18);
+    background: rgba(0,0,0,.18);
+    box-shadow: 0 14px 24px rgba(0,0,0,.22), inset 0 0 0 1px rgba(255,255,255,.04);
+  }
+
+  .msem-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding: 12px 12px;
+    background: linear-gradient(180deg, rgba(111,231,255,.10), rgba(0,0,0,0));
+    color: rgba(235,250,255,.95);
+    border:0;
+    cursor:pointer;
+    font-weight: 800;
+    letter-spacing:.2px;
+  }
+
+  .msem-btn .left{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    text-align:left;
+    min-width:0;
+  }
+
+  .msem-btn .title{
+    margin:0;
+    padding:0;
+    text-align:left;
+    line-height:1.1;
+    text-shadow:none;
+  }
+
+  .msem-btn .sub{
+    font-size: 12px;
+    font-weight: 650;
+    color: rgba(220,235,255,.78);
+  }
+
+  .msem-btn .chev{
+    flex:0 0 auto;
+    width: 34px;
+    height: 34px;
+    display:grid;
+    place-items:center;
+    border-radius: 12px;
+    border: 1px solid rgba(140,210,255,.18);
+    background: rgba(0,0,0,.18);
+    box-shadow: 0 10px 18px rgba(0,0,0,.18);
+    transition: transform .18s ease, filter .18s ease;
+  }
+
+  .msem[aria-expanded="true"] .msem-btn .chev{
+    transform: rotate(180deg);
+    filter: brightness(1.08);
+  }
+
+  .msem-panel{
+    display:none;
+    padding: 10px 10px 12px;
+    border-top: 1px solid rgba(140,210,255,.12);
+  }
+
+  .msem[aria-expanded="true"] .msem-panel{
+    display:block;
+  }
+
+  /* grid boxů uvnitř panelu */
+  .msem-grid{
+    display:grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap:10px;
+  }
+
+  /* group (blok povinně-volitelných) roztáhneme na plnou šířku */
+  .msem-grid .group{
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, 1fr);
+    gap:10px;
+  }
+
+  /* box touch target */
+  .msem-grid .box{
+    min-height: 48px;
+    padding: 12px 10px;
+    font-size: 14px;
+    white-space: normal;
+  }
+
+  /* prázdné divy (placeholdery) se nebudou řešit, do akordeonu je vůbec nepřesuneme */
+}
+
+
+    // =========================
+// ✅ MOBILE: build accordion by semesters
+// =========================
+function buildMobileSemAccordion(){
+  const mq = window.matchMedia("(max-width: 760px)");
+  if (!mq.matches) return;
+
+  const rowsEl = document.querySelector(".rows");
+  const flowFrame = document.getElementById("flowFrame");
+  if (!rowsEl || !flowFrame) return;
+
+  // pokud už existuje, nic nedělej (např. hot reload)
+  if (document.getElementById("mobileSemesters")) return;
+
+  const rowEls = Array.from(rowsEl.querySelectorAll(":scope > .row"));
+  if (!rowEls.length) return;
+
+  // názvy semestrů podle pořadí řádků v HTML
+  const labels = [
+    { key: "Z1", title: "Zimní semestr 1", sub: "1. semestr (Z)" },
+    { key: "L1", title: "Letní semestr 1", sub: "2. semestr (L)" },
+    { key: "Z2", title: "Zimní semestr 2", sub: "3. semestr (Z)" },
+    { key: "L2", title: "Letní semestr 2", sub: "4. semestr (L)" }
+  ];
+
+  const container = document.createElement("div");
+  container.id = "mobileSemesters";
+
+  rowEls.forEach((row, idx) => {
+    const meta = labels[idx] || { key: `S${idx+1}`, title: `Semestr ${idx+1}`, sub: "" };
+
+    // seber jen "užitečné" prvky: .box a .group (a uvnitř group boxy)
+    const boxes = Array.from(row.querySelectorAll(":scope > .box"));
+    const groups = Array.from(row.querySelectorAll(":scope > .group"));
+
+    // vytvoř akordeon item
+    const item = document.createElement("section");
+    item.className = "msem";
+    item.setAttribute("aria-expanded", idx === 0 ? "true" : "false");
+
+    const btn = document.createElement("button");
+    btn.className = "msem-btn";
+    btn.type = "button";
+
+    const left = document.createElement("div");
+    left.className = "left";
+
+    const t = document.createElement("div");
+    t.className = "title";
+    t.textContent = `${meta.key} — ${meta.title}`;
+
+    const s = document.createElement("div");
+    s.className = "sub";
+    s.textContent = meta.sub || "";
+
+    left.appendChild(t);
+    if (meta.sub) left.appendChild(s);
+
+    const chev = document.createElement("div");
+    chev.className = "chev";
+    chev.textContent = "⌄";
+
+    btn.appendChild(left);
+    btn.appendChild(chev);
+
+    const panel = document.createElement("div");
+    panel.className = "msem-panel";
+
+    const grid = document.createElement("div");
+    grid.className = "msem-grid";
+
+    // přesun boxů (zůstanou event listenery)
+    boxes.forEach(b => grid.appendChild(b));
+
+    // přesun group bloků (zůstanou event listenery i u jejich boxů)
+    groups.forEach(g => grid.appendChild(g));
+
+    panel.appendChild(grid);
+
+    btn.addEventListener("click", () => {
+      const isOpen = item.getAttribute("aria-expanded") === "true";
+
+      // "single open" chování: zavřít ostatní
+      Array.from(container.querySelectorAll(".msem")).forEach(x => x.setAttribute("aria-expanded","false"));
+
+      item.setAttribute("aria-expanded", isOpen ? "false" : "true");
+    });
+
+    item.appendChild(btn);
+    item.appendChild(panel);
+    container.appendChild(item);
+  });
+
+  // vlož akordeon do flowFrame (nad free-note)
+  const freeNote = flowFrame.querySelector(".free-note");
+  if (freeNote) flowFrame.insertBefore(container, freeNote);
+  else flowFrame.appendChild(container);
+}
+
+// spusť po inicializaci eventů
+buildMobileSemAccordion();
+
+    
+
   </style>
 </head>
 
