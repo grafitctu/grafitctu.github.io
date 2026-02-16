@@ -1,410 +1,812 @@
-
-<!DOCTYPE html>
-<html lang="cs">
+<!doctype html>
+<html lang="cs" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Velikonoční Game Jam FIT 2025</title>
-<style>
-    body {{
-        background-color: #05161A;
-        color: #E6F1F5;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        line-height: 1.6;
-    }}
-    h1, h2, h3 {{
-        color: #7DF9FF;
-        margin-bottom: 0.5em;
-    }}
-    .container {{
-        width: 90%;
-        max-width: 1200px;
-        margin: auto;
-        padding: 2em 0;
-    }}
-    .hero {{
-        background: linear-gradient(120deg, #063453, #032e41);
-        padding: 5em 2em;
-        text-align: center;
-        border-bottom: 4px solid #7DF9FF;
-    }}
-    .hero h1 {{
-        font-size: 2.8em;
-        margin: 0;
-    }}
-    .hero p {{
-        font-size: 1.2em;
-        margin-top: 1em;
-        color: #A8DADC;
-    }}
-    section {{
-        margin-bottom: 3em;
-    }}
-    .ingredients {{
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5em;
-    }}
-    .ingredient {{
-        background-color: #0B3C49;
-        padding: 1em;
-        border-left: 4px solid #7DF9FF;
-        border-radius: 8px;
-    }}
-    .rank-table table {{
-        width: 100%;
-        border-collapse: collapse;
-    }}
-    .rank-table th, .rank-table td {{
-        padding: 0.5em 1em;
-        text-align: left;
-    }}
-    .rank-table tr:nth-child(even) {{
-        background-color: #082E3A;
-    }}
-    .rank-table tr:nth-child(odd) {{
-        background-color: #0B3C49;
-    }}
-    .rank-table th {{
-        background-color: #10516b;
-        color: #7DF9FF;
-    }}
-    .game-grid {{
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5em;
-    }}
-    .game-card {{
-        background-color: #0B3C49;
-        border-radius: 10px;
-        padding: 1.2em;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }}
-    .game-card h3 {{
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-        color: #7DF9FF;
-    }}
-    .game-card .authors, .game-card .genre, .game-card .ranking {{
-        font-size: 0.9em;
-        color: #A8DADC;
-        margin: 0.2em 0;
-    }}
-    .game-card .desc {{
-        font-size: 0.9em;
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-    }}
-    .game-card .play-link {{
-        align-self: flex-start;
-        margin-top: auto;
-        text-decoration: none;
-        color: #05161A;
-        background-color: #7DF9FF;
-        padding: 0.4em 0.8em;
-        border-radius: 4px;
-        font-weight: bold;
-    }}
-    .game-card .play-link:hover {{
-        background-color: #59c3c3;
-    }}
-    .game-img {{
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-        border-radius: 8px;
-    }}
-    .sponsors-list {{
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 0.8em;
-    }}
-    .sponsors-list li {{
-        background-color: #0B3C49;
-        padding: 0.6em 1em;
-        border-left: 4px solid #7DF9FF;
-        border-radius: 6px;
-        color: #A8DADC;
-    }}
-    footer {{
-        text-align: center;
-        padding: 2em 1em;
-        background-color: #032e41;
-        color: #5fa8a8;
-    }}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GameJam FIT · Velikonoční 2025</title>
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    .icon { width: 1rem; height: 1rem; }
+
+    /* karty */
+    .card {
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    }
+    .card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+    }
+
+    /* gradient pozadí */
+    .bg-gradient-dark {
+      background: radial-gradient(circle at top, #1f2937 0, #020617 52%, #020617 100%);
+    }
+
+    /* Quick nav pills */
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      border-radius:9999px;
+      padding:.25rem .75rem;
+      border:1px solid rgba(255,255,255,.1);
+      color:rgba(255,255,255,.9);
+    }
+    .pill:hover { background: rgba(255,255,255,.08); }
+    .pill:focus-visible {
+      outline: 2px solid rgba(56,189,248,.9);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
-<body>
-<div class="hero">
-    <h1>Velikonoční Game Jam FIT 2025</h1>
-    <p>48 hodin, 4 ingredience, nespočet nápadů. Přinášíme přehled her a výsledků z tradičního velikonočního jamu na FIT ČVUT.</p>
-</div>
-<div class="container">
-    <section id="about">
-        <h2>O jamu</h2>
-        <p>Velikonoční jam proběhl v budově Fakulty informačních technologií ČVUT během víkendu <strong>18.–20. dubna 2025</strong>. Účastníci měli za úkol vytvořit jednoduchou počítačovou či deskovou hru do 48 hodin, a to na <em>tři ze čtyř zadaných ingrediencí</em>. Vyhlášení vítězů se konalo 25. dubna. Na místě se střídaly prezentace, palačinky, pizza i mentoring. Tento ročník přilákal 15 týmů a vznikla pestrá paleta projektů.</p>
-    </section>
-    <section id="ingredients">
-        <h2>Ingredience</h2>
-        <div class="ingredients">
-            <div class="ingredient">
-                <h3>Oběť</h3>
-                <p>Dramatický motiv ztráty nebo vzdání se něčeho cenného. Ve hrách se objevuje jako mechanika, kdy hráč musí obětovat předmět, schopnost či postavu, aby mohl pokračovat a dosáhnout vyššího cíle【29335818061567†L68-L84】.</p>
-            </div>
-            <div class="ingredient">
-                <h3>Ďáblův advokát</h3>
-                <p>Hlas pochybností, který zpochybňuje samozřejmá řešení a nutí přehodnocovat názory. Může být postavou nebo systémem, který obrací argumenty naruby【29335818061567†L95-L107】.</p>
-            </div>
-            <div class="ingredient">
-                <h3>Můj dům, můj hrad</h3>
-                <p>Téma domova jako opevněného hradu – bezpečného útočiště i paranoidní pevnosti. Jaké hranice postavíme mezi sebou a světem? Hráči zkoumají obranu i uzavřenost【29335818061567†L117-L135】.</p>
-            </div>
-            <div class="ingredient">
-                <h3>Reinkarnace</h3>
-                <p>Smrt není konec; nový život, nový začátek. Reinkarnace může fungovat jako herní mechanika či příběhový zvrat, umožňující hráči zúročit zkušenost z předchozích pokusů【29335818061567†L145-L165】.</p>
-            </div>
+
+<body class="min-h-screen text-neutral-100 bg-gradient-dark">
+
+  <!-- horní progress bar -->
+  <div id="scrollbar" class="fixed left-0 top-0 h-1 w-0 bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-blue-400 z-50"></div>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <canvas id="heroCanvas" class="absolute inset-0 w-full pointer-events-none" style="height:50vh"></canvas>
+
+    <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-16 pb-14 space-y-8">
+      <!-- breadcrumb -->
+      <div class="flex items-center justify-between gap-3 text-xs text-neutral-400">
+        <a href="https://gamejam.pages.fit/"
+           class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 hover:bg-white/10">
+          <i data-lucide="arrow-left" class="icon"></i>
+          <span>Zpět na přehled jamů</span>
+        </a>
+        <span class="hidden sm:inline-flex items-center gap-1 text-[11px]">
+          <i data-lucide="sparkles" class="icon"></i>
+          <span>GameJam FIT · GraFIT Research Group</span>
+        </span>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-8 md:items-start">
+        <div class="flex-1 space-y-4">
+          <p class="text-xs uppercase tracking-[0.24em] text-cyan-300/80">
+            GameJam FIT · Velikonoční jam
+          </p>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+            GameJam FIT 2025 (Velikonoční)
+          </h1>
+          <p class="max-w-2xl text-neutral-300">
+            48 hodin, 4 ingredience, 15 týmů. Přehled her, partnerů a výsledků (porota i veřejnost).
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm mt-2">
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="calendar" class="icon"></i>
+              <span>18.–20. 4. 2025</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="clock" class="icon"></i>
+              <span>48 hodin</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="map-pin" class="icon"></i>
+              <span>FIT ČVUT</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="trophy" class="icon"></i>
+              <span>Pořadí: porota + hlasování</span>
+            </span>
+          </div>
+
+          <div class="flex flex-wrap gap-2 pt-2">
+            <a href="https://itch.io/jam/gamejam-fit-2025a/results" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+              <i data-lucide="external-link" class="icon"></i>
+              <span>Výsledky na itch.io</span>
+            </a>
+          </div>
         </div>
-    </section>
-    <section id="sponsors">
-        <h2>Sponzoři</h2>
-        <ul class="sponsors-list">
-            <li>2K Czech</li>
-            <li>Albi</li>
-            <li>Amanita Design</li>
-            <li>Ashborne Games</li>
-            <li>Asmodee</li>
-            <li>Beresnev Games</li>
-            <li>Bohemia Interactive</li>
-            <li>Cenega</li>
-            <li>Grip Studios</li>
-            <li>Imago</li>
-            <li>SCS Software</li>
-            <li>Wargaming</li>
-            <li>Warhorse</li>
-        </ul>
-        <p>Velké poděkování patří partnerům, kteří jam podporovali finančně či věcnými cenami【29335818061567†L168-L195】.</p>
-    </section>
-    <section id="results">
-        <h2>Výsledky – porota vs. veřejnost</h2>
-        <p>Profesní porota ohodnotila projekty podle vlastních kritérií, zatímco na itch.io hlasovala široká veřejnost. Níže uvedená tabulka ukazuje, jak se obě pořadí lišila.</p>
-        <div class="rank-table">
-            <table>
-                <tr><th>Název hry</th><th>Pořadí poroty</th><th>Pořadí veřejnosti</th></tr>
-                <tr>
-<td>WhiteNoise</td><td>1</td><td>2</td>
-</tr>
-<tr>
-<td>CEMpETARY</td><td>2</td><td>10</td>
-</tr>
-<tr>
-<td>Animal Stack</td><td>3</td><td>3</td>
-</tr>
-<tr>
-<td>Galaxy Golf</td><td>4</td><td>12</td>
-</tr>
-<tr>
-<td>The Princess Game</td><td>5</td><td>1</td>
-</tr>
-<tr>
-<td>Denied Reincarnation</td><td>6</td><td>5</td>
-</tr>
-<tr>
-<td>Drinking with the Devil</td><td>7</td><td>7</td>
-</tr>
-<tr>
-<td>AI na Hrad</td><td>8</td><td>9</td>
-</tr>
-<tr>
-<td>Crusaders</td><td>9</td><td>8</td>
-</tr>
-<tr>
-<td>Tower Defenceless</td><td>10</td><td>4</td>
-</tr>
-<tr>
-<td>Soulless</td><td>11</td><td>6</td>
-</tr>
-<tr>
-<td>B.T.B.D.</td><td>13</td><td>13</td>
-</tr>
-<tr>
-<td>Angel Survivors</td><td>13</td><td>11</td>
-</tr>
-<tr>
-<td>Můj dům, Drákulův hrad</td><td>14</td><td>14</td>
-</tr>
-<tr>
-<td>Harmonopolis</td><td>15</td><td>15</td>
-</tr>
 
-            </table>
+        <!-- koláž / mini-plakát (ponechávám tvoje existující images/game_*.png) -->
+        <div class="w-full max-w-md md:w-80">
+          <div class="card overflow-hidden rounded-2xl border border-white/15 bg-black/50">
+            <div class="grid grid-cols-1 gap-2 p-2">
+              <img src="images/game_2.png" alt="WhiteNoise cover" class="h-28 w-full rounded-xl object-cover border border-white/10" />
+              <div class="grid grid-cols-2 gap-2">
+                <img src="images/game_3.png" alt="Animal Stack cover" class="h-28 w-full rounded-xl object-cover border border-white/10" />
+                <img src="images/game_1.png" alt="The Princess Game cover" class="h-28 w-full rounded-xl object-cover border border-white/10" />
+              </div>
+            </div>
+          </div>
+          <p class="mt-2 text-[11px] text-neutral-500">
+            Tip: Pokud chceš místo koláže jeden plakát, stačí vyměnit obrázky za jediný PNG.
+          </p>
         </div>
-    </section>
-    <section id="games">
-        <h2>Přehled her</h2>
-        <div class="game-grid">
-            
-<div class="game-card">
-        <img src="images/game_2.png" alt="WhiteNoise" class="game-img" />
-        <h3>WhiteNoise</h3>
-        <p class="authors"><strong>Autoři:</strong> Belonzik, TheMultiplexx, ShadyPedro</p>
-        <p class="genre"><strong>Žánr:</strong> Puzzle platformer</p>
-        <p class="desc">Psychologická 2D puzzle plošinovka zkoumající pět fází smutku. Hráč putuje světem plným stínů, postupně obětuje vzpomínky a bojuje s vnitřním hlasem “ďáblova advokáta”, aby dosáhl smíření a znovuzrození.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 1&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 2</p>
-        <a href="https://belonzik.itch.io/whitenoise" target="_blank" class="play-link">Zobrazit hru</a>
+      </div>
+
+      <!-- rychlá navigace -->
+      <nav class="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+        <a href="#about"       class="pill text-xs"><i data-lucide="info" class="icon"></i><span>O jamu</span></a>
+        <a href="#ingredients" class="pill text-xs"><i data-lucide="flask-conical" class="icon"></i><span>Ingredience</span></a>
+        <a href="#sponsors"    class="pill text-xs"><i data-lucide="handshake" class="icon"></i><span>Sponzoři</span></a>
+        <a href="#results"     class="pill text-xs"><i data-lucide="bar-chart-3" class="icon"></i><span>Výsledky</span></a>
+        <a href="#games"       class="pill text-xs"><i data-lucide="gamepad-2" class="icon"></i><span>Hry</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- OBSAH + druhý canvas -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <canvas id="areaCanvas" class="w-full h-full"></canvas>
     </div>
 
-<div class="game-card">
-        
-        <h3>CEMpETARY</h3>
-        <p class="authors"><strong>Autoři:</strong> Cozy Games Studio, Langosh, Barevnej, john333j, ItsKita</p>
-        <p class="genre"><strong>Žánr:</strong> Auto‑battler</p>
-        <p class="desc">Vtipný 2D auto‑battler, ve kterém oživujete zvířátka a kombinujete jejich části, aby ubránila hřbitov před hordami nepřátel. Oběť a reinkarnace jsou použity doslova – z tělesných částí skládáte nové bytosti.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 2&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 10</p>
-        <a href="https://cozy-games-studio.itch.io/cempetary" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+    <main class="relative z-10 mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-10 space-y-12">
 
-<div class="game-card">
-        <img src="images/game_3.png" alt="Animal Stack" class="game-img" />
-        <h3>Animal Stack</h3>
-        <p class="authors"><strong>Autoři:</strong> Rin, Ali ✿, Duongkha, ItsHoffi</p>
-        <p class="genre"><strong>Žánr:</strong> Platformer / puzzle</p>
-        <p class="desc">2D plošinovka, kde se vaše postava neustále reinkarnuje do nových zvířat, jejichž schopnosti musíte proskakovat a řešit hádanky v temném dungeonovém prostředí. Každá smrt je obětí i novým začátkem.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 3&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 3</p>
-        <a href="https://rincake.itch.io/animal-stack" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+      <!-- O jamu -->
+      <section id="about" class="space-y-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">ℹ️</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-500">O čem to bylo</p>
+            <h2 class="text-2xl font-bold tracking-tight">Velikonoční GameJam FIT 2025</h2>
+          </div>
+        </div>
 
-<div class="game-card">
-        
-        <h3>Galaxy Golf</h3>
-        <p class="authors"><strong>Autoři:</strong> LukyDrum</p>
-        <p class="genre"><strong>Žánr:</strong> Logická hra</p>
-        <p class="desc">Kosmický minigolf s černými dírami a planetami. Každý úder využívá gravitaci; oběť se projevuje v postupném vzdání se ideální trajektorie a reinkarnace v neustálém zkoušení nových cest.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 4&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 12</p>
-        <a href="https://lukydrum.itch.io/galaxy-golf" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+        <div class="text-sm text-neutral-300/90 leading-relaxed space-y-4">
+          <p>
+            Velikonoční jam proběhl na FIT ČVUT během víkendu <strong>18.–20. 4. 2025</strong>.
+            Týmy měly <strong>48 hodin</strong> na vytvoření hry (digitální i deskové) a musely použít
+            <strong>tři ze čtyř</strong> zadaných ingrediencí.
+          </p>
+          <p>
+            Pořadí je <strong>dvojí</strong>: <strong>odborná porota</strong> (hlavní) a <strong>hlasování na itch.io</strong>.
+            Níže je přehled výsledků i jednotlivých projektů.
+          </p>
+        </div>
+      </section>
 
-<div class="game-card">
-        <img src="images/game_1.png" alt="The Princess Game" class="game-img" />
-        <h3>The Princess Game</h3>
-        <p class="authors"><strong>Autoři:</strong> FloatWave, Aliciel</p>
-        <p class="genre"><strong>Žánr:</strong> Narativní hra s minihry</p>
-        <p class="desc">Temný příběh o princezně uvězněné v pochmurném hradě, která prchá do barevných světů plných minihier. Každá úroveň využívá jiný žánr a zpracovává témata oběti, ďáblova advokáta, domova‑hradu a reinkarnace.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 5&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 1</p>
-        <a href="https://floatwave.itch.io/the-princess-game" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+      <!-- Ingredience -->
+      <section id="ingredients" class="space-y-4 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🧪</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-500">Témata</p>
+            <h2 class="text-2xl font-bold tracking-tight">Ingredience jamu</h2>
+          </div>
+        </div>
 
-<div class="game-card">
-        
-        <h3>Denied Reincarnation</h3>
-        <p class="authors"><strong>Autoři:</strong> Trampod, redcoff, Crowbitezz</p>
-        <p class="genre"><strong>Žánr:</strong> Visual novel / detektivka</p>
-        <p class="desc">Vyšetřujete vraždu v univerzu, kde je reinkarnace realitou. Jako právník sbíráte důkazy a vyjednáváte s postavami, přičemž ďáblův advokát se projevuje ve vašem vlastním vnitřním sporu.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 6&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 5</p>
-        <a href="https://trampod.itch.io/denied-reincarnation" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+        <div class="grid md:grid-cols-2 gap-6 text-sm text-neutral-300/90">
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-2">
+            <h3 class="font-semibold text-neutral-100 flex items-center gap-2">
+              <i data-lucide="heart-handshake" class="icon"></i> Oběť
+            </h3>
+            <p>Ztráta, cena za výsledek, vzdání se něčeho cenného. Mechanika i příběhový motiv.</p>
+          </div>
 
-<div class="game-card">
-        
-        <h3>Drinking with the Devil</h3>
-        <p class="authors"><strong>Autoři:</strong> SimonStrikesBack, NullPageGh0st, Finishx</p>
-        <p class="genre"><strong>Žánr:</strong> Simulátor / bar management</p>
-        <p class="desc">Jako majitel baru v pekle obsluhujete podivné hosty, plníte jejich přání a snažíte se pomoci jednomu z nich uniknout. Humor a atmosféra se mísí s obětováním času a přemýšlením o reinkarnaci.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 7&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 7</p>
-        <a href="https://simonstrikesback.itch.io/drinking-with-the-devil" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-2">
+            <h3 class="font-semibold text-neutral-100 flex items-center gap-2">
+              <i data-lucide="message-square-warning" class="icon"></i> Ďáblův advokát
+            </h3>
+            <p>Hlas pochybností, který obrací argumenty naruby – postava, dialog nebo herní systém.</p>
+          </div>
 
-<div class="game-card">
-        
-        <h3>AI na Hrad</h3>
-        <p class="authors"><strong>Autoři:</strong> Thund3r, MJMB, Danielicek, Martin3225</p>
-        <p class="genre"><strong>Žánr:</strong> 3D střílečka</p>
-        <p class="desc">Retro FPS, ve kterém se jako experimentální AI probíjíte Pražským hradem proti jiné AI. Kromě střelby se naučíte obětovat části výbavy a přemýšlet jako ďáblův advokát.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 8&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 9</p>
-        <a href="https://thund3r3.itch.io/ai-na-hrad" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-2">
+            <h3 class="font-semibold text-neutral-100 flex items-center gap-2">
+              <i data-lucide="castle" class="icon"></i> Můj dům, můj hrad
+            </h3>
+            <p>Domov jako útočiště i pevnost. Obrana, hranice, bezpečí, uzavřenost.</p>
+          </div>
 
-<div class="game-card">
-        
-        <h3>Crusaders</h3>
-        <p class="authors"><strong>Autoři:</strong> Indecx, StepGames, slavek592, marostelka</p>
-        <p class="genre"><strong>Žánr:</strong> Strategie</p>
-        <p class="desc">Budujete vesnici a posíláte své věřící na křížové výpravy, abyste dokázali svou oddanost a dosáhli svatosti. Hra kombinuje ekonomický management, morální rozhodování a humor.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 9&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 8</p>
-        <a href="https://indecx.itch.io/crusades" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-2">
+            <h3 class="font-semibold text-neutral-100 flex items-center gap-2">
+              <i data-lucide="refresh-cw" class="icon"></i> Reinkarnace
+            </h3>
+            <p>Smrt není konec – návrat, nový start, přenos zkušenosti (nebo těla).</p>
+          </div>
+        </div>
+      </section>
 
-<div class="game-card">
-        
-        <h3>Tower Defenceless</h3>
-        <p class="authors"><strong>Autoři:</strong> El_Sheppe, RudolfJelin</p>
-        <p class="genre"><strong>Žánr:</strong> Logický / tower defence</p>
-        <p class="desc">Humorné převrácení tower defence žánru – vaše úkol je umisťovat věže co nejhůře, aby rebelové prošli pevností. Otázka “Můj dům, můj hrad” je zde zpracována satiricky.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 10&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 4</p>
-        <a href="https://el-sheppe.itch.io/tower-defenceless" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+      <!-- Sponzoři -->
+      <section id="sponsors" class="space-y-4 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🤝</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-500">Partneři</p>
+            <h2 class="text-2xl font-bold tracking-tight">Sponzoři a podporovatelé</h2>
+          </div>
+        </div>
 
-<div class="game-card">
-        
-        <h3>Soulless</h3>
-        <p class="authors"><strong>Autoři:</strong> w3ndaF, MasterVotr, Alfatrt</p>
-        <p class="genre"><strong>Žánr:</strong> Hack and slash</p>
-        <p class="desc">Top‑down akční hra, v níž sháníte fragmenty vlastní duše. Každý restart znamená oběť, ale i návrat silnější díky reinkarnaci. Atmosférická pixel art grafika.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 11&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 6</p>
-        <a href="https://w3ndaf.itch.io/soulless" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+        <div class="card rounded-2xl border border-white/10 bg-black/50 p-5">
+          <p class="text-sm text-neutral-300/90 mb-4">
+            Díky partnerům jsme mohli zajistit ceny, zázemí a podporu týmům.
+          </p>
+          <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">2K Czech</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Albi</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Amanita Design</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Ashborne Games</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Asmodee</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Beresnev Games</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Bohemia Interactive</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Cenega</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Grip Studios</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Imago</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">SCS Software</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Wargaming</li>
+            <li class="rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-neutral-300/90">Warhorse</li>
+          </ul>
+        </div>
+      </section>
 
-<div class="game-card">
-        
-        <h3>B.T.B.D.</h3>
-        <p class="authors"><strong>Autoři:</strong> Arcus von Sinus</p>
-        <p class="genre"><strong>Žánr:</strong> Tower defence / strategie</p>
-        <p class="desc">Metahumorná tower defence hra, která si sama ze sebe dělá legraci. Stavíte obranu proti nekončícím vlnám, ale hra neustále komentuje vaše rozhodnutí.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 13&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 13</p>
-        <a href="https://arcusvonsinus.itch.io/btbd" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+      <!-- Výsledky -->
+      <section id="results" class="space-y-4 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🏆</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-500">Porota vs. hlasování</p>
+            <h2 class="text-2xl font-bold tracking-tight">Výsledky</h2>
+          </div>
+        </div>
 
-<div class="game-card">
-        
-        <h3>Angel Survivors</h3>
-        <p class="authors"><strong>Autoři:</strong> tym13, kikinek20, Skymi, Petr Martínek</p>
-        <p class="genre"><strong>Žánr:</strong> Akční survival</p>
-        <p class="desc">Akce inspirovaná hitem Vampire Survivors. Bráníte svou základnu proti hordám nepřátel a zároveň šíříte slovo Satana. Jednoduché ovládání a zábavná hratelnost.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 13&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 11</p>
-        <a href="https://tym13.itch.io/angel-survivors" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+        <div class="grid lg:grid-cols-3 gap-6">
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-5 lg:col-span-2">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="text-left text-neutral-400 border-b border-white/10">
+                    <th class="py-2 pr-4">Hra</th>
+                    <th class="py-2 pr-4">Porota</th>
+                    <th class="py-2">Hlasování</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">WhiteNoise</td><td class="py-2 pr-4 text-neutral-300">1</td><td class="py-2 text-neutral-300">2</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">CEMpETARY</td><td class="py-2 pr-4 text-neutral-300">2</td><td class="py-2 text-neutral-300">10</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">Animal Stack</td><td class="py-2 pr-4 text-neutral-300">3</td><td class="py-2 text-neutral-300">3</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">Galaxy Golf</td><td class="py-2 pr-4 text-neutral-300">4</td><td class="py-2 text-neutral-300">12</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">The Princess Game</td><td class="py-2 pr-4 text-neutral-300">5</td><td class="py-2 text-neutral-300">1</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">Denied Reincarnation</td><td class="py-2 pr-4 text-neutral-300">6</td><td class="py-2 text-neutral-300">5</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">Drinking with the Devil</td><td class="py-2 pr-4 text-neutral-300">7</td><td class="py-2 text-neutral-300">7</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">AI na Hrad</td><td class="py-2 pr-4 text-neutral-300">8</td><td class="py-2 text-neutral-300">9</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">Crusaders</td><td class="py-2 pr-4 text-neutral-300">9</td><td class="py-2 text-neutral-300">8</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">Tower Defenceless</td><td class="py-2 pr-4 text-neutral-300">10</td><td class="py-2 text-neutral-300">4</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">Soulless</td><td class="py-2 pr-4 text-neutral-300">11</td><td class="py-2 text-neutral-300">6</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">B.T.B.D.</td><td class="py-2 pr-4 text-neutral-300">13</td><td class="py-2 text-neutral-300">13</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">Angel Survivors</td><td class="py-2 pr-4 text-neutral-300">13</td><td class="py-2 text-neutral-300">11</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">Můj dům, Drákulův hrad</td><td class="py-2 pr-4 text-neutral-300">14</td><td class="py-2 text-neutral-300">14</td></tr>
+                  <tr class="border-b border-white/10 hover:bg-white/5"><td class="py-2 pr-4 font-medium text-neutral-100">Harmonopolis</td><td class="py-2 pr-4 text-neutral-300">15</td><td class="py-2 text-neutral-300">15</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-<div class="game-card">
-        
-        <h3>Můj dům, Drákulův hrad</h3>
-        <p class="authors"><strong>Autoři:</strong> Bremondr, zuskokat, Cenislav</p>
-        <p class="genre"><strong>Žánr:</strong> Desková hra / dobrodružství</p>
-        <p class="desc">Fyzická desková hra odehrávající se v Drákulově hradě. Vypráví spletitý příběh o obraně domova proti upírům a hráči využívají taktiku i kolektivní oběť.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 14&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 14</p>
-        <a href="https://bremondr.itch.io/muj-dum-drakuluv-hrad" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+          <div class="space-y-4">
+            <div class="card rounded-2xl border border-white/10 bg-black/50 p-5">
+              <h3 class="font-semibold text-neutral-100 flex items-center gap-2 mb-2">
+                <i data-lucide="scale" class="icon"></i> Jak číst rozdíl
+              </h3>
+              <p class="text-sm text-neutral-300/90">
+                Porota typicky hodnotí celkovou kvalitu, design a provedení. Hlasování často zvýhodní
+                rychle uchopitelné nebo „wow“ nápady.
+              </p>
+            </div>
 
-<div class="game-card">
-        
-        <h3>Harmonopolis</h3>
-        <p class="authors"><strong>Autoři:</strong> kurilluk</p>
-        <p class="genre"><strong>Žánr:</strong> Desková hra / puzzle</p>
-        <p class="desc">Desková hra zasazená do létajícího města. Hráči společně přestavují jeho části, aby dosáhli rovnováhy a harmonického celku, a musí se vypořádat s překážkami i obětmi.</p>
-        <p class="ranking"><strong>Pořadí poroty:</strong> 15&nbsp;|&nbsp;<strong>Pořadí veřejnosti:</strong> 15</p>
-        <a href="https://kurilluk.itch.io/harmonopolis" target="_blank" class="play-link">Zobrazit hru</a>
-    </div>
+            <div class="card rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-5">
+              <h3 class="text-base font-semibold text-emerald-100">Chceš odkazy na všechny projekty na jednom místě?</h3>
+              <p class="text-sm text-neutral-200 mt-1">
+                Kompletní seznam je na itch.io results stránce.
+              </p>
+              <a href="https://itch.io/jam/gamejam-fit-2025a/results" target="_blank" rel="noopener"
+                 class="mt-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít výsledky</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hry -->
+      <section id="games" class="space-y-4 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎮</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-500">Ukázky</p>
+            <h2 class="text-2xl font-bold tracking-tight">Přehled všech her</h2>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+          <!-- WhiteNoise -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="overflow-hidden rounded-xl border border-white/10 bg-black/40">
+              <img src="images/game_2.png" alt="WhiteNoise" class="h-40 w-full object-cover" />
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">WhiteNoise</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> Belonzik, TheMultiplexx, ShadyPedro</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Puzzle platformer</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Psychologická 2D puzzle plošinovka zkoumající pět fází smutku. Hráč putuje světem plným stínů,
+                postupně obětuje vzpomínky a bojuje s vnitřním hlasem „ďáblova advokáta“, aby dosáhl smíření a znovuzrození.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">1</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">2</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://belonzik.itch.io/whitenoise" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- CEMpETARY -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">CEMpETARY</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> Cozy Games Studio, Langosh, Barevnej, john333j, ItsKita</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Auto-battler</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Vtipný 2D auto-battler, ve kterém oživujete zvířátka a kombinujete jejich části, aby ubránila hřbitov před hordami nepřátel.
+                Oběť a reinkarnace jsou použity doslova – z tělesných částí skládáte nové bytosti.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">2</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">10</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://cozy-games-studio.itch.io/cempetary" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Animal Stack -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="overflow-hidden rounded-xl border border-white/10 bg-black/40">
+              <img src="images/game_3.png" alt="Animal Stack" class="h-40 w-full object-cover" />
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">Animal Stack</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> Rin, Ali ✿, Duongkha, ItsHoffi</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Platformer / puzzle</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                2D plošinovka, kde se vaše postava neustále reinkarnuje do nových zvířat, jejichž schopnosti musíte proskakovat a řešit hádanky
+                v temném dungeonovém prostředí. Každá smrt je obětí i novým začátkem.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">3</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">3</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://rincake.itch.io/animal-stack" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Galaxy Golf -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">Galaxy Golf</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> LukyDrum</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Logická hra</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Kosmický minigolf s černými dírami a planetami. Každý úder využívá gravitaci; oběť se projevuje v postupném vzdání se ideální trajektorie
+                a reinkarnace v neustálém zkoušení nových cest.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">4</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">12</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://lukydrum.itch.io/galaxy-golf" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- The Princess Game -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="overflow-hidden rounded-xl border border-white/10 bg-black/40">
+              <img src="images/game_1.png" alt="The Princess Game" class="h-40 w-full object-cover" />
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">The Princess Game</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> FloatWave, Aliciel</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Narativní hra s minihry</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Temný příběh o princezně uvězněné v pochmurném hradě, která prchá do barevných světů plných minihier.
+                Každá úroveň využívá jiný žánr a zpracovává témata oběti, ďáblova advokáta, domova-hradu a reinkarnace.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">5</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">1</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://floatwave.itch.io/the-princess-game" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Denied Reincarnation -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">Denied Reincarnation</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> Trampod, redcoff, Crowbitezz</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Visual novel / detektivka</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Vyšetřujete vraždu v univerzu, kde je reinkarnace realitou. Jako právník sbíráte důkazy a vyjednáváte s postavami,
+                přičemž ďáblův advokát se projevuje ve vašem vlastním vnitřním sporu.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">6</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">5</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://trampod.itch.io/denied-reincarnation" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Drinking with the Devil -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">Drinking with the Devil</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> SimonStrikesBack, NullPageGh0st, Finishx</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Simulátor / bar management</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Jako majitel baru v pekle obsluhujete podivné hosty, plníte jejich přání a snažíte se pomoci jednomu z nich uniknout.
+                Humor a atmosféra se mísí s obětováním času a přemýšlením o reinkarnaci.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">7</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">7</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://simonstrikesback.itch.io/drinking-with-the-devil" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- AI na Hrad -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">AI na Hrad</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> Thund3r, MJMB, Danielicek, Martin3225</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> 3D střílečka</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Retro FPS, ve kterém se jako experimentální AI probíjíte Pražským hradem proti jiné AI.
+                Kromě střelby se naučíte obětovat části výbavy a přemýšlet jako ďáblův advokát.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">8</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">9</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://thund3r3.itch.io/ai-na-hrad" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Crusaders -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">Crusaders</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> Indecx, StepGames, slavek592, marostelka</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Strategie</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Budujete vesnici a posíláte své věřící na křížové výpravy, abyste dokázali svou oddanost a dosáhli svatosti.
+                Hra kombinuje ekonomický management, morální rozhodování a humor.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">9</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">8</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://indecx.itch.io/crusades" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Tower Defenceless -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">Tower Defenceless</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> El_Sheppe, RudolfJelin</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Logický / tower defence</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Humorné převrácení tower defence žánru – vaším úkolem je umisťovat věže co nejhůře, aby rebelové prošli pevností.
+                Otázka „Můj dům, můj hrad“ je zde zpracována satiricky.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">10</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">4</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://el-sheppe.itch.io/tower-defenceless" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Soulless -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">Soulless</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> w3ndaF, MasterVotr, Alfatrt</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Hack and slash</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Top-down akční hra, v níž sháníte fragmenty vlastní duše. Každý restart znamená oběť, ale i návrat silnější díky reinkarnaci.
+                Atmosférická pixel art grafika.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">11</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">6</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://w3ndaf.itch.io/soulless" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- B.T.B.D. -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">B.T.B.D.</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> Arcus von Sinus</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Tower defence / strategie</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Metahumorná tower defence hra, která si sama ze sebe dělá legraci. Stavíte obranu proti nekončícím vlnám,
+                ale hra neustále komentuje vaše rozhodnutí.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">13</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">13</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://arcusvonsinus.itch.io/btbd" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Angel Survivors -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">Angel Survivors</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> tym13, kikinek20, Skymi, Petr Martínek</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Akční survival</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Akce inspirovaná hitem Vampire Survivors. Bráníte svou základnu proti hordám nepřátel a zároveň šíříte slovo Satana.
+                Jednoduché ovládání a zábavná hratelnost.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">13</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">11</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://tym13.itch.io/angel-survivors" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Můj dům, Drákulův hrad -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">Můj dům, Drákulův hrad</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> Bremondr, zuskokat, Cenislav</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Desková hra / dobrodružství</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Fyzická desková hra odehrávající se v Drákulově hradě. Vypráví příběh o obraně domova proti upírům
+                a pracuje s taktikou i kolektivní obětí.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">14</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">14</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://bremondr.itch.io/muj-dum-drakuluv-hrad" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Harmonopolis -->
+          <article class="card rounded-2xl border border-white/10 bg-black/50 p-5 space-y-4">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold tracking-tight text-neutral-50">Harmonopolis</h3>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Autoři:</span> kurilluk</p>
+              <p class="text-xs text-neutral-400"><span class="font-semibold text-neutral-200">Žánr:</span> Desková hra / puzzle</p>
+              <p class="text-sm text-neutral-300/90 leading-relaxed">
+                Desková hra zasazená do létajícího města. Hráči společně přestavují jeho části, aby dosáhli rovnováhy a harmonického celku,
+                a musí se vypořádat s překážkami i obětmi.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="award" class="icon"></i><span>Porota: <strong class="text-neutral-50">15</strong></span></span>
+              <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-neutral-200"><i data-lucide="users" class="icon"></i><span>Hlasování: <strong class="text-neutral-50">15</strong></span></span>
+            </div>
+            <div class="pt-1">
+              <a href="https://kurilluk.itch.io/harmonopolis" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-sm hover:bg-white/10">
+                <i data-lucide="external-link" class="icon"></i>
+                <span>Otevřít na itch.io</span>
+              </a>
+            </div>
+          </article>
 
         </div>
-    </section>
-</div>
-<footer>
-    <p>Stránku připravil tým GraFIT. © 2025</p>
-    <p>Akci pořádá FIT ČVUT ve spolupráci s výzkumnou skupinou GraFIT【29335818061567†L230-L235】.</p>
-</footer>
+      </section>
+
+      <footer class="pt-6 text-center text-xs text-neutral-500 border-t border-white/10">
+        © GraFIT Research Group — GameJam FIT 2025 (Velikonoční)
+      </footer>
+    </main>
+  </section>
+
+  <script>
+    // lucide ikony
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) { window.lucide.createIcons(); }
+    });
+
+    // částicové pozadí (stejné jako Grafické večery)
+    function particles(canvas, opts) {
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      let w = 0, h = 0, raf = 0;
+      const N = opts.N || 42;
+      const speed = opts.speed || 0.35;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width  = Math.max(window.innerWidth, Math.ceil(rect.width || window.innerWidth));
+        h = canvas.height = Math.ceil(rect.height || 320);
+      }
+
+      const dots = Array.from({length:N}, () => ({
+        x: 0, y: 0,
+        vx: (Math.random() - .5) * speed,
+        vy: (Math.random() - .5) * speed
+      }));
+
+      function resetDots() {
+        dots.forEach(d => {
+          d.x = Math.random() * w;
+          d.y = Math.random() * h;
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        const grad = ctx.createLinearGradient(0,0,w,h);
+        grad.addColorStop(0,"#020617");
+        grad.addColorStop(0.4,"#020617");
+        grad.addColorStop(1,"#0b1120");
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = .96;
+        ctx.fillRect(0,0,w,h);
+        ctx.globalAlpha = 1;
+
+        for (let i=0; i<N; i++) {
+          const a = dots[i];
+          a.x += a.vx;
+          a.y += a.vy;
+          if (a.x < 0 || a.x > w) a.vx *= -1;
+          if (a.y < 0 || a.y > h) a.vy *= -1;
+
+          for (let j=i+1; j<N; j++) {
+            const b = dots[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 140) {
+              ctx.globalAlpha = 1 - dist/140;
+              ctx.strokeStyle = "#22d3ee";
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
+          }
+
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(a.x, a.y, 1.4, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      function start() {
+        resize();
+        resetDots();
+        draw();
+      }
+
+      const ro = new ResizeObserver(() => resize());
+      ro.observe(canvas.parentElement);
+      window.addEventListener("resize", resize);
+      start();
+
+      return { stop: () => cancelAnimationFrame(raf), ro };
+    }
+
+    // scroll progress
+    window.addEventListener("scroll", () => {
+      const s = document.documentElement.scrollTop || document.body.scrollTop;
+      const h = (document.documentElement.scrollHeight - document.documentElement.clientHeight) || 1;
+      const pct = Math.max(0, Math.min(1, s / h));
+      const bar = document.getElementById("scrollbar");
+      if (bar) bar.style.width = (pct * 100) + "%";
+    });
+
+    // init částic
+    const prefersReduced = window.matchMedia &&
+                           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReduced) {
+      particles(document.getElementById("heroCanvas"), { N: 32, speed: .3 });
+      particles(document.getElementById("areaCanvas"), { N: 40, speed: .3 });
+    }
+  </script>
 </body>
 </html>
