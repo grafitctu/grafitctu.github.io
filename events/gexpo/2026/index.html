@@ -88,6 +88,58 @@
     }
     .back-pill:hover{ background: rgba(255,255,255,.07); }
 
+    /* ===== Host badge (Bohemia) – vpravo nahoře ===== */
+    .guest-badge{
+      position:absolute;
+      right: 18px;
+      top: 0px;
+      display:flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      z-index: 5;
+    }
+    .guest-label{
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.55);
+      padding: 5px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.35);
+      backdrop-filter: var(--blur);
+    }
+    .guest-logo{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 8px 10px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.35);
+      backdrop-filter: var(--blur);
+      box-shadow: 0 12px 34px rgba(0,0,0,.35);
+      text-decoration:none;
+    }
+    .guest-logo:hover{ background: rgba(255,255,255,.06); }
+    .guest-logo img{
+      height: 26px; /* malé logo */
+      width: auto;
+      display:block;
+      /* Pokud bude logo moc tmavé, můžeš odkomentovat:
+         filter: invert(1);
+      */
+    }
+    @media (max-width: 720px){
+      /* na mobilu ať se to neschová / nepřekrývá */
+      .guest-badge{
+        position: static;
+        margin-top: 10px;
+        align-items: flex-start;
+      }
+    }
+
     .eyebrow{
       margin-top: 6px;
       font-size: 12px;
@@ -531,6 +583,15 @@
     <canvas id="heroCanvas"></canvas>
 
     <div class="wrap">
+      <!-- host badge vpravo nahoře -->
+      <div class="guest-badge" aria-label="Host z praxe">
+        <div class="guest-label">Host z praxe</div>
+        <a class="guest-logo" href="https://www.bohemia.net/" target="_blank" rel="noreferrer" title="Bohemia Interactive">
+          <!-- UPRAV si cestu na reálný soubor -->
+          <img src="/assets/logos/bohemia-interactive.png" alt="Bohemia Interactive">
+        </a>
+      </div>
+
       <a class="back-pill" href="https://grafitctu.github.io/">
         <span class="ico" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
@@ -550,7 +611,7 @@
           <h1>Grafické EXPO (GEXPO) 2026</h1>
           <p class="lead">
             Semestrální přehlídka projektů z VGA (architektra počačovch her), VHS (Virtuální herní světy), PGA (programování grafických aplikací) a dalších grafických kurzů na FIT ČVUT.
-            Hry, VR, vizualizace i digitální kresba – přijďte si to osahat a pobavit se s autory. 
+            Hry, VR, vizualizace i digitální kresba – přijďte si to osahat a pobavit se s autory.
           </p>
 
           <div class="info-row">
@@ -721,43 +782,41 @@
         </div>
 
         <div class="video-grid">
-            <div class="video">
-    <iframe
-      src="https://www.youtube.com/embed/hIpm078OXc0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
+          <div class="video">
+            <iframe
+              src="https://www.youtube.com/embed/hIpm078OXc0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
 
-  <div class="video">
-    <iframe
-      src="https://www.youtube.com/embed/OrFqhsNcELw"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
+          <div class="video">
+            <iframe
+              src="https://www.youtube.com/embed/OrFqhsNcELw"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
 
-  <div class="video">
-    <iframe
-      src="https://www.youtube.com/embed/R0gp34q9sqA"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
+          <div class="video">
+            <iframe
+              src="https://www.youtube.com/embed/R0gp34q9sqA"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
 
-            <div class="video">
-    <iframe
-      src="https://www.youtube.com/embed/bzElbXqiKqA"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
+          <div class="video">
+            <iframe
+              src="https://www.youtube.com/embed/bzElbXqiKqA"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
 
-          
           <div class="video"><iframe src="https://www.youtube.com/embed/IT9bUmlOFiM" allowfullscreen></iframe></div>
           <div class="video"><iframe src="https://www.youtube.com/embed/kDnPp82q_Io" allowfullscreen></iframe></div>
           <div class="video"><iframe src="https://www.youtube.com/embed/AQNmMeknEpM" allowfullscreen></iframe></div>
-
         </div>
       </section>
 
@@ -778,6 +837,8 @@
               do neformálních diskuzí. Studenti si mezi sebou zkoušeli hry, sdíleli dojmy a navzájem si dávali zpětnou vazbu.
               Probírali nejen konkrétní technické a vizuální aspekty svých projektů, ale i širší témata související s herním průmyslem
               a grafickým designem.
+              <br><br>
+              <strong>Letos k nám dorazil i Aleš Ulm z Bohemia Interactive</strong> — a po programu si opravdu poctivě <strong>vyzkoušel všechny hry</strong>.
             </div>
 
             <div style="height:12px;"></div>
@@ -817,12 +878,11 @@
         <div class="section-head">
           <div class="badge">📸</div>
           <div>
-            <div class="kicker">Galerie (2025) </div>
+            <div class="kicker">Galerie (2026)</div>
             <h2>Fotogalerie</h2>
           </div>
         </div>
 
-        <!-- NOTE: href nechávám jako fallback (když je JS vypnutý) -->
         <div class="gallery" id="gallery">
           <a class="thumb" href="/assets/events/GEXPO/2026a/1g.jpg"  data-caption="GEXPO Foto 1"><img src="/assets/events/GEXPO/2026a/1g.jpg"  alt="GEXPO Foto 1"  loading="lazy"></a>
           <a class="thumb" href="/assets/events/GEXPO/2026a/2g.jpg"  data-caption="GEXPO Foto 2"><img src="/assets/events/GEXPO/2026a/2g.jpg"  alt="GEXPO Foto 2"  loading="lazy"></a>
@@ -838,9 +898,8 @@
           <a class="thumb" href="/assets/events/GEXPO/2026a/12g.jpg" data-caption="GEXPO Foto 12"><img src="/assets/events/GEXPO/2026a/12g.jpg" alt="GEXPO Foto 12" loading="lazy"></a>
           <a class="thumb" href="/assets/events/GEXPO/2026a/13g.jpg" data-caption="GEXPO Foto 13"><img src="/assets/events/GEXPO/2026a/13g.jpg" alt="GEXPO Foto 13" loading="lazy"></a>
           <a class="thumb" href="/assets/events/GEXPO/2026a/14g.jpg" data-caption="GEXPO Foto 14"><img src="/assets/events/GEXPO/2026a/14g.jpg" alt="GEXPO Foto 14" loading="lazy"></a>
-          <a class="thumb" href="/assets/events/GEXPO/2026a/15g.jpg" data-caption="GEXPO Foto 15"><img src="/assets/events/GEXPO/2026a/15g.jpg" alt="GEXPO Foto 15" loading="lazy"></a>          
-          <a class="thumb" href="/assets/events/GEXPO/2026a/16g.jpg" data-caption="GEXPO Foto 16"><img src="/assets/events/GEXPO/2026a/16g.jpg" alt="GEXPO Foto 16" loading="lazy"></a>     
-        
+          <a class="thumb" href="/assets/events/GEXPO/2026a/15g.jpg" data-caption="GEXPO Foto 15"><img src="/assets/events/GEXPO/2026a/15g.jpg" alt="GEXPO Foto 15" loading="lazy"></a>
+          <a class="thumb" href="/assets/events/GEXPO/2026a/16g.jpg" data-caption="GEXPO Foto 16"><img src="/assets/events/GEXPO/2026a/16g.jpg" alt="GEXPO Foto 16" loading="lazy"></a>
         </div>
 
         <div class="card" style="margin-top:18px;">
@@ -862,7 +921,7 @@
   <div class="lb" id="lb" aria-hidden="true">
     <div class="lb-panel" role="dialog" aria-modal="true" aria-label="Fotogalerie">
       <div class="lb-top">
-        <div class="lb-title" id="lbTitle">FOTOGALERIE (2025) </div>
+        <div class="lb-title" id="lbTitle">FOTOGALERIE (2026)</div>
         <div class="lb-actions">
           <button class="lb-btn" id="lbDownload" type="button" title="Otevřít obrázek v novém okně (fallback)">
             <svg viewBox="0 0 24 24"><path d="M12 3v10"/><path d="M7 13l5 5 5-5"/><path d="M5 21h14"/></svg>
@@ -887,7 +946,6 @@
         </button>
       </div>
 
-      <!-- Profi thumbnail strip -->
       <div class="lb-strip" id="lbStrip" aria-label="Náhledy fotogalerie"></div>
 
       <div class="lb-bottom">
@@ -1023,11 +1081,10 @@
         caption: a.getAttribute("data-caption") || a.querySelector("img")?.alt || "Foto",
       }));
 
-      // --- "profi" thumbs: generování miniatur přes canvas + cache v sessionStorage ---
       const THUMB_W = 240;
       const THUMB_H = 160;
       const THUMB_Q = 0.72;
-      const thumbCache = new Map(); // url -> Promise<string>
+      const thumbCache = new Map();
 
       function thumbKey(url){ return "gexpo_thumb_v1::" + url; }
 
@@ -1076,14 +1133,13 @@
           const ctx = canvas.getContext("2d", { alpha: false });
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = "high";
-
           ctx.drawImage(img, sx, sy, sw, sh, 0, 0, THUMB_W, THUMB_H);
 
           let dataUrl;
           try {
             dataUrl = canvas.toDataURL("image/jpeg", THUMB_Q);
           } catch {
-            return url; // canvas tainted (CORS) -> fallback
+            return url;
           }
 
           try { sessionStorage.setItem(thumbKey(url), dataUrl); } catch {}
@@ -1165,10 +1221,9 @@
         lbImg.alt = item.caption;
         lbCaption.textContent = item.caption;
         lbCount.textContent = `${idx + 1} / ${data.length}`;
-        lbTitle.textContent = "FOTOGALERIE · GEXPO 2025";
+        lbTitle.textContent = "FOTOGALERIE · GEXPO 2026";
         lbDownload.onclick = () => window.open(item.href, "_blank", "noreferrer");
 
-        // active thumb highlight + scroll to center
         if (lbStrip) {
           const thumbs = lbStrip.querySelectorAll(".lb-thumb");
           thumbs.forEach((t, k) => t.classList.toggle("active", k === idx));
@@ -1176,10 +1231,8 @@
           active?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
         }
 
-        // preload neighboring thumbs
         primeThumbsAround(idx);
 
-        // preload neighbors full images for smoother nav
         const prev = data[(idx - 1 + data.length) % data.length].href;
         const next = data[(idx + 1) % data.length].href;
         const p1 = new Image(); p1.src = prev;
@@ -1209,7 +1262,6 @@
       function prev(){ setImage(idx - 1); }
       function next(){ setImage(idx + 1); }
 
-      // click thumbs on page -> open
       items.forEach((a, i) => {
         a.addEventListener("click", (e) => {
           e.preventDefault();
@@ -1217,20 +1269,16 @@
         });
       });
 
-      // controls
       lbClose.addEventListener("click", close);
       lbPrev.addEventListener("click", prev);
       lbNext.addEventListener("click", next);
 
-      // click outside panel closes
       lb.addEventListener("click", (e) => {
         if (e.target === lb) close();
       });
 
-      // click image closes
       lbImg.addEventListener("click", close);
 
-      // keyboard
       document.addEventListener("keydown", (e) => {
         if (!lb.classList.contains("open")) return;
 
@@ -1239,7 +1287,6 @@
         else if (e.key === "ArrowRight") { e.preventDefault(); next(); }
       });
 
-      // basic swipe
       let startX = null;
       lbBody.addEventListener("touchstart", (e) => {
         if (!lb.classList.contains("open")) return;
