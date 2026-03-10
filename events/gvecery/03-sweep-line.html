@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="cs" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grafit – Grafický večer: Sweep Line Algoritmy</title>
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    .icon { width: 1rem; height: 1rem; }
+
+    .card {
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    }
+    .card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+    }
+
+    .bg-gradient-dark {
+      background: radial-gradient(circle at top, #1f2937 0, #020617 52%, #020617 100%);
+    }
+
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      border-radius:9999px;
+      padding:.25rem .75rem;
+      border:1px solid rgba(255,255,255,.1);
+      color:rgba(255,255,255,.9);
+    }
+    .pill:hover { background: rgba(255,255,255,.08); }
+    .pill:focus-visible {
+      outline: 2px solid rgba(56,189,248,.9);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-neutral-100 bg-gradient-dark">
+
+  <div id="scrollbar" class="fixed left-0 top-0 h-1 w-0 bg-gradient-to-r from-fuchsia-400 via-cyan-300 to-blue-400 z-50"></div>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <canvas id="heroCanvas" class="absolute inset-0 w-full pointer-events-none" style="height:50vh"></canvas>
+
+    <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-16 pb-14 space-y-8">
+      <div class="flex items-center justify-between gap-3 text-xs text-neutral-400">
+        <a href="index.html"
+           class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 px-3 py-1 hover:bg-white/10">
+          <i data-lucide="arrow-left" class="icon"></i>
+          <span>Zpět na přehled Grafických večerů</span>
+        </a>
+        <span class="hidden sm:inline-flex items-center gap-1 text-[11px]">
+          <i data-lucide="sparkles" class="icon"></i>
+          <span>Grafické večery · Grafit Research Group</span>
+        </span>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-8 md:items-start">
+        <div class="flex-1 space-y-4">
+          <p class="text-xs uppercase tracking-[0.24em] text-cyan-300/80">
+            Grafické večery · Matematika & algoritmy
+          </p>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+            Grafický večer – Sweep Line Algoritmy
+          </h1>
+          <p class="max-w-2xl text-neutral-300">
+            Zajímá vás matematika a algoritmy v grafice? Přemýšlíte, jestli si zapsat
+            <strong>ANI-DVG</strong>? Přijďte na přednášku o Sweep Line algoritmech, kde zazní
+            obecný princip i tři konkrétní algoritmy z výpočetní geometrie.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm mt-2">
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="calendar" class="icon"></i>
+              <span>pátek 13. 3. 2026</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="clock" class="icon"></i>
+              <span>18:00</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1">
+              <i data-lucide="map-pin" class="icon"></i>
+              <span>TH:A-1455 (ggLab)</span>
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-cyan-400/60 bg-cyan-500/20 px-3 py-1">
+              <i data-lucide="user" class="icon"></i>
+              <span>Šimon Taněv</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="w-full max-w-md md:w-80">
+          <div class="card overflow-hidden rounded-2xl border border-white/15 bg-black/50">
+            <img
+              src="/assets/events/graficke-vecery/sweep-line-2026-03-13.png"
+              alt="Grafické večery – Sweep Line Algoritmy"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <p class="mt-2 text-[11px] text-neutral-500">
+            Plakát ke stažení:
+            <a href="/assets/events/graficke-vecery/sweep-line-2026-03-13.png" class="underline hover:text-cyan-300">PNG</a>
+          </p>
+        </div>
+      </div>
+
+      <nav class="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+        <a href="#about" class="pill text-xs"><i data-lucide="info" class="icon"></i><span>O přednášce</span></a>
+        <a href="#content" class="pill text-xs"><i data-lucide="binary" class="icon"></i><span>Co zazní</span></a>
+        <a href="#practical" class="pill text-xs"><i data-lucide="backpack" class="icon"></i><span>Praktické info</span></a>
+        <a href="#course" class="pill text-xs"><i data-lucide="graduation-cap" class="icon"></i><span>ANI-DVG</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <canvas id="areaCanvas" class="w-full h-full"></canvas>
+    </div>
+
+    <main class="relative z-10 mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-10 space-y-12">
+
+      <!-- O přednášce -->
+      <section id="about" class="space-y-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">∑</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">O přednášce</p>
+            <h2 class="text-2xl font-bold tracking-tight">Proč přijít na Sweep Line Algoritmy</h2>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 text-sm text-neutral-300/90 leading-relaxed">
+          <p>
+            Pokud vás zajímá propojení <strong>matematiky, algoritmů a počítačové grafiky</strong>,
+            tenhle grafický večer je přesně pro vás. Sweep Line je elegantní obecný princip,
+            který se objevuje v celé řadě algoritmů výpočetní geometrie.
+          </p>
+          <p>
+            Přednáška je ideální pro všechny, kteří uvažují o zapsání předmětu
+            <strong>ANI-DVG (Úvod do diskrétní a výpočetní geometrie)</strong>, nebo si chtějí
+            udělat lepší představu o tom, jak podobné algoritmy fungují v praxi.
+          </p>
+        </div>
+      </section>
+
+      <!-- Co zazní -->
+      <section id="content" class="space-y-4 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">📐</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">Obsah přednášky</p>
+            <h2 class="text-2xl font-bold tracking-tight">Co na večeru zazní</h2>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 text-sm text-neutral-300/90">
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-2 flex items-center gap-2">
+              <i data-lucide="move-horizontal" class="icon"></i> Obecný koncept Sweep Line
+            </h3>
+            <p>
+              Nejprve zazní samotná myšlenka sweep line přístupu: jak si představit „zametací“
+              přímku, jak se udržuje stavová struktura a proč je tenhle způsob uvažování tak silný.
+            </p>
+          </div>
+
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-2 flex items-center gap-2">
+              <i data-lucide="git-merge" class="icon"></i> Line Segment Intersections
+            </h3>
+            <p>
+              Ukážeme si algoritmus pro hledání průsečíků úseček a podíváme se na to,
+              proč sweep line výrazně zlepšuje efektivitu oproti naivním přístupům.
+            </p>
+          </div>
+
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-2 flex items-center gap-2">
+              <i data-lucide="network" class="icon"></i> Voronoi & Visibility
+            </h3>
+            <p>
+              Druhá část se zaměří na <strong>konstrukci Voronoi diagramů</strong> a
+              <strong>konstrukci visibility grafu</strong>, tedy dvě klasické úlohy výpočetní geometrie
+              s praktickým přesahem do grafiky i plánování pohybu.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Praktické info -->
+      <section id="practical" class="space-y-4 border-t border-white/10 pt-8">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎒</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">Praktické informace</p>
+            <h2 class="text-2xl font-bold tracking-tight">Co je dobré vědět předem</h2>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 text-sm text-neutral-300/90">
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-1 flex items-center gap-2">
+              <i data-lucide="brain" class="icon"></i> Doporučené znalosti
+            </h3>
+            <p>
+              Pro účast doporučujeme znalosti z <strong>AG1</strong>. Nemusíte být odborník na geometrii,
+              ale základní orientace v matematickém myšlení a algoritmech se bude hodit.
+            </p>
+          </div>
+
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-1 flex items-center gap-2">
+              <i data-lucide="presentation" class="icon"></i> Formát akce
+            </h3>
+            <p>
+              Půjde o přednáškový grafický večer s důrazem na srozumitelný výklad,
+              motivaci algoritmů a jejich praktické použití.
+            </p>
+          </div>
+
+          <div class="card rounded-2xl border border-white/10 bg-black/50 p-4">
+            <h3 class="font-semibold text-neutral-100 mb-1 flex items-center gap-2">
+              <i data-lucide="map-pinned" class="icon"></i> Kde se potkáme
+            </h3>
+            <p>
+              Akce proběhne v <strong>ggLabu TH:A-1455</strong>. Dorazte ideálně pár minut před začátkem,
+              ať se stihnete v klidu usadit.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANI-DVG -->
+      <section id="course" class="space-y-4 border-t border-white/10 pt-8 pb-6">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎓</span>
+          <div>
+            <p class="text-sm uppercase tracking-wide text-neutral-400">Souvislost s výukou</p>
+            <h2 class="text-2xl font-bold tracking-tight">Přemýšlíte o ANI-DVG?</h2>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 text-sm text-neutral-300/90">
+          <p>
+            Tenhle večer je dobrá příležitost zjistit, jestli vás baví typ problémů,
+            které se řeší v <strong>diskrétní a výpočetní geometrii</strong>. Pokud vás zaujmou
+            sweep line algoritmy, Voronoi diagramy nebo visibility grafy, ANI-DVG pro vás může být
+            velmi zajímavý předmět.
+          </p>
+          <p>
+            Součástí večera bude nejen samotný algoritmický obsah, ale i lepší představa o tom,
+            jak se podobné koncepty používají v grafice, geometrii, simulacích a dalších oblastech
+            informatiky.
+          </p>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="border-t border-cyan-500/30 pt-6">
+        <div class="card flex flex-col md:flex-row items-start md:items-center justify-between gap-4 rounded-2xl border border-cyan-500/40 bg-cyan-500/10 px-5 py-4">
+          <div>
+            <h3 class="text-lg font-semibold text-cyan-100">Chcete dorazit?</h3>
+            <p class="text-sm text-neutral-200">
+              Přijďte v <strong>pátek 13. 3. v 18:00 do ggLabu TH:A-1455</strong>.
+              Další info a případné upřesnění najdete na Discordu.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a href="https://discord.gg/ySdYZjZT?event=1478561995836887131"
+               class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-2 text-sm hover:bg-white/10">
+              <i data-lucide="messages-square" class="icon"></i>
+              <span>Discord událost</span>
+            </a>
+            <a href="https://discord.gg/ySdYZjZT"
+               class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-2 text-sm hover:bg-white/10">
+              <i data-lucide="hash" class="icon"></i>
+              <span>Discord</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 text-center text-xs text-neutral-500 border-t border-white/10">
+        © Grafit Research Group — Grafické večery · Sweep Line Algoritmy
+      </footer>
+    </main>
+  </section>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide && window.lucide.createIcons) {
+        window.lucide.createIcons();
+      }
+    });
+
+    function particles(canvas, opts) {
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      let w = 0, h = 0, raf = 0;
+      const N = opts.N || 42;
+      const speed = opts.speed || 0.35;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width  = Math.max(window.innerWidth, Math.ceil(rect.width || window.innerWidth));
+        h = canvas.height = Math.ceil(rect.height || 320);
+      }
+
+      const dots = Array.from({length:N}, () => ({
+        x: 0, y: 0,
+        vx: (Math.random() - .5) * speed,
+        vy: (Math.random() - .5) * speed
+      }));
+
+      function resetDots() {
+        dots.forEach(d => {
+          d.x = Math.random() * w;
+          d.y = Math.random() * h;
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        const grad = ctx.createLinearGradient(0,0,w,h);
+        grad.addColorStop(0,"#020617");
+        grad.addColorStop(0.4,"#020617");
+        grad.addColorStop(1,"#0b1120");
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = .96;
+        ctx.fillRect(0,0,w,h);
+        ctx.globalAlpha = 1;
+
+        for (let i=0; i<N; i++) {
+          const a = dots[i];
+          a.x += a.vx;
+          a.y += a.vy;
+          if (a.x < 0 || a.x > w) a.vx *= -1;
+          if (a.y < 0 || a.y > h) a.vy *= -1;
+
+          for (let j=i+1; j<N; j++) {
+            const b = dots[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 140) {
+              ctx.globalAlpha = 1 - dist/140;
+              ctx.strokeStyle = "#22d3ee";
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
+          }
+
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(a.x, a.y, 1.4, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      function start() {
+        resize();
+        resetDots();
+        draw();
+      }
+
+      const ro = new ResizeObserver(() => resize());
+      ro.observe(canvas.parentElement);
+      window.addEventListener("resize", resize);
+      start();
+
+      return { stop: () => cancelAnimationFrame(raf), ro };
+    }
+
+    window.addEventListener("scroll", () => {
+      const s = document.documentElement.scrollTop || document.body.scrollTop;
+      const h = (document.documentElement.scrollHeight - document.documentElement.clientHeight) || 1;
+      const pct = Math.max(0, Math.min(1, s / h));
+      const bar = document.getElementById("scrollbar");
+      if (bar) bar.style.width = (pct * 100) + "%";
+    });
+
+    const prefersReduced = window.matchMedia &&
+                           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReduced) {
+      particles(document.getElementById("heroCanvas"), { N: 32, speed: .3 });
+      particles(document.getElementById("areaCanvas"), { N: 40, speed: .3 });
+    }
+  </script>
+</body>
+</html>
