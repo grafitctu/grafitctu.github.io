@@ -124,7 +124,7 @@ function w3IncludeHTML(cb) {
           elmnt.removeAttribute("w3-include-html");
           w3IncludeHTML(cb);
         }
-      }      
+      }
       xhttp.open("GET", file, true);
       xhttp.send();
       return;
@@ -148,22 +148,13 @@ function w3Http(target, readyfunc, xml, method) {
 }
 window.w3 = window.w3 || {};
 window.w3.includeHTML = window.w3.includeHTML || w3IncludeHTML;
+
 (function(){
-function run(){
- if(!document.getElementById('games-grid')) return;
- var s=document.createElement('style');
- s.textContent='body.presentation-mode .promo-card--extra .promo-card__title{font-size:clamp(2.8rem,5.6vw,5.8rem)}';
- document.head.appendChild(s);
- function mt(el,t){if(!el)return;el.textContent='';t.split('\n').forEach(function(x,i){if(i)el.appendChild(document.createElement('br'));el.appendChild(document.createTextNode(x));});}
- function tags(el,a){if(!el)return;el.textContent='';a.forEach(function(x){var p=document.createElement('span');p.className='promo-card__tag';p.textContent=x;el.appendChild(p);});}
- function set(card,d){card.classList.add('promo-card--extra');card.dataset.qrTarget=d.href;card.dataset.qrTitle=d.title.replace(/\n/g,' ');var k=card.querySelector('.promo-card__kicker');if(k)k.textContent=d.kicker;mt(card.querySelector('.promo-card__title'),d.title);var x=card.querySelector('.promo-card__text');if(x)x.textContent=d.text;var y=card.querySelector('.promo-card__secondary');if(y)y.textContent=d.secondary;var img=card.querySelector('.promo-card__media img');if(img){img.src=d.image;img.alt=d.title.replace(/\n/g,' ');}tags(card.querySelector('.promo-card__tags'),d.tags);}
- var cards=Array.from(document.querySelectorAll('.promo-card'));
- var gj=cards.find(function(c){return ((c.querySelector('.promo-card__kicker')||{}).textContent||'').toLowerCase().indexOf('gamejam fit')>=0;});
- if(!gj || gj.dataset.splitDone) return; gj.dataset.splitDone='1';
- var art=gj.cloneNode(true); gj.parentNode.insertBefore(art,gj.nextSibling);
- set(gj,{kicker:'GameJam FIT · Development',title:'48 hours\nfrom idea to prototype',image:'/assets/games/promo-gamejam-development.jpg',href:'https://itch.io/jam/gamejam-fit-2025a',text:'For eight years, GameJam FIT has brought together students, teachers, alumni, sponsors and friends of the faculty to create playable games in a short, intense and playful format.',secondary:'Teams design mechanics, code prototypes, test ideas, present results and get feedback from teachers, peers, sponsors and people from the game industry.',tags:['48-hour prototypes','Teams','Sponsors','Feedback','Bohemia GameJam']});
- set(art,{kicker:'GameJam FIT · Game art',title:'From sketches\nto playable worlds',image:'/assets/games/promo-gamejam-art.jpg',href:'https://itch.io/jam/gamejam-fit-2025a',text:'GameJam is not only about programming. Students also build visual style, characters, worlds, UI, mood and readable game feedback under real time pressure.',secondary:'The specialization connects game design with visual creation — including digital drawing, concept art, animation, UX and practical work with game assets.',tags:['Digital Drawing','Game Art','Visual Design','UX','Student Creativity']});
- if(window.presentationSlides){presentationSlides.splice(presentationSlides.indexOf(gj)+1,0,art);} if(window.presentationInfoSlides){presentationInfoSlides.splice(presentationInfoSlides.indexOf(gj)+1,0,art);}
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+var oldQ=Document.prototype.querySelectorAll;
+var done=false;
+function lines(el,t){if(!el)return;el.textContent='';t.split('\n').forEach(function(s,i){if(i)el.appendChild(document.createElement('br'));el.appendChild(document.createTextNode(s));});}
+function tags(el,a){if(!el)return;el.textContent='';a.forEach(function(s){var x=document.createElement('span');x.className='promo-card__tag';x.textContent=s;el.appendChild(x);});}
+function set(card,d){card.classList.add('promo-card--extra');card.dataset.qrTarget=d.href;card.dataset.qrTitle=d.title.replace(/\n/g,' ');var k=card.querySelector('.promo-card__kicker');if(k)k.textContent=d.kicker;lines(card.querySelector('.promo-card__title'),d.title);var p=card.querySelector('.promo-card__text');if(p)p.textContent=d.text;var q=card.querySelector('.promo-card__secondary');if(q)q.textContent=d.secondary;var img=card.querySelector('.promo-card__media img');if(img){img.src=d.image;img.alt=d.title.replace(/\n/g,' ');}tags(card.querySelector('.promo-card__tags'),d.tags);}
+function prepare(){if(done)return;var grid=document.getElementById('games-grid');if(!grid)return;var cards=Array.from(oldQ.call(document,'.promo-card'));var gj=cards.find(function(c){return ((c.querySelector('.promo-card__kicker')||{}).textContent||'').toLowerCase().indexOf('gamejam fit')>=0;});if(!gj)return;done=true;var st=document.createElement('style');st.textContent='body.presentation-mode .promo-card--extra .promo-card__title{font-size:clamp(2.8rem,5.6vw,5.8rem)}';document.head.appendChild(st);var art=gj.cloneNode(true);gj.parentNode.insertBefore(art,gj.nextSibling);set(gj,{kicker:'GameJam FIT · Development',title:'48 hours\nfrom idea to prototype',image:'/assets/games/promo-gamejam-development.jpg',href:'https://itch.io/jam/gamejam-fit-2025a',text:'For eight years, GameJam FIT has brought together students, teachers, alumni, sponsors and friends of the faculty to create playable games in a short, intense and playful format.',secondary:'Teams design mechanics, code prototypes, test ideas, present results and get feedback from teachers, peers, sponsors and people from the game industry.',tags:['48-hour prototypes','Teams','Sponsors','Feedback','Bohemia GameJam']});set(art,{kicker:'GameJam FIT · Game art',title:'From sketches\nto playable worlds',image:'/assets/games/promo-gamejam-art.jpg',href:'https://itch.io/jam/gamejam-fit-2025a',text:'GameJam is not only about programming. Students also build visual style, characters, worlds, UI, mood and readable game feedback under real time pressure.',secondary:'The specialization connects game design with visual creation — including digital drawing, concept art, animation, UX and practical work with game assets.',tags:['Digital Drawing','Game Art','Visual Design','UX','Student Creativity']});}
+Document.prototype.querySelectorAll=function(sel){if(sel==='.showcase-slide')prepare();return oldQ.apply(this,arguments);};
 })();
