@@ -282,10 +282,309 @@
         font-size: 2rem;
       }
     }
+
+
+    /* ---------------------------------------------------------
+   Prezentační mód
+   --------------------------------------------------------- */
+
+.presentation-toggle {
+  position: fixed;
+  z-index: 5000;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(11, 16, 34, 0.86);
+  color: #f5f5f5;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+}
+
+.presentation-toggle:hover,
+.presentation-toggle:focus-visible {
+  border-color: rgba(250, 204, 21, 0.85);
+}
+
+.presentation-toggle__icon {
+  color: #facc15;
+  font-size: 1rem;
+}
+
+.presentation-school-info,
+.presentation-qr-panel {
+  display: none;
+}
+
+body.presentation-mode {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(24, 42, 90, 0.9) 0, transparent 34%),
+    radial-gradient(circle at 80% 20%, rgba(129, 63, 152, 0.45) 0, transparent 32%),
+    #050814;
+}
+
+body.presentation-mode > div[w3-include-html] {
+  display: none;
+}
+
+body.presentation-mode .page-header,
+body.presentation-mode #gds-qr,
+body.presentation-mode #grafit-games h2,
+body.presentation-mode #grafit-games .section-lead {
+  display: none;
+}
+
+body.presentation-mode #grafit-games {
+  min-height: 100vh;
+  padding: 0;
+  background: transparent;
+}
+
+body.presentation-mode #grafit-games .section-inner {
+  max-width: none;
+}
+
+body.presentation-mode .games-grid {
+  display: block;
+  max-width: none;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+body.presentation-mode .game-card {
+  display: none;
+}
+
+body.presentation-mode .game-card.is-presenting {
+  position: fixed;
+  inset: 7rem 7rem 9.5rem 7rem;
+  display: flex;
+  flex-direction: row;
+  background:
+    linear-gradient(135deg, rgba(11, 16, 34, 0.98), rgba(20, 31, 67, 0.96));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.72);
+  transform: none;
+  pointer-events: none;
+}
+
+body.presentation-mode .game-card.is-presenting .game-card__image-wrap {
+  flex: 0 0 58%;
+  padding-top: 0;
+  min-height: 0;
+}
+
+body.presentation-mode .game-card.is-presenting .game-card__body {
+  flex: 1 1 auto;
+  padding: 3rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+body.presentation-mode .game-card.is-presenting .game-card__title {
+  font-size: clamp(2.4rem, 5vw, 5.2rem);
+  line-height: 1;
+  margin-bottom: 1.2rem;
+}
+
+body.presentation-mode .game-card.is-presenting .game-card__type {
+  font-size: clamp(1rem, 1.5vw, 1.55rem);
+  margin-bottom: 0.6rem;
+}
+
+body.presentation-mode .game-card.is-presenting .game-card__platforms {
+  font-size: clamp(0.95rem, 1.3vw, 1.35rem);
+  margin-bottom: 1.5rem;
+}
+
+body.presentation-mode .game-card.is-presenting .game-card__blurb {
+  font-size: clamp(1.1rem, 1.6vw, 1.55rem);
+  line-height: 1.45;
+  color: #e5e9f6;
+}
+
+body.presentation-mode .presentation-school-info {
+  position: fixed;
+  z-index: 4000;
+  top: 1.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: calc(100vw - 12rem);
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  background: rgba(5, 8, 20, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #dbe5ff;
+  font-size: clamp(0.8rem, 1vw, 1rem);
+  white-space: nowrap;
+  backdrop-filter: blur(12px);
+}
+
+body.presentation-mode .presentation-school-info strong {
+  color: #ffffff;
+}
+
+body.presentation-mode .presentation-school-info span::before {
+  content: "•";
+  margin-right: 1rem;
+  color: #facc15;
+}
+
+body.presentation-mode .presentation-qr-panel {
+  position: fixed;
+  z-index: 4100;
+  bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  max-width: 35vw;
+  padding: 0.75rem;
+  border-radius: 18px;
+  background: rgba(5, 8, 20, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(12px);
+}
+
+body.presentation-mode .presentation-qr-panel--page {
+  left: 1.5rem;
+}
+
+body.presentation-mode .presentation-qr-panel--game {
+  right: 1.5rem;
+}
+
+.presentation-qr-panel img {
+  width: 118px;
+  height: 118px;
+  display: block;
+  background: #ffffff;
+  padding: 0.35rem;
+  border-radius: 10px;
+}
+
+.presentation-qr-panel__text {
+  min-width: 0;
+}
+
+.presentation-qr-panel__label {
+  margin: 0 0 0.25rem;
+  color: #facc15;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.presentation-qr-panel__title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+
+@media (max-width: 900px) {
+  body.presentation-mode .game-card.is-presenting {
+    inset: 6rem 1.25rem 10rem 1.25rem;
+    flex-direction: column;
+  }
+
+  body.presentation-mode .game-card.is-presenting .game-card__image-wrap {
+    flex: 0 0 48%;
+  }
+
+  body.presentation-mode .game-card.is-presenting .game-card__body {
+    padding: 1.5rem;
+  }
+
+  body.presentation-mode .presentation-school-info {
+    left: 1rem;
+    right: 5rem;
+    transform: none;
+    max-width: none;
+    overflow: hidden;
+  }
+
+  body.presentation-mode .presentation-qr-panel {
+    max-width: 46vw;
+  }
+
+  .presentation-qr-panel img {
+    width: 92px;
+    height: 92px;
+  }
+}
+    
   </style>
 </head>
 
 <body>
+
+    <button
+    id="presentation-toggle"
+    class="presentation-toggle"
+    type="button"
+    aria-pressed="false"
+    aria-label="Spustit prezentační mód"
+    title="Spustit prezentační mód"
+  >
+    <span class="presentation-toggle__icon">▶</span>
+    <span class="presentation-toggle__label">Prezentace</span>
+  </button>
+
+  <div class="presentation-school-info" aria-hidden="true">
+    <strong>ČVUT v Praze</strong>
+    <span>Fakulta informačních technologií</span>
+    <span>Visual Computing and Game Design</span>
+  </div>
+
+  <div class="presentation-qr-panel presentation-qr-panel--page" aria-hidden="true">
+    <a href="https://grafitctu.github.io/games" target="_blank" rel="noopener">
+      <img
+        src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=https%3A%2F%2Fgrafitctu.github.io%2Fgames"
+        alt="QR kód na stránku se studentskými hrami"
+      />
+    </a>
+    <div class="presentation-qr-panel__text">
+      <p class="presentation-qr-panel__label">Menu her</p>
+      <p class="presentation-qr-panel__title">grafitctu.github.io/games</p>
+    </div>
+  </div>
+
+  <div class="presentation-qr-panel presentation-qr-panel--game" aria-hidden="true">
+    <a id="presentation-game-link" href="#" target="_blank" rel="noopener">
+      <img
+        id="presentation-game-qr"
+        src=""
+        alt="QR kód na aktuální hru"
+      />
+    </a>
+    <div class="presentation-qr-panel__text">
+      <p class="presentation-qr-panel__label">Aktuální hra</p>
+      <p id="presentation-game-title" class="presentation-qr-panel__title">—</p>
+    </div>
+  </div>
+
+
+
+
+  
   <!-- menu -->
   <div w3-include-html="/menu.html"></div>
 
@@ -306,8 +605,8 @@
           <div class="header-qr-title">Menu her: web verze</div>
           <a href="https://grafitctu.github.io/gds" target="_blank" rel="noopener">
             <img
-              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fgrafitctu.github.io%2Fgds"
-              alt="QR kód – Menu her: web verze (grafitctu.github.io/gds)"
+              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fgrafitctu.github.io%2Fgames"
+              alt="QR kód – Menu her: web verze (grafitctu.github.io/games)"
             />
           </a>
           <small>Otevře tuto stránku s menu her.</small>
@@ -818,6 +1117,151 @@
   <script>
     if (window.w3 && w3.includeHTML) {
       w3.includeHTML();
+    }
+
+    const PRESENTATION_PAGE_URL = "https://grafitctu.github.io/games";
+    const QR_API_BASE =
+      "https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=";
+    const PRESENTATION_INTERVAL_MS = 12000;
+
+    const presentationCards = Array.from(document.querySelectorAll(".game-card"));
+    const presentationToggle = document.getElementById("presentation-toggle");
+    const presentationToggleIcon = presentationToggle?.querySelector(".presentation-toggle__icon");
+    const presentationToggleLabel = presentationToggle?.querySelector(".presentation-toggle__label");
+
+    const gameQrLink = document.getElementById("presentation-game-link");
+    const gameQrImage = document.getElementById("presentation-game-qr");
+    const gameQrTitle = document.getElementById("presentation-game-title");
+
+    let presentationIndex = 0;
+    let presentationTimer = null;
+
+    function makeQrUrl(url) {
+      return QR_API_BASE + encodeURIComponent(url);
+    }
+
+    function getCardTitle(card) {
+      return card?.querySelector(".game-card__title")?.textContent?.trim() || "Aktuální hra";
+    }
+
+    function setPresentedCard(index) {
+      if (!presentationCards.length) return;
+
+      presentationIndex =
+        ((index % presentationCards.length) + presentationCards.length) %
+        presentationCards.length;
+
+      presentationCards.forEach((card, cardIndex) => {
+        card.classList.toggle("is-presenting", cardIndex === presentationIndex);
+      });
+
+      const currentCard = presentationCards[presentationIndex];
+      const currentUrl = currentCard.href;
+      const currentTitle = getCardTitle(currentCard);
+
+      if (gameQrLink) {
+        gameQrLink.href = currentUrl;
+      }
+
+      if (gameQrImage) {
+        gameQrImage.src = makeQrUrl(currentUrl);
+        gameQrImage.alt = "QR kód – " + currentTitle;
+      }
+
+      if (gameQrTitle) {
+        gameQrTitle.textContent = currentTitle;
+      }
+    }
+
+    function scheduleNextCard() {
+      window.clearInterval(presentationTimer);
+
+      presentationTimer = window.setInterval(() => {
+        setPresentedCard(presentationIndex + 1);
+      }, PRESENTATION_INTERVAL_MS);
+    }
+
+    function startPresentation(options = {}) {
+      if (!presentationCards.length) return;
+
+      document.body.classList.add("presentation-mode");
+      presentationToggle?.setAttribute("aria-pressed", "true");
+      presentationToggle?.setAttribute("aria-label", "Ukončit prezentační mód");
+      presentationToggle?.setAttribute("title", "Ukončit prezentační mód");
+
+      if (presentationToggleIcon) presentationToggleIcon.textContent = "■";
+      if (presentationToggleLabel) presentationToggleLabel.textContent = "Stop";
+
+      setPresentedCard(presentationIndex);
+      scheduleNextCard();
+
+      if (options.requestFullscreen !== false && document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {
+          /* Fullscreen může prohlížeč odmítnout; prezentační režim poběží i tak. */
+        });
+      }
+    }
+
+    function stopPresentation(options = {}) {
+      document.body.classList.remove("presentation-mode");
+      presentationCards.forEach((card) => card.classList.remove("is-presenting"));
+
+      window.clearInterval(presentationTimer);
+      presentationTimer = null;
+
+      presentationToggle?.setAttribute("aria-pressed", "false");
+      presentationToggle?.setAttribute("aria-label", "Spustit prezentační mód");
+      presentationToggle?.setAttribute("title", "Spustit prezentační mód");
+
+      if (presentationToggleIcon) presentationToggleIcon.textContent = "▶";
+      if (presentationToggleLabel) presentationToggleLabel.textContent = "Prezentace";
+
+      if (
+        options.exitFullscreen !== false &&
+        document.fullscreenElement &&
+        document.exitFullscreen
+      ) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    presentationToggle?.addEventListener("click", () => {
+      if (document.body.classList.contains("presentation-mode")) {
+        stopPresentation();
+      } else {
+        startPresentation();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (!document.body.classList.contains("presentation-mode")) return;
+
+      if (event.key === "Escape") {
+        stopPresentation();
+      }
+
+      if (event.key === "ArrowRight" || event.key === " " || event.key === "PageDown") {
+        event.preventDefault();
+        setPresentedCard(presentationIndex + 1);
+        scheduleNextCard();
+      }
+
+      if (event.key === "ArrowLeft" || event.key === "PageUp") {
+        event.preventDefault();
+        setPresentedCard(presentationIndex - 1);
+        scheduleNextCard();
+      }
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement && document.body.classList.contains("presentation-mode")) {
+        stopPresentation({ exitFullscreen: false });
+      }
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("present") || params.has("presentation")) {
+      startPresentation({ requestFullscreen: false });
     }
   </script>
 </body>
