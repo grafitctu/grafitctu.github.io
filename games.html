@@ -3,118 +3,224 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ČVUT FIT – Studentské hry (Grafit games)</title>
+  <title>ČVUT FIT – Visual Computing and Game Design</title>
 
-  <!-- společné styly Grafitu -->
   <link rel="stylesheet" href="/single.css" />
   <link rel="stylesheet" href="/footer.css" />
   <script src="/w3.js"></script>
 
-  <!-- specifické styly pro GDS stránky -->
   <style>
-    body {
-      background: #050814;
-      color: #f5f5f5;
+    :root {
+      --fit-yellow: #f6c800;
+      --grafit-purple: #813f98;
+      --ctu-blue: #005eb8;
+      --page-bg: #050814;
+      --panel-bg: #0b1022;
+      --panel-soft: rgba(11, 16, 34, 0.78);
+      --text-main: #f5f5f5;
+      --text-soft: #c9d1e3;
+      --text-muted: #9da9c8;
     }
 
-    .page-header {
-      padding: 3rem 1.5rem 1.5rem;
-      background: radial-gradient(circle at top, #182a5a 0, #050814 55%);
+    body {
+      background: var(--page-bg);
+      color: var(--text-main);
     }
 
     .section-inner {
+      position: relative;
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    /* layout horního headeru – vlevo text, vpravo QR */
-    .header-layout {
+    .page-header {
+      position: relative;
+      overflow: hidden;
+      padding: 4.5rem 1.5rem 3.2rem;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(246, 200, 0, 0.22) 0, transparent 30%),
+        radial-gradient(circle at 84% 12%, rgba(129, 63, 152, 0.5) 0, transparent 33%),
+        radial-gradient(circle at 50% 0%, rgba(0, 94, 184, 0.4) 0, transparent 48%),
+        linear-gradient(180deg, #0b1022 0%, #050814 100%);
+    }
+
+    .page-header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.16;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, #000 0%, transparent 82%);
+    }
+
+    .hero-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 290px;
+      gap: 3rem;
+      align-items: end;
+    }
+
+    .hero-kicker {
       display: flex;
-      align-items: flex-start;
-      gap: 2.5rem;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin: 0 0 1.25rem;
+      color: #ffffff;
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .header-text {
-      flex: 1 1 0;
-      min-width: 0;
+    .hero-kicker span {
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    .page-header h1 {
-      font-size: 2.4rem;
-      margin-bottom: 0.3rem;
+    .hero-title {
+      max-width: 900px;
+      margin: 0;
+      font-size: clamp(3rem, 8vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.07em;
+      text-transform: uppercase;
     }
 
-    .page-header .subheading {
-      text-transform: lowercase;
-      font-size: 0.9rem;
-      letter-spacing: 0.25em;
-      color: #9da9c8;
-      margin-bottom: 0.8rem;
+    .hero-title .accent {
+      color: var(--fit-yellow);
+      text-shadow: 0 0 28px rgba(246, 200, 0, 0.25);
     }
 
-    .page-header p {
-      max-width: 40rem;
-      color: #c9d1e3;
+    .hero-lead {
+      max-width: 50rem;
+      margin: 1.45rem 0 0;
+      color: #e6ecff;
+      font-size: clamp(1.08rem, 1.7vw, 1.45rem);
+      line-height: 1.45;
+    }
+
+    .hero-note {
+      max-width: 44rem;
+      margin: 0.8rem 0 0;
+      color: var(--text-soft);
       font-size: 1rem;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
-    /* QR karta v headeru */
-    .header-qr {
-      flex: 0 0 auto;
-      background: #0b1022;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 1.2rem 1.3rem 1.4rem;
+    .hero-note strong {
+      color: #ffffff;
+    }
+
+    .hero-qr-card {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.25rem;
       text-align: center;
-      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
+      background: rgba(5, 8, 20, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 22px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(14px);
     }
 
-    .header-qr-title {
-      font-size: 0.9rem;
-      font-weight: 600;
+    .hero-qr-title {
+      margin: 0 0 0.8rem;
+      color: var(--fit-yellow);
+      font-size: 0.82rem;
+      font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      margin: 0 0 0.6rem;
-      color: #e6ecff;
     }
 
-    .header-qr img {
-      width: 160px;
-      height: 160px;
-      background: #ffffff;
-      padding: 0.3rem;
-      border-radius: 8px;
+    .hero-qr-card img {
+      width: 190px;
+      height: 190px;
       display: block;
       margin: 0 auto;
+      padding: 0.45rem;
+      background: #ffffff;
+      border-radius: 14px;
     }
 
-    .header-qr small {
+    .hero-qr-card small {
       display: block;
-      margin-top: 0.5rem;
-      font-size: 0.75rem;
-      color: #c9d1e3;
+      margin-top: 0.8rem;
+      color: var(--text-soft);
+      font-size: 0.78rem;
+      line-height: 1.35;
     }
 
-    /* Sekce her */
+    .hero-pillars {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .hero-pillar {
+      min-height: 128px;
+      padding: 1.15rem 1.2rem;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.24);
+    }
+
+    .hero-pillar h2 {
+      margin: 0 0 0.45rem;
+      color: #ffffff;
+      font-size: 1.08rem;
+    }
+
+    .hero-pillar p {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .hero-pillar:nth-child(1) { border-top: 3px solid var(--fit-yellow); }
+    .hero-pillar:nth-child(2) { border-top: 3px solid var(--grafit-purple); }
+    .hero-pillar:nth-child(3) { border-top: 3px solid var(--ctu-blue); }
+
     #grafit-games {
-      background: #050814;
-      color: #f5f5f5;
-      padding: 2rem 1.5rem 3.5rem;
+      padding: 3rem 1.5rem 3.5rem;
+      background: var(--page-bg);
+      color: var(--text-main);
+    }
+
+    .section-eyebrow {
+      margin: 0 0 0.35rem;
+      color: var(--fit-yellow);
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     #grafit-games h2 {
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
+      margin: 0 0 0.8rem;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
     }
 
     #grafit-games .section-lead {
-      max-width: 40rem;
-      margin-bottom: 2rem;
-      color: #c9d1e3;
+      max-width: 48rem;
+      margin-bottom: 2.3rem;
+      color: var(--text-soft);
+      font-size: 1.05rem;
+      line-height: 1.55;
     }
 
-    /* Grid karet – 3 na řádku, min šířka */
     .games-grid {
       display: grid;
       justify-content: center;
@@ -124,44 +230,31 @@
       margin: 0 auto;
     }
 
-    @media (max-width: 1100px) {
-      .games-grid {
-        grid-template-columns: repeat(2, minmax(280px, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
-      .games-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Jednotlivá karta */
     .game-card {
       display: flex;
       flex-direction: column;
-      background: #0b1022;
-      border-radius: 12px;
       overflow: hidden;
-      text-decoration: none;
       color: inherit;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      text-decoration: none;
+      background: var(--panel-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
-      transition: transform 160ms ease, box-shadow 160ms ease,
-        border-color 160ms ease;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
     }
 
     .game-card:hover,
     .game-card:focus-visible {
       transform: translateY(-4px);
+      border-color: rgba(246, 200, 0, 0.7);
       box-shadow: 0 24px 55px rgba(0, 0, 0, 0.6);
-      border-color: rgba(123, 176, 255, 0.7);
     }
 
     .game-card__image-wrap {
       position: relative;
-      padding-top: 56.25%; /* 16:9 */
       overflow: hidden;
+      padding-top: 56.25%;
+      background: #050814;
     }
 
     .game-card__image-wrap img {
@@ -177,48 +270,48 @@
     }
 
     .game-card__title {
-      font-size: 1.1rem;
       margin: 0 0 0.25rem;
+      font-size: 1.1rem;
     }
 
     .game-card__type {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #facc15; /* zlatý akcent */
       margin: 0 0 0.35rem;
+      color: var(--fit-yellow);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
     .game-card__platforms {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #89a4ff;
       margin: 0 0 0.6rem;
+      color: #89a4ff;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
     .game-card__blurb {
+      margin: 0;
+      color: #d6d9e5;
       font-size: 0.9rem;
       line-height: 1.4;
-      color: #d6d9e5;
     }
 
-    /* QR sekce dole */
     #gds-qr {
-      background: #050814;
-      color: #f5f5f5;
       padding: 0 1.5rem 4rem;
+      background: var(--page-bg);
+      color: var(--text-main);
     }
 
     #gds-qr h2 {
-      font-size: 1.6rem;
       margin-bottom: 0.5rem;
+      font-size: 1.6rem;
     }
 
     #gds-qr .qr-lead {
       max-width: 40rem;
       margin-bottom: 1.8rem;
-      color: #c9d1e3;
+      color: var(--text-soft);
     }
 
     .qr-grid {
@@ -228,17 +321,17 @@
     }
 
     .qr-card {
-      background: #0b1022;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 1.5rem 1.75rem 1.75rem;
-      text-align: center;
       flex: 1 1 260px;
       max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1.75rem 1.75rem;
+      text-align: center;
+      background: var(--panel-bg);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
       box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
-        display: flex;
-  flex-direction: column;
-  align-items: center;
     }
 
     .qr-card h3 {
@@ -247,9 +340,9 @@
     }
 
     .qr-card p {
-      font-size: 0.9rem;
-      color: #d6d9e5;
       margin: 0 0 1rem;
+      color: #d6d9e5;
+      font-size: 0.9rem;
     }
 
     .qr-card img {
@@ -257,309 +350,274 @@
       height: 220px;
       display: block;
       margin: 0 auto;
-      background: #fff;
       padding: 0.35rem;
+      background: #ffffff;
       border-radius: 8px;
     }
 
+    .presentation-toggle {
+      position: fixed;
+      z-index: 5000;
+      top: 1rem;
+      right: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.7rem 1rem;
+      color: var(--text-main);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: rgba(11, 16, 34, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
+    }
+
+    .presentation-toggle:hover,
+    .presentation-toggle:focus-visible {
+      border-color: rgba(246, 200, 0, 0.85);
+    }
+
+    .presentation-toggle__icon {
+      color: var(--fit-yellow);
+      font-size: 1rem;
+    }
+
+    .presentation-school-info,
+    .presentation-qr-panel {
+      display: none;
+    }
+
+    body.presentation-mode {
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(0, 94, 184, 0.72) 0, transparent 34%),
+        radial-gradient(circle at 80% 20%, rgba(129, 63, 152, 0.52) 0, transparent 32%),
+        radial-gradient(circle at 50% 120%, rgba(246, 200, 0, 0.18) 0, transparent 36%),
+        var(--page-bg);
+    }
+
+    body.presentation-mode > div[w3-include-html] {
+      display: none;
+    }
+
+    body.presentation-mode .page-header,
+    body.presentation-mode #gds-qr,
+    body.presentation-mode #grafit-games .section-eyebrow,
+    body.presentation-mode #grafit-games h2,
+    body.presentation-mode #grafit-games .section-lead {
+      display: none;
+    }
+
+    body.presentation-mode #grafit-games {
+      min-height: 100vh;
+      padding: 0;
+      background: transparent;
+    }
+
+    body.presentation-mode #grafit-games .section-inner {
+      max-width: none;
+    }
+
+    body.presentation-mode .games-grid {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      margin: 0;
+    }
+
+    body.presentation-mode .game-card {
+      display: none;
+    }
+
+    body.presentation-mode .game-card.is-presenting {
+      position: fixed;
+      inset: 7rem 7rem 9.5rem 7rem;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(11, 16, 34, 0.98), rgba(20, 31, 67, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 30px;
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.72);
+      transform: none;
+    }
+
+    body.presentation-mode .game-card.is-presenting .game-card__image-wrap {
+      flex: 0 0 58%;
+      min-height: 0;
+      padding-top: 0;
+    }
+
+    body.presentation-mode .game-card.is-presenting .game-card__body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 3.5rem;
+    }
+
+    body.presentation-mode .game-card.is-presenting .game-card__title {
+      margin-bottom: 1.2rem;
+      font-size: clamp(2.4rem, 5vw, 5.2rem);
+      line-height: 1;
+    }
+
+    body.presentation-mode .game-card.is-presenting .game-card__type {
+      margin-bottom: 0.6rem;
+      font-size: clamp(1rem, 1.5vw, 1.55rem);
+    }
+
+    body.presentation-mode .game-card.is-presenting .game-card__platforms {
+      margin-bottom: 1.5rem;
+      font-size: clamp(0.95rem, 1.3vw, 1.35rem);
+    }
+
+    body.presentation-mode .game-card.is-presenting .game-card__blurb {
+      color: #e5e9f6;
+      font-size: clamp(1.1rem, 1.6vw, 1.55rem);
+      line-height: 1.45;
+    }
+
+    body.presentation-mode .presentation-school-info {
+      position: fixed;
+      z-index: 4000;
+      top: 1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      max-width: calc(100vw - 12rem);
+      padding: 0.75rem 1.25rem;
+      color: #dbe5ff;
+      white-space: nowrap;
+      background: rgba(5, 8, 20, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      backdrop-filter: blur(12px);
+    }
+
+    body.presentation-mode .presentation-school-info strong {
+      color: #ffffff;
+    }
+
+    body.presentation-mode .presentation-school-info span::before {
+      content: "•";
+      margin-right: 1rem;
+      color: var(--fit-yellow);
+    }
+
+    body.presentation-mode .presentation-qr-panel {
+      position: fixed;
+      z-index: 4100;
+      bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      max-width: 35vw;
+      padding: 0.75rem;
+      background: rgba(5, 8, 20, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(12px);
+    }
+
+    body.presentation-mode .presentation-qr-panel--page { left: 1.5rem; }
+    body.presentation-mode .presentation-qr-panel--game { right: 1.5rem; }
+
+    .presentation-qr-panel img {
+      width: 118px;
+      height: 118px;
+      display: block;
+      padding: 0.35rem;
+      background: #ffffff;
+      border-radius: 10px;
+    }
+
+    .presentation-qr-panel__label {
+      margin: 0 0 0.25rem;
+      color: var(--fit-yellow);
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .presentation-qr-panel__title {
+      margin: 0;
+      color: #ffffff;
+      font-size: 0.95rem;
+      line-height: 1.25;
+    }
+
+    @media (max-width: 1100px) {
+      .games-grid { grid-template-columns: repeat(2, minmax(280px, 1fr)); }
+    }
+
     @media (max-width: 900px) {
-      .header-layout {
+      .hero-layout { grid-template-columns: 1fr; align-items: start; }
+      .hero-qr-card { max-width: 280px; }
+      .hero-pillars { grid-template-columns: 1fr; }
+
+      body.presentation-mode .game-card.is-presenting {
+        inset: 6rem 1.25rem 10rem 1.25rem;
         flex-direction: column;
-        align-items: flex-start;
       }
 
-      .header-qr {
-        margin-top: 1.5rem;
+      body.presentation-mode .game-card.is-presenting .game-card__image-wrap {
+        flex: 0 0 48%;
       }
+
+      body.presentation-mode .game-card.is-presenting .game-card__body {
+        padding: 1.5rem;
+      }
+
+      body.presentation-mode .presentation-school-info {
+        right: 5rem;
+        left: 1rem;
+        max-width: none;
+        overflow: hidden;
+        transform: none;
+      }
+
+      body.presentation-mode .presentation-qr-panel { max-width: 46vw; }
+      .presentation-qr-panel img { width: 92px; height: 92px; }
+    }
+
+    @media (max-width: 720px) {
+      .games-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
-      .page-header {
-        padding-top: 2.5rem;
-      }
-
-      .page-header h1 {
-        font-size: 2rem;
-      }
+      .page-header { padding-top: 3.5rem; }
+      .hero-title { font-size: 3.2rem; }
+      .hero-kicker { font-size: 0.74rem; }
     }
-
-
-    /* ---------------------------------------------------------
-   Prezentační mód
-   --------------------------------------------------------- */
-
-.presentation-toggle {
-  position: fixed;
-  z-index: 5000;
-  top: 1rem;
-  right: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.7rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 999px;
-  background: rgba(11, 16, 34, 0.86);
-  color: #f5f5f5;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px);
-}
-
-.presentation-toggle:hover,
-.presentation-toggle:focus-visible {
-  border-color: rgba(250, 204, 21, 0.85);
-}
-
-.presentation-toggle__icon {
-  color: #facc15;
-  font-size: 1rem;
-}
-
-.presentation-school-info,
-.presentation-qr-panel {
-  display: none;
-}
-
-body.presentation-mode {
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(24, 42, 90, 0.9) 0, transparent 34%),
-    radial-gradient(circle at 80% 20%, rgba(129, 63, 152, 0.45) 0, transparent 32%),
-    #050814;
-}
-
-body.presentation-mode > div[w3-include-html] {
-  display: none;
-}
-
-body.presentation-mode .page-header,
-body.presentation-mode #gds-qr,
-body.presentation-mode #grafit-games h2,
-body.presentation-mode #grafit-games .section-lead {
-  display: none;
-}
-
-body.presentation-mode #grafit-games {
-  min-height: 100vh;
-  padding: 0;
-  background: transparent;
-}
-
-body.presentation-mode #grafit-games .section-inner {
-  max-width: none;
-}
-
-body.presentation-mode .games-grid {
-  display: block;
-  max-width: none;
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-}
-
-body.presentation-mode .game-card {
-  display: none;
-}
-
-body.presentation-mode .game-card.is-presenting {
-  position: fixed;
-  inset: 7rem 7rem 9.5rem 7rem;
-  display: flex;
-  flex-direction: row;
-  background:
-    linear-gradient(135deg, rgba(11, 16, 34, 0.98), rgba(20, 31, 67, 0.96));
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 30px;
-  overflow: hidden;
-  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.72);
-  transform: none;
-  pointer-events: none;
-}
-
-body.presentation-mode .game-card.is-presenting .game-card__image-wrap {
-  flex: 0 0 58%;
-  padding-top: 0;
-  min-height: 0;
-}
-
-body.presentation-mode .game-card.is-presenting .game-card__body {
-  flex: 1 1 auto;
-  padding: 3rem 3.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-body.presentation-mode .game-card.is-presenting .game-card__title {
-  font-size: clamp(2.4rem, 5vw, 5.2rem);
-  line-height: 1;
-  margin-bottom: 1.2rem;
-}
-
-body.presentation-mode .game-card.is-presenting .game-card__type {
-  font-size: clamp(1rem, 1.5vw, 1.55rem);
-  margin-bottom: 0.6rem;
-}
-
-body.presentation-mode .game-card.is-presenting .game-card__platforms {
-  font-size: clamp(0.95rem, 1.3vw, 1.35rem);
-  margin-bottom: 1.5rem;
-}
-
-body.presentation-mode .game-card.is-presenting .game-card__blurb {
-  font-size: clamp(1.1rem, 1.6vw, 1.55rem);
-  line-height: 1.45;
-  color: #e5e9f6;
-}
-
-body.presentation-mode .presentation-school-info {
-  position: fixed;
-  z-index: 4000;
-  top: 1.4rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  max-width: calc(100vw - 12rem);
-  padding: 0.75rem 1.25rem;
-  border-radius: 999px;
-  background: rgba(5, 8, 20, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #dbe5ff;
-  font-size: clamp(0.8rem, 1vw, 1rem);
-  white-space: nowrap;
-  backdrop-filter: blur(12px);
-}
-
-body.presentation-mode .presentation-school-info strong {
-  color: #ffffff;
-}
-
-body.presentation-mode .presentation-school-info span::before {
-  content: "•";
-  margin-right: 1rem;
-  color: #facc15;
-}
-
-body.presentation-mode .presentation-qr-panel {
-  position: fixed;
-  z-index: 4100;
-  bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  max-width: 35vw;
-  padding: 0.75rem;
-  border-radius: 18px;
-  background: rgba(5, 8, 20, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(12px);
-}
-
-body.presentation-mode .presentation-qr-panel--page {
-  left: 1.5rem;
-}
-
-body.presentation-mode .presentation-qr-panel--game {
-  right: 1.5rem;
-}
-
-.presentation-qr-panel img {
-  width: 118px;
-  height: 118px;
-  display: block;
-  background: #ffffff;
-  padding: 0.35rem;
-  border-radius: 10px;
-}
-
-.presentation-qr-panel__text {
-  min-width: 0;
-}
-
-.presentation-qr-panel__label {
-  margin: 0 0 0.25rem;
-  color: #facc15;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.presentation-qr-panel__title {
-  margin: 0;
-  color: #ffffff;
-  font-size: 0.95rem;
-  line-height: 1.25;
-}
-
-@media (max-width: 900px) {
-  body.presentation-mode .game-card.is-presenting {
-    inset: 6rem 1.25rem 10rem 1.25rem;
-    flex-direction: column;
-  }
-
-  body.presentation-mode .game-card.is-presenting .game-card__image-wrap {
-    flex: 0 0 48%;
-  }
-
-  body.presentation-mode .game-card.is-presenting .game-card__body {
-    padding: 1.5rem;
-  }
-
-  body.presentation-mode .presentation-school-info {
-    left: 1rem;
-    right: 5rem;
-    transform: none;
-    max-width: none;
-    overflow: hidden;
-  }
-
-  body.presentation-mode .presentation-qr-panel {
-    max-width: 46vw;
-  }
-
-  .presentation-qr-panel img {
-    width: 92px;
-    height: 92px;
-  }
-}
-    
   </style>
 </head>
 
 <body>
-
-    <button
-    id="presentation-toggle"
-    class="presentation-toggle"
-    type="button"
-    aria-pressed="false"
-    aria-label="Spustit prezentační mód"
-    title="Spustit prezentační mód"
-  >
+  <button id="presentation-toggle" class="presentation-toggle" type="button" aria-pressed="false" aria-label="Spustit prezentační mód" title="Spustit prezentační mód">
     <span class="presentation-toggle__icon">▶</span>
     <span class="presentation-toggle__label">Prezentace</span>
   </button>
 
   <div class="presentation-school-info" aria-hidden="true">
-    <strong>ČVUT v Praze</strong>
-    <span>Fakulta informačních technologií</span>
+    <strong>ČVUT FIT</strong>
     <span>Visual Computing and Game Design</span>
+    <span>grafitctu.github.io/games</span>
   </div>
 
   <div class="presentation-qr-panel presentation-qr-panel--page" aria-hidden="true">
     <a href="https://grafitctu.github.io/games" target="_blank" rel="noopener">
-      <img
-        src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=https%3A%2F%2Fgrafitctu.github.io%2Fgames"
-        alt="QR kód na stránku se studentskými hrami"
-      />
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=https%3A%2F%2Fgrafitctu.github.io%2Fgames" alt="QR kód na stránku se studentskými hrami" />
     </a>
     <div class="presentation-qr-panel__text">
       <p class="presentation-qr-panel__label">Menu her</p>
@@ -569,11 +627,7 @@ body.presentation-mode .presentation-qr-panel--game {
 
   <div class="presentation-qr-panel presentation-qr-panel--game" aria-hidden="true">
     <a id="presentation-game-link" href="#" target="_blank" rel="noopener">
-      <img
-        id="presentation-game-qr"
-        src=""
-        alt="QR kód na aktuální hru"
-      />
+      <img id="presentation-game-qr" src="" alt="QR kód na aktuální hru" />
     </a>
     <div class="presentation-qr-panel__text">
       <p class="presentation-qr-panel__label">Aktuální hra</p>
@@ -581,529 +635,92 @@ body.presentation-mode .presentation-qr-panel--game {
     </div>
   </div>
 
-
-
-
-  
-  <!-- menu -->
   <div w3-include-html="/menu.html"></div>
 
   <main>
     <header class="page-header">
-      <div class="section-inner header-layout">
-        <div class="header-text">
-          <h1>ČVUT FIT – STUDENTSKÉ HRY</h1>
-          <p class="subheading">grafit games</p>
-          <p>
-            Výběr studentských her (semestrální práce) a her z FIT gamejamu.
-            Webové hry lze hrát po prokliknutí. Windows a Linux hry vždy na jednom
-            z připravených PC.
-          </p>
+      <div class="section-inner">
+        <div class="hero-layout">
+          <div class="hero-text">
+            <p class="hero-kicker">
+              <span>Czech Technical University in Prague</span>
+              <span>Faculty of Information Technology</span>
+              <span>GRAFIT</span>
+            </p>
+
+            <h1 class="hero-title">
+              Visual Computing<br />
+              <span class="accent">and Game Design</span>
+            </h1>
+
+            <p class="hero-lead">
+              A new study specialization connecting computer graphics, game design,
+              VR/AR, UX/UI, pattern recognition and interactive technologies.
+            </p>
+
+            <p class="hero-note">
+              Explore <strong>student games</strong> created in FIT courses, game jams
+              and research-oriented projects.
+            </p>
+          </div>
+
+          <div class="hero-qr-card">
+            <div>
+              <div class="hero-qr-title">Student games showcase</div>
+              <a href="https://grafitctu.github.io/games" target="_blank" rel="noopener">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fgrafitctu.github.io%2Fgames" alt="QR kód – Student games showcase" />
+              </a>
+            </div>
+            <small>Open the full showcase on your phone.</small>
+          </div>
         </div>
 
-        <div class="header-qr">
-          <div class="header-qr-title">Menu her: web verze</div>
-          <a href="https://grafitctu.github.io/gds" target="_blank" rel="noopener">
-            <img
-              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fgrafitctu.github.io%2Fgames"
-              alt="QR kód – Menu her: web verze (grafitctu.github.io/games)"
-            />
-          </a>
-          <small>Otevře tuto stránku s menu her.</small>
+        <div class="hero-pillars" aria-label="Main areas of the specialization">
+          <article class="hero-pillar">
+            <h2>Computer Graphics</h2>
+            <p>Rendering, image processing, visual computing and technical foundations for interactive media.</p>
+          </article>
+          <article class="hero-pillar">
+            <h2>Game Design</h2>
+            <p>Game mechanics, prototyping, player experience and design of digital and physical games.</p>
+          </article>
+          <article class="hero-pillar">
+            <h2>VR / AR / UX</h2>
+            <p>Immersive interfaces, interactive systems, human-computer interaction and playful technologies.</p>
+          </article>
         </div>
       </div>
     </header>
 
     <section id="grafit-games">
       <div class="section-inner">
-        <h2>Studentské hry Grafitu</h2>
+        <p class="section-eyebrow">Student games showcase</p>
+        <h2>What our students create</h2>
         <p class="section-lead">
-          Kliknutím na kartu otevřeš stránku s hrou v novém okně.
+          These projects demonstrate how students combine technical skills,
+          visual computing and playful interaction into working prototypes and games.
         </p>
-
-        <div class="games-grid">
-
-
-      <!-- Factory Reset -->
-      <a class="game-card" href="https://itch.io/jam/bohemia-gamejam/rate/4509014" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1nLzI2OTA4ODk1LnBuZw%3D%3D/315x250%23c/Z6YcOp.png" alt="Factory Reset" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">Factory Reset</h3>
-          <p class="game-card__type">Bohemia Gamejam 2026 · 3. místo</p>
-          <p class="game-card__platforms">Windows · multiplayer · split-screen</p>
-          <p class="game-card__blurb">
-            Asymetrická multiplayerová hra od FIT týmu: jeden hráč ovládá robota snažícího se uniknout z továrny,
-            druhý hraje administrátora, který mu pomocí hackerských zásahů hází klacky pod nohy.
-          </p>
-        </div>
-      </a>
-    
-
-      <!-- After The Rain -->
-      <a class="game-card" href="https://finishx.itch.io/after-the-rain" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1hZ2UvNDQ0NDY3NC8yNjU1MjkwNy5wbmc=/original/rJGYVt.png" alt="After The Rain" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">After The Rain</h3>
-          <p class="game-card__type">GameJam FIT 2026</p>
-          <p class="game-card__platforms">Web</p>
-          <p class="game-card__blurb">
-            Cozy narativní puzzle adventura, ve které se proměníte v malého houbového hrdinu a snažíte se zachránit svůj úl.
-          </p>
-        </div>
-      </a>
-
-      <!-- Voracious -->
-      <a class="game-card" href="https://pasekvi1.itch.io/voracious-of-spores-and-sin" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1hZ2UvNDQ0OTE3Ni8yNjU1Nzc2Ni5wbmc=/original/BXiVHQ.png" alt="Voracious: Of Spores and Sin" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">Voracious: Of Spores and Sin</h3>
-          <p class="game-card__type">GameJam FIT 2026</p>
-          <p class="game-card__platforms">Windows</p>
-          <p class="game-card__blurb">
-            3D puzzle hra ze světa pohlceného houbovou nákazou. Posedávejte různé tvory a využívejte jejich schopnosti k útěku.
-          </p>
-        </div>
-      </a>
-
-      <!-- They Requested The Egg -->
-      <a class="game-card" href="https://aliciel.itch.io/they-requested-the-egg" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1hZ2UvNDQ0OTk1OC8yNjU1MjEwMy5wbmc=/original/fHN2%2Fo.png" alt="They Requested The Egg" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">They Requested The Egg</h3>
-          <p class="game-card__type">GameJam FIT 2026</p>
-          <p class="game-card__platforms">Windows</p>
-          <p class="game-card__blurb">
-            Akční výprava za vzácným griffiním vejcem. Jeskyně se mění, vejce překáží a všechno se samozřejmě komplikuje.
-          </p>
-        </div>
-      </a>
-
- 
- 
-
-      <!-- Nom Nom Mushroom -->
-      <a class="game-card" href="https://arcusvonsinus.itch.io/nom-nom-mushroom" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1nLzI2NTIzNzY0LnBuZw==/315x250%23c/2j608l.png" alt="Nom Nom Mushroom" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">Nom Nom Mushroom</h3>
-          <p class="game-card__type">GameJam FIT 2026</p>
-          <p class="game-card__platforms">Web</p>
-          <p class="game-card__blurb">
-            Rychlá houbová hra, ve které je hlavní otázka jednoduchá: co všechno se ještě dá sežrat?
-          </p>
-        </div>
-      </a>
-
-      <!-- Twilight State -->
-      <a class="game-card" href="https://propotato.itch.io/twilight-state" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1hZ2UvNDQ0ODUzNC8yNjUyNDQ5OS5wbmc=/original/Btx6iY.png" alt="Twilight State" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">Twilight State</h3>
-          <p class="game-card__type">GameJam FIT 2026</p>
-          <p class="game-card__platforms">Web</p>
-          <p class="game-card__blurb">
-            Krátká experimentální hra o podivném stavu mezi snem a bděním. Realita není úplně stabilní.
-          </p>
-        </div>
-      </a>
-
-      <!-- Les -->
-      <a class="game-card" href="https://grenewereare.itch.io/les" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1hZ2UvNDQ0OTgxNS8yNjUyNDY0NC5wbmc=/original/p%2BE3Tn.png" alt="Les" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">Les</h3>
-          <p class="game-card__type">GameJam FIT 2026</p>
-          <p class="game-card__platforms">Web</p>
-          <p class="game-card__blurb">
-            Top-down akce v lese plném vražedných hub. Cesta na nádraží ještě nikdy nebyla tak mykologicky nebezpečná.
-          </p>
-        </div>
-      </a>
-
-      <!-- Chronobot -->
-      <a class="game-card" href="https://img.itch.zone/aW1hZ2UvNDQ0OTk4NC8yNjUyNDM4Ni5wbmc=/original/gGb3r2.png" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1hZ2UvNDQ0OTk4NC8yNjUyNDM4NS5wbmc%3D/347x500/4XvgsW.png" alt="Chronobot" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">Chronobot</h3>
-          <p class="game-card__type">GameJam FIT 2026</p>
-          <p class="game-card__platforms">Web</p>
-          <p class="game-card__blurb">
-            Puzzle platformer o robotovi, který přepíná mezi dvěma časovými liniemi, aby zabránil katastrofě.
-          </p>
-        </div>
-      </a>
-
-      <!-- Sporify -->
-      <a class="game-card" href="https://alisena.itch.io/sporify" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1hZ2UvNDQ0OTIyOC8yNjU0MjI3Ni5wbmc=/original/VQikPp.png" alt="Sporify" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">Sporify</h3>
-          <p class="game-card__type">GameJam FIT 2026</p>
-          <p class="game-card__platforms">Web</p>
-          <p class="game-card__blurb">
-            Začínáte jako jediná spora a postupně rozšiřujete houbovou kolonii. Malý zárodek, velké ambice.
-          </p>
-        </div>
-      </a>
-
-      <!-- Spory -->
-      <a class="game-card" href="https://cozy-games-studio.itch.io/spory" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1nLzI2NTI0MjYzLnBuZw==/315x250%23c/z3kw1v.png" alt="Spory" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">Spory</h3>
-          <p class="game-card__type">GameJam FIT 2026</p>
-          <p class="game-card__platforms">Web · local multiplayer</p>
-          <p class="game-card__blurb">
-            Kompetitivní hra pro dva hráče na jednom zařízení. Šiřte své houby a nedovolte soupeři převzít mapu.
-          </p>
-        </div>
-      </a>
-
-      <!-- Shroombellion -->
-      <a class="game-card" href="https://lukydrum.itch.io/shroombellion-mushrooms-against-humanity" target="_blank" rel="noopener">
-        <div class="game-card__image-wrap">
-          <img src="https://img.itch.zone/aW1nLzI2NTIzODI0LnBuZw==/315x250%23c/51MnZw.png" alt="Shroombellion: Mushrooms against humanity" loading="lazy" />
-        </div>
-        <div class="game-card__body">
-          <h3 class="game-card__title">Shroombellion</h3>
-          <p class="game-card__type">GameJam FIT 2026</p>
-          <p class="game-card__platforms">Web · solo / split-screen</p>
-          <p class="game-card__blurb">
-            Houby vrací úder. Sbírejte lidi po lese, prodávejte je a za utržené peníze vylepšujte základnu.
-          </p>
-        </div>
-      </a>
-
-          <!-- Sladká pomsta -->
-          <a class="game-card" href="https://pospec.itch.io/sladka-pomsta" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/01-sladka pomsta.jpg" alt="Sladká pomsta" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Sladká pomsta</h3>
-              <p class="game-card__type">Bakalářská práce</p>
-              <p class="game-card__platforms">Web / Windows</p>
-              <p class="game-card__blurb">
-                Karetní RPG hra s hromadou medu, kde hrajete za medvěda. Brum.
-              </p>
-            </div>
-          </a>
-
-          <!-- Chrysalis -->
-          <a class="game-card" href="https://liaaq.itch.io/chrysalis" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/02 chysalis.png" alt="Chrysalis" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Chrysalis</h3>
-              <p class="game-card__type">Bakalářská práce</p>
-              <p class="game-card__platforms">Linux / Windows / Web</p>
-              <p class="game-card__blurb">
-                Narativní top-down pixelovka – bojujte se svou depresí, OCD a strachem.
-              </p>
-            </div>
-          </a>
-
-          <!-- HaLLMark -->
-          <a class="game-card" href="https://mogula99.itch.io/hallmark" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/03 hallmark.png" alt="HaLLMark" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">HaLLMark</h3>
-              <p class="game-card__type">Diplomová práce</p>
-              <p class="game-card__platforms">Linux / Windows</p>
-              <p class="game-card__blurb">
-                LLM-řízená správa království. Vládněte navzdory všem náhodně generovaným útrapám.
-              </p>
-            </div>
-          </a>
-
-          <!-- FIT Life -->
-          <a class="game-card" href="https://antik98.github.io/FitLife/" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/04 FitLife.png" alt="FIT Life" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">FIT Life</h3>
-              <p class="game-card__type">2× bakalářská práce</p>
-              <p class="game-card__platforms">Web</p>
-              <p class="game-card__blurb">
-                Poslední tři hektické dny prvního semestru na ČVUT FIT v jedné hře.
-              </p>
-            </div>
-          </a>
-
-          <!-- Kolejenku Pls -->
-          <a class="game-card" href="https://www.youtube.com/watch?v=AQNmMeknEpM&list=PLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF&index=13" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/05 kolejenkupls.jpg" alt="Kolejenku Pls" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Kolejenku Pls</h3>
-              <p class="game-card__type">Semestrální projekt</p>
-              <p class="game-card__platforms">Windows (video ukázka)</p>
-              <p class="game-card__blurb">
-                Simulace života kolejbáby s jasnou inspirací a smrtelně realistickým humorem.
-              </p>
-            </div>
-          </a>
-
-          <!-- Quantumage -->
-          <a class="game-card"
-             href="https://itch.io/jam/easter-gamejam-fit/rate/2009202"
-             target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/06 quantumage.png"
-                   alt="Quantumage" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Quantumage</h3>
-              <p class="game-card__type">GameJam</p>
-              <p class="game-card__platforms">Windows</p>
-              <p class="game-card__blurb">
-                2D puzzle platformer využívající kvantové provázání. Pekelně těžké!
-              </p>
-            </div>
-          </a>
-
-          <!-- Bear Café -->
-          <a class="game-card" href="https://play.unity.com/en/games/dfd180ed-7a16-4601-961f-ee8e8ca2ba76/bear-cafe-2" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/07 bearcafe.jpg" alt="Bear Café" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Bear Café</h3>
-              <p class="game-card__type">Bakalářská práce</p>
-              <p class="game-card__platforms">Web</p>
-              <p class="game-card__blurb">
-                Cozy medvědí kavárna. Bez medu, zato s pořádnou dávkou kafe. Pandy included.
-              </p>
-            </div>
-          </a>
-
-          <!-- Strahov -->
-          <a class="game-card" href="https://www.youtube.com/watch?v=gE93zi4wl0E&list=PLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF&index=22" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/08 strahov.jpg" alt="Strahov" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Strahov</h3>
-              <p class="game-card__type">Semestrální projekt</p>
-              <p class="game-card__platforms">Windows (video ukázka)</p>
-              <p class="game-card__blurb">
-                Ubytujte se na Strahově a přežijte zdejší specifické prostředí.
-                Škola, Strahov, alkohol, zoufalství.
-              </p>
-            </div>
-          </a>
-
-          <!-- Liminal -->
-          <a class="game-card" href="https://hypercubic-studio.itch.io/liminal" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/12 liminal.png" alt="Liminal" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Liminal</h3>
-              <p class="game-card__type">GameJam</p>
-              <p class="game-card__platforms">Windows</p>
-              <p class="game-card__blurb">
-                Logická hra. Od alkoholiků, pro alkoholiky.
-              </p>
-            </div>
-          </a>
-
-          <!-- Galaxy Golf -->
-          <a class="game-card" href="https://lukydrum.itch.io/galaxy-golf" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/11 galaxygolf.png" alt="Galaxy Golf" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Galaxy Golf</h3>
-              <p class="game-card__type">GameJam</p>
-              <p class="game-card__platforms">Linux / Windows</p>
-              <p class="game-card__blurb">
-                Jeden člověk, jeden víkend a spousta planet, které je třeba uklidit do černých děr.
-              </p>
-            </div>
-          </a>
-
-          <!-- Útěk z Brna -->
-          <a class="game-card" href="https://trampod.itch.io/escape-from-brno" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/13 brno.jpg" alt="Útěk z Brna" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Útěk z Brna</h3>
-              <p class="game-card__type">GameJam</p>
-              <p class="game-card__platforms">Windows / Web</p>
-              <p class="game-card__blurb">
-                Dokumentární biografická hra o Pražákovi, který se snaží uniknout kruté realitě místa zvaného Brno.
-              </p>
-            </div>
-          </a>
-
-          <!-- Whitenoise -->
-          <a class="game-card" href="https://belonzik.itch.io/whitenoise" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/14 whitenoise.png" alt="Whitenoise" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Whitenoise</h3>
-              <p class="game-card__type">GameJam</p>
-              <p class="game-card__platforms">Windows</p>
-              <p class="game-card__blurb">
-                2D puzzle-platformer, kde překážky jsou vaše vzpomínky. Srovnejte se s nimi – nebo je obětujte.
-              </p>
-            </div>
-          </a>
-
-          <!-- Godwork -->
-          <a class="game-card"
-             href="https://belonzik.itch.io/godwork"
-             target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/17 godwork.jpg"
-                   alt="Godwork" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Godwork</h3>
-              <p class="game-card__type">GameJam</p>
-              <p class="game-card__platforms">Windows</p>
-              <p class="game-card__blurb">
-                Strategie, ve které se ujmete role božské entity v roce 34 před Kristem.
-                Tušíte, že se něco chystá – přimějte lidi, aby vás uctívali skrze dary,
-                oběti a proroctví!
-              </p>
-            </div>
-          </a>
-
-          <!-- Barman -->
-          <a class="game-card" href="https://simonstrikesback.itch.io/drinking-with-the-devil" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/08 barman.png" alt="Barman – Drinking with the Devil" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Barman – Drinking with the Devil</h3>
-              <p class="game-card__type">GameJam</p>
-              <p class="game-card__platforms">Web</p>
-              <p class="game-card__blurb">
-                Jste barmanem v pekle, který čeká na soud. Dokážete zjistit, jak porazit pekelného právníka?
-              </p>
-            </div>
-          </a>
-
-          <!-- The Princess Game -->
-          <a class="game-card" href="https://floatwave.itch.io/the-princess-game" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/09 princesgame.png" alt="The Princess Game" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">The Princess Game</h3>
-              <p class="game-card__type">GameJam</p>
-              <p class="game-card__platforms">Windows</p>
-              <p class="game-card__blurb">
-                Nešťastná princezna toužící po svobodě a útěku od tyranského otce. Jeden z vítězů FIT GameJamu.
-              </p>
-            </div>
-          </a>
-
-          <!-- Únikovka FIT -->
-          <a class="game-card" href="https://grafit.games/" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/15 escaperoon.png" alt="Únikovka FIT" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Únikovka FIT</h3>
-              <p class="game-card__type">Fyzická escape hra</p>
-              <p class="game-card__platforms">Fyzická hra</p>
-              <p class="game-card__blurb">
-                Nejen počítačovými hrami je student FITu živ. Stavíme i únikové hry – najdete je v kontejneru před budovou FIT.
-              </p>
-            </div>
-          </a>
-
-          <!-- Drákulův hrad -->
-          <a class="game-card" href="https://bremondr.itch.io/muj-dum-drakulv-hrad" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/15 drákula.jpg" alt="Drákulův hrad" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Drákulův hrad</h3>
-              <p class="game-card__type">GameJam (desková hra)</p>
-              <p class="game-card__platforms">Desková hra</p>
-              <p class="game-card__blurb">
-                Navrhujeme a hrajeme i deskovky. V téhle se pokusíte z vlastního hradu vyhnat samotného Drákulu.
-              </p>
-            </div>
-          </a>
-
-          <!-- Adventní kalendář -->
-          <a class="game-card" href="https://grafit.games/" target="_blank" rel="noopener">
-            <div class="game-card__image-wrap">
-              <img src="/assets/games/16 adventni kalendar.png" alt="Adventní kalendář" loading="lazy" />
-            </div>
-            <div class="game-card__body">
-              <h3 class="game-card__title">Adventní kalendář (bonus)</h3>
-              <!-- záměrně bez gamejam/semestrálka/bakalářka -->
-              <p class="game-card__platforms">Sada webových her</p>
-              <p class="game-card__blurb">
-                Nemáte rádi čokoládu, ale milujete Vánoce? Herní adventní kalendář – každý den jeden level.
-              </p>
-            </div>
-          </a>
-        </div>
+        <div id="games-grid" class="games-grid"></div>
       </div>
     </section>
 
-    <!-- QR kódy na konci stránky -->
     <section id="gds-qr">
       <div class="section-inner">
         <h2>QR kódy</h2>
-        <p class="qr-lead">
-          Rychlý přístup k videím z her a k aktuálním FIT GameJamům.
-        </p>
-
+        <p class="qr-lead">Rychlý přístup k videím z her a k aktuálním FIT GameJamům.</p>
         <div class="qr-grid">
           <div class="qr-card">
             <h3>Grafit – YouTube playlist</h3>
             <p>Ukázky studentských her na našem YouTube kanálu.</p>
             <a href="https://www.youtube.com/playlist?list=PLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF" target="_blank" rel="noopener">
-              <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fwww.youtube.com%2Fplaylist%3Flist%3DPLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF"
-                alt="QR kód – Grafit YouTube playlist"
-              />
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fwww.youtube.com%2Fplaylist%3Flist%3DPLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF" alt="QR kód – Grafit YouTube playlist" />
             </a>
           </div>
-
           <div class="qr-card">
             <h3>FIT GameJam</h3>
             <p>Itch.io stránka Velikonočního gamejamu FIT z roku 2025.</p>
             <a href="https://itch.io/jam/gamejam-fit-2025a" target="_blank" rel="noopener">
-              <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fitch.io%2Fjam%2Fgamejam-fit-2025a"
-                alt="QR kód – FIT GameJam na itch.io"
-              />
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fitch.io%2Fjam%2Fgamejam-fit-2025a" alt="QR kód – FIT GameJam na itch.io" />
             </a>
           </div>
         </div>
@@ -1111,7 +728,6 @@ body.presentation-mode .presentation-qr-panel--game {
     </section>
   </main>
 
-  <!-- patička -->
   <div w3-include-html="/footer.html"></div>
 
   <script>
@@ -1119,16 +735,88 @@ body.presentation-mode .presentation-qr-panel--game {
       w3.includeHTML();
     }
 
-    const PRESENTATION_PAGE_URL = "https://grafitctu.github.io/games";
-    const QR_API_BASE =
-      "https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=";
+    const games = [
+      { title: "Factory Reset", type: "Bohemia Gamejam 2026 · 3. místo", platforms: "Windows · multiplayer · split-screen", href: "https://itch.io/jam/bohemia-gamejam/rate/4509014", image: "https://img.itch.zone/aW1nLzI2OTA4ODk1LnBuZw%3D%3D/315x250%23c/Z6YcOp.png", blurb: "Asymetrická multiplayerová hra od FIT týmu: jeden hráč ovládá robota snažícího se uniknout z továrny, druhý hraje administrátora, který mu pomocí hackerských zásahů hází klacky pod nohy." },
+      { title: "After The Rain", type: "GameJam FIT 2026", platforms: "Web", href: "https://finishx.itch.io/after-the-rain", image: "https://img.itch.zone/aW1hZ2UvNDQ0NDY3NC8yNjU1MjkwNy5wbmc=/original/rJGYVt.png", blurb: "Cozy narativní puzzle adventura, ve které se proměníte v malého houbového hrdinu a snažíte se zachránit svůj úl." },
+      { title: "Voracious: Of Spores and Sin", type: "GameJam FIT 2026", platforms: "Windows", href: "https://pasekvi1.itch.io/voracious-of-spores-and-sin", image: "https://img.itch.zone/aW1hZ2UvNDQ0OTE3Ni8yNjU1Nzc2Ni5wbmc=/original/BXiVHQ.png", blurb: "3D puzzle hra ze světa pohlceného houbovou nákazou. Posedávejte různé tvory a využívejte jejich schopnosti k útěku." },
+      { title: "They Requested The Egg", type: "GameJam FIT 2026", platforms: "Windows", href: "https://aliciel.itch.io/they-requested-the-egg", image: "https://img.itch.zone/aW1hZ2UvNDQ0OTk1OC8yNjU1MjEwMy5wbmc=/original/fHN2%2Fo.png", blurb: "Akční výprava za vzácným griffiním vejcem. Jeskyně se mění, vejce překáží a všechno se samozřejmě komplikuje." },
+      { title: "Nom Nom Mushroom", type: "GameJam FIT 2026", platforms: "Web", href: "https://arcusvonsinus.itch.io/nom-nom-mushroom", image: "https://img.itch.zone/aW1nLzI2NTIzNzY0LnBuZw==/315x250%23c/2j608l.png", blurb: "Rychlá houbová hra, ve které je hlavní otázka jednoduchá: co všechno se ještě dá sežrat?" },
+      { title: "Twilight State", type: "GameJam FIT 2026", platforms: "Web", href: "https://propotato.itch.io/twilight-state", image: "https://img.itch.zone/aW1hZ2UvNDQ0ODUzNC8yNjUyNDQ5OS5wbmc=/original/Btx6iY.png", blurb: "Krátká experimentální hra o podivném stavu mezi snem a bděním. Realita není úplně stabilní." },
+      { title: "Les", type: "GameJam FIT 2026", platforms: "Web", href: "https://grenewereare.itch.io/les", image: "https://img.itch.zone/aW1hZ2UvNDQ0OTgxNS8yNjUyNDY0NC5wbmc=/original/p%2BE3Tn.png", blurb: "Top-down akce v lese plném vražedných hub. Cesta na nádraží ještě nikdy nebyla tak mykologicky nebezpečná." },
+      { title: "Chronobot", type: "GameJam FIT 2026", platforms: "Web", href: "https://img.itch.zone/aW1hZ2UvNDQ0OTk4NC8yNjUyNDM4Ni5wbmc=/original/gGb3r2.png", image: "https://img.itch.zone/aW1hZ2UvNDQ0OTk4NC8yNjUyNDM4NS5wbmc%3D/347x500/4XvgsW.png", blurb: "Puzzle platformer o robotovi, který přepíná mezi dvěma časovými liniemi, aby zabránil katastrofě." },
+      { title: "Sporify", type: "GameJam FIT 2026", platforms: "Web", href: "https://alisena.itch.io/sporify", image: "https://img.itch.zone/aW1hZ2UvNDQ0OTIyOC8yNjU0MjI3Ni5wbmc=/original/VQikPp.png", blurb: "Začínáte jako jediná spora a postupně rozšiřujete houbovou kolonii. Malý zárodek, velké ambice." },
+      { title: "Spory", type: "GameJam FIT 2026", platforms: "Web · local multiplayer", href: "https://cozy-games-studio.itch.io/spory", image: "https://img.itch.zone/aW1nLzI2NTI0MjYzLnBuZw==/315x250%23c/z3kw1v.png", blurb: "Kompetitivní hra pro dva hráče na jednom zařízení. Šiřte své houby a nedovolte soupeři převzít mapu." },
+      { title: "Shroombellion", type: "GameJam FIT 2026", platforms: "Web · solo / split-screen", href: "https://lukydrum.itch.io/shroombellion-mushrooms-against-humanity", image: "https://img.itch.zone/aW1nLzI2NTIzODI0LnBuZw==/315x250%23c/51MnZw.png", blurb: "Houby vrací úder. Sbírejte lidi po lese, prodávejte je a za utržené peníze vylepšujte základnu." },
+      { title: "Sladká pomsta", type: "Bakalářská práce", platforms: "Web / Windows", href: "https://pospec.itch.io/sladka-pomsta", image: "/assets/games/01-sladka pomsta.jpg", blurb: "Karetní RPG hra s hromadou medu, kde hrajete za medvěda. Brum." },
+      { title: "Chrysalis", type: "Bakalářská práce", platforms: "Linux / Windows / Web", href: "https://liaaq.itch.io/chrysalis", image: "/assets/games/02 chysalis.png", blurb: "Narativní top-down pixelovka – bojujte se svou depresí, OCD a strachem." },
+      { title: "HaLLMark", type: "Diplomová práce", platforms: "Linux / Windows", href: "https://mogula99.itch.io/hallmark", image: "/assets/games/03 hallmark.png", blurb: "LLM-řízená správa království. Vládněte navzdory všem náhodně generovaným útrapám." },
+      { title: "FIT Life", type: "2× bakalářská práce", platforms: "Web", href: "https://antik98.github.io/FitLife/", image: "/assets/games/04 FitLife.png", blurb: "Poslední tři hektické dny prvního semestru na ČVUT FIT v jedné hře." },
+      { title: "Kolejenku Pls", type: "Semestrální projekt", platforms: "Windows (video ukázka)", href: "https://www.youtube.com/watch?v=AQNmMeknEpM&list=PLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF&index=13", image: "/assets/games/05 kolejenkupls.jpg", blurb: "Simulace života kolejbáby s jasnou inspirací a smrtelně realistickým humorem." },
+      { title: "Quantumage", type: "GameJam", platforms: "Windows", href: "https://itch.io/jam/easter-gamejam-fit/rate/2009202", image: "/assets/games/06 quantumage.png", blurb: "2D puzzle platformer využívající kvantové provázání. Pekelně těžké!" },
+      { title: "Bear Café", type: "Bakalářská práce", platforms: "Web", href: "https://play.unity.com/en/games/dfd180ed-7a16-4601-961f-ee8e8ca2ba76/bear-cafe-2", image: "/assets/games/07 bearcafe.jpg", blurb: "Cozy medvědí kavárna. Bez medu, zato s pořádnou dávkou kafe. Pandy included." },
+      { title: "Strahov", type: "Semestrální projekt", platforms: "Windows (video ukázka)", href: "https://www.youtube.com/watch?v=gE93zi4wl0E&list=PLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF&index=22", image: "/assets/games/08 strahov.jpg", blurb: "Ubytujte se na Strahově a přežijte zdejší specifické prostředí. Škola, Strahov, alkohol, zoufalství." },
+      { title: "Liminal", type: "GameJam", platforms: "Windows", href: "https://hypercubic-studio.itch.io/liminal", image: "/assets/games/12 liminal.png", blurb: "Logická hra. Od alkoholiků, pro alkoholiky." },
+      { title: "Galaxy Golf", type: "GameJam", platforms: "Linux / Windows", href: "https://lukydrum.itch.io/galaxy-golf", image: "/assets/games/11 galaxygolf.png", blurb: "Jeden člověk, jeden víkend a spousta planet, které je třeba uklidit do černých děr." },
+      { title: "Útěk z Brna", type: "GameJam", platforms: "Windows / Web", href: "https://trampod.itch.io/escape-from-brno", image: "/assets/games/13 brno.jpg", blurb: "Dokumentární biografická hra o Pražákovi, který se snaží uniknout kruté realitě místa zvaného Brno." },
+      { title: "Whitenoise", type: "GameJam", platforms: "Windows", href: "https://belonzik.itch.io/whitenoise", image: "/assets/games/14 whitenoise.png", blurb: "2D puzzle-platformer, kde překážky jsou vaše vzpomínky. Srovnejte se s nimi – nebo je obětujte." },
+      { title: "Godwork", type: "GameJam", platforms: "Windows", href: "https://belonzik.itch.io/godwork", image: "/assets/games/17 godwork.jpg", blurb: "Strategie, ve které se ujmete role božské entity v roce 34 před Kristem. Tušíte, že se něco chystá – přimějte lidi, aby vás uctívali skrze dary, oběti a proroctví!" },
+      { title: "Barman – Drinking with the Devil", type: "GameJam", platforms: "Web", href: "https://simonstrikesback.itch.io/drinking-with-the-devil", image: "/assets/games/08 barman.png", blurb: "Jste barmanem v pekle, který čeká na soud. Dokážete zjistit, jak porazit pekelného právníka?" },
+      { title: "The Princess Game", type: "GameJam", platforms: "Windows", href: "https://floatwave.itch.io/the-princess-game", image: "/assets/games/09 princesgame.png", blurb: "Nešťastná princezna toužící po svobodě a útěku od tyranského otce. Jeden z vítězů FIT GameJamu." },
+      { title: "Únikovka FIT", type: "Fyzická escape hra", platforms: "Fyzická hra", href: "https://grafit.games/", image: "/assets/games/15 escaperoon.png", blurb: "Nejen počítačovými hrami je student FITu živ. Stavíme i únikové hry – najdete je v kontejneru před budovou FIT." },
+      { title: "Drákulův hrad", type: "GameJam (desková hra)", platforms: "Desková hra", href: "https://bremondr.itch.io/muj-dum-drakulv-hrad", image: "/assets/games/15 drákula.jpg", blurb: "Navrhujeme a hrajeme i deskovky. V téhle se pokusíte z vlastního hradu vyhnat samotného Drákulu." },
+      { title: "Adventní kalendář (bonus)", type: "", platforms: "Sada webových her", href: "https://grafit.games/", image: "/assets/games/16 adventni kalendar.png", blurb: "Nemáte rádi čokoládu, ale milujete Vánoce? Herní adventní kalendář – každý den jeden level." }
+    ];
+
+    const grid = document.getElementById("games-grid");
+
+    function appendTextElement(parent, tagName, className, text) {
+      if (!text) return null;
+      const element = document.createElement(tagName);
+      element.className = className;
+      element.textContent = text;
+      parent.appendChild(element);
+      return element;
+    }
+
+    function renderGames() {
+      games.forEach((game) => {
+        const card = document.createElement("a");
+        card.className = "game-card";
+        card.href = game.href;
+        card.target = "_blank";
+        card.rel = "noopener";
+
+        const imageWrap = document.createElement("div");
+        imageWrap.className = "game-card__image-wrap";
+
+        const image = document.createElement("img");
+        image.src = game.image;
+        image.alt = game.title;
+        image.loading = "lazy";
+        imageWrap.appendChild(image);
+
+        const body = document.createElement("div");
+        body.className = "game-card__body";
+        appendTextElement(body, "h3", "game-card__title", game.title);
+        appendTextElement(body, "p", "game-card__type", game.type);
+        appendTextElement(body, "p", "game-card__platforms", game.platforms);
+        appendTextElement(body, "p", "game-card__blurb", game.blurb);
+
+        card.appendChild(imageWrap);
+        card.appendChild(body);
+        grid.appendChild(card);
+      });
+    }
+
+    renderGames();
+
+    const QR_API_BASE = "https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=";
     const PRESENTATION_INTERVAL_MS = 12000;
 
     const presentationCards = Array.from(document.querySelectorAll(".game-card"));
     const presentationToggle = document.getElementById("presentation-toggle");
     const presentationToggleIcon = presentationToggle?.querySelector(".presentation-toggle__icon");
     const presentationToggleLabel = presentationToggle?.querySelector(".presentation-toggle__label");
-
     const gameQrLink = document.getElementById("presentation-game-link");
     const gameQrImage = document.getElementById("presentation-game-qr");
     const gameQrTitle = document.getElementById("presentation-game-title");
@@ -1146,36 +834,25 @@ body.presentation-mode .presentation-qr-panel--game {
 
     function setPresentedCard(index) {
       if (!presentationCards.length) return;
-
-      presentationIndex =
-        ((index % presentationCards.length) + presentationCards.length) %
-        presentationCards.length;
+      presentationIndex = ((index % presentationCards.length) + presentationCards.length) % presentationCards.length;
 
       presentationCards.forEach((card, cardIndex) => {
         card.classList.toggle("is-presenting", cardIndex === presentationIndex);
       });
 
       const currentCard = presentationCards[presentationIndex];
-      const currentUrl = currentCard.href;
       const currentTitle = getCardTitle(currentCard);
 
-      if (gameQrLink) {
-        gameQrLink.href = currentUrl;
-      }
-
+      if (gameQrLink) gameQrLink.href = currentCard.href;
       if (gameQrImage) {
-        gameQrImage.src = makeQrUrl(currentUrl);
+        gameQrImage.src = makeQrUrl(currentCard.href);
         gameQrImage.alt = "QR kód – " + currentTitle;
       }
-
-      if (gameQrTitle) {
-        gameQrTitle.textContent = currentTitle;
-      }
+      if (gameQrTitle) gameQrTitle.textContent = currentTitle;
     }
 
     function scheduleNextCard() {
       window.clearInterval(presentationTimer);
-
       presentationTimer = window.setInterval(() => {
         setPresentedCard(presentationIndex + 1);
       }, PRESENTATION_INTERVAL_MS);
@@ -1183,44 +860,32 @@ body.presentation-mode .presentation-qr-panel--game {
 
     function startPresentation(options = {}) {
       if (!presentationCards.length) return;
-
       document.body.classList.add("presentation-mode");
       presentationToggle?.setAttribute("aria-pressed", "true");
       presentationToggle?.setAttribute("aria-label", "Ukončit prezentační mód");
       presentationToggle?.setAttribute("title", "Ukončit prezentační mód");
-
       if (presentationToggleIcon) presentationToggleIcon.textContent = "■";
       if (presentationToggleLabel) presentationToggleLabel.textContent = "Stop";
-
       setPresentedCard(presentationIndex);
       scheduleNextCard();
 
       if (options.requestFullscreen !== false && document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch(() => {
-          /* Fullscreen může prohlížeč odmítnout; prezentační režim poběží i tak. */
-        });
+        document.documentElement.requestFullscreen().catch(() => {});
       }
     }
 
     function stopPresentation(options = {}) {
       document.body.classList.remove("presentation-mode");
       presentationCards.forEach((card) => card.classList.remove("is-presenting"));
-
       window.clearInterval(presentationTimer);
       presentationTimer = null;
-
       presentationToggle?.setAttribute("aria-pressed", "false");
       presentationToggle?.setAttribute("aria-label", "Spustit prezentační mód");
       presentationToggle?.setAttribute("title", "Spustit prezentační mód");
-
       if (presentationToggleIcon) presentationToggleIcon.textContent = "▶";
       if (presentationToggleLabel) presentationToggleLabel.textContent = "Prezentace";
 
-      if (
-        options.exitFullscreen !== false &&
-        document.fullscreenElement &&
-        document.exitFullscreen
-      ) {
+      if (options.exitFullscreen !== false && document.fullscreenElement && document.exitFullscreen) {
         document.exitFullscreen().catch(() => {});
       }
     }
@@ -1235,17 +900,12 @@ body.presentation-mode .presentation-qr-panel--game {
 
     document.addEventListener("keydown", (event) => {
       if (!document.body.classList.contains("presentation-mode")) return;
-
-      if (event.key === "Escape") {
-        stopPresentation();
-      }
-
+      if (event.key === "Escape") stopPresentation();
       if (event.key === "ArrowRight" || event.key === " " || event.key === "PageDown") {
         event.preventDefault();
         setPresentedCard(presentationIndex + 1);
         scheduleNextCard();
       }
-
       if (event.key === "ArrowLeft" || event.key === "PageUp") {
         event.preventDefault();
         setPresentedCard(presentationIndex - 1);
