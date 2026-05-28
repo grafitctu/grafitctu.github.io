@@ -391,13 +391,38 @@
       display: none;
     }
 
+    .presentation-brand-kicker,
+    .presentation-brand-title,
+    .presentation-brand-meta,
+    .presentation-brand-counter {
+      margin: 0;
+    }
+
     body.presentation-mode {
       overflow: hidden;
       background:
-        radial-gradient(circle at 20% 0%, rgba(0, 94, 184, 0.72) 0, transparent 34%),
-        radial-gradient(circle at 80% 20%, rgba(129, 63, 152, 0.52) 0, transparent 32%),
-        radial-gradient(circle at 50% 120%, rgba(246, 200, 0, 0.18) 0, transparent 36%),
-        var(--page-bg);
+        radial-gradient(circle at 20% 0%, rgba(0, 94, 184, 0.78) 0, transparent 34%),
+        radial-gradient(circle at 82% 14%, rgba(129, 63, 152, 0.62) 0, transparent 34%),
+        radial-gradient(circle at 50% 118%, rgba(246, 200, 0, 0.22) 0, transparent 38%),
+        linear-gradient(180deg, #050814 0%, #080d20 100%);
+    }
+
+    body.presentation-mode::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.12;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    body.presentation-mode > * {
+      position: relative;
+      z-index: 1;
     }
 
     body.presentation-mode > div[w3-include-html] {
@@ -434,83 +459,172 @@
       display: none;
     }
 
+    body.presentation-mode .presentation-school-info {
+      position: fixed;
+      z-index: 4300;
+      top: 1.15rem;
+      left: 1.5rem;
+      right: 7.2rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        "kicker counter"
+        "title counter"
+        "meta counter";
+      gap: 0.15rem 1.5rem;
+      align-items: center;
+      padding: 1rem 1.3rem 1.05rem;
+      background:
+        linear-gradient(90deg, rgba(5, 8, 20, 0.9), rgba(11, 16, 34, 0.72)),
+        linear-gradient(90deg, rgba(246, 200, 0, 0.13), rgba(129, 63, 152, 0.16));
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-left: 5px solid var(--fit-yellow);
+      border-radius: 24px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.52);
+      backdrop-filter: blur(14px);
+    }
+
+    body.presentation-mode .presentation-brand-kicker {
+      grid-area: kicker;
+      color: #dbe5ff;
+      font-size: clamp(0.72rem, 0.9vw, 0.95rem);
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    body.presentation-mode .presentation-brand-title {
+      grid-area: title;
+      color: #ffffff;
+      font-size: clamp(1.6rem, 3.5vw, 3.5rem);
+      font-weight: 950;
+      line-height: 0.92;
+      letter-spacing: -0.055em;
+      text-transform: uppercase;
+    }
+
+    body.presentation-mode .presentation-brand-title span {
+      color: var(--fit-yellow);
+    }
+
+    body.presentation-mode .presentation-brand-meta {
+      grid-area: meta;
+      color: var(--text-soft);
+      font-size: clamp(0.8rem, 1vw, 1rem);
+      line-height: 1.25;
+    }
+
+    body.presentation-mode .presentation-brand-counter {
+      grid-area: counter;
+      min-width: 4.4rem;
+      padding: 0.65rem 0.8rem;
+      color: #ffffff;
+      font-size: clamp(1.05rem, 1.6vw, 1.6rem);
+      font-weight: 900;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+    }
+
     body.presentation-mode .game-card.is-presenting {
       position: fixed;
-      inset: 7rem 7rem 9.5rem 7rem;
-      display: flex;
-      flex-direction: row;
+      inset: 10.2rem 6rem 9.7rem 6rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.85fr);
       overflow: hidden;
       pointer-events: none;
       background: linear-gradient(135deg, rgba(11, 16, 34, 0.98), rgba(20, 31, 67, 0.96));
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 30px;
-      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 34px;
+      box-shadow: 0 34px 95px rgba(0, 0, 0, 0.74);
       transform: none;
     }
 
+    body.presentation-mode .game-card.is-presenting::before {
+      content: "Student project showcase";
+      position: absolute;
+      z-index: 3;
+      top: 1.2rem;
+      left: 1.2rem;
+      padding: 0.45rem 0.75rem;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(5, 8, 20, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+
     body.presentation-mode .game-card.is-presenting .game-card__image-wrap {
-      flex: 0 0 58%;
       min-height: 0;
       padding-top: 0;
     }
 
+    body.presentation-mode .game-card.is-presenting .game-card__image-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, transparent 0%, transparent 64%, rgba(11, 16, 34, 0.45) 100%),
+        linear-gradient(0deg, rgba(5, 8, 20, 0.18), transparent 42%);
+    }
+
     body.presentation-mode .game-card.is-presenting .game-card__body {
-      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 3rem 3.5rem;
+      padding: 3rem 3.3rem;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(246, 200, 0, 0.1) 0, transparent 38%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    body.presentation-mode .game-card.is-presenting .game-card__body::before {
+      content: "Created by FIT students";
+      width: fit-content;
+      margin-bottom: 1.1rem;
+      padding: 0.4rem 0.65rem;
+      color: var(--fit-yellow);
+      font-size: clamp(0.78rem, 0.9vw, 0.95rem);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(246, 200, 0, 0.1);
+      border: 1px solid rgba(246, 200, 0, 0.28);
+      border-radius: 999px;
     }
 
     body.presentation-mode .game-card.is-presenting .game-card__title {
-      margin-bottom: 1.2rem;
-      font-size: clamp(2.4rem, 5vw, 5.2rem);
-      line-height: 1;
+      margin-bottom: 1.25rem;
+      color: #ffffff;
+      font-size: clamp(2.6rem, 5.4vw, 5.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.055em;
     }
 
     body.presentation-mode .game-card.is-presenting .game-card__type {
-      margin-bottom: 0.6rem;
-      font-size: clamp(1rem, 1.5vw, 1.55rem);
+      margin-bottom: 0.55rem;
+      color: var(--fit-yellow);
+      font-size: clamp(1rem, 1.45vw, 1.45rem);
     }
 
     body.presentation-mode .game-card.is-presenting .game-card__platforms {
-      margin-bottom: 1.5rem;
-      font-size: clamp(0.95rem, 1.3vw, 1.35rem);
+      margin-bottom: 1.45rem;
+      color: #a8bbff;
+      font-size: clamp(0.95rem, 1.25vw, 1.3rem);
     }
 
     body.presentation-mode .game-card.is-presenting .game-card__blurb {
+      max-width: 36rem;
       color: #e5e9f6;
-      font-size: clamp(1.1rem, 1.6vw, 1.55rem);
+      font-size: clamp(1.08rem, 1.55vw, 1.5rem);
       line-height: 1.45;
-    }
-
-    body.presentation-mode .presentation-school-info {
-      position: fixed;
-      z-index: 4000;
-      top: 1.4rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      max-width: calc(100vw - 12rem);
-      padding: 0.75rem 1.25rem;
-      color: #dbe5ff;
-      white-space: nowrap;
-      background: rgba(5, 8, 20, 0.72);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 999px;
-      backdrop-filter: blur(12px);
-    }
-
-    body.presentation-mode .presentation-school-info strong {
-      color: #ffffff;
-    }
-
-    body.presentation-mode .presentation-school-info span::before {
-      content: "•";
-      margin-right: 1rem;
-      color: var(--fit-yellow);
     }
 
     body.presentation-mode .presentation-qr-panel {
@@ -519,12 +633,12 @@
       bottom: 1.5rem;
       display: flex;
       align-items: center;
-      gap: 0.9rem;
-      max-width: 35vw;
-      padding: 0.75rem;
-      background: rgba(5, 8, 20, 0.78);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 18px;
+      gap: 1rem;
+      max-width: 37vw;
+      padding: 0.8rem 0.9rem;
+      background: rgba(5, 8, 20, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
       box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(12px);
     }
@@ -538,7 +652,7 @@
       display: block;
       padding: 0.35rem;
       background: #ffffff;
-      border-radius: 10px;
+      border-radius: 12px;
     }
 
     .presentation-qr-panel__label {
@@ -553,7 +667,14 @@
     .presentation-qr-panel__title {
       margin: 0;
       color: #ffffff;
-      font-size: 0.95rem;
+      font-size: 0.98rem;
+      line-height: 1.22;
+    }
+
+    .presentation-qr-panel__hint {
+      margin: 0.22rem 0 0;
+      color: var(--text-soft);
+      font-size: 0.78rem;
       line-height: 1.25;
     }
 
@@ -566,25 +687,27 @@
       .hero-qr-card { max-width: 280px; }
       .hero-pillars { grid-template-columns: 1fr; }
 
-      body.presentation-mode .game-card.is-presenting {
-        inset: 6rem 1.25rem 10rem 1.25rem;
-        flex-direction: column;
+      body.presentation-mode .presentation-school-info {
+        right: 5.2rem;
+        left: 1rem;
+        grid-template-columns: 1fr;
+        grid-template-areas: "kicker" "title" "meta";
       }
 
-      body.presentation-mode .game-card.is-presenting .game-card__image-wrap {
-        flex: 0 0 48%;
+      body.presentation-mode .presentation-brand-counter {
+        display: none;
+      }
+
+      body.presentation-mode .game-card.is-presenting {
+        inset: 10.8rem 1.25rem 10rem 1.25rem;
+        grid-template-columns: 1fr;
+        grid-template-rows: 45% 55%;
       }
 
       body.presentation-mode .game-card.is-presenting .game-card__body {
         padding: 1.5rem;
-      }
-
-      body.presentation-mode .presentation-school-info {
-        right: 5rem;
-        left: 1rem;
-        max-width: none;
-        overflow: hidden;
-        transform: none;
+        border-left: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       body.presentation-mode .presentation-qr-panel { max-width: 46vw; }
@@ -610,9 +733,10 @@
   </button>
 
   <div class="presentation-school-info" aria-hidden="true">
-    <strong>ČVUT FIT</strong>
-    <span>Visual Computing and Game Design</span>
-    <span>grafitctu.github.io/games</span>
+    <p class="presentation-brand-kicker">Czech Technical University in Prague · Faculty of Information Technology · GRAFIT</p>
+    <p class="presentation-brand-title">Visual Computing <span>and Game Design</span></p>
+    <p class="presentation-brand-meta">Computer graphics · Game design · VR/AR · UX/UI · Pattern recognition · Interactive technologies</p>
+    <p id="presentation-counter" class="presentation-brand-counter">1/1</p>
   </div>
 
   <div class="presentation-qr-panel presentation-qr-panel--page" aria-hidden="true">
@@ -620,8 +744,9 @@
       <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=https%3A%2F%2Fgrafitctu.github.io%2Fgames" alt="QR kód na stránku se studentskými hrami" />
     </a>
     <div class="presentation-qr-panel__text">
-      <p class="presentation-qr-panel__label">Menu her</p>
+      <p class="presentation-qr-panel__label">Full showcase</p>
       <p class="presentation-qr-panel__title">grafitctu.github.io/games</p>
+      <p class="presentation-qr-panel__hint">Open the complete student games gallery.</p>
     </div>
   </div>
 
@@ -630,8 +755,9 @@
       <img id="presentation-game-qr" src="" alt="QR kód na aktuální hru" />
     </a>
     <div class="presentation-qr-panel__text">
-      <p class="presentation-qr-panel__label">Aktuální hra</p>
+      <p class="presentation-qr-panel__label">This project</p>
       <p id="presentation-game-title" class="presentation-qr-panel__title">—</p>
+      <p class="presentation-qr-panel__hint">Open, play or watch this student project.</p>
     </div>
   </div>
 
@@ -820,6 +946,7 @@
     const gameQrLink = document.getElementById("presentation-game-link");
     const gameQrImage = document.getElementById("presentation-game-qr");
     const gameQrTitle = document.getElementById("presentation-game-title");
+    const presentationCounter = document.getElementById("presentation-counter");
 
     let presentationIndex = 0;
     let presentationTimer = null;
@@ -849,6 +976,7 @@
         gameQrImage.alt = "QR kód – " + currentTitle;
       }
       if (gameQrTitle) gameQrTitle.textContent = currentTitle;
+      if (presentationCounter) presentationCounter.textContent = (presentationIndex + 1) + "/" + presentationCards.length;
     }
 
     function scheduleNextCard() {
