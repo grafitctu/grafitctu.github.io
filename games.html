@@ -100,6 +100,12 @@
     .presentation-toggle { position: fixed; z-index: 5000; top: 1rem; right: 1rem; display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.7rem 1rem; color: var(--text-main); font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; background: rgba(11,16,34,0.86); border: 1px solid rgba(255,255,255,0.22); border-radius: 999px; box-shadow: 0 12px 28px rgba(0,0,0,0.45); backdrop-filter: blur(10px); }
     .presentation-toggle:hover, .presentation-toggle:focus-visible { border-color: rgba(246, 200, 0, 0.85); }
     .presentation-toggle__icon { color: var(--fit-yellow); font-size: 1rem; }
+
+    .presentation-info-toggle { display: none; position: fixed; z-index: 5000; top: 4.05rem; right: 1rem; padding: 0.48rem 0.78rem; color: rgba(245,245,245,0.76); font-size: 0.72rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; background: rgba(11,16,34,0.58); border: 1px solid rgba(255,255,255,0.13); border-radius: 999px; box-shadow: 0 10px 24px rgba(0,0,0,0.32); opacity: 0.58; backdrop-filter: blur(10px); }
+    body.presentation-mode .presentation-info-toggle { display: inline-flex; align-items: center; }
+    .presentation-info-toggle:hover, .presentation-info-toggle:focus-visible { opacity: 1; border-color: rgba(246,200,0,0.55); }
+    .presentation-info-toggle[aria-pressed="true"] { opacity: 1; color: var(--fit-yellow); background: rgba(246,200,0,0.1); border-color: rgba(246,200,0,0.62); }
+
     .presentation-school-info, .presentation-qr-panel { display: none; }
     .presentation-brand-kicker, .presentation-brand-title, .presentation-brand-meta, .presentation-brand-counter { margin: 0; }
 
@@ -172,6 +178,10 @@
   <button id="presentation-toggle" class="presentation-toggle" type="button" aria-pressed="false" aria-label="Spustit prezentační mód" title="Spustit prezentační mód">
     <span class="presentation-toggle__icon">▶</span>
     <span class="presentation-toggle__label">Prezentace</span>
+  </button>
+
+  <button id="presentation-info-toggle" class="presentation-info-toggle" type="button" aria-pressed="false" aria-label="Cyklit pouze informační slidy" title="Cyklit pouze informační slidy">
+    Info only
   </button>
 
   <div class="presentation-school-info" aria-hidden="true">
@@ -390,7 +400,9 @@
     const QR_API_BASE = "https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=";
     const PRESENTATION_INTERVAL_MS = 12000;
     const presentationSlides = Array.from(document.querySelectorAll(".showcase-slide"));
+    const presentationInfoSlides = presentationSlides.filter((slide) => slide.classList.contains("promo-card"));
     const presentationToggle = document.getElementById("presentation-toggle");
+    const presentationInfoToggle = document.getElementById("presentation-info-toggle");
     const presentationToggleIcon = presentationToggle?.querySelector(".presentation-toggle__icon");
     const presentationToggleLabel = presentationToggle?.querySelector(".presentation-toggle__label");
     const gameQrLink = document.getElementById("presentation-game-link");
@@ -402,18 +414,29 @@
 
     let presentationIndex = 0;
     let presentationTimer = null;
+    let infoOnlyMode = false;
 
     function makeQrUrl(url) { return QR_API_BASE + encodeURIComponent(url); }
+    function getActiveSlides() { return infoOnlyMode ? presentationInfoSlides : presentationSlides; }
+    function updateInfoToggleState() {
+      if (!presentationInfoToggle) return;
+      presentationInfoToggle.setAttribute("aria-pressed", infoOnlyMode ? "true" : "false");
+      presentationInfoToggle.title = infoOnlyMode ? "Cyklují se pouze informační slidy" : "Cyklit pouze informační slidy";
+      presentationInfoToggle.setAttribute("aria-label", presentationInfoToggle.title);
+      presentationInfoToggle.textContent = infoOnlyMode ? "Info only ✓" : "Info only";
+    }
 
     function getSlideTitle(slide) {
       return slide?.dataset?.qrTitle || slide?.querySelector(".game-card__title")?.textContent?.trim() || slide?.querySelector(".promo-card__title")?.textContent?.trim() || "Visual Computing and Game Design";
     }
 
     function setPresentedCard(index) {
-      if (!presentationSlides.length) return;
-      presentationIndex = ((index % presentationSlides.length) + presentationSlides.length) % presentationSlides.length;
-      presentationSlides.forEach((slide, slideIndex) => slide.classList.toggle("is-presenting", slideIndex === presentationIndex));
-      const currentSlide = presentationSlides[presentationIndex];
+      const activeSlides = getActiveSlides();
+      if (!activeSlides.length) return;
+      presentationIndex = ((index % activeSlides.length) + activeSlides.length) % activeSlides.length;
+      presentationSlides.forEach((slide) => slide.classList.remove("is-presenting"));
+      const currentSlide = activeSlides[presentationIndex];
+      currentSlide.classList.add("is-presenting");
       const isPromo = currentSlide.classList.contains("promo-card");
       const currentTitle = getSlideTitle(currentSlide);
       const currentUrl = currentSlide.dataset.qrTarget || currentSlide.href || PAGE_URL;
@@ -422,7 +445,7 @@
       if (gameQrTitle) gameQrTitle.textContent = currentTitle;
       if (gameQrLabel) gameQrLabel.textContent = isPromo ? "Learn more" : "This project";
       if (gameQrHint) gameQrHint.textContent = isPromo ? "Open related FIT information or the full showcase." : "Open, play or watch this student project.";
-      if (presentationCounter) presentationCounter.textContent = (presentationIndex + 1) + "/" + presentationSlides.length;
+      if (presentationCounter) presentationCounter.textContent = (presentationIndex + 1) + "/" + activeSlides.length;
     }
 
     function scheduleNextCard() {
@@ -438,6 +461,7 @@
       presentationToggle?.setAttribute("title", "Ukončit prezentační mód");
       if (presentationToggleIcon) presentationToggleIcon.textContent = "■";
       if (presentationToggleLabel) presentationToggleLabel.textContent = "Stop";
+      updateInfoToggleState();
       setPresentedCard(presentationIndex);
       scheduleNextCard();
       if (options.requestFullscreen !== false && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
@@ -460,9 +484,17 @@
       if (document.body.classList.contains("presentation-mode")) stopPresentation(); else startPresentation();
     });
 
+    presentationInfoToggle?.addEventListener("click", () => {
+      infoOnlyMode = !infoOnlyMode;
+      presentationIndex = 0;
+      updateInfoToggleState();
+      if (!document.body.classList.contains("presentation-mode")) startPresentation(); else { setPresentedCard(0); scheduleNextCard(); }
+    });
+
     document.addEventListener("keydown", (event) => {
       if (!document.body.classList.contains("presentation-mode")) return;
       if (event.key === "Escape") stopPresentation();
+      if (event.key.toLowerCase() === "i") { infoOnlyMode = !infoOnlyMode; presentationIndex = 0; updateInfoToggleState(); setPresentedCard(0); scheduleNextCard(); }
       if (event.key === "ArrowRight" || event.key === " " || event.key === "PageDown") { event.preventDefault(); setPresentedCard(presentationIndex + 1); scheduleNextCard(); }
       if (event.key === "ArrowLeft" || event.key === "PageUp") { event.preventDefault(); setPresentedCard(presentationIndex - 1); scheduleNextCard(); }
     });
@@ -472,7 +504,13 @@
     });
 
     const params = new URLSearchParams(window.location.search);
-    if (params.has("present") || params.has("presentation")) startPresentation({ requestFullscreen: false });
+    if (params.has("info") || params.get("present") === "info" || params.get("presentation") === "info") {
+      infoOnlyMode = true;
+      updateInfoToggleState();
+      startPresentation({ requestFullscreen: false });
+    } else if (params.has("present") || params.has("presentation")) {
+      startPresentation({ requestFullscreen: false });
+    }
   </script>
 </body>
 </html>
