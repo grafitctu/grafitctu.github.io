@@ -313,20 +313,20 @@
         transform: translateX(0);
       }
 
-/* Mobile: upper side panels, high position. */
+/* Mobile: upper side panels, safely above the wheel buttons. */
 .side-archetypes.left .side-panel:nth-child(1),
 .side-archetypes.right .side-panel:nth-child(1) {
-  top: 235px;
+  top: 270px;
 }
 
 .side-archetypes.left .side-panel:nth-child(2),
 .side-archetypes.right .side-panel:nth-child(2) {
-  top: 283px;
+  top: 318px;
 }
 
 .side-archetypes.left .side-panel:nth-child(3),
 .side-archetypes.right .side-panel:nth-child(3) {
-  top: 331px;
+  top: 366px;
 }
 
       /* Mobile: three panels on each side near the lower part. */
