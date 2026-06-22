@@ -315,13 +315,13 @@
 
      /* Mobile: three upper panels on each side, moved higher. */
 .side-archetypes.left .side-panel:nth-child(1),
-.side-archetypes.right .side-panel:nth-child(1) { top: 15vh; }
+.side-archetypes.right .side-panel:nth-child(1) { top: 5vh; }
 
 .side-archetypes.left .side-panel:nth-child(2),
-.side-archetypes.right .side-panel:nth-child(2) { top: calc(15vh + 48px); }
+.side-archetypes.right .side-panel:nth-child(2) { top: calc(5vh + 48px); }
 
 .side-archetypes.left .side-panel:nth-child(3),
-.side-archetypes.right .side-panel:nth-child(3) { top: calc(15vh + 96px); }
+.side-archetypes.right .side-panel:nth-child(3) { top: calc(5vh + 96px); }
 
       /* Mobile: three panels on each side near the lower part. */
       .side-archetypes.left .side-panel:nth-child(4),
