@@ -313,15 +313,21 @@
         transform: translateX(0);
       }
 
-     /* Mobile: three upper panels on each side, moved higher. */
+/* Mobile: upper side panels, high position. */
 .side-archetypes.left .side-panel:nth-child(1),
-.side-archetypes.right .side-panel:nth-child(1) { top: 5vh; }
+.side-archetypes.right .side-panel:nth-child(1) {
+  top: 235px;
+}
 
 .side-archetypes.left .side-panel:nth-child(2),
-.side-archetypes.right .side-panel:nth-child(2) { top: calc(5vh + 48px); }
+.side-archetypes.right .side-panel:nth-child(2) {
+  top: 283px;
+}
 
 .side-archetypes.left .side-panel:nth-child(3),
-.side-archetypes.right .side-panel:nth-child(3) { top: calc(5vh + 96px); }
+.side-archetypes.right .side-panel:nth-child(3) {
+  top: 331px;
+}
 
       /* Mobile: three panels on each side near the lower part. */
       .side-archetypes.left .side-panel:nth-child(4),
