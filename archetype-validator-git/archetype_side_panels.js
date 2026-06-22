@@ -313,15 +313,15 @@
         transform: translateX(0);
       }
 
-      /* Mobile: three panels on each side near the upper part. */
-      .side-archetypes.left .side-panel:nth-child(1),
-      .side-archetypes.right .side-panel:nth-child(1) { top: 32vh; }
+     /* Mobile: three upper panels on each side, moved higher. */
+.side-archetypes.left .side-panel:nth-child(1),
+.side-archetypes.right .side-panel:nth-child(1) { top: 25vh; }
 
-      .side-archetypes.left .side-panel:nth-child(2),
-      .side-archetypes.right .side-panel:nth-child(2) { top: calc(32vh + 48px); }
+.side-archetypes.left .side-panel:nth-child(2),
+.side-archetypes.right .side-panel:nth-child(2) { top: calc(25vh + 48px); }
 
-      .side-archetypes.left .side-panel:nth-child(3),
-      .side-archetypes.right .side-panel:nth-child(3) { top: calc(32vh + 96px); }
+.side-archetypes.left .side-panel:nth-child(3),
+.side-archetypes.right .side-panel:nth-child(3) { top: calc(25vh + 96px); }
 
       /* Mobile: three panels on each side near the lower part. */
       .side-archetypes.left .side-panel:nth-child(4),
