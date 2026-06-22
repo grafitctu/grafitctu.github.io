@@ -346,6 +346,25 @@
       .side-panel.open {
         width: min(var(--panel-width), 86vw);
       }
+
+
+      /* 3 horní bloky – lehce výš */
+.side-archetypes.left .side-panel:nth-child(1),
+.side-archetypes.right .side-panel:nth-child(1) {
+  top: 28vh;
+}
+
+.side-archetypes.left .side-panel:nth-child(2),
+.side-archetypes.right .side-panel:nth-child(2) {
+  top: calc(28vh + 48px);
+}
+
+.side-archetypes.left .side-panel:nth-child(3),
+.side-archetypes.right .side-panel:nth-child(3) {
+  top: calc(28vh + 96px);
+}
+
+
     }
   `;
 
