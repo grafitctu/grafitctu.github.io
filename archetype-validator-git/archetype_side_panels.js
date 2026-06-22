@@ -1,100 +1,101 @@
 (() => {
   const archetypes = [
     {
-      id: "innocent",
-      name: "Innocent",
-      short: "Safety / hope",
+      id: "explorer",
+      name: "Explorer",
+      short: "Freedom",
       color: "#9bb83d",
       side: "left",
-      text: "The Innocent seeks safety, purity, simplicity, trust, and a return to a world that still makes moral sense. In protagonists, this archetype often appears as vulnerability, naivety, optimism, or a desire to preserve goodness despite danger."
+      text: "Explorer seeks freedom, discovery, movement, and self-definition beyond imposed boundaries. In games, this often appears in travel, adventure, survival, archaeology, open-world exploration, and characters who are defined by leaving the known world."
     },
     {
-      id: "everyman",
-      name: "Everyman",
-      short: "Belonging",
+      id: "outlaw",
+      name: "Outlaw",
+      short: "Liberation",
       color: "#d4c80a",
       side: "left",
-      text: "The Everyman is ordinary, relatable, socially grounded, and often defined by survival, community, or everyday moral pressure. In games, this archetype is especially useful for non-heroic protagonists, civilians, workers, clerks, survivors, or reluctant participants."
+      text: "Outlaw resists authority, breaks rules, rejects imposed order, or attacks oppressive systems. This archetype may be heroic, criminal, comic, or destructive; the key feature is opposition to established control."
+    },
+    {
+      id: "magician",
+      name: "Magician",
+      short: "Power",
+      color: "#d79a16",
+      side: "left",
+      text: "Magician transforms reality, perception, identity, or systems. This may be literal magic, hacking, psychic power, occult knowledge, technological manipulation, or any role that changes the rules of the world."
     },
     {
       id: "hero",
       name: "Hero",
-      short: "Courage",
-      color: "#d79a16",
-      side: "left",
-      text: "The Hero is defined by struggle, courage, confrontation, endurance, and the willingness to face danger. This does not always mean moral purity; many heroic protagonists are damaged, reluctant, or compromised, but their role is structured around overcoming."
-    },
-    {
-      id: "caregiver",
-      name: "Caregiver",
-      short: "Protection",
+      short: "Mastery",
       color: "#cf7623",
       side: "left",
-      text: "The Caregiver is motivated by protection, responsibility, sacrifice, repair, and care for another person or community. In games, this often appears in parent-child plots, escort structures, healing roles, rescue missions, or protagonists whose violence is framed as protection."
-    },
-    {
-      id: "explorer",
-      name: "Explorer",
-      short: "Freedom",
-      color: "#c84d53",
-      side: "left",
-      text: "The Explorer seeks freedom, discovery, movement, unknown spaces, and self-definition beyond imposed boundaries. This archetype is common in adventure, open-world, travel, archaeology, survival, and exploration-driven games."
-    },
-    {
-      id: "rebel",
-      name: "Rebel",
-      short: "Liberation",
-      color: "#bf2d75",
-      side: "left",
-      text: "The Rebel, Outlaw, or Revolutionary resists authority, breaks rules, attacks oppressive systems, or rejects imposed identities. Rebel protagonists may be heroic, comic, criminal, or destructive; the key is their oppositional relation to order."
+      text: "Hero is structured around courage, struggle, confrontation, endurance, and overcoming danger. The protagonist does not need to be morally perfect; the key is that the narrative or gameplay frames them through challenge and achievement."
     },
     {
       id: "lover",
       name: "Lover",
       short: "Intimacy",
-      color: "#934091",
-      side: "right",
-      text: "The Lover is driven by intimacy, attachment, desire, beauty, devotion, or emotional connection. This archetype is not limited to romance; it can also describe protagonists whose core motivation is relational, aesthetic, sensual, or deeply personal."
-    },
-    {
-      id: "creator",
-      name: "Creator",
-      short: "Creation",
-      color: "#315fa4",
-      side: "right",
-      text: "The Creator is defined by making, shaping, building, designing, inventing, composing, or transforming material into form. In games, this can describe named artists and inventors, but also player roles in construction, crafting, colony, and sandbox systems."
+      color: "#c84d53",
+      side: "left",
+      text: "Lover is driven by attachment, desire, beauty, devotion, intimacy, or emotional connection. This is not only romance: it can also describe protagonists whose main motivation is relational, aesthetic, sensual, or deeply personal."
     },
     {
       id: "jester",
       name: "Jester",
-      short: "Play",
-      color: "#1681b3",
+      short: "Enjoyment",
+      color: "#bf2d75",
+      side: "left",
+      text: "Jester uses play, humor, irony, trickery, improvisation, or refusal of seriousness. Jester protagonists may be fools, pranksters, comic heroes, chaotic tricksters, or figures who expose the absurdity of social order."
+    },
+
+    {
+      id: "everyman",
+      name: "Everyman",
+      short: "Belonging",
+      color: "#934091",
       side: "right",
-      text: "The Jester uses play, humor, irony, trickery, absurdity, improvisation, or refusal of seriousness. Jester protagonists can be comic heroes, tricksters, fools, pranksters, or chaotic figures who expose the fragility of social order."
+      text: "Everyman is ordinary, relatable, socially grounded, and often defined by survival, community, work, or everyday moral pressure. This is especially useful for non-heroic protagonists, civilians, workers, survivors, and reluctant participants."
     },
     {
-      id: "sage",
-      name: "Sage",
-      short: "Knowledge",
-      color: "#0797b5",
+      id: "caregiver",
+      name: "Caregiver",
+      short: "Service",
+      color: "#315fa4",
       side: "right",
-      text: "The Sage seeks truth, knowledge, interpretation, investigation, memory, or understanding. Detectives, scholars, hackers, scientists, witnesses, and puzzle-solving protagonists often carry Sage functions, especially when the central action is finding out what is really going on."
-    },
-    {
-      id: "magician",
-      name: "Magician",
-      short: "Transformation",
-      color: "#198f88",
-      side: "right",
-      text: "The Magician transforms reality, perception, selfhood, or systems. This archetype appears in literal magic, hacking, psychic powers, technological manipulation, occult knowledge, or protagonists whose role is to alter the rules of the world."
+      text: "Caregiver is motivated by protection, responsibility, repair, sacrifice, and care for another person or community. It often appears in parent-child plots, rescue structures, healing roles, and protagonists whose violence is framed as protection."
     },
     {
       id: "ruler",
       name: "Ruler",
       short: "Control",
+      color: "#1681b3",
+      side: "right",
+      text: "Ruler seeks order, control, leadership, law, command, or systemic power. In games this can describe kings, commanders, bosses, mayors, managers, strategists, and player roles built around governance or control."
+    },
+    {
+      id: "creator",
+      name: "Creator",
+      short: "Innovation",
+      color: "#0797b5",
+      side: "right",
+      text: "Creator is defined by making, shaping, building, composing, inventing, or transforming material into form. It can describe artists and inventors, but also player roles in crafting, construction, sandbox, colony, and design systems."
+    },
+    {
+      id: "innocent",
+      name: "Innocent",
+      short: "Safety",
+      color: "#198f88",
+      side: "right",
+      text: "Innocent seeks safety, trust, hope, simplicity, purity, or a world that still makes moral sense. In protagonists this can appear as vulnerability, optimism, naivety, or a desire to preserve goodness despite danger."
+    },
+    {
+      id: "sage",
+      name: "Sage",
+      short: "Understanding",
       color: "#0aa66f",
       side: "right",
-      text: "The Ruler seeks order, control, leadership, responsibility, command, law, or systemic power. In games, this archetype is common not only in kings, commanders, and bosses, but also in strategy, management, city-building, and political simulations."
+      text: "Sage seeks truth, knowledge, interpretation, investigation, memory, or understanding. Detectives, scholars, hackers, scientists, witnesses, and puzzle-solving protagonists often carry Sage functions."
     }
   ];
 
@@ -110,14 +111,21 @@
       pointer-events: none;
     }
 
-    .side-archetypes.left { left: 0; }
-    .side-archetypes.right { right: 0; }
+    .side-archetypes.left {
+      left: 0;
+    }
+
+    .side-archetypes.right {
+      right: 0;
+    }
 
     .side-panel {
-      --panel-color: #111;
+      --panel-color: #111827;
+      --panel-width: 300px;
+      --tab-width: 108px;
       position: relative;
-      width: 230px;
-      min-height: 54px;
+      width: var(--panel-width);
+      min-height: 56px;
       border: 0;
       padding: 0;
       margin: 0;
@@ -125,76 +133,121 @@
       pointer-events: auto;
       cursor: pointer;
       font: inherit;
-      text-align: left;
       color: #fff;
+      text-align: left;
       filter: drop-shadow(0 8px 18px rgba(0,0,0,.18));
       transition: transform .22s ease, filter .22s ease;
     }
 
+    /*
+      DŮLEŽITÉ:
+      Levý panel je schovaný doleva.
+      Vidíme tedy jeho PRAVÝ okraj.
+      Proto musí být štítek na pravém okraji panelu.
+    */
     .side-archetypes.left .side-panel {
-      transform: translateX(-176px);
+      transform: translateX(calc(-1 * (var(--panel-width) - var(--tab-width))));
     }
 
+    /*
+      Pravý panel je schovaný doprava.
+      Vidíme tedy jeho LEVÝ okraj.
+      Proto musí být štítek na levém okraji panelu.
+    */
     .side-archetypes.right .side-panel {
-      transform: translateX(176px);
+      transform: translateX(calc(var(--panel-width) - var(--tab-width)));
     }
 
     .side-archetypes.left .side-panel.open,
-    .side-archetypes.left .side-panel:hover {
-      transform: translateX(0);
-    }
-
+    .side-archetypes.left .side-panel:hover,
     .side-archetypes.right .side-panel.open,
     .side-archetypes.right .side-panel:hover {
       transform: translateX(0);
+      filter: drop-shadow(0 12px 26px rgba(0,0,0,.25));
     }
 
     .side-panel-inner {
       display: grid;
-      grid-template-columns: 54px 1fr;
-      min-height: 54px;
+      min-height: 56px;
       background: var(--panel-color);
       overflow: hidden;
     }
 
+    /*
+      Levá strana:
+      obsah je vlevo a zajetý mimo obrazovku,
+      štítek je vpravo a zůstává viditelný.
+    */
     .side-archetypes.left .side-panel-inner {
+      grid-template-columns: 1fr var(--tab-width);
       border-radius: 0 14px 14px 0;
     }
 
+    .side-archetypes.left .side-content {
+      order: 1;
+    }
+
+    .side-archetypes.left .side-tab {
+      order: 2;
+    }
+
+    /*
+      Pravá strana:
+      štítek je vlevo a zůstává viditelný,
+      obsah je vpravo a zajetý mimo obrazovku.
+    */
     .side-archetypes.right .side-panel-inner {
-      grid-template-columns: 1fr 54px;
+      grid-template-columns: var(--tab-width) 1fr;
       border-radius: 14px 0 0 14px;
     }
 
-    .side-tab {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 54px;
-      background: rgba(0,0,0,.12);
-      font-size: 10px;
-      line-height: 1;
-      font-weight: 950;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      user-select: none;
+    .side-archetypes.right .side-tab {
+      order: 1;
     }
 
-    .side-archetypes.right .side-tab {
+    .side-archetypes.right .side-content {
       order: 2;
-      writing-mode: vertical-lr;
+    }
+
+    .side-tab {
+      min-height: 56px;
+      padding: 8px 9px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: rgba(0,0,0,.10);
+      user-select: none;
+      overflow: hidden;
+    }
+
+    .side-tab-name {
+      display: block;
+      font-size: 12px;
+      line-height: 1.05;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .035em;
+      white-space: nowrap;
+    }
+
+    .side-tab-short {
+      display: block;
+      margin-top: 3px;
+      font-size: 9.5px;
+      line-height: 1.05;
+      font-weight: 850;
+      opacity: .95;
+      white-space: nowrap;
     }
 
     .side-content {
-      padding: 8px 11px 9px;
+      padding: 10px 13px 11px;
       min-width: 0;
     }
 
     .side-title {
       margin: 0;
-      font-size: 13px;
+      font-size: 15px;
       line-height: 1.05;
       font-weight: 950;
       text-transform: uppercase;
@@ -202,28 +255,23 @@
     }
 
     .side-short {
-      margin: 3px 0 0;
-      font-size: 11px;
-      line-height: 1.1;
-      font-weight: 800;
-      opacity: .92;
+      margin: 4px 0 0;
+      font-size: 12px;
+      line-height: 1.15;
+      font-weight: 900;
+      opacity: 1;
     }
 
     .side-detail {
       display: none;
-      margin: 7px 0 0;
+      margin: 8px 0 0;
       font-size: 11px;
       line-height: 1.25;
       opacity: .96;
     }
 
-    .side-panel.open {
-      width: 300px;
-      filter: drop-shadow(0 12px 26px rgba(0,0,0,.24));
-    }
-
     .side-panel.open .side-panel-inner {
-      min-height: 132px;
+      min-height: 138px;
     }
 
     .side-panel.open .side-detail {
@@ -235,76 +283,77 @@
       outline-offset: 2px;
     }
 
-    @media (max-width: 760px) {
+    @media (max-width: 900px) {
+      .side-panel {
+        --panel-width: 260px;
+        --tab-width: 92px;
+        min-height: 48px;
+      }
+
+      .side-panel-inner {
+        min-height: 48px;
+      }
+
+      .side-tab {
+        min-height: 48px;
+        padding: 6px 7px;
+      }
+
+      .side-tab-name {
+        font-size: 10.5px;
+      }
+
+      .side-tab-short {
+        font-size: 8.5px;
+      }
+
+      .side-content {
+        padding: 8px 10px 9px;
+      }
+
+      .side-title {
+        font-size: 13px;
+      }
+
+      .side-short {
+        font-size: 10.5px;
+      }
+
+      .side-detail {
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 620px) {
       .side-archetypes {
         gap: 5px;
       }
 
       .side-panel {
-        width: 176px;
+        --panel-width: 230px;
+        --tab-width: 78px;
         min-height: 42px;
-      }
-
-      .side-archetypes.left .side-panel {
-        transform: translateX(-135px);
-      }
-
-      .side-archetypes.right .side-panel {
-        transform: translateX(135px);
-      }
-
-      .side-panel.open {
-        width: min(270px, 82vw);
       }
 
       .side-panel-inner {
-        grid-template-columns: 41px 1fr;
         min-height: 42px;
-      }
-
-      .side-archetypes.right .side-panel-inner {
-        grid-template-columns: 1fr 41px;
       }
 
       .side-tab {
         min-height: 42px;
-        font-size: 8px;
-        letter-spacing: .06em;
+        padding: 5px 6px;
       }
 
-      .side-content {
-        padding: 6px 8px 7px;
+      .side-tab-name {
+        font-size: 9px;
       }
 
-      .side-title {
-        font-size: 11px;
-      }
-
-      .side-short {
-        font-size: 9.5px;
-      }
-
-      .side-detail {
-        font-size: 10px;
-        line-height: 1.2;
-      }
-    }
-
-    @media (max-width: 420px) {
-      .side-panel {
-        width: 156px;
-      }
-
-      .side-archetypes.left .side-panel {
-        transform: translateX(-119px);
-      }
-
-      .side-archetypes.right .side-panel {
-        transform: translateX(119px);
+      .side-tab-short {
+        font-size: 7.5px;
       }
 
       .side-panel.open {
-        width: min(260px, 86vw);
+        width: min(var(--panel-width), 86vw);
       }
     }
   `;
@@ -332,7 +381,10 @@
 
     btn.innerHTML = `
       <div class="side-panel-inner">
-        <div class="side-tab">${a.short}</div>
+        <div class="side-tab">
+          <span class="side-tab-name">${a.name}</span>
+          <span class="side-tab-short">${a.short}</span>
+        </div>
         <div class="side-content">
           <p class="side-title">${a.name}</p>
           <p class="side-short">${a.short}</p>
@@ -343,11 +395,14 @@
 
     btn.addEventListener("click", (event) => {
       event.stopPropagation();
+
       const wasOpen = btn.classList.contains("open");
-      document.querySelectorAll(".side-panel.open").forEach(p => {
-        p.classList.remove("open");
-        p.setAttribute("aria-expanded", "false");
+
+      document.querySelectorAll(".side-panel.open").forEach(panel => {
+        panel.classList.remove("open");
+        panel.setAttribute("aria-expanded", "false");
       });
+
       if (!wasOpen) {
         btn.classList.add("open");
         btn.setAttribute("aria-expanded", "true");
@@ -358,25 +413,28 @@
   }
 
   archetypes.forEach(a => {
-    if (a.side === "left") left.appendChild(makePanel(a));
-    else right.appendChild(makePanel(a));
+    if (a.side === "left") {
+      left.appendChild(makePanel(a));
+    } else {
+      right.appendChild(makePanel(a));
+    }
   });
 
   document.body.appendChild(left);
   document.body.appendChild(right);
 
   document.addEventListener("click", () => {
-    document.querySelectorAll(".side-panel.open").forEach(p => {
-      p.classList.remove("open");
-      p.setAttribute("aria-expanded", "false");
+    document.querySelectorAll(".side-panel.open").forEach(panel => {
+      panel.classList.remove("open");
+      panel.setAttribute("aria-expanded", "false");
     });
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      document.querySelectorAll(".side-panel.open").forEach(p => {
-        p.classList.remove("open");
-        p.setAttribute("aria-expanded", "false");
+      document.querySelectorAll(".side-panel.open").forEach(panel => {
+        panel.classList.remove("open");
+        panel.setAttribute("aria-expanded", "false");
       });
     }
   });
