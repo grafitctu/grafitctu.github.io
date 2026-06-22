@@ -4,6 +4,7 @@
       id: "explorer",
       name: "Explorer",
       short: "Freedom",
+      inner: "Explore Spirituality",
       color: "#9bb83d",
       side: "left",
       text: "Explorer seeks freedom, discovery, movement, and self-definition beyond imposed boundaries. In games, this often appears in travel, adventure, survival, archaeology, open-world exploration, and characters who are defined by leaving the known world."
@@ -12,6 +13,7 @@
       id: "outlaw",
       name: "Outlaw",
       short: "Liberation",
+      inner: "Leave Legacy",
       color: "#d4c80a",
       side: "left",
       text: "Outlaw resists authority, breaks rules, rejects imposed order, or attacks oppressive systems. This archetype may be heroic, criminal, comic, or destructive; the key feature is opposition to established control."
@@ -20,6 +22,7 @@
       id: "magician",
       name: "Magician",
       short: "Power",
+      inner: "Leave Legacy",
       color: "#d79a16",
       side: "left",
       text: "Magician transforms reality, perception, identity, or systems. This may be literal magic, hacking, psychic power, occult knowledge, technological manipulation, or any role that changes the rules of the world."
@@ -28,6 +31,7 @@
       id: "hero",
       name: "Hero",
       short: "Mastery",
+      inner: "Leave Legacy",
       color: "#cf7623",
       side: "left",
       text: "Hero is structured around courage, struggle, confrontation, endurance, and overcoming danger. The protagonist does not need to be morally perfect; the key is that the narrative or gameplay frames them through challenge and achievement."
@@ -36,6 +40,7 @@
       id: "lover",
       name: "Lover",
       short: "Intimacy",
+      inner: "Pursue Connection",
       color: "#c84d53",
       side: "left",
       text: "Lover is driven by attachment, desire, beauty, devotion, intimacy, or emotional connection. This is not only romance: it can also describe protagonists whose main motivation is relational, aesthetic, sensual, or deeply personal."
@@ -44,15 +49,16 @@
       id: "jester",
       name: "Jester",
       short: "Enjoyment",
+      inner: "Pursue Connection",
       color: "#bf2d75",
       side: "left",
       text: "Jester uses play, humor, irony, trickery, improvisation, or refusal of seriousness. Jester protagonists may be fools, pranksters, comic heroes, chaotic tricksters, or figures who expose the absurdity of social order."
     },
-
     {
       id: "everyman",
       name: "Everyman",
       short: "Belonging",
+      inner: "Pursue Connection",
       color: "#934091",
       side: "right",
       text: "Everyman is ordinary, relatable, socially grounded, and often defined by survival, community, work, or everyday moral pressure. This is especially useful for non-heroic protagonists, civilians, workers, survivors, and reluctant participants."
@@ -61,6 +67,7 @@
       id: "caregiver",
       name: "Caregiver",
       short: "Service",
+      inner: "Provide Structure",
       color: "#315fa4",
       side: "right",
       text: "Caregiver is motivated by protection, responsibility, repair, sacrifice, and care for another person or community. It often appears in parent-child plots, rescue structures, healing roles, and protagonists whose violence is framed as protection."
@@ -69,6 +76,7 @@
       id: "ruler",
       name: "Ruler",
       short: "Control",
+      inner: "Provide Structure",
       color: "#1681b3",
       side: "right",
       text: "Ruler seeks order, control, leadership, law, command, or systemic power. In games this can describe kings, commanders, bosses, mayors, managers, strategists, and player roles built around governance or control."
@@ -77,6 +85,7 @@
       id: "creator",
       name: "Creator",
       short: "Innovation",
+      inner: "Provide Structure",
       color: "#0797b5",
       side: "right",
       text: "Creator is defined by making, shaping, building, composing, inventing, or transforming material into form. It can describe artists and inventors, but also player roles in crafting, construction, sandbox, colony, and design systems."
@@ -85,6 +94,7 @@
       id: "innocent",
       name: "Innocent",
       short: "Safety",
+      inner: "Explore Spirituality",
       color: "#198f88",
       side: "right",
       text: "Innocent seeks safety, trust, hope, simplicity, purity, or a world that still makes moral sense. In protagonists this can appear as vulnerability, optimism, naivety, or a desire to preserve goodness despite danger."
@@ -93,6 +103,7 @@
       id: "sage",
       name: "Sage",
       short: "Understanding",
+      inner: "Explore Spirituality",
       color: "#0aa66f",
       side: "right",
       text: "Sage seeks truth, knowledge, interpretation, investigation, memory, or understanding. Detectives, scholars, hackers, scientists, witnesses, and puzzle-solving protagonists often carry Sage functions."
@@ -111,13 +122,8 @@
       pointer-events: none;
     }
 
-    .side-archetypes.left {
-      left: 0;
-    }
-
-    .side-archetypes.right {
-      right: 0;
-    }
+    .side-archetypes.left { left: 0; }
+    .side-archetypes.right { right: 0; }
 
     .side-panel {
       --panel-color: #111827;
@@ -139,29 +145,19 @@
       transition: transform .22s ease, filter .22s ease;
     }
 
-    /*
-      DŮLEŽITÉ:
-      Levý panel je schovaný doleva.
-      Vidíme tedy jeho PRAVÝ okraj.
-      Proto musí být štítek na pravém okraji panelu.
-    */
+    /* Left panel hides to the left, so the visible tab must be on its right edge. */
     .side-archetypes.left .side-panel {
       transform: translateX(calc(-1 * (var(--panel-width) - var(--tab-width))));
     }
 
-    /*
-      Pravý panel je schovaný doprava.
-      Vidíme tedy jeho LEVÝ okraj.
-      Proto musí být štítek na levém okraji panelu.
-    */
+    /* Right panel hides to the right, so the visible tab must be on its left edge. */
     .side-archetypes.right .side-panel {
       transform: translateX(calc(var(--panel-width) - var(--tab-width)));
     }
 
+    /* Panels open only when clicked. No hover-open. */
     .side-archetypes.left .side-panel.open,
-    .side-archetypes.left .side-panel:hover,
-    .side-archetypes.right .side-panel.open,
-    .side-archetypes.right .side-panel:hover {
+    .side-archetypes.right .side-panel.open {
       transform: translateX(0);
       filter: drop-shadow(0 12px 26px rgba(0,0,0,.25));
     }
@@ -173,41 +169,21 @@
       overflow: hidden;
     }
 
-    /*
-      Levá strana:
-      obsah je vlevo a zajetý mimo obrazovku,
-      štítek je vpravo a zůstává viditelný.
-    */
     .side-archetypes.left .side-panel-inner {
       grid-template-columns: 1fr var(--tab-width);
       border-radius: 0 14px 14px 0;
     }
 
-    .side-archetypes.left .side-content {
-      order: 1;
-    }
+    .side-archetypes.left .side-content { order: 1; }
+    .side-archetypes.left .side-tab { order: 2; }
 
-    .side-archetypes.left .side-tab {
-      order: 2;
-    }
-
-    /*
-      Pravá strana:
-      štítek je vlevo a zůstává viditelný,
-      obsah je vpravo a zajetý mimo obrazovku.
-    */
     .side-archetypes.right .side-panel-inner {
       grid-template-columns: var(--tab-width) 1fr;
       border-radius: 14px 0 0 14px;
     }
 
-    .side-archetypes.right .side-tab {
-      order: 1;
-    }
-
-    .side-archetypes.right .side-content {
-      order: 2;
-    }
+    .side-archetypes.right .side-tab { order: 1; }
+    .side-archetypes.right .side-content { order: 2; }
 
     .side-tab {
       min-height: 56px;
@@ -254,7 +230,7 @@
       letter-spacing: .04em;
     }
 
-    .side-short {
+    .side-inner {
       margin: 4px 0 0;
       font-size: 12px;
       line-height: 1.15;
@@ -290,67 +266,82 @@
         min-height: 48px;
       }
 
-      .side-panel-inner {
-        min-height: 48px;
-      }
+      .side-panel-inner { min-height: 48px; }
 
       .side-tab {
         min-height: 48px;
         padding: 6px 7px;
       }
 
-      .side-tab-name {
-        font-size: 10.5px;
-      }
+      .side-tab-name { font-size: 10.5px; }
+      .side-tab-short { font-size: 8.5px; }
 
-      .side-tab-short {
-        font-size: 8.5px;
-      }
-
-      .side-content {
-        padding: 8px 10px 9px;
-      }
-
-      .side-title {
-        font-size: 13px;
-      }
-
-      .side-short {
-        font-size: 10.5px;
-      }
-
-      .side-detail {
-        font-size: 10px;
-      }
+      .side-content { padding: 8px 10px 9px; }
+      .side-title { font-size: 13px; }
+      .side-inner { font-size: 10.5px; }
+      .side-detail { font-size: 10px; }
     }
 
     @media (max-width: 620px) {
       .side-archetypes {
-        gap: 5px;
+        top: auto;
+        transform: none;
+        display: block;
+        gap: 0;
+        pointer-events: none;
       }
 
       .side-panel {
+        position: fixed;
         --panel-width: 230px;
         --tab-width: 78px;
         min-height: 42px;
       }
 
-      .side-panel-inner {
-        min-height: 42px;
+      .side-archetypes.left .side-panel {
+        left: 0;
+        transform: translateX(calc(-1 * (var(--panel-width) - var(--tab-width))));
       }
+
+      .side-archetypes.right .side-panel {
+        right: 0;
+        transform: translateX(calc(var(--panel-width) - var(--tab-width)));
+      }
+
+      .side-archetypes.left .side-panel.open,
+      .side-archetypes.right .side-panel.open {
+        transform: translateX(0);
+      }
+
+      /* Mobile: three panels on each side near the upper part. */
+      .side-archetypes.left .side-panel:nth-child(1),
+      .side-archetypes.right .side-panel:nth-child(1) { top: 32vh; }
+
+      .side-archetypes.left .side-panel:nth-child(2),
+      .side-archetypes.right .side-panel:nth-child(2) { top: calc(32vh + 48px); }
+
+      .side-archetypes.left .side-panel:nth-child(3),
+      .side-archetypes.right .side-panel:nth-child(3) { top: calc(32vh + 96px); }
+
+      /* Mobile: three panels on each side near the lower part. */
+      .side-archetypes.left .side-panel:nth-child(4),
+      .side-archetypes.right .side-panel:nth-child(4) { top: 68vh; }
+
+      .side-archetypes.left .side-panel:nth-child(5),
+      .side-archetypes.right .side-panel:nth-child(5) { top: calc(68vh + 48px); }
+
+      .side-archetypes.left .side-panel:nth-child(6),
+      .side-archetypes.right .side-panel:nth-child(6) { top: calc(68vh + 96px); }
+
+      .side-panel-inner { min-height: 42px; }
 
       .side-tab {
         min-height: 42px;
         padding: 5px 6px;
       }
 
-      .side-tab-name {
-        font-size: 9px;
-      }
-
-      .side-tab-short {
-        font-size: 7.5px;
-      }
+      .side-tab-name { font-size: 9px; }
+      .side-tab-short { font-size: 7.5px; }
 
       .side-panel.open {
         width: min(var(--panel-width), 86vw);
@@ -377,7 +368,7 @@
     btn.style.setProperty("--panel-color", a.color);
     btn.dataset.archetype = a.id;
     btn.setAttribute("aria-expanded", "false");
-    btn.setAttribute("aria-label", `${a.name}: ${a.short}`);
+    btn.setAttribute("aria-label", `${a.name}: ${a.short}. ${a.inner}.`);
 
     btn.innerHTML = `
       <div class="side-panel-inner">
@@ -387,7 +378,7 @@
         </div>
         <div class="side-content">
           <p class="side-title">${a.name}</p>
-          <p class="side-short">${a.short}</p>
+          <p class="side-inner">${a.inner}</p>
           <p class="side-detail">${a.text}</p>
         </div>
       </div>
@@ -395,41 +386,22 @@
 
     btn.addEventListener("click", (event) => {
       event.stopPropagation();
-
-      const wasOpen = btn.classList.contains("open");
-
-      document.querySelectorAll(".side-panel.open").forEach(panel => {
-        panel.classList.remove("open");
-        panel.setAttribute("aria-expanded", "false");
-      });
-
-      if (!wasOpen) {
-        btn.classList.add("open");
-        btn.setAttribute("aria-expanded", "true");
-      }
+      const isOpen = btn.classList.toggle("open");
+      btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
     });
 
     return btn;
   }
 
   archetypes.forEach(a => {
-    if (a.side === "left") {
-      left.appendChild(makePanel(a));
-    } else {
-      right.appendChild(makePanel(a));
-    }
+    if (a.side === "left") left.appendChild(makePanel(a));
+    else right.appendChild(makePanel(a));
   });
 
   document.body.appendChild(left);
   document.body.appendChild(right);
 
-  document.addEventListener("click", () => {
-    document.querySelectorAll(".side-panel.open").forEach(panel => {
-      panel.classList.remove("open");
-      panel.setAttribute("aria-expanded", "false");
-    });
-  });
-
+  // Escape remains a useful global reset. Click outside does not close panels.
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       document.querySelectorAll(".side-panel.open").forEach(panel => {
