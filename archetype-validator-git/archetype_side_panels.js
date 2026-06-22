@@ -145,17 +145,14 @@
       transition: transform .22s ease, filter .22s ease;
     }
 
-    /* Left panel hides to the left, so the visible tab must be on its right edge. */
     .side-archetypes.left .side-panel {
       transform: translateX(calc(-1 * (var(--panel-width) - var(--tab-width))));
     }
 
-    /* Right panel hides to the right, so the visible tab must be on its left edge. */
     .side-archetypes.right .side-panel {
       transform: translateX(calc(var(--panel-width) - var(--tab-width)));
     }
 
-    /* Panels open only when clicked. No hover-open. */
     .side-archetypes.left .side-panel.open,
     .side-archetypes.right .side-panel.open {
       transform: translateX(0);
@@ -313,31 +310,42 @@
         transform: translateX(0);
       }
 
-/* Mobile: upper side panels, safely above the wheel buttons. */
-.side-archetypes.left .side-panel:nth-child(1),
-.side-archetypes.right .side-panel:nth-child(1) {
-  top: 270px;
-}
-
-.side-archetypes.left .side-panel:nth-child(2),
-.side-archetypes.right .side-panel:nth-child(2) {
-  top: 318px;
-}
-
-.side-archetypes.left .side-panel:nth-child(3),
-.side-archetypes.right .side-panel:nth-child(3) {
-  top: 366px;
-}
-
-      /* Mobile: three panels on each side near the lower part. */
-      .side-archetypes.left .side-panel:nth-child(4),
-      .side-archetypes.right .side-panel:nth-child(4) { top: 68vh; }
+      /* Mobile: side panels remain side panels, but are stacked from the bottom. */
+      .side-archetypes.left .side-panel:nth-child(6),
+      .side-archetypes.right .side-panel:nth-child(6) {
+        bottom: calc(env(safe-area-inset-bottom) + 28px);
+        top: auto;
+      }
 
       .side-archetypes.left .side-panel:nth-child(5),
-      .side-archetypes.right .side-panel:nth-child(5) { top: calc(68vh + 48px); }
+      .side-archetypes.right .side-panel:nth-child(5) {
+        bottom: calc(env(safe-area-inset-bottom) + 76px);
+        top: auto;
+      }
 
-      .side-archetypes.left .side-panel:nth-child(6),
-      .side-archetypes.right .side-panel:nth-child(6) { top: calc(68vh + 96px); }
+      .side-archetypes.left .side-panel:nth-child(4),
+      .side-archetypes.right .side-panel:nth-child(4) {
+        bottom: calc(env(safe-area-inset-bottom) + 124px);
+        top: auto;
+      }
+
+      .side-archetypes.left .side-panel:nth-child(3),
+      .side-archetypes.right .side-panel:nth-child(3) {
+        bottom: calc(env(safe-area-inset-bottom) + 172px);
+        top: auto;
+      }
+
+      .side-archetypes.left .side-panel:nth-child(2),
+      .side-archetypes.right .side-panel:nth-child(2) {
+        bottom: calc(env(safe-area-inset-bottom) + 220px);
+        top: auto;
+      }
+
+      .side-archetypes.left .side-panel:nth-child(1),
+      .side-archetypes.right .side-panel:nth-child(1) {
+        bottom: calc(env(safe-area-inset-bottom) + 268px);
+        top: auto;
+      }
 
       .side-panel-inner { min-height: 42px; }
 
@@ -352,25 +360,6 @@
       .side-panel.open {
         width: min(var(--panel-width), 86vw);
       }
-
-
-      /* 3 horní bloky – lehce výš */
-.side-archetypes.left .side-panel:nth-child(1),
-.side-archetypes.right .side-panel:nth-child(1) {
-  top: 28vh;
-}
-
-.side-archetypes.left .side-panel:nth-child(2),
-.side-archetypes.right .side-panel:nth-child(2) {
-  top: calc(28vh + 48px);
-}
-
-.side-archetypes.left .side-panel:nth-child(3),
-.side-archetypes.right .side-panel:nth-child(3) {
-  top: calc(28vh + 96px);
-}
-
-
     }
   `;
 
@@ -426,7 +415,6 @@
   document.body.appendChild(left);
   document.body.appendChild(right);
 
-  // Escape remains a useful global reset. Click outside does not close panels.
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       document.querySelectorAll(".side-panel.open").forEach(panel => {
