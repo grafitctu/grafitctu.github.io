@@ -106,7 +106,7 @@
       inner: "Explore Spirituality",
       color: "#0aa66f",
       side: "right",
-      text: "Sage seeks truth, knowledge, interpretation, investigation, memory, or understanding. Detectives, scholars, hackers, scientists, witnesses, and puzzle-solving protagonists often carry Sage functions."
+      text: "Sage seeks truth, knowledge, interpretation, memory, investigation, or understanding. Detectives, scholars, hackers, scientists, witnesses, and puzzle-solving protagonists often carry Sage functions."
     }
   ];
 
@@ -157,6 +157,20 @@
     .side-archetypes.right .side-panel.open {
       transform: translateX(0);
       filter: drop-shadow(0 12px 26px rgba(0,0,0,.25));
+    }
+
+    /*
+      Desktop/laptop only:
+      hover gently reveals the panel, so the inner label
+      such as "Provide Structure" or "Pursue Connection" becomes visible.
+      On touch/mobile screens this rule is ignored.
+    */
+    @media (hover: hover) and (pointer: fine) {
+      .side-archetypes.left .side-panel:hover,
+      .side-archetypes.right .side-panel:hover {
+        transform: translateX(0);
+        filter: drop-shadow(0 12px 26px rgba(0,0,0,.25));
+      }
     }
 
     .side-panel-inner {
