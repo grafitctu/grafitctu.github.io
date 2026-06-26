@@ -24,7 +24,7 @@
     const text=document.body.innerText || '';
     const total = items.length;
     const patterns=[
-      new RegExp('(?:^|\\s)(\\d+)\\s*/\\s*'+total+'(?:\\s|$)'),
+      new RegExp('(?:^|\s)(\d+)\s*/\s*'+total+'(?:\s|$)'),
       /(\d+)\s*\/\s*(\d+)/
     ];
     for(const p of patterns){
@@ -52,7 +52,7 @@
     addCss();
     const idx=getIndexFromPage();
     const it=items[idx] || items[0];
-    const game=it.game || it.game_name || it.title || 'Unknown game';
+    const game=it.game || it.game_name || it.gameTitle || it.title || 'Unknown game';
     const character=it.character || it.character_name || it.name || 'Unknown character / role';
     const role=it.protagonist_role || '';
     const status=it.known_status || '';
@@ -71,6 +71,6 @@
   function escapeAttr(s){return String(s).replace(/["<>]/g, '');}
   fetch('characters.json?game_patch=' + Date.now())
     .then(r=>r.json())
-    .then(data=>{items=data; updatePanel(); setInterval(updatePanel, 300);})
+    .then(data=>{items=(typeof window.prepareArchetypeCharactersForValidation==='function'?window.prepareArchetypeCharactersForValidation(data):data); updatePanel(); setInterval(updatePanel, 300);})
     .catch(e=>console.warn('Game display patch failed:', e));
 })();
