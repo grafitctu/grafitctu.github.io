@@ -179,3 +179,11 @@
 
   window.prepareArchetypeCharactersForValidation = prepareCharactersForValidation;
 })();
+
+(() => {
+  const current = document.currentScript;
+  const script = document.createElement('script');
+  script.src = 'app_' + 'cleaned.js?v=dedup1';
+  if (current && current.parentNode) current.parentNode.insertBefore(script, current.nextSibling);
+  else document.head.appendChild(script);
+})();
