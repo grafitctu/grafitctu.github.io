@@ -182,8 +182,19 @@
 
 (() => {
   const current = document.currentScript;
-  const script = document.createElement('script');
-  script.src = 'app_' + 'cleaned.js?v=dedup1';
-  if (current && current.parentNode) current.parentNode.insertBefore(script, current.nextSibling);
-  else document.head.appendChild(script);
+  const parent = current && current.parentNode;
+
+  const appScript = document.createElement('script');
+  appScript.src = 'app_' + 'cleaned.js?v=dedup1';
+
+  const navScript = document.createElement('script');
+  navScript.src = 'bottom_character_nav_' + 'cleaned.js?v=dedup1';
+
+  if (parent) {
+    parent.insertBefore(appScript, current.nextSibling);
+    parent.insertBefore(navScript, appScript.nextSibling);
+  } else {
+    document.head.appendChild(appScript);
+    document.head.appendChild(navScript);
+  }
 })();
