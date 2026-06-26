@@ -10,7 +10,8 @@
  * 6. Copy the /exec URL to config.js as GOOGLE_SHEETS_WEB_APP_URL.
  */
 
-const SHEET_NAME = 'responses';
+const DEFAULT_SHEET_NAME = 'responses';
+const ALLOWED_SHEET_NAMES = ['responses', 'responses_vip'];
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
@@ -18,15 +19,17 @@ function doPost(e) {
 
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = getOrCreateSheet_(ss, SHEET_NAME);
-    ensureHeader_(sheet);
-
     const payload = JSON.parse(e.postData && e.postData.contents ? e.postData.contents : '{}');
+    const sheetName = getSheetName_(payload);
+    const sheet = getOrCreateSheet_(ss, sheetName);
+    ensureHeader_(sheet);
 
     sheet.appendRow([
       new Date(),
       payload.timestamp || '',
       payload.participantId || '',
+      payload.validatorVariant || '',
+      payload.sheetName || '',
       payload.characterIndex ?? '',
       payload.characterId || '',
       payload.characterName || '',
@@ -37,11 +40,12 @@ function doPost(e) {
       Array.isArray(payload.selectedArchetypeNames) ? payload.selectedArchetypeNames.join(', ') : '',
       JSON.stringify(payload.selectedArchetypes || []),
       payload.skipped === true,
+      payload.vip === true,
       payload.userAgent || ''
     ]);
 
     return ContentService
-      .createTextOutput(JSON.stringify({ ok: true }))
+      .createTextOutput(JSON.stringify({ ok: true, sheetName: sheetName }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService
@@ -58,6 +62,12 @@ function doGet() {
     .setMimeType(ContentService.MimeType.TEXT);
 }
 
+function getSheetName_(payload) {
+  const requested = String(payload.sheetName || '').trim();
+  if (ALLOWED_SHEET_NAMES.indexOf(requested) >= 0) return requested;
+  return DEFAULT_SHEET_NAME;
+}
+
 function getOrCreateSheet_(ss, name) {
   return ss.getSheetByName(name) || ss.insertSheet(name);
 }
@@ -67,6 +77,8 @@ function ensureHeader_(sheet) {
     'receivedAt',
     'timestamp',
     'participantId',
+    'validatorVariant',
+    'requestedSheetName',
     'characterIndex',
     'characterId',
     'characterName',
@@ -77,6 +89,7 @@ function ensureHeader_(sheet) {
     'selectedArchetypeNames',
     'selectedArchetypesJson',
     'skipped',
+    'vip',
     'userAgent'
   ];
 
