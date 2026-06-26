@@ -2,16 +2,19 @@
   'use strict';
 
   const FRONT = [
-    'mario', 'kratos_modern', 'joel_miller', 'lara_croft', 'geralt_of_rivia',
-    'harrier_harry_du_bois', 'link', 'gordon_freeman', 'chell', 'master_chief',
-    'doom_slayer', 'samus_aran', 'solid_snake', 'cloud_strife', 'batman',
-    'kratos_old', 'senua', 'jesse_faden', 'adam_jensen', 'carl_cj_johnson',
-    'niko_bellic', 'leon_s_kennedy', 'jill_valentine_chris_redfield',
-    'ethan_winters', 'max_payne', 'sonic_the_hedgehog', 'dante',
-    'kazuma_kiryu', 'ichiban_kasuga', 'booker_dewitt'
+    'kratos_old', 'mario', 'kratos_modern', 'joel_miller', 'lara_croft',
+    'geralt_of_rivia', 'harrier_harry_du_bois', 'link', 'gordon_freeman',
+    'chell', 'master_chief', 'doom_slayer', 'samus_aran', 'solid_snake',
+    'cloud_strife', 'batman', 'senua', 'jesse_faden', 'adam_jensen',
+    'carl_cj_johnson', 'niko_bellic', 'leon_s_kennedy',
+    'jill_valentine_chris_redfield', 'ethan_winters', 'max_payne',
+    'sonic_the_hedgehog', 'dante', 'kazuma_kiryu', 'ichiban_kasuga',
+    'booker_dewitt'
   ];
 
   const PREFERRED = {
+    kratos_old: ['igdb90_2005_god-of-war_kratos', 'steam__kratos'],
+    kratos_modern: ['manual_2018_god-of-war_kratos-modern'],
     mario: ['igdbpre90_1985_super-mario-bros_mario'],
     lara_croft: ['steam__lara-croft', 'igdb90_1996_tomb-raider_lara-croft', 'steam_391220_lara-croft'],
     link: ['igdb90_1998_the-legend-of-zelda-ocarina-of-time_link'],
@@ -169,8 +172,8 @@
 
     ordered.forEach((item, index) => {
       item.order = index + 1;
-      item.reorder_note_v3 = 'iconic_front_dedup_minimized';
-      item.reorder_reason_v3 = 'iconic protagonists first; duplicate protagonist entries minimized';
+      item.reorder_note_v3 = 'original_kratos_first_dedup_minimized';
+      item.reorder_reason_v3 = 'original Kratos first; Link and Lara Croft collapsed to one representative each; other duplicate protagonists minimized';
       if (!item.name) item.name = character(item);
       if (!item.gameTitle) item.gameTitle = game(item);
     });
@@ -185,10 +188,10 @@
   const parent = current && current.parentNode;
 
   const appScript = document.createElement('script');
-  appScript.src = 'app_' + 'cleaned.js?v=dedup1';
+  appScript.src = 'app_' + 'cleaned.js?v=dedup2';
 
   const navScript = document.createElement('script');
-  navScript.src = 'bottom_character_nav_' + 'cleaned.js?v=dedup1';
+  navScript.src = 'bottom_character_nav_' + 'cleaned.js?v=dedup2';
 
   if (parent) {
     parent.insertBefore(appScript, current.nextSibling);
