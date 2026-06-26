@@ -2,7 +2,7 @@
   'use strict';
 
   const FRONT = [
-    'kratos_old', 'mario', 'kratos_modern', 'joel_miller', 'lara_croft',
+    'kratos_old', 'kratos_modern', 'joel_miller', 'lara_croft',
     'geralt_of_rivia', 'harrier_harry_du_bois', 'link', 'gordon_freeman',
     'chell', 'master_chief', 'doom_slayer', 'samus_aran', 'solid_snake',
     'cloud_strife', 'batman', 'senua', 'jesse_faden', 'adam_jensen',
@@ -11,6 +11,8 @@
     'sonic_the_hedgehog', 'dante', 'kazuma_kiryu', 'ichiban_kasuga',
     'booker_dewitt'
   ];
+
+  const END = ['mario'];
 
   const PREFERRED = {
     kratos_old: ['igdb90_2005_god-of-war_kratos', 'steam__kratos'],
@@ -164,16 +166,24 @@
       }
     });
     kept.sort((a, b) => a.index - b.index).forEach((entry) => {
-      if (!used.has(entry.item.id)) {
+      const groupKey = key(entry.item);
+      if (END.indexOf(groupKey) < 0 && !used.has(entry.item.id)) {
         ordered.push(entry.item);
         used.add(entry.item.id);
+      }
+    });
+    END.forEach((endKey) => {
+      const item = byKey.get(endKey);
+      if (item && !used.has(item.id)) {
+        ordered.push(item);
+        used.add(item.id);
       }
     });
 
     ordered.forEach((item, index) => {
       item.order = index + 1;
-      item.reorder_note_v3 = 'original_kratos_first_dedup_minimized';
-      item.reorder_reason_v3 = 'original Kratos first; Link and Lara Croft collapsed to one representative each; other duplicate protagonists minimized';
+      item.reorder_note_v3 = 'original_kratos_first_mario_last';
+      item.reorder_reason_v3 = 'original Kratos first; Mario moved to the end; Link and Lara Croft collapsed to one representative each; other duplicate protagonists minimized';
       if (!item.name) item.name = character(item);
       if (!item.gameTitle) item.gameTitle = game(item);
     });
@@ -188,10 +198,10 @@
   const parent = current && current.parentNode;
 
   const appScript = document.createElement('script');
-  appScript.src = 'app_' + 'cleaned.js?v=dedup2';
+  appScript.src = 'app_' + 'cleaned.js?v=dedup3_mario_last';
 
   const navScript = document.createElement('script');
-  navScript.src = 'bottom_character_nav_' + 'cleaned.js?v=dedup2';
+  navScript.src = 'bottom_character_nav_' + 'cleaned.js?v=dedup3_mario_last';
 
   if (parent) {
     parent.insertBefore(appScript, current.nextSibling);
