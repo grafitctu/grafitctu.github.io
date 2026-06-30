@@ -36,7 +36,19 @@
     extra('vip_bg2_neera', 'Baldur\'s Gate II: Enhanced Edition', 'Neera', 'wild mage companion introduced in the Enhanced Edition', 'playable party companion', 'Magician', 'Jester / Rebel'),
     extra('vip_bg2_rasaad-yn-bashir', 'Baldur\'s Gate II: Enhanced Edition', 'Rasaad yn Bashir', 'Sun Soul monk companion introduced in the Enhanced Edition', 'playable party companion', 'Sage', 'Hero / Innocent'),
     extra('vip_bg2_wilson', 'Baldur\'s Gate II: Enhanced Edition', 'Wilson', 'bear companion introduced in the Enhanced Edition', 'playable party companion', 'Innocent', 'Hero / Jester'),
-    extra('vip_silksong_hornet', 'Hollow Knight: Silksong', 'Hornet', 'princess-protector of Hallownest and playable protagonist travelling through Pharloom', 'fixed protagonist', 'Hero', 'Explorer / Caregiver')
+    extra('vip_silksong_hornet', 'Hollow Knight: Silksong', 'Hornet', 'princess-protector of Hallownest and playable protagonist travelling through Pharloom', 'fixed protagonist', 'Hero', 'Explorer / Caregiver'),
+    extra('vip_bg3_tav-custom-origin', 'Baldur\'s Gate 3', 'Tav / Custom Origin', 'custom player-created protagonist drawn into the mind flayer parasite crisis', 'custom protagonist', 'Everyman', 'Hero / Explorer'),
+    extra('vip_bg3_dark-urge', 'Baldur\'s Gate 3', 'The Dark Urge', 'customizable origin protagonist haunted by murderous impulses and a hidden legacy', 'custom origin protagonist', 'Outlaw', 'Hero / Shadow-load high'),
+    extra('vip_bg3_astarion', 'Baldur\'s Gate 3', 'Astarion', 'vampire spawn rogue origin character and companion', 'origin character / playable party companion', 'Outlaw', 'Lover / Everyman'),
+    extra('vip_bg3_gale', 'Baldur\'s Gate 3', 'Gale', 'wizard origin character and companion carrying a dangerous magical condition', 'origin character / playable party companion', 'Magician', 'Sage / Lover'),
+    extra('vip_bg3_karlach', 'Baldur\'s Gate 3', 'Karlach', 'tiefling barbarian origin character and companion with an infernal engine', 'origin character / playable party companion', 'Hero', 'Lover / Rebel'),
+    extra('vip_bg3_lae-zel', 'Baldur\'s Gate 3', 'Lae\'zel', 'githyanki fighter origin character and companion shaped by martial duty', 'origin character / playable party companion', 'Hero', 'Ruler / Rebel'),
+    extra('vip_bg3_shadowheart', 'Baldur\'s Gate 3', 'Shadowheart', 'cleric origin character and companion with concealed memories and religious conflict', 'origin character / playable party companion', 'Sage', 'Innocent / Caregiver'),
+    extra('vip_bg3_wyll', 'Baldur\'s Gate 3', 'Wyll', 'warlock origin character and companion known as the Blade of Frontiers', 'origin character / playable party companion', 'Hero', 'Caregiver / Magician'),
+    extra('vip_bg3_halsin', 'Baldur\'s Gate 3', 'Halsin', 'druid companion and protector of the Emerald Grove', 'playable party companion', 'Caregiver', 'Sage / Explorer'),
+    extra('vip_bg3_minthara', 'Baldur\'s Gate 3', 'Minthara', 'drow paladin companion associated with ruthless command and survival', 'playable party companion', 'Ruler', 'Outlaw / Hero'),
+    extra('vip_bg3_jaheira', 'Baldur\'s Gate 3', 'Jaheira', 'veteran Harper druid/fighter companion returning in Baldur\'s Gate 3', 'playable party companion', 'Caregiver', 'Sage / Ruler'),
+    extra('vip_bg3_minsc', 'Baldur\'s Gate 3', 'Minsc', 'Rashemi ranger companion returning with Boo in Baldur\'s Gate 3', 'playable party companion', 'Hero', 'Jester / Caregiver')
   ];
 
   function extra(id, game, character, role, type, primary, secondary) {
@@ -65,7 +77,7 @@
       internal_suggested_secondary_archetype: secondary,
       internal_suggested_archetype_confidence_0_1: '0.65',
       bucket: 'vip_extra_manual',
-      batch: 'vip_bg2_silksong_append',
+      batch: 'vip_bg2_bg3_silksong_append',
       prompt: game + ' — ' + character,
       include_main_clean: true,
       game_included_for_display: true,
