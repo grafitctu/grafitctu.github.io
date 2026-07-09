@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>FIT/GRAFIT · RUV pracovní podklad</title>
+  <link rel="stylesheet" href="/single.css">
+  <link rel="stylesheet" href="/footer.css">
+  <script src="/w3.js"></script>
+  <style>
+    :root{
+      --bg:#050814;
+      --panel:#0b1022;
+      --panel2:#101833;
+      --text:#f5f7ff;
+      --muted:#c9d1e3;
+      --soft:#8fa2cf;
+      --yellow:#f6c800;
+      --blue:#4d8dff;
+      --pink:#d56bff;
+      --ok:#69d391;
+      --warn:#ffcb6b;
+      --border:#ffffff18;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+    a{color:#9fc0ff}
+    a:hover{color:#fff}
+    .hero{padding:4.5rem 1.5rem 3.2rem;background:
+      radial-gradient(circle at 10% 0%,#f6c80038,transparent 30%),
+      radial-gradient(circle at 92% 12%,#813f9880,transparent 34%),
+      linear-gradient(180deg,#101833 0%,#050814 82%)}
+    .wrap{max-width:1180px;margin:0 auto}
+    .kicker{display:flex;gap:.5rem;flex-wrap:wrap;margin:0 0 1rem;font-size:.78rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#e7ecff}
+    .kicker span,.pill{display:inline-flex;align-items:center;gap:.35rem;border:1px solid var(--border);border-radius:999px;background:#ffffff12;padding:.35rem .65rem}
+    h1{max-width:900px;margin:0;font-size:clamp(2.8rem,7vw,6.6rem);line-height:.9;letter-spacing:-.055em;text-transform:uppercase}
+    h1 span{color:var(--yellow)}
+    .lead{max-width:760px;margin:1.4rem 0 0;color:#e3eaff;font-size:clamp(1.02rem,1.5vw,1.28rem)}
+    .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:2rem;align-items:end}
+    .hero-note{background:#060817cc;border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.15rem;box-shadow:0 22px 55px #0008}
+    .hero-note h2{margin:0 0 .5rem;font-size:1rem;color:var(--yellow);text-transform:uppercase;letter-spacing:.08em}
+    .hero-note p{margin:.45rem 0 0;color:var(--muted);font-size:.92rem}
+    section{padding:2.8rem 1.5rem}
+    section.alt{background:#081024}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}
+    .eyebrow{color:var(--yellow);font-weight:900;text-transform:uppercase;letter-spacing:.13em;font-size:.78rem;margin:0 0 .35rem}
+    h2{margin:0;font-size:clamp(1.8rem,3.4vw,3rem);line-height:1}
+    .section-lead{max-width:780px;color:var(--muted);margin:.9rem 0 1.8rem}
+    .two-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+    .rule-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.2rem}
+    .rule-box h3{margin:0 0 .65rem;font-size:1.05rem}
+    .rule-box ul{margin:.3rem 0 0;padding-left:1.15rem;color:var(--muted)}
+    .rule-box li+li{margin-top:.35rem}
+    .seg-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+    .seg{background:linear-gradient(180deg,#101833,#0b1022);border:1px solid var(--border);border-radius:12px;padding:1rem}
+    .seg h3{margin:0 0 .45rem;font-size:1rem;color:#fff}
+    .seg p{margin:0;color:var(--muted);font-size:.9rem}
+    .shortlist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;counter-reset:item}
+    .shortlist li{list-style:none;counter-increment:item;background:#ffffff0b;border:1px solid var(--border);border-radius:10px;padding:.85rem .95rem;color:#e5ebff}
+    .shortlist li:before{content:counter(item) ".";display:inline-flex;margin-right:.45rem;color:var(--yellow);font-weight:900}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(280px,1fr));gap:1.1rem}
+    .card{display:flex;flex-direction:column;overflow:hidden;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 18px 42px #0007}
+    .image{position:relative;aspect-ratio:16/9;background:#121a33;overflow:hidden}
+    .image img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .body{padding:1rem 1rem 1.1rem}
+    .body h3{margin:0 0 .4rem;font-size:1.12rem;line-height:1.2}
+    .meta{display:flex;flex-wrap:wrap;gap:.35rem;margin:.55rem 0 .8rem}
+    .tag{display:inline-flex;align-items:center;border-radius:999px;border:1px solid #ffffff20;background:#ffffff10;padding:.25rem .5rem;color:#dfe7ff;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+    .tag.ok{color:#d8ffe4;border-color:#69d39155;background:#69d39118}
+    .tag.warn{color:#ffefc8;border-color:#ffcb6b55;background:#ffcb6b16}
+    .tag.next{color:#dcebff;border-color:#4d8dff55;background:#4d8dff18}
+    .body p{margin:.65rem 0;color:var(--muted);font-size:.92rem}
+    .links{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.9rem}
+    .links a{display:inline-flex;align-items:center;text-decoration:none;border:1px solid #ffffff22;border-radius:999px;padding:.4rem .65rem;background:#ffffff0d;font-size:.82rem;font-weight:800}
+    .links a:hover{border-color:#f6c800aa;color:#fff}
+    .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:14px;background:var(--panel)}
+    table{width:100%;border-collapse:collapse;min-width:980px}
+    th,td{padding:.8rem .85rem;border-bottom:1px solid var(--border);vertical-align:top;text-align:left}
+    th{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow);background:#ffffff08}
+    td{color:var(--muted);font-size:.9rem}
+    td strong{color:#fff}
+    .thumb{width:124px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:#111827;display:block}
+    .note{border-left:3px solid var(--yellow);background:#ffffff0b;padding:.95rem 1rem;color:#dce5ff;border-radius:0 10px 10px 0}
+    .sources{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}
+    .source{background:#ffffff0b;border:1px solid var(--border);border-radius:10px;padding:.85rem .95rem;text-decoration:none;color:#dce5ff}
+    .source:hover{border-color:#f6c800aa;color:#fff}
+    footer.page-footer{padding:2rem 1.5rem;color:var(--soft);font-size:.88rem}
+    @media(max-width:1000px){.hero-grid,.two-col{grid-template-columns:1fr}.seg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:repeat(2,minmax(260px,1fr))}.shortlist{grid-template-columns:repeat(2,minmax(0,1fr))}.sources{grid-template-columns:1fr 1fr}}
+    @media(max-width:680px){.cards,.seg-grid,.shortlist,.sources{grid-template-columns:1fr}.hero{padding-top:3rem}.section-head{display:block}}
+  </style>
+</head>
+<body>
+  <div w3-include-html="/menu.html"></div>
+
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="kicker"><span>FIT ČVUT</span><span>GRAFIT</span><span>pracovní podklad</span></p>
+        <h1>Možné výstupy pro <span>RUV</span></h1>
+        <p class="lead">Neodkazovaná pracovní stránka k prověření herních, interaktivních a creative-coding výstupů FIT/GRAFIT pro Registr uměleckých výstupů.</p>
+      </div>
+      <aside class="hero-note">
+        <h2>Stav</h2>
+        <p>Podklad pro interní diskuzi, ne finální RUV přihláška.</p>
+        <p>Datum přípravy: 9. 7. 2026</p>
+        <p>URL po publikaci: <strong>/ruv/</strong></p>
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <p class="eyebrow">Rámec</p>
+        <h2>Proč to řešit</h2>
+        <p class="section-lead">Na FIT, zejména kolem skupiny GRAFIT, vznikají výstupy na pomezí game designu, interaktivních instalací, UX/UI, digitálního designu a creative coding. Některé z nich už nejsou pouze školní prototypy: jsou veřejně hratelné, prezentované na GDS/Game Access, oceněné v soutěžích, doložené v DSpace nebo realizované pro externího partnera.</p>
+        <div class="note">
+          Nejsilnější kandidáti jsou výstupy pro interaktivní dotykovou stěnu. Podle interní informace byly odkoupeny initi.org a mohou být prezentovány i mimo FIT na kompatibilních instalacích. To z nich dělá realizované interaktivní dílo pro externího partnera, nikoli jen školní ukázku.
+        </div>
+      </div>
+    </section>
+
+    <section class="alt">
+      <div class="wrap">
+        <p class="eyebrow">Pravidla</p>
+        <h2>Co do RUV patří a nepatří</h2>
+        <div class="two-col">
+          <article class="rule-box">
+            <h3>Patří navrhovat</h3>
+            <ul>
+              <li>veřejně uvedená autorská umělecká nebo designová díla;</li>
+              <li>studentské výstupy prezentované mimo školu nebo realizované pro partnera;</li>
+              <li>digitální hry, UX/UI, interaktivní instalace a webové projekty s dokumentací;</li>
+              <li>výstupy s jasnými autory, podíly, datem prvního uvedení a veřejným odkazem;</li>
+              <li>oceněné nebo veřejně prezentované gamejamové projekty.</li>
+            </ul>
+          </article>
+          <article class="rule-box">
+            <h3>Spíše nepatří</h3>
+            <ul>
+              <li>samotný text bakalářské nebo diplomové práce;</li>
+              <li>běžná semestrálka bez veřejného uvedení;</li>
+              <li>interní školní demo bez externí realizace;</li>
+              <li>čistě technický plugin nebo výzkumný prototyp bez umělecké/designové podoby;</li>
+              <li>výstupy bez doložitelných autorů, data a práv k prezentaci.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="eyebrow">Segmenty</p>
+        <h2>Kam by to mohlo patřit</h2>
+        <div class="seg-grid">
+          <article class="seg">
+            <h3>Design</h3>
+            <p>Nejpravděpodobnější segment pro hry, UX/UI, grafický design, fyzické hry a výstupy realizované pro klienta.</p>
+          </article>
+          <article class="seg">
+            <h3>Výtvarná umění</h3>
+            <p>Vhodné pro interaktivní instalace, webové projekty, sound/visual art a participativní digitální díla.</p>
+          </article>
+          <article class="seg">
+            <h3>Audiovize</h3>
+            <p>Spíše jen u samostatného filmového, animačního nebo AV výstupu, ne pro hru jako takovou.</p>
+          </article>
+          <article class="seg">
+            <h3>Hudba</h3>
+            <p>Výjimečně u samostatně uvedených hudebních/elektroakustických děl; u AI a sonifikace opatrně.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="alt">
+      <div class="wrap">
+        <p class="eyebrow">První jednání</p>
+        <h2>Nejkratší shortlist</h2>
+        <ol class="shortlist">
+          <li><strong>Vesmírné vylomeniny</strong> - interaktivní stěna, odkup initi.org.</li>
+          <li><strong>Na frontě není klid</strong> - interaktivní stěna, odkup initi.org.</li>
+          <li><strong>Sladká pomsta</strong> - veřejná hra, DSpace, grafika/UX a game design.</li>
+          <li><strong>Bear Café</strong> - veřejně publikovaná hra, DSpace, rok 2025.</li>
+          <li><strong>Chrysalis</strong> - autorská narativní hra, DSpace, rok 2025.</li>
+          <li><strong>After The Rain</strong> - GDS/Game Access, webová hra, sběr 2026.</li>
+          <li><strong>The Princess Game</strong> - vítěz FIT GameJamu, veřejně prezentovaná hra.</li>
+          <li><strong>Factory Reset</strong> - 3. místo Bohemia GameJam 2026.</li>
+          <li><strong>KolejenkuPls</strong> - dokončená hra, připravit pro další sběr.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="eyebrow">Priorita</p>
+        <h2>Silní kandidáti</h2>
+        <p class="section-lead">Karty níže jsou psané jako pracovní popis pro vedení školy: co je dílo, proč je RUV relevantní, kam by mohlo spadat a co ještě doložit.</p>
+        <div class="cards">
+          <article class="card">
+            <div class="image"><img src="/assets/projects/intwall.png" alt="Interaktivní dotyková stěna"></div>
+            <div class="body">
+              <h3>Vesmírné vylomeniny</h3>
+              <div class="meta"><span class="tag ok">velmi vysoká priorita</span><span class="tag">dotyková stěna</span></div>
+              <p>Interaktivní hra pro velkoformátovou dotykovou stěnu vyvinutá v Unity. Díky odkupu initi.org ji lze rámovat jako realizované interaktivní dílo pro externího partnera.</p>
+              <p><strong>RUV:</strong> Design / realizovaný design, alternativně Výtvarná umění / interaktivní instalace.</p>
+              <div class="links"><a href="https://dspace.cvut.cz/handle/10467/116050">DSpace</a><a href="https://grafitctu.github.io/">GRAFIT</a></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="image"><img src="/assets/projects/intwall.png" alt="Interaktivní dotyková stěna"></div>
+            <div class="body">
+              <h3>Na frontě není klid</h3>
+              <div class="meta"><span class="tag ok">velmi vysoká priorita</span><span class="tag">ggLab</span></div>
+              <p>Hra pro interaktivní stěnu v ggLab. Pokud byla součástí balíku odkoupeného initi.org, jde o silného kandidáta jako realizované dílo pro konkrétního partnera.</p>
+              <p><strong>RUV:</strong> Design / grafický design / realizovaný design, alternativně Výtvarná umění.</p>
+              <div class="links"><a href="https://dspace.cvut.cz/handle/10467/116079">DSpace</a><a href="https://grafitctu.github.io/">GRAFIT</a></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="image"><img src="/assets/games/01-sladka%20pomsta.jpg" alt="Sladká pomsta"></div>
+            <div class="body">
+              <h3>Sladká pomsta</h3>
+              <div class="meta"><span class="tag ok">2025</span><span class="tag">hra</span></div>
+              <p>Veřejně publikované karetní RPG v Unity s autorskou grafikou, UX/UI a game designem. Doloženo dvěma bakalářskými pracemi.</p>
+              <p><strong>RUV:</strong> Design / grafický design / realizovaný digitální design.</p>
+              <div class="links"><a href="https://pospec.itch.io/sladka-pomsta">Hra</a><a href="https://dspace.cvut.cz/handle/10467/124340">Grafika/UX</a><a href="https://dspace.cvut.cz/handle/10467/124352">Game design</a></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="image"><img src="/assets/games/07%20bearcafe.jpg" alt="Bear Café"></div>
+            <div class="body">
+              <h3>Bear Café</h3>
+              <div class="meta"><span class="tag ok">2025</span><span class="tag">Unity Play</span></div>
+              <p>Cozy webová hra finalizovaná a publikovaná jako hratelný výstup. Navazuje na výuku herního designu a má veřejnou podobu.</p>
+              <p><strong>RUV:</strong> Design / grafický design / realizovaný design.</p>
+              <div class="links"><a href="https://play.unity.com/en/games/dfd180ed-7a16-4601-961f-ee8e8ca2ba76/bear-cafe-2">Hra</a><a href="https://dspace.cvut.cz/handle/10467/121064">DSpace</a></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="image"><img src="/assets/games/02%20chysalis.png" alt="Chrysalis"></div>
+            <div class="body">
+              <h3>Chrysalis</h3>
+              <div class="meta"><span class="tag ok">2025</span><span class="tag">narativní hra</span></div>
+              <p>Top-down pixelová hra věnovaná depresi, strachu a OCD. Má výraznější autorský a tematický přesah než běžný školní prototyp.</p>
+              <p><strong>RUV:</strong> Design, alternativně Výtvarná umění / digitální interaktivní dílo.</p>
+              <div class="links"><a href="https://liaaq.itch.io/chrysalis">Hra</a><a href="https://dspace.cvut.cz/handle/10467/124337">DSpace</a></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="image"><img src="/assets/games/05%20kolejenkupls.jpg" alt="KolejenkuPls"></div>
+            <div class="body">
+              <h3>KolejenkuPls</h3>
+              <div class="meta"><span class="tag next">2026</span><span class="tag">další sběr</span></div>
+              <p>Satirická 2D hra o přidělování kolejí, kombinující game design, UI, 2D grafiku a autorský humor navázaný na studentské prostředí.</p>
+              <p><strong>RUV:</strong> Design / grafický design / realizovaný design.</p>
+              <div class="links"><a href="https://www.youtube.com/watch?v=AQNmMeknEpM">Video</a><a href="https://dspace.cvut.cz/handle/10467/181077">DSpace</a></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="alt">
+      <div class="wrap">
+        <p class="eyebrow">GDS / Game Access</p>
+        <h2>Hry veřejně prezentované na akcích</h2>
+        <p class="section-lead">Stránka GRAFIT GDS je veřejné menu studentských her určených k prezentaci. To je pro RUV dobrý podpůrný doklad mimoškolního uvedení. U Game Access je nutné doplnit konkrétní stopu: fotku stánku, program, potvrzení účasti nebo interní záznam.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Výstup</th><th>Náhled</th><th>Odkaz</th><th>RUV návrh</th><th>Verdikt</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>After The Rain</strong></td><td><img class="thumb" src="https://img.itch.zone/aW1hZ2UvNDQ0NDY3NC8yNjU1MjkwNy5wbmc=/original/rJGYVt.png" alt="After The Rain"></td><td><a href="https://finishx.itch.io/after-the-rain">itch.io</a></td><td>Design / grafický design; případně Výtvarná umění.</td><td><strong>OK.</strong> Veřejná webová hra, GDS stránka, sběr 2026.</td></tr>
+              <tr><td><strong>Whitenoise</strong></td><td><img class="thumb" src="/assets/games/14%20whitenoise.png" alt="Whitenoise"></td><td><a href="https://belonzik.itch.io/whitenoise">itch.io</a></td><td>Design / digitální herní design.</td><td><strong>OK s doložením.</strong> Doplnit autory, rok a fotky z prezentace.</td></tr>
+              <tr><td><strong>HaLLMark</strong></td><td><img class="thumb" src="/assets/games/03%20hallmark.png" alt="HaLLMark"></td><td><a href="https://mogula99.itch.io/hallmark">itch.io</a></td><td>Design / experimentální digitální design.</td><td><strong>OK, opatrně.</strong> Má DSpace; AI formulovat jako součást autorského herního designu.</td></tr>
+              <tr><td><strong>Liminal</strong></td><td><img class="thumb" src="/assets/games/12%20liminal.png" alt="Liminal"></td><td><a href="https://hypercubic-studio.itch.io/liminal">itch.io</a></td><td>Design / digitální herní design.</td><td><strong>Spíše OK.</strong> Bez DSpace a ocenění nižší priorita, ale veřejná prezentace pomáhá.</td></tr>
+              <tr><td><strong>Strahov</strong></td><td><img class="thumb" src="/assets/games/08%20strahov.jpg" alt="Strahov"></td><td><a href="https://www.youtube.com/watch?v=gE93zi4wl0E&list=PLXhipPFpvUWH-N-0lSjF7LzsXNY_g69LF&index=22">video</a></td><td>Design / digitální herní design.</td><td><strong>Podmíněně OK.</strong> Silné jen pokud byla hra hratelně ukazovaná, ne pouze video.</td></tr>
+              <tr><td><strong>Barman - Drinking with the Devil</strong></td><td><img class="thumb" src="/assets/games/08%20barman.png" alt="Barman"></td><td><a href="https://simonstrikesback.itch.io/drinking-with-the-devil">itch.io</a></td><td>Design / digitální herní design.</td><td><strong>OK s doložením.</strong> Funkční URL; doplnit autory, rok a prezentaci.</td></tr>
+              <tr><td><strong>The Princess Game</strong></td><td><img class="thumb" src="/assets/games/09%20princesgame.png" alt="The Princess Game"></td><td><a href="https://floatwave.itch.io/the-princess-game">itch.io</a></td><td>Design / oceněný nebo prezentovaný digitální design.</td><td><strong>OK a silnější.</strong> Uváděna jako jeden z vítězů FIT GameJamu.</td></tr>
+              <tr><td><strong>CEMpETARY</strong></td><td><img class="thumb" src="https://img.itch.zone/aW1nLzIwODA1OTA2LnBuZw%3D%3D/315x250%23c/dSDmjB.png" alt="CEMpETARY"></td><td><a href="https://cozy-games-studio.itch.io/cempetary">itch.io</a></td><td>Design / digitální herní design.</td><td><strong>OK s metadaty.</strong> Doplnit autory a přesné datum prezentace.</td></tr>
+              <tr><td><strong>aloNe</strong></td><td><img class="thumb" src="https://img.itch.zone/aW1hZ2UvMjYxNTgwMy8xNTU4OTk3OS5wbmc%3D/347x500/X93LUp.png" alt="aloNe"></td><td><a href="https://kurilluk.itch.io/alone">itch.io</a></td><td>Design / experimentální digitální herní design.</td><td><strong>OK s korekcí názvu.</strong> Sjednotit název podle itch.io a doplnit autory.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="eyebrow">Rezerva</p>
+        <h2>Další kandidáti</h2>
+        <div class="cards">
+          <article class="card">
+            <div class="image"><img src="/assets/games/04%20FitLife.png" alt="FIT Life"></div>
+            <div class="body">
+              <h3>FIT Life</h3>
+              <div class="meta"><span class="tag warn">starší ročník</span><span class="tag">webová hra</span></div>
+              <p>Webová hra simulující poslední tři dny prvního semestru na FIT. Věcně silné, ale rok 2022 je potřeba ověřit vůči možnosti staršího sběru.</p>
+              <p><strong>RUV:</strong> Design, případně Výtvarná umění / webový interaktivní projekt.</p>
+              <div class="links"><a href="https://antik98.github.io/FitLife/">Hra</a><a href="https://dspace.cvut.cz/handle/10467/101602">DSpace 1</a><a href="https://dspace.cvut.cz/handle/10467/101756">DSpace 2</a></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="image"><img src="/assets/projects/grafitgames_logo.jpg" alt="GRAFIT Games Studio"></div>
+            <div class="body">
+              <h3>Neckventure</h3>
+              <div class="meta"><span class="tag warn">2024</span><span class="tag">diplomová práce</span></div>
+              <p>2D plošinovka s autorskou herní mechanikou. Vhodná jako příklad game design linie, pokud se doloží veřejné vydání a autorství.</p>
+              <p><strong>RUV:</strong> Design / grafický design / digitální design.</p>
+              <div class="links"><a href="https://barushe22.itch.io/neckventure">Hra</a><a href="https://dspace.cvut.cz/handle/10467/114579">DSpace</a></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="image"><img src="/assets/showcase/niccc_sc5.png" alt="Music Wave"></div>
+            <div class="body">
+              <h3>Music Wave</h3>
+              <div class="meta"><span class="tag warn">starší ročník</span><span class="tag">creative coding</span></div>
+              <p>Sonifikace obrazu a creative-coding výstup z NI-CCC. Vhodné spíše jako ukázka typu výstupu; u Hudby opatrně.</p>
+              <p><strong>RUV:</strong> Výtvarná umění / webový nebo sound-art projekt.</p>
+              <div class="links"><a href="https://ni-ccc.github.io/projects/music_wave/">Projekt</a><a href="https://dspace.cvut.cz/handle/10467/101569">DSpace</a></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="alt">
+      <div class="wrap">
+        <p class="eyebrow">Další krok</p>
+        <h2>Co doložit před zadáním do RUV</h2>
+        <div class="two-col">
+          <article class="rule-box">
+            <h3>Ke každému výstupu</h3>
+            <ul>
+              <li>autoři a procentuální podíly;</li>
+              <li>rok prvního veřejného uvedení;</li>
+              <li>URL hry, video, screenshoty nebo build;</li>
+              <li>anotace a jasný autorský/designový přínos;</li>
+              <li>segment RUV a návrh typu činnosti.</li>
+            </ul>
+          </article>
+          <article class="rule-box">
+            <h3>Speciálně pro RUV argument</h3>
+            <ul>
+              <li>u dotykové stěny potvrzení odkupu/užití initi.org;</li>
+              <li>u GDS/Game Access fotka stánku, program nebo potvrzení účasti;</li>
+              <li>u soutěží doklad ocenění nebo nominace;</li>
+              <li>u starších prací ověření ročníku sběru;</li>
+              <li>u AI projektů opatrná formulace lidského autorství.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="eyebrow">Zdroje</p>
+        <h2>Pracovní odkazy</h2>
+        <div class="sources">
+          <a class="source" href="https://msmt.gov.cz/vzdelavani/vysoke-skolstvi/ruv-registr-umeleckych-vystupu">MŠMT - RUV</a>
+          <a class="source" href="https://msmt.gov.cz/vzdelavani/vysoke-skolstvi/segmenty">MŠMT - segmenty RUV</a>
+          <a class="source" href="https://www.ruv.cz/app/">RUV aplikace</a>
+          <a class="source" href="https://grafitctu.github.io/">GRAFIT</a>
+          <a class="source" href="https://grafitctu.github.io/games">GRAFIT Games</a>
+          <a class="source" href="https://grafitctu.github.io/gds">GRAFIT GDS</a>
+          <a class="source" href="https://dspace.cvut.cz/">ČVUT DSpace</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <div class="wrap">Pracovní neveřejně odkazovaný podklad. Stránka není zařazena do navigace webu a obsahuje meta značku noindex.</div>
+  </footer>
+
+  <div w3-include-html="/footer.html"></div>
+  <script>if(window.w3&&w3.includeHTML)w3.includeHTML();</script>
+</body>
+</html>
