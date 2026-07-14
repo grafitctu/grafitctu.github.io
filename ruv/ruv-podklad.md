@@ -46,15 +46,16 @@ Nejsilnější kandidáti jsou výstupy pro interaktivní dotykovou stěnu. Podl
 
 1. **Vesmírné vylomeniny** - ggLab + dotyková stěna, odkup initi.org, spustitelné i jinde.
 2. **Na frontě není klid** - ggLab + dotyková stěna, odkup initi.org, spustitelné i jinde.
-3. **Sladká pomsta** - veřejná hra, DSpace, grafika/UX a game design.
-4. **Bear Café** - veřejně publikovaná hra, DSpace, rok 2025.
-5. **Chrysalis** - autorská narativní hra, DSpace, rok 2025.
-6. **HaLLMark** - LLM příběhová hra, DSpace, článek a prezentace v USA.
-7. **After The Rain** - GDS/Game Access, webová hra, sběr 2026.
-8. **The Princess Game** - vítěz FIT GameJamu, veřejně prezentovaná hra.
-9. **Factory Reset** - 3. místo Bohemia GameJam 2026.
-10. **FIT Life** - veřejná webová hra, dvě bakalářské práce, silný školní kontext.
-11. **KolejenkuPls** - dokončená hra, připravit pro další sběr.
+3. **Na ztéééč! / Chaaarge!** - ggLab + dotyková stěna, BP 2025, odkup initi.org, spustitelné i jinde.
+4. **Sladká pomsta** - veřejná hra, DSpace, grafika/UX a game design.
+5. **Bear Café** - veřejně publikovaná hra, DSpace, rok 2025.
+6. **Chrysalis** - autorská narativní hra, DSpace, rok 2025.
+7. **HaLLMark** - LLM příběhová hra, DSpace, článek a prezentace v USA.
+8. **After The Rain** - GDS/Game Access, webová hra, sběr 2026.
+9. **The Princess Game** - vítěz FIT GameJamu, veřejně prezentovaná hra.
+10. **Factory Reset** - 3. místo Bohemia GameJam 2026.
+11. **FIT Life** - veřejná webová hra, dvě bakalářské práce, silný školní kontext.
+12. **KolejenkuPls** - dokončená hra, připravit pro další sběr.
 
 ## Silní kandidáti
 
@@ -62,6 +63,7 @@ Nejsilnější kandidáti jsou výstupy pro interaktivní dotykovou stěnu. Podl
 | --- | --- | --- | --- |
 | **Vesmírné vylomeniny** | Interaktivní hra pro velkoformátovou dotykovou stěnu v ggLab, vyvinutá v Unity. Díky odkupu initi.org a přenositelnosti na kompatibilní dotykové stěny ji lze pouštět i mimo FIT. | Design / realizovaný design, alternativně Výtvarná umění / interaktivní instalace. | [DSpace](https://dspace.cvut.cz/handle/10467/116050), [GRAFIT](https://grafitctu.github.io/) |
 | **Na frontě není klid** | Hra pro interaktivní dotykovou stěnu v ggLab. Pokud byla součástí balíku odkoupeného initi.org, jde o realizované dílo pro konkrétního partnera, spustitelné i na dalších kompatibilních stěnách mimo školu. | Design / grafický design / realizovaný design, alternativně Výtvarná umění. | [DSpace](https://dspace.cvut.cz/handle/10467/116079), [GRAFIT](https://grafitctu.github.io/) |
+| **Na ztéééč! / Chaaarge!** | Bakalářská práce Jana Procházky vedená Radkem Richtrem. 2D endless-runner tower-offense hra pro interaktivní dotykovou stěnu v ggLabu, ovládaná házením míčků, s procedurálním generováním trasy a podporou libovolného počtu hráčů. Patří do stejné dotykové linie jako Vesmírné vylomeniny a Na frontě není klid: odkup initi.org, přenositelnost na kompatibilní stěny a veřejné předvedení doložit fotkami. | Design / game design / realizovaný interaktivní design, alternativně Výtvarná umění / interaktivní instalace. | [DSpace](https://dspace.cvut.cz/handle/10467/123566), [GRAFIT](https://grafitctu.github.io/) |
 | **Sladká pomsta** | Veřejně publikované karetní RPG v Unity s autorskou grafikou, UX/UI a game designem. Doloženo dvěma bakalářskými pracemi. | Design / grafický design / realizovaný digitální design. | [Hra](https://pospec.itch.io/sladka-pomsta), [Grafika/UX](https://dspace.cvut.cz/handle/10467/124340), [Game design](https://dspace.cvut.cz/handle/10467/124352) |
 | **Bear Café** | Cozy webová hra finalizovaná a publikovaná jako hratelný výstup. Navazuje na výuku herního designu a má veřejnou podobu. | Design / grafický design / realizovaný design. | [Hra](https://play.unity.com/en/games/dfd180ed-7a16-4601-961f-ee8e8ca2ba76/bear-cafe-2), [DSpace](https://dspace.cvut.cz/handle/10467/121064) |
 | **Chrysalis** | Top-down pixelová hra věnovaná depresi, strachu a OCD. Má výraznější autorský a tematický přesah než běžný školní prototyp. | Design, alternativně Výtvarná umění / digitální interaktivní dílo. | [Hra](https://liaaq.itch.io/chrysalis), [DSpace](https://dspace.cvut.cz/handle/10467/124337) |
