@@ -126,7 +126,7 @@ Tahle skupina není hlavní shortlist pro první jednání, ale stojí za eviden
 
 | Výstup | Pracovní poznámka | Odkazy |
 | --- | --- | --- |
-| **Interaktivní webový vizualizér hudebního signálu v reálném čase** | Bakalářská práce Jáchyma Křečka vedená Jiřím Kubištou (2026). Webová aplikace v prohlížeči zpracovává živý audio vstup, extrahuje hudební charakteristiky a řídí tři vizuální moduly nad Three.js a vlastními WebGL shadery. RUV spíše jako Výtvarná umění / webový sound-visual art projekt nebo Design / interaktivní digitální design; nutné doložit veřejné demo, prezentaci nebo stabilní odkaz na běžící aplikaci. | [DSpace](https://dspace.cvut.cz/handle/10467/181175) |
+| **Interaktivní webový vizualizér hudebního signálu v reálném čase** | Bakalářská práce Jáchyma Křečka vedená Jiřím Kubištou (2026). Webová aplikace v prohlížeči zpracovává živý audio vstup, extrahuje hudební charakteristiky a řídí tři vizuální moduly nad Three.js a vlastními WebGL shadery. Online verze běží na wisuals.netlify.app. RUV spíše jako Výtvarná umění / webový sound-visual art projekt nebo Design / interaktivní digitální design; doplnit ideálně i doklad veřejné prezentace. | [Online verze](https://wisuals.netlify.app/), [DSpace](https://dspace.cvut.cz/handle/10467/181175) |
 | **Music Wave** | Sonifikace obrazu a creative-coding výstup z NI-CCC. Vhodné spíše jako ukázka typu výstupu; u Hudby opatrně. | [Projekt](https://ni-ccc.github.io/projects/music_wave/), [DSpace](https://dspace.cvut.cz/handle/10467/101569) |
 
 ## Co doložit před zadáním do RUV
