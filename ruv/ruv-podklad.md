@@ -9,11 +9,11 @@ Pracovní podklad pro interní diskuzi vedení FIT ČVUT.
 
 ## Proč to řešit
 
-Na FIT, zejména kolem skupiny GRAFIT, vznikají výstupy na pomezí game designu, interaktivních instalací, UX/UI, digitálního designu a creative coding. Některé z nich už nejsou pouze školní prototypy: jsou veřejně hratelné, prezentované na GDS/Game Access, oceněné v soutěžích, doložené v DSpace nebo realizované pro externího partnera.
+Na FIT, zejména kolem skupiny GRAFIT, vznikají výstupy na pomezí game designu, interaktivních instalací, UX/UI, digitálního designu a creative coding. Některé z nich už nejsou pouze školní prototypy: jsou veřejně hratelné, prezentované na GDS/Game Access, oceněné v soutěžích, doložené v DSpace nebo provozované v licenci i externím partnerem.
 
 Pro RUV je klíčová doložitelná veřejná stopa mimo univerzitu: fotografie z prezentace, program akce, potvrzení účasti nebo veřejný odkaz. Uznatelnost těchto výstupů je proto přímo spojená s tím, aby pedagogové a studenti mohli díla vozit a ukazovat na akcích typu GDS, Game Access, konferencích a partnerských instalacích, včetně podpory účasti, cest a dokumentace.
 
-Nejsilnější kandidáti jsou výstupy pro interaktivní dotykovou stěnu. Podle interní informace byly odkoupeny initi.org a mohou být prezentovány i mimo FIT na kompatibilních instalacích. To z nich dělá realizované interaktivní dílo pro externího partnera, nikoli jen školní ukázku.
+Nejsilnější kandidáti jsou výstupy pro interaktivní dotykovou stěnu. Vznikají a jsou provozovatelné v rámci spolupráce s initi.org, která pro FIT zajišťuje dotykovou stěnu; díky tomu je lze prezentovat i mimo FIT na kompatibilních instalacích. Jde tedy o realizovaná interaktivní díla provozovaná v licenci i externím partnerem, nikoli jen školní ukázku.
 
 ## Co do RUV patří a nepatří
 
@@ -44,9 +44,9 @@ Nejsilnější kandidáti jsou výstupy pro interaktivní dotykovou stěnu. Podl
 
 ## Nejkratší shortlist pro první jednání
 
-1. **Vesmírné vylomeniny** - ggLab + dotyková stěna, odkup initi.org, spustitelné i jinde.
-2. **Na frontě není klid** - ggLab + dotyková stěna, odkup initi.org, spustitelné i jinde.
-3. **Na ztéééč! / Chaaarge!** - ggLab + dotyková stěna, BP 2025, odkup initi.org, spustitelné i jinde.
+1. **Vesmírné vylomeniny** - ggLab + dotyková stěna, spolupráce s initi.org, spustitelné i jinde.
+2. **Na frontě není klid** - ggLab + dotyková stěna, spolupráce s initi.org, spustitelné i jinde.
+3. **Na ztéééč! / Chaaarge!** - ggLab + dotyková stěna, BP 2025, spolupráce s initi.org.
 4. **Sladká pomsta** - veřejná hra, DSpace, grafika/UX a game design.
 5. **Bear Café** - veřejně publikovaná hra, DSpace, rok 2025.
 6. **Chrysalis** - autorská narativní hra, DSpace, rok 2025.
@@ -61,9 +61,9 @@ Nejsilnější kandidáti jsou výstupy pro interaktivní dotykovou stěnu. Podl
 
 | Výstup | Proč je relevantní | Pracovní zařazení v RUV | Odkazy |
 | --- | --- | --- | --- |
-| **Vesmírné vylomeniny** | Interaktivní hra pro velkoformátovou dotykovou stěnu v ggLab, vyvinutá v Unity. Díky odkupu initi.org a přenositelnosti na kompatibilní dotykové stěny ji lze pouštět i mimo FIT. | Design / realizovaný design, alternativně Výtvarná umění / interaktivní instalace. | [DSpace](https://dspace.cvut.cz/handle/10467/116050), [GRAFIT](https://grafitctu.github.io/) |
-| **Na frontě není klid** | Hra pro interaktivní dotykovou stěnu v ggLab. Pokud byla součástí balíku odkoupeného initi.org, jde o realizované dílo pro konkrétního partnera, spustitelné i na dalších kompatibilních stěnách mimo školu. | Design / grafický design / realizovaný design, alternativně Výtvarná umění. | [DSpace](https://dspace.cvut.cz/handle/10467/116079), [GRAFIT](https://grafitctu.github.io/) |
-| **Na ztéééč! / Chaaarge!** | Bakalářská práce Jana Procházky vedená Radkem Richtrem. 2D endless-runner tower-offense hra pro interaktivní dotykovou stěnu v ggLabu, ovládaná házením míčků, s procedurálním generováním trasy a podporou libovolného počtu hráčů. Patří do stejné dotykové linie jako Vesmírné vylomeniny a Na frontě není klid: odkup initi.org, přenositelnost na kompatibilní stěny a veřejné předvedení doložit fotkami. | Design / game design / realizovaný interaktivní design, alternativně Výtvarná umění / interaktivní instalace. | [DSpace](https://dspace.cvut.cz/handle/10467/123566), [GRAFIT](https://grafitctu.github.io/) |
+| **Vesmírné vylomeniny** | Interaktivní hra pro velkoformátovou dotykovou stěnu v ggLab, vyvinutá v Unity. Díky spolupráci s initi.org, která pro FIT zajišťuje dotykovou stěnu, a přenositelnosti na kompatibilní dotykové stěny ji lze pouštět i mimo FIT. | Design / realizovaný design, alternativně Výtvarná umění / interaktivní instalace. | [DSpace](https://dspace.cvut.cz/handle/10467/116050), [GRAFIT](https://grafitctu.github.io/) |
+| **Na frontě není klid** | Hra pro interaktivní dotykovou stěnu v ggLab, provozovatelná v rámci spolupráce s initi.org. Jde o realizované dílo provozované v licenci i externím partnerem, spustitelné i na dalších kompatibilních stěnách mimo školu. | Design / grafický design / realizovaný design, alternativně Výtvarná umění. | [DSpace](https://dspace.cvut.cz/handle/10467/116079), [GRAFIT](https://grafitctu.github.io/) |
+| **Na ztéééč! / Chaaarge!** | Bakalářská práce Jana Procházky vedená Radkem Richtrem. 2D endless-runner tower-offense hra pro interaktivní dotykovou stěnu v ggLabu, ovládaná házením míčků, s procedurálním generováním trasy a podporou libovolného počtu hráčů. Patří do stejné dotykové linie jako Vesmírné vylomeniny a Na frontě není klid: spolupráce s initi.org, přenositelnost na kompatibilní stěny a veřejné předvedení doložit fotkami. | Design / game design / realizovaný interaktivní design, alternativně Výtvarná umění / interaktivní instalace. | [DSpace](https://dspace.cvut.cz/handle/10467/123566), [GRAFIT](https://grafitctu.github.io/) |
 | **Sladká pomsta** | Veřejně publikované karetní RPG v Unity s autorskou grafikou, UX/UI a game designem. Doloženo dvěma bakalářskými pracemi. | Design / grafický design / realizovaný digitální design. | [Hra](https://pospec.itch.io/sladka-pomsta), [Grafika/UX](https://dspace.cvut.cz/handle/10467/124340), [Game design](https://dspace.cvut.cz/handle/10467/124352) |
 | **Bear Café** | Cozy webová hra finalizovaná a publikovaná jako hratelný výstup. Navazuje na výuku herního designu a má veřejnou podobu. | Design / grafický design / realizovaný design. | [Hra](https://play.unity.com/en/games/dfd180ed-7a16-4601-961f-ee8e8ca2ba76/bear-cafe-2), [DSpace](https://dspace.cvut.cz/handle/10467/121064) |
 | **Chrysalis** | Top-down pixelová hra věnovaná depresi, strachu a OCD. Má výraznější autorský a tematický přesah než běžný školní prototyp. | Design, alternativně Výtvarná umění / digitální interaktivní dílo. | [Hra](https://liaaq.itch.io/chrysalis), [DSpace](https://dspace.cvut.cz/handle/10467/124337) |
@@ -141,7 +141,7 @@ Tahle skupina není hlavní shortlist pro první jednání, ale stojí za eviden
 
 ### Speciálně pro RUV argument
 
-- U dotykové stěny potvrzení odkupu/užití initi.org.
+- U dotykové stěny doložení spolupráce s initi.org a licenčního provozu mimo FIT.
 - U GDS/Game Access fotka stánku, program nebo potvrzení účasti.
 - U soutěží doklad ocenění nebo nominace.
 - U starších prací ověření ročníku sběru.
