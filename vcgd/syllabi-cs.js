@@ -1626,23 +1626,49 @@ window.VCGD_SYLLABI = {
   "UEE": {
     "code": "UEE",
     "name": "Environmentální design v Unreal Engine",
-    "extent": "bude upřesněno",
+    "extent": "4denní bloková výuka",
     "credits": "2",
-    "semester": "Z",
-    "ending": "bude upřesněno",
+    "semester": "blokově na začátku zkouškového období",
     "url": "",
-    "planned": true,
-    "sourceLabel": "Připravovaný předmět",
+    "lecturers": [
+      "Daniel Tripplet (Purdue University)"
+    ],
+    "sourceLabel": "Podklady VCGD · uskutečněná bloková výuka",
     "sections": [
       {
-        "title": "Stav předmětu",
+        "title": "Anotace",
         "type": "p",
-        "content": "Předmět je ve fázi přípravy. Oficiální sylabus, způsob zakončení a rozsah výuky zatím nebyly zveřejněny v katalogu FIT ČVUT."
+        "content": "Intenzivní praktický předmět zaměřený na tvorbu interaktivních 3D prostředí v Unreal Engine. Výuka propojuje práci v Unreal Engine se základní přípravou 3D obsahu v Blenderu a s pořízením a využitím 3D skenů reálných objektů."
       },
       {
-        "title": "Předběžné zaměření",
+        "title": "Výstupy učení",
+        "type": "ul",
+        "content": [
+          "vytvořit a upravit jednoduché interaktivní 3D prostředí v Unreal Engine",
+          "připravit základní 3D obsah v Blenderu pro použití v Unreal Engine",
+          "pořídit 3D sken objektu a začlenit naskenovaný objekt do prostředí v Unreal Engine"
+        ]
+      },
+      {
+        "title": "Obsah blokové výuky",
+        "type": "ul",
+        "content": [
+          "praktická práce s Unreal Engine při tvorbě interaktivního prostředí",
+          "základní workflow mezi Blenderem a Unreal Engine",
+          "krátký praktický kurz 3D skenování objektů",
+          "zpracování a využití naskenovaných objektů v Unreal Engine",
+          "propojení uvedených postupů při tvorbě 3D prostředí"
+        ]
+      },
+      {
+        "title": "Organizace výuky",
         "type": "p",
-        "content": "Praktický návrh a tvorba interaktivních prostředí s využitím pracovního postupu mezi nástroji pro 3D tvorbu a Unreal Engine."
+        "content": "Předmět proběhl jako čtyřdenní blok na začátku zkouškového období. Výuku vedl Daniel Tripplet z Purdue University. Rozsah předmětu je 2 ECTS."
+      },
+      {
+        "title": "Další běh předmětu",
+        "type": "p",
+        "content": "S obdobným čtyřdenním blokovým formátem se počítá také v následujícím akademickém roce. Konkrétní termín bude oznámen samostatně."
       }
     ]
   }
