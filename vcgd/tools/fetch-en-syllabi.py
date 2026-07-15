@@ -289,23 +289,49 @@ def main() -> None:
     output: dict[str, dict] = {}
     failures: list[str] = []
 
-    planned = source["UEE"]
+    completed_block = source["UEE"]
     output["UEE"] = {
-        **planned,
+        **completed_block,
         "name": "Environment Design in Unreal Engine",
-        "extent": "to be confirmed",
-        "ending": "to be confirmed",
-        "sourceLabel": "Planned course",
+        "extent": "four-day intensive block",
+        "semester": "intensive block at the beginning of the examination period",
+        "lecturers": ["Daniel Tripplet (Purdue University)"],
+        "sourceLabel": "VCGD course records · completed intensive block",
         "sections": [
             {
-                "title": "Course status",
+                "title": "Annotation",
                 "type": "p",
-                "content": "This course is in preparation. Its official syllabus, completion requirements and teaching extent have not yet been published in the FIT CTU catalogue.",
+                "content": "An intensive practice-oriented course focused on creating interactive 3D environments in Unreal Engine. It combines work in Unreal Engine with basic preparation of 3D content in Blender and with the capture and use of 3D scans of physical objects.",
             },
             {
-                "title": "Preliminary focus",
+                "title": "Learning outcomes",
+                "type": "ul",
+                "content": [
+                    "create and edit a simple interactive 3D environment in Unreal Engine",
+                    "prepare basic 3D content in Blender for use in Unreal Engine",
+                    "capture a 3D scan of an object and integrate the scanned object into an Unreal Engine environment",
+                ],
+            },
+            {
+                "title": "Intensive-block syllabus",
+                "type": "ul",
+                "content": [
+                    "hands-on work in Unreal Engine to create an interactive environment",
+                    "a basic workflow between Blender and Unreal Engine",
+                    "a short practical course in 3D scanning objects",
+                    "processing and using scanned objects in Unreal Engine",
+                    "combining these techniques in the creation of a 3D environment",
+                ],
+            },
+            {
+                "title": "Teaching format",
                 "type": "p",
-                "content": "Practical design and production of interactive environments using a workflow between 3D content-creation tools and Unreal Engine.",
+                "content": "The course was delivered as a four-day intensive block at the beginning of the examination period. It was taught by Daniel Tripplet from Purdue University and carries 2 ECTS credits.",
+            },
+            {
+                "title": "Next course run",
+                "type": "p",
+                "content": "A similar four-day intensive format is planned for the following academic year. The exact dates will be announced separately.",
             },
         ],
     }

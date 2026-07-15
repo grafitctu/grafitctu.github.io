@@ -16,7 +16,7 @@ Shared assets:
 
 The syllabus assets are generated in two steps:
 
-1. `node tools/build-syllabi.mjs` extracts and normalizes the full Czech data from the legacy `vcgd.html` source.
+1. `node tools/build-syllabi.mjs` extracts and normalizes the full Czech data from the archived legacy source at `archive/vcgd-legacy-2026-07-15.html`.
 2. `python tools/fetch-en-syllabi.py` resolves current FIT catalogue links, refreshes the English catalogue text and aligns Czech catalogue URLs.
 
 The print document is generated from the same HTML course cards and syllabus data as the interactive page. Appending `?print=1` prepares the print-only DOM without opening a print dialog; this view is used to rebuild the committed PDFs. Regular browser printing and Ctrl+P use the same layout.
@@ -33,6 +33,6 @@ The presentation follows the structure of the existing VCGD prototype and the pu
 - elective space: at least 12 ECTS;
 - complete programme: 120 ECTS.
 
-Both language variants contain the same 27 course codes. The `UEE` environment-design course is explicitly marked as planned because no stable public catalogue entry is available yet.
+Both language variants contain the same 27 course codes. The `UEE` environment-design course records the completed four-day intensive block taught by Daniel Tripplet from Purdue University. A similar format is planned for the following academic year; no stable public catalogue entry is available yet.
 
-The detail dialog contains annotation, lecture and seminar outlines, literature, requirements and available teaching metadata. Most English texts come directly from the official FIT CTU catalogue. `ANI-DVD` and `ANI-DIP` use transparent English translations of the Czech VCGD source because the catalogue does not currently expose a complete English syllabus. A small set of catalogue fields that are still Czech on the English FIT page are translated through explicit overrides in `tools/fetch-en-syllabi.py`. `UEE` remains explicitly marked as a planned course without an approved public syllabus.
+The detail dialog contains annotation, lecture and seminar outlines, literature, requirements and available teaching metadata. Most English texts come directly from the official FIT CTU catalogue. `ANI-DVD` and `ANI-DIP` use transparent English translations of the Czech VCGD source because the catalogue does not currently expose a complete English syllabus. A small set of catalogue fields that are still Czech on the English FIT page are translated through explicit overrides in `tools/fetch-en-syllabi.py`. The Czech and English `UEE` syllabus is maintained from VCGD's record of the completed intensive course because it does not yet have a stable public catalogue page.
