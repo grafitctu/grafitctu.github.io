@@ -22,7 +22,7 @@ window.VCGD_SYLLABI = {
       {
         "title": "Seminar syllabus",
         "type": "p",
-        "content": "bude doplněno"
+        "content": "To be added."
       },
       {
         "title": "Literature",
@@ -32,7 +32,7 @@ window.VCGD_SYLLABI = {
       {
         "title": "Requirements",
         "type": "p",
-        "content": "Zápočet za řešení úloh a testy z teoretických a praktických znalostí v semestru, zkouška s důrazem na propojení získaných teoretických a praktických znalostí a realizací."
+        "content": "Credit is awarded for assignments and tests of theoretical and practical knowledge during the semester. The examination emphasizes connecting the acquired theoretical and practical knowledge and applying it in an implementation."
       }
     ],
     "sourceLabel": "Official FIT CTU course catalogue"
@@ -66,7 +66,7 @@ window.VCGD_SYLLABI = {
       {
         "title": "Seminar syllabus",
         "type": "p",
-        "content": "bude doplněno"
+        "content": "To be added."
       },
       {
         "title": "Literature",
@@ -296,7 +296,7 @@ window.VCGD_SYLLABI = {
       {
         "title": "Seminar syllabus",
         "type": "p",
-        "content": "bude doplněno"
+        "content": "To be added."
       },
       {
         "title": "Literature",
@@ -369,7 +369,7 @@ window.VCGD_SYLLABI = {
       {
         "title": "Annotation",
         "type": "p",
-        "content": "Tento prakticky zaměřený předmět poskytuje úvod do problematiky herních engine, jejich principů a využití v herním vývoji. Výuka se soustředí na obecné koncepty vývoje v grafických enginech a jejich aplikaci v konkrétních nástrojích, jako jsou Unity nebo Godot. Cvičení jsou zaměřena na praktickou práci v enginech a vedení samostatných projektů. Studenti se naučí pracovat s editory, vytvářet scény, implementovat animace, interagovat s objekty, navrhovat dialogy a využívat pokročilé grafické techniky. Důraz je kladen na aplikaci nabytých znalostí v rámci semestrálních projektů. Předmět je vhodný pro studenty se zájmem o herní vývoj, kteří chtějí získat pevné základy v práci s moderními grafickými enginy a pochopit principy tvorby herních aplikací."
+        "content": "This practice-oriented course introduces game engines, their underlying principles and their use in game development. Teaching focuses on general concepts of development in graphics engines and their application in tools such as Unity or Godot. Seminars emphasize hands-on work with engines and independent projects. Students learn to use editors, create scenes, implement animations, interact with objects, design dialogue and apply advanced graphics techniques. The acquired knowledge is put into practice in semester projects. The course is intended for students interested in game development who want a solid foundation in modern graphics engines and an understanding of how game applications are created."
       },
       {
         "title": "Lecture syllabus",
@@ -379,7 +379,7 @@ window.VCGD_SYLLABI = {
       {
         "title": "Seminar syllabus",
         "type": "p",
-        "content": "bude doplněno"
+        "content": "To be added."
       },
       {
         "title": "Literature",
@@ -413,7 +413,7 @@ window.VCGD_SYLLABI = {
       {
         "title": "Annotation",
         "type": "p",
-        "content": "Předmět je zaměřen na principy a aktuální technologie pro síťové přenosy v reálném čase. Osnova zahrnuje: snímání a prezentaci audiovizuálních signálů (vstup a výstup), síťové protokoly používané při přenosech, rozhraní zařízení, kodeky, formáty dat a stereoskopii. Pozornost je věnována praktickému využití AV přenosů v reálném čase pro zajímavé aplikace. V rámci cvičení si studenti prakticky vyzkouší sestavení přenosového AV řetězce pomocí hardwarových i softwarových prostředků a ověří vliv různých komponent na kvalitu a časové zpoždění přenosu. Naučí se jak zajistit síťovou infrastrukturu pro realizaci kvalitních AV přenosů od snímání scény až po prezentaci uživatelům."
+        "content": "The course focuses on principles and current technologies for real-time network transmission. The syllabus covers the capture and presentation of audiovisual signals, network protocols used for transmission, device interfaces, codecs, data formats and stereoscopy. Attention is given to practical uses of real-time AV transmission. In seminars, students assemble a complete AV transmission chain using hardware and software components, examine how individual components affect quality and latency, and learn how to provide the network infrastructure required for high-quality AV transmission from scene capture to presentation to users."
       },
       {
         "title": "Lecture syllabus",
@@ -423,7 +423,7 @@ window.VCGD_SYLLABI = {
       {
         "title": "Seminar syllabus",
         "type": "p",
-        "content": "bude doplněno"
+        "content": "To be added."
       },
       {
         "title": "Literature",
@@ -740,7 +740,7 @@ window.VCGD_SYLLABI = {
       {
         "title": "Annotation",
         "type": "p",
-        "content": "Studenti se seznámí s metodami aplikované statistiky a jejich teoretickým základem. Naučí se pracovat s různými druhy dat, provádět analýzy a vhodně volit model, který data vystihuje. Probrána bude regresní a korelační analýza, analýza rozptylu a úvod do neparametrických metod. Studenti se seznámí se statistickým prostředím jazyka R a použití metod si osvojí na datech z praxe."
+        "content": "Students become familiar with applied statistical methods and their theoretical foundations. They learn to work with different types of data, carry out analyses and choose a model appropriate to the data. The course covers regression and correlation analysis, analysis of variance and an introduction to non-parametric methods. Students also learn to use the R statistical environment and apply the methods to real-world data."
       },
       {
         "title": "Lecture syllabus",
@@ -784,7 +784,7 @@ window.VCGD_SYLLABI = {
       {
         "title": "Annotation",
         "type": "p",
-        "content": "Cílem předmětu je poskytnout studentům komplexní pochopení principů game designu a naučit je aplikovat teoretické koncepty v praxi. Předmět se zaměřuje na návrh herních mechanik, systémů a interakcí s důrazem na tvorbu vyvážených a poutavých herních zážitků. Studenti se seznámí s klíčovými oblastmi herního designu, včetně level designu, narativních struktur, herní ekonomiky, UX, multiplayeru a testování herních systémů. Důraz je kladen na analýzu hráčského chování, iterativní vývoj a kreativní proces navrhování her."
+        "content": "The course gives students a comprehensive understanding of game-design principles and teaches them to apply theoretical concepts in practice. It focuses on the design of game mechanics, systems and interactions, with an emphasis on balanced and engaging player experiences. Students encounter key areas of game design including level design, narrative structures, game economies, UX, multiplayer systems and testing. The course emphasizes player-behaviour analysis, iterative development and the creative design process."
       },
       {
         "title": "Lecture syllabus",
@@ -826,17 +826,17 @@ window.VCGD_SYLLABI = {
       {
         "title": "Lecture syllabus",
         "type": "p",
-        "content": "předmět nemá přednášky"
+        "content": "The course has no lectures."
       },
       {
         "title": "Seminar syllabus",
         "type": "p",
-        "content": "Před začátkem či na začátku semestru společná schůzka všech studentů s vedoucími jednotlivých projektů, kerými budou vyučující a nebo partneři z praxe. Na schůzce dojde k finálnímu rozdělení studentů do týmů a studenti absolvují úvodní teoretické zaškolení v oblastech plánování, řízení a monitorování projektu, ideace, analýzy rizik a SW podpory pro týmovou práci. Zaškolení bude pouze orientační, protože týmy budou sestavovány napříč specializacemi. V každém týmu tedy budou i studenti, kteří se další podrobnosti z vedení projektů analýzy rizik, ideace, návrhu uživatelského rozhraní atd. naučí v dalších předmětech programu (například Tvorba softwarových produktů (ANI-TSW) nebo Návrh uživatelského rozhraní (ANI-NUR)). Budou následovat pravidelné schůzky týmů s vedoucím projektů případně dalšími doménovými znalci z příslušného projektu, na kterých budou diskutovány dílčí výsledky a stanovovány další úkoly a kroky v projektu. Dále budou studenti pracovat na projektu samostatně s podporou nástrojů pro týmovou spolupráci, zejména budou používat GitLab prémium, kterým fakulta disponuje, a který podporuje širokou škálu nástrojů pro řízení i realizaci týmových projektů."
+        "content": "Before or at the beginning of the semester, all students meet with the leaders of the individual projects, who may be faculty members or external partners. Students are assigned to final teams and receive an introductory briefing on project planning, management and monitoring, ideation, risk analysis and software support for teamwork. The briefing is intentionally concise because the teams are interdisciplinary and students develop the relevant specialist knowledge in other programme courses, such as Software Product Development (ANI-TSW) or User Interface Design (ANI-NUR). Teams then meet regularly with their project leader and, where appropriate, other domain experts to discuss interim results and define the next tasks and milestones. Students work independently between meetings using collaboration tools, especially the GitLab Premium environment provided by the faculty for project management and implementation."
       },
       {
         "title": "Literature",
         "type": "p",
-        "content": "bude dodáno později"
+        "content": "To be added."
       },
       {
         "title": "Requirements",
@@ -858,22 +858,22 @@ window.VCGD_SYLLABI = {
       {
         "title": "Annotation",
         "type": "p",
-        "content": "Cílem předmětu je pravidelná a systematická práce na projektu, který si studenti zvolili v rámci předmětu Týmový proejkt A. Studenti se tak zlepšují v týmové spolupráci v menších interdisciplinárních týmech. Je možné a žádoucí, že někteří studenti si v rámci práce na projektu najdou a zvolí téma své budoucí diplomové práce. Může to být další rozvinutí projektu ve směru specializace příslušného studenta."
+        "content": "The course consists of regular and systematic work on the project selected in Team Project A. Students improve their collaboration skills in small interdisciplinary teams. Some students may use the project to identify and develop a topic for their future master's thesis, extending the project in the direction of their specialization."
       },
       {
         "title": "Lecture syllabus",
         "type": "p",
-        "content": "předmět nemá přednášky"
+        "content": "The course has no lectures."
       },
       {
         "title": "Seminar syllabus",
         "type": "p",
-        "content": "předmět nemá cvičení"
+        "content": "The course has no seminars."
       },
       {
         "title": "Literature",
         "type": "p",
-        "content": "bude dodáno později"
+        "content": "To be added."
       },
       {
         "title": "Requirements",

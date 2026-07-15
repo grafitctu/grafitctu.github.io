@@ -22,6 +22,43 @@ CODE_ALIASES = {
     "ANI-DID": "NI-DID",
     "ANI-TVR": "NI-TVR",
 }
+CATALOGUE_ENGLISH_OVERRIDES = {
+    "ANI-ARC": {
+        "Seminar syllabus": "To be added.",
+        "Requirements": "Credit is awarded for assignments and tests of theoretical and practical knowledge during the semester. The examination emphasizes connecting the acquired theoretical and practical knowledge and applying it in an implementation.",
+    },
+    "ANI-BSO": {
+        "Seminar syllabus": "To be added.",
+    },
+    "ANI-DVG": {
+        "Seminar syllabus": "To be added.",
+    },
+    "ANI-EGG": {
+        "Annotation": "This practice-oriented course introduces game engines, their underlying principles and their use in game development. Teaching focuses on general concepts of development in graphics engines and their application in tools such as Unity or Godot. Seminars emphasize hands-on work with engines and independent projects. Students learn to use editors, create scenes, implement animations, interact with objects, design dialogue and apply advanced graphics techniques. The acquired knowledge is put into practice in semester projects. The course is intended for students interested in game development who want a solid foundation in modern graphics engines and an understanding of how game applications are created.",
+        "Seminar syllabus": "To be added.",
+    },
+    "ANI-IRT": {
+        "Annotation": "The course focuses on principles and current technologies for real-time network transmission. The syllabus covers the capture and presentation of audiovisual signals, network protocols used for transmission, device interfaces, codecs, data formats and stereoscopy. Attention is given to practical uses of real-time AV transmission. In seminars, students assemble a complete AV transmission chain using hardware and software components, examine how individual components affect quality and latency, and learn how to provide the network infrastructure required for high-quality AV transmission from scene capture to presentation to users.",
+        "Seminar syllabus": "To be added.",
+    },
+    "ANI-SAI": {
+        "Annotation": "Students become familiar with applied statistical methods and their theoretical foundations. They learn to work with different types of data, carry out analyses and choose a model appropriate to the data. The course covers regression and correlation analysis, analysis of variance and an introduction to non-parametric methods. Students also learn to use the R statistical environment and apply the methods to real-world data.",
+    },
+    "ANI-SSD": {
+        "Annotation": "The course gives students a comprehensive understanding of game-design principles and teaches them to apply theoretical concepts in practice. It focuses on the design of game mechanics, systems and interactions, with an emphasis on balanced and engaging player experiences. Students encounter key areas of game design including level design, narrative structures, game economies, UX, multiplayer systems and testing. The course emphasizes player-behaviour analysis, iterative development and the creative design process.",
+    },
+    "ANI-TPA": {
+        "Lecture syllabus": "The course has no lectures.",
+        "Seminar syllabus": "Before or at the beginning of the semester, all students meet with the leaders of the individual projects, who may be faculty members or external partners. Students are assigned to final teams and receive an introductory briefing on project planning, management and monitoring, ideation, risk analysis and software support for teamwork. The briefing is intentionally concise because the teams are interdisciplinary and students develop the relevant specialist knowledge in other programme courses, such as Software Product Development (ANI-TSW) or User Interface Design (ANI-NUR). Teams then meet regularly with their project leader and, where appropriate, other domain experts to discuss interim results and define the next tasks and milestones. Students work independently between meetings using collaboration tools, especially the GitLab Premium environment provided by the faculty for project management and implementation.",
+        "Literature": "To be added.",
+    },
+    "ANI-TPB": {
+        "Annotation": "The course consists of regular and systematic work on the project selected in Team Project A. Students improve their collaboration skills in small interdisciplinary teams. Some students may use the project to identify and develop a topic for their future master's thesis, extending the project in the direction of their specialization.",
+        "Lecture syllabus": "The course has no lectures.",
+        "Seminar syllabus": "The course has no seminars.",
+        "Literature": "To be added.",
+    },
+}
 
 
 def clean(value: str) -> str:
@@ -234,6 +271,15 @@ def parse_course(code: str, course: dict, links: dict[str, str]) -> tuple[str, d
         "sourceLabel": "Official FIT CTU course catalogue",
         "sections": sections,
     }
+    overrides = CATALOGUE_ENGLISH_OVERRIDES.get(code, {})
+    if overrides:
+        for section in translated["sections"]:
+            if section["title"] in overrides:
+                section["type"] = "p"
+                section["content"] = overrides[section["title"]]
+        translated["sourceLabel"] = (
+            "Official FIT CTU course catalogue · English translation of Czech catalogue fields"
+        )
     return code, translated
 
 
