@@ -11,6 +11,7 @@ Shared assets:
 - `vcgd.js` — semester filters, persistent card/horizontal view switch, accessible syllabus dialog and print action
 - `syllabi-cs.js` — complete Czech syllabus data
 - `syllabi-en.js` — official English catalogue data, with two documented source translations
+- `assets/fit-cvut-negativ-cs.svg` and `assets/fit-cvut-negativ-en.svg` — official Czech and English FIT CTU logo variants for dark backgrounds, copied without modification from the [CTU logo package](https://www.cvut.cz/logo-a-graficky-manual)
 
 The syllabus assets are generated in two steps:
 
