@@ -1308,67 +1308,507 @@ body:has(dialog[open]) {
   }
 }
 
+.print-document {
+  display: none;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 12mm 13mm 14mm;
+}
+
+@page plan {
+  size: A4 landscape;
+  margin: 8mm;
+}
+
+@page syllabus {
+  size: A4 portrait;
+  margin: 12mm 13mm 14mm;
+}
+
 @media print {
   :root {
     color-scheme: light;
   }
 
+  html,
   body {
+    width: auto;
+    min-width: 0;
+    height: auto;
+    margin: 0;
+    padding: 0;
     color: #111827;
     background: #fff;
   }
 
   body::before,
-  .site-header,
-  .quick-nav,
-  .hero-actions,
-  .filters,
-  .view-toggle,
-  .results-count,
-  .course-action,
-  .cta-panel,
-  .site-footer,
-  dialog {
+  body > *:not(.print-document) {
     display: none !important;
   }
 
-  .hero {
-    min-height: auto;
-    padding-block: 1.5rem;
-  }
-
-  .hero-inner {
-    grid-template-columns: 1fr;
-  }
-
-  .hero h1,
-  .section-heading h2,
-  .audience-copy h2 {
+  .print-document {
+    display: block !important;
     color: #111827;
-  }
-
-  .hero h1 span {
-    color: #7a4a00;
-    background: none;
-  }
-
-  .hero-panel,
-  .focus-card,
-  .semester,
-  .course-card,
-  .audience-list li {
-    color: #111827;
-    border-color: #aeb7c8;
     background: #fff;
-    box-shadow: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8.4pt;
+    line-height: 1.35;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .print-document,
+  .print-document * {
+    box-sizing: border-box;
+  }
+
+  .print-category-program { --print-category: #2f8de4; --print-category-soft: #e8f3fd; }
+  .print-category-specialization { --print-category: #7655b8; --print-category-soft: #f0ebf8; }
+  .print-category-choice { --print-category: #d48519; --print-category-soft: #fff3df; }
+  .print-category-optional { --print-category: #a78a16; --print-category-soft: #fff9d9; }
+
+  .print-kicker {
+    margin: 0;
+    color: #7655b8;
+    font-size: 7.2pt;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+  }
+
+  .print-plan-page {
+    page: plan;
+    height: 194mm;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    gap: 2.5mm;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .print-plan-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8mm;
+    align-items: end;
+    padding-bottom: 2.5mm;
+    border-bottom: 0.6mm solid #111827;
+  }
+
+  .print-plan-heading h1 {
+    margin: 1mm 0 0;
+    font-size: 22pt;
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+  }
+
+  .print-plan-label {
+    margin: 1mm 0 0;
+    color: #4b5563;
+    font-size: 9pt;
+    font-weight: 700;
+  }
+
+  .print-plan-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 24mm);
+    gap: 2mm;
+  }
+
+  .print-plan-stat {
+    min-height: 14mm;
+    padding: 2mm;
+    border: 0.25mm solid #aeb7c8;
+    border-top: 1mm solid #2f8de4;
+    border-radius: 1.5mm;
+    background: #f8fafc;
+  }
+
+  .print-plan-stat:nth-child(2) {
+    border-top-color: #7655b8;
+  }
+
+  .print-plan-stat:nth-child(3) {
+    border-top-color: #d48519;
+  }
+
+  .print-plan-stat strong,
+  .print-plan-stat span {
+    display: block;
+  }
+
+  .print-plan-stat strong {
+    font-size: 14pt;
+    line-height: 1;
+  }
+
+  .print-plan-stat span {
+    margin-top: 0.8mm;
+    color: #4b5563;
+    font-size: 5.8pt;
+    line-height: 1.05;
+  }
+
+  .print-plan-legend {
+    display: flex;
+    align-items: center;
+    gap: 3.5mm;
+    min-height: 7mm;
+    color: #374151;
+    font-size: 6.3pt;
+  }
+
+  .print-plan-legend > strong {
+    margin-right: 1mm;
+    color: #111827;
+    font-size: 6.5pt;
+    text-transform: uppercase;
+  }
+
+  .print-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2mm;
+  }
+
+  .print-legend-item b,
+  .print-category-badge {
+    min-width: 5.5mm;
+    height: 5.5mm;
+    display: inline-grid;
+    place-items: center;
+    padding: 0 0.8mm;
+    border: 0.25mm solid var(--print-category);
+    border-radius: 1mm;
+    color: #111827;
+    background: var(--print-category-soft);
+    font-size: 5.5pt;
+    line-height: 1;
+  }
+
+  .print-semester-grid {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2.5mm;
+  }
+
+  .print-semester {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 0.3mm solid #9ca3af;
+    border-radius: 2mm;
+    background: #fff;
+  }
+
+  .print-semester-header {
+    min-height: 15mm;
+    padding: 2.2mm 2.5mm;
+    border-bottom: 0.3mm solid #aeb7c8;
+    background: #111827;
+    color: #fff;
+  }
+
+  .print-semester-header span {
+    display: block;
+    color: #f6c800;
+    font-size: 5.8pt;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .print-semester-header h2 {
+    margin: 1mm 0 0;
+    color: #fff;
+    font-size: 9pt;
+    line-height: 1.05;
+  }
+
+  .print-plan-courses {
+    min-height: 0;
+    display: grid;
+    gap: 1mm;
+    align-content: start;
+    margin: 0;
+    padding: 2mm;
+    list-style: none;
+  }
+
+  .print-plan-course {
+    min-height: 10.5mm;
+    display: grid;
+    grid-template-columns: 6mm minmax(0, 1fr) auto;
+    gap: 1.2mm;
+    align-items: center;
+    padding: 1.2mm 1.4mm 1.2mm 1mm;
+    overflow: hidden;
+    border: 0.25mm solid #d1d5db;
+    border-left: 1.1mm solid var(--print-category);
+    border-radius: 1.2mm;
+    background: #fff;
+  }
+
+  .print-plan-course-body {
+    min-width: 0;
+    display: block;
+  }
+
+  .print-plan-course-body strong,
+  .print-plan-course-body span {
+    display: block;
+  }
+
+  .print-plan-course-body strong {
+    color: #111827;
+    font-size: 6pt;
+    line-height: 1;
+  }
+
+  .print-plan-course-body span {
+    margin-top: 0.7mm;
+    overflow: hidden;
+    color: #374151;
+    font-size: 6pt;
+    line-height: 1.08;
+  }
+
+  .print-plan-credits {
+    color: #4b5563;
+    font-size: 5.5pt;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .print-plan-footer {
+    min-height: 9mm;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6mm;
+    align-items: end;
+    padding-top: 2mm;
+    border-top: 0.3mm solid #aeb7c8;
+    color: #4b5563;
+    font-size: 6.2pt;
+    line-height: 1.25;
+  }
+
+  .print-plan-footer p {
+    margin: 0;
+  }
+
+  .print-plan-footer strong {
+    color: #111827;
+    white-space: nowrap;
+  }
+
+  .print-syllabi {
+    page: syllabus;
+  }
+
+  .print-syllabi-heading {
+    margin: 0 0 7mm;
+    padding-bottom: 5mm;
+    border-bottom: 0.8mm solid #111827;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .print-syllabi-heading h1 {
+    margin: 1.5mm 0 1.5mm;
+    font-size: 25pt;
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .print-syllabi-heading > p:last-child {
+    max-width: 155mm;
+    margin: 0;
+    color: #4b5563;
+    font-size: 9pt;
+  }
+
+  .print-course {
+    border-top: 1.1mm solid var(--print-category);
+    orphans: 3;
+    widows: 3;
+  }
+
+  .print-course + .print-course {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .print-course-running {
+    display: flex;
+    justify-content: space-between;
+    gap: 10mm;
+    padding: 2mm 0 2.5mm;
+    color: #6b7280;
+    font-size: 6.5pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .print-course-running strong {
+    color: #111827;
+  }
+
+  .print-course-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 43mm;
+    gap: 8mm;
+    align-items: start;
+  }
+
+  .print-course-code {
+    margin: 0;
+    color: var(--print-category);
+    font-size: 8pt;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+
+  .print-course-header h2 {
+    margin: 1mm 0 0;
+    font-size: 19pt;
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+  }
+
+  .print-course-category {
+    display: grid;
+    grid-template-columns: 9mm minmax(0, 1fr);
+    gap: 2mm;
+    align-items: center;
+    padding: 2mm;
+    border: 0.3mm solid var(--print-category);
+    border-radius: 1.5mm;
+    background: var(--print-category-soft);
+    font-size: 6.7pt;
+    line-height: 1.15;
+  }
+
+  .print-course-category b {
+    display: grid;
+    place-items: center;
+    height: 8mm;
+    border-radius: 1mm;
+    color: #fff;
+    background: var(--print-category);
+  }
+
+  .print-course-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5mm;
+    margin-top: 4mm;
+  }
+
+  .print-course-meta span {
+    padding: 1.2mm 2mm;
+    border: 0.25mm solid #c5cad3;
+    border-radius: 99mm;
+    color: #374151;
+    background: #f8fafc;
+    font-size: 6.8pt;
+  }
+
+  .print-course-summary {
+    margin: 4mm 0 5mm;
+    padding: 3mm 3.5mm;
+    border-left: 1mm solid var(--print-category);
+    color: #1f2937;
+    background: var(--print-category-soft);
+    font-size: 9pt;
+    line-height: 1.45;
+  }
+
+  .print-course-columns {
+    column-count: 2;
+    column-gap: 8mm;
+    column-rule: 0.25mm solid #d1d5db;
+  }
+
+  .print-syllabus-section {
+    margin: 0 0 4mm;
+    padding: 2.5mm 0 0;
+    border-top: 0.35mm solid #9ca3af;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-syllabus-section:first-child {
+    margin-top: 0;
+  }
+
+  .print-syllabus-section h3 {
+    margin: 0 0 1.5mm;
+    color: #111827;
+    font-size: 7.5pt;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .print-syllabus-section p,
+  .print-syllabus-section li,
+  .print-syllabus-section dd,
+  .print-syllabus-section dt {
+    font-size: 7.5pt;
+    line-height: 1.36;
+  }
+
+  .print-syllabus-section p,
+  .print-syllabus-section ol,
+  .print-syllabus-section ul,
+  .print-syllabus-section dl {
+    margin: 0;
+  }
+
+  .print-syllabus-section ol,
+  .print-syllabus-section ul {
+    padding-left: 4.8mm;
+  }
+
+  .print-syllabus-section li + li {
+    margin-top: 0.8mm;
+  }
+
+  .print-people dl {
+    display: grid;
+    grid-template-columns: 25mm minmax(0, 1fr);
+    gap: 1mm 2mm;
+  }
+
+  .print-people dt {
+    color: #6b7280;
+    font-weight: 700;
+  }
+
+  .print-people dd {
+    color: #111827;
+  }
+
+  .print-course-source {
+    display: grid;
+    gap: 1mm;
+    margin-top: 4mm;
+    padding-top: 2.5mm;
+    border-top: 0.3mm solid #aeb7c8;
+    color: #6b7280;
+    font-size: 6.3pt;
     break-inside: avoid;
   }
 
-  .semester-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .course-card {
-    min-height: 0;
+  .print-course-source a {
+    color: #374151;
+    text-decoration: none;
+    overflow-wrap: anywhere;
   }
 }
