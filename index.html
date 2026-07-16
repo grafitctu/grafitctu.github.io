@@ -1,714 +1,1635 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html lang="cs" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/footer.css">
-    <script src="/w3.js"></script>
-    <title>Grafit Research Group</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GRAFIT Research Group | FIT ČVUT</title>
+  <meta name="description" content="GRAFIT Research Group at FIT CTU in Prague: computer graphics, VR/AR, image processing, UX/UI, game design, research, teaching and student projects." />
+  <meta name="theme-color" content="#070b12" />
+  <link rel="canonical" href="https://grafitctu.github.io/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="GRAFIT Research Group | FIT ČVUT" />
+  <meta property="og:description" content="Research, teaching and student work across computer graphics, VR/AR, image processing, UX/UI and game design." />
+  <meta property="og:url" content="https://grafitctu.github.io/" />
+  <meta property="og:image" content="https://grafitctu.github.io/assets/projects/gexpo_logo.jpg" />
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      overflow-x: hidden;
+    }
+    .skip-link {
+      position: fixed;
+      left: 1rem;
+      top: -4rem;
+      z-index: 100;
+      border-radius: 9999px;
+      background: white;
+      color: #09090b;
+      padding: .55rem 1rem;
+      font-weight: 700;
+      transition: top 160ms ease;
+    }
+    .skip-link:focus { top: 1rem; }
+    .icon {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    /* Micro-motion hover for cards */
+    .card {
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+    }
+    .card .thumb {
+      transform: scale(1.02);
+      transition: transform 500ms cubic-bezier(.22,1,.36,1);
+    }
+    .card:hover .thumb {
+      transform: scale(1.08);
+    }
+
+    /* Courses */
+    .course-card {
+      transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease;
+    }
+    .course-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 16px 32px rgba(0,0,0,.22);
+    }
+
+    /* Tmavé/světlé přechody pozadí */
+    .bg-gradient-dark {
+      background: linear-gradient(#070b12,#0a0f18 55%,#090d14);
+    }
+    .bg-gradient-light{
+      background: linear-gradient(#f9fafb,#f4f6f8 55%,#eef2f7);
+    }
+
+    /* QuickNav pills */
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      border-radius:9999px;
+      padding:.25rem .75rem;
+      border:1px solid rgba(255,255,255,.1);
+      color:rgba(255,255,255,.9);
+    }
+    .pill:hover {
+      background: rgba(255,255,255,.08);
+    }
+    .pill:focus-visible {
+      outline: 2px solid rgba(56,189,248,.9);
+      outline-offset: 2px;
+    }
+
+    /* Wide-screen compaction */
+    @media (min-width: 1280px) {
+      .pill { padding: .20rem .60rem; font-size: .9rem; }
+      .icon { width: .9rem; height: .9rem; }
+    }
+    @media (min-width: 1536px) {
+      .pill { padding: .15rem .55rem; font-size: .875rem; }
+      .icon { width: .85rem; height: .85rem; }
+    }
+
+    /* Tooltip šipka pro skupinový seznam vyučujících */
+    .tooltip::after{
+      content:"";
+      position:absolute;
+      left:16px;
+      top:-6px;
+      border-width:6px;
+      border-style:solid;
+      border-color:transparent transparent rgb(0 0 0 / .9) transparent;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .card, .card .thumb, .course-card, .skip-link { transition: none; }
+      .card:hover, .course-card:hover { transform: none; }
+    }
+  </style>
 </head>
 
-<body>
-    <div class="bg-dim">
-        <section>
-            <div class="hero-panel">
-                <div class="logos">
-                    <img class="logo" src="/assets/logos/grafit_bw.png" alt="grafit logo">
-                    <img class="logo" src="/assets/logos/fitctu_bw.svg" alt="grafit logo">
-                </div>
-                <div>
-                    <p><span>Grafit</span> Research Group: For Programmers, Designers and Artists</p>
-                    <p>Focused on <span>virtual</span> and <span>augmented reality</span>, computer graphics, <span>user interface design</span>, <span>pattern recognition</span>, and <span>game design &darr;</span></p>
-                </div>
-            </div>
-        </section>
+<body class="min-h-screen text-neutral-900 dark:text-white bg-gradient-dark dark:bg-gradient-dark">
+  <a class="skip-link" href="#main" data-i18n-key="skipToContent">Přeskočit na obsah</a>
 
-        <section>
-            <div class="panel">
-                <h2>Events</h2>                
-            </div>
+  <!-- horní progress pruh -->
+  <div id="scrollbar" class="fixed left-0 top-0 h-1 w-0 bg-gradient-to-r from-blue-400 via-cyan-300 to-fuchsia-300 z-50"></div>
 
-                 <!-- <div class="project">
-                    <img src="/assets/projects/gexpo_logo.jpg" alt="GEXPO">
-                    <div class="description">
-                        <h3>GEXPO 2026</h3>
-                        <p>It’s becoming a tradition! This year’s Graphics Expo once again showcased the achievements of our students in game development, VR, and final projects. With 60+ participants and a program running late into the evening, it was an event to remember!</p>
-                        <ul>
-                            <li><a href="events/gexpo/2025">Gexpo 2025</a></li>
-                            <li><a href="events/gexpo/2026">Gexpo 2026</a></li>
-                        </ul>
-                    </div>
-                </div> -->
-            
-            <div class="projects">
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <!-- výška hero: cca 2/3 viewportu -->
+    <canvas id="heroCanvas" class="absolute inset-0 w-full" style="height:66vh"></canvas>
 
-                                 <div class="project">
-                    <img src="/assets/projects/gexpo_logo.jpg" alt="GEXPO">
-                    <div class="description">
-                        <h3>GEXPO 2026</h3>
-                        <p>It’s becoming a tradition! This year’s Graphics Expo once again showcased the achievements of our students in game development, VR, and final projects. With 60+ participants and a program running late into the evening, it was an event to remember!</p>
-                        <ul>
-                            <li><a href="events/gexpo/2025">Gexpo 2025</a></li>
-                            <li><a href="events/gexpo/2026">Gexpo 2026</a></li>
-                        </ul>
-                    </div>
-                </div>
+    <div class="relative mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 pt-24 pb-24">
+      <!-- Jazykový přepínač -->
+      <div class="absolute right-0 top-0 z-20 flex items-center gap-1 rounded-full border border-white/25 bg-black/60 px-1 py-1 text-xs">
+        <button id="btn-lang-cs"
+                class="px-2 py-0.5 rounded-full bg-white/25 text-white font-semibold"
+                type="button">
+          <span data-i18n-key="langToggleCs">CZ</span>
+        </button>
+        <button id="btn-lang-en"
+                class="px-2 py-0.5 rounded-full text-neutral-300 hover:bg-white/10"
+                type="button">
+          <span data-i18n-key="langToggleEn">EN</span>
+        </button>
+      </div>
 
-                
-                <div class="project">
-                    <img src="/assets/projects/majak2.png" alt="GameJam Velikonoční 2025">
-                    <div class="description">
-                        <h3>GameJam 2025</h3>
-                        <p>Another installment in our series of traditional game jams! Once again, we're hosting it over Easter, but this time with a surprise – our judges will be industry leaders from game studios and major companies!</p>
-                        <ul>
-                            <li><a href="https://itch.io/jam/gamejam-fit-2026"> itch </a></li>  <li><a href="https://grafitctu.github.io/events/gamejam2026/">web </a></li>   
-                            <li><a href="https://itch.io/jam/gamejam-fit-2025a"> itch </a></li>  <li><a href="https://grafitctu.github.io/events/gamejam2025a/">web </a></li>   
-                            <li><a href="https://gamejam.pages.fit/">GameJam web </a></li> 
-                        </ul>
-                    </div>
-                </div>      
+      <div class="flex items-start gap-4 sm:gap-6">
+        <img src="https://grafitctu.github.io/assets/logos/grafit.png"
+             alt="GRAFIT Research Group"
+             class="h-12 w-12 sm:h-14 sm:w-14 shrink-0 rounded-xl border border-white/10 shadow">
+        <div class="min-w-0">
+          <p class="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300/80" data-i18n-key="heroEyebrow">FIT ČVUT · Praha</p>
+          <h1 class="text-2xl sm:text-5xl font-extrabold tracking-tight" data-i18n-key="heroTitle">
+            Grafit Research Group
+          </h1>
+          <p class="mt-3 max-w-3xl text-neutral-300" data-i18n-key="heroSubtitle">
+            Výzkum, výuka a studentská tvorba na pomezí počítačové grafiky, VR/AR, zpracování obrazu, UX/UI a game designu na FIT ČVUT.
+          </p>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <a href="vcgd/"
+               class="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-400/15 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-400/25">
+              <i data-lucide="graduation-cap" class="icon"></i>
+              <span data-i18n-key="heroStudy">Studijní plán VCGD</span>
+            </a>
+            <a href="games/"
+               class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-neutral-200 hover:bg-white/10">
+              <i data-lucide="gamepad-2" class="icon"></i>
+              <span data-i18n-key="heroGames">Studentské hry</span>
+            </a>
+            <a href="events/gvecery/graphic-evenings.html"
+               class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-neutral-200 hover:bg-white/10">
+              <i data-lucide="calendar-days" class="icon"></i>
+              <span data-i18n-key="heroEvenings">Grafické večery</span>
+            </a>
+          </div>
 
-                <div class="project">
-                    <img src="/assets/projects/gv.png" alt="Grafické Večery">
-                    <div class="description">
-                        <h3>Graphic Evenings 2025</h3>
-                        <p>Continuation of Graphic Thursdays. A series of invited guests will present a wide range of graphic topics from LLM in games, through photography, and design. In addition to invited guests, current and former students will also give lectures about their completed thesis.</p>
-                        <ul>
-                            <li><a href="https://grafitctu.github.io/events/gvecery/graphic-evenings.html">Grafické Večery</a></li>
-                            
-                        </ul>
-                    </div>
-                </div>                 
-           
-                <div class="project">
-                    <img src="/events/hellofit.jpg" alt="HelloFit 2025">
-                    <div class="description">
-                        <h3>HelloFit 2025</h3>
-                        <p>Another part of our traditional series of events for freshmen. Once again, we helped our friends from Fit++, welcomed new students and invited them to join our game design group and the STOH board game club.</p>
-                        <ul>
-                            <li><a href="https://www.klubfitpp.cz/events/2025/hello-fit-25/">HelloFit 2025 </a></li>
-                            <li><a href="https://stoh.su.cvut.cz/phprs/">Klub STOH</a></li> 
-                        </ul>
-                    </div>
-                </div>                
-           
- 
- 
-                <div class="project">
-                    <img src="/assets/projects/nocvedcu.png" alt="Noc vedcu">
-                    <div class="description">
-                        <h3>ResearchersNight 2025</h3>
-                        <p>This year, we will celebrate the 20th anniversary of Researchers' Night in the Czech Republic with you! Together, we will meet again in more than 50 cities on Friday, 26 September 2025.</p>
-                        <ul>
-                            <li><a href="https://www.nocvedcu.cz/en">Researchers Night</a></li>
-                        </ul>
-                    </div>
-                </div>                
-                 <div class="project">
-                    <img src="/assets/projects/grafitgames_logo.jpg" alt="Grafit games">
-                    <div class="description">
-                        <h3>Grafit Games Studio</h3>
-                        <p>Bridging cutting-edge research with creative game development, we craft both digital and board game experiences.</p>
-                        <ul>
-                            <li><a href="https://barushe22.itch.io/neckventure">NeckVenture</a></li>
-                            <li><a href="https://betacaroten.itch.io/game-everyday">GameEveryday</a></li>
-                        </ul>
-                    </div>
-                </div>
-               <div class="project">
-                    <img src="/assets/projects/gamejam_2024b_logo.jpg" alt="GameJam Vánoční 2024">
-                    <div class="description">
-                        <h3>GameJam 2024</h3>
-                        <p>Another installment in our series of traditional game jams! Once again, we're hosting it over Easter, but this time with a surprise – our judges will be industry leaders from game studios and major companies!</p>
-                        <ul>
-                            <li><a href="https://itch.io/jam/gamejam-fit-2024-vanocni">itch.io 2025 </a></li>
-                            <li><a href="events/gamejam02/">GameJam 2024</a></li> 
-                        </ul>
-                    </div>
-                </div>
-                               
-            </div>
-        </section>
-        
-        <section>
-            <div class="panel">
-                <h2>Research</h2>
-                <p class="nav">see also <a href="/publications">Publications</a> and <a href="/theses">Theses</a></p>
-            </div>
-            <div class="projects">
-                <div class="project">
-                    <img src="/assets/projects/politeia.png" alt="politeia 21">
-                    <div class="description">
-                        <h3>Politeia 21</h3>
-                        <p>An interdisciplinary project combining virtual reality, social studies and philosophy. Our goal is to build a virtual simulation where Plato's theses about an ideal society and ethical aspects of human behavior could be examined. We plan to use the simulation as a vast experimental instrument to study real time human interactions in a virtual environment.</p>
-                        <ul>
-                            <li><a href="https://www.unihack.cz/project/8">Unihack Special Jury Award </a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="project">
-                    <img src="/assets/projects/vennamesta.png" alt="venna mesta">
-                    <div class="description">
-                        <h3>Dowry Towns of Bohemian Queens</h3>
-                        <p>The towns which used to belong to Bohemian queens, the so-called royal dowry towns, pertain to a specific category among historic Bohemian cities in many respects. The institution of dowry towns was created in the early 14th century and underwent a complex development. We have contributed to several projects mapping their historical development and digitalization of cultural heritage. (2018-2022)</p>
-                        <ul>
-                            <li><a href="https://www.kralovskavennamesta.cz/">Věnná města českých královen ve VR</a></li>
-                            <li><a href="https://www.uhk.cz/en/philosophical-faculty/about-faculty">PF University of Hradec Králove</a></li>
-                            <li><a href="https://www.hiu.cas.cz/projekty/venna-mesta-ceskych-kraloven-ziva-soucast-historickeho-vedomi-a-jeji-podpora-nastroji-historicke-geografie-virtualni-reality-a-kyberprostoru">Institute of History CAS </a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="project">
-                    <img src="/assets/projects/gamedesign.png" alt="game design">
-                    <div class="description">
-                        <h3>Game design</h3>
-                        <p>Our focus is on the game design theory; we are interested in word design, acessibility of inpaired users and creative writing.</p>
-                        <ul>
-                            <li><a href="https://casopis.fit.cvut.cz/deni-na-fit/nemam-cas-na-spanek-jsem-na-gamejamu/">GameJam 2020 CS</a></li>
-                            <li><a href="events/gamejam_cs/">GameJam 2022.1 CS</a><a href="events/gamejam/"> EN</a></li>
-                            <li><a href="events/gamejam02/">GameJam 2022.2 CS</a></li>                            
-                            <li><a href="https://www.youtube.com/channel/UC5lYKLsaeDs7ucC1nZIg19Q/playlists">VHS Youtube Channel</a></li>
-                            <li><a href="projects/">FIT games</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="project">
-                    <img src="/assets/projects/textures.jpg" alt="textures">
-                    <div class="description">
-                        <h3>Texture modeling</h3>
-                        <p>In cooperation with the Institute of Information Theory and Automation, Czech Academy of Sciences, we map and model the realistic appearance of materials.</p>
-                        <ul>
-                            <li><a href="https://youtu.be/gj6j4cmcGd0">BRDF and BTF lectures (cs)</a></li>
-                            <li><a href="http://btf.utia.cas.cz/?brdf_dwn">BTF measuring and modelling</a></li>
-                        </ul>
-                    </div>
-                </div>
-                 <div class="project">
-                    <img src="/assets/projects/most.png" alt="venna mesta">
-                    <div class="description">
-                        <h3>Most - city that not disappear</h3>
-                        <p>Most is a city that has experienced a turbulent reconstruction in its history. We reconstruct the appearance of the city before this massive reconstruction. (2023-2027)</p>
-                        <ul>
-                            <li><a href="https://www.vugtk.cz/en/home-page/">VÚGTK</a></li>
-                            <li><a href="https://www.ujep.cz/en/about-ujep">University of J. E. Purkyně</a></li>                            
-                        </ul>
-                    </div>
-                </div>
-                 <div class="project">
-                    <img src="/assets/projects/intwall.png" alt="textures">
-                    <div class="description">
-                        <h3>Tactile interfaces: interactive wall</h3>
-                        <p>In cooperation with MIT, Tokyo University, initi.org and CAMP we explore the tactile-specific interfaces</p>
-                        <ul>
-                            <li><a href="https://www.youtube.com/watch?v=3jvmoj7pLZU&ab_channel=IraWinder">Taxtile Matrix Box (MIT version)</a></li>
-                            <li><a href="https://www.youtube.com/watch?v=3jvmoj7pLZU&ab_channel=IraWinder">Interactive wall</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+          <!-- Plovoucí tlačítko pro otevření filtrů -->
+          <button id="openFilters"
+                  aria-controls="filterDrawer"
+                  aria-expanded="false"
+                  class="absolute right-6 bottom-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">
+            🔎 <span data-i18n-key="openFiltersLabel">Filtry</span>
+          </button>
+        </div>
+      </div>
     </div>
-    <section>
-        <div class="panel">
-            <h2>Student Showcase</h2>
-        </div>
-        <div class="showcase">       
-            <div class="item">
-                <h4>Wood texture generation</h4>
-                <a href="https://iga.ksi.fit.cvut.cz/bi-pga/b241/3d/jechjose?class=3d">
-                    <img src="/assets/showcase/jechdrevo.png" /> </a></p>
-                </a>
-                <p>Plugin for creating artificial wood texture. (PGA course, bachelor work)</p>
-           </div>     
-            <div class="item">
-                <h4>KolejenkuPls</h4>
-                <a href="https://www.youtube.com/watch?v=AQNmMeknEpM">
-                    <img src="https://gitlab.fit.cvut.cz/BI-VHS/b241_projects/nefitnuto/-/raw/main/sprites/Room/roomBackground.png" /> </a></p>
-                </a>
-                <p>Tonight you are the Strahov Dorm Matron — the last line between the street and a warm bed. Inspect IDs, weigh excuses, stamp or deny, and live with the fallout of every decision. (VHS course)</p>                                
-                <a href="https://drive.google.com/drive/u/1/folders/1ihZj2bwOup5j24CMroseJMnO4suCWSoJ?usp=sharing">download</a>
-            </div>            
-            <div class="item">
-                <h4>AI Texture to 3D generatiopn</h4>
-                <a href="stablegen.ai">
-                    <img src="/assets/showcase/stablegen.jpg" /> </a></p>
-                </a>
-                <p>Plugin for generating amazing AI textures for 3D objects. (PGA course, bachelor work) </p>
-            </div>
-            <div class="item">
-                <h4>Texture editing</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/stud/svabosa1/blob/master/dokumentace1.adoc">
-                    <img src="/assets/showcase/svabova.png" /> </a></p>
-                </a>
-                <p>Content aware fill implemented as a GIMP plugin (PGA course)</p>
-            </div>            
-            <div class="item">
-                <h4>Elections visualisation</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/stud/milecold/blob/master/dokumentace2.adoc">
-                    <img src="/assets/showcase/milec.png" />
-                </a>
-                <p>Parliament elections visualisation + online parser, implemented as a SAGE app (PGA course)</p>
-            </div>
-            <div class="item">
-                <h4>Edge detectors</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/stud/hoskorad/blob/master/dokumentace1.adoc">
-                    <img src="/assets/showcase/hoskorad.jpg" />
-                </a>
-                <p>A set of edge detectors and comparisons of the application of the resulting operators, implemented as a GIMP plugin (PGA course)</p>
-            </div>
-            <div class="item">
-                <h4>3D FT visualisation</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/valkojo1/tree/master/3D">
-                    <img src="/assets/showcase/valko.png" />
-                </a>
-                <p>Fourier transformation visualisation implemented as a Blender plugin (PGA course)</p>
-            </div>
-            <div class="item">
-                <h4>Parametric towers generation</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/trzasmar/blob/master/3D-object_generator/dokumentace3.adoc">
-                    <img src="/assets/showcase/trzasmar.jpg" />
-                </a>
-                <p>Object generation implemented as a Blender plugin (PGA course)</p>
-            </div>
-            <div class="item">
-                <h4>Mandelbulb</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/svejsond/blob/master/3D/dokumentace3.adoc">
-                    <img src="/assets/showcase/svejstil.jpg" />
-                </a>
-                <p>Fractal rendering implemented as a Blender plugin (PGA course)</p>
-            </div>
-            <div class="item">
-                <h4>Linky animation</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/spaneada/blob/master/gimp/dokumentace1.md">
-                    <img src="/assets/showcase/cvut2.gif" />
-                </a>
-                <p>4x170 animation exporter implemented as a GIMP plugin (PGA course)</p>
-            </div>
-            <div class="item">
-                <h4>Edge Detect Material</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/poncaada">
-                    <img src="/assets/showcase/poncaada.png" />
-                </a>
-                <p>Object manipulation implemented as a Blender plugin (PGA course)</p>
-            </div>
-            <div class="item">
-                <h4>Seam carving</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/kolemrad/blob/master/dokumentace1.md">
-                    <img src="/assets/showcase/kolemrad.png" />
-                </a>
-                <p>Content-aware image resizing, implemented as a GIMP plugin (PGA course)</p>
-            </div>
-            <div class="item">
-                <h4>Gallifreyan translator</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/kyselba1">
-                    <img src="/assets/showcase/kyselova.png" />
-                </a>
-                <p>Corosion and price metal simulation, implemented as a Blender plugin (bachelor thesis)</p>
-            </div>
-            <div class="item">
-                <h4>Blender Snow</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/kacervik">
-                    <img src="/assets/showcase/kacer.jpg" />
-                </a>
-                <p>Covering model by added snow implemented as a Blender plugin (PGA course)</p>
-            </div>
-            <div class="item">
-                <h4>Decimation</h4>
-                <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/kvasnric">
-                    <img src="/assets/showcase/kvasnica.jpg" />
-                </a>
-                <p>Decimation by vertex clustering implemented as a Blender plugin (PGA course)</p>
-            </div>
+  </section>
 
-            <div class="item">
-                <h4>Magnificent 7</h4>
-                <a href="https://youtu.be/SN_Pse347iI">
-                    <img src="/assets/showcase/img_vhs_1.png" alt="cover">
-                </a>
-                <p>Student game, unity engine, multiple story endings (VHS course)</p>
-                <a href="https://drive.google.com/drive/u/1/folders/1ihZj2bwOup5j24CMroseJMnO4suCWSoJ?usp=sharing">demo</a>
-            </div>
+  <!-- QUICK NAV -->
+  <nav class="sticky top-0 z-40 border-y border-white/10 bg-white/5 backdrop-blur">
+    <div class="mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-3 flex flex-wrap items-center justify-center gap-2 2xl:gap-2">
+      <a href="#events" class="pill" aria-label="Přejít na sekci Events">
+        <i data-lucide="calendar" class="icon"></i>
+        <span data-i18n-key="navEvents">↓ Events</span>
+      </a>
+      <a href="#research" class="pill" aria-label="Přejít na sekci Research">
+        <i data-lucide="flask-conical" class="icon"></i>
+        <span data-i18n-key="navResearch">↓ Research</span>
+      </a>
+      <a href="#showcase" class="pill" aria-label="Přejít na sekci Students showcase">
+        <i data-lucide="gamepad-2" class="icon"></i>
+        <span data-i18n-key="navShowcase">↓ Showcase</span>
+      </a>
+      <a href="#courses" class="pill" aria-label="Přejít na sekci Courses">
+        <i data-lucide="graduation-cap" class="icon"></i>
+        <span data-i18n-key="navCourses">↓ Courses</span>
+      </a>
+      <a href="#members" class="pill" aria-label="Přejít na sekci Členové">
+        <i data-lucide="users" class="icon"></i>
+        <span data-i18n-key="navMembers">↓ Členové</span>
+      </a>
+      <a href="#labs" class="pill" aria-label="Přejít na sekci Laboratoře">
+        <i data-lucide="microscope" class="icon"></i>
+        <span data-i18n-key="navLabs">↓ Laboratoře</span>
+      </a>
 
-            <div class="item">
-                <h4>Pointless pointers</h4>
-                <a href="https://www.youtube.com/watch?v=4u3qrxFuULM&t=1s">
-                    <img src="/assets/showcase/img_vhs_2.png" />
-                </a>
-                <p>A game with living world as pixel art, many dialogs, colorful characters (VHS course)</p>
-                <a href="https://drive.google.com/drive/u/1/folders/1ihZj2bwOup5j24CMroseJMnO4suCWSoJ?usp=sharing">demo</a>
-            </div>
+      <span class="mx-2 hidden h-5 w-px bg-white/10 sm:block"></span>
 
-            <div class="item">
-                <h4>Strahov Gang</h4>
-                <a href="https://youtu.be/n1OENc6Fc2M?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m">
-                    <img src="/assets/showcase/img_vhs_3.png" />
-                </a>
-                <p>Unreal engine-based game, beautiful and optimistic; capturing student live at FIT CTU (VHS course)</p>
-                <a href="https://drive.google.com/drive/folders/1icQkARaYjq0B90TApwGjrA_ugspPzygI?usp=sharing">demo</a>
-            </div>
+      <a href="vcgd/" class="pill" aria-label="Otevřít studijní plán VCGD">
+        <i data-lucide="orbit" class="icon"></i><span>VCGD</span>
+      </a>
+      <a href="games/" class="pill" aria-label="Otevřít galerii studentských her">
+        <i data-lucide="gamepad-2" class="icon"></i><span>Games</span>
+      </a>
 
-            <div class="item">
-                <h4>Golf Town</h4>
-                <a href="https://www.youtube.com/watch?v=OB7_UmOI_2U&t=6s">
-                    <img src="/assets/showcase/img_vhs_4.png" />
-                </a>
-                <p>Unity engine-based game with western motives + VR + Hide 'N Seek! (VHS course)</p>
-                <a href="https://drive.google.com/drive/u/1/folders/1ihZj2bwOup5j24CMroseJMnO4suCWSoJ?usp=sharing">demo</a>
-            </div>
+      <span class="mx-2 hidden h-5 w-px bg-white/10 sm:block"></span>
 
-            <div class="item">
-                <h4>Path of Exile Ripoff</h4>
-                <a href="https://www.youtube.com/watch?v=7P3N3s81QqU&t=20s">
-                    <img src="/assets/showcase/img_vhs_5.png" />
-                </a>
-                <p>Unity engine MMORPG where you can encounter 20+ enemies (VHS course)</p>
-                <a href="https://drive.google.com/drive/u/1/folders/1ihZj2bwOup5j24CMroseJMnO4suCWSoJ?usp=sharing">demo</a>
-            </div>
+      <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer"
+         class="pill" aria-label="Otevřít YouTube kanál Grafit">
+        <i data-lucide="youtube" class="icon"></i><span>YouTube</span> ↗
+      </a>
+      <a href="https://discord.gg/sfMx2nq7BQ" target="_blank" rel="noreferrer"
+         class="pill" aria-label="Otevřít Discord Grafit">
+        <i data-lucide="gamepad-2" class="icon"></i><span>Discord</span> ↗
+      </a>
+    </div>
+  </nav>
 
-            <div class="item">
-                <h4>Ardaestra Magitech</h4>
-                <a href="https://youtu.be/Zz09tvnLEuo?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m">
-                    <img src="assets/showcase/img_vhs_6.png" />
-                </a>
-                <p>3D single player Action RPG made with Unity Engine (VHS course)</p>
-                <a href="https://drive.google.com/drive/folders/1icQkARaYjq0B90TApwGjrA_ugspPzygI?usp=sharing">demo</a>
-            </div>
-
-            <div class="item">
-                <h4>FitLife</h4>
-                <a href="https://antik98.github.io/FitLife/">
-                    <img src="assets/showcase/FitLife.png" />
-                </a>
-                <p>PixelArt online playable game about living, studying and surviving FIT (bachelor thesis)</p>
-                <a href="https://antik98.github.io/FitLife/">live demo</a>
-            </div>   
-
-
-            <div class="item">
-                <h4>Honza</h4>
-                <a href="https://www.youtube.com/watch?v=dhuMuopxlio&list=PLXhipPFpvUWEhSxw79CDOdjFFm5D6b3us&index=4&ab_channel=GrafitCTUFITPrague">
-                    <img src="assets/showcase/honzaDetail.png" />
-                </a>
-                <p>PixelArt game based on Czech fairytales. Lets try to be Dumm Honza! (VHS course)</p>
-                <a href="https://drive.google.com/drive/folders/196Tsc10b4VhWHliSrVg9lHpd5kfuz8Kr?usp=sharing">demo</a>
-            </div> 
-
-
-
-            <div class="item">
-                <h4>Music Wave - image sonification</h4>
-                <a href="https://ni-ccc.github.io/projects/music_wave/">
-                    <img src="assets/showcase/niccc_sc5.png" />
-                </a>
-                <p>Experimental project about sonification of images (CCC course)</p>
-                <a href="https://dspace.cvut.cz/handle/10467/101569">thesis</a>
-            </div>    
-            
-            <div class="item">
-                <h4>The sound of extinction</h4>
-                <a href="https://ni-ccc.github.io/projects/music_wave/">
-                    <img src="assets/showcase/niccc_sc6.png" />
-                </a>
-                <p> An audio visualization of animal sounds, animals that went extinct or are on the verge of extinction (CCC course, thesis)</p>
-                <a href="https://sound-of-extinction.herokuapp.com/">live demo</a>  <a href="https://dspace.cvut.cz/handle/10467/101774"> thesis</a>
-            </div>   
-
-            <div class="item">
-                <h4>Pulse detection</h4>
-                <a href="https://ni-ccc.github.io/projects/pavel/">
-                    <img src="assets/showcase/niccc_sc2.png" />
-                </a>
-                <p> Pulse detection from webcamera (CCC course)</p>
-                <a href="https://ni-ccc.github.io/projects/pavel/"> demo</a>  
-            </div>        
-
-            <div class="item">
-                <h4>Covid visualisation</h4>
-                <a href="https://ni-ccc.github.io/projects/vizualizace_covid/">
-                    <img src="assets/showcase/niccc_sc4.png" />
-                </a>
-                <p> Covid time human movement visualization (CCC course)</p>
-                <a href="https://ni-ccc.github.io/projects/vizualizace_covid/"> demo</a>  
-            </div>     
-
-            <div class="item">
-                <h4>Renoir style transfer</h4>
-                <a href="https://ni-ccc.github.io/projects/martin_honza/">
-                    <img src="assets/showcase/niccc_sc3.png" />
-                </a>
-                <p> Covid time human movement visualization (CCC course)</p>
-                <a href="https://ni-ccc.github.io/projects/martin_honza/"> demo</a>  
-            </div>    
-
-
-
-
-            <div class="item">
-                <h4>Fantasy tree scene</h4>
-                <a href="https://iga.ksi.fit.cvut.cz/bi-ble/gallery">
-                    <img src="assets/showcase/img_ble_1.png" />
-                </a>
-                <p> Fantasy tree scene 3D model and video render (BLE course)</p>
-                <a href="https://iga.ksi.fit.cvut.cz/cache/files/4/b222/kahoujos/02-scene/video.mp4">video</a>  
-            </div>  
-            <div class="item">
-                <h4>Abstract scene</h4>
-                <a href="https://iga.ksi.fit.cvut.cz/bi-ble/gallery">
-                    <img src="assets/showcase/img_ble_2.png" />
-                </a>
-                <p> Abstract animation (BLE course)</p>
-                <a href="https://iga.ksi.fit.cvut.cz/cache/files/4/b222/kuzneole/09-compositing/video.mp4">video</a>  
-            </div>  
-            <div class="item">
-                <h4>Game scene</h4>
-                <a href="https://iga.ksi.fit.cvut.cz/bi-ble/gallery">
-                    <img src="assets/showcase/img_ble_3.png" />
-                </a>
-                <p> Material and scene showcase (BLE course)</p>
-                <a href="https://iga.ksi.fit.cvut.cz/cache/files/4/b222/gaierda1/04-textures/video.mp4">video</a>  
-            </div>              
-
-            
-        </div>
-    </section>
-    <div class="bg-dim">
-        <section>
-            <div class="panel">
-                <h2>Courses and Lectures</h2>
-            </div>
-            <div class="courses">
-                <div class="course">
-                    <div>
-                        <div class="label">Course</div>
-                        <h3>Multimedial &amp; Graphic Applications</h3>
-                        <p class="staff">J. Buriánek, L. Bařinka, J. Chludil</p>
-                        <p>Introductory overview course, where students learn to work with 2D and 3D graphics tools</p>
-                        <p class="original">CS: Multimediální a grafické aplikace</p>
-                    </div>
-                    <div class="stats">
-                        <div class="badge">BI-MGA</div>
-                        <div class="badge">3rd semester</div>
-                        <div class="badge">obligatory</div>
-                        <div class="badge">4 credits</div>
-                        <div class="badge"><a href="https://bilakniha.cvut.cz/cs/predmet1122906.html#gsc.tab=0">Syllabus</a></div>
-                    </div>
-                </div>
-
-                <div class="course">
-                    <div>
-                        <div class="label">Course</div>
-                        <h3>Virtual Game Worlds</h3>
-                        <p class="staff">R. Richtr</p>
-                        <p>A subject dedicated to game design, level design and the creation of the game world</p>
-                        <p class="original">CS: Virtuální herní světy</p>
-                    </div>
-                    <div class="stats">
-                        <div class="badge">BI-VHS</div>
-                        <div class="badge">3rd, 5th semester</div>
-                        <div class="badge">optional</div>
-                        <div class="badge">4 credits</div>
-                        <div class="badge"><a href="https://bilakniha.cvut.cz/en/predmet6570106.html#gsc.tab=0">Syllabus</a></div>                        
-                    </div>
-                </div>
-
-                <div class="course">
-                    <div>
-                        <div class="label">Course</div>
-                        <h3>Blender</h3>
-                        <p class="staff">L. Bařinka</p>
-                        <p>An advanced course following the MGA and developing considerably the knowledge of working in Blender</p>
-                    </div>
-                    <div class="stats">
-                        <div class="badge">BI-BLE</div>
-                        <div class="badge">summer semester</div>
-                        <div class="badge">eligible</div>
-                        <div class="badge">4 credits</div>
-                        <div class="badge"><a href="https://bilakniha.cvut.cz/en/predmet5240406.html#gsc.tab=0">Syllabus</a></div>   
-                        <div class="badge"><a href="https://iga.ksi.fit.cvut.cz/bi-ble/gallery">gelery</a></div>                         
-                    </div>
-                </div>
-
-                <div class="course">
-                    <div>
-                        <div class="label">Course</div>
-                        <h3>Graphic Application Programming</h3>
-                        <p class="staff">R. Richtr, J. Chludil</p>
-                        <p>Advanced subject finalizing students' graphic knowledge; the course deals with programming plugins in GIMP and Blender</p>
-                        <p class="original">CS: Programování grafických aplikací</p>
-                    </div>
-                    <div class="stats">
-                        <div class="badge">BI-PGA</div>
-                        <div class="badge">5th semester</div>
-                        <div class="badge">obligatory</div>
-                        <div class="badge">4 credits</div>
-                        <div class="badge"><a href="https://bilakniha.cvut.cz/en/predmet6703006.html#gsc.tab=0">Syllabus</a></div>  
-                    </div>
-                </div>
-
-                <div class="course">
-                    <div>
-                        <div class="label">Course</div>
-                        <h3>Modern Visualization Technologies</h3>
-                        <p class="staff">P. Pauš, J. Chludil</p>
-                        <p>An overview subject devoted to modern technologies and hardware</p>
-                        <p class="original">CS: Moderní vizualizační technologie</p>
-                    </div>
-                    <div class="stats">
-                        <div class="badge">BI-MVT</div>
-                        <div class="badge">5th semester</div>
-                        <div class="badge">obligatory</div>
-                        <div class="badge">4 credits</div>
-                        <div class="badge"><a href="https://bk.fit.cvut.cz/cz/predmety/00/00/00/00/00/00/06/56/98/p6569806.html">Syllabus</a></div>  
-                    </div>
-                </div>
-
-                <div class="course">
-                    <div>
-                        <div class="label">Course</div>
-                        <h3>Advanced Virtual Reality</h3>
-                        <p class="staff">P. Pauš</p>
-                        <p>Advanced virtual reality course in unity engine</p>
-                        <p class="original">CS: Pokročilá virtuální realita</p>
-                    </div>
-                    <div class="stats">
-                        <div class="badge">BI-PVR</div>
-                        <div class="badge">winter semester</div>
-                        <div class="badge">optional</div>
-                        <div class="badge">4 credits</div>
-                        <div class="badge"><a href="https://bilakniha.cvut.cz/cs/predmet6166006.html#gsc.tab=0">Syllabus</a></div>  
-                    </div>
-                </div>
-
-                <div class="course">
-                    <div>
-                        <div class="label">Course</div>
-                        <h3>Computer Graphics 1</h3>
-                        <p class="staff">R. Richtr, V. Tomas</p>
-                        <p>Advanced course completing knowledge of rendering, data structures for computer graphics and state-of-the-art realistic texturing</p>
-                        <p class="original">CS: Počítačová grafika 1</p>
-                    </div>
-                    <div class="stats">
-                        <div class="badge">NI-PG1</div>
-                        <div class="badge">summer semester</div>
-                        <div class="badge">optional</div>
-                        <div class="badge">4 credits</div>
-                        <div class="badge"><a href="https://bilakniha.cvut.cz/cs/predmet6083506.html#gsc.tab=0">Syllabus</a></div>  
-                    </div>
-                </div>
-
-                <div class="course">
-                    <div>
-                        <div class="label">Course</div>
-                        <h3>Recognition 1</h3>
-                        <p class="staff">M. Haindl, R. Richtr</p>
-                        <p>Advanced pattern recognition course; lectures in cooperation with the Academy of Sciences</p>
-                        <p class="original">CS: Rozpoznávání 1</p>
-                    </div>
-                    <div class="stats">
-                        <div class="badge">NI-ROZ</div>
-                        <div class="badge">winter semester</div>
-                        <div class="badge">optional</div>
-                        <div class="badge">4 credits</div>
-                        <div class="badge"><a href="https://bilakniha.cvut.cz/cs/predmet6768306.html#gsc.tab=0">Syllabus</a></div>  
-                    </div>
-                </div>
-
-                <div class="course">
-                    <div>
-                        <div class="label">Course</div>
-                        <h3>Creative Coding &amp; Computational Art</h3>
-                        <p class="staff">J. Kortan, V. Tomas, R. Richtr</p>
-                        <p>A project-oriented course that maps a wide range of art, graphics and creative programming, see <a href="https://ni-ccc.github.io">course website</a></p>
-                    </div>
-                    <div class="stats">
-                        <div class="badge">NI-CCC</div>
-                        <div class="badge">winter semester</div>
-                        <div class="badge">optional</div>
-                        <div class="badge">4 credits</div>
-                        <div class="badge"><a href="https://bilakniha.cvut.cz/en/predmet5240406.html#gsc.tab=0">Syllabus</a></div>  
-                    </div>
-                </div>
-            </div>
-            <div class="panel">
-                <h3>Associated Courses</h3>
-            </div>
-            <div class="associated">
-            </div>
-            <div class="panel">
-                <h3>Featured Lectures</h3>
-            </div>
-            <div class="lectures">
-                <div class="lecture">
-                    <h4>Texture Segmentation</h4>
-                    <p>Textural featres (H. Tamura), see <a href="https://courses.fit.cvut.cz/MI-ROZ/media/tutorials/archive/bernhdav-roz-TZ.pdf">documentation (cs)</a>, tested on ÚTIA CAS benchmark <a href="https://mosaic.utia.cas.cz/">Mosaic</a> - <a href="https://mosaic.utia.cas.cz/index.php?act=res_details&rid=2602"> complete results</a> </p>
-                </div>
-                <div class="lecture">
-                    <h4>Skin Cancer Recognition</h4>
-                    <p>SURF (H. Bay), see <a href="https://courses.fit.cvut.cz/MI-ROZ/media/tutorials/archive/rames-roz-TZ.pdf">documentation (cs)</a>, Various dataset validation (i.e. <a href="https://www.kaggle.com/datasets/nodoubttome/skin-cancer9-classesisic">ISIC</a>)</p>
-                </div>
-                <div class="lecture">
-                    <h4>Iris Recognition</h4>
-                    <p>Local Binary Patterns (T. Ojala), see <a href="https://courses.fit.cvut.cz/MI-ROZ/media/tutorials/archive/bernhdav-roz-TZ.pdf">documentation (cs)</a>, Various LBP variations</p>
-                </div>
-                <div class="lecture">
-                    <h4>Bark Recognition</h4>
-                    <p>Various Textural Features, see <a href="http://library.utia.cas.cz/separaty/2019/RO/haindl-0506602.pdf">article</a>, Rotationally Invariant Multispectral</p>
-                </div>
-            </div>
-        </section>
+  <!-- Spodní sekce s částicemi podklad -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <canvas id="areaCanvas" class="w-full h-full"></canvas>
     </div>
 
+    <main id="main" class="relative z-10 mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-10">
 
-    
-    
-    <section>
-        <div class="panel">
-            <h2>Members</h2>
-            <p>Grafit Research Group consists of researchers and teachers of computer graphics and related sciences centered around CTU FIT</p>
+      <!-- Events -->
+      <div class="mb-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">📅</span>
+          <span class="text-sm uppercase tracking-wide text-neutral-400" data-i18n-key="secEventsLabel">Co se u nás děje</span>
         </div>
-        <div class="members">
-            <a class="member" href="/members/rr/">Radek Richtr</a>
-            <a class="member" href="/members/jch/">Jiří Chludil</a>
-            <a class="member" href="/members/pp/">Petr Pauš</a>
-            <a class="member" href="/members/ob/">Ondřej Brém</a>
-            <a class="member" href="/members/tn/">Tomáš Nováček</a>
-            <a class="member" href="/members/jk/">Jiří Kubišta</a>
-            <a class="member" href="/members/jm/">Jiří Melnikov</a>
-        </div>
-    </section>
+        <h2 id="events" class="mt-1 scroll-mt-24 text-2xl font-bold tracking-tight" data-i18n-key="secEventsTitle">Události</h2>
+      </div>
+      <div id="eventsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10"></div>
 
-    <section>
-        <div class="panel">
-            <h2>Labs</h2>
-            <p>Grafit Research Group manages four laboratories that funciton as a joint workplace for researchers, students and other collaborators</p>
+      <!-- Research -->
+      <div class="mb-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🧪</span>
+          <span class="text-sm uppercase tracking-wide text-neutral-400" data-i18n-key="secResearchLabel">Projekty a spolupráce</span>
         </div>
-        <div class="labs">
-            <a class="lab" href="https://sagelab.cesnet.cz/en/">SAGElab</a>
-            <a class="lab" href="/labs/ulab">Usability Lab</a>
-            <a class="lab" href="/labs/gglab">ggLab</a>
-            <a class="lab" href="/labs/vrlab">VR Lab</a>
+        <h2 id="research" class="mt-1 scroll-mt-24 text-2xl font-bold tracking-tight" data-i18n-key="secResearchTitle">Výzkum</h2>
+      </div>
+      <div id="researchGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
+
+      <!-- Showcase -->
+      <div class="mb-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎮</span>
+          <span class="text-sm uppercase tracking-wide text-neutral-400" data-i18n-key="secShowcaseLabel">Vybrané studentské práce</span>
         </div>
-    </section>
-    <section>
-        <div w3-include-html="/footer.html"></div>
-    </section>
+        <h2 id="showcase" class="mt-1 scroll-mt-24 text-2xl font-bold tracking-tight" data-i18n-key="secShowcaseTitle">Studentská tvorba</h2>
+      </div>
+      <div id="showcaseGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10"></div>
 
-    <!---<ul>
-    <p>
-        <a href="https://www.youtube.com/channel/UC5lYKLsaeDs7ucC1nZIg19Q">
-            <img alt="yt" height="51" src="imgs/yt.png" width="51"></a>
-        <a href="https://twitter.com/CtuGrafit">
-            <img alt="tw" height="51" src="imgs/tw.png" width="51"></a>
-        <a href="https://discord.gg/sfMx2nq7BQ">
-            <img alt="dc" height="51" src="imgs/dc.png" width="51"></a>
-    </p>-->
+      <!-- Courses -->
+      <div class="mb-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎓</span>
+          <span class="text-sm uppercase tracking-wide text-neutral-400" data-i18n-key="secCoursesLabel">Předměty a výuka</span>
+        </div>
+        <h2 id="courses" class="mt-1 scroll-mt-24 text-2xl font-bold tracking-tight" data-i18n-key="secCoursesTitle">Bakalářské předměty</h2>
+      </div>
+      <div id="coursesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
 
-   
-    
+      <!-- Magisterský program -->
+      <div class="mt-10 mb-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🎓</span>
+          <span class="text-sm uppercase tracking-wide text-neutral-400" data-i18n-key="secMasterLabel">
+            Navazující magisterské studium
+          </span>
+        </div>
+        <h2 id="mastercourses" class="mt-1 scroll-mt-24 text-2xl font-bold tracking-tight" data-i18n-key="secMasterTitle">
+          Visual Computing and Game Design
+        </h2>
+      </div>
+      <div id="masterProgram"></div>
+
+      <!-- Members -->
+      <div class="mt-12 mb-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">👥</span>
+          <span class="text-sm uppercase tracking-wide text-neutral-400" data-i18n-key="secMembersLabel">Lidé za GRAFITEM</span>
+        </div>
+        <h2 id="members" class="mt-1 scroll-mt-24 text-2xl font-bold tracking-tight" data-i18n-key="secMembersTitle">Členové</h2>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-neutral-400" data-i18n-key="secMembersText">Výzkumníci a vyučující počítačové grafiky a příbuzných oblastí na FIT ČVUT.</p>
+      </div>
+      <div id="membersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+
+      <!-- Labs -->
+      <div class="mt-12 mb-4">
+        <div class="flex items-center gap-2 text-neutral-300">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">🔬</span>
+          <span class="text-sm uppercase tracking-wide text-neutral-400" data-i18n-key="secLabsLabel">Zázemí pro výzkum a projekty</span>
+        </div>
+        <h2 id="labs" class="mt-1 scroll-mt-24 text-2xl font-bold tracking-tight" data-i18n-key="secLabsTitle">Laboratoře</h2>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-neutral-400" data-i18n-key="secLabsText">Čtyři propojená pracoviště pro studenty, výzkumníky a spolupracující partnery.</p>
+      </div>
+      <div id="labsGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4"></div>
+
+      <!-- CTA -->
+      <div class="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-5 border-cyan-400/20 bg-cyan-500/10 text-neutral-200">
+        <div>
+          <h3 class="text-xl font-semibold text-cyan-200" data-i18n-key="ctaTitle">Chcete vědět víc?</h3>
+          <p class="text-neutral-300/90 text-sm" data-i18n-key="ctaText">
+            Navštivte náš komunitní Discord server. Najdete tam učitele, studenty a další, kteří vám rádi a ochotně odpoví na vaše otázky.
+          </p>
+        </div>
+        <div class="flex gap-2">
+          <a href="https://discord.gg/sfMx2nq7BQ" target="_blank" rel="noreferrer"
+             class="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm hover:bg-white/10 border-white/15 bg-black/40">
+            <span data-i18n-key="ctaDiscord">Discord</span> ↗
+          </a>
+          <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer"
+             class="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm hover:bg-white/10 border-white/15 bg-white/10">
+            <span data-i18n-key="ctaYT">YouTube</span> ↗
+          </a>
+        </div>
+      </div>
+
+      <footer class="mt-14 border-t py-8 text-center text-sm text-neutral-400 border-white/10" data-i18n-key="footerText">
+        © GRAFIT Research Group · Faculty of Information Technology, Czech Technical University in Prague
+      </footer>
+    </main>
+  </section>
+
+  <!-- Drawer s filtry (skrytý) -->
+  <div id="filterDrawer" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="filterTitle">
+    <div id="filterBackdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="relative mx-auto mt-10 w-[min(92%,1100px)] rounded-2xl border border-white/12 bg-neutral-900/90 p-4 sm:p-5 shadow-xl">
+      <div class="flex items-center justify-between gap-2">
+        <h3 id="filterTitle" class="text-base font-semibold text-white" data-i18n-key="filterTitle">Vyhledávání &amp; tagy</h3>
+        <button id="closeFilters"
+                class="inline-flex items-center rounded-md border border-white/10 px-2 py-1 text-sm text-neutral-300 hover:bg-white/10">
+          <span data-i18n-key="filterClose">✕ Zavřít</span>
+        </button>
+      </div>
+
+      <div class="mt-3 flex items-center gap-2">
+        <span class="text-neutral-400 text-sm">🔎</span>
+        <input id="search"
+               data-i18n-key="filterPlaceholder"
+               placeholder="Hledat v events/research/showcase…"
+               class="px-3 py-2 rounded-md border border-white/10 bg-black/40 text-white placeholder:text-neutral-500 w-full"/>
+      </div>
+
+      <div id="tags" class="mt-3 flex flex-wrap items-center gap-2"></div>
+    </div>
+  </div>
+
+  <script>
+    // Po načtení nahradit lucide ikony
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    });
+
+    // --- I18N ---
+
+    const I18N = {
+      cs: {
+        pageTitle: "GRAFIT Research Group | FIT ČVUT",
+        pageDescription: "GRAFIT na FIT ČVUT: počítačová grafika, VR/AR, zpracování obrazu, UX/UI, game design, výzkum, výuka a studentské projekty.",
+        skipToContent: "Přeskočit na obsah",
+        heroEyebrow: "FIT ČVUT · Praha",
+        heroTitle: "GRAFIT Research Group",
+        heroSubtitle: "Výzkum, výuka a studentská tvorba na pomezí počítačové grafiky, VR/AR, zpracování obrazu, UX/UI a game designu na FIT ČVUT.",
+        heroStudy: "Studijní plán VCGD",
+        heroGames: "Studentské hry",
+        heroEvenings: "Grafické večery",
+        openFiltersLabel: "Filtry",
+
+        navEvents: "↓ Události",
+        navResearch: "↓ Výzkum",
+        navShowcase: "↓ Tvorba",
+        navCourses: "↓ Výuka",
+        navMembers: "↓ Členové",
+        navLabs: "↓ Laboratoře",
+
+        secEventsLabel: "Co se u nás děje",
+        secEventsTitle: "Události",
+        secResearchLabel: "Projekty a spolupráce",
+        secResearchTitle: "Výzkum",
+        secShowcaseLabel: "Vybrané studentské práce",
+        secShowcaseTitle: "Studentská tvorba",
+        secCoursesLabel: "Předměty a výuka",
+        secCoursesTitle: "Bakalářské předměty",
+        secMasterLabel: "Navazující magisterské studium",
+        secMasterTitle: "Visual Computing and Game Design",
+        secMembersLabel: "Lidé za GRAFITEM",
+        secMembersTitle: "Členové",
+        secMembersText: "Výzkumníci a vyučující počítačové grafiky a příbuzných oblastí na FIT ČVUT.",
+        secLabsLabel: "Zázemí pro výzkum a projekty",
+        secLabsTitle: "Laboratoře",
+        secLabsText: "Čtyři propojená pracoviště pro studenty, výzkumníky a spolupracující partnery.",
+
+        ctaTitle: "Chcete vědět víc?",
+        ctaText: "Navštivte náš komunitní Discord server. Najdete tam učitele, studenty a další, kteří vám rádi a ochotně odpoví na vaše otázky.",
+        ctaDiscord: "Discord",
+        ctaYT: "YouTube",
+
+        filterTitle: "Vyhledávání & tagy",
+        filterClose: "✕ Zavřít",
+        filterPlaceholder: "Hledat v událostech, výzkumu a tvorbě…",
+        filterTagsLabel: "Filtr tagů:",
+        filterReset: "Reset",
+
+        footerText: "© GRAFIT Research Group · Fakulta informačních technologií ČVUT v Praze",
+
+        langToggleCs: "CZ",
+        langToggleEn: "EN",
+
+        syllabus: "Detail předmětu ↗"
+      },
+      en: {
+        pageTitle: "GRAFIT Research Group | FIT CTU",
+        pageDescription: "GRAFIT at FIT CTU: computer graphics, VR/AR, image processing, UX/UI, game design, research, teaching and student projects.",
+        skipToContent: "Skip to content",
+        heroEyebrow: "FIT CTU · Prague",
+        heroTitle: "GRAFIT Research Group",
+        heroSubtitle: "Research, teaching and student work across computer graphics, VR/AR, image processing, UX/UI and game design at FIT CTU.",
+        heroStudy: "VCGD study plan",
+        heroGames: "Student games",
+        heroEvenings: "Graphic Evenings",
+        openFiltersLabel: "Filters",
+
+        navEvents: "↓ Events",
+        navResearch: "↓ Research",
+        navShowcase: "↓ Showcase",
+        navCourses: "↓ Courses",
+        navMembers: "↓ Members",
+        navLabs: "↓ Labs",
+
+        secEventsLabel: "What's happening here",
+        secEventsTitle: "Events",
+        secResearchLabel: "Projects & collaborations",
+        secResearchTitle: "Research",
+        secShowcaseLabel: "Selected student work",
+        secShowcaseTitle: "Student Showcase",
+        secCoursesLabel: "Courses & teaching",
+        secCoursesTitle: "Bachelor courses",
+        secMasterLabel: "Follow-up master's programme",
+        secMasterTitle: "Visual Computing and Game Design",
+        secMembersLabel: "The people behind GRAFIT",
+        secMembersTitle: "Members",
+        secMembersText: "Researchers and teachers in computer graphics and related fields at FIT CTU.",
+        secLabsLabel: "Facilities for research and projects",
+        secLabsTitle: "Laboratories",
+        secLabsText: "Four connected workplaces for students, researchers and collaborating partners.",
+
+        ctaTitle: "Want to know more?",
+        ctaText: "Join our community Discord server. You'll find teachers, students and others happy to answer your questions.",
+        ctaDiscord: "Discord",
+        ctaYT: "YouTube",
+
+        filterTitle: "Search & tags",
+        filterClose: "✕ Close",
+        filterPlaceholder: "Search events/research/showcase…",
+        filterTagsLabel: "Tag filter:",
+        filterReset: "Reset",
+
+        footerText: "© GRAFIT Research Group · Faculty of Information Technology, Czech Technical University in Prague",
+
+        langToggleCs: "CZ",
+        langToggleEn: "EN",
+
+        syllabus: "Course detail ↗"
+      }
+    };
+
+    let currentLang = "cs";
+    try {
+      const savedLang = localStorage.getItem("grafitLang");
+      if (I18N[savedLang]) currentLang = savedLang;
+    } catch(e) {}
+
+    function t(key) {
+      return (I18N[currentLang] && I18N[currentLang][key])
+        || (I18N.en && I18N.en[key])
+        || key;
+    }
+
+    function applyStaticTexts() {
+      document.documentElement.lang = currentLang;
+      document.title = t("pageTitle");
+      const description = document.querySelector('meta[name="description"]');
+      if (description) description.setAttribute("content", t("pageDescription"));
+      document.querySelectorAll("[data-i18n-key]").forEach(el => {
+        const key = el.getAttribute("data-i18n-key");
+        if (!key) return;
+        if (el.tagName.toLowerCase() === "input") {
+          el.setAttribute("placeholder", t(key));
+        } else {
+          el.textContent = t(key);
+        }
+      });
+    }
+
+    function updateLangToggleUI() {
+      const btnCs = document.getElementById("btn-lang-cs");
+      const btnEn = document.getElementById("btn-lang-en");
+      if (!btnCs || !btnEn) return;
+
+      btnCs.classList.remove("bg-white/25","text-white","font-semibold","text-neutral-300");
+      btnEn.classList.remove("bg-white/25","text-white","font-semibold","text-neutral-300");
+
+      if (currentLang === "cs") {
+        btnCs.classList.add("bg-white/25","text-white","font-semibold");
+        btnEn.classList.add("text-neutral-300");
+        btnCs.setAttribute("aria-pressed", "true");
+        btnEn.setAttribute("aria-pressed", "false");
+      } else {
+        btnEn.classList.add("bg-white/25","text-white","font-semibold");
+        btnCs.classList.add("text-neutral-300");
+        btnCs.setAttribute("aria-pressed", "false");
+        btnEn.setAttribute("aria-pressed", "true");
+      }
+    }
+
+    function setLanguage(lang) {
+      if (!I18N[lang]) return;
+      currentLang = lang;
+      try { localStorage.setItem("grafitLang", lang); } catch(e) {}
+      updateLangToggleUI();
+      applyStaticTexts();
+      applyFilter(); // přerenderuje cards s aktuálním jazykem
+    }
+
+    function getLocalized(obj) {
+      if (obj == null) return "";
+      if (typeof obj === "string") return obj;
+      return obj[currentLang] || obj.en || obj.cs || Object.values(obj)[0] || "";
+    }
+
+    // --- DATA ---
+
+    const EVENTS = [
+      {
+        id:"e-gamejam-2026",
+        title:{ cs:"GameJam FIT 2026", en:"GameJam FIT 2026" },
+        blurb:{
+          cs:"Tradiční velikonoční game jam: 48 hodin designu, programování, grafiky a improvizace. Ročník 2026 přinesl desítky nových digitálních i deskových her.",
+          en:"Our traditional Easter game jam: 48 hours of design, programming, art and improvisation. The 2026 edition produced dozens of new digital and board games."
+        },
+        img:"assets/gamejam/2026/gj26.jpg",
+        href:"events/gamejam2026/",
+        tags:["event","gamejam","community"],
+        date:{ cs:"3.–10. 4. 2026", en:"3–10 Apr 2026" }
+      },
+      {
+        id:"e-gexpo-2026",
+        title:{ cs:"GEXPO 2026", en:"GEXPO 2026" },
+        blurb:{
+          cs:"Semestrální přehlídka studentských her, VR, vizualizací, digitální kresby a závěrečných prací z grafických předmětů na FIT ČVUT.",
+          en:"A semester showcase of student games, VR, visualisation, digital art and thesis projects from graphics courses at FIT CTU."
+        },
+        img:"assets/events/GEXPO/2026a/1g.jpg",
+        href:"events/gexpo/2026/",
+        tags:["event","expo","students","vr","games"],
+        date:"2026"
+      },
+      {
+        id:"e-graphic-evenings",
+        title:{ cs:"Grafické večery", en:"Graphic Evenings" },
+        blurb:{
+          cs:"Studentská série přednášek a workshopů pod patronáží GRAFITU: grafika, design, algoritmy, fotografie, 3D i tvorba her.",
+          en:"A student-led series supported by GRAFIT: talks and workshops spanning graphics, design, algorithms, photography, 3D and game creation."
+        },
+        img:"assets/projects/gv.png",
+        href:"events/gvecery/graphic-evenings.html",
+        tags:["event","workshop","community","design"],
+        date:"2025–2026"
+      },
+      {
+        id:"e-uee-2026",
+        title:{ cs:"Environment Design v Unreal Engine", en:"Environment Design in Unreal Engine" },
+        blurb:{
+          cs:"Čtyřdenní blokový kurz Daniela Tripletta z Purdue University: Unreal Engine, Blender, tvorba prostředí a praktické využití 3D skenování.",
+          en:"A four-day block course led by Daniel Triplett from Purdue University: Unreal Engine, Blender, environment design and practical use of 3D scanning."
+        },
+        img:"assets/events/graficke-vecery/xx-environment-design.jpg",
+        href:"events/gvecery/xx-environmental-design.html",
+        tags:["event","unreal","blender","3d","international"],
+        date:{ cs:"květen 2026", en:"May 2026" }
+      }
+    ];
+
+
+    const RESEARCH = [
+      {
+        id:"r-politeia21",
+        title:{ cs:"Politeia 21", en:"Politeia 21" },
+        blurb:{
+          cs:"Interdisciplinární VR projekt zkoumající Platónovy teze, etiku a lidské chování ve velké sociální simulaci.",
+          en:"Interdisciplinary VR project exploring Plato’s theses, ethics and human behavior in a large-scale social simulation."
+        },
+        img:"/assets/projects/politeia.png",
+        href:"https://www.unihack.cz/project/8",
+        tags:["vr","simulation","social","philosophy","research"]
+      },
+      {
+        id:"r-dowry-towns",
+        title:{ cs:"Věnná města českých královen", en:"Dowry Towns of Bohemian Queens" },
+        blurb:{
+          cs:"Mapování historického vývoje a digitalizace kulturního dědictví věnných měst; VR rekonstrukce a digitální archivy.",
+          en:"Projects mapping historical development and digitizing cultural heritage of royal dowry towns; VR reconstructions and archives."
+        },
+        img:"/assets/projects/vennamesta.png",
+        href:"https://www.kralovskavennamesta.cz/",
+        tags:["heritage","mapping","history","vr"],
+        date:"2018–2022"
+      },
+      {
+        id:"r-game-design",
+        title:{ cs:"Game design", en:"Game design" },
+        blurb:{
+          cs:"Výzkum teorie game designu: návrh světů, přístupnost pro znevýhodněné hráče a kreativní psaní.",
+          en:"Research in game design theory: world design, accessibility for impaired users, and creative writing."
+        },
+        img:"/assets/projects/gamedesign.png",
+        href:"/projects/",
+        tags:["games","design","accessibility","writing"]
+      },
+      {
+        id:"r-texture-modeling",
+        title:{ cs:"Modelování textur", en:"Texture modeling" },
+        blurb:{
+          cs:"Ve spolupráci s ÚTIA AV ČR analyzujeme a modelujeme realistický vzhled materiálů (BRDF/BTF).",
+          en:"With the Institute of Information Theory and Automation (CAS), we analyze and model realistic material appearance (BRDF/BTF)."
+        },
+        img:"/assets/projects/textures.jpg",
+        href:"http://btf.utia.cas.cz/?brdf_dwn",
+        tags:["materials","brdf","btf","collaboration"]
+      },
+      {
+        id:"r-most-city",
+        title:{ cs:"Most – město, které nezaniklo", en:"Most – city that did not disappear" },
+        blurb:{
+          cs:"Rekonstrukce historické podoby města Most před jeho rozsáhlou přestavbou.",
+          en:"Reconstruction of the historic appearance of the city of Most prior to its major redevelopment."
+        },
+        img:"/assets/projects/most.png",
+        href:"https://www.vugtk.cz/en/home-page/",
+        tags:["heritage","reconstruction","city","3d"],
+        date:"2023–2027"
+      },
+      {
+        id:"r-tactile-wall",
+        title:{ cs:"Taktilní rozhraní: interaktivní stěna", en:"Tactile interfaces: interactive wall" },
+        blurb:{
+          cs:"Výzkum taktilních rozhraní ve spolupráci s MIT, University of Tokyo, initi.org a CAMP.",
+          en:"Exploration of tactile-specific interfaces in collaboration with MIT, University of Tokyo, initi.org and CAMP."
+        },
+        img:"/assets/projects/intwall.png",
+        href:"https://www.youtube.com/watch?v=3jvmoj7pLZU&ab_channel=IraWinder",
+        tags:["haptics","ui","installation","collaboration"]
+      }
+    ];
+
+    const SHOWCASE = [
+      { id:"sc-wood-texture-generation",
+        title:{cs:"Generování dřevěné textury",en:"Wood texture generation"},
+        blurb:{
+          cs:"Plugin pro tvorbu umělé dřevěné textury.",
+          en:"Plugin for creating artificial wood texture."
+        },
+        img:"/assets/showcase/jechdrevo.png",
+        href:"https://dspace.cvut.cz/entities/publication/c80c55df-ff24-40a7-bf6e-f0ac6747fb29",
+        tags:["pga","texture","bachelor"] },
+      { id:"sc-ai-texture-to-3d",
+        title:{cs:"AI textura do 3D",en:"AI Texture to 3D generation"},
+        blurb:{
+          cs:"Nástroj pro generování 3D z AI textur.",
+          en:"Tool for generating 3D from AI textures."
+        },
+        img:"/assets/showcase/stablegen.jpg",
+        href:"https://stablegen.ai",
+        tags:["pga","ai","texture","3d","bachelor"] },
+      { id:"sc-texture-editing",
+        title:{cs:"Editace textur",en:"Texture editing"},
+        blurb:{
+          cs:"Rozšířené nástroje pro práci s texturami v GIMPu.",
+          en:"Extended tools for working with textures in GIMP."
+        },
+        img:"/assets/showcase/svabova.png",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/stud/svabosa1/blob/master/dokumentace1.adoc",
+        tags:["pga","gimp","content-aware"] },
+      { id:"sc-elections-visualisation",
+        title:{cs:"Vizualizace voleb",en:"Elections visualisation"},
+        blurb:{
+          cs:"Datová vizualizace výsledků voleb s využitím SAGE.",
+          en:"Data visualisation of election results using SAGE."
+        },
+        img:"/assets/showcase/milec.png",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/stud/milecold/blob/master/dokumentace2.adoc",
+        tags:["pga","visualization","sage","parser"] },
+      { id:"sc-edge-detectors",
+        title:{cs:"Detektory hran",en:"Edge detectors"},
+        blurb:{
+          cs:"Sada materiálů a filtrů pro detekci hran.",
+          en:"A set of materials and filters for edge detection."
+        },
+        img:"/assets/showcase/hoskorad.jpg",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/stud/hoskorad/blob/master/dokumentace1.adoc",
+        tags:["pga","gimp","edge-detection"] },
+      { id:"sc-3d-ft-visualisation",
+        title:{cs:"3D vizualizace FT",en:"3D FT visualisation"},
+        blurb:{
+          cs:"3D vizualizace Fourierovy transformace v Blenderu.",
+          en:"3D visualisation of Fourier transform in Blender."
+        },
+        img:"/assets/showcase/valko.png",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/valkojo1/tree/master/3D",
+        tags:["pga","blender","fourier","3d"] },
+      { id:"sc-parametric-towers",
+        title:{cs:"Parametrické věže",en:"Parametric towers generation"},
+        blurb:{
+          cs:"Procedurální generování věží v Blenderu.",
+          en:"Procedural generation of towers in Blender."
+        },
+        img:"/assets/showcase/trzasmar.jpg",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/trzasmar/blob/master/3D-object_generator/dokumentace3.adoc",
+        tags:["pga","blender","procedural"] },
+      { id:"sc-mandelbulb",
+        title:{cs:"Mandelbulb",en:"Mandelbulb"},
+        blurb:{
+          cs:"Fraktální 3D objekt a jeho vizualizace.",
+          en:"Fractal 3D object and its visualisation."
+        },
+        img:"/assets/showcase/svejstil.jpg",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/svejsond/blob/master/3D/dokumentace3.adoc",
+        tags:["pga","blender","fractal"] },
+      { id:"sc-linky-animation",
+        title:{cs:"Linky – animace",en:"Linky animation"},
+        blurb:{
+          cs:"Animace v GIMPu založená na kreslených linkách.",
+          en:"GIMP-based animation built on stylised lines."
+        },
+        img:"/assets/showcase/cvut2.gif",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/spaneada/blob/master/gimp/dokumentace1.md",
+        tags:["pga","gimp","animation"] },
+      { id:"sc-edge-detect-material",
+        title:{cs:"Materiál Edge Detect",en:"Edge Detect Material"},
+        blurb:{
+          cs:"Blender materiál pro zdůraznění hran v 3D scéně.",
+          en:"Blender material to emphasise edges in a 3D scene."
+        },
+        img:"/assets/showcase/poncaada.png",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/poncaada",
+        tags:["pga","blender","material"] },
+      { id:"sc-seam-carving",
+        title:{cs:"Seam carving",en:"Seam carving"},
+        blurb:{
+          cs:"Inteligentní změna rozlišení obrázků v GIMPu.",
+          en:"Content-aware resizing of images in GIMP."
+        },
+        img:"/assets/showcase/kolemrad.png",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kolemrad/blob/master/dokumentace1.md",
+        tags:["pga","gimp","seam-carving"] },
+      { id:"sc-gallifreyan-translator",
+        title:{cs:"Gallifreyský překladač",en:"Gallifreyan translator"},
+        blurb:{
+          cs:"Blender projekt inspirovaný Doctor Who a kruhovým písmem.",
+          en:"Blender project inspired by Doctor Who and circular writing."
+        },
+        img:"/assets/showcase/kyselova.png",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kyselba1",
+        tags:["blender","simulation","bachelor"] },
+      { id:"sc-blender-snow",
+        title:{cs:"Sníh v Blenderu",en:"Blender Snow"},
+        blurb:{
+          cs:"Simulace sněhu v prostředí Blenderu.",
+          en:"Snow simulation in Blender."
+        },
+        img:"/assets/showcase/kacer.jpg",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kacervik",
+        tags:["pga","blender","snow"] },
+      { id:"sc-decimation",
+        title:{cs:"Decimace meshů",en:"Decimation"},
+        blurb:{
+          cs:"Optimalizace složitosti 3D modelů pomocí decimačních algoritmů.",
+          en:"Optimising 3D model complexity using decimation algorithms."
+        },
+        img:"/assets/showcase/kvasnica.jpg",
+        href:"https://gitlab.fit.cvut.cz/BI-PGA/b201/kvasnric",
+        tags:["pga","blender","decimation"] },
+      { id:"sc-magnificent-7",
+        title:{cs:"Magnificent 7",en:"Magnificent 7"},
+        blurb:{
+          cs:"Studentská hra vytvořená v Unity v rámci BI-VHS.",
+          en:"Student Unity game created in BI-VHS."
+        },
+        img:"/assets/showcase/img_vhs_1.png",
+        href:"https://youtu.be/SN_Pse347iI",
+        tags:["vhs","unity","game"] },
+      { id:"sc-pointless-pointers",
+        title:{cs:"Pointless Pointers",en:"Pointless Pointers"},
+        blurb:{
+          cs:"Pixelartová hra z předmětu Virtuální herní světy.",
+          en:"Pixel-art game developed in the Virtual Game Worlds course."
+        },
+        img:"/assets/showcase/img_vhs_2.png",
+        href:"https://www.youtube.com/watch?v=4u3qrxFuULM&t=1s",
+        tags:["vhs","pixel-art","game"] },
+      { id:"sc-strahov-gang",
+        title:{cs:"Strahov Gang",en:"Strahov Gang"},
+        blurb:{
+          cs:"Unreal Engine projekt zasazený do prostředí Strahova.",
+          en:"Unreal Engine project set in the Strahov dorms."
+        },
+        img:"/assets/showcase/img_vhs_3.png",
+        href:"https://youtu.be/n1OENc6Fc2M?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m",
+        tags:["vhs","unreal","game"] },
+      { id:"sc-golf-town",
+        title:{cs:"Golf Town",en:"Golf Town"},
+        blurb:{
+          cs:"VR hra vytvořená v Unity.",
+          en:"Unity-based VR game."
+        },
+        img:"/assets/showcase/img_vhs_4.png",
+        href:"https://www.youtube.com/watch?v=OB7_UmOI_2U&t=6s",
+        tags:["vhs","unity","vr","game"] },
+      { id:"sc-poe-ripoff",
+        title:{cs:"Path of Exile Ripoff",en:"Path of Exile Ripoff"},
+        blurb:{
+          cs:"MMORPG styl inspirovaný Path of Exile.",
+          en:"MMORPG-style prototype inspired by Path of Exile."
+        },
+        img:"/assets/showcase/img_vhs_5.png",
+        href:"https://www.youtube.com/watch?v=7P3N3s81QqU&t=20s",
+        tags:["vhs","unity","mmorpg","game"] },
+      { id:"sc-ardaestra-magitech",
+        title:{cs:"Ardaestra Magitech",en:"Ardaestra Magitech"},
+        blurb:{
+          cs:"Fantasy RPG projekt v Unity.",
+          en:"Fantasy RPG project in Unity."
+        },
+        img:"/assets/showcase/img_vhs_6.png",
+        href:"https://youtu.be/Zz09tvnLEuo?list=PLXhipPFpvUWH24SDRyFNhCUIuf8zIkM-m",
+        tags:["vhs","unity","rpg","game"] },
+      { id:"sc-fitlife",
+        title:{cs:"FitLife",en:"FitLife"},
+        blurb:{
+          cs:"Pixelartová hra o životě na FITu.",
+          en:"Pixel-art game about life at FIT."
+        },
+        img:"/assets/showcase/FitLife.png",
+        href:"https://antik98.github.io/FitLife/",
+        tags:["bachelor","pixel-art","game"] },
+      { id:"sc-honza",
+        title:{cs:"Honza",en:"Honza"},
+        blurb:{
+          cs:"Krátká studentská hra z prostředí FITu.",
+          en:"Short student game set at FIT."
+        },
+        img:"/assets/showcase/honzaDetail.png",
+        href:"https://www.youtube.com/watch?v=dhuMuopxlio&list=PLXhipPFpvUWEhSxw79CDOdjFFm5D6b3us&index=4&ab_channel=GrafitCTUFITPrague",
+        tags:["vhs","pixel-art","game"] },
+      { id:"sc-music-wave",
+        title:{cs:"Music Wave – sonifikace obrazu",en:"Music Wave – image sonification"},
+        blurb:{
+          cs:"Konverze obrázků do zvuku a zpět.",
+          en:"Converting images into sound and back."
+        },
+        img:"/assets/showcase/niccc_sc5.png",
+        href:"https://ni-ccc.github.io/projects/music_wave/",
+        tags:["ccc","sonification","audio","experimental"] },
+      { id:"sc-sound-of-extinction",
+        title:{cs:"Zvuk vymírání",en:"The sound of extinction"},
+        blurb:{
+          cs:"Audio-vizuální projekt o ohrožených druzích.",
+          en:"Audio-visual project about endangered species."
+        },
+        img:"/assets/showcase/niccc_sc6.png",
+        href:"https://ni-ccc.github.io/projects/music_wave/",
+        tags:["ccc","audio","visualization","thesis"] },
+      { id:"sc-pulse-detection",
+        title:{cs:"Detekce pulsu",en:"Pulse detection"},
+        blurb:{
+          cs:"Detekce srdečního tepu z webkamery.",
+          en:"Detecting heart rate from a webcam signal."
+        },
+        img:"/assets/showcase/niccc_sc2.png",
+        href:"https://ni-ccc.github.io/projects/pavel/",
+        tags:["ccc","computer-vision","webcam","biometrics"] },
+      { id:"sc-covid-visualisation",
+        title:{cs:"Vizualizace Covidu",en:"Covid visualisation"},
+        blurb:{
+          cs:"Vizualizace pohybu lidí během pandemie Covid-19.",
+          en:"Visualisation of people movement during the Covid-19 pandemic."
+        },
+        img:"/assets/showcase/niccc_sc4.png",
+        href:"https://ni-ccc.github.io/projects/vizualizace_covid/",
+        tags:["ccc","visualization","covid","movement"] },
+      { id:"sc-renoir-style-transfer",
+        title:{cs:"Renoir – přenos stylu",en:"Renoir style transfer"},
+        blurb:{
+          cs:"Přenos malířského stylu Augusta Renoira na fotografie.",
+          en:"Transferring the painterly style of Auguste Renoir onto photos."
+        },
+        img:"/assets/showcase/niccc_sc3.png",
+        href:"https://ni-ccc.github.io/projects/martin_honza/",
+        tags:["ccc","style-transfer","ml","visualization"] },
+      { id:"sc-fantasy-tree-scene",
+        title:{cs:"Fantasy scéna se stromem",en:"Fantasy tree scene"},
+        blurb:{
+          cs:"Ilustrovaná fantasy scéna v Blenderu.",
+          en:"Illustrated fantasy scene created in Blender."
+        },
+        img:"/assets/showcase/img_ble_1.png",
+        href:"https://iga.ksi.fit.cvut.cz/bi-ble/gallery",
+        tags:["ble","3d","render"] },
+      { id:"sc-abstract-scene",
+        title:{cs:"Abstraktní scéna",en:"Abstract scene"},
+        blurb:{
+          cs:"Experimenty s animovanými abstraktními tvary.",
+          en:"Experiments with animated abstract shapes."
+        },
+        img:"/assets/showcase/img_ble_2.png",
+        href:"https://iga.ksi.fit.cvut.cz/bi-ble/gallery",
+        tags:["ble","animation","abstract"] },
+      { id:"sc-game-scene",
+        title:{cs:"Herní scéna",en:"Game scene"},
+        blurb:{
+          cs:"Kompletní herní scéna s materiály a světly.",
+          en:"Complete game-ready scene with materials and lighting."
+        },
+        img:"/assets/showcase/img_ble_3.png",
+        href:"https://iga.ksi.fit.cvut.cz/bi-ble/gallery",
+        tags:["ble","materials","scene"] }
+    ];
+
+    const COURSES = [
+      {
+        id:"c-mga",
+        code:"BI-MGA",
+        title:{ cs:"Multimediální a grafické aplikace", en:"Multimedia and Graphics Applications" },
+        blurb:{
+          cs:"Úvodní přehledový kurz, kde se studenti naučí pracovat s 2D a 3D grafickými nástroji.",
+          en:"Introductory overview course where students learn to work with 2D and 3D graphics tools."
+        },
+        link:"https://courses.fit.cvut.cz/BI-MGA/",
+        teachers:["J. Buriánek","L. Bařinka","J. Chludil"],
+        tags:["3rd semester","obligatory","4 ECTS"]
+      },
+      {
+        id:"c-vhs",
+        code:"BI-VHS",
+        title:{ cs:"Virtuální herní světy", en:"Virtual Game Worlds" },
+        blurb:{
+          cs:"Předmět věnovaný game designu, level designu a tvorbě herních světů.",
+          en:"A subject dedicated to game design, level design and the creation of the game world."
+        },
+        link:"https://courses.fit.cvut.cz/BI-VHS/",
+        teachers:["R. Richtr"],
+        tags:["3rd or 5th semester","optional","4 ECTS"]
+      },
+      {
+        id:"c-ble",
+        code:"BI-BLE",
+        title:{ cs:"Blender", en:"Blender" },
+        blurb:{
+          cs:"Navazující kurz na MGA, který výrazně prohlubuje práci v Blenderu.",
+          en:"An advanced course following MGA, significantly deepening work in Blender."
+        },
+        link:"https://courses.fit.cvut.cz/BI-BLE/",
+        teachers:["L. Bařinka"],
+        tags:["summer semester","elective","4 ECTS"]
+      },
+      {
+        id:"c-pga",
+        code:"BI-PGA",
+        title:{ cs:"Programování grafických aplikací", en:"Programming Graphics Applications" },
+        blurb:{
+          cs:"Pokročilý kurz zaměřený na tvorbu pluginů pro GIMP a Blender.",
+          en:"Advanced course focused on developing plugins for GIMP and Blender."
+        },
+        link:"https://courses.fit.cvut.cz/BI-PGA/",
+        teachers:["R. Richtr","J. Chludil"],
+        tags:["5th semester","obligatory","4 ECTS"]
+      },
+      {
+        id:"c-mvt",
+        code:"BI-MVT",
+        title:{ cs:"Moderní vizualizační technologie", en:"Modern Visualisation Technologies" },
+        blurb:{
+          cs:"Přehled moderních vizualizačních technologií a hardware.",
+          en:"Overview of modern visualisation technologies and hardware."
+        },
+        link:"https://courses.fit.cvut.cz/BI-MVT/",
+        teachers:["P. Pauš","J. Chludil"],
+        tags:["5th semester","optional","4 ECTS"]
+      }
+    ];
+
+    // NOVÉ: magisterské (ANI-…) předměty – samostatná sekce
+    const MASTER_PROGRAM = {
+      title:"Visual Computing and Game Design",
+      eyebrow:{ cs:"Specializace Aplikované informatiky", en:"Applied Informatics specialisation" },
+      blurb:{
+        cs:"Technologie, obraz a hra v jednom studijním plánu. Specializace propojuje počítačovou grafiku, zpracování obrazu, vizualizaci, herní enginy, VR/AR, game design a rozpoznávání.",
+        en:"Technology, imaging and games in one study plan. The specialisation connects computer graphics, image processing, visualisation, game engines, VR/AR, game design and recognition."
+      },
+      href:"vcgd/",
+      cta:{ cs:"Prohlédnout studijní plán", en:"Explore the study plan" },
+      stats:[
+        { value:"4", label:{ cs:"semestry", en:"semesters" } },
+        { value:"120", label:{ cs:"ECTS v úplném plánu", en:"ECTS in the full plan" } },
+        { value:"7", label:{ cs:"profilových předmětů", en:"profile courses" } }
+      ]
+    };
+
+    const MEMBERS = [
+      {
+        name:"Radek Richtr",
+        href:"members/rr/",
+        focus:{ cs:"Počítačová grafika · rozpoznávání · game design", en:"Computer graphics · recognition · game design" }
+      },
+      {
+        name:"Jiří Chludil",
+        href:"members/jch/",
+        focus:{ cs:"VR/AR · UX · softwarové inženýrství", en:"VR/AR · UX · software engineering" }
+      },
+      {
+        name:"Petr Pauš",
+        href:"members/pp/",
+        focus:{ cs:"VR/AR · vizualizace · obrazová data", en:"VR/AR · visualisation · imaging data" }
+      },
+      {
+        name:"Ondřej Brém",
+        href:"members/ob/",
+        focus:{ cs:"UX · design sprint · uživatelské testování", en:"UX · design sprint · user testing" }
+      },
+      {
+        name:"Tomáš Nováček",
+        href:"members/tn/",
+        focus:{ cs:"VR rozhraní · hand-tracking · rendering", en:"VR interfaces · hand tracking · rendering" }
+      },
+      {
+        name:"Jiří Kubišta",
+        href:"members/jk/",
+        focus:{ cs:"SAGElab · fotogrammetrie · 3D spolupráce", en:"SAGElab · photogrammetry · 3D collaboration" }
+      },
+      {
+        name:"Jiří Melnikov",
+        href:"members/jm/",
+        focus:{ cs:"SAGElab · IoT · nízkolatenční sítě", en:"SAGElab · IoT · ultra-low-latency networks" }
+      }
+    ];
+
+    const LABS = [
+      {
+        name:"ggLab",
+        href:"labs/gglab/",
+        icon:"cpu",
+        blurb:{
+          cs:"Společné zázemí pro počítačovou grafiku, game design, generativní umění a studentské prototypy.",
+          en:"A shared base for computer graphics, game design, generative art and student prototypes."
+        }
+      },
+      {
+        name:"Usability Lab",
+        href:"labs/ulab/",
+        icon:"mouse-pointer-2",
+        blurb:{
+          cs:"Uživatelský výzkum a testování aplikací, webů, služeb i nových forem interakce.",
+          en:"User research and testing of applications, websites, services and emerging forms of interaction."
+        }
+      },
+      {
+        name:"VR Lab",
+        href:"labs/vrlab/",
+        icon:"glasses",
+        blurb:{
+          cs:"VR vybavení a konzultační zázemí pro studentské, výzkumné a výukové projekty.",
+          en:"VR equipment and consultation support for student, research and teaching projects."
+        }
+      },
+      {
+        name:"SAGElab",
+        href:"https://sagelab.cesnet.cz/en/",
+        icon:"panels-top-left",
+        external:true,
+        blurb:{
+          cs:"Laboratoř CESNET a FIT ČVUT pro velkoformátové vizualizace, vzdálenou spolupráci a kulturu po síti.",
+          en:"A CESNET and FIT CTU lab for large-scale visualisation, remote collaboration and networked culture."
+        }
+      }
+    ];
+
+
+    // --- pomocné ---
+    const $ = sel => document.querySelector(sel);
+    const create = (tag, cls="", html="") => {
+      const el = document.createElement(tag);
+      if(cls) el.className = cls;
+      if(html) el.innerHTML = html;
+      return el;
+    };
+
+    const allTags = Array.from(
+      new Set([...EVENTS, ...RESEARCH, ...SHOWCASE].flatMap(i => i.tags || []))
+    );
+
+    // === UI HELPERY pro kurzy ===
+    function personIcon(){
+      const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 24 24");
+      svg.classList.add("h-3.5","w-3.5","opacity-80");
+      const p1=document.createElementNS(svg.namespaceURI,"path");
+      p1.setAttribute("d","M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z");
+      p1.setAttribute("fill","currentColor");
+      const p2=document.createElementNS(svg.namespaceURI,"path");
+      p2.setAttribute("d","M4 22a8 8 0 0 1 16 0v1H4v-1z");
+      p2.setAttribute("fill","currentColor");
+      svg.appendChild(p1);
+      svg.appendChild(p2);
+      return svg;
+    }
+
+    function teacherChip(name){
+      const chip=document.createElement('span');
+      chip.className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium bg-white/5 text-neutral-200 ring-1 ring-white/10";
+      chip.title=name;
+      chip.appendChild(personIcon());
+      const tNode=document.createElement('span');
+      tNode.textContent=name;
+      chip.appendChild(tNode);
+      return chip;
+    }
+
+    function teacherGroup(teachers=[]){
+      const wrap=document.createElement('div');
+      wrap.className="relative group flex items-center gap-1.5";
+
+      if(teachers.length<=2){
+        teachers.forEach(n=>wrap.appendChild(teacherChip(n)));
+        return wrap;
+      }
+
+      wrap.appendChild(teacherChip(teachers[0]));
+      wrap.appendChild(teacherChip(teachers[1]));
+
+      const more=document.createElement('button');
+      more.type="button";
+      more.className="relative rounded-md px-2 py-0.5 text-[11px] font-semibold bg-white/5 text-neutral-200 ring-1 ring-white/10 hover:bg-white/10";
+      more.textContent = `+${teachers.length-2}`;
+      wrap.appendChild(more);
+
+      const tip=document.createElement('div');
+      tip.className="tooltip pointer-events-none absolute left-0 top-full z-20 mt-2 rounded-md bg-black/90 px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100";
+      tip.innerHTML = teachers.map(n=>`• ${n}`).join("<br>");
+      wrap.appendChild(tip);
+
+      return wrap;
+    }
+
+    function chip(text){
+      const s=document.createElement('span');
+      s.className="rounded-md px-2 py-0.5 text-[10px] font-medium bg-white/5 text-neutral-200 ring-1 ring-white/10";
+      s.textContent=text;
+      return s;
+    }
+
+    function courseCard(c){
+      const article=document.createElement('article');
+      article.className="course-card rounded-2xl border p-4 border-white/10 bg-gradient-to-b from-neutral-900 to-black";
+
+      const row=document.createElement('div');
+      row.className="flex items-start gap-3";
+      article.appendChild(row);
+
+      const code=document.createElement('span');
+      code.className="shrink-0 inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-cyan-400/30 bg-cyan-500/20 text-cyan-200";
+      code.textContent=c.code;
+      row.appendChild(code);
+
+      const body=document.createElement('div');
+      body.className="min-w-0 flex-1";
+      row.appendChild(body);
+
+      const h3=document.createElement('h3');
+      h3.className="text-lg font-semibold text-neutral-100";
+      h3.textContent=getLocalized(c.title);
+      body.appendChild(h3);
+
+      const p=document.createElement('p');
+      p.className="text-sm text-neutral-300/90";
+      p.textContent=getLocalized(c.blurb);
+      body.appendChild(p);
+
+      const meta=document.createElement('div');
+      meta.className="mt-2 flex items-center gap-3";
+      body.appendChild(meta);
+
+      if(Array.isArray(c.teachers) && c.teachers.length){
+        meta.appendChild(teacherGroup(c.teachers));
+      }
+
+      const tagbox=document.createElement('div');
+      tagbox.className="ml-auto flex flex-wrap gap-2";
+      (c.tags||[]).forEach(t=>tagbox.appendChild(chip(t)));
+      meta.appendChild(tagbox);
+
+      const a=document.createElement('a');
+      a.className="mt-2 inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-200 text-sm";
+      a.href=c.link;
+      a.target="_blank";
+      a.rel="noreferrer";
+      a.textContent=t("syllabus");
+      body.appendChild(a);
+
+      return article;
+    }
+
+    function setLinkBehavior(anchor, href){
+      anchor.href = href || "#";
+      if (/^https?:\/\//i.test(href || "")) {
+        anchor.target = "_blank";
+        anchor.rel = "noreferrer";
+      }
+    }
+
+    function masterProgramCard(program){
+      const article = create(
+        "article",
+        "course-card relative overflow-hidden rounded-3xl border border-fuchsia-400/25 bg-gradient-to-br from-fuchsia-500/15 via-neutral-950 to-cyan-500/10 p-6 sm:p-8",
+        ""
+      );
+      const layout = create("div", "relative grid gap-7 lg:grid-cols-[1.5fr_1fr] lg:items-end", "");
+      const copy = create("div", "", "");
+      copy.appendChild(create("p", "text-xs font-semibold uppercase tracking-[.2em] text-fuchsia-200", getLocalized(program.eyebrow)));
+      copy.appendChild(create("h3", "mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-white", program.title));
+      copy.appendChild(create("p", "mt-3 max-w-3xl text-sm sm:text-base leading-relaxed text-neutral-300", getLocalized(program.blurb)));
+      const link = create("a", "mt-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-400/15 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-400/25", getLocalized(program.cta) + " →");
+      setLinkBehavior(link, program.href);
+      copy.appendChild(link);
+      layout.appendChild(copy);
+
+      const stats = create("div", "grid grid-cols-3 gap-2", "");
+      program.stats.forEach(stat => {
+        const box = create("div", "rounded-2xl border border-white/10 bg-black/30 p-3 sm:p-4", "");
+        box.appendChild(create("strong", "block text-2xl sm:text-3xl text-white", stat.value));
+        box.appendChild(create("span", "mt-1 block text-[11px] leading-snug text-neutral-400", getLocalized(stat.label)));
+        stats.appendChild(box);
+      });
+      layout.appendChild(stats);
+      article.appendChild(layout);
+      return article;
+    }
+
+    function memberCard(member){
+      const a = create("a", "course-card group flex items-start gap-3 rounded-2xl border border-white/10 bg-black/45 p-4 hover:border-cyan-300/30", "");
+      setLinkBehavior(a, member.href);
+      const initials = member.name.split(/\s+/).map(part => part.charAt(0)).join("").slice(0,2);
+      a.appendChild(create("span", "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-300/20 bg-cyan-400/10 text-sm font-bold text-cyan-100", initials));
+      const body = create("span", "min-w-0", "");
+      body.appendChild(create("strong", "block text-base text-neutral-100 group-hover:text-cyan-200", member.name));
+      body.appendChild(create("span", "mt-1 block text-xs leading-relaxed text-neutral-400", getLocalized(member.focus)));
+      a.appendChild(body);
+      return a;
+    }
+
+    function labCard(lab){
+      const a = create("a", "course-card group flex h-full flex-col rounded-2xl border border-white/10 bg-black/45 p-5 hover:border-fuchsia-300/30", "");
+      setLinkBehavior(a, lab.href);
+      const iconWrap = create("span", "inline-flex h-10 w-10 items-center justify-center rounded-xl border border-fuchsia-300/20 bg-fuchsia-400/10 text-fuchsia-100", "");
+      const icon = document.createElement("i");
+      icon.setAttribute("data-lucide", lab.icon);
+      icon.className = "icon";
+      iconWrap.appendChild(icon);
+      a.appendChild(iconWrap);
+      a.appendChild(create("strong", "mt-4 text-lg text-neutral-100 group-hover:text-fuchsia-200", lab.name + (lab.external ? " ↗" : "")));
+      a.appendChild(create("span", "mt-2 text-sm leading-relaxed text-neutral-400", getLocalized(lab.blurb)));
+      return a;
+    }
+
+    function card(item, kind){
+      const a = create(
+        "a",
+        "card group relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-b from-neutral-900 to-black block",
+        ""
+      );
+      setLinkBehavior(a, item.href || "#");
+
+      const aspect = (kind === "event") ? "aspect-[16/9]" : "aspect-[2/1]";
+      const imgBox = create(
+        "div",
+        `relative w-full overflow-hidden ${aspect}`,
+        ""
+      );
+
+      const img = create("img","thumb h-full w-full object-cover object-center","");
+      img.src = item.img;
+      img.alt = getLocalized(item.title);
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.addEventListener("error", () => {
+        if (img.dataset.remoteFallback || /^https?:\/\//i.test(item.img || "")) return;
+        img.dataset.remoteFallback = "true";
+        img.src = "https://grafitctu.github.io/" + String(item.img).replace(/^\//, "");
+      });
+      imgBox.appendChild(img);
+
+      imgBox.appendChild(
+        create("div","absolute inset-0 bg-gradient-to-t from-black/50 to-transparent","")
+      );
+
+      if(item.date){
+        imgBox.appendChild(
+          create(
+            "span",
+            "absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-neutral-200 border border-white/10",
+            "📅 " + getLocalized(item.date)
+          )
+        );
+      }
+
+      a.appendChild(imgBox);
+
+      const body = create("div","p-4","");
+      const headerRow = document.createElement("div");
+      headerRow.className = "flex items-center justify-between";
+
+      const h3 = document.createElement("h3");
+      h3.className = "text-lg font-semibold text-neutral-100";
+      h3.textContent = getLocalized(item.title);
+
+      const spanKind = document.createElement("span");
+      spanKind.className = "text-neutral-400 text-xs uppercase tracking-wide";
+      const kindLabels = {
+        event:{ cs:"událost", en:"event" },
+        research:{ cs:"výzkum", en:"research" },
+        showcase:{ cs:"projekt", en:"project" }
+      };
+      spanKind.textContent = getLocalized(kindLabels[kind] || kind);
+
+      headerRow.appendChild(h3);
+      headerRow.appendChild(spanKind);
+      body.appendChild(headerRow);
+
+      const p = document.createElement("p");
+      p.className = "mt-1 text-neutral-300/90 text-sm leading-relaxed";
+      p.textContent = getLocalized(item.blurb);
+      body.appendChild(p);
+
+      if((item.tags || []).length){
+        const tg = create("div","mt-3 flex flex-wrap gap-2","");
+        (item.tags || []).forEach(t =>
+          tg.appendChild(
+            create(
+              "span",
+              "text-xs rounded-full border px-2 py-0.5 text-neutral-300 border-neutral-700/80",
+              "#" + t
+            )
+          )
+        );
+        body.appendChild(tg);
+      }
+
+      a.appendChild(body);
+      return a;
+    }
+
+    function renderLists(filterFn){
+      const E = $("#eventsGrid");
+      if (E) {
+        E.innerHTML = "";
+        EVENTS.filter(filterFn).forEach(it => E.appendChild(card(it,"event")));
+      }
+
+      const R = $("#researchGrid");
+      if (R) {
+        R.innerHTML = "";
+        RESEARCH.filter(filterFn).forEach(it => R.appendChild(card(it,"research")));
+      }
+
+      const S = $("#showcaseGrid");
+      if (S) {
+        S.innerHTML = "";
+        SHOWCASE.filter(filterFn).forEach(it => S.appendChild(card(it,"showcase")));
+      }
+
+      const C = $("#coursesGrid");
+      if (C) {
+        C.innerHTML = "";
+        COURSES.forEach(c => C.appendChild(courseCard(c)));
+      }
+
+      const MP = $("#masterProgram");
+      if (MP) {
+        MP.innerHTML = "";
+        MP.appendChild(masterProgramCard(MASTER_PROGRAM));
+      }
+
+      const people = $("#membersGrid");
+      if (people) {
+        people.innerHTML = "";
+        MEMBERS.forEach(member => people.appendChild(memberCard(member)));
+      }
+
+      const labs = $("#labsGrid");
+      if (labs) {
+        labs.innerHTML = "";
+        LABS.forEach(lab => labs.appendChild(labCard(lab)));
+      }
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+
+    // --- vyhledávání + tagy (v draweru) ---
+    let activeTags = new Set();
+
+    function applyFilter(){
+      const searchEl = $("#search");
+      const q = (searchEl?.value || "").trim().toLowerCase();
+
+      const filterFn = (item) => {
+        const titleText = getLocalized(item.title).toLowerCase();
+        const blurbText = getLocalized(item.blurb).toLowerCase();
+        const tagsText = (item.tags || []).join(" ").toLowerCase();
+
+        const text = `${titleText} ${blurbText} ${tagsText}`;
+
+        const matchQ = !q || text.includes(q);
+        const matchTags =
+          activeTags.size === 0 ||
+          (item.tags || []).some(t => activeTags.has(t));
+
+        return matchQ && matchTags;
+      };
+
+      renderLists(filterFn);
+    }
+
+    function renderTags(){
+      const T = $("#tags");
+      if(!T) return;
+      T.innerHTML = `<span class="text-xs text-neutral-400">${t("filterTagsLabel")}</span>`;
+
+      allTags.forEach(tagText=>{
+        const b = create(
+          "button",
+          "px-3 py-1 rounded-full border text-sm border-neutral-700 text-neutral-300 hover:border-neutral-500",
+          ""
+        );
+        b.textContent = tagText;
+        b.onclick = () => {
+          activeTags.has(tagText) ? activeTags.delete(tagText) : activeTags.add(tagText);
+          b.classList.toggle("bg-cyan-500/20");
+          b.classList.toggle("border-cyan-400");
+          applyFilter();
+        };
+        T.appendChild(b);
+      });
+
+      if(allTags.length){
+        const reset = create(
+          "button",
+          "ml-2 text-xs text-cyan-300 hover:text-cyan-200",
+          t("filterReset")
+        );
+        reset.onclick = () => {
+          activeTags = new Set();
+          renderTags();
+          applyFilter();
+        };
+        T.appendChild(reset);
+      }
+    }
+
+    // --- částice (canvas) ---
+    function particles(canvas, opts){
+      const c = canvas, ctx = c.getContext("2d");
+      let w=0,h=0, raf=0;
+      const N = opts.N || 42;
+      const speed = opts.speed || 0.4;
+
+      function resize(){
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = c.width = Math.max(window.innerWidth, Math.ceil(rect.width||window.innerWidth));
+        h = c.height = Math.ceil(rect.height || 520);
+      }
+
+      const dots = Array.from({length:N}, ()=>({
+        x:0,
+        y:0,
+        vx:(Math.random()-.5)*speed,
+        vy:(Math.random()-.5)*speed
+      }));
+
+      function reset(){
+        dots.forEach(d=>{
+          d.x=Math.random()*w;
+          d.y=Math.random()*h;
+        });
+      }
+
+      function draw(){
+        ctx.clearRect(0,0,w,h);
+        const grad = ctx.createLinearGradient(0,0,w,h);
+        grad.addColorStop(0,"#0b1220");
+        grad.addColorStop(1,"#0b0f16");
+        ctx.fillStyle=grad;
+        ctx.globalAlpha=.94;
+        ctx.fillRect(0,0,w,h);
+        ctx.globalAlpha=1;
+
+        for(let i=0;i<N;i++){
+          const a=dots[i];
+          a.x+=a.vx;
+          a.y+=a.vy;
+          if(a.x<0||a.x>w) a.vx*=-1;
+          if(a.y<0||a.y>h) a.vy*=-1;
+
+          for(let j=i+1;j<N;j++){
+            const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+            if(d<120){
+              ctx.globalAlpha = 1 - d/120;
+              ctx.strokeStyle = "#60a5fa";
+              ctx.beginPath();
+              ctx.moveTo(a.x,a.y);
+              ctx.lineTo(b.x,b.y);
+              ctx.stroke();
+              ctx.globalAlpha=1;
+            }
+          }
+
+          ctx.fillStyle="#22d3ee";
+          ctx.beginPath();
+          ctx.arc(a.x,a.y,1.2,0,Math.PI*2);
+          ctx.fill();
+        }
+        raf = requestAnimationFrame(draw);
+      }
+
+      function start(){
+        resize();
+        reset();
+        draw();
+      }
+
+      const ro = new ResizeObserver(()=>{ resize(); });
+      ro.observe(canvas.parentElement);
+      window.addEventListener("resize", resize);
+      start();
+      return { stop:()=>cancelAnimationFrame(raf), ro };
+    }
+
+    // --- scroll progress ---
+    window.addEventListener("scroll", () => {
+      const s = document.documentElement.scrollTop || document.body.scrollTop;
+      const h = (document.documentElement.scrollHeight - document.documentElement.clientHeight) || 1;
+      const pct = Math.max(0, Math.min(1, s/h));
+      $("#scrollbar").style.width = (pct*100) + "%";
+    });
+
+    // --- toggle schovávacího panelu filtrů ---
+    const drawer = document.getElementById("filterDrawer");
+    const openBtn = document.getElementById("openFilters");
+    const closeBtn = document.getElementById("closeFilters");
+    const backdrop = document.getElementById("filterBackdrop");
+
+    function openFilters(){
+      drawer.classList.remove("hidden");
+      openBtn?.setAttribute("aria-expanded", "true");
+      setTimeout(()=> document.getElementById("search")?.focus(), 50);
+    }
+    function closeFilters(){
+      drawer.classList.add("hidden");
+      openBtn?.setAttribute("aria-expanded", "false");
+    }
+
+    openBtn?.addEventListener("click", openFilters);
+    closeBtn?.addEventListener("click", closeFilters);
+    backdrop?.addEventListener("click", closeFilters);
+    document.addEventListener("keydown", (e)=>{
+      if(e.key==="Escape") closeFilters();
+    });
+
+    // event na vyhledávací input
+    document.addEventListener("input", (e)=>{
+      if (e.target && e.target.id === "search") {
+        applyFilter();
+      }
+    });
+
+    // Jazykový přepínač – eventy
+    document.getElementById("btn-lang-cs")?.addEventListener("click", ()=>setLanguage("cs"));
+    document.getElementById("btn-lang-en")?.addEventListener("click", ()=>setLanguage("en"));
+
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // init
+    updateLangToggleUI();
+    renderTags();
+    applyStaticTexts();
+    applyFilter();
+    if (!prefersReduced) {
+      particles(document.getElementById("heroCanvas"), { N: 42, speed: .4 });
+      particles(document.getElementById("areaCanvas"), { N: 48, speed: .35 });
+    }
+  </script>
 </body>
-
-<script>w3IncludeHTML();</script>
-
 </html>
