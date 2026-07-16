@@ -302,6 +302,15 @@
         </h2>
       </div>
       <div id="masterProgram"></div>
+      <div class="mt-7 mb-4">
+        <h3 class="text-xl font-bold tracking-tight text-neutral-100" data-i18n-key="secMasterCoursesTitle">
+          Profilové předměty specializace
+        </h3>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-neutral-400" data-i18n-key="secMasterCoursesText">
+          Sedm předmětů, které tvoří odborné jádro specializace. Podrobný studijní plán obsahuje jejich zařazení do semestrů, volby i kompletní sylaby.
+        </p>
+      </div>
+      <div id="masterCoursesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
 
       <!-- Members -->
       <div class="mt-12 mb-4">
@@ -415,6 +424,8 @@
         secCoursesTitle: "Bakalářské předměty",
         secMasterLabel: "Navazující magisterské studium",
         secMasterTitle: "Visual Computing and Game Design",
+        secMasterCoursesTitle: "Profilové předměty specializace",
+        secMasterCoursesText: "Sedm předmětů, které tvoří odborné jádro specializace. Podrobný studijní plán obsahuje jejich zařazení do semestrů, volby i kompletní sylaby.",
         secMembersLabel: "Lidé za GRAFITEM",
         secMembersTitle: "Členové",
         secMembersText: "Výzkumníci a vyučující počítačové grafiky a příbuzných oblastí na FIT ČVUT.",
@@ -469,6 +480,8 @@
         secCoursesTitle: "Bachelor courses",
         secMasterLabel: "Follow-up master's programme",
         secMasterTitle: "Visual Computing and Game Design",
+        secMasterCoursesTitle: "Specialisation profile courses",
+        secMasterCoursesText: "Seven courses forming the specialisation's academic core. The detailed study plan shows their semester placement, choices and complete syllabi.",
         secMembersLabel: "The people behind GRAFIT",
         secMembersTitle: "Members",
         secMembersText: "Researchers and teachers in computer graphics and related fields at FIT CTU.",
@@ -1038,6 +1051,83 @@
       ]
     };
 
+    const MASTER_COURSES = [
+      {
+        code:"ANI-DZO",
+        title:{ cs:"Digitální zpracování obrazu", en:"Digital Image Processing" },
+        blurb:{
+          cs:"Moderní metody interaktivní editace digitálního obrazu a videa, jejich algoritmy a teoretické základy.",
+          en:"Modern methods for interactive editing of digital images and video, including their algorithms and theoretical foundations."
+        },
+        link:"https://courses.fit.cvut.cz/ANI-DZO/",
+        tags:[{ cs:"1. semestr", en:"semester 1" }, { cs:"profilový", en:"profile course" }, "6 ECTS"]
+      },
+      {
+        code:"ANI-DVG",
+        title:{ cs:"Úvod do diskrétní a výpočetní geometrie", en:"Introduction to Discrete and Computational Geometry" },
+        blurb:{
+          cs:"Geometrické datové struktury a algoritmy pro praktické úlohy diskrétní a výpočetní geometrie.",
+          en:"Geometric data structures and algorithms for practical problems in discrete and computational geometry."
+        },
+        link:"https://courses.fit.cvut.cz/ANI-DVG/",
+        tags:[{ cs:"1. semestr", en:"semester 1" }, { cs:"profilový", en:"profile course" }, "5 ECTS"]
+      },
+      {
+        code:"ANI-EGG",
+        title:{ cs:"Enginy pro hry a grafiku", en:"Engines for Games and Graphics" },
+        blurb:{
+          cs:"Praktický úvod do herních enginů, jejich architektury a využití při tvorbě interaktivních grafických projektů.",
+          en:"A practical introduction to game engines, their architecture and their use in interactive graphics projects."
+        },
+        link:"https://courses.fit.cvut.cz/ANI-EGG/",
+        teachers:["P. Pauš","J. Matoušek"],
+        tags:[{ cs:"1. semestr", en:"semester 1" }, { cs:"profilový", en:"profile course" }, "4 ECTS"]
+      },
+      {
+        code:"ANI-PG1",
+        title:{ cs:"Počítačová grafika 1", en:"Computer Graphics 1" },
+        blurb:{
+          cs:"Pokročilá počítačová grafika: realistické texturování, ray tracing, odborné články a implementace vybraných metod.",
+          en:"Advanced computer graphics: realistic texturing, ray tracing, research papers and implementation of selected methods."
+        },
+        link:"https://courses.fit.cvut.cz/ANI-PG1/",
+        teachers:["R. Richtr"],
+        tags:[{ cs:"2. semestr", en:"semester 2" }, { cs:"profilový", en:"profile course" }, "5 ECTS"]
+      },
+      {
+        code:"ANI-VIZ",
+        title:{ cs:"Vizualizace", en:"Visualisation" },
+        blurb:{
+          cs:"Teoretické základy a praktické metody vizualizace dat s ohledem na výpočetní možnosti a lidské vnímání.",
+          en:"Theoretical foundations and practical methods of data visualisation with respect to computing capabilities and human perception."
+        },
+        link:"https://courses.fit.cvut.cz/ANI-VIZ/",
+        tags:[{ cs:"2. semestr", en:"semester 2" }, { cs:"profilový", en:"profile course" }, "6 ECTS"]
+      },
+      {
+        code:"ANI-ROZ",
+        title:{ cs:"Rozpoznávání", en:"Pattern Recognition" },
+        blurb:{
+          cs:"Statistické rozpoznávání dat, pravděpodobnostní modely, odhad parametrů a výpočetní aspekty klasifikačních metod.",
+          en:"Statistical pattern recognition, probabilistic models, parameter estimation and computational aspects of classification methods."
+        },
+        link:"https://courses.fit.cvut.cz/ANI-ROZ/",
+        teachers:["R. Richtr"],
+        tags:[{ cs:"3. semestr", en:"semester 3" }, { cs:"profilový", en:"profile course" }, "5 ECTS"]
+      },
+      {
+        code:"ANI-PIV",
+        title:{ cs:"Počítačové vidění", en:"Computer Vision" },
+        blurb:{
+          cs:"Klasické i moderní metody analýzy obrazu: filtrace, segmentace, detekce objektů, hluboké učení a vision transformers.",
+          en:"Classical and modern image-analysis methods: filtering, segmentation, object detection, deep learning and vision transformers."
+        },
+        link:"https://courses.fit.cvut.cz/ANI-PIV/",
+        teachers:["V. Benešová"],
+        tags:[{ cs:"3. semestr", en:"semester 3" }, { cs:"profilový", en:"profile course" }, "5 ECTS"]
+      }
+    ];
+
     const MEMBERS = [
       {
         name:"Radek Richtr",
@@ -1195,16 +1285,18 @@
       return s;
     }
 
-    function courseCard(c){
+    function courseCard(c, variant="bachelor"){
       const article=document.createElement('article');
-      article.className="course-card rounded-2xl border p-4 border-white/10 bg-gradient-to-b from-neutral-900 to-black";
+      article.className=`course-card rounded-2xl border p-4 border-white/10 bg-gradient-to-b from-neutral-900 to-black ${variant === "master" ? "hover:border-fuchsia-300/30" : "hover:border-cyan-300/30"}`;
 
       const row=document.createElement('div');
       row.className="flex items-start gap-3";
       article.appendChild(row);
 
       const code=document.createElement('span');
-      code.className="shrink-0 inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-cyan-400/30 bg-cyan-500/20 text-cyan-200";
+      code.className=variant === "master"
+        ? "shrink-0 inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-fuchsia-400/40 bg-fuchsia-500/20 text-fuchsia-100"
+        : "shrink-0 inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-cyan-400/30 bg-cyan-500/20 text-cyan-200";
       code.textContent=c.code;
       row.appendChild(code);
 
@@ -1232,11 +1324,13 @@
 
       const tagbox=document.createElement('div');
       tagbox.className="ml-auto flex flex-wrap gap-2";
-      (c.tags||[]).forEach(t=>tagbox.appendChild(chip(t)));
+      (c.tags||[]).forEach(tag=>tagbox.appendChild(chip(getLocalized(tag))));
       meta.appendChild(tagbox);
 
       const a=document.createElement('a');
-      a.className="mt-2 inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-200 text-sm";
+      a.className=variant === "master"
+        ? "mt-2 inline-flex items-center gap-1 text-fuchsia-200 hover:text-fuchsia-100 text-sm"
+        : "mt-2 inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-200 text-sm";
       a.href=c.link;
       a.target="_blank";
       a.rel="noreferrer";
@@ -1424,6 +1518,12 @@
       if (MP) {
         MP.innerHTML = "";
         MP.appendChild(masterProgramCard(MASTER_PROGRAM));
+      }
+
+      const MC = $("#masterCoursesGrid");
+      if (MC) {
+        MC.innerHTML = "";
+        MASTER_COURSES.forEach(c => MC.appendChild(courseCard(c, "master")));
       }
 
       const people = $("#membersGrid");
