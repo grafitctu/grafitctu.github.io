@@ -1,258 +1,183 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="cs">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Scrolling Gallery</title>
-    <style>
-        :root {
-            --radius: 12px;
-            --radius-xl: 24px;
-        }
-
-        html, body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            font-size: 16px;
-            line-height: 1.5;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            background-color: #fff;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .gallery {
-            display: flex;
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 30px;
-            border-radius: var(--radius);
-        }
-        .gallery-inner {
-            display: flex;
-            transition: transform 1s ease;
-        }
-        .gallery-item {
-            min-width: 300px;
-            margin: 10px;
-            background: #f9f9f9;
-            border-radius: var(--radius);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .gallery-item img {
-            width: 300px;
-            height: 150px;
-            object-fit: cover;
-            border-bottom: 1px solid #ddd;
-        }
-        .gallery-item h4 {
-            margin: 10px;
-            font-weight: 600;
-            font-size: 1.2em;
-        }
-        .gallery-item p {
-            margin: 10px;
-            font-size: 0.9em;
-        }
-        .gallery-controls {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-        }
-        .control {
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            font-size: 2rem;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: var(--radius);
-        }
-    </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const galleries = document.querySelectorAll('.gallery');
-            galleries.forEach((gallery) => {
-                const galleryInner = gallery.querySelector('.gallery-inner');
-                let currentIndex = 0;
-                const items = galleryInner.querySelectorAll('.gallery-item');
-                const itemWidth = items[0].offsetWidth + 20; // Including margin
-
-                function scrollGallery() {
-                    currentIndex = (currentIndex + 1) % items.length;
-                    galleryInner.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
-                    setTimeout(scrollGallery, getRandomDelay());
-                }
-
-                function getRandomDelay() {
-                    return Math.floor(Math.random() * 5000) + 10000; // Random delay between 10 and 15 seconds
-                }
-
-                function manualScroll(direction) {
-                    if (direction === 'left') {
-                        currentIndex = (currentIndex - 1 + items.length) % items.length;
-                    } else if (direction === 'right') {
-                        currentIndex = (currentIndex + 1) % items.length;
-                    }
-                    galleryInner.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
-                }
-
-                const leftButton = gallery.querySelector('.control-left');
-                const rightButton = gallery.querySelector('.control-right');
-
-                leftButton.addEventListener('click', () => manualScroll('left'));
-                rightButton.addEventListener('click', () => manualScroll('right'));
-
-                setTimeout(scrollGallery, getRandomDelay());
-            });
-        });
-    </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Závěrečné práce vedené členy skupiny GRAFIT na FIT ČVUT: kurátorský výběr i úplný katalog bakalářských a diplomových prací.">
+  <meta name="theme-color" content="#070a16">
+  <title>Závěrečné práce · GRAFIT FIT ČVUT</title>
+  <link rel="canonical" href="https://grafitctu.github.io/theses/">
+  <link rel="alternate" hreflang="cs" href="https://grafitctu.github.io/theses/">
+  <link rel="alternate" hreflang="en" href="https://grafitctu.github.io/theses/en/">
+  <link rel="stylesheet" href="./theses.css">
+  <script src="../members/member-lang.js" defer></script>
+  <script src="./theses-data.js" defer></script>
+  <script src="./theses.js" defer></script>
 </head>
 <body>
-    <div class="gallery">
-        <div class="gallery-inner">
-            <div class="gallery-item">
-                <img src="../assets/showcase/img_ble_1.png" alt="Project 1">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/img_ble_2.png" alt="Project 2">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/img_ble_3.png" alt="Project 3">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/niccc_sc1.png" alt="Project 4">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/niccc_sc2.png" alt="Project 5">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/niccc_sc3.png" alt="Project 1">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/niccc_sc4.png" alt="Project 2">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/niccc_sc5.png" alt="Project 2">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/niccc_sc6.png" alt="Project 2">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/FitLife.png" alt="Project 5">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/img_vhs_6.png" alt="Project 5">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/img_vhs_1.png" alt="Project 5">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/img_vhs_2.png" alt="Project 5">
-            </div>
-            <div class="gallery-item">
-                <img src="../assets/showcase/img_vhs_3.png" alt="Project 5">
-            </div>
-        </div>
-        <div class="gallery-controls">
-            <button class="control control-left">&#9664;</button>
-            <button class="control control-right">&#9654;</button>
-        </div>
+  <a class="skip-link" href="#catalogue">Přeskočit na závěrečné práce</a>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="../">
+        <img src="../assets/logos/Grafit_SVG.svg" alt="">
+        <span>GRAFIT · FIT ČVUT</span>
+      </a>
+      <nav aria-label="Hlavní navigace">
+        <a href="../#research">Výzkum</a>
+        <a href="../#members">Členové</a>
+        <a href="../publications/">Publikace</a>
+        <span class="language-switch" aria-label="Jazyk">
+          <span aria-current="page">CZ</span>
+          <a href="./en/?lang=en" lang="en" data-language-link="en">EN</a>
+        </span>
+      </nav>
     </div>
-    <div class="gallery">
-        <div class="gallery-inner">
-            <div class="gallery-item" style="width: 300px;">
-                <div class="item">
-                    <h4>Texture editing</h4>
-                    <a href="https://gitlab.fit.cvut.cz/BI-PGA/stud/svabosa1/blob/master/dokumentace1.adoc">
-                        <img src="../assets/showcase/svabova.png" style="object-fit: cover; height: 150px; width: 300px;" />
-                    </a>
-                    <p>Content aware fill implemented as a GIMP plugin (PGA course)</p>
-                </div>
-            </div>
-            <div class="gallery-item" style="width: 300px;">
-                <div class="item">
-                    <h4>Elections visualisation</h4>
-                    <a href="https://gitlab.fit.cvut.cz/BI-PGA/stud/milecold/blob/master/dokumentace2.adoc">
-                        <img src="../assets/showcase/milec.png" style="object-fit: cover; height: 150px; width: 300px;" />
-                    </a>
-                    <p>Parliament elections visualisation + online parser, implemented as a SAGE app (PGA course)</p>
-                </div>
-            </div>
-            <div class="gallery-item" style="width: 300px;">
-                <div class="item">
-                    <h4>Edge detectors</h4>
-                    <a href="https://gitlab.fit.cvut.cz/BI-PGA/stud/hoskorad/blob/master/dokumentace1.adoc">
-                        <img src="../assets/showcase/hoskorad.jpg" style="object-fit: cover; height: 150px; width: 300px;" />
-                    </a>
-                    <p>A set of edge detectors and comparisons of the application of the resulting operators, implemented as a GIMP plugin (PGA course)</p>
-                </div>
-            </div>
-            <div class="gallery-item" style="width: 300px;">
-                <div class="item">
-                    <h4>3D FT visualisation</h4>
-                    <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/valkojo1/tree/master/3D">
-                        <img src="../assets/showcase/valko.png" style="object-fit: cover; height: 150px; width: 300px;" />
-                    </a>
-                    <p>Fourier transformation visualisation implemented as a Blender plugin (PGA course)</p>
-                </div>
-            </div>
-            <div class="gallery-item" style="width: 300px;">
-                <div class="item">
-                    <h4>Parametric towers generation</h4>
-                    <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/trzasmar/blob/master/3D-object_generator/dokumentace3.adoc">
-                        <img src="../assets/showcase/trzasmar.jpg" style="object-fit: cover; height: 150px; width: 300px;" />
-                    </a>
-                    <p>Object generation implemented as a Blender plugin (PGA course)</p>
-                </div>
-            </div>
-            <div class="gallery-item" style="width: 300px;">
-                <div class="item">
-                    <h4>Mandelbulb</h4>
-                    <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/svejsond/blob/master/3D/dokumentace3.adoc">
-                        <img src="../assets/showcase/svejstil.jpg" style="object-fit: cover; height: 150px; width: 300px;" />
-                    </a>
-                    <p>Fractal rendering implemented as a Blender plugin (PGA course)</p>
-                </div>
-            </div>
-            <div class="gallery-item" style="width: 300px;">
-                <div class="item">
-                    <h4>Linky animation</h4>
-                    <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/spaneada/blob/master/gimp/dokumentace1.md">
-                        <img src="../assets/showcase/cvut2.gif" style="object-fit: cover; height: 150px; width: 300px;" />
-                    </a>
-                    <p>4x170 animation exporter implemented as a GIMP plugin (PGA course)</p>
-                </div>
-            </div>
-            <div class="gallery-item" style="width: 300px;">
-                <div class="item">
-                    <h4>Edge Detect Material</h4>
-                    <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/poncaada">
-                        <img src="../assets/showcase/poncaada.png" style="object-fit: cover; height: 150px; width: 300px;" />
-                    </a>
-                    <p>Object manipulation implemented as a Blender plugin (PGA course)</p>
-                </div>
-            </div>
-            <div class="gallery-item" style="width: 300px;">
-                <div class="item">
-                    <h4>Seam carving</h4>
-                    <a href="https://gitlab.fit.cvut.cz/BI-PGA/b201/kolemrad/blob/master/dokumentace1.md">
-                        <img src="../assets/showcase/kolemrad.png" style="object-fit: cover; height: 150px; width: 300px;" />
-                    </a>
-                    <p>Content-aware image resizing, implemented as a GIMP plugin (PGA course)</p>
-                </div>
-            </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Studentská práce · 8 vedoucích · 401 projektů</p>
+          <h1>Závěrečné<br>práce</h1>
+          <p class="hero-lead">Od grafických enginů, her a VR přes zpracování obrazu až po kulturní dědictví, medicínská data a interaktivní systémy.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#catalogue">Procházet práce ↓</a>
+            <a class="button" href="../#members">Profily vedoucích</a>
+          </div>
         </div>
-        <div class="gallery-controls">
-            <button class="control control-left">&#9664;</button>
-            <button class="control control-right">&#9654;</button>
+        <aside class="hero-stats" aria-label="Souhrn katalogu">
+          <div class="stat"><strong data-total-theses>401</strong><span>závěrečných prací</span></div>
+          <div class="stat"><strong data-curated-total>24</strong><span>v kurátorském výběru</span></div>
+          <div class="stat"><strong data-supervisor-total>8</strong><span>vedoucích</span></div>
+          <p>Výběr ukazuje šíři témat a výrazné realizace. Režim „Vše“ zpřístupní kompletní seznamy z profilů členů.</p>
+        </aside>
+      </div>
+    </section>
+
+    <nav class="quick-nav" aria-label="Na této stránce">
+      <div class="quick-nav-inner">
+        <a href="#catalogue">⌕ Katalog</a>
+        <a href="#how-selection-works">◎ Jak vybíráme</a>
+        <a href="#sources">↗ Zdroje</a>
+      </div>
+    </nav>
+
+    <section class="catalogue-section" id="catalogue">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Dva způsoby procházení</p>
+          <h2>Seznam, nebo živá galerie.</h2>
         </div>
+        <p>Přehled je určený pro cílené hledání. Karusel promění stejná data ve tři pohybující se pásy pro prezentace a objevování.</p>
+      </div>
+
+      <div class="mode-panel" aria-label="Nastavení zobrazení">
+        <div class="mode-group">
+          <span class="mode-label">Zobrazení</span>
+          <div class="segmented-control" data-view-control>
+            <button type="button" data-view="overview" aria-pressed="true">▦ Přehled prací</button>
+            <button type="button" data-view="carousel" aria-pressed="false">≋ Dynamický karusel</button>
+          </div>
+        </div>
+        <div class="mode-group">
+          <span class="mode-label">Rozsah</span>
+          <div class="segmented-control" data-scope-control>
+            <button type="button" data-scope="curated" aria-pressed="true">Kurátorský výběr</button>
+            <button type="button" data-scope="all" aria-pressed="false">Vše</button>
+          </div>
+        </div>
+      </div>
+
+      <form class="filters" data-filters role="search">
+        <label class="search-field">
+          <span>Hledat</span>
+          <input type="search" name="q" placeholder="Název, autor, téma…" autocomplete="off" data-search>
+        </label>
+        <label>
+          <span>Vedoucí</span>
+          <select name="supervisor" data-supervisor-filter>
+            <option value="">Všichni vedoucí</option>
+          </select>
+        </label>
+        <label>
+          <span>Typ práce</span>
+          <select name="degree" data-degree-filter>
+            <option value="">Bakalářské i diplomové</option>
+            <option value="master">Diplomové práce</option>
+            <option value="bachelor">Bakalářské práce</option>
+          </select>
+        </label>
+        <label>
+          <span>Rok</span>
+          <select name="year" data-year-filter>
+            <option value="">Všechny roky</option>
+          </select>
+        </label>
+        <button class="reset-button" type="reset" data-reset>Vymazat filtry</button>
+      </form>
+
+      <div class="results-toolbar">
+        <p aria-live="polite"><strong data-results-count>24</strong> <span data-results-label>prací</span></p>
+        <p data-active-filter>Kurátorský výběr</p>
+      </div>
+
+      <section class="overview-view" data-overview-view aria-label="Přehled závěrečných prací">
+        <div class="thesis-grid" data-thesis-grid></div>
+      </section>
+
+      <section class="carousel-view" data-carousel-view aria-label="Dynamický karusel závěrečných prací" hidden>
+        <div class="carousel-toolbar">
+          <p>Tři tematicky promíchané pásy. Pohyb se zastaví při najetí, ovládání klávesnicí nebo dotyku.</p>
+          <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="false">
+            <span data-motion-icon>Ⅱ</span>
+            <span data-motion-label>Zastavit pohyb</span>
+          </button>
+        </div>
+        <div class="carousel-stage" data-carousel-stage></div>
+      </section>
+
+      <div class="empty-state" data-empty hidden>
+        <strong>Žádná práce neodpovídá zvoleným filtrům.</strong>
+        <p>Zkuste kratší hledaný výraz, jiného vedoucího nebo přepněte na úplný seznam.</p>
+      </div>
+      <noscript>
+        <p class="empty-state">Interaktivní přehled vyžaduje JavaScript. Kompletní seznamy najdete také na profilech jednotlivých členů.</p>
+      </noscript>
+    </section>
+
+    <section class="selection-section" id="how-selection-works">
+      <div class="selection-card">
+        <p class="eyebrow">Kurátorský výběr</p>
+        <h2>Reprezentativní průřez, ne pořadník.</h2>
+        <p>Výběr kombinuje výrazné realizace z her, grafiky, VR/AR, 3D vizualizace, interakce, kulturního dědictví a aplikovaného výzkumu. Hlídá také zastoupení různých vedoucích a starších i současných projektů.</p>
+        <div class="theme-list" data-theme-list></div>
+      </div>
+      <aside class="selection-note">
+        <span>Chybí tu výjimečná práce?</span>
+        <strong>Kurátorský výběr můžeme průběžně měnit.</strong>
+        <p>Pošlete název práce, odkaz a krátké zdůvodnění, proč by měla být ve výběru.</p>
+        <a class="button" href="mailto:radek.richtr@fit.cvut.cz?subject=Kur%C3%A1torsk%C3%BD%20v%C3%BDb%C4%9Br%20z%C3%A1v%C4%9Bre%C4%8Dn%C3%BDch%20prac%C3%AD">Navrhnout práci</a>
+      </aside>
+    </section>
+
+    <section class="sources-section" id="sources">
+      <div>
+        <p class="eyebrow">Provenience</p>
+        <h2>Úplné seznamy zůstávají také u jednotlivých lidí.</h2>
+      </div>
+      <p>Katalog sjednocuje veřejné seznamy závěrečných prací z profilů členů GRAFIT. Každá karta vede na záznam práce nebo na původní fakultní evidenci.</p>
+      <div class="supervisor-links" data-supervisor-links></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <span>© GRAFIT Research Group · FIT ČVUT v Praze</span>
+      <span><a href="../">Hlavní stránka</a> · <a href="./en/?lang=en" data-language-link="en">English</a></span>
     </div>
+  </footer>
 </body>
 </html>
