@@ -244,7 +244,7 @@
 
   <!-- Spodní sekce s částicemi podklad -->
   <section class="relative overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none z-0">
+    <div class="absolute inset-x-0 top-0 h-[620px] pointer-events-none z-0">
       <canvas id="areaCanvas" class="w-full h-full"></canvas>
     </div>
 
@@ -585,7 +585,7 @@
           en:"Our traditional Easter game jam: 48 hours of design, programming, art and improvisation. The 2026 edition produced dozens of new digital and board games."
         },
         img:"assets/gamejam/2026/gj26.jpg",
-        href:"events/gamejam2026/",
+        href:"events/gamejam/",
         tags:["event","gamejam","community"],
         date:{ cs:"3.–10. 4. 2026", en:"3–10 Apr 2026" }
       },
@@ -597,7 +597,7 @@
           en:"A semester showcase of student games, VR, visualisation, digital art and thesis projects from graphics courses at FIT CTU."
         },
         img:"assets/events/GEXPO/2026a/1g.jpg",
-        href:"events/gexpo/2026/",
+        href:"events/gexpo/",
         tags:["event","expo","students","vr","games"],
         date:"2026"
       },
@@ -1152,7 +1152,7 @@
       },
       {
         name:"Jan Matoušek",
-        href:"https://fit.cvut.cz/cs/fakulta/lide/5249-jan-matousek",
+        href:"members/jma/",
         focus:{ cs:"Herní enginy · architektura her · únikové hry", en:"Game engines · game architecture · escape rooms" }
       },
       {
@@ -1175,7 +1175,7 @@
     const LABS = [
       {
         name:"ggLab",
-        href:"labs/gglab/",
+        href:{ cs:"labs/", en:"labs/en/" },
         icon:"cpu",
         blurb:{
           cs:"Společné zázemí pro počítačovou grafiku, game design, generativní umění a studentské prototypy.",
@@ -1183,8 +1183,8 @@
         }
       },
       {
-        name:"Usability Lab",
-        href:"labs/ulab/",
+        name:"UXLab",
+        href:{ cs:"labs/", en:"labs/en/" },
         icon:"mouse-pointer-2",
         blurb:{
           cs:"Uživatelský výzkum a testování aplikací, webů, služeb i nových forem interakce.",
@@ -1193,7 +1193,7 @@
       },
       {
         name:"VR Lab",
-        href:"labs/vrlab/",
+        href:{ cs:"labs/", en:"labs/en/" },
         icon:"glasses",
         blurb:{
           cs:"VR vybavení a konzultační zázemí pro studentské, výzkumné a výukové projekty.",
@@ -1391,7 +1391,7 @@
 
     function labCard(lab){
       const a = create("a", "course-card group flex h-full flex-col rounded-2xl border border-white/10 bg-black/45 p-5 hover:border-fuchsia-300/30", "");
-      setLinkBehavior(a, lab.href);
+      setLinkBehavior(a, getLocalized(lab.href));
       const iconWrap = create("span", "inline-flex h-10 w-10 items-center justify-center rounded-xl border border-fuchsia-300/20 bg-fuchsia-400/10 text-fuchsia-100", "");
       const icon = document.createElement("i");
       icon.setAttribute("data-lucide", lab.icon);
@@ -1608,14 +1608,19 @@
     // --- částice (canvas) ---
     function particles(canvas, opts){
       const c = canvas, ctx = c.getContext("2d");
-      let w=0,h=0, raf=0;
+      let w=0,h=0,raf=0,running=false,visible=true,lastFrame=0,gradient=null;
       const N = opts.N || 42;
       const speed = opts.speed || 0.4;
+      const linkDistance = 120;
+      const frameInterval = 1000 / 30;
 
       function resize(){
         const rect = canvas.parentElement.getBoundingClientRect();
         w = c.width = Math.max(window.innerWidth, Math.ceil(rect.width||window.innerWidth));
         h = c.height = Math.ceil(rect.height || 520);
+        gradient = ctx.createLinearGradient(0,0,w,h);
+        gradient.addColorStop(0,"#0b1220");
+        gradient.addColorStop(1,"#0b0f16");
       }
 
       const dots = Array.from({length:N}, ()=>({
@@ -1632,12 +1637,13 @@
         });
       }
 
-      function draw(){
+      function draw(now){
+        if(!running) return;
+        raf = requestAnimationFrame(draw);
+        if(now-lastFrame < frameInterval) return;
+        lastFrame = now;
         ctx.clearRect(0,0,w,h);
-        const grad = ctx.createLinearGradient(0,0,w,h);
-        grad.addColorStop(0,"#0b1220");
-        grad.addColorStop(1,"#0b0f16");
-        ctx.fillStyle=grad;
+        ctx.fillStyle=gradient;
         ctx.globalAlpha=.94;
         ctx.fillRect(0,0,w,h);
         ctx.globalAlpha=1;
@@ -1648,17 +1654,35 @@
           a.y+=a.vy;
           if(a.x<0||a.x>w) a.vx*=-1;
           if(a.y<0||a.y>h) a.vy*=-1;
+        }
 
-          for(let j=i+1;j<N;j++){
-            const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
-            if(d<120){
-              ctx.globalAlpha = 1 - d/120;
+        // Spatial hash: only compare points in the same or neighbouring cells.
+        const cells = new Map();
+        dots.forEach((dot,index)=>{
+          const cx=Math.floor(dot.x/linkDistance),cy=Math.floor(dot.y/linkDistance);
+          const key=cx+","+cy;
+          if(!cells.has(key)) cells.set(key,[]);
+          cells.get(key).push(index);
+        });
+
+        for(let i=0;i<N;i++){
+          const a=dots[i];
+
+          const cx=Math.floor(a.x/linkDistance),cy=Math.floor(a.y/linkDistance);
+          for(let ox=-1;ox<=1;ox++) for(let oy=-1;oy<=1;oy++){
+            const nearby=cells.get((cx+ox)+","+(cy+oy))||[];
+            for(const j of nearby){
+              if(j<=i) continue;
+              const b=dots[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+            if(d<linkDistance){
+              ctx.globalAlpha = 1 - d/linkDistance;
               ctx.strokeStyle = "#60a5fa";
               ctx.beginPath();
               ctx.moveTo(a.x,a.y);
               ctx.lineTo(b.x,b.y);
               ctx.stroke();
               ctx.globalAlpha=1;
+            }
             }
           }
 
@@ -1673,14 +1697,25 @@
       function start(){
         resize();
         reset();
-        draw();
+        running=true;
+        raf=requestAnimationFrame(draw);
       }
 
       const ro = new ResizeObserver(()=>{ resize(); });
       ro.observe(canvas.parentElement);
       window.addEventListener("resize", resize);
+      const io = new IntersectionObserver(entries=>{
+        visible=entries.some(entry=>entry.isIntersecting);
+        running=visible && !document.hidden;
+        if(running && !raf) raf=requestAnimationFrame(draw);
+      },{threshold:0.01});
+      io.observe(canvas);
+      document.addEventListener("visibilitychange",()=>{
+        running=visible && !document.hidden;
+        if(running && !raf) raf=requestAnimationFrame(draw);
+      });
       start();
-      return { stop:()=>cancelAnimationFrame(raf), ro };
+      return { stop:()=>{running=false;cancelAnimationFrame(raf);io.disconnect();ro.disconnect();}, ro, io };
     }
 
     // --- scroll progress ---
@@ -1739,3 +1774,4 @@
   </script>
 </body>
 </html>
+
