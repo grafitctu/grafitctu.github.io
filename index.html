@@ -256,7 +256,10 @@
           <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white/5 border-white/10">📅</span>
           <span class="text-sm uppercase tracking-wide text-neutral-400" data-i18n-key="secEventsLabel">Co se u nás děje</span>
         </div>
-        <h2 id="events" class="mt-1 scroll-mt-24 text-2xl font-bold tracking-tight" data-i18n-key="secEventsTitle">Události</h2>
+        <div class="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 id="events" class="mt-1 scroll-mt-24 text-2xl font-bold tracking-tight" data-i18n-key="secEventsTitle">Události</h2>
+          <a href="events/" class="text-sm text-cyan-300 hover:text-cyan-200" data-i18n-key="allEventsLink">Všechny eventy →</a>
+        </div>
       </div>
       <div id="eventsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10"></div>
 
@@ -417,6 +420,7 @@
 
         secEventsLabel: "Co se u nás děje",
         secEventsTitle: "Události",
+        allEventsLink: "Všechny eventy →",
         secResearchLabel: "Projekty a spolupráce",
         secResearchTitle: "Výzkum",
         secShowcaseLabel: "Vybrané studentské práce",
@@ -473,6 +477,7 @@
 
         secEventsLabel: "What's happening here",
         secEventsTitle: "Events",
+        allEventsLink: "All events →",
         secResearchLabel: "Projects & collaborations",
         secResearchTitle: "Research",
         secShowcaseLabel: "Selected student work",
@@ -578,6 +583,19 @@
 
     const EVENTS = [
       {
+        id:"e-kanazawa-2026",
+        title:{ cs:"Návštěva studentů z University of Kanazawa", en:"Visit by students from Kanazawa University" },
+        blurb:{
+          cs:"Mezinárodní návštěva SAGELabu a ggLabu, dotykové stěny a studentských her — včetně Útěku z Brna.",
+          en:"An international visit to SAGELab and ggLab, the touch wall and student games — including Escape from Brno."
+        },
+        img:"assets/projects/gv.png",
+        href:"events/kanazawa/",
+        tags:["event","visit","japan","kanazawa","international"],
+        date:{ cs:"datum doplníme", en:"date to be added" }
+      },
+
+      {
         id:"e-gamejam-2026",
         title:{ cs:"GameJam FIT 2026", en:"GameJam FIT 2026" },
         blurb:{
@@ -624,6 +642,30 @@
         href:"events/gvecery/xx-environmental-design.html",
         tags:["event","unreal","blender","3d","international"],
         date:{ cs:"květen 2026", en:"May 2026" }
+      },
+      {
+        id:"e-sweep-line-2026",
+        title:{ cs:"Sweep Line algoritmy", en:"Sweep Line Algorithms" },
+        blurb:{
+          cs:"Studentská přednáška o průsečících úseček, Voronoi diagramech a visibility grafech.",
+          en:"A student lecture on line-segment intersections, Voronoi diagrams and visibility graphs."
+        },
+        img:"assets/projects/gv.png",
+        href:"events/gvecery/event.html?id=sweep-line-2026",
+        tags:["event","graphic-evenings","algorithms","geometry"],
+        date:{ cs:"13. 3. 2026", en:"13 Mar 2026" }
+      },
+      {
+        id:"e-art-contest-2025",
+        title:{ cs:"Vánoční art contest", en:"Christmas Art Contest" },
+        blurb:{
+          cs:"Kreativní večer otevřený digitální, tradiční, 2D i 3D tvorbě.",
+          en:"A creative evening open to digital, traditional, 2D and 3D work."
+        },
+        img:"assets/projects/gv.png",
+        href:"events/gvecery/event.html?id=art-contest-2025",
+        tags:["event","graphic-evenings","art","community"],
+        date:{ cs:"12. 12. 2025", en:"12 Dec 2025" }
       }
     ];
 
@@ -1513,7 +1555,7 @@
       const E = $("#eventsGrid");
       if (E) {
         E.innerHTML = "";
-        EVENTS.filter(filterFn).forEach(it => E.appendChild(card(it,"event")));
+        EVENTS.filter(filterFn).slice(0, 6).forEach(it => E.appendChild(card(it,"event")));
       }
 
       const R = $("#researchGrid");
