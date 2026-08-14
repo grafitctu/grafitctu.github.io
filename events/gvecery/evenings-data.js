@@ -6,6 +6,7 @@
     events: [
       {
         id: "environment-design-2026",
+        series: "course",
         status: "archive",
         type: {
           cs: "Hostující bloková výuka",
@@ -188,8 +189,8 @@
           en: "An evening for everyone interested in the connection between mathematics, algorithms and computer graphics."
         },
         notice: {
-          cs: "Proběhlo",
-          en: "Completed"
+          cs: "Proběhlo · otevřeno i mimo FIT",
+          en: "Completed · open beyond FIT"
         },
         sections: [
           {
@@ -397,8 +398,8 @@
           en: "A practical introduction to image compositing in Affinity, with principles transferable to Adobe Photoshop and similar editors."
         },
         notice: {
-          cs: "Proběhlo · vhodné i pro úplné začátečníky",
-          en: "Completed · suitable for complete beginners"
+          cs: "Proběhlo · otevřeno i mimo FIT · vhodné i pro úplné začátečníky",
+          en: "Completed · open beyond FIT · suitable for complete beginners"
         },
         sections: [
           {
@@ -465,8 +466,49 @@
             }
           }
         ]
+      },
+      {
+        id: "procedural-caves",
+        series: "graphic-evening",
+        status: "archive",
+        type: { cs: "Grafický večer · archivní záznam", en: "Graphic Evening · archive record" },
+        title: { cs: "Procedurální generování: jeskyně", en: "Procedural Generation: Caves" },
+        shortTitle: { cs: "Procedurální jeskyně", en: "Procedural Caves" },
+        date: "",
+        dateLabel: { cs: "Datum a host budou doplněni", en: "Date and speaker to be added" },
+        time: "",
+        venue: "ggLab · FIT ČVUT",
+        lecturer: "",
+        language: { cs: "čeština", en: "Czech" },
+        credits: "",
+        image: "/assets/projects/gv.png",
+        tags: { cs: ["procedurální generování", "jeskyně", "algoritmy"], en: ["procedural generation", "caves", "algorithms"] },
+        summary: { cs: "Archivní záznam Grafického večera o procedurálním generování jeskynních struktur. Přesný termín, hosta a podklady ještě ověřujeme.", en: "An archive record of a Graphic Evening on procedural cave generation. The exact date, speaker and materials are still being verified." },
+        lead: { cs: "Téma je v archivu doplněno, zatím bez neověřených údajů o termínu a hostovi.", en: "The topic has been restored to the archive without adding unverified date or speaker details." },
+        notice: { cs: "Proběhlo · otevřeno i mimo FIT · údaje doplňujeme", en: "Completed · open beyond FIT · details being added" },
+        sections: [{ icon: "⌁", eyebrow: { cs: "Archivní doplnění", en: "Archive update" }, title: { cs: "Záznam čeká na ověření podkladů", en: "The record is awaiting source verification" }, paragraphs: { cs: ["Večer patří do úplného archivu série. Jakmile budou k dispozici původní podklady, doplníme datum, hosta, anotaci a případnou oficiální grafiku."], en: ["This evening belongs in the complete series archive. Once the original materials are available, we will add the date, speaker, description and official artwork where applicable."] } }]
+      },
+      {
+        id: "pub-quiz",
+        series: "graphic-evening",
+        status: "archive",
+        type: { cs: "Grafický večer · komunitní speciál", en: "Graphic Evening · community special" },
+        title: { cs: "Pub quiz", en: "Pub Quiz" },
+        shortTitle: { cs: "Pub quiz", en: "Pub Quiz" },
+        date: "",
+        dateLabel: { cs: "Datum bude doplněno", en: "Date to be added" },
+        time: "",
+        venue: "ggLab · FIT ČVUT",
+        lecturer: "",
+        language: { cs: "čeština", en: "Czech" },
+        credits: "",
+        image: "/assets/projects/gv.png",
+        tags: { cs: ["pub quiz", "komunita", "grafika"], en: ["pub quiz", "community", "graphics"] },
+        summary: { cs: "Komunitní speciál Grafických večerů. Přesný termín a původní podklady ještě ověřujeme.", en: "A community special in the Graphic Evenings series. The exact date and original materials are still being verified." },
+        lead: { cs: "Pub quiz je znovu uveden v úplném archivu, bez domýšlení chybějících údajů.", en: "The Pub Quiz is restored to the complete archive without inventing missing details." },
+        notice: { cs: "Proběhlo · otevřeno i mimo FIT · údaje doplňujeme", en: "Completed · open beyond FIT · details being added" },
+        sections: [{ icon: "?", eyebrow: { cs: "Archivní doplnění", en: "Archive update" }, title: { cs: "Komunitní speciál", en: "Community special" }, paragraphs: { cs: ["Akci ponecháváme v archivu jako doložený název. Datum, přesnější popis a obrazové podklady doplníme po jejich ověření."], en: ["The event remains in the archive under its documented title. Its date, fuller description and images will be added after verification."] } }]
       }
-    ]
+   ]
   };
 }());
-

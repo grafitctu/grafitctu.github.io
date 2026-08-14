@@ -14,7 +14,8 @@
       learnMore: "Zjistit víc",
       programmeCard: "VCGD · kapitola o oboru",
       unavailable: "Bez veřejného odkazu",
-      shown: (count) => `Zobrazeno ${count} ${count === 1 ? "projekt" : count >= 2 && count <= 4 ? "projekty" : "projektů"}`,
+      shown: (count, total) => `Zobrazeno ${count} z ${total} projektů`,
+      showMore: "Zobrazit další projekty",
       pause: "Pauza",
       play: "Pokračovat",
       pauseAria: "Pozastavit automatické přehrávání",
@@ -28,7 +29,8 @@
       learnMore: "Learn more",
       programmeCard: "VCGD · programme chapter",
       unavailable: "No public link",
-      shown: (count) => `Showing ${count} ${count === 1 ? "project" : "projects"}`,
+      shown: (count, total) => `Showing ${count} of ${total} projects`,
+      showMore: "Show more projects",
       pause: "Pause",
       play: "Continue",
       pauseAria: "Pause automatic playback",
@@ -72,9 +74,9 @@
 
   function classify(game) {
     const haystack = `${localized(game.type)} ${localized(game.platforms)}`.toLocaleLowerCase("cs");
+    if (/fyzick|physical|deskov|board game|únikov/.test(haystack)) return "physical";
     if (/game\s?jam/.test(haystack)) return "gamejam";
     if (/bakalář|diplom|závěreč|bachelor|master thesis|thesis/.test(haystack)) return "thesis";
-    if (/fyzick|physical|deskov|board game|únikov/.test(haystack)) return "physical";
     return "other";
   }
 
@@ -206,21 +208,37 @@
 
   const resultCount = document.querySelector("[data-results-count]");
   const filterButtons = Array.from(document.querySelectorAll("[data-filter]"));
+  const galleryPageSize = 24;
+  let currentFilter = "all";
+  let visibleLimit = galleryPageSize;
+  const showMoreButton = document.createElement("button");
+  showMoreButton.className = "gallery-more button";
+  showMoreButton.type = "button";
+  showMoreButton.textContent = copy.showMore;
+  if (grid) grid.insertAdjacentElement("afterend", showMoreButton);
 
   function filterGallery(filter) {
-    let visible = 0;
-    document.querySelectorAll(".game-card").forEach((card) => {
-      const matches = filter === "all" ||
-        (filter === "presentation" && card.dataset.presentation === "true") ||
-        card.dataset.category === filter;
-      card.hidden = !matches;
-      if (matches) visible += 1;
-    });
+    currentFilter = filter;
+    const cards = Array.from(document.querySelectorAll(".game-card"));
+    const matches = cards.filter((card) => filter === "all" ||
+      (filter === "presentation" && card.dataset.presentation === "true") ||
+      card.dataset.category === filter);
+    cards.forEach((card) => { card.hidden = true; });
+    matches.forEach((card, index) => { card.hidden = index >= visibleLimit; });
     filterButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.filter === filter)));
-    if (resultCount) resultCount.textContent = copy.shown(visible);
+    const visible = Math.min(visibleLimit, matches.length);
+    if (resultCount) resultCount.textContent = copy.shown(visible, matches.length);
+    showMoreButton.hidden = visible >= matches.length;
   }
 
-  filterButtons.forEach((button) => button.addEventListener("click", () => filterGallery(button.dataset.filter)));
+  filterButtons.forEach((button) => button.addEventListener("click", () => {
+    visibleLimit = galleryPageSize;
+    filterGallery(button.dataset.filter);
+  }));
+  showMoreButton.addEventListener("click", () => {
+    visibleLimit += galleryPageSize;
+    filterGallery(currentFilter);
+  });
   filterGallery("all");
 
   const stage = document.querySelector(".presentation-stage[data-presentation]");
