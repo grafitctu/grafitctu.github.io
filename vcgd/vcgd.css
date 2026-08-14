@@ -142,8 +142,7 @@ img {
   gap: 0.5rem;
 }
 
-.nav-link,
-.language-link {
+.nav-link {
   min-height: 42px;
   display: inline-flex;
   align-items: center;
@@ -160,12 +159,6 @@ img {
   transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
 }
 
-.language-link {
-  color: #07101d;
-  border-color: var(--yellow);
-  background: var(--yellow);
-}
-
 .nav-link:hover,
 .nav-link:focus-visible {
   color: #fff;
@@ -173,10 +166,31 @@ img {
   background: rgba(255, 255, 255, 0.09);
 }
 
-.language-link:hover,
-.language-link:focus-visible {
-  background: #ffe24e;
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.2rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.76rem;
+  font-weight: 900;
 }
+
+.language-switch a,
+.language-switch span {
+  min-width: 2.2rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.language-switch a { color: var(--muted-strong); }
+.language-switch a:hover,
+.language-switch a:focus-visible { color: #fff; background: rgba(255, 255, 255, 0.1); }
+.language-switch [aria-current="page"] { color: #07101d; background: var(--yellow); }
 
 .hero {
   position: relative;
@@ -627,6 +641,10 @@ img {
   box-shadow: 0 0 18px color-mix(in srgb, var(--category-color) 46%, transparent);
 }
 
+.legend-item.category-specialization .legend-dot { border-radius: 2px; }
+.legend-item.category-choice .legend-dot { border-radius: 2px; transform: rotate(45deg) scale(.78); }
+.legend-item.category-optional .legend-dot { border: 2px solid var(--category-color); background: transparent; box-shadow: none; }
+
 .category-program { --category-color: var(--program); }
 .category-specialization { --category-color: var(--specialization); }
 .category-choice { --category-color: var(--choice); }
@@ -718,6 +736,19 @@ img {
   width: 3px;
   background: var(--category-color);
   content: "";
+}
+
+.course-card.category-specialization::before {
+  background: repeating-linear-gradient(0deg, var(--category-color) 0 5px, transparent 5px 8px);
+}
+
+.course-card.category-choice::before {
+  width: 5px;
+  background: linear-gradient(90deg, var(--category-color) 0 2px, transparent 2px 3px, var(--category-color) 3px 5px);
+}
+
+.course-card.category-optional::before {
+  background: repeating-linear-gradient(0deg, var(--category-color) 0 2px, transparent 2px 6px);
 }
 
 .course-card:hover,
@@ -820,6 +851,8 @@ img {
   width: 100%;
   height: 3px;
 }
+
+.semester-grid[data-view="flow"] .course-card.category-choice::before { height: 5px; }
 
 .semester-grid[data-view="flow"] .course-code-row {
   align-items: flex-start;

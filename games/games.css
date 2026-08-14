@@ -141,7 +141,6 @@ button { font: inherit; }
 }
 
 .nav-link,
-.language-link,
 .presentation-header-actions a,
 .presentation-header-actions button {
   min-height: 42px;
@@ -160,7 +159,6 @@ button { font: inherit; }
 }
 
 .nav-link:hover,
-.language-link:hover,
 .presentation-header-actions a:hover,
 .presentation-header-actions button:hover {
   border-color: var(--line-strong);
@@ -168,14 +166,11 @@ button { font: inherit; }
   transform: translateY(-1px);
 }
 
-.language-link {
-  min-width: 42px;
-  padding-inline: 10px;
-  color: var(--bg-deep);
-  border-color: var(--yellow);
-  background: var(--yellow);
-  font-weight: 850;
-}
+.language-switch { display:inline-flex; align-items:center; gap:2px; padding:3px; border:1px solid var(--line); border-radius:999px; font-size:.78rem; font-weight:850; }
+.language-switch a,.language-switch span { min-width:38px; padding:7px 10px; border-radius:999px; text-align:center; text-decoration:none; }
+.language-switch a { color:var(--muted); }
+.language-switch a:hover,.language-switch a:focus-visible { color:var(--ink); background:rgba(255,255,255,.08); }
+.language-switch [aria-current="page"] { color:var(--bg-deep); background:var(--yellow); }
 
 .hero {
   position: relative;
@@ -455,10 +450,7 @@ h1 span {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 600ms cubic-bezier(.2, .8, .2, 1);
 }
-
-.story-card:hover > img { transform: scale(1.035); }
 
 .story-card::after {
   position: absolute;
@@ -508,6 +500,8 @@ h1 span {
   gap: 22px;
   margin-bottom: 34px;
 }
+
+.gallery-more { display: flex; margin: 34px auto 0; }
 
 .filters { display: flex; flex-wrap: wrap; gap: 9px; }
 
@@ -773,6 +767,8 @@ h1 span {
 
 .presentation-card {
   width: min(100%, 1500px);
+  height: 100%;
+  max-height: 100%;
   min-height: 0;
   margin: auto;
   display: grid;
@@ -801,9 +797,7 @@ h1 span {
   background: linear-gradient(130deg, transparent 55%, rgba(3, 5, 13, 0.2));
 }
 
-.presentation-media img { width: 100%; height: 100%; object-fit: cover; }
-
-.presentation-stage[data-kind="game"] .presentation-media img { object-fit: contain; }
+.presentation-media img { width: 100%; height: 100%; object-fit: contain; }
 
 .presentation-copy {
   min-width: 0;
@@ -811,6 +805,7 @@ h1 span {
   flex-direction: column;
   justify-content: center;
   padding: clamp(28px, 4vw, 68px);
+  overflow-y: auto;
 }
 
 .presentation-eyebrow { color: var(--slide-accent); }
@@ -951,7 +946,7 @@ h1 span {
   .brand-link span { display: none; }
   .brand-link img { width: 34px; height: 34px; }
   .nav-link-hide-mobile { display: none; }
-  .nav-link, .language-link { min-height: 38px; padding-inline: 11px; }
+  .nav-link { min-height: 38px; padding-inline: 11px; }
   .hero { padding: 58px 0 80px; }
   h1 {
     max-width: 100%;

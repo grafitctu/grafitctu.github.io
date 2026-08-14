@@ -145,9 +145,9 @@
 
   try {
     const savedView = localStorage.getItem("vcgd-curriculum-view");
-    if (savedView) setCurriculumView(savedView, false);
+    setCurriculumView(["cards", "flow"].includes(savedView) ? savedView : "flow", false);
   } catch {
-    // Keep the default card view when local storage is unavailable.
+    setCurriculumView("flow", false);
   }
 
   function createTextSection(title, text) {
@@ -253,7 +253,7 @@
     dialogFields.source.textContent = details?.sourceLabel || "";
     dialogFields.source.classList.toggle("is-planned", Boolean(details?.planned));
 
-    const url = details?.url || trigger.dataset.url || "";
+    const url = trigger.dataset.url || details?.url || "";
     if (url) {
       dialogFields.link.href = url;
       dialogFields.link.hidden = false;
@@ -463,7 +463,7 @@
     }
     article.appendChild(columns);
 
-    const url = details?.url || course.dataset.url || "";
+    const url = course.dataset.url || details?.url || "";
     const source = makeElement("footer", "print-course-source");
     source.appendChild(makeElement("span", "", `${printCopy.source}: ${details?.sourceLabel || "FIT ČVUT"}`));
     if (url) {

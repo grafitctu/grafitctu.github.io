@@ -106,6 +106,18 @@
       .icon { width: .85rem; height: .85rem; }
     }
 
+    @media (max-width: 640px) {
+      .quick-nav-track {
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        overscroll-behavior-inline: contain;
+        scrollbar-width: none;
+      }
+      .quick-nav-track::-webkit-scrollbar { display: none; }
+      .quick-nav-track .pill { flex: 0 0 auto; }
+    }
+
     /* Tooltip šipka pro skupinový seznam vyučujících */
     .tooltip::after{
       content:"";
@@ -163,17 +175,17 @@
             Výzkum, výuka a studentská tvorba na pomezí počítačové grafiky, VR/AR, zpracování obrazu, UX/UI a game designu na FIT ČVUT.
           </p>
           <div class="mt-4 flex flex-wrap items-center gap-3">
-            <a href="vcgd/"
+            <a href="vcgd/" data-href-cs="vcgd/" data-href-en="vcgd/en/"
                class="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-400/15 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-400/25">
               <i data-lucide="graduation-cap" class="icon"></i>
               <span data-i18n-key="heroStudy">Studijní plán VCGD</span>
             </a>
-            <a href="games/"
+            <a href="games/" data-href-cs="games/" data-href-en="games/en/"
                class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-neutral-200 hover:bg-white/10">
               <i data-lucide="gamepad-2" class="icon"></i>
               <span data-i18n-key="heroGames">Studentské hry</span>
             </a>
-            <a href="events/gvecery/graphic-evenings.html"
+            <a href="events/gvecery/graphic-evenings.html" data-href-cs="events/gvecery/graphic-evenings.html" data-href-en="events/gvecery/en/graphic-evenings.html"
                class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-neutral-200 hover:bg-white/10">
               <i data-lucide="calendar-days" class="icon"></i>
               <span data-i18n-key="heroEvenings">Grafické večery</span>
@@ -185,7 +197,7 @@
                   aria-controls="filterDrawer"
                   aria-expanded="false"
                   class="absolute right-6 bottom-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 hover:bg-white/10">
-            🔎 <span data-i18n-key="openFiltersLabel">Filtry</span>
+            🔎 <span data-i18n-key="openFiltersLabel">Vyhledat a filtrovat</span>
           </button>
         </div>
       </div>
@@ -194,7 +206,7 @@
 
   <!-- QUICK NAV -->
   <nav class="sticky top-0 z-40 border-y border-white/10 bg-white/5 backdrop-blur">
-    <div class="mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-3 flex flex-wrap items-center justify-center gap-2 2xl:gap-2">
+    <div class="quick-nav-track mx-auto max-w-[1200px] xl:max-w-[1400px] px-4 xl:px-6 py-3 flex flex-wrap items-center justify-center gap-2 2xl:gap-2">
       <a href="#events" class="pill" aria-label="Přejít na sekci Events">
         <i data-lucide="calendar" class="icon"></i>
         <span data-i18n-key="navEvents">↓ Events</span>
@@ -222,10 +234,10 @@
 
       <span class="mx-2 hidden h-5 w-px bg-white/10 sm:block"></span>
 
-      <a href="vcgd/" class="pill" aria-label="Otevřít studijní plán VCGD">
+      <a href="vcgd/" data-href-cs="vcgd/" data-href-en="vcgd/en/" class="pill" aria-label="Otevřít studijní plán VCGD">
         <i data-lucide="orbit" class="icon"></i><span>VCGD</span>
       </a>
-      <a href="games/" class="pill" aria-label="Otevřít galerii studentských her">
+      <a href="games/" data-href-cs="games/" data-href-en="games/en/" class="pill" aria-label="Otevřít galerii studentských her">
         <i data-lucide="gamepad-2" class="icon"></i><span>Games</span>
       </a>
 
@@ -233,7 +245,7 @@
 
       <a href="https://www.youtube.com/@grafitctu" target="_blank" rel="noreferrer"
          class="pill" aria-label="Otevřít YouTube kanál Grafit">
-        <i data-lucide="youtube" class="icon"></i><span>YouTube</span> ↗
+        <i data-lucide="play" class="icon"></i><span>YouTube</span> ↗
       </a>
       <a href="https://discord.gg/sfMx2nq7BQ" target="_blank" rel="noreferrer"
          class="pill" aria-label="Otevřít Discord Grafit">
@@ -258,7 +270,7 @@
         </div>
         <div class="flex flex-wrap items-baseline justify-between gap-3">
           <h2 id="events" class="mt-1 scroll-mt-24 text-2xl font-bold tracking-tight" data-i18n-key="secEventsTitle">Události</h2>
-          <a href="events/" class="text-sm text-cyan-300 hover:text-cyan-200" data-i18n-key="allEventsLink">Všechny eventy →</a>
+          <a href="events/" data-href-cs="events/" data-href-en="events/en/" class="text-sm text-cyan-300 hover:text-cyan-200" data-i18n-key="allEventsLink">Všechny eventy →</a>
         </div>
       </div>
       <div id="eventsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10"></div>
@@ -409,7 +421,7 @@
         heroStudy: "Studijní plán VCGD",
         heroGames: "Studentské hry",
         heroEvenings: "Grafické večery",
-        openFiltersLabel: "Filtry",
+        openFiltersLabel: "Vyhledat a filtrovat",
 
         navEvents: "↓ Události",
         navResearch: "↓ Výzkum",
@@ -428,7 +440,7 @@
         secCoursesLabel: "Předměty a výuka",
         secCoursesTitle: "Bakalářské předměty",
         secMasterLabel: "Navazující magisterské studium",
-        secMasterTitle: "Visual Computing and Game Design",
+        secMasterTitle: "Vizuální výpočetní technika a herní design",
         secMasterCoursesTitle: "Profilové předměty specializace",
         secMasterCoursesText: "Sedm předmětů, které tvoří odborné jádro specializace. Podrobný studijní plán obsahuje jejich zařazení do semestrů, volby i kompletní sylaby.",
         secMembersLabel: "Lidé za GRAFITEM",
@@ -466,7 +478,7 @@
         heroStudy: "VCGD study plan",
         heroGames: "Student games",
         heroEvenings: "Graphic Evenings",
-        openFiltersLabel: "Filters",
+        openFiltersLabel: "Search & filter",
 
         navEvents: "↓ Events",
         navResearch: "↓ Research",
@@ -541,6 +553,9 @@
           el.textContent = t(key);
         }
       });
+      document.querySelectorAll("[data-href-cs][data-href-en]").forEach(link => {
+        link.setAttribute("href", link.getAttribute(`data-href-${currentLang}`));
+      });
     }
 
     function updateLangToggleUI() {
@@ -590,11 +605,10 @@
           en:"An international visit to SAGELab and ggLab, the touch wall and student games — including Escape from Brno."
         },
         img:"assets/projects/gv.png",
-        href:"events/kanazawa/",
+        href:{ cs:"events/kanazawa/", en:"events/kanazawa/en/" },
         tags:["event","visit","japan","kanazawa","international"],
         date:{ cs:"datum doplníme", en:"date to be added" }
       },
-
       {
         id:"e-gamejam-2026",
         title:{ cs:"GameJam FIT 2026", en:"GameJam FIT 2026" },
@@ -603,7 +617,7 @@
           en:"Our traditional Easter game jam: 48 hours of design, programming, art and improvisation. The 2026 edition produced dozens of new digital and board games."
         },
         img:"assets/gamejam/2026/gj26.jpg",
-        href:"events/gamejam/",
+        href:{ cs:"events/gamejam/", en:"events/gamejam/en/" },
         tags:["event","gamejam","community"],
         date:{ cs:"3.–10. 4. 2026", en:"3–10 Apr 2026" }
       },
@@ -615,7 +629,7 @@
           en:"A semester showcase of student games, VR, visualisation, digital art and thesis projects from graphics courses at FIT CTU."
         },
         img:"assets/events/GEXPO/2026a/1g.jpg",
-        href:"events/gexpo/",
+        href:{ cs:"events/gexpo/2026/", en:"events/gexpo/2026/en/" },
         tags:["event","expo","students","vr","games"],
         date:"2026"
       },
@@ -627,7 +641,7 @@
           en:"A student-led series supported by GRAFIT: talks and workshops spanning graphics, design, algorithms, photography, 3D and game creation."
         },
         img:"assets/projects/gv.png",
-        href:"events/gvecery/graphic-evenings.html",
+        href:{ cs:"events/gvecery/graphic-evenings.html", en:"events/gvecery/en/graphic-evenings.html" },
         tags:["event","workshop","community","design"],
         date:"2025–2026"
       },
@@ -639,7 +653,7 @@
           en:"A four-day block course led by Daniel Triplett from Purdue University: Unreal Engine, Blender, environment design and practical use of 3D scanning."
         },
         img:"assets/events/graficke-vecery/xx-environment-design.jpg",
-        href:"events/gvecery/xx-environmental-design.html",
+        href:{ cs:"events/unreal-course/", en:"events/unreal-course/en/" },
         tags:["event","unreal","blender","3d","international"],
         date:{ cs:"květen 2026", en:"May 2026" }
       },
@@ -651,7 +665,7 @@
           en:"A student lecture on line-segment intersections, Voronoi diagrams and visibility graphs."
         },
         img:"assets/projects/gv.png",
-        href:"events/gvecery/event.html?id=sweep-line-2026",
+        href:{ cs:"events/gvecery/event.html?id=sweep-line-2026", en:"events/gvecery/en/event.html?id=sweep-line-2026" },
         tags:["event","graphic-evenings","algorithms","geometry"],
         date:{ cs:"13. 3. 2026", en:"13 Mar 2026" }
       },
@@ -663,7 +677,7 @@
           en:"A creative evening open to digital, traditional, 2D and 3D work."
         },
         img:"assets/projects/gv.png",
-        href:"events/gvecery/event.html?id=art-contest-2025",
+        href:{ cs:"events/gvecery/event.html?id=art-contest-2025", en:"events/gvecery/en/event.html?id=art-contest-2025" },
         tags:["event","graphic-evenings","art","community"],
         date:{ cs:"12. 12. 2025", en:"12 Dec 2025" }
       }
@@ -760,7 +774,6 @@
         img:"https://img.itch.zone/aW1nLzI2NTUyODMwLnBuZw==/original/%2BBR%2FGe.png",
         href:"https://finishx.itch.io/after-the-rain",
         tags:["gamejam","games","narrative","2026"] },
-
       { id:"sc-wood-texture-generation",
         title:{cs:"Generování dřevěné textury",en:"Wood texture generation"},
         blurb:{
@@ -1098,13 +1111,13 @@
 
     // NOVÉ: magisterské (ANI-…) předměty – samostatná sekce
     const MASTER_PROGRAM = {
-      title:"Visual Computing and Game Design",
+      title:{ cs:"Vizuální výpočetní technika a herní design", en:"Visual Computing and Game Design" },
       eyebrow:{ cs:"Specializace Aplikované informatiky", en:"Applied Informatics specialisation" },
       blurb:{
         cs:"Technologie, obraz a hra v jednom studijním plánu. Specializace propojuje počítačovou grafiku, zpracování obrazu, vizualizaci, herní enginy, VR/AR, game design a rozpoznávání.",
         en:"Technology, imaging and games in one study plan. The specialisation connects computer graphics, image processing, visualisation, game engines, VR/AR, game design and recognition."
       },
-      href:"vcgd/",
+      href:{ cs:"vcgd/", en:"vcgd/en/" },
       cta:{ cs:"Prohlédnout studijní plán", en:"Explore the study plan" },
       stats:[
         { value:"4", label:{ cs:"semestry", en:"semesters" } },
@@ -1193,42 +1206,42 @@
     const MEMBERS = [
       {
         name:"Radek Richtr",
-        href:"members/rr/",
+        href:{ cs:"members/rr/", en:"members/rr/en/" },
         focus:{ cs:"Počítačová grafika · rozpoznávání · game design", en:"Computer graphics · recognition · game design" }
       },
       {
         name:"Jiří Chludil",
-        href:"members/jch/",
+        href:{ cs:"members/jch/", en:"members/jch/en/" },
         focus:{ cs:"VR/AR · UX · softwarové inženýrství", en:"VR/AR · UX · software engineering" }
       },
       {
         name:"Petr Pauš",
-        href:"members/pp/",
+        href:{ cs:"members/pp/", en:"members/pp/en/" },
         focus:{ cs:"VR/AR · vizualizace · obrazová data", en:"VR/AR · visualisation · imaging data" }
       },
       {
         name:"Ondřej Brém",
-        href:"members/ob/",
+        href:{ cs:"members/ob/", en:"members/ob/en/" },
         focus:{ cs:"UX · design sprint · uživatelské testování", en:"UX · design sprint · user testing" }
       },
       {
         name:"Jan Matoušek",
-        href:"members/jma/",
+        href:{ cs:"members/jma/", en:"members/jma/en/" },
         focus:{ cs:"Herní enginy · architektura her · únikové hry", en:"Game engines · game architecture · escape rooms" }
       },
       {
         name:"Tomáš Nováček",
-        href:"members/tn/",
+        href:{ cs:"members/tn/", en:"members/tn/en/" },
         focus:{ cs:"VR rozhraní · hand-tracking · rendering", en:"VR interfaces · hand tracking · rendering" }
       },
       {
         name:"Jiří Kubišta",
-        href:"members/jk/",
+        href:{ cs:"members/jk/", en:"members/jk/en/" },
         focus:{ cs:"SAGElab · fotogrammetrie · 3D spolupráce", en:"SAGElab · photogrammetry · 3D collaboration" }
       },
       {
         name:"Jiří Melnikov",
-        href:"members/jm/",
+        href:{ cs:"members/jm/", en:"members/jm/en/" },
         focus:{ cs:"SAGElab · IoT · nízkolatenční sítě", en:"SAGElab · IoT · ultra-low-latency networks" }
       }
     ];
@@ -1236,7 +1249,7 @@
     const LABS = [
       {
         name:"ggLab",
-        href:{ cs:"labs/", en:"labs/en/" },
+        href:{ cs:"labs/gglab/", en:"labs/gglab/en/" },
         icon:"cpu",
         blurb:{
           cs:"Společné zázemí pro počítačovou grafiku, game design, generativní umění a studentské prototypy.",
@@ -1245,7 +1258,7 @@
       },
       {
         name:"UXLab",
-        href:{ cs:"labs/", en:"labs/en/" },
+        href:{ cs:"labs/ulab/", en:"labs/ulab/en/" },
         icon:"mouse-pointer-2",
         blurb:{
           cs:"Uživatelský výzkum a testování aplikací, webů, služeb i nových forem interakce.",
@@ -1254,7 +1267,7 @@
       },
       {
         name:"VR Lab",
-        href:{ cs:"labs/", en:"labs/en/" },
+        href:{ cs:"labs/vrlab/", en:"labs/vrlab/en/" },
         icon:"glasses",
         blurb:{
           cs:"VR vybavení a konzultační zázemí pro studentské, výzkumné a výukové projekty.",
@@ -1403,8 +1416,9 @@
     }
 
     function setLinkBehavior(anchor, href){
-      anchor.href = href || "#";
-      if (/^https?:\/\//i.test(href || "")) {
+      const localizedHref = getLocalized(href);
+      anchor.href = localizedHref || "#";
+      if (/^https?:\/\//i.test(localizedHref || "")) {
         anchor.target = "_blank";
         anchor.rel = "noreferrer";
       }
@@ -1419,7 +1433,7 @@
       const layout = create("div", "relative grid gap-7 lg:grid-cols-[1.5fr_1fr] lg:items-end", "");
       const copy = create("div", "", "");
       copy.appendChild(create("p", "text-xs font-semibold uppercase tracking-[.2em] text-fuchsia-200", getLocalized(program.eyebrow)));
-      copy.appendChild(create("h3", "mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-white", program.title));
+      copy.appendChild(create("h3", "mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-white", getLocalized(program.title)));
       copy.appendChild(create("p", "mt-3 max-w-3xl text-sm sm:text-base leading-relaxed text-neutral-300", getLocalized(program.blurb)));
       const link = create("a", "mt-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-400/15 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-400/25", getLocalized(program.cta) + " →");
       setLinkBehavior(link, program.href);
@@ -1452,7 +1466,7 @@
 
     function labCard(lab){
       const a = create("a", "course-card group flex h-full flex-col rounded-2xl border border-white/10 bg-black/45 p-5 hover:border-fuchsia-300/30", "");
-      setLinkBehavior(a, getLocalized(lab.href));
+      setLinkBehavior(a, lab.href);
       const iconWrap = create("span", "inline-flex h-10 w-10 items-center justify-center rounded-xl border border-fuchsia-300/20 bg-fuchsia-400/10 text-fuchsia-100", "");
       const icon = document.createElement("i");
       icon.setAttribute("data-lucide", lab.icon);
@@ -1555,6 +1569,7 @@
       const E = $("#eventsGrid");
       if (E) {
         E.innerHTML = "";
+        // Keep the homepage compact: two complete rows in the standard 3-column layout.
         EVENTS.filter(filterFn).slice(0, 6).forEach(it => E.appendChild(card(it,"event")));
       }
 
@@ -1699,9 +1714,12 @@
       }
 
       function draw(now){
+        raf = 0;
         if(!running) return;
-        raf = requestAnimationFrame(draw);
-        if(now-lastFrame < frameInterval) return;
+        if(now-lastFrame < frameInterval){
+          raf = requestAnimationFrame(draw);
+          return;
+        }
         lastFrame = now;
         ctx.clearRect(0,0,w,h);
         ctx.fillStyle=gradient;
@@ -1752,7 +1770,7 @@
           ctx.arc(a.x,a.y,1.2,0,Math.PI*2);
           ctx.fill();
         }
-        raf = requestAnimationFrame(draw);
+        if(running) raf = requestAnimationFrame(draw);
       }
 
       function start(){
@@ -1835,4 +1853,3 @@
   </script>
 </body>
 </html>
-

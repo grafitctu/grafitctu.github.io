@@ -1,12 +1,33 @@
-(function(){"use strict";var lang=document.body.dataset.lang==='en'?'en':'cs';var events=[
-{title:{cs:'Návštěva studentů z University of Kanazawa',en:'Visit by students from Kanazawa University'},date:{cs:'Datum bude doplněno',en:'Date to be added'},text:{cs:'SAGELab, ggLab, dotyková stěna a studentské hry — včetně Útěku z Brna.',en:'SAGELab, ggLab, the touch wall and student games — including Escape from Brno.'},img:'/assets/projects/gv.png',href:'kanazawa/'},
-{title:{cs:'GameJam FIT 2026',en:'GameJam FIT 2026'},date:{cs:'3.–10. 4. 2026',en:'3–10 Apr 2026'},text:{cs:'48 hodin designu, programování, grafiky a improvizace.',en:'48 hours of design, programming, art and improvisation.'},img:'/assets/gamejam/2026/gj26.jpg',href:'gamejam/'},
-{title:{cs:'GEXPO 2026',en:'GEXPO 2026'},date:'2026',text:{cs:'Přehlídka studentských her, VR, vizualizací a závěrečných prací.',en:'A showcase of student games, VR, visualisation and final projects.'},img:'/assets/events/GEXPO/2026a/1g.jpg',href:'gexpo/'},
-{title:{cs:'Environment Design v Unreal Engine',en:'Environment Design in Unreal Engine'},date:{cs:'květen 2026',en:'May 2026'},text:{cs:'Bloková výuka s Danielem Triplettem z Purdue University.',en:'An intensive led by Daniel Triplett from Purdue University.'},img:'/assets/projects/gv.png',href:'gvecery/xx-environmental-design.html'},
-{title:{cs:'Sweep Line algoritmy',en:'Sweep Line Algorithms'},date:{cs:'13. 3. 2026',en:'13 Mar 2026'},text:{cs:'Studentská přednáška o výpočetní geometrii, Voronoi diagramech a visibility grafech.',en:'A student lecture on computational geometry, Voronoi diagrams and visibility graphs.'},img:'/assets/projects/gv.png',href:'gvecery/03-sweep-line.html'},
-{title:{cs:'Vánoční art contest',en:'Christmas Art Contest'},date:{cs:'12. 12. 2025',en:'12 Dec 2025'},text:{cs:'Kreativní večer otevřený digitální, tradiční, 2D i 3D tvorbě.',en:'A creative evening open to digital, traditional, 2D and 3D work.'},img:'/assets/projects/gv.png',href:'gvecery/02-art-contest.html'},
-{title:{cs:'Affinity workshop',en:'Affinity Workshop'},date:{cs:'21. 11. 2025',en:'21 Nov 2025'},text:{cs:'Praktický úvod do fotomontáže a obrazové postprodukce.',en:'A hands-on introduction to photomontage and image post-production.'},img:'/assets/projects/gv.png',href:'gvecery/01-affinity.html'},
-{title:{cs:'Grafické večery',en:'Graphic Evenings'},date:'2025–2026',text:{cs:'Archiv přednášek, workshopů a kreativních speciálů GRAFITu.',en:'The archive of GRAFIT talks, workshops and creative specials.'},img:'/assets/projects/gv.png',href:'gvecery/'}
-];function text(v){return v&&typeof v==='object'?(v[lang]||v.cs||v.en):v||''}function esc(v){return String(v).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]})}var grid=document.querySelector('[data-events-grid]');if(grid)grid.innerHTML=events.map(function(e){return '<a class="event-card" href="'+esc(e.href)+'"><img src="'+esc(e.img)+'" alt="'+esc(text(e.title))+'" loading="lazy"><div class="card-body"><div class="date">'+esc(text(e.date))+'</div><h3>'+esc(text(e.title))+'</h3><p>'+esc(text(e.text))+'</p></div></a>'}).join('');}());
+(function () {
+  "use strict";
 
+  const lang = document.body.dataset.lang === "en" ? "en" : "cs";
+  const generalEvents = [
+    { title:{cs:"Návštěva studentů z University of Kanazawa",en:"Visit by students from Kanazawa University"}, date:{cs:"Datum bude doplněno",en:"Date to be added"}, text:{cs:"SAGELab, ggLab, dotyková stěna a studentské hry — včetně Útěku z Brna.",en:"SAGELab, ggLab, the touch wall and student games — including Escape from Brno."}, img:"/assets/projects/gv.png", href:{cs:"kanazawa/",en:"../kanazawa/en/"} },
+    { title:{cs:"GameJam FIT 2026",en:"GameJam FIT 2026"}, date:{cs:"3.–10. 4. 2026",en:"3–10 Apr 2026"}, text:{cs:"48 hodin designu, programování, grafiky a improvizace.",en:"48 hours of design, programming, art and improvisation."}, img:"/assets/gamejam/2026/gj26.jpg", href:{cs:"gamejam/",en:"../gamejam/en/"} },
+    { title:{cs:"GEXPO 2026",en:"GEXPO 2026"}, date:"2026", text:{cs:"Přehlídka studentských her, VR, vizualizací a závěrečných prací.",en:"A showcase of student games, VR, visualisation and final projects."}, img:"/assets/events/GEXPO/2026a/1g.jpg", href:{cs:"gexpo/2026/",en:"../gexpo/2026/en/"} },
+    { title:{cs:"Environment Design v Unreal Engine",en:"Environment Design in Unreal Engine"}, date:{cs:"květen 2026",en:"May 2026"}, text:{cs:"Samostatná bloková výuka s Danielem Triplettem z Purdue University.",en:"A standalone intensive led by Daniel Triplett from Purdue University."}, img:"/assets/events/graficke-vecery/xx-environment-design.jpg", href:{cs:"unreal-course/",en:"../unreal-course/en/"} }
+  ];
 
+  const text = (value) => value && typeof value === "object" ? (value[lang] || value.cs || value.en || "") : (value || "");
+  const esc = (value) => String(value).replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]);
+  const asset = (value) => location.protocol === "file:" && value.startsWith("/") ? new URL((lang === "en" ? "../../" : "../") + value.slice(1), location.href).href : value;
+
+  function card(event, graphicEvening) {
+    const href = graphicEvening
+      ? (lang === "en" ? `../gvecery/en/event.html?id=${encodeURIComponent(event.id)}` : `gvecery/event.html?id=${encodeURIComponent(event.id)}`)
+      : text(event.href);
+    return `<a class="event-card" href="${esc(href)}"><img src="${esc(asset(event.img || event.image))}" alt="${esc(text(event.title))}" loading="lazy"><div class="card-body"><div class="date">${esc(text(event.dateLabel || event.date))}</div><h3>${esc(text(event.title))}</h3><p>${esc(text(event.text || event.summary))}</p></div></a>`;
+  }
+
+  const generalGrid = document.querySelector("[data-events-grid]");
+  if (generalGrid) generalGrid.innerHTML = generalEvents.map((event) => card(event, false)).join("");
+
+  const eveningGrid = document.querySelector("[data-evenings-grid]");
+  if (eveningGrid) {
+    const evenings = ((window.GRAFIT_EVENINGS || {}).events || [])
+      .filter((event) => event.series !== "course")
+      .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+    eveningGrid.innerHTML = evenings.map((event) => card(event, true)).join("");
+  }
+}());
