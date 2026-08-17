@@ -113,11 +113,14 @@
   }
 
   function normalizeGame(tuple, index) {
+    const sourceTitle = String(tuple[0]);
+    const isJapaneseOsakaEdition = lang === "ja" && sourceTitle === "Útěk z Brna";
     const japaneseDescription = (window.GRAFIT_GAMES_JA || {})[String(tuple[0])];
     const game = {
       kind: "game",
       id: `game-${index + 1}`,
-      title: localized(tuple[0]),
+      title: isJapaneseOsakaEdition ? "Escape from Brno Osaka" : localized(tuple[0]),
+      strikeBrno: isJapaneseOsakaEdition,
       type: localized(tuple[1]),
       platforms: localized(tuple[2]),
       href: tuple[3] || "",
@@ -191,6 +194,19 @@
     container.appendChild(badge);
   }
 
+  function renderTitle(container, item) {
+    if (!item.strikeBrno) {
+      container.textContent = item.title;
+      return;
+    }
+
+    container.replaceChildren(document.createTextNode("Escape from "));
+    const deletedBrno = document.createElement("del");
+    deletedBrno.lang = "en";
+    deletedBrno.textContent = "Brno";
+    container.append(deletedBrno, document.createTextNode(" Osaka"));
+  }
+
   function gameCard(game) {
     const article = document.createElement("article");
     article.className = "game-card";
@@ -220,7 +236,7 @@
     const body = document.createElement("div");
     body.className = "game-card-copy";
     const title = document.createElement("h3");
-    title.textContent = game.title;
+    renderTitle(title, game);
     const description = document.createElement("p");
     description.className = "game-card-description";
     description.textContent = game.description;
@@ -380,7 +396,7 @@
     slideImage.alt = item.title;
     slideImage.onerror = () => { slideImage.onerror = null; slideImage.src = placeholder; };
     slideEyebrow.textContent = item.kind === "story" ? item.eyebrow : copy.selectedGame;
-    slideTitle.textContent = item.title;
+    renderTitle(slideTitle, item);
     slideMeta.textContent = item.kind === "story"
       ? copy.programmeCard
       : [item.type, item.platforms].filter(Boolean).join(" · ");

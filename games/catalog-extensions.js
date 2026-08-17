@@ -277,5 +277,11 @@
     if (!deduplicated.has(titleKey)) deduplicated.set(titleKey, game);
   });
 
-  window.GRAFIT_GAMES = Array.from(deduplicated.values());
+  const orderedGames = Array.from(deduplicated.values());
+  const escapeFromBrnoIndex = orderedGames.findIndex((game) => key(game[0]) === key("Útěk z Brna"));
+  if (escapeFromBrnoIndex > 0) {
+    orderedGames.unshift(orderedGames.splice(escapeFromBrnoIndex, 1)[0]);
+  }
+
+  window.GRAFIT_GAMES = orderedGames;
 })();
