@@ -13,6 +13,7 @@ window.GRAFIT_GAME_COVERS = Object.freeze({
   "https://lukydrum.itch.io/shroombellion-mushrooms-against-humanity": "https://img.itch.zone/aW1nLzI2NTIzODI0LnBuZw==/original/CMIkkq.png",
   "https://martuss.itch.io/joke-the-jaker": "https://img.itch.zone/aW1nLzE1NTg5MzEzLnBuZw==/300x240%23c/Dkm5e9.png",
   "https://belonzik.itch.io/encore": "https://img.itch.zone/aW1nLzE1NTg5Njk5LnBuZw==/300x240%23c/9ArEKb.png",
+  "https://belonzik.itch.io/quantumage": "/assets/games/quantumage-cover.png",
   "https://hypercubic-studio.itch.io/liminal": "https://img.itch.zone/aW1nLzE1NTg5OTAyLnBuZw==/300x240%23c/WlFEYJ.png",
   "https://lukydrum.itch.io/skaters-paradise": "https://img.itch.zone/aW1nLzE1NTg0OTYxLmpwZw==/300x240%23c/HsrrNF.jpg",
   "https://kurilluk.itch.io/alone": "https://img.itch.zone/aW1nLzE1NTg1NDM2LnBuZw==/300x240%23c/xpFxhx.png",
