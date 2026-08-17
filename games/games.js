@@ -1,7 +1,8 @@
 (function () {
   "use strict";
 
-  const lang = document.documentElement.lang === "en" ? "en" : "cs";
+  const requestedLang = document.documentElement.lang.toLowerCase().split("-")[0];
+  const lang = ["cs", "en", "ja"].includes(requestedLang) ? requestedLang : "cs";
   const root = document.body.dataset.root || "../";
   const AUTOPLAY_MS = 14000;
   const publicOrigin = "https://grafitctu.github.io";
@@ -36,16 +37,47 @@
       pauseAria: "Pause automatic playback",
       playAria: "Continue automatic playback",
       qrAlt: "QR link to project"
+    },
+    ja: {
+      selected: "プレゼンテーション掲載",
+      selectedGame: "学生ゲーム・セレクション",
+      openProject: "プロジェクトを開く",
+      learnMore: "詳しく見る",
+      programmeCard: "VCGD・専攻紹介",
+      unavailable: "公開リンクなし",
+      shown: (count, total) => `${total}件中${count}件を表示`,
+      showMore: "さらに表示",
+      pause: "一時停止",
+      play: "再開",
+      pauseAria: "自動再生を一時停止",
+      playAria: "自動再生を再開",
+      qrAlt: "プロジェクトへのQRコード"
     }
   }[lang];
+
+  const japaneseMeta = new Map([
+    ["Bohemia Gamejam 2026 · 3rd place", "Bohemia GameJam 2026・第3位"],
+    ["Bachelor thesis", "学士論文"],
+    ["Master thesis", "修士論文"],
+    ["Physical escape game", "体験型脱出ゲーム"],
+    ["Physical game", "フィジカルゲーム"],
+    ["Board game", "ボードゲーム"],
+    ["Bonus", "ボーナス"],
+    ["Web game collection", "Webゲーム集"],
+    ["Christmas GameJam FIT 2024", "クリスマス GameJam FIT 2024"],
+    ["Easter GameJam FIT 2023", "イースター GameJam FIT 2023"],
+    ["VHS course", "VHS授業プロジェクト"]
+  ]);
 
   const placeholder = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#11172c"/><stop offset="1" stop-color="#050814"/></linearGradient></defs><rect width="1200" height="750" fill="url(#g)"/><g fill="none" stroke="#ffd43b" stroke-width="18" opacity=".72"><path d="M490 257 600 193l110 64v127l-110 64-110-64z"/><path d="m490 257 110 64 110-64M600 321v127"/></g><text x="600" y="540" fill="#aeb5ca" font-family="Arial,sans-serif" font-size="34" text-anchor="middle">GRAFIT · FIT CTU</text></svg>`
   );
 
   function localized(value) {
-    if (value && typeof value === "object") return value[lang] || value.cs || value.en || "";
-    return value == null ? "" : String(value);
+    let result;
+    if (value && typeof value === "object") result = value[lang] || value.en || value.cs || "";
+    else result = value == null ? "" : String(value);
+    return lang === "ja" ? (japaneseMeta.get(result) || result) : result;
   }
 
   function assetUrl(value) {
@@ -74,13 +106,14 @@
 
   function classify(game) {
     const haystack = `${localized(game.type)} ${localized(game.platforms)}`.toLocaleLowerCase("cs");
-    if (/fyzick|physical|deskov|board game|únikov/.test(haystack)) return "physical";
+    if (/fyzick|physical|deskov|board game|únikov|フィジカル|ボード|脱出/.test(haystack)) return "physical";
     if (/game\s?jam/.test(haystack)) return "gamejam";
-    if (/bakalář|diplom|závěreč|bachelor|master thesis|thesis/.test(haystack)) return "thesis";
+    if (/bakalář|diplom|závěreč|bachelor|master thesis|thesis|学士論文|修士論文/.test(haystack)) return "thesis";
     return "other";
   }
 
   function normalizeGame(tuple, index) {
+    const japaneseDescription = (window.GRAFIT_GAMES_JA || {})[String(tuple[0])];
     const game = {
       kind: "game",
       id: `game-${index + 1}`,
@@ -90,7 +123,9 @@
       href: tuple[3] || "",
       image: (window.GRAFIT_GAME_COVERS || {})[tuple[3]] || tuple[4] || "",
       present: Number(tuple[5]) === 1,
-      description: lang === "en" ? (tuple[7] || tuple[6] || "") : (tuple[6] || tuple[7] || "")
+      description: lang === "ja"
+        ? (japaneseDescription || tuple[7] || tuple[6] || "")
+        : lang === "en" ? (tuple[7] || tuple[6] || "") : (tuple[6] || tuple[7] || "")
     };
     game.category = classify(game);
     game.accent = game.category === "gamejam" ? "purple" : game.category === "thesis" ? "blue" : game.category === "physical" ? "orange" : "yellow";
@@ -98,13 +133,14 @@
   }
 
   function normalizeStory(story) {
+    const japaneseStory = (window.GRAFIT_GAME_STORIES_JA || {})[story.id] || {};
     return {
       kind: "story",
       id: story.id,
       after: Math.max(0, Number(story.after) || 0),
-      title: localized(story.title),
-      eyebrow: localized(story.eyebrow),
-      description: localized(story.text),
+      title: lang === "ja" ? (japaneseStory.title || localized(story.title)) : localized(story.title),
+      eyebrow: lang === "ja" ? (japaneseStory.eyebrow || localized(story.eyebrow)) : localized(story.eyebrow),
+      description: lang === "ja" ? (japaneseStory.text || localized(story.text)) : localized(story.text),
       href: story.href || "",
       image: story.image || "",
       accent: story.accent || "yellow"
@@ -261,7 +297,7 @@
   const pauseIcon = stage.querySelector("[data-pause-icon]");
   const pauseLabel = stage.querySelector("[data-pause-label]");
   const progress = stage.querySelector("[data-slide-progress]");
-  const presentationLanguage = stage.querySelector("[data-presentation-language]");
+  const presentationLanguages = Array.from(stage.querySelectorAll("[data-presentation-language]"));
 
   let active = false;
   let currentIndex = 0;
@@ -285,11 +321,14 @@
   }
 
   function setPresentationLanguageLink() {
-    if (!presentationLanguage) return;
-    const base = new URL(presentationLanguage.getAttribute("href").split("?")[0], location.href);
-    base.searchParams.set("present", "1");
-    base.searchParams.set("slide", String(currentIndex + 1));
-    presentationLanguage.href = base.href;
+    presentationLanguages.forEach((link) => {
+      const original = link.dataset.cleanHref || link.getAttribute("href").split("?")[0];
+      link.dataset.cleanHref = original;
+      const base = new URL(original, location.href);
+      base.searchParams.set("present", "1");
+      base.searchParams.set("slide", String(currentIndex + 1));
+      link.href = base.href;
+    });
   }
 
   function syncRegularLanguageLink() {
