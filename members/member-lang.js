@@ -32,4 +32,19 @@
       }
     });
   });
+
+  var contactIcons = {
+    "@": "email",
+    "⌖": "office",
+    "i": "profile",
+    "G": "lab"
+  };
+
+  document.querySelectorAll(".contact-symbol").forEach(function (symbol) {
+    var icon = contactIcons[symbol.textContent.trim()];
+    if (!icon) return;
+    symbol.setAttribute("data-contact-icon", icon);
+    symbol.setAttribute("aria-hidden", "true");
+    symbol.textContent = "";
+  });
 }());

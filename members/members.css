@@ -253,9 +253,14 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
 .contact-card h2 { max-width: 760px; margin: 0.4rem 0 0.85rem; font-size: clamp(2rem, 4vw, 3.4rem); letter-spacing: -0.05em; line-height: 1.06; }
 .contact-line { display: grid; padding: 0.85rem 0; grid-template-columns: 2.2rem minmax(0, 1fr); gap: 0.75rem; }
 .contact-line + .contact-line { border-top: 1px solid var(--line); }
-.contact-symbol { display: inline-flex; width: 2.1rem; height: 2.1rem; border: 1px solid var(--line); border-radius: 10px; align-items: center; justify-content: center; color: var(--cyan); font-size: 0.72rem; font-weight: 900; }
-.contact-line strong, .contact-line a, .contact-line span { display: block; }
-.contact-line a, .contact-line span { margin-top: 0.12rem; color: var(--muted); font-size: 0.85rem; overflow-wrap: anywhere; }
+.contact-symbol { display: inline-flex; width: 2.1rem; height: 2.1rem; flex: 0 0 2.1rem; border: 1px solid var(--line); border-radius: 10px; align-items: center; justify-content: center; color: var(--cyan); }
+.contact-symbol::before { width: 1rem; height: 1rem; content: ""; background: currentColor; -webkit-mask: var(--contact-icon) center / contain no-repeat; mask: var(--contact-icon) center / contain no-repeat; }
+.contact-symbol[data-contact-icon="email"] { --contact-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 5.5h18v13H3zM3.5 6l8.5 7 8.5-7' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.contact-symbol[data-contact-icon="office"] { --contact-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.contact-symbol[data-contact-icon="profile"] { --contact-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='8' r='3' fill='none' stroke='black' stroke-width='1.8'/%3E%3Cpath d='M6.5 18c.8-3.1 2.6-4.6 5.5-4.6s4.7 1.5 5.5 4.6' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E"); }
+.contact-symbol[data-contact-icon="lab"] { --contact-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 3h6M10 3v6l-4.5 8.2A2.5 2.5 0 0 0 7.7 21h8.6a2.5 2.5 0 0 0 2.2-3.8L14 9V3M7.5 14h9' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.contact-line strong, .contact-line a, .contact-line > div > span { display: block; }
+.contact-line a, .contact-line > div > span { margin-top: 0.12rem; color: var(--muted); font-size: 0.85rem; overflow-wrap: anywhere; }
 .contact-line a:hover { color: var(--cyan); }
 .profile-footer { border-top: 1px solid var(--line); background: rgba(4, 7, 16, 0.7); }
 .profile-footer-inner { display: flex; width: min(var(--max), calc(100% - 2rem)); min-height: 110px; margin: 0 auto; align-items: center; justify-content: space-between; gap: 1rem; color: var(--quiet); font-size: 0.78rem; }
