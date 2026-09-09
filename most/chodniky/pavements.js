@@ -1,0 +1,1 @@
+document.getElementById('repeat')?.addEventListener('click',e=>{const active=e.currentTarget.getAttribute('aria-pressed')!=='true';e.currentTarget.setAttribute('aria-pressed',String(active));document.querySelector('.pavement-grid').classList.toggle('repeated',active)});
