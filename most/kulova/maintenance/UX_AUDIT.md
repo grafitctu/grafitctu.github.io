@@ -29,6 +29,9 @@ Source baseline: published main 6a26caaf1145fb8f8a21612ce13888aab74637f7.
    Added a common presentation layer, wrapping controls, minimum 44px controls,
    reduced-motion support, keyboard skip links and model/slider instructions.
    Source dialogs and static comparisons work independently of model loading.
+   On narrow screens, a native disclosure collapses the large control panel so
+   the model appears sooner. Desktop controls remain open; every setting and
+   the source dialog are available after expanding the mobile disclosure.
 7. Laboratory copy still described C/G selection as pending.
    Updated method status: C was chosen; G is the default after source checking;
    T is an explicitly requested alternative. Preserved all experimental models
