@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Virtuální herní světy: scény, avatar a návrh hry. První přednáška Radka Richtra, FIT ČVUT.">
+  <title>VHS · 01 · Scény, avatar a návrh hry</title>
+  <script>
+    (() => {
+      let saved;
+      try { saved = localStorage.getItem('vhs-theme'); } catch {}
+      document.documentElement.dataset.theme = saved === 'dark' || saved === 'light'
+        ? saved : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    })();
+  </script>
+  <link rel="stylesheet" href="presentation.css">
+  <script src="presentation.js" defer></script>
+</head>
+<body>
+  <header class="toolbar">
+    <a class="brand" href="#slide-1" aria-label="První snímek">VHS <span>/ 01</span></a>
+    <span id="chapter">Úvod</span>
+    <nav aria-label="Nástroje prezentace">
+      <button id="contents" aria-haspopup="dialog">Obsah</button>
+      <button id="reading" aria-pressed="false">Čtení</button>
+      <button id="theme" aria-label="Tmavý režim" aria-pressed="false" title="Tmavý režim">◐</button>
+      <button id="fullscreen" aria-label="Celá obrazovka (F)">⛶ <span>Celá obrazovka</span></button>
+    </nav>
+  </header>
+  <main id="deck" aria-label="První přednáška VHS">
+    <section class="slide title-slide" id="slide-1" data-section="Úvod" aria-label="Snímek 1: Virtuální herní světy"><div class="content">
+  <div class="cover"><p class="eyebrow">Přednáška 1 · SOL varianta</p><h1>Virtuální herní světy: scény, avatar a návrh hry</h1><p class="byline">Radek Richtr<br>FIT ČVUT v Praze</p></div>
+</div></section>
+<section class="slide" id="slide-2" data-section="Úvod" aria-label="Snímek 2: Co si z přednášky odnést"><h2 id="title-2" tabindex="-1">Co si z přednášky odnést</h2><div class="content">
+  Po přednášce dokážete:
+  <ul class=""><li> vysvětlit rozdíl mezi <strong class="accent">virtuálním světem</strong>, scénou a herní úrovní,
+    </li><li> rozlišit <strong class="accent">graf scén</strong> a <strong class="accent">graf scény</strong>,
+    </li><li> zvolit vhodnou reprezentaci a míru personalizace avatara,
+    </li><li> použít Schellovu tetrádu při rozboru i návrhu hry,
+    </li><li> převést záměr hry do první kontrolovatelné verze světa.
+  </li></ul>
+</div></section>
+<section class="slide" id="slide-3" data-section="Úvod" aria-label="Snímek 3: Mapa dnešní přednášky"><h2 id="title-3" tabindex="-1">Mapa dnešní přednášky</h2><div class="content">
+  <div class="center"><div class="flow"><div>Virtuální svět</div><span class="arrow" aria-hidden="true">→</span><div>Scény a jejich graf</div><span class="arrow" aria-hidden="true">→</span><div>Avatar a přítomnost</div><span class="arrow" aria-hidden="true">→</span><div>Návrh hry</div></div>
+  </div>
+  
+  <aside class="block"><h3>Průběžná otázka</h3>
+    Jak každé rozhodnutí ovlivní to, co hráč vidí, může udělat a chápe?
+  </aside>
+</div></section>
+<section class="slide" id="slide-4" data-section="Virtuální svět" aria-label="Snímek 4: Virtuální svět"><h2 id="title-4" tabindex="-1">Virtuální svět</h2><div class="content">
+  <aside class="block"><h3>Pracovní vymezení</h3>
+    Virtuální svět je konzistentní systém míst, objektů, aktérů a pravidel,
+    který může hráč vnímat a svým jednáním měnit.
+  </aside>
+  <ul class=""><li> <strong class="">Prostor</strong>: kde se něco může stát.
+    </li><li> <strong class="">Stav</strong>: co právě platí.
+    </li><li> <strong class="">Pravidla</strong>: jak se stav mění.
+    </li><li> <strong class="">Prezentace</strong>: jak se svět projeví hráči.
+  </li></ul>
+</div></section>
+<section class="slide" id="slide-5" data-section="Virtuální svět" aria-label="Snímek 5: Svět, scéna a úroveň"><h2 id="title-5" tabindex="-1">Svět, scéna a úroveň</h2><div class="content">
+  <div class="columns">
+    <div class="column">
+      <aside class="block"><h3>Svět</h3>
+        Celek a jeho pravidla. Může existovat déle než jedna herní situace.
+      </aside>
+    </div><div class="column">
+      <aside class="block"><h3>Scéna</h3>
+        Spravovatelná část světa: místo, situace nebo technický celek.
+      </aside>
+    </div><div class="column">
+      <aside class="block"><h3>Úroveň</h3>
+        Úsek postupu či výzvy. Nemusí odpovídat jedné scéně.
+      </aside>
+  </div></div>
+  
+  <strong class="accent">Názvy nejsou univerzální. Důležitá je role části v návrhu a implementaci.</strong>
+</div></section>
+<section class="slide" id="slide-6" data-section="Virtuální svět" aria-label="Snímek 6: Proč svět dělit na scény"><h2 id="title-6" tabindex="-1">Proč svět dělit na scény</h2><div class="content">
+  <div class="columns">
+    <div class="column">
+      <ul class=""><li> načítání a uvolňování obsahu,
+        </li><li> řízení výkonu a paměti,
+        </li><li> oddělení herních režimů,
+      </li></ul>
+    </div><div class="column">
+      <ul class=""><li> přehlednější tvorba a testování,
+        </li><li> rozdělení práce v týmu,
+        </li><li> bezpečné opakované použití částí.
+      </li></ul>
+  </div></div>
+  <aside class="block"><h3>Návrhová zásada</h3>
+    Hranice scény má řešit konkrétní problém, ne pouze kopírovat geografii.
+  </aside>
+</div></section>
+<section class="slide" id="slide-7" data-section="Virtuální svět" aria-label="Snímek 7: Jedna mapa, více možných dělení"><h2 id="title-7" tabindex="-1">Jedna mapa, více možných dělení</h2><div class="content">
+  <div class="columns"><div class="column">
+      <figure><img src="../../assets/shared/p01_map_018f509b.png" alt="Jedna mapa, více možných dělení – ilustrace z původní přednášky" decoding="async"></figure>
+    </div><div class="column">
+      <ul class=""><li> podle místností či oblastí,
+        </li><li> podle příběhových situací,
+        </li><li> podle potřeb streamování,
+        </li><li> podle odpovědnosti systémů.
+      </li></ul>
+      <aside class="block emphasis"><h3>Otázka</h3>
+        Které dělení zmenší riziko vašeho projektu?
+      </aside>
+  </div></div>
+</div></section>
+<section class="slide" id="slide-8" data-section="Virtuální svět" aria-label="Snímek 8: Graf scén"><h2 id="title-8" tabindex="-1">Graf scén</h2><div class="content">
+  <div class="columns"><div class="column">
+      <figure><img src="../../assets/shared/p01_gs1_330dcc6c.png" alt="Graf scén – ilustrace z původní přednášky" decoding="async"></figure>
+    </div><div class="column">
+      <aside class="block"><h3>Uzly</h3>
+        Scény, lokace nebo herní stavy.
+      </aside>
+      <aside class="block"><h3>Hrany</h3>
+        Přechody, portály, podmínky nebo návaznosti.
+      </aside>
+      Graf odpovídá hlavně na otázku <strong class="accent">kam a za jakých podmínek lze pokračovat</strong>.
+  </div></div>
+</div></section>
+<section class="slide" id="slide-9" data-section="Virtuální svět" aria-label="Snímek 9: Graf scény"><h2 id="title-9" tabindex="-1">Graf scény</h2><div class="content">
+  <div class="columns"><div class="column">
+      <svg class="diagram" viewBox="0 0 520 285" role="img" aria-label="Scéna obsahuje místnost a rozhraní. Místnost obsahuje světlo a postavu. Rozhraní obsahuje kameru."><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10" fill="#506d79"/></marker></defs><path d="M260 58 L150 111" stroke="#506d79" stroke-width="2" marker-end="url(#arrow)"/><path d="M260 58 L400 111" stroke="#506d79" stroke-width="2" marker-end="url(#arrow)"/><path d="M150 158 L65 216" stroke="#506d79" stroke-width="2" marker-end="url(#arrow)"/><path d="M150 158 L240 216" stroke="#506d79" stroke-width="2" marker-end="url(#arrow)"/><path d="M400 158 L430 216" stroke="#506d79" stroke-width="2" marker-end="url(#arrow)"/><rect x="201" y="13" width="118" height="44" rx="6" fill="#edf2f3" stroke="#9baeb5"/><text x="260" y="42" text-anchor="middle" font-size="21" fill="#20333a">Scéna</text><rect x="91" y="113" width="118" height="44" rx="6" fill="#edf2f3" stroke="#9baeb5"/><text x="150" y="142" text-anchor="middle" font-size="21" fill="#20333a">Místnost</text><rect x="341" y="113" width="118" height="44" rx="6" fill="#edf2f3" stroke="#9baeb5"/><text x="400" y="142" text-anchor="middle" font-size="21" fill="#20333a">Rozhraní</text><rect x="6" y="218" width="118" height="44" rx="6" fill="#edf2f3" stroke="#9baeb5"/><text x="65" y="247" text-anchor="middle" font-size="21" fill="#20333a">Světlo</text><rect x="181" y="218" width="118" height="44" rx="6" fill="#edf2f3" stroke="#9baeb5"/><text x="240" y="247" text-anchor="middle" font-size="21" fill="#20333a">Postava</text><rect x="371" y="218" width="118" height="44" rx="6" fill="#edf2f3" stroke="#9baeb5"/><text x="430" y="247" text-anchor="middle" font-size="21" fill="#20333a">Kamera</text></svg>
+    </div><div class="column">
+      Hierarchie objektů uvnitř jedné scény.
+      <ul class=""><li> transformace a rodičovství,
+        </li><li> životní cyklus objektů,
+        </li><li> lokální odpovědnosti,
+        </li><li> opakovaně použitelné podstromy.
+      </li></ul>
+  </div></div>
+</div></section>
+<section class="slide" id="slide-10" data-section="Virtuální svět" aria-label="Snímek 10: Dva různé grafy"><h2 id="title-10" tabindex="-1">Dva různé grafy</h2><div class="content">
+  <div class="center"><div class="table-wrap"><table><tr><th></th><th> <strong class="">Graf scén</strong> </th><th> <strong class="">Graf scény</strong></th></tr><tr><td>Uzly </td><td> celé scény či stavy </td><td> objekty v jedné scéně</td></tr><tr><td>Hrany </td><td> přechod a návaznost </td><td> hierarchie a vazby</td></tr><tr><td>Otázka </td><td> kam lze pokračovat? </td><td> z čeho se scéna skládá?</td></tr><tr><td>Riziko </td><td> slepé větve, drahé přechody </td><td> nepřehledná hierarchie</td></tr></table></div>
+  </div>
+  
+  <strong class="accent">Stejné slovo „graf“ neznamená stejnou úroveň návrhu.</strong>
+</div></section>
+<section class="slide" id="slide-11" data-section="Virtuální svět" aria-label="Snímek 11: Hranice scény v praxi"><h2 id="title-11" tabindex="-1">Hranice scény v praxi</h2><div class="content">
+  <aside class="block"><h3>Zvolte hranici tam, kde se mění alespoň dvě věci</h3>
+    <ul class=""><li> sada aktivních objektů a pravidel,
+      </li><li> způsob ovládání nebo kamera,
+      </li><li> audiovizuální kontext,
+      </li><li> požadavky na výkon či načítání,
+      </li><li> odpovědnost člena týmu.
+    </li></ul>
+  </aside>
+  Samotné dveře ještě nemusí znamenat novou scénu.
+</div></section>
+<section class="slide" id="slide-12" data-section="Virtuální svět" aria-label="Snímek 12: Kontrolní otázky ke scénám"><h2 id="title-12" tabindex="-1">Kontrolní otázky ke scénám</h2><div class="content">
+  <ol class=""><li> Co musí zůstat zachováno při přechodu?
+    </li><li> Co lze bezpečně zahodit a znovu vytvořit?
+    </li><li> Kde hráč očekává kontinuitu?
+    </li><li> Které části se mají testovat samostatně?
+    </li><li> Jak dlouho může přechod trvat?
+  </li></ol>
+  <aside class="block emphasis"><h3>Výstup pro projekt</h3>
+    Jednoduchý graf scén a jedna věta vysvětlující každou hranici.
+  </aside>
+</div></section>
+<section class="slide" id="slide-13" data-section="Avatar" aria-label="Snímek 13: Avatar jako rozhraní se světem"><h2 id="title-13" tabindex="-1">Avatar jako rozhraní se světem</h2><div class="content">
+  <aside class="block"><h3>Nejen vzhled postavy</h3>
+    Avatar určuje, odkud hráč svět vnímá, jaké akce má k dispozici a jak svět
+    jeho přítomnost reprezentuje.
+  </aside>
+  <ul class=""><li> může být tělesný, abstraktní i neviditelný,
+    </li><li> může být ovládán přímo nebo nepřímo,
+    </li><li> propojuje kameru, ovládání, zpětnou vazbu a pravidla.
+  </li></ul>
+</div></section>
+<section class="slide" id="slide-14" data-section="Avatar" aria-label="Snímek 14: Perspektiva a informace"><h2 id="title-14" tabindex="-1">Perspektiva a informace</h2><div class="content">
+  <div class="columns">
+    <div class="column">
+      <aside class="block"><h3>První osoba</h3>
+        Blízkost akce, omezený přehled, silná vazba na kameru.
+      </aside>
+    </div><div class="column">
+      <aside class="block"><h3>Třetí osoba</h3>
+        Viditelné tělo, lepší prostorový přehled, složitější kamera.
+      </aside>
+    </div><div class="column">
+      <aside class="block"><h3>Nepřímé řízení</h3>
+        Hráč ovládá kurzor, skupinu, systém nebo pravidla.
+      </aside>
+  </div></div>
+  
+  Volba perspektivy je zároveň volbou <strong class="accent">dostupných informací</strong>.
+</div></section>
+<section class="slide" id="slide-15" data-section="Avatar" aria-label="Snímek 15: Tělesný a abstraktní avatar"><h2 id="title-15" tabindex="-1">Tělesný a abstraktní avatar</h2><div class="content">
+  <div class="columns"><div class="column">
+      <figure><img src="../../assets/shared/p01_katja1_b0bd799b.png" alt="Tělesný a abstraktní avatar – ilustrace z původní přednášky" decoding="async"></figure>
+       Tělesná reprezentace
+    </div><div class="column">
+      <div class="avatar-symbol"><svg viewBox="0 0 240 170" aria-hidden="true"><circle cx="100" cy="90" r="62" fill="#edf2f3" stroke="#506d79" stroke-width="2"/><path d="M100 90L199 40M185 39L199 40L193 54" fill="none" stroke="#506d79" stroke-width="3"/></svg><p>Kurzor, vozidlo, skupina<br>nebo samotná kamera</p></div>
+  </div></div>
+  <aside class="block"><h3>Rozhodnutí</h3>
+    Kolik těla musí hráč vidět, aby správně odhadl prostor a důsledky akce?
+  </aside>
+</div></section>
+<section class="slide" id="slide-16" data-section="Avatar" aria-label="Snímek 16: Přímé a nepřímé ovládání"><h2 id="title-16" tabindex="-1">Přímé a nepřímé ovládání</h2><div class="content">
+  <div class="columns">
+    <div class="column">
+      <aside class="block"><h3>Přímé</h3>
+        Vstup se bezprostředně mapuje na pohyb či akci avatara.
+        <ul class=""><li> pocit bezprostřednosti,
+          </li><li> nároky na odezvu a animaci.
+        </li></ul>
+      </aside>
+    </div><div class="column">
+      <aside class="block"><h3>Nepřímé</h3>
+        Hráč zadává cíl, příkaz nebo plán.
+        <ul class=""><li> větší odstup a přehled,
+          </li><li> potřeba čitelného stavu příkazu.
+        </li></ul>
+      </aside>
+  </div></div>
+</div></section>
+<section class="slide" id="slide-17" data-section="Avatar" aria-label="Snímek 17: Soulad avatara se světem"><h2 id="title-17" tabindex="-1">Soulad avatara se světem</h2><div class="content">
+  <div class="columns"><div class="column">
+      <figure><img src="../../assets/shared/p01_3128ea9e36525b6a42a5a71c59c068b1_19b3ecbd.jpg" alt="Soulad avatara se světem – ilustrace z původní přednášky" decoding="async"></figure>
+    </div><div class="column">
+      <figure><img src="../../assets/shared/p01_fiona2_reg_209d3c52.jpg" alt="Soulad avatara se světem – ilustrace z původní přednášky" decoding="async"></figure>
+  </div></div>
+  <ul class=""><li> geometrie, materiál a animace tvoří jeden styl,
+    </li><li> vyšší detail avatara zvyšuje očekávání vůči okolí,
+    </li><li> nesoulad může být záměr, ale musí být čitelný.
+  </li></ul>
+</div></section>
+<section class="slide" id="slide-18" data-section="Avatar" aria-label="Snímek 18: Personalizace avatara"><h2 id="title-18" tabindex="-1">Personalizace avatara</h2><div class="content">
+  <div class="columns">
+    <div class="column">
+      <strong class="">Co může získat hráč</strong>
+      <ul class=""><li> identifikaci a vlastnictví,
+        </li><li> srozumitelnou roli,
+        </li><li> sociální odlišení.
+      </li></ul>
+    </div><div class="column">
+      <strong class="">Co platí tým</strong>
+      <ul class=""><li> více kombinací k otestování,
+        </li><li> omezení animací a výbavy,
+        </li><li> riziko narušení výtvarného stylu.
+      </li></ul>
+  </div></div>
+  <aside class="block emphasis"><h3>Nejdřív význam, potom počet voleb</h3>
+    Personalizace má podporovat zamýšlený vztah hráče k roli.
+  </aside>
+</div></section>
+<section class="slide" id="slide-19" data-section="Avatar" aria-label="Snímek 19: Přítomnost a identifikace"><h2 id="title-19" tabindex="-1">Přítomnost a identifikace</h2><div class="content">
+  <ul class=""><li> <strong class="">Prostorová přítomnost</strong>: pocit „jsem tam“.
+    </li><li> <strong class="">Jednající přítomnost</strong>: pocit „mé akce mají účinek“.
+    </li><li> <strong class="">Sociální přítomnost</strong>: pocit „nejsem tam sám“.
+    </li><li> <strong class="">Identifikace</strong>: vztah „jsem tato postava“ nebo „jednám za ni“.
+  </li></ul>
+  <aside class="block"><h3>Pozorování při testu</h3>
+    Sledujte, zda hráč rozumí poloze, možnostem a následkům, ne pouze zda se mu
+    avatar líbí.
+  </aside>
+</div></section>
+<section class="slide" id="slide-20" data-section="Avatar" aria-label="Snímek 20: Údolí nepatřičnosti"><h2 id="title-20" tabindex="-1">Údolí nepatřičnosti</h2><div class="content">
+  <div class="columns"><div class="column">
+      <figure><img src="../../assets/shared/p01_uncanny_valley_based_on_m_mori_2_w640_3351bd63.jpg" alt="Údolí nepatřičnosti – ilustrace z původní přednášky" decoding="async"></figure>
+    </div><div class="column">
+      Rostoucí realističnost může zvýšit citlivost na chyby v:
+      <ul class=""><li> pohledu a mimice,
+        </li><li> načasování pohybu,
+        </li><li> materiálu kůže a vlasů,
+        </li><li> souladu hlasu a těla.
+      </li></ul>
+      <strong class="accent">Realističnost je závazek, ne automatické zlepšení.</strong>
+  </div></div>
+</div></section>
+<section class="slide" id="slide-21" data-section="Avatar" aria-label="Snímek 21: Stylizace jako konzistentní slib"><h2 id="title-21" tabindex="-1">Stylizace jako konzistentní slib</h2><div class="content">
+  <div class="columns"><div class="column">
+      <figure><img src="../../assets/shared/p01_uncannylion_98533992.jpg" alt="Stylizace jako konzistentní slib – ilustrace z původní přednášky" decoding="async"></figure>
+    </div><div class="column">
+      Stylizace může:
+      <ul class=""><li> sjednotit dostupné prostředky,
+        </li><li> zvýraznit důležité rysy,
+        </li><li> snížit očekávání fyzické přesnosti.
+      </li></ul>
+      Musí však zůstat konzistentní v modelu, animaci, zvuku i chování.
+  </div></div>
+</div></section>
+<section class="slide" id="slide-22" data-section="Avatar" aria-label="Snímek 22: Kontrolní otázky k avatarovi"><h2 id="title-22" tabindex="-1">Kontrolní otázky k avatarovi</h2><div class="content">
+  <ol class=""><li> Co hráč prostřednictvím avatara vnímá?
+    </li><li> Které akce musí působit bezprostředně?
+    </li><li> Jak avatar sděluje stav a záměr?
+    </li><li> Potřebuje hráč tělo vidět?
+    </li><li> Které prvky personalizace mění význam hry?
+  </li></ol>
+</div></section>
+<section class="slide" id="slide-23" data-section="Návrh hry" aria-label="Snímek 23: Návrh hry jako rozhodování"><h2 id="title-23" tabindex="-1">Návrh hry jako rozhodování</h2><div class="content">
+  <aside class="block"><h3>Cíl návrhu</h3>
+    Vytvořit podmínky pro zamýšlený zážitek hráče, ne pouze seznam obsahu.
+  </aside>
+  Návrhář rozhoduje zejména o:
+  <ul class=""><li> cílech a pravidlech,
+    </li><li> informacích a zpětné vazbě,
+    </li><li> tempu, nejistotě a obtížnosti,
+    </li><li> podobě světa a způsobu jeho realizace.
+  </li></ul>
+</div></section>
+<section class="slide" id="slide-24" data-section="Návrh hry" aria-label="Snímek 24: Od záměru k ověřitelné situaci"><h2 id="title-24" tabindex="-1">Od záměru k ověřitelné situaci</h2><div class="content">
+  <div class="center"><div class="flow vertical"><div>Zamýšlený zážitek</div><span class="arrow" aria-hidden="true">↓</span><div>Rozhodnutí hráče</div><span class="arrow" aria-hidden="true">↓</span><div>Reakce systému</div><span class="arrow" aria-hidden="true">↓</span><div>Vnímatelný důsledek</div></div>
+  </div>
+  První prototyp má ověřit tuto smyčku co nejlevněji.
+</div></section>
+<section class="slide" id="slide-25" data-section="Návrh hry" aria-label="Snímek 25: Schellova tetráda"><h2 id="title-25" tabindex="-1">Schellova tetráda</h2><div class="content">
+  <div class="columns"><div class="column">
+      <figure><img src="../../assets/shared/p01_elementy_fe829263.png" alt="Schellova tetráda – ilustrace z původní přednášky" decoding="async"></figure>
+    </div><div class="column">
+      <ul class=""><li> <strong class="">Mechaniky</strong>
+        </li><li> <strong class="">Příběh</strong>
+        </li><li> <strong class="">Estetika</strong>
+        </li><li> <strong class="">Technologie</strong>
+      </li></ul>
+      Žádný prvek není automaticky nadřazený. Změna jednoho vytváří tlak na ostatní.
+  </div></div>
+  <p class="source">Zdroj: Jesse Schell: The Art of Game Design</p>
+</div></section>
+<section class="slide" id="slide-26" data-section="Návrh hry" aria-label="Snímek 26: Mechaniky"><h2 id="title-26" tabindex="-1">Mechaniky</h2><div class="content">
+  <aside class="block"><h3>Otázka tetrády</h3>
+    Co může hráč dělat, podle jakých pravidel a s jakými důsledky?
+  </aside>
+  <ul class=""><li> akce a omezení,
+    </li><li> cíle a podmínky úspěchu,
+    </li><li> zdroje a ekonomika,
+    </li><li> náhoda, informace a dovednost,
+    </li><li> pravidla pro změnu stavu světa.
+  </li></ul>
+</div></section>
+<section class="slide" id="slide-27" data-section="Návrh hry" aria-label="Snímek 27: Příběh"><h2 id="title-27" tabindex="-1">Příběh</h2><div class="content">
+  <aside class="block"><h3>Otázka tetrády</h3>
+    Jaký význam hráč přisuzuje situacím a změnám ve světě?
+  </aside>
+  <ul class=""><li> předem připravené události,
+    </li><li> příběh vznikající z pravidel,
+    </li><li> role postav a motivace,
+    </li><li> pořadí, rytmus a interpretace událostí.
+  </li></ul>
+  Příběh není jen text mezi herními úseky.
+</div></section>
+<section class="slide" id="slide-28" data-section="Návrh hry" aria-label="Snímek 28: Estetika"><h2 id="title-28" tabindex="-1">Estetika</h2><div class="content">
+  <aside class="block"><h3>Otázka tetrády</h3>
+    Co hráč vnímá a jakou náladu či očekávání to vytváří?
+  </aside>
+  <ul class=""><li> obraz, zvuk, pohyb a rytmus,
+    </li><li> čitelnost důležitých objektů,
+    </li><li> konzistence stylu,
+    </li><li> smyslová a emoční kvalita interakce.
+  </li></ul>
+</div></section>
+<section class="slide" id="slide-29" data-section="Návrh hry" aria-label="Snímek 29: Technologie"><h2 id="title-29" tabindex="-1">Technologie</h2><div class="content">
+  <aside class="block"><h3>Otázka tetrády</h3>
+    Které prostředky umožní zamýšlenou zkušenost spolehlivě vytvořit?
+  </aside>
+  <ul class=""><li> cílová zařízení a vstupy,
+    </li><li> herní engine, nástroje a datový tok,
+    </li><li> síť, výkon a perzistence,
+    </li><li> dostupné schopnosti a čas týmu.
+  </li></ul>
+  Technologie je současně možnost i omezení.
+</div></section>
+<section class="slide" id="slide-30" data-section="Návrh hry" aria-label="Snímek 30: Příklad: tichý průchod hlídaným domem"><h2 id="title-30" tabindex="-1">Příklad: tichý průchod hlídaným domem</h2><div class="content">
+  <div class="center"><div class="table-wrap"><table><tr><td><strong class="">Mechaniky</strong> </td><td> skrývání, hluk, omezený rozhled stráží</td></tr><tr><td><strong class="">Příběh</strong> </td><td> hráč nechce obyvatele ohrozit</td></tr><tr><td><strong class="">Estetika</strong> </td><td> tlumené světlo, vzdálené kroky, úzké prostory</td></tr><tr><td><strong class="">Technologie</strong> </td><td> navigační síť, detekce zvuku, dynamické osvětlení</td></tr></table></div>
+  </div>
+  <aside class="block emphasis"><h3>Změna</h3>
+    Co se stane s ostatními vrcholy, když přidáme rychlé ukládání pozice?
+  </aside>
+</div></section>
+<section class="slide" id="slide-31" data-section="Návrh hry" aria-label="Snímek 31: Konzistence tetrády"><h2 id="title-31" tabindex="-1">Konzistence tetrády</h2><div class="content">
+  <ul class=""><li> Mechanika vytváří rozhodnutí, které příběh dokáže interpretovat.
+    </li><li> Estetika zvýrazňuje stav potřebný pro rozhodnutí.
+    </li><li> Technologie udrží odezvu a rozsah, které mechanika vyžaduje.
+    </li><li> Příběh neslibuje schopnosti, které systém nepodporuje.
+  </li></ul>
+  <aside class="block"><h3>Praktický test</h3>
+    Ke každému vrcholu napište jeden konkrétní příspěvek k zamýšlenému zážitku.
+  </aside>
+</div></section>
+<section class="slide" id="slide-32" data-section="Návrh hry" aria-label="Snímek 32: Krátké týmové cvičení"><h2 id="title-32" tabindex="-1">Krátké týmové cvičení</h2><div class="content">
+  <strong class="">Za 8 minut</strong> vyberte jednu herní situaci ze svého projektu.
+  <ol class=""><li> Jednou větou popište zamýšlený zážitek.
+    </li><li> Doplňte čtyři vrcholy tetrády.
+    </li><li> Označte nejslabší vazbu mezi dvěma vrcholy.
+    </li><li> Navrhněte jeden levný test této vazby.
+  </li></ol>
+  <aside class="block emphasis"><h3>Výsledek</h3>
+    Čtyři konkrétní volby a jedna ověřitelná otázka, ne slogan hry.
+  </aside>
+</div></section>
+<section class="slide" id="slide-33" data-section="Návrh hry" aria-label="Snímek 33: Kontrolní seznam pro projekt"><h2 id="title-33" tabindex="-1">Kontrolní seznam pro projekt</h2><div class="content">
+  <ul class=""><li> Máme graf scén a známe důvod každé hranice.
+    </li><li> Umíme popsat, co se zachovává mezi scénami.
+    </li><li> Avatar poskytuje informace potřebné pro rozhodování.
+    </li><li> Perspektiva a ovládání podporují zamýšlený vztah ke světu.
+    </li><li> Čtyři vrcholy tetrády tvoří jeden ověřitelný celek.
+    </li><li> Víme, kterou vazbu otestujeme jako první.
+  </li></ul>
+</div></section>
+<section class="slide" id="slide-34" data-section="Návrh hry" aria-label="Snímek 34: Most k multimodální zpětné vazbě"><h2 id="title-34" tabindex="-1">Most k multimodální zpětné vazbě</h2><div class="content">
+  V další přednášce se zaměříme na to, jak svět hráči sděluje svůj stav.
+  <ul class=""><li> Která informace je kritická?
+    </li><li> Jak ji vyjádřit obrazem, zvukem a haptikou?
+    </li><li> Co se stane, když jeden kanál hráč nevnímá?
+  </li></ul>
+  <aside class="block"><h3>Příprava</h3>
+    Přineste jednu situaci z projektu, ve které hráč často přehlédne důležitý signál.
+  </aside>
+</div></section>
+<section class="slide" id="slide-35" data-section="Návrh hry" aria-label="Snímek 35: Zdroje a další studium"><h2 id="title-35" tabindex="-1">Zdroje a další studium</h2><div class="content">
+  <ul class=""><li> Jesse Schell: <em class="">The Art of Game Design: A Book of Lenses</em>.
+    </li><li> Katie Salen, Eric Zimmerman: <em class="">Rules of Play</em>.
+    </li><li> Tracy Fullerton: <em class="">Game Design Workshop</em>.
+    </li><li> Aktuální informace k předmětu: <a href="https://courses.fit.cvut.cz/BI-VHS/">courses.fit.cvut.cz/BI-VHS/</a>
+    </li><li> Studijní repozitář: <a href="https://gitlab.fit.cvut.cz/BI-VHS/bi-vhs">gitlab.fit.cvut.cz/BI-VHS/bi-vhs</a>
+  </li></ul>
+</div></section>
+<section class="slide" id="slide-36" data-section="Návrh hry" aria-label="Snímek 36: Otázky?"><h2 id="title-36" tabindex="-1">Otázky?</h2><div class="content"><p class="closing">Scény · avatar · tetráda</p></div></section>
+  </main>
+  <footer class="controls">
+    <span class="hint">← → <span>listování</span> · F <span>celá obrazovka</span></span>
+    <div class="pager"><button id="previous" aria-label="Předchozí snímek">←</button><output id="counter">01 / 36</output><button id="next" aria-label="Další snímek">→</button></div>
+    <span class="credit">Radek Richtr · FIT ČVUT</span>
+    <div class="progress" aria-hidden="true"><div id="progress-value"></div></div>
+  </footer>
+  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="overview" aria-labelledby="overview-title">
+    <div class="dialog-heading"><h2 id="overview-title">Obsah přednášky</h2><button class="close" aria-label="Zavřít obsah">✕</button></div>
+    <nav aria-label="Všechny snímky"><a href="#slide-1"><span>01</span><span>Virtuální herní světy</span><small>Úvod</small></a><a href="#slide-2"><span>02</span><span>Co si z přednášky odnést</span><small>Úvod</small></a><a href="#slide-3"><span>03</span><span>Mapa dnešní přednášky</span><small>Úvod</small></a><a href="#slide-4"><span>04</span><span>Virtuální svět</span><small>Virtuální svět</small></a><a href="#slide-5"><span>05</span><span>Svět, scéna a úroveň</span><small>Virtuální svět</small></a><a href="#slide-6"><span>06</span><span>Proč svět dělit na scény</span><small>Virtuální svět</small></a><a href="#slide-7"><span>07</span><span>Jedna mapa, více možných dělení</span><small>Virtuální svět</small></a><a href="#slide-8"><span>08</span><span>Graf scén</span><small>Virtuální svět</small></a><a href="#slide-9"><span>09</span><span>Graf scény</span><small>Virtuální svět</small></a><a href="#slide-10"><span>10</span><span>Dva různé grafy</span><small>Virtuální svět</small></a><a href="#slide-11"><span>11</span><span>Hranice scény v praxi</span><small>Virtuální svět</small></a><a href="#slide-12"><span>12</span><span>Kontrolní otázky ke scénám</span><small>Virtuální svět</small></a><a href="#slide-13"><span>13</span><span>Avatar jako rozhraní se světem</span><small>Avatar</small></a><a href="#slide-14"><span>14</span><span>Perspektiva a informace</span><small>Avatar</small></a><a href="#slide-15"><span>15</span><span>Tělesný a abstraktní avatar</span><small>Avatar</small></a><a href="#slide-16"><span>16</span><span>Přímé a nepřímé ovládání</span><small>Avatar</small></a><a href="#slide-17"><span>17</span><span>Soulad avatara se světem</span><small>Avatar</small></a><a href="#slide-18"><span>18</span><span>Personalizace avatara</span><small>Avatar</small></a><a href="#slide-19"><span>19</span><span>Přítomnost a identifikace</span><small>Avatar</small></a><a href="#slide-20"><span>20</span><span>Údolí nepatřičnosti</span><small>Avatar</small></a><a href="#slide-21"><span>21</span><span>Stylizace jako konzistentní slib</span><small>Avatar</small></a><a href="#slide-22"><span>22</span><span>Kontrolní otázky k avatarovi</span><small>Avatar</small></a><a href="#slide-23"><span>23</span><span>Návrh hry jako rozhodování</span><small>Návrh hry</small></a><a href="#slide-24"><span>24</span><span>Od záměru k ověřitelné situaci</span><small>Návrh hry</small></a><a href="#slide-25"><span>25</span><span>Schellova tetráda</span><small>Návrh hry</small></a><a href="#slide-26"><span>26</span><span>Mechaniky</span><small>Návrh hry</small></a><a href="#slide-27"><span>27</span><span>Příběh</span><small>Návrh hry</small></a><a href="#slide-28"><span>28</span><span>Estetika</span><small>Návrh hry</small></a><a href="#slide-29"><span>29</span><span>Technologie</span><small>Návrh hry</small></a><a href="#slide-30"><span>30</span><span>Příklad: tichý průchod hlídaným domem</span><small>Návrh hry</small></a><a href="#slide-31"><span>31</span><span>Konzistence tetrády</span><small>Návrh hry</small></a><a href="#slide-32"><span>32</span><span>Krátké týmové cvičení</span><small>Návrh hry</small></a><a href="#slide-33"><span>33</span><span>Kontrolní seznam pro projekt</span><small>Návrh hry</small></a><a href="#slide-34"><span>34</span><span>Most k multimodální zpětné vazbě</span><small>Návrh hry</small></a><a href="#slide-35"><span>35</span><span>Zdroje a další studium</span><small>Návrh hry</small></a><a href="#slide-36"><span>36</span><span>Otázky?</span><small>Návrh hry</small></a></nav>
+  </dialog>
+  <dialog id="image-view" aria-label="Zvětšený obrázek"><button class="close" aria-label="Zavřít obrázek">✕</button><img alt=""></dialog>
+  <noscript><p class="no-script">Bez JavaScriptu je přednáška zobrazena jako souvislý dokument.</p></noscript>
+</body>
+</html>
