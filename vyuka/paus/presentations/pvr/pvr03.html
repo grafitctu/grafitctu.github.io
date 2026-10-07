@@ -1,0 +1,2222 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>MI-PVR: Úvod do Unity3D — ČVUT</title>
+  <meta name="description"
+    content="Přednáška MI-PVR: Úvod do Unity3D — scény, GameObjecty, komponenty, assety, prefaby a build projektu — Petr Pauš, FIT ČVUT v Praze">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <!-- <link rel="stylesheet" href="../bordel/css/custom-theme.css"> -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+</head>
+
+<body>
+
+  <!-- Top Persistent Header -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+    <!-- <div class="logo-badge">
+      <span class="cvut-tag">ČVUT</span>
+      <span>MI-PVR &bull; <span class="highlight">Úvod do Unity3D</span></span>
+    </div>
+    <div class="logo-badge">
+      <span>Petr Pauš</span>
+    </div> -->
+  </header>
+
+  <!-- Bottom Persistent Footer Navigation Helper -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div>
+    <!-- <div>ČVUT v Praze &bull; MI-PVR / NI-PVR</div> -->
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==========================================
+           SLIDE 1: TITULNÍ SLIDE
+           ========================================== -->
+      <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)">
+        <div class="title-hero">
+          <div class="vr-badge">MI-PVR / NI-PVR &bull; Pokročilá virtuální realita</div>
+          <h1>Úvod do Unity3D</h1>
+          <p style="color: var(--text-muted); font-size: 1.2em; margin-bottom: 24px;">
+            Scény, GameObjecty, komponenty, assety a prefaby architektura projektu <strong>pro vývoj aplikací
+              virtuální reality</strong>.
+          </p>
+
+          <div class="authors">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze</div>
+            </div>
+          </div>
+
+
+        </div>
+        <aside class="notes">
+          Vítejte na přednášce věnované prostředí Unity3D. Unity je v předmětu MI-PVR hlavním nástrojem pro tvorbu
+          aplikací virtuální reality, protože kombinuje přístupný editor, jazyk C# a hotovou podporu headsetů.
+          Dnes si vysvětlíme základní pojmy, které v Unity potkáte od první minuty: scénu, GameObject,
+          komponenty, assety a prefaby: a ukážeme si editor, import assetů a vytvoření buildu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 2: SCÉNA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Scéna</span>
+        <h2>Scéna (Scene)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Co je scéna?</h3>
+              <p style="margin: 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+                Hra (projekt) je rozdělena na <strong>scény</strong>.<br> Je to <strong>hierarchický popis
+                  prostředí</strong><br>uložená struktura objektů a jejich vztahů.
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.86em; margin-top: 14px;">
+              <li><strong>Obsahuje GameObjecty</strong>: kamery, světla, modely, kolize, zvuky.</li>
+              <li><strong>Hierarchický popis</strong>: objekty mají rodiče a potomky, transformace se dědí.</li>
+              <li><strong>Scén může být víc</strong>: úvodní menu, levely, ...</li>
+              <li><strong>Přepínání scén</strong>: runtime zajišťuje skript
+                (<code>SceneManager.LoadScene()</code> / <code>LoadSceneAsync()</code>).</li>
+            </ul>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Scéna vs. projekt</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.45;">
+                <strong>Projekt</strong> je celá aplikace včetně všech scén, kódů a assetů.<br><strong>Scéna</strong> je
+                jedna &bdquo;level&ldquo;-ová úroveň, kterou editor právě otevírá a kterou spouštíte.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">V praxi ve VR</h3>
+              <ul class="custom-list" style="font-size: 0.86em; margin-top: 14px;">
+                <li><strong>U VR aplikací scény přepínat opatrně:</strong> načítání scény na okamžik zastaví
+                  vykreslování a v headsetu to působí nevolnost.</li>
+                <li>Používá se <strong>asynchronní načítání</strong>
+                  (<code>SceneManager.LoadSceneAsync()</code>, <code>allowSceneActivation = false</code>)</li>
+                <li>Po celou
+                  dobu se použije <strong>zatmívání</strong> (fade-to-black vignette), aby obraz nikdy
+                  nezamrzl.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Unity je postaveno na jednoduché trojici pojmů: projekt, scéna a GameObject.
+          Scéna je soubor, ve kterém je uložen hierarchický strom objektů a jejich nastavení. Zatímco projekt je celek,
+          scéna je jedna úroveň — úvodní obrazovka, hra, vyhodnocení.
+          Scén může být libovolné množství a mezi nimi se přepíná ze skriptu. Ve VR je vhodné scény příliš často
+          nepřepínat nebo načítat asynchronně, protože zamrznutí obrazu v headsetu vyvolává nevolnost.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 3: GAMEOBJECT
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Základní pojmy &bull; GameObject</span>
+        <h2>GameObject</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Základní prvek scény</h3>
+              <p style="margin: 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+              <ul class="custom-list">
+                <li><strong>GameObject</strong> je základní stavební prvek scény.</li>
+                <li>Samotný je prakticky prázdný</li>
+                <li>Vždy má komponentu <strong>Transform</strong> (pozice, rotace, škálování), nedá se odebrat.</li>
+                <li>Ostatní chování získává z přidaných <strong>komponent</strong>.</li>
+              </ul>
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.86em; margin-top: 14px;">
+              <li><strong>Komponent lze přidat neomezeně</strong>, libovolná kombinace vlastností.</li>
+              <li><strong>Může být prázdný</strong> (create empty) používaný jako &bdquo;rodič&ldquo; pro skupinu
+                objektů.</li>
+              <li><strong>Hierarchie</strong>: potomek dědí transformaci rodiče.</li>
+            </ul>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Příklady GameObjectů ve
+                scéně</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+                <li><strong>Viditelné objekty</strong>: 2D sprite i 3D model</li>
+                <li><strong>Kamera</strong>: pohled do scény (ve VR headset)</li>
+                <li><strong>Světlo</strong>: directionální, bodové, kuželové</li>
+                <li><strong>Částicové systémy</strong>: particle systems (oheň, déšť)</li>
+                <li><strong>Zvuk</strong>: AudioSource, prostorový poslech</li>
+              </ul>
+            </div>
+
+
+
+            <div class="glass-card accent-emerald" style="padding: 10px 14px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.15em; margin-bottom: 6px;">
+                Design v Unity = skládání komponent
+              </h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+                <li>Místo dědičnosti tříd se objekt sestavuje jako výčet komponent (&bdquo;composition over
+                  inheritance&ldquo;).</li>
+                <li>Chování se mění přidáním či odebráním komponenty, ne přepisováním kódu.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          GameObject je prázdný kontejner. Jediné, co má vždy, je transformace — tedy kde se nachází, jak je otočený a
+          jak je velký. Všechno ostatní — tvar, vzhled, fyziku, zvuk, chování — dostává až z komponent.
+          Typická chyba začátečníků je hledat „třída objektu“. V Unity žádná není; objekt je dán tím, jaké komponenty
+          mu nasadíte. Prázdný GameObject se často používá jako rodič, abychom najednou posunuli nebo otočili skupinu
+          objektů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4: KOMPONENTY
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Základní pojmy &bull; Komponenty</span>
+        <h2>Komponenty (Components)</h2>
+        <p style="color: var(--text-muted); font-size: 0.84em; margin: 0 0 8px 0;">
+          Komponenty přidávají GameObjectu další vlastnosti a chování,<br> přes menu <strong>GameObject &gt;
+            Component</strong> nebo tlačítkem <strong>Add Component</strong> v Inspektoru.
+        </p>
+        <div class="slide-grid-2" style="gap: 14px;">
+          <div>
+            <div class="glass-card" style="margin-bottom: 15px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 6px;">Geometrie a zobrazení
+              </h3>
+              <ul class="custom-list" style="font-size: 0.7em; margin: 0;">
+                <li><strong>Mesh</strong>: popis tvaru (vrcholy, hrany, trojúhelníky).</li>
+                <li><strong>Mesh Renderer</strong>: zobrazuje objekt ve scéně.</li>
+                <li><strong>Material</strong>: zobrazovací vlastnosti: textura, odlesky, stínování, shadery,
+                  normálové mapy.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-bottom: 15px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1em; margin-bottom: 6px;">Fyzika</h3>
+              <ul class="custom-list" style="font-size: 0.7em; margin: 0;">
+                <li><strong>Collider</strong>: detekce kolizí (box, sféra, kapsle, mesh).</li>
+                <li><strong>Rigidbody</strong>: tuhé těleso, fyzikální vlastnosti tělesa (hmotnost, síly).</li>
+                <li><strong>Physics Material</strong>: pružnost, tření, disipace energie při srážce.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card --accent-amber" style="margin-bottom: 15px;">
+              <h3 style="color: var(--accent-amber); font-size: 1em; margin-bottom: 6px;">Skriptování</h3>
+              <ul class="custom-list" style="font-size: 0.7em; margin: 0;">
+                <li><strong>Script v C#</strong>: vlastní logika (pro nás nejdůležitější součást).</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="glass-card accent-emerald" style="margin-bottom: 15px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1em; margin-bottom: 6px;">Chování</h3>
+              <ul class="custom-list" style="font-size: 0.7em; margin: 0;">
+                <li><strong>Script v C#</strong>: vlastní logika (pro nás nejdůležitější součást).</li>
+                <li><strong>Audio Source</strong>: zvuk.</li>
+                <li><strong>Particle System, Animator, Joint&hellip;</strong></li>
+              </ul>
+            </div>
+
+
+            <div class="glass-card" style="border-left: 4px solid var(--accent-amber);">
+              <h3 style="color: var(--accent-amber); font-size: 1em; margin-bottom: 6px;">Ukázka komponent v Inspektoru
+              </h3>
+              <pre style="margin: 0; font-size: 0.45em; line-height: 1.3;width: 100%;"><code class="language-text" data-trim data-noescape>☐ Interaktivní bedna          ← GameObject (jen název + Transform)
+  Transform                   pozice / rotace / měřítko
+  Mesh Filter                 geometrie bedna.fbx
+  Mesh Renderer               materiály, stíny
+  Box Collider                tvar pro srážky      ☑ enabled
+  Rigidbody                   hmotnost, síly       ☐ Is Kinematic
+  Hinge Joint                 pant víka
+  MonoBehaviour: BoxOpener    váš C# skript</code></pre>
+              <p style="margin: 8px 0 0 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.35;">
+                Unity obsahuje desítky komponent, další přidávají balíčky.
+                <br>Není třeba je znát všechny: důležitá je
+                <strong>myšlenka skládání</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Komponenty jsou jádro filozofie Unity. Mesh popisuje geometrii, Mesh Renderer ji zobrazí a Material určuje,
+          jak vypadá — jakou texturu, jak se odráží světlo, jaký shader a jestli má normálovou mapu.
+          Fyzikální trojice Collider, Rigidbody a Physics Material řeší srážky a pohyb: Collider je tvar pro detekci,
+          Rigidbody dělá z objektu fyzikálně řízené těleso a Physics Material nastavuje tření a pružnost.
+          A pro nás nejdůležitější je komponenta Script — C# skript připojený ke GameObjectu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 5: ASSETS
+           ========================================== -->
+      <section>
+        <h2>Assets</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div>
+              <div class="highlight-card" style="margin: 0;padding-bottom: 0;">
+                <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Veškerá data projektu</h3>
+                <ul class="custom-list" style="font-size: 0.81em; margin-top: 14px;">
+                  <li>
+                    <strong>Assets</strong> jsou veškerá binární i textová data potřebná pro projekt.
+                  </li>
+                  <li>Leží ve složce
+                    <code>Assets</code> na disku, která je do Unity <strong>přímo zrcadlena</strong>.
+                  </li>
+                  <li>
+                    Co se vloží do složky, se okamžitě importuje do editoru.
+                  </li>
+                </ul>
+              </div>
+
+              <ul class="custom-list" style="font-size: 0.81em; margin-top: 14px;">
+                <li><strong>Soubory na disku</strong>: editor jen sleduje změny a importuje je.</li>
+                <li><strong>Import</strong>: původní soubor se převede na interní formát (a uloží se do
+                  <code>Library</code>).
+                </li>
+                <li><strong>Import nastavení</strong>: každý asset má v Inspektor vlastní importní parametry
+                  (komprese textury, měřítko modelu&hellip;).</li>
+              </ul>
+            </div>
+            <div class="highlight-card" style="margin: 14px 0 0 0; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.77em; color: var(--text-main); line-height: 1.45;">
+                Pozor na termín: <em>asset</em> je <strong>původní soubor</strong> (např. <code>beerkeg.fbx</code>),
+                <em>objekt</em> (instance) je to, co z něj po importu vznikne a co vložíte do scény.
+              </p>
+            </div>
+          </div>
+
+          <div class="glass-card" style="margin: 0;">
+            <h3 class="accent-cyan" style="margin-bottom: 6px; font-size: 1.15em;">Typy assetů</h3>
+            <div class="badge-group" style="justify-content: flex-start; gap: 8px;">
+              <span class="spec-badge ">Bitmapové textury</span>
+              <span class="spec-badge ">3D modely</span>
+              <span class="spec-badge ">Skripty (C#)</span>
+              <span class="spec-badge ">Zvuky</span>
+              <span class="spec-badge ">Video</span>
+              <span class="spec-badge ">Fonty</span>
+              <span class="spec-badge ">Animace</span>
+              <span class="spec-badge ">Materiály a shadery</span>
+              <span class="spec-badge ">Obrázky / sprite</span>
+              <span class="spec-badge ">Prefaby</span>
+              <span class="spec-badge ">Scény</span>
+            </div>
+
+
+            <div class="glass-card"
+              style="margin: 12px 0 0 0; border-left: 4px solid var(--accent-rose); padding: 10px 14px;">
+              <div class="notice-pill" style="margin-bottom: 6px;">Soubory .meta: nikdy nemazat!</div>
+              <p style="margin: 0 0 6px 0; font-size: 0.73em; color: var(--text-main); line-height: 1.4;">
+                Ke každému assetu vytvoří Unity <strong>vedlejší soubor <code>.meta</code></strong>, který obsahuje
+                <strong>GUID</strong> a importní nastavení. Veškeré vazby ve projektu (skript &rarr; prefab, prefab
+                &rarr; textura, animace &rarr; kostra) jsou uloženy jako odkazy na toto GUID.
+              </p>
+              <ul class="custom-list" style="font-size: 0.72em; margin: 0;">
+                <li><code>bedna.fbx</code> + <code>bedna.fbx.meta</code>: <strong>patří k sobě</strong>.</li>
+                <li>Smazaný nebo nezacommitovaný <code>.meta</code> &rarr; nové GUID &rarr; <strong>rozbité
+                    odkazy</strong>
+                  (&bdquo;Missing script reference&ldquo;).</li>
+                <li><code>.meta</code> soubory <strong>musí být v Gitu</strong> (jsou textové, malé).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Assety jsou všechna vstupní data — textury, modely, zvuky, skripty, videa, fonty, animace.
+          Klíčové je, že složka Assets na disku a pohled v editoru jsou zrcadla. Můžete tedy kopírovat soubory
+          z Průzkumníka či Finderu přímo do složky a Unity je samo naimportuje; nemusíte nic importovat ručně.
+          Důležité rozlišení: asset je soubor, objekt je instance v scene.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 6: PREFABS – TEORIE
+           ========================================== -->
+      <section>
+        <h2>Prefab (předpřipravená šablona)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Šablona objektu</h3>
+              <p style="margin: 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+                <strong>Prefab</strong> je předpřipravená šablona prvku scény: uložený GameObject (nebo celá
+                hierarchie) i se všemi komponentami, skripty a texturami.
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.85em; margin-top: 14px;">
+              <li><strong>Jeden i více GameObjectů</strong>: libovolná hierarchie (auto = karoserie + kola +
+                světla).</li>
+              <li><strong>Společné nastavené vlastnosti</strong>: komponenty, skripty, textury...</li>
+              <li><strong>Nová instance</strong>: drag&ndash;drop v editoru nebo <code>Instantiate()</code>.</li>
+              <li><strong>Instance lze měnit</strong>: lokálně u jedné, nebo hromadně pro všechny (úprava
+                prefabu).</li>
+            </ul>
+
+            <div class="glass-card " style="border-left: 4px solid var(--accent-rose);">
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.4;">
+                Instance si nese odkaz na svůj prefab. V Inspektoru vidíte tlačítka <strong>Revert</strong> (zahození
+                lokálních změn) a <strong>Select</strong> (skok ke šabloně). Modrá značka = vlastnost odlišená od
+                prefabu.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald">
+              <h3 style="color: var(--accent-emerald); font-size: 1.15em; margin-bottom: 6px;">K čemu to slouží</h3>
+              <ul class="custom-list" style="font-size: 0.8em; margin: 0;">
+                <li><strong>Opakování bez práce</strong>: 500 střepů, 40 nepřátel, 30 lektvarů z jedné šablony.
+                </li>
+                <li><strong>Centrální údržba</strong>: změníte prefab, změna se promítne do všech instancí.</li>
+                <li><strong>Spawning za běhu</strong>: projektily, efekty, nepřátelé se tvoří dynamicky.</li>
+              </ul>
+            </div>
+
+
+
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.15em; margin-bottom: 6px;">Varianty a vnoření</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>Prefab Variant</strong>: prefab odvozený od jiného; dědí vše a mění jen co
+                  potřebujete. Ve VR velmi časté: <em>Interactable</em> (základ) &rarr; varianta
+                  <em>Pistol</em> / <em>Button</em> / <em>Knife</em>.
+                </li>
+                <li><strong>Nested Prefab</strong>: prefab uvnitř jiného prefabu<br>
+                  - auto &gt; kolo jako samostatný prefab<br>
+                  - ruka &gt; model ovladače</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Prefab je to, co z Unity dělá opravdu produktivní nástroj. Jednou nastavený objekt — model, materiály,
+          kolize, fyzika, skripty — uložíte jako šablonu a pak ho vytlačíte do scény tolikrát, kolikrát potřebujete.
+          Výhoda je dvojitá: šetří čas při tvorbě a hlavně při údržbě. Když doladíte vzhled nepřítele v prefabu,
+          projeví se to ve všech sto instancích ve všech scénách.
+          Druhou instanci lze vytvořit i dynamicky za běhu — o tom je Instantiate ve skriptu. Praktickou ukázku
+          prefabů si ukážeme později na konci přednášky.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 7: BALÍČKY / PACKAGES
+           ========================================== -->
+      <section class="dense">
+        <h2>Balíčky (Packages)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <span class="spec-badge cyan" style="float: right;">Window &gt; Package Manager</span>
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Rozdělení projektu na
+                balíčky</h3>
+              <p style="margin: 0; font-size: 0.81em; color: var(--text-main); line-height: 1.45;">
+                Projekt v Unity lze rozdělit na <strong>samostatné balíčky</strong>. Každý balíček je zabalená,
+                znovu použitelná <strong>funkcionalita</strong>: skripty, shadery, assety i editorová rozšíření
+                : s vlastním rozhraním a verzováním.
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.80em; margin-top: 14px;">
+              <li><strong>Soběstačnost</strong>: balíček deklaruje, od čeho závisí.</li>
+              <li><strong>Verzování</strong>: SemVer, uzamčení verze v <code>manifest.json</code>.</li>
+              <li><strong>Znovupoužití</strong>: stejný balíček napříč více projekty a týmy.</li>
+            </ul>
+            <div class="glass-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Balíčky pro 3D a VR</h3>
+              <p style="margin: 8px 0 0 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+                Např. OpenXR plugin, <strong>XR Interaction Toolkit</strong> (XRI), <strong>Input System</strong>,
+                <strong>URP</strong>, XR Plugin Management a XR Hands.<br>
+                K nalezení v okně Package Manager &gt;
+                Unity Registry.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+
+
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Z Asset Store další</h3>
+
+              <ul class="custom-list" style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.4;">
+                <li>Základ Unity dodá samo (UGUI, TextMeshPro, testovací funkce, AI Navigation).</li>
+                <li>Z katalogu pak hotové funkce pro hry (FPS controller), modelování terénu, inventory systémy,
+                  zvukové knihovny&hellip;</li>
+              </ul>
+
+            </div>
+
+            <div class="glass-card" style="border-left: 4px solid var(--accent-rose);">
+              <h3 style="color: var(--accent-rose); font-size: 1.15em; margin-bottom: 6px;">Pozor na závislosti</h3>
+              <ul class="custom-list" style="font-size: 0.75em; margin: 0;">
+                <li><strong>Kompatibilita</strong>: balíčky nemusí ladit s verzi Unity ani navzájem.</li>
+                <li><strong>Dependency hell</strong>: dva balíčky vyžadují různé verze téže závislosti.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Balíčky jsou způsob, jak z projektu vyčlenit znovu použitelné celky. Unity sama nainstaluje základní
+          balíčky — UI, TextMeshPro, testovací framework. Rozšíření pro VR se přidávají z Asset Store, ostatně
+          stejně jako hotové řadicí schránky pro hry, terénní nástroje nebo 3D text.
+          Prakem provázejí dva problémy: balíčky nemusí být kompatibilní s danou verzí editoru a mohou si odporovat
+          navzájem — klasický dependency hell. Proto si vždy poznamenejte verze Unity a balíčků, ve kterých vaše
+          semestrální práce běží.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 8: ARCHITEKTURA VR / OPENXR (nové)
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Virtuální realita &bull; Architektura</span>
+        <h2>Architektura VR: standard OpenXR</h2>
+        <div class="slide-grid-2" style="gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card" style="margin-top: 0; padding: 12px 14px;">
+              <span class="spec-badge cyan" style="float: right;">openxr.org</span>
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Jedno API pro všechny
+                headsety</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.77em; color: var(--text-main); line-height: 1.4;">
+                <li><strong>OpenXR</strong> je otevřený standard konsorcia <strong>Khronos Group</strong> (autoři
+                  Vulkanu, OpenGL či glTF).</li>
+                <li>Jednotné rozhraní pro sledování polohy (6DoF), ovladače, haptiku i vlastnosti displejů.</li>
+                <li><strong>Konec fragmentace trhu</strong>: aplikace se nepíše pro konkrétní HW; jeden kód běží na
+                  <strong>Meta Questu (Android/Link), SteamVR (Index, Vive), Apple Vision Pro i WMR</strong>.
+                </li>
+                <li>Oddělení aplikace od hardware: <em>OpenXR Loader</em> předává volání do <em>OpenXR Runtime</em>
+                  nainstalovaného výrobcem HW/OS.</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-cyan" style="padding: 12px 14px;margin-bottom: 10px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Interaction Profiles
+                &amp; Akční model</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.38;">
+                <li><strong>Abstraktní akce místo tlačítek</strong>: v kódu se neptáme na &bdquo;stisknutí
+                  tlačítka A&ldquo;, ale definujeme sémantické akce: <code>Select</code>, <code>Activate</code>,
+                  <code>AimPose</code>, <code>GripPose</code>.
+                </li>
+                <li><strong>Interaction Profiles</strong>: standardizované profily ovladačů (např.
+                  <code>/interaction_profiles/oculus/touch_controller</code>, <code>valve/index_controller</code>,
+                  <code>khr/simple_controller</code>).
+                </li>
+                <li><strong>Budoucí kompatibilita</strong>: připojení nového headsetu nevyžaduje změnu kódu
+                  aplikace; runtime sám přemapuje akce na nové fyzické ovladače.</li>
+              </ul>
+            </div>
+
+            <!-- <div class="glass-card accent-emerald" style="padding: 12px 14px;">
+              <div class="spec-badge emerald" style="margin-bottom: 6px;">Systém rozšíření (OpenXR Extensions)</div>
+              <ul class="custom-list" style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.38;">
+                <li>Základní jádro specifikace je striktní a stabilní; specifické funkce HW se doplňují modulárně pomocí
+                  rozšíření:</li>
+                <li><code>XR_EXT_hand_tracking</code>:  nativní sledování kloubů ruky bez ovladačů.</li>
+                <li><code>XR_EXT_eye_gaze_interaction</code>:  sledování pohledu očí a foveated rendering.</li>
+                <li><code>XR_FB_passthrough</code> / <code>XR_MSFT_*</code>:  smíšená realita (MR / video
+                  passthrough), prostorové kotvy (Spatial Anchors) a detekce místnosti.</li>
+                <li>Aplikace ověří podporu za běhu:  pokud funkce na daném headsetu chybí, hra stále funguje v
+                  základním režimu.</li>
+              </ul>
+            </div> -->
+          </div>
+        </div>
+        <div class="glass-card accent-purple" style="margin-top: 0; padding: 12px 14px;">
+          <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Vrstvy architektury (Stack)
+          </h3>
+          <pre style="margin: 0; font-size: 0.60em; line-height: 1.45; width: 100%;"><code class="language-text" data-trim data-noescape>XR Interaction Toolkit (XRI)  interakce: grab, ray, teleport, UI (XR Origin)
+Input System (Action Maps)    abstraktní akce ← tlačítka, páčky, 6DoF pose
+OpenXR Plugin                 Unity rozhraní překládající akce do OpenXR API
+─────────────────────────────────────────────────────────────────────────────
+OpenXR Loader &amp; Runtime       Meta Runtime / SteamVR / Monado / Apple …
+Hardware                      Meta Quest 3 · Valve Index · HTC Vive · Vision Pro</code></pre>
+          <p style="margin: 6px 0 0 0; font-size: 0.70em; color: var(--text-muted); line-height: 1.3;">
+            Aktivace: <em>Edit &gt; Project Settings &gt; XR Plug-in Management &gt; OpenXR</em> (u Questu při vývoji
+            vypněte <em>OpenXR Validation &amp; Faults</em>, jinak build spadne na varování).
+          </p>
+        </div>
+        <aside class="notes">
+          Dříve byl vývoj VR noční můrou: každý výrobce měl své proprietární SDK — Oculus SDK pro Rift/Quest,
+          OpenVR/SteamVR pro HTC Vive a Index, Windows Mixed Reality API a další. Kód pro jednu platformu nešel snadno
+          spustit jinde.
+          Konsorcium Khronos Group (které spravuje i Vulkan či OpenGL) vytvořilo OpenXR jako jednotný otevřený
+          průmyslový standard, na který dnes přešli všichni klíčoví hráči — Meta, Valve, Microsoft, Varjo a přes
+          wrappery i Apple.
+          Aplikace volá jednotné OpenXR funkce. O překlad na fyzický hardware se stará runtime dodaný výrobcem.
+          Dva klíčové koncepty OpenXR jsou:
+          1) Akční model a Interaction Profiles — místo vazby na konkrétní tlačítka pracujeme s abstraktními akcemi a
+          profily ovladačů, takže hra funguje i na hardware, který v době jejího vydání ještě neexistoval.
+          2) Systém rozšíření (Extensions) — umožňuje výrobcům rychle přinášet inovace jako passthrough, hand tracking
+          nebo foveated rendering, aniž by rozbili základní standard.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 8b: XR V UNITY - OBJEKTY, PREFABY, BALÍČKY
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">OpenXR &bull; Unity3D ekosystém</span>
+        <h2>XR v Unity: balíčky, objekty a prefaby 1/2</h2>
+        <div class="slide-grid-2" style="gap: 16px;">
+
+
+          <div class="glass-card accent-cyan" style="padding: 12px 14px;">
+            <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Klíčové balíčky</h3>
+            <ul class="custom-list" style="margin: 0; font-size: 0.74em; color: var(--text-main); line-height: 1.36;">
+              <li><strong>XR Interaction Toolkit (XRI)</strong>: <code>com.unity.xr.interaction.toolkit</code>:
+                oficiální vysokoúrovňový framework pro interakce (grab, ray, poke, UI), rig hráče a pohyb.</li>
+              <li><strong>OpenXR Plugin</strong>: <code>com.unity.xr.openxr</code>: Unity bridge implementující
+                OpenXR standard pro desktop i standalone (Android/Quest).</li>
+              <li><strong>XR Plugin Management</strong>: centrální aktivace a správa XR loaderů pro jednotlivé
+                platformy.</li>
+              <li><strong>Input System</strong>: <code>com.unity.inputsystem</code>: moderní event-driven vstup
+                s Action Maps (povinný pro XRI).</li>
+              <li><strong>XR Hands</strong>: standardizovaný subsystém pro hand tracking a rozpoznávání gest
+                bez nutnosti vendor SDK.</li>
+              <li><em>Doplňkově:</em> <strong>Meta XR All-in-One SDK</strong> (pokud projekt vyžaduje specifika Meta
+                Passthrough / Scene API).</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-emerald" style="padding: 12px 14px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Prefab XR Origin: rig
+              hráče</h3>
+            <p style="margin: 0 0 6px 0; font-size: 0.74em; color: var(--text-main); line-height: 1.35;">
+              <strong>XR Origin</strong> je kořenový GameObject reprezentující <em>hráče a jeho herní prostor</em> ve
+              scéně.
+            </p>
+            <ul class="custom-list" style="font-size: 0.72em; margin: 0; line-height: 1.35;">
+              <li><strong>XR Origin (skript)</strong>: koordinuje měřítko a <code>Tracking Origin Mode</code>
+                (<em>Floor</em> pro room-scale / <em>Device</em> pro sedící).</li>
+              <li><strong>Camera Offset</strong>: GameObject kompenzující výšku očí nad podlahou.</li>
+              <li><strong>Main Camera</strong>: <code>Tracked Pose Driver</code> mapuje 6DoF pozici a rotaci
+                HMD.</li>
+              <li><strong>Left / Right Controller</strong>: <code>XR Controller (Action-based)</code> sleduje
+                pozici rukou a předává stisky tlačítek.</li>
+            </ul>
+          </div>
+
+
+
+        </div>
+        <aside class="notes">
+          V Unity dnes stavíme VR na oficiálním ekosystému:
+          1. Balíčky: V Package Manageru nainstalujeme XR Plugin Management, OpenXR Plugin a XR Interaction Toolkit
+          (XRI). XRI vyžaduje moderní Input System. Pro snímání rukou bez ovladačů je tu XR Hands.
+          2. Rig hráče (XR Origin): Hierarchie objektů, kde XR Origin je kořen, pod ním je Camera Offset pro nastavení
+          výšky podlahy a uvnitř Main Camera s komponentou Tracked Pose Driver, která synchronizuje rotaci a polohu
+          headsetu. Ovladače mají komponentu XR Controller s referencí na Action Maps.
+          3. Model Interaktor vs Interactable: Interaktor je na ruce (Direct pro dotyk, Ray pro dálku a UI, Poke pro
+          mačkání čudlíků, Socket pro dokování). Na předmětech ve scéně je Interactable (Grab pro chytání, Simple pro
+          spínače). Tyto dvě části spolu komunikují přes standardní eventy (Hover, Select, Activate).
+          4. Pohyb: XRI obsahuje hotové Locomotion providery pro plynulý pohyb (Continuous Move), skokové otáčení (Snap
+          Turn) i teleportaci na Teleport Area / Anchor.
+        </aside>
+      </section>
+
+      <section class="dense">
+        <span class="slide-category">OpenXR &bull; Unity3D ekosystém</span>
+        <h2>OpenXR: Unity3D: balíčky, objekty a prefaby 2/2</h2>
+        <div class="slide-grid-2" style="gap: 16px;">
+
+
+
+
+          <div class="glass-card accent-purple" style="padding: 12px 14px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Klíčové XRI skripty a
+              komponenty</h3>
+            <ul class="custom-list" style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.05;">
+              <li><strong>Interaktory (kdo interaguje: na ovladačích / rukách):</strong>
+                <ul style="margin-top: 3px; padding-left: 14px;" class="custom-list">
+                  <li><code>XR Direct Interactor</code>: uchopení objektu přímým dotykem (kolizí).</li>
+                  <li><code>XR Ray Interactor</code>: laserový paprsek pro dálkovou interakci a 3D UI.</li>
+                  <li><code>XR Poke Interactor</code>: stisknutí tlačítek a UI panelů prstem.</li>
+                  <li><code>XR Socket Interactor</code>: magnetický slot pro odložení předmětu (pouzdro,
+                    batoh).</li>
+                </ul>
+              </li>
+              <li><strong>Interactables (s čím se interaguje: na předmětech):</strong>
+                <ul style="margin-top: 3px; padding-left: 14px;" class="custom-list">
+                  <li><code>XR Grab Interactable</code>: zvedání předmětů, házení fyzikou, attach pointy.</li>
+                  <li><code>XR Simple Interactable</code>: reaguje na Hover/Select/Activate (spínače, páky).
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <div class="glass-card" style="border-left: 4px solid var(--accent-rose); padding: 10px 14px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Pohyb (Locomotion) a prefaby
+            </h3>
+            <ul class="custom-list" style="font-size: 0.72em; margin: 0; line-height: 1.35;">
+              <li><strong>Locomotion Providers</strong>: skripty na rigu hráče:
+                <code>Teleportation Provider</code> (skoky na plochy <em>Teleport Area / Anchor</em>),
+                <code>Continuous Move Provider</code> (pohyb páčkou) a <code>Snap / Continuous Turn Provider</code>
+                (otáčení hráče).
+              </li>
+              <li><strong>Starter Assets prefaby</strong>: XRI vzorový balíček obsahuje hotový prefab
+                <em>Complete XR Origin Setup</em> se všemi interaktory a teleportem.
+              </li>
+              <li><strong>Měřítko &amp; Stereo</strong>: 1 unit = 1 metr; v Project Settings nastavit
+                <strong>Single Pass Instanced</strong> pro výkon.
+              </li>
+            </ul>
+          </div>
+
+        </div>
+        <aside class="notes">
+          V Unity dnes stavíme VR na oficiálním ekosystému:
+          1. Balíčky: V Package Manageru nainstalujeme XR Plugin Management, OpenXR Plugin a XR Interaction Toolkit
+          (XRI). XRI vyžaduje moderní Input System. Pro snímání rukou bez ovladačů je tu XR Hands.
+          2. Rig hráče (XR Origin): Hierarchie objektů, kde XR Origin je kořen, pod ním je Camera Offset pro nastavení
+          výšky podlahy a uvnitř Main Camera s komponentou Tracked Pose Driver, která synchronizuje rotaci a polohu
+          headsetu. Ovladače mají komponentu XR Controller s referencí na Action Maps.
+          3. Model Interaktor vs Interactable: Interaktor je na ruce (Direct pro dotyk, Ray pro dálku a UI, Poke pro
+          mačkání čudlíků, Socket pro dokování). Na předmětech ve scéně je Interactable (Grab pro chytání, Simple pro
+          spínače). Tyto dvě části spolu komunikují přes standardní eventy (Hover, Select, Activate).
+          4. Pohyb: XRI obsahuje hotové Locomotion providery pro plynulý pohyb (Continuous Move), skokové otáčení (Snap
+          Turn) i teleportaci na Teleport Area / Anchor.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9: INSTALACE UNITY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Praktický začátek &bull; Instalace</span>
+        <h2>Unity3D studio: instalace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="continuum-container" style="margin-top: 0;">
+              <div class="continuum-bar"></div>
+              <div class="continuum-labels">
+                <div class="continuum-node">
+                  <div class="continuum-title" style="color: var(--accent-cyan);">1. Unity Hub</div>
+                  <div class="continuum-desc">Instalovat a spustit Unity Hub</div>
+                </div>
+                <div class="continuum-node">
+                  <div class="continuum-title" style="color: var(--accent-purple);">2. Účet</div>
+                  <div class="continuum-desc">Vytvořit osobní (free) účet</div>
+                </div>
+                <div class="continuum-node">
+                  <div class="continuum-title">3. Verze</div>
+                  <div class="continuum-desc">Vybrat verzi Unity (LTS)</div>
+                </div>
+                <div class="continuum-node">
+                  <div class="continuum-title" style="color: var(--accent-emerald);">4. Instalace</div>
+                  <div class="continuum-desc">Moduly: platforma, IDE, dokumentace</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div class="image-showcase" style="max-height: 400px; margin: 0;">
+                <img src="../bordel/images-pvr/03_unity3d/newproject.png"
+                  alt="Unity Hub se seznamem nainstalovaných verzí a projektem" data-preview-image
+                  style="max-height: 360px;">
+                <div class="image-caption">Unity Hub: správa instalovaných verzí, licencí a projektů.</div>
+              </div>
+
+
+            </div>
+
+
+          </div>
+          <ul class="custom-list" style="font-size: 0.84em; margin-top: 16px;">
+            <li><strong>Unity Hub</strong>: centrální správce instalací a projektů; samotné Unity se instalační
+              volbou neovládá.</li>
+            <li><strong>Verze LTS</strong>: dlouhodobá podpora, stabilní; pro cvičení vždy shodná verze pro
+              celou skupinu.</li>
+            <li><strong>Instalační moduly</strong>: Visual Studio Community, Build Support (Windows /
+              Android&hellip;), Local Documentation.</li>
+            <li><strong>Meta Quest = Android</strong>: <strong>Android Build Support</strong> a v něm i
+              <strong>OpenJDK</strong> a <strong>Android SDK &amp; NDK</strong><br>
+              bez NDK
+              se Quest build nepodaří.
+            </li>
+            <li><strong>Nový projekt</strong>: šablona <strong>3D / URP</strong>, případně rovnou
+              <strong>VR</strong>, která má OpenXR a XRI předpřipravené.
+            </li>
+          </ul>
+
+        </div>
+        <aside class="notes">
+          Instalace se dnes nedělá stažením editoru, ale přes Unity Hub. Stáhnete Hub, založíte si osobní účet
+          — pro nás zdarma licence Personal — a v Hubu vyberete verzi editoru, kterou chcete nainstalovat.
+          U instalace vybíráte moduly: Visual Studio, podporu cílové platformy a případně lokální dokumentaci.
+          Pro cvičení i semestrální práci trvejte na stejné verzi LTS pro celou skupinu; rozdílné verze jsou nejčastější
+          zdroj „u mě to funguje“.
+          Při vytvoření projektu zvolte šablonu 3D a pro VR render pipeline URP.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9: HLAVNÍ OKNO EDITORU
+           ========================================== -->
+      <section>
+        <span class="slide-category">Editor &bull; Orientace v prostředí</span>
+        <h2>Hlavní okno editoru</h2>
+        <div class="slide-grid-2" style="grid-template-columns: 1.55fr 1fr; gap: 18px;">
+          <div>
+            <div class="image-showcase" style="max-height: 500px; margin-bottom: 10px;">
+              <img src="../bordel/images-pvr/03_unity3d/slide_09_img_01.png"
+                alt="Hlavní okno editoru Unity s Hierarchy, Scene View, Inspectorem a Project panelem"
+                data-preview-image style="max-height: 400px;">
+              <div class="image-caption">Hlavní okno editoru: rozložení panelů lze libovolně přetahovat a uložit
+                jako
+                layout</div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div class="glass-card" style="margin: 0; padding: 8px 12px;">
+                <h3>1 &bull; Hierarchie objektů ve scéně</h3>
+                <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                  <strong>Hierarchy</strong>: strom všech GameObjectů scény včetně vnoření.
+                </p>
+              </div>
+
+              <div class="glass-card" style="margin: 0; padding: 8px 12px;">
+                <h3>2 &bull; Okno scény</h3>
+                <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                  <strong>Scene</strong>: editační pohled s gizmos<br><strong>Game</strong>: pohled
+                  kamery.
+                </p>
+              </div>
+            </div>
+
+
+          </div>
+
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+
+
+            <div class="glass-card" style="margin: 0; padding: 8px 12px;">
+              <h3>3 &bull; Složka assetů</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                <strong>Project</strong>: struktura <em>stejná jako na disku</em> (složka <code>Assets</code>).
+              </p>
+            </div>
+
+            <div class="glass-card" style="margin: 0; padding: 8px 12px;">
+              <h3>4 &bull; Kontextové menu objektů</h3>
+              <p style="margin: 0; font-size: 0.74em; color: var(--text-muted); line-height: 1.35;">
+                Pravé tlačítko v <strong>Hierarchy</strong>: vytvoření objektu, přidání komponenty, duplikace,
+                <strong>Create Prefab</strong>.
+              </p>
+            </div>
+
+            <div class="glass-card" style="margin: 0; padding: 8px 12px;">
+              <h3>5 &bull; Console &amp; Gizmos</h3>
+              <p style="margin: 0; font-size: 0.74em; color: var(--text-muted); line-height: 1.35;">
+                <strong>Console</strong> (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd>): výpisy
+                <code>Debug.Log</code>, chyby a výjimky; klik na chybu skočí na řádek ve skriptu. Přes tlačítko
+                <strong>Gizmos</strong> v liště Scene View zapínáte vizualizace kolizí, raycastů, lightmapů i XR rigů.
+              </p>
+            </div>
+
+            <div class="highlight-card"
+              style="justify-content: flex-start; font-size: 0.78em; color: var(--text-muted);">
+              <ul class="custom-list">
+                <li>Pravé tlačítko + <kbd>W</kbd><kbd>S</kbd><kbd>A</kbd><kbd>D</kbd>: Pohyb ve scéně.</li>
+                <li><kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd>R</kbd> Select / Move / Rotate /
+                  Scale</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Editor je rozdělen na několik panelů, jejichž rozložení si můžete přetáhnout a uložit jako vlastní layout.
+          Vlevo nahoře je Hierarchy — strom objektů scény. Uprostřed je Scene View, editační pohled, ve kterém objekty
+          posouváte otáčením a škálováním; záložka Game ukazuje to, co uvidí kamera.
+          Dole je Project — a to je důležité — struktura totožná se složkou Assets na disku. Vpravo je Inspector
+          a pravým tlačítkem se dostanete ke kontextovému menu objektů, kde vytváříte objekty, přidáváte komponenty
+          nebo tvoříte prefaby.
+          Klávesy Q, W, E, R přepínají nástroje Select, Move, Rotate, Scale.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 10: USPOŘÁDÁNÍ PROJEKTU
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Editor &bull; Organizace projektu</span>
+        <h2>Uspořádání projektu</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Assety</h3>
+              <p style="margin: 0; font-size: 0.81em; color: var(--text-main); line-height: 1.45;">
+                Všechny potřebné soubory <strong>musí být uvnitř složky <code>Assets</code></strong>. <br>
+                Cokoli leží mimo ni, Unity nevidí,<br>
+                a naopak: co se do <code>Assets</code> nakopíruje, to Unity zkusí
+                naimportovat.
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.80em; margin-top: 14px;">
+              <li><strong>Složky podle typu</strong>: <code>Textures</code>, <code>Images</code>,
+                <code>Scripts</code>, <code>Models</code>, <code>Prefabs</code>, <code>Materials</code>.
+              </li>
+              <li><strong>Konzistentní pojmenování</strong>: objekty pojmenovávat vhodně a <em>stejným
+                  vzorem</em> (<code>Enemy_Soldier_01</code>).</li>
+              <li><strong>Znovupoužitelné komponenty</strong>: hlavně skripty; raději obecný
+                <code>Health</code> než deset kopií.
+              </li>
+              <li><strong>Způsoby přidání assetu</strong>: přes editor, nebo přímým kopírováním souborů do
+                složky projektu.</li>
+            </ul>
+
+            <div class="glass-card" style="border-left: 4px solid var(--accent-rose); padding: 10px 14px;">
+              <p style="margin: 0 0 6px 0; font-size: 0.73em; color: var(--text-main); line-height: 1.35;">
+                V projektu rozhoduje dohledatelnost. Bez struktury a názvů se nedá spolupracovat v
+                týmu ani se vrátit ke svému vlastnímu kódu po pár měsících.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple">
+              <h3>Doporučená struktura</h3>
+              <pre style="margin: 0; font-size: 0.63em; line-height: 1.45; width: 100%;"><code class="language-text" data-trim data-noescape>Assets/
+├── Scenes/       # scény (Main, Menu, Game)
+├── Scripts/      # C# skripty
+├── Prefabs/      # šablony objektů
+├── Models/       # FBX, OBJ
+├── Materials/    # materiály a shadery
+├── Textures/     # albedo, normálové, ORM
+├── ../bordel/images-pvr/       # UI sprite, ikony
+├── Audio/        # AudioClips, mixery
+└── Settings/     # input actions, XR setup</code></pre>
+            </div>
+
+
+
+            <div class="glass-card" style="border-left: 4px solid var(--accent-rose); padding: 10px 14px;">
+              <div class="notice-pill" style="margin-bottom: 6px;">Co do Gitu</div>
+              <p style="margin: 0 0 6px 0; font-size: 0.73em; color: var(--text-main); line-height: 1.35;">
+                <code>Library/</code> a <code>Temp/</code> <strong>se tam nedávají</strong><br>
+                Jen <code>Assets/</code>, <code>Packages/</code>, <code>ProjectSettings/</code> a
+                <strong>všechny <code>.meta</code> soubory</strong>.
+              </p>
+              <p style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.35;">
+                <strong>Git LFS</strong> (Large File Sharing): Použít <code>git lfs track &quot;*.fbx&quot; &quot;*.png&quot; &quot;*.tga&quot;
+                &quot;*.wav&quot; &quot;*.psd&quot;</code> <strong>selže push na GitHubu/GitLabu</strong> na limitech
+                souboru (100&nbsp;MB). LFS nastavit <em>před</em> prvním commitem.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Organizace není kosmetika, je to podmínka toho, se v projektu vyznáte. Všechno musí ležet ve složce Assets.
+          Doporučuji složky podle typu — textury, obrazy, skripty, modely, prefaby, materiály — a jednotný vzor
+          názvů. Objekty pojmenovávejte smysluplně a konzistentně; „Cube (1)“, „Cube (2)“, „Nový objekt“ se za týden
+          nedají dohledat.
+          Skripty pište znovu použitelné. A pro odevzdání a Git: do verze patří Assets, Packages a ProjectSettings,
+          nikdy ne Library a Temp, které si Unity vygeneruje sama.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 11: INSPEKTOR
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Editor &bull; Inspektor</span>
+        <h2>Inspektor objektů</h2>
+        <p style="color: var(--text-muted); font-size: 0.83em; margin: 0 0 10px 0;">
+          <strong>Inspector</strong> zobrazuje vybraný GameObject a všechny jeho komponenty.<br>
+          Je to hlavní místo, kde se nastavují vlastnosti.
+        </p>
+        <div class="slide-grid-2" style="grid-template-columns: 1.15fr 1fr; gap: 18px;">
+          <div>
+
+
+            <div class="glass-card" style="margin: 0 0 12px 0;">
+              <h3>Záhlaví objektu (společná pro všechny)</h3>
+              <ul class="custom-list" style="font-size: 0.75em; margin: 0;">
+                <li><strong>Jméno objektu</strong>: jak je vidět v Hierarchy.</li>
+                <li><strong>Tag</strong>: pro rychlé třídění a hledání objektů (<code>FindWithTag</code>).</li>
+                <li><strong>Layer</strong>: vrstvy pro kolize a raycasting.</li>
+                <li><strong>Static</strong>: objekt se ve scéně nehýbe &rarr; editor ho optimalizuje
+                  (lightmapping, batching).</li>
+              </ul>
+            </div>
+
+
+
+            <div class="glass-card accent-purple" style="margin: 0;">
+              <div class="spec-badge purple" style="margin-bottom: 8px;">Dále následují komponenty objektu</div>
+              <ul class="custom-list" style="font-size: 0.75em; margin: 0;">
+                <li><strong>Transform</strong>: má každý objekt (Position, Rotation, Scale).</li>
+                <li><strong>Mesh Filter</strong>: data o geometrii.</li>
+                <li><strong>Mesh Renderer</strong>: zobrazuje objekt: materiály, osvícení, stínování.</li>
+                <li><strong>&hellip;</strong> další komponenty včetně vašich skriptů.</li>
+              </ul>
+            </div>
+
+          </div>
+          <div>
+            <div class="image-showcase" style="max-height: 500px; margin-bottom: 10px;">
+              <img src="../bordel/images-pvr/03_unity3d/slide_11_img_01.png"
+                alt="Inspektor objektu se jménem, tagem, vrstvou, zaškrtávkou Static a komponentami Transform, Mesh Filter a Mesh Renderer"
+                data-preview-image style="max-height: 330px;">
+
+            </div>
+            <div class="glass-card" style="margin: 0 0 12px 0; border-left: 4px solid var(--accent-rose);">
+              <h3 style="color: var(--accent-rose);">Layer Mask: ve VR klíčové</h3>
+              <p style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.35;">
+                Vrstvy se ve VR používají jako <strong>filtr, do jakých objektů paprsek či ruka sahá</strong>: vytvořte
+                si vlastní vrstvy <em>Teleport</em>, <em>Grabbable</em> a <em>UI</em> a v komponentách XRI je přiřaďte
+                přes <em>Layer Mask</em>.<br>
+                Ray interactor pak <strong>nechytá</strong> stěny a UI se nechová jako
+                uchopitelný předmět.<br>Nastavení vrstev: <em>Edit &gt; Project Settings &gt; Tags and Layers</em>.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Inspector je vaše hlavní ovládací panel. Nahoře jsou společné údaje: jméno, tag pro rychlé třídění, layer a
+          zaškrtávek Static, který říká, že se objekt nebude hýbat — podle toho Unity počítá osvětlení do světelných map
+          a slučuje vykreslování.
+          Pod tím je výčet komponent. Transform tam najdete vždy, protože se nedá odebrat. Mesh Filter určuje jakou
+          geometrii objekt zobrazuje a Mesh Renderer jak ji vykreslit — materiály, osvícení, stínování.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 12: DŮLEŽITÉ KOMPONENTY – FYZIKA
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Fyzika &bull; Vybrané komponenty</span>
+        <h2>Důležité komponenty: Fyzika 1/2 (Rigidbody &amp; Materiály)</h2>
+        <p style="color: var(--text-muted); font-size: 0.88em; margin: 0 0 10px 0;">
+          Přidávají se přes menu <strong>GameObject &gt; Component &gt; Physics</strong>.
+        </p>
+        <div class="slide-grid-2" style="gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card" style="margin: 0; padding: 10px 14px;">
+
+              <img src="../bordel/images-pvr/03_unity3d/slide_12_img_01.png" alt="Inspektor komponenty Rigidbody"
+                data-preview-image style="max-height: 105px;max-height: 105px; margin: 8px; float:right">
+
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Rigidbody: tuhé těleso</h3>
+              <p style="margin: 0 0 6px 0; font-size: 0.76em; color: var(--text-main); line-height: 1.35;">
+                Řídí <strong>fyzikální chování</strong>: gravitace, síly, hmotnost (kg), setrvačnost a odpor prostředí
+                (<code>Drag</code> / <code>Angular Drag</code>). Bez Rigidbody se objekt fyzikou neřídí.
+              </p>
+              <ul class="custom-list" style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.35;">
+                <li><strong>Interpolate (ve VR povinnost)</strong>: PhysX počítá ve <code>FixedUpdate</code> (např.
+                  50/90&nbsp;Hz), displej běží na 90/120&nbsp;Hz. Bez <em>Interpolate</em> předměty při pohybu
+                  <strong>mikro-trhají</strong> &rarr; spouštěč nevolnosti.
+                </li>
+                <li><strong>Collision Detection</strong>: <em>Continuous</em> / <em>Continuous Dynamic</em> brání
+                  prolétnutí předmětu tenkou stěnou při rychlém švihu rukou (tunneling).</li>
+                <li><strong>Constraints</strong>: zamčení pozice / rotace v osách X, Y, Z (např. zásuvka stolu, posuvná
+                  páka).</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin: 0; padding: 10px 14px;">
+              <div style="font-weight: 700; color: var(--accent-rose); font-size: 0.78em; margin-bottom: 2px;">Is
+                Kinematic: předání kontroly skriptu</div>
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.35;">
+                Vypne vliv gravitace a sil; polohu určuje skript či XRI. Při uchopení se předmět přepne na
+                <code>isKinematic = true</code> a drží v ruce. Po puštění se vrátí na <code>false</code> a padá podle
+                fyziky.
+              </p>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-purple" style="margin: 0; padding: 10px 14px;">
+
+              <img src="../bordel/images-pvr/03_unity3d/slide_12_img_02.png"
+                alt="Physics Material s nastavením tření a odrazivosti" data-preview-image
+                style="max-height: 100px; margin: 8px; float:right">
+
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Physics Material: povrchy
+              </h3>
+              <p style="margin: 0 0 6px 0; font-size: 0.75em; color: var(--text-main); line-height: 1.35;">
+                Přiřazuje se do <em>Collideru</em> a definuje <strong>tření a pružnost</strong> při kontaktu:
+              </p>
+              <ul class="custom-list" style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.35;">
+                <li><strong>Dynamic / Static Friction</strong>: odpor při skluzu vs. síla nutná k uvedení do pohybu. Ve
+                  VR nutné nastavit &gt; 0, jinak odložené předměty na stole samovolně kloužou jako na ledu.</li>
+                <li><strong>Bounciness (0 až 1)</strong>: odrazivost povrchu (0 = plastelína pohlcující energii, 1 =
+                  dokonale pružný míček).</li>
+                <li><strong>Friction / Bounce Combine</strong>: jak se hodnoty obou dotýkajících se těles kombinují
+                  (<em>Average, Minimum, Multiply, Maximum</em>).</li>
+              </ul>
+
+            </div>
+
+            <div class="glass-card" style="border-left: 4px solid var(--accent-rose); padding: 10px 14px; margin: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 6px;">Fyzika a Rigidbody ve VR
+              </h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.35;">
+                <li><strong>Fixed Timestep</strong>: výchozích 50&nbsp;Hz (0,02&nbsp;s) nestačí pro 72/90&nbsp;Hz
+                  headsety. V <em>Project Settings &gt; Time</em> změnit na <strong>0,0111&nbsp;s (pro
+                    90&nbsp;Hz)</strong> nebo 0,0138&nbsp;s (pro 72&nbsp;Hz).</li>
+                <!-- <li><strong>XRI Grab: Kinematic vs. Velocity Tracking</strong>:
+                  <em>Kinematic</em> sleduje ovladač natvrdo (projde zdí); <em>Velocity Tracking</em> předává síly
+                 : předmět se zastaví o stůl/zeď a při hodu přirozeně letí se setrvačností ruky.
+                </li> -->
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Fyzikální trojice, které budete potřebovat nejčastěji: Rigidbody, Physics Material a Collidery.
+          Rigidbody dělá z objektu tuhé těleso — bez něj na objekt gravitace ani síly působit nebudou.
+          Ve VR jsou klíčové dvě věci:
+          1) Interpolace: Fyzika běží ve FixedUpdate (např. 50 Hz), ale headset kreslí 90 snímků za sekundu. Pokud
+          nezapnete Interpolate, pohybující se objekty se v headsetu trhají a kmitají, což spolehlivě vyvolává
+          nevolnost. Proto také v Project Settings zkracujeme Fixed Timestep na 0,0111 s (90 Hz).
+          2) Is Kinematic a XRI Move Type: Kinematický režim předá řízení skriptu. XRI to používá při zvedání předmětů.
+          Pokud chcete, aby předmět v ruce narážel do zdi a neprocházel jí, zvolí se Velocity Tracking, kde XRI aplikuje
+          síly.
+          Physics Material definuje tření a odrazivost — ve VR nutnost, jinak vám předměty na stole budou klouzat pryč.
+        </aside>
+      </section>
+
+      <section class="dense">
+        <span class="slide-category">Fyzika &bull; Vybrané komponenty</span>
+        <h2>Důležité komponenty: Fyzika 2/2 (Collidery)</h2>
+
+        <div class="slide-grid-2" style="gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-emerald" style="margin: 0; padding: 10px 14px;">
+
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">Collider: typy a výkon
+              </h3>
+
+              <ul class="custom-list"
+                style="margin: 0; font-size: 0.74em; color: var(--text-main); line-height: 1.35; display: inline-block;">
+                <li>
+
+                  <img src="../bordel/images-pvr/03_unity3d/slide_12_img_03.png" alt="Inspektor komponenty Box Collider"
+                    data-preview-image style="max-height: 110px;max-height: 115px; margin: 0 8 8 0px; float: right;">
+                  <strong>Primitivní collidery</strong> (<code>Box</code>, <code>Sphere</code>,
+                  <code>Capsule</code>):
+                  analyticky přesné a extrémně rychlé na výpočet.
+                </li>
+                <li><strong>Compound collidery</strong>: složení tvaru z několika primitivních colliderů (např. meč =
+                  rukojeť capsule + čepel box); výrazně levnější než mesh.</li>
+                <li><strong>Mesh Collider</strong>: kopíruje trojúhelníky 3D modelu. Pro dynamické Rigidbody
+                  <strong>musí mít zaškrtnuto <em>Convex</em></strong>, jinak nejdou kolize
+                  s jinými tělesy.
+                </li>
+              </ul>
+
+            </div>
+
+            <div class="glass-card" style="margin: 0; padding: 10px 14px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Pevná kolize vs. Is Trigger
+              </h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.35;">
+                <li><strong>Pevný collider (Solid)</strong>: neprostupný, působí odpudivé síly, odrazy a tření. Volá
+                  <code>OnCollisionEnter(Collision)</code>.
+                </li>
+                <li><strong>Trigger (Is Trigger)</strong>: nebrání pohybu, funguje jako neviditelná detekční zóna. Volá
+                  událost <code>OnTriggerEnter(Collider)</code>.</li>
+                <li>Aby vznikla kolizní událost, <strong>alespoň jeden</strong>
+                  ze dvou kolidujících objektů musí mít <code>Rigidbody</code>!</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-cyan" style="padding: 10px 14px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Collidery v XR: interaktory
+                a detekce</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.35;">
+                <li><strong>interaktory neinteragují s mesh</strong>, ale jen s collidery.</li>
+                <li><strong>XR Direct Interactor (ruka)</strong>: vyžaduje collider nastavený jako
+                  <strong>Trigger</strong> (typicky <code>SphereCollider</code> o $r\approx10$ cm).
+                </li>
+                <li><strong>XR Ray Interactor (paprsek)</strong>: vysílá fyzikální <code>Raycast</code> proti colliderům
+                  ve scéně: uchopení z dálky, teleportace a interakce s World Space UI.</li>
+                <li><strong>XR Poke Interactor (prst)</strong>: miniaturní trigger na špičce ukazováčku pro fyzické
+                  stlačování tlačítek.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="border-left: 4px solid var(--accent-rose); padding: 10px 14px;">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 6px;">Kolize ve VR: vrstvy a
+                průchod zdí</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.35;">
+                <li><strong>Self-collision &amp; Layer Matrix</strong>: předmět v ruce nesmí narážet do collideru ruky
+                  ani hráče (jinak začne nekontrolovaně kmitat).<!-- Nastavte vrstvy <em>Hand</em>, <em>Grabbable</em>,
+                  <em>Player</em> a vypněte jejich kolizi v <em>Project Settings &gt; Physics &gt; Layer Collision
+                    Matrix</em>. -->
+                </li>
+
+                <li><strong>Kinematic</strong>: předmět věrně kopíruje ruku a projde zdí (rozpad imerze).</li>
+                <li><strong>Velocity Tracking</strong>: předmět zůstává dynamický, o pevnou zeď se zastaví a k ruce ho
+                  dotahuje virtuální pružina.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Collidery jsou ve virtuální realitě naprosto fundamentální:
+          1. Rozdíl mezi grafikou a fyzikou: Mesh Renderer určuje, jak věc vypadá, ale pro interakci ve VR je
+          neviditelný. Interaktory (Direct i Ray) testují pouze collidery.
+          2. Typy: Pro VR jsou nejlepší primitivní collidery (Box, Sphere, Capsule) nebo Compound collidery složené z
+          více primitiv. Mesh Collider je náročný a pokud má mít těleso Rigidbody, musí být Convex s limitem 255
+          polygonů.
+          3. Is Trigger: Direct Interactor na ruce je ve skutečnosti Trigger koule. Když do ní vejde collider předmětu s
+          XR Grab Interactable, dojde k hover stavu a stisk tlačítka grip ho vezme.
+          4. Layer Collision Matrix: Obrovská chyba začátečníků ve VR je, že držený předmět začne kolidovat s colliderem
+          ruky hráče, což způsobí šílené fyzikální síly a vystřelení předmětu do vesmíru. Proto musíme mít oddělené
+          vrstvy a vypnout kolize mezi rukou a drženým předmětem.
+          5. Pohyb se zdí: V režimu Kinematic můžete předmětem projít zdí, v režimu Velocity Tracking se předmět o zeď
+          zasekne jako ve skutečnosti.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 13: JOINTS
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Fyzika &bull; Spoje</span>
+        <h2>Joints: spoje</h2>
+        <div class="slide-grid-2" style="gap: 16px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Pevné spoje: hierarchie</h3>
+              <p style="margin: 0; font-size: 0.79em; color: var(--text-main); line-height: 1.45;">
+                Nejjednodušší pevné spojení vytvoříte <strong>hierarchií ve scéně</strong>: potomek pevně dědí
+                transformaci rodiče.<br>Je to levné a spolehlivé, vhodné pro <strong>jednoduché spoje</strong> (auto a
+                jeho kola, postava a meč).<br>
+                <strong>Nevýhoda:</strong> žádná fyzika, jen pevný vztah.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px;">
+              <h3>Joint komponenty: fyzikální spoje</h3>
+              <ul class="custom-list" style="font-size: 0.75em; margin: 0;">
+                <li><strong>Fixed Joint</strong>: pevný spoj, ale s <strong>víc možností</strong> než
+                  hierarchie: lze ho silou přetrhnout (<code>breakForce</code>), nastavit vzájemnou transformaci.</li>
+                <li><strong>Spring Joint</strong>: <strong>pružný spoj</strong>; Spring (tuhost), Damper
+                  (tlumení), Target Position (klidová délka). Ve VR: <strong>pružné lano</strong>, přitahování
+                  uchopeného objektu k ruce.</li>
+                <li><strong>Hinge Joint</strong>: pant / otáčení kolem osy s mezemi a motorem. Ve VR nejčastější
+                  spoj vůbec: <strong>dveře, páky, kohoutky, otočný volant</strong>: stačí uchopit a zatáhnout
+                  rukou.</li>
+                <li><strong>Configurable / Character / Constant Force Joint</strong>: atd.</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div>
+
+            <div class="image-gallery" style="grid-template-columns: 1fr; gap: 12px;">
+              <div class="image-showcase" style="max-height: 210px;">
+                <img src="../bordel/images-pvr/03_unity3d/slide_13_img_01.png"
+                  alt="Inspektor komponenty Fixed Joint s Connected Body a Break Force" data-preview-image
+                  style="max-height: 150px;">
+
+              </div>
+              <div class="image-showcase" style="max-height: 300px;">
+                <img src="../bordel/images-pvr/03_unity3d/slide_13_img_02.png"
+                  alt="Inspektor komponenty Spring Joint s Spring, Damper a Target Position" data-preview-image
+                  style="max-height: 210px;">
+
+              </div>
+            </div>
+            <div class="highlight-card">
+              <ul class="custom-list" style="font-size: 0.8em;">
+                <li>Rigidbody u obou konců</li>
+                <li>Connected Body: s čím je spojeno</li>
+                <li>Auto Configure Connected Mass</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Objekty lze spojovat dvou způsoby. Ten nejjednodušší je hierarchie — potomek zafixovaný vzhledem k rodiči.
+          Nic to nestojí a chová se to přesně, ale je to mrtvé spojení bez fyziky.
+          Fyzikální spoje dělají komponenty Joint. Fixed Joint je pevný, ale na rozdíl od hierarchie ho lze
+          přetrhnout nastavenou silou a lze ovládat vzájemnou polohu. Spring Joint je pružina — tuhost, tlumení a
+          klidová délka; typicky se takhle dělá kyvadlo, lanové mosty nebo přitažlivost objektu k hráči.
+          K tomu Hinge Joint na panty a dveře. Vždy potřebujete Rigidbody na obou spojovaných tělesech a v Connected
+          Body určete protější objekt.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 14: KAMERA
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Scéna &bull; Kamera</span>
+        <h2>Kamera</h2>
+        <div class="slide-grid-2" style="grid-template-columns: 1fr 1.05fr; gap: 18px;">
+          <div>
+            <ul class="custom-list" style="font-size: 0.76em; margin: 0 0 10px 0;">
+              <li><strong>Může být víc kamer ve scéně</strong>: aktivní je ta s nejvyšším <em>Depth</em>.</li>
+              <li><strong>Skybox</strong>: pozadí scény (obloha, environment); volí se přes <em>Clear
+                  Flags &gt; Skybox Material</em>.</li>
+              <li><strong>Volba perspektivy</strong>: <em>Perspective</em> vs. <em>Orthographic</em>
+                (rovnoběžné paprsky, technické pohledy, 2D).</li>
+              <li><strong>Field of View</strong>: zorný úhel; ve VR ho <strong>nikdy nenastavovat
+                  ručně</strong>: získá se z headsetu a XR rozhraní (ruční změna rozbije stereo).</li>
+              <li><strong>Vlastnosti grafiky</strong>: Clear Flags, Background Color, Clipping Planes,
+                Culling Mask, HDR / MSAA, Target Texture.</li>
+            </ul>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase" style="max-height: 430px; margin: 0;">
+              <img src="../bordel/images-pvr/03_unity3d/slide_14_img_01.png"
+                alt="Inspektor komponenty Camera s Clear Flags, Background Color, Culling Mask, Clipping Planes, Projection a Field of View"
+                data-preview-image style="max-height: 265px;">
+
+            </div>
+
+
+          </div>
+        </div>
+        <div class="glass-card"
+          style="margin: 0 0 10px 0; border-left: 4px solid var(--accent-rose); padding: 8px 12px;">
+          <h3 style="color: var(--accent-rose)">Ve VR se kamera nedělá ručně: XR Origin
+
+            <pre style="margin: 10px; font-size: 0.63em; line-height: 1.45; width: 95%;"><code class="language-text" data-trim data-noescape>XR Origin                    kořen rigu = pozice hráče v místnosti (0)
+└── Camera Offset            výška očí (~1,6 m), lze doladit
+    └── Main Camera          Tracked Pose Driver → sledování hlavy
+                             FOV a eye offset diktuje headset
+├── Left Hand                pose levého ovladače
+└── Right Hand               pose pravého ovladače</code></pre>
+            <p style="margin: 6px 0 0 0; font-size: 0.72em; color: var(--text-main); line-height: 1.35;">
+              Prefab <em>XR Origin (XR rig)</em>). Pohyb
+              hlavy
+              do kamery přenáší komponenta <strong>Tracked Pose Driver</strong>;<br>Výška hráče se mění na
+              <em>Camera Offset</em>, nikdy ne na kameře.
+            </p>
+        </div>
+        <aside class="notes">
+          Kamera je GameObject jako každý jiný, jen s komponentou Camera. Nastavíte v ní clear flags a barvu pozadí,
+          culling mask které vrstvy se mají kreslit, clipping planes jak daleko se ještě vykresluje, perspektivu
+          a zorný úhel.
+          Ve scéně jich může být víc — rozhoduje Depth. V klasické hře se třetí kamera používá třeba na mapu nebo na
+          stříhání záběru.
+          Ve VR ale kameru nenastavujete ručně: XR rig ji vytvoří sám, dvě podkamery pro oči, a FOV i pozici očí
+          přebírá z profilu headsetu. Když ve VR ručně přepnete FOV, rozbijete stereo zobrazování.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE: INPUT SYSTEM & VR OVLADAČE (nové)
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Virtuální realita &bull; Vstup</span>
+        <h2>Input System a VR ovladače</h2>
+        <div class="slide-grid-2" style="gap: 16px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <span class="spec-badge purple" style="float: right;">com.unity.inputsystem</span>
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Od
+                <code>Input.GetAxis</code>
+                k akcím
+              </h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.4;">
+                Starý <code>Input.GetAxis("Vertical")</code> předpokládá <strong>jednu klávesnici a jeden
+                  gamepad</strong>.<br> Ve VR nestačí: ovladače pro dvě ruce, joystick, trigger s plynulou hodnotou,
+                grip a sledování polohy v prostoru. Nový <strong>Input System</strong> proto pracuje s
+                <strong>akcemi (actions)</strong> a <strong>mapováním</strong>.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px;">
+              <h3>Action maps: asset
+                <code>.inputactions</code>
+              </h3>
+              <pre style="margin: 0; font-size: 0.62em; line-height: 1.15; width: 100%;"><code class="language-text" data-trim data-noescape>ActionMap "VR"
+├── Pose        (Pose)     pose levé / pravé ruky v prostoru
+├── Move        (Vector2)  thumbstick ← osy X/Y
+├── Grab        (Button)   grip / squeeze
+├── Select      (Button)   trigger (axis 0…1, plynulý stisk)
+├── Teleport    (Button)   stisk pro teleportaci
+└── Haptic      (Pose+axis) vibrační odezva (amplituda, frekvence)</code></pre>
+              <p style="margin: 8px 0 0 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.35;">
+                Přepnutí: <em>Edit &gt; Project Settings &gt; Player &gt; Active Input Handling &rarr; Both /
+                  Input System Package (new)</em>.<br>XRI má předpřipravené mapování <em>XRI Default Input Actions</em>.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <h3>Čtení dat z ovladače</h3>
+              <pre style="margin: 0; font-size: 0.62em; line-height: 1.2;width: 100%"><code class="language-csharp" data-trim data-noescape>[SerializeField] InputActionReference grab;
+
+void OnEnable()  => grab.action.performed += OnGrab;
+void OnDisable() => grab.action.performed -= OnGrab;
+
+void OnGrab(InputAction.CallbackContext ctx)
+{
+    float t = ctx.ReadValue&lt;float&gt;();
+    xrDevice.SendHapticImpression(0, t); 
+}</code></pre>
+              <p style="margin: 8px 0 0 0; font-size: 0.72em; color: var(--text-main); line-height: 1.15; ;">
+                Reference se přiřadí z Inspektoru: <strong>žádné pevně zapsané názvy tlačítek</strong>, hra pak
+                funguje s jakýmkoli profilem ovladače.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald">
+              <h3>Rozdíl od normálních her</h3>
+              <ul class="custom-list" style="font-size: 0.73em; margin: 0;">
+                <li><strong>Pose</strong>: ne osy, ale <strong>poloha a rotace ruky</strong> v prostoru.</li>
+                <li><strong>Analogový trigger</strong>: plynulá hodnota.</li>
+                <li><strong>Grip / thumbstick / A&nbsp;B&nbsp;X&nbsp;Y</strong>: zvlášť za každou ruku.</li>
+                <li><strong>Haptika</strong>: odezva při uchopení, nárazu, zásahu.</li>
+                <li><strong>Hand tracking</strong>: místo tlačítek póza ruky (pinch, ...).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Starý Input manager zná osy jako Vertical nebo Fire1 a předpokládá klávesnici. Ve VR to k ničemu není —
+          potřebujete číst polohu ruky, plynulý stisk triggeru a zvlášť levou a pravou ruku. To řeší nový Input System:
+          v editoru si vytvoříte asset .inputactions, v něm akce a jejich mapování na konkrétní hardware.
+          Pak ve skriptu neptáte se „je stisknuta klávesa W“, ale „byla provedena akce Move“.
+          Výhoda: když hráč vymění Quest za Index, neměníte řádek kódu, jen profil. A k tomu haptika —
+          SendHapticImpression —
+          která v klasické hře je bonus, ale ve VR je to zásadní zpětná vazba, protože hráč předmět fyzicky nedrží.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 15: KOMPONENTA SCRIPT
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Programování &bull; Komponenta Script</span>
+        <h2>Komponenta Script</h2>
+        <div class="slide-grid-2" style="gap: 16px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 4px;">Pro nás velmi důležitá</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.35;">
+                Třída odvozená od <code>MonoBehaviour</code> se chová jako <strong>komponenta</strong>: lze ji
+                připojit k libovolnému GameObjectu.
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.76em; margin: 10px 0 0 0;">
+              <li><img src="../bordel/images-pvr/03_unity3d/slide_15_img_01.png"
+                  alt="Komponenta ScriptPVR v Inspektoru zobrazená s poli Speed a Prefab" data-preview-image
+                  style="max-width: 50%;float:right;padding:5px"><strong>Kód v C#</strong>: <em>Create &gt; C#
+                  Script</em> v
+                Project panelu.
+              </li>
+              <li><strong>Běžný textový soubor</strong>: Unity sleduje změny a
+                po uložení znovu zkompiluje.</li>
+              <li><strong>Podpora MS Visual Studio</strong>: (Mac, Win); alternativně JetBrains Rider
+                nebo VS Code.</li>
+              <li><strong>Vlastní atributy viditelné v editoru</strong>: <code>public</code> pole a
+                <code>[SerializeField]</code> se objeví v Inspektoru &rarr; ladění bez překladu.
+              </li>
+              <li><strong>Odkazy na jiné komponenty</strong>:<br><code>GetComponent&lt;Rigidbody&gt;()</code>
+                (volat v <code>Awake</code>, ne v <code>Update</code>).</li>
+            </ul>
+
+
+          </div>
+
+          <div style="">
+            <div class="glass-card accent-emerald" style="margin-top: 10px; padding: 15px;">
+              <h3>Životní cyklus
+              </h3>
+              <p style="margin: 0; font-size: 0.71em; color: var(--text-main); line-height: 1.35;">
+
+                <code>Awake</code> &rarr; <code>OnEnable</code> &rarr; <code>Start</code> &rarr;
+                (<code>FixedUpdate</code>, <code>Update</code>, <code>LateUpdate</code>)
+                &rarr; <code>OnDisable</code> &rarr; <code>OnDestroy</code>.
+                <br>
+                <strong><code>Update()</code></strong> proběhne <strong>jednou za vykreslený snímek</strong>:
+                jeho četnost kolísá s FPS, proto se násobí <code>Time.deltaTime</code>.<br>
+                <strong><code>FixedUpdate()</code></strong> běhá v <strong>pevném fyzikálním kroku</strong> (výchozích
+                50&nbsp;Hz &rarr; <code>Time.fixedDeltaTime</code> = 0,02&nbsp;s), tedy nezávisle na snímkové frekvenci.
+              </p>
+              <p class="highlight-card"
+                style="margin: 6px 0 0 0; font-size: 0.71em; color: var(--text-main); line-height: 1.35;">
+                Ve VR je to klíčové: hlavu i ovladače sleduje headset v pevné frekvenci a fyzika uchopených předmětů se
+                musí počítat v pevném kroku. Síly se dávají výhradně do <code>FixedUpdate</code>: jinak při
+                kolísavém FPS předmět v ruce <strong>trhá a kmitá</strong>, což vyvolává nevolnost.
+              </p>
+            </div>
+            <div class="glass-card accent-purple" style="margin: 0; padding: 10px 14px;">
+              <pre style="margin: 5px; font-size: 0.62em; line-height: 1.0;width: 100%;height: 250px;"><code class="language-csharp" data-trim data-noescape style="max-height: 250px;">using UnityEngine;
+
+public class ScriptPVR: MonoBehaviour
+{
+    public float speed = 2f;      // viditelné v Inspektoru
+    public GameObject prefab;     // reference na šablonu
+    Rigidbody rb;                 // odkaz na jinou komponentu
+
+    void Awake()                  // získání komponenty
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void Start()                  // jednou při spawnu
+    {
+        Debug.Log("Start");
+    }
+
+    void Update()                 // jednou za snímek
+    {   // Time.deltaTime = čas od předchozího snímku
+        transform.Translate(0, 0, speed * Time.deltaTime);
+    }
+
+    void FixedUpdate()            // pevný krok – síly sem
+    {
+        if (rb) rb.AddForce(Vector3.up * speed);
+    }
+}</code></pre>
+            </div>
+
+
+            <!-- 
+            <img src="../bordel/images-pvr/03_unity3d/slide_15_img_01.png"
+              alt="Komponenta ScriptPVR v Inspektoru zobrazená s poli Speed a Prefab" data-preview-image
+              style="max-height: 130px;">
+            <div class="image-caption"><code>public</code> pole jsou v Inspektoru editovatelná</div> -->
+
+            <!-- <div class="image-showcase" style="max-height: 190px;">
+                <img src="../bordel/images-pvr/03_unity3d/slide_15_img_02.png"
+                  alt="Microsoft Visual Studio s otevřeným C# skriptem ScriptPVR odvozeným od MonoBehaviour"
+                  data-preview-image style="max-height: 130px;">
+                <div class="image-caption">Visual Studio: IntelliSense a automatické doplňování</div>
+              </div> -->
+
+          </div>
+        </div>
+        <aside class="notes">
+          Tato komponenta je důvod, proč se přednáška jmenuje jak se jmenuje. Když odvodíte třídu od MonoBehaviour,
+          Unity ji pozná jako komponentu: dá se přidat ke GameObjectu a její public pole se objeví v Inspektoru.
+          To je základní pracovní postup: hodnoty vyladíte v editoru, nemusíte nic překládat.
+          Kód se píše v C# ve Visual Studiu, Rideru nebo VS Code. Unity soubor hlídá a po uložení ho sama přeloží.
+          Životní cyklus: Awake a Start jednou, Update každý snímek, FixedUpdate pevný krok pro fyziku. A pamatujte,
+          že Update běhá jednou za snímek bez ohledu na to, kolik očí se vykresluje; camera callbacky naopak Unity
+          volá za každé oko zvlášť.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 16: PREFABS – PRAKTIKA
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Praxe &bull; Prefabs</span>
+        <h2>Prefabs v praxi</h2>
+        <div class="slide-grid-2" style="grid-template-columns: 1fr 1.15fr; gap: 18px;">
+          <div>
+            <ul class="custom-list" style="font-size: 0.80em; margin: 0 0 12px 0;">
+              <li><strong>&bdquo;Šablony&ldquo; objektů</strong>, které lze <strong>staticky i dynamicky</strong>
+                duplikovat.</li>
+              <li><strong>Uchovají se všechny komponenty</strong>: Mesh, materiály, kolize, fyzika i skripty
+                s nastavenými hodnotami.</li>
+              <li><strong>Vytvoření</strong>: <strong>přetažením objektu ze scény do složky Assetů</strong>,
+                nebo tlačítkem <em>Create Prefab</em> v Inspektoru.</li>
+              <li><strong>Drag&amp;Drop do scény</strong> naopak vytvoří <strong>novou instanci</strong> prefabu.</li>
+              <li><strong>Lze i ze skriptu</strong>:
+                <code>Instantiate(prefab, position, rotation)</code>; zničení <code>Destroy(go)</code> (zpožděně
+                <code>Destroy(go, 2f)</code>).
+              </li>
+            </ul>
+
+            <div class="glass-card"
+              style="margin: 10px 0 0 0; border-left: 4px solid var(--accent-emerald);padding: 0;">
+              <ul class="custom-list">
+                <li>
+                  <p style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.4;">
+                    <strong>Instance</strong>
+                    Modrý název v Hierarchy = instance. Lze posunout, přejmenovat, změnit hodnoty: prefab se
+                    nezmění.
+                  </p>
+                </li>
+                <li>
+                  <p style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.4;">
+                    <strong>Prefab (šablona)</strong>
+                    Úprava v režimu <em>Prefab</em> (dvojklik na asset) se <strong>propadne do všech instancí</strong>
+                    ve všech scénách.
+                  </p>
+              </ul>
+
+            </div>
+
+          </div>
+          <div>
+            <div class="image-showcase" style="max-height: 520px; margin: 0;">
+              <img src="../bordel/images-pvr/03_unity3d/slide_16_img_01.png"
+                alt="Editor Unity se scénou obsahující dva krychle a prefab Cube vybraný ve složce Prefabs"
+                data-preview-image style="max-height: 350px;">
+
+            </div>
+
+            <div class="glass-card"
+              style="margin: 10px 0 0 0; border-left: 4px solid var(--accent-rose); padding: 8px 12px;">
+              <h3 style="color:var(--accent-rose); margin-bottom: 4px;">Object pooling: performance ve VR</h3>
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.35;">
+                <code>Instantiate()</code> / <code>Destroy()</code> za běhu uvolňují paměť a spouštějí
+                <strong>garbage collection</strong>, který se projeví zamrznutím snímku.<br>
+                Ve VR, kde musíte držet stabilních
+                90&nbsp;FPS, se proto hotové instance <strong>recyklují</strong>: nepoužité se jen skryjí
+                (<code>SetActive(false)</code>) a příště se znovu vypůjčí z <em>poolu</em>.<br>Unity má hotový
+                <code>UnityEngine.Pool.ObjectPool&lt;T&gt;</code>.
+              </p>
+            </div>
+          </div>
+          <aside class="notes">
+            Praktická část k prefabům. Šablonu vytvoříte nejlépe tak, že hotový objekt z Hierarchy přetáhnete do složky
+            Assetů. Unity z něj udělá .prefab soubor a pohltil všechny komponenty.
+            Zpět do scény ho dostanete přetažením — a to už je instance, která si nese odkaz na šablonu.
+            Na obrázku vidíme dvě instance krychle. Jedna je posunutá a otočená, ale to je lokální změna instance.
+            Když otevřeme samotný prefab a změníme v něm materiál, změní se obě najednou. A dynamicky instance tvoříme
+            voláním Instantiate — to budeme používat pro spawnování objektů ve VR ze skriptu.
+          </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE: VR INTERAKCE & LOCOMOTION (nové)
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Virtuální realita &bull; Interakce a pohyb</span>
+        <h2>VR interakce &amp; pohyb (Locomotion)</h2>
+        <div class="slide-grid-2" style="gap: 16px;">
+          <div>
+            <div class="glass-card" style="margin: 0 0 12px 0;">
+              <h3 style="color:var(--accent-cyan); margin-bottom: 4px;">Komponenty XRI: komponenty na ruce a na
+                předmětu</h3>
+              <ul class="custom-list" style="font-size: 0.75em; margin: 0;">
+                <li><strong>XR Origin</strong>: rig hráče (kamera + ruce).</li>
+                <li><strong>XR Direct Interactor</strong>: na <em>ruce</em>; fyzický dosah, sahá do trigger
+                  collideru ruky.</li>
+                <li><strong>XR Ray Interactor</strong>: na ruce; <em>paprsek</em> na vzdálené objekty a UI.</li>
+                <li><strong>XR Grab Interactable</strong>: na <em>předmětu</em>; uchopení, hození,
+                  <code>Move Type</code> (Kinematic / Velocity Tracking).
+                </li>
+                <li><strong>XR Teleportation Area / Provider</strong>: na podlaze, resp. na rigu.</li>
+              </ul>
+              <p style="margin: 8px 0 0 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.35;">
+                Vzájemná vazba přes <em>Layer Mask</em> a rozhraní <code>IXRSelectInteractable</code>;<br>
+                bez
+                collideru na předmětu <strong>nelze uchopit</strong>.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin: 0;">
+              <h3 style="margin-top: 0;">Reakce na uchopení / puštění</h3>
+              <pre style="margin: 0; font-size: 0.62em; line-height: 1.4;width: 99%;"><code class="language-csharp" data-trim data-noescape>[SerializeField] XRGrabInteractable grab;   // na předmětu
+void OnEnable() {
+    // ruka předmět vzala / pustila
+    grab.selectEntered += e => Haptic(0.4f);
+    grab.selectExited  += e => Throw();
+}
+// XRI při uchopení zapne isKinematic a po puštění vrátí
+// na false → předmět pak podléhá gravitaci.</code></pre>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple">
+              <h3 style="color:var(--accent-purple); margin-bottom: 4px;">Dva způsoby pohybu</h3>
+
+
+
+              <p style="margin: 0; font-size: 0.71em; color: var(--text-muted); line-height: 1.35;"><strong
+                  style="color:var(--accent-cyan);">Teleportace</strong>:
+                Paprsek &rarr; klik &rarr; okamžitý přesun.<br><strong>Nejšetrnější</strong>, žádná
+                akcelerace. Nevýhoda: pomalejší, méně přirozené.
+              </p>
+
+
+              <p style="margin: 0; font-size: 0.71em; color: var(--text-muted); line-height: 1.35;">
+                <strong style="color:var(--accent-purple);">Continuous (plynulý)</strong>:
+                Thumbstick posouvá kameru. Nutné <strong>tunelování zorného pole</strong> (vignette), konstantní
+                rychlost bez zrychlení.
+              </p>
+
+
+              <p class="highlight-card" style="font-size: 0.73em; margin: 0;padding: 8px;">
+                V XRI: <em>Teleportation Area</em> na podlaze (využívá NavMesh), <em>Teleportation Provider</em> a
+                <em>Teleportation Area Manager</em> na rigu a na ruce <em>XR Ray Interactor</em>, který paprsek
+                vede. Pro semestrální práci je teleportace bezpečná volba: zvlášť když hru předvádíte
+                před publikem.
+              </p>
+            </div>
+
+            <div class="glass-card" style="border-left: 4px solid var(--accent-rose);" style="padding: 0px;">
+              <h3 style="color:var(--accent-rose);">Důležitá pravidla imerze</h3>
+              <ul class="custom-list" style="font-size: 0.65em; margin: 0;padding: 0px;">
+                <li><strong>Gravitace &amp; haptika</strong>: předmět by měl po puštění spadnout a při uchopení
+                  zavibrovat.</li>
+                <li><strong>Ruce neprocházejí stěnou</strong>: bez kolize ruky imerze končí.</li>
+                <li><strong>UI patří do světa</strong>: <em>Canvas &gt; World Space</em> +
+                  <em>Tracked Device Graphic Raycaster</em>, ne plocha nalepená před obličej.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          XR Interaction Toolkit je to, co vám ušetří týdny práce. Rozdělení je jednoduché: interaktory jsou na ruce —
+          direct interactor pro to, čeho se ruka opravdu dotkne, ray interactor na paprsek do dálky a k UI.
+          Interactable je na předmětu. XRI se samo postará o kinematický režim, o hození i o zvýraznění.
+          Druhá věc je pohyb. Teleportace je pro začátek správná volba — hráč se nikam neposouvá postupně, takže
+          žádná akcelerace, žádná nevolnost. Plynulý pohyb jde taky, ale musí se s ním pracovat: vignette, konstantní
+          rychlost, snap otáčení po krocích.
+          A tři věci, které prozradí nezkusený tým: předmět po puštění nepadá, ruka propadne zdí, UI je přilepené
+          před obličej.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 17: IMPORT ASSETŮ
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Práce s daty &bull; Import</span>
+        <h2>Import assetů</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin: 0 0 12px 0; border-left: 4px solid var(--accent-rose);">
+              <div class="notice-pill"
+                style="font-weight: 800; color: var(--accent-rose); font-size: 1.35em; line-height: 1.1; float: right;">
+                1 unit = 1 metr
+              </div>
+              <p style="margin: 6px 0 0 0; font-size: 0.74em; color: var(--text-main); line-height: 1.4;">
+                V klasické 3D hře je měřítko <strong>relativní</strong>:<br>záleží jen na poměru věcí.<br> Ve VR
+                <strong>1&nbsp;jednotka Unity = 1&nbsp;metr reálného prostoru</strong> (headset zná
+                rozměry místnosti a polohu rukou.<br>Židle vysoká <code>10</code> jednotek se ve VR jeví
+                jako deset metrů vysoký objekt &rarr; <strong>okamžitý rozpad imerze a nevolnost</strong>.
+              </p>
+            </div>
+
+            <div class="highlight-card" style="margin: 0 0 12px 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Kompatibilní formáty lze
+                přidat rovnou</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.4;">
+                Unity umí řadu formátů naimportovat sama (přes Assimp / FBX SDK). Není potřeba je předem převádět na
+                interní formát.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px;">
+              <h3>Jak asset přidat</h3>
+              <ul class="custom-list" style="font-size: 0.75em; margin: 0;">
+                <li><strong>Pomocí menu</strong>: <em>Assets &gt; Import</em> (Nové Asset &gt; Import
+                  Package&hellip;).</li>
+                <li><strong>Drag&amp;Drop</strong> do okna Assets (Project panel).</li>
+                <li><strong>Přímé kopírování</strong> do složky <code>Assets</code> v projektu: nejjednodušší a
+                  nejrychlejší.</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card" style="margin-top: 12px; padding: 10px 14px;">
+              <h3 style="color: var(--accent-rose);">Měřítko při importu</h3>
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.35;">
+                Každý asset má v Inspektoru <strong>záložku importního nastavení</strong>: kompresi textury,
+                sRGB, mipmapy; u modelu <strong>Scale Factor</strong>,
+                vygenerování kolize, přiřazení materiálů.<br>Z Blenderu exportujte do <strong>FBX při
+                  měřítku&nbsp;1.0</strong>;<br>
+                Hlídat osy (Blender +Z&nbsp;up &rarr; FBX exporter to řeší,
+                OBJ ne).<br>Krychle o&nbsp;skutečné velikosti
+                1&nbsp;m zůstane po importu krychle o&nbsp;rozměru&nbsp;1.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3>Podpora 3D modelů</h3>
+              <ul class="custom-list" style="font-size: 0.75em; margin: 0;">
+                <li><strong>Základní / otevřené</strong>: <strong>OBJ</strong>, <strong>FBX</strong> (doporučeno,
+                  nese i animace, kostry a materiály), COLLADA (dae), STL.</li>
+                <li><strong>Proprietární</strong>: <strong>Maya, Blender, 3DS Max, SketchUp</strong>:
+                  vždy je lepší exportovat do FBX/OBJ, ne dávat do projektu originál.</li>
+              </ul>
+            </div>
+
+            <!-- <div class="glass-card accent-emerald">
+              <div class="spec-badge emerald" style="margin-bottom: 8px;">Fonty a další</div>
+              <p style="margin: 0; font-size: 0.75em; color: var(--text-main); line-height: 1.4;">
+                <strong>Fonty</strong> (TTF, OTF: pro TextMeshPro se převádí na atlas). Dále audio
+                (<code>wav, mp3, ogg, aiff</code>), video (<code>mp4</code> přes Video Player), HTML/CSS-like UI
+                a <code>.unitypackage</code> balíčky.
+              </p>
+            </div> -->
+          </div>
+        </div>
+        <aside class="notes">
+          Unity má poměrně širokou podporu vstupních formátů. Obrázky — jpg, png, tiff, psd, tga — modely OBJ a FBX,
+          ale i proprietární formáty Maya, Blender, 3DS Max či SketchUp. U proprietárních ale doporučuji export do
+          FBX, jednak jsou menší, jednak to eliminuje problém s nainstalovanou verzí aplikace.
+          Přidat asset lze třemi způsoby: menu Assets, přetažením do Project panelu, nebo prostým zkopírováním souboru
+          do složky Assets — a to je cesta, kterou používám nejraději.
+          Pak si vždy prohlédněte importní nastavení: u textury kompresi, u modelu měřítko. Výchozí Scale Factor
+          bývá příčinou toho, že model je ve scéně patnáctkrát větší než místnost.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 18: ASSET STORE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Ekosystém &bull; Asset Store</span>
+        <h2>Asset Store</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em; margin: 0 0 12px 0;">
+              <li><strong>Další možnost přidání assetů a balíčků</strong>: oficiální katalog na
+                <em>assetstore.unity.com</em>, propojený s Unity Hubem a Package Managerem.
+              </li>
+              <li><strong>Placené i free assety</strong>: od zdarma po desítky tisíc korun; u free balíčků
+                sledujte hodnocení a datum poslední aktualizace.</li>
+              <li><strong>Obsah</strong>: skripty, textury, modely, animace, zvuky, scény i celé balíčky.</li>
+              <li><strong>Publikace</strong>: své assety tam lze i publikovat a prodávat (po schválení a
+                podepsání smlouvy).</li>
+            </ul>
+
+            <div class="glass-card accent-purple" style="margin: 0;">
+              <h3>Licence: na co si dát pozor</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li>Asset smíte <strong>použít ve své hře</strong>, nesmíte ho ale přeprodat jako samostatný soubor.
+                </li>
+                <li>Volně šiřitelné assety (CC0) z jiných zdrojů: ověřte licenci, zejména u komerčních
+                  projektů.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- <div class="highlight-card" style="margin: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 8px;">Aktuální standard pro kurz
+                : nainstalovat:</h3>
+              <div class="slide-grid-2" style="gap: 10px;">
+                <div class="glass-card" style="margin: 0; padding: 10px 12px;">
+                  <div class="spec-badge cyan" style="margin-bottom: 4px;">OpenXR Plugin</div>
+                  <p style="margin: 0; font-size: 0.73em; color: var(--text-muted); line-height: 1.35;">Jednotné
+                    rozhraní
+                    pro Quest, SteamVR, Vive, WMR i Apple Vision Pro.</p>
+                </div>
+                <div class="glass-card" style="margin: 0; padding: 10px 12px;">
+                  <div class="spec-badge purple" style="margin-bottom: 4px;">XR Interaction Toolkit</div>
+                  <p style="margin: 0; font-size: 0.73em; color: var(--text-muted); line-height: 1.35;">Oficiální
+                    interakce: grab, ray, teleportace, rigy, UI.</p>
+                </div>
+                <div class="glass-card" style="margin: 0; padding: 10px 12px;">
+                  <div class="spec-badge emerald" style="margin-bottom: 4px;">Meta XR SDK + XR Hands</div>
+                  <p style="margin: 0; font-size: 0.73em; color: var(--text-muted); line-height: 1.35;">Vlastnosti
+                    Questu; snímání tvaru prstů (hand tracking).</p>
+                </div>
+                <div class="glass-card" style="margin: 0; padding: 10px 12px;">
+                  <div class="spec-badge amber" style="margin-bottom: 4px;">Input System + URP</div>
+                  <p style="margin: 0; font-size: 0.73em; color: var(--text-muted); line-height: 1.35;">Action maps pro
+                    ovladače; render pipeline pro mobilní VR.</p>
+                </div>
+              </div>
+            </div> -->
+
+            <div class="glass-card" style="border-left: 4px solid var(--accent-rose); padding: 10px 14px;">
+              <h3 style="color: var(--accent-rose);">Zastaralé, nepoužívat</h3>
+              <p style="margin: 0; font-size: 0.73em; color: var(--text-main); line-height: 1.35;">
+                <strong>SteamVR Plugin</strong>, <strong>Vive Input Utility</strong> a <strong>VRTK v3</strong> jsou
+                dnes <em>deprecated</em> a v Unity&nbsp;6 způsobují konflikty (vlastní starý
+                input systém, duplicate assemblies, nekompatibilní rigy). Dnes se vývoj nedělá přes proprietární SDK
+                výrobců, ale přes <strong>OpenXR</strong> a <strong>XR Interaction Toolkit</strong>; VRTK nahradil
+                přímo XRI.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 10px 14px;">
+              <h3 style="color: var(--accent-emerald);">Praktická poznámka</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.4;">
+                <strong>Vše lze přidat i bez storu manuálně</strong>: stačí zkopírovat složku balíčku do
+                <code>Assets/</code> nebo <code>Packages/</code>, či naimportovat <code>.unitypackage</code>.<br>Store
+                je
+                jen pohodlná distribuce a hlídání aktualizací.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Asset Store je oficiální katalog hotových dílů. Najdete tam skripty, textury i modely, ale hlavně celé VR
+          toolkity. Doba se tu ale změnila: dřív se dokupovaly SteamVR plugin, Vive Input Utility nebo VRTK a dnes
+          jsou všechny tyhle věci buď zastaralé, nebo přímo označené za deprecated, a na novém Unity dělají konflikty.
+          Dnes se jde cestou OpenXR — jedno rozhraní pro Quest, SteamVR, Vive i Vision Pro — a nad ním oficiální
+          XR Interaction Toolkit. Na Quest přidáte Meta XR SDK, na tvar prstů XR Hands, to všechno pod URP a novým
+          Input Systemem.
+          Důležité je, že v tom není žádná magie. Všechno se dá nainstalovat i bez storu — vložením složky do Assets
+          nebo importem souboru unitypackage; ony čtyři hlavní balíčky jsou ostatně přímo v Unity Registry
+          v Package Manageru. Store vám jen hlídá verze a aktualizace.
+          A nezapomeňte na licenci: asset smíte použít ve své hře, ale nesmíte ho přeprodat jako samostatný balíček.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE: VR MOTION SICKNESS & VYKON (nové)
+           ========================================== -->
+      <!-- <section class="dense">
+        <span class="slide-category">Virtuální realita &bull; Komfort a výkon</span>
+        <h2>Pohybová nevolnost (VR Sickness) &amp; optimalizace</h2>
+        <div class="slide-grid-2" style="gap: 16px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Proč se lidem dělá nevolno
+              </h3>
+              <p style="margin: 0; font-size: 0.75em; color: var(--text-main); line-height: 1.4;">
+                <strong>Sensory mismatch</strong>: oko hlásí <em>&bdquo;pohybuji se&ldquo;</em>, ale
+                <strong>vestibulární ústrojí</strong> v nitro uchu cítí, že tělo stojí na místě. Mozek takový rozpor
+                evolučně interpretuje jako halucinaci (= otravu) a reaguje nevolností. Druhou příčinou je
+                <strong>zaostalý obraz</strong> (latency &gt; 20&nbsp;ms, zahozené snímky): hlava se už otočila,
+                obraz ještě ne.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px;">
+              <div class="spec-badge emerald" style="margin-bottom: 8px;">Pravidla designu</div>
+              <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+                <li><strong>Neakcelerovat kamerou</strong>: konstantní rychlost; zrychlení a brzdění jsou
+                  nejhorší spouštěč. Automatická jízda &bdquo;na kolejích&ldquo; bez volby hráče je recept na nevolnost.
+                </li>
+                <li><strong>Kamera v úrovni očí a vodorovně</strong>: žádné klopení (roll), žádný pohyb kamery
+                  proti vůli hráče.</li>
+                <li><strong>Vignette / tunel</strong> při pohybu: zúžené periferní vidění pomáhá prokazatelně.
+                </li>
+                <li><strong>Stabilita &gt; špičková grafika</strong>: rovných 72&nbsp;FPS je lepší než
+                  90&nbsp;FPS
+                  s výkyvy; framerate měřte vždy <strong>v headsetu</strong>, ne na monitoru.</li>
+                <li><strong>Poskytnout oporu</strong>: viditelný rám místnosti / okna, teleportace jako výchozí
+                  režim pohybu.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card" style="border-left: 4px solid var(--accent-rose);">
+              <div class="notice-pill" style="margin-bottom: 6px;">Kolik snímků za sekundu musíte udržet</div>
+              <div class="slide-grid-2" style="gap: 10px;">
+                <div class="highlight-card" style="margin: 0; padding: 10px 12px; text-align: center;">
+                  <div style="font-weight: 800; font-size: 1.3em; color: var(--accent-cyan);">72&ndash;90&nbsp;Hz</div>
+                  <p style="margin: 2px 0 0 0; font-size: 0.71em; color: var(--text-muted); line-height: 1.3;">
+                    Meta Quest 2/3: minimum, které se nesmí podtínat</p>
+                </div>
+                <div class="highlight-card" style="margin: 0; padding: 10px 12px; text-align: center;">
+                  <div style="font-weight: 800; font-size: 1.3em; color: var(--accent-purple);">90&ndash;120&nbsp;Hz
+                  </div>
+                  <p style="margin: 2px 0 0 0; font-size: 0.71em; color: var(--text-muted); line-height: 1.3;">
+                    PC VR (Valve Index, Vive): obvyklý standard</p>
+                </div>
+              </div>
+              <p style="margin: 8px 0 0 0; font-size: 0.72em; color: var(--text-main); line-height: 1.35;">
+                Rozlišení se počítá <strong>na oko</strong> a kreslí se <strong>dvě pohledy</strong> &rarr; zhruba
+                dvojnásobná zátěž oproti běžné hře. U Androidu si v <em>Quality Settings</em> zapněte
+                <strong>Fixed Framerate</strong> (72/90), ať engine ví, jaký rozpočet na snímek má dodržet.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <div class="spec-badge purple" style="margin-bottom: 8px;">Konkrétní nástroje v Unity</div>
+              <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+                <li><strong>Single Pass Instanced Rendering</strong>: <em>URP Asset &gt; Camera &gt; Stereo
+                    Rendering Mode</em>; obě oči se vykreslí <strong>v jednom průchodu</strong>, u staršího
+                  <em>Multi Pass</em> dvakrát za sebou.
+                </li>
+                <li><strong>Foveated Rendering</strong>: periférie se vykresluje v nižším rozlišení; na Questu
+                  <em>Fixed Foveated Rendering</em> z Meta XR SDK ušetří desítky procent fill rate.
+                </li>
+                <li><strong>Object pooling</strong>: viz předchozí slide; záseky garbage collectoru jsou ve VR
+                  ihned cítit.</li>
+                <li><strong>Profiler &amp; Frame Debugger</strong>: odděleně CPU a GPU; na Questu
+                  <em>Meta XR SDK &gt; Performance Tools</em> nebo <code>adb shell dumpsys gfxinfo</code>.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je v MI-PVR slide, který rozhoduje o tom, jestli si spolužáci vaši hru opravdu zahrají, nebo po
+          minutě sundají headset. Příčina je fyziologická: oko říká „pohybuju se“, vnitřní ucho říká „stojím“. Mozek
+          vyhodnotí rozpor jako otravu a pustí nevolnost. Druhá věc je zpoždění obrazu za hlavou — efekt je stejný.
+          Prakticky: kamerou nikdy neříkejte do pohybu proti vůli hráče, neklopte ji. Když už pohyb řízený hrou, tak
+          konstantní rychlostí a s vignettou.
+          A výkon: ve VR se kreslí dvakrát a frekvence je 72 až 120 Hz, takže na nic není čas. Single Pass Instanced
+          je v URP dnes default, ale zkontrolujte si ho; foveated rendering na Questu ušetří hodně.
+          Měřte vždy v headsetu — na monitoru vám padání snímků v brýlích nevyleze.
+        </aside>
+      </section> -->
+
+      <!-- ==========================================
+           SLIDE 19: BUILD PROJEKTU
+           ========================================== -->
+      <section>
+        <span class="slide-category">Vydání &bull; Build</span>
+        <h2>Build projektu</h2>
+        <div class="slide-grid-2" style="grid-template-columns: 1.1fr 1fr; gap: 18px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <span class="spec-badge cyan" style="float: right;">File &gt; Build Settings</span>
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Z editoru ke spustitelné
+                aplikaci</h3>
+              <p style="margin: 0; font-size: 0.85em; color: var(--text-main); line-height: 1.45;">
+                Build se spouští z menu <strong>File &gt; Build Settings</strong> (nebo
+                <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd>).
+                Otevře se okno, kde vyberete scény, cílovou platformu a název výstupu.
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.85em; margin-top: 12px;">
+              <li><strong>Scény v buildu</strong>: zaškrtnutí a pořadí; scéna s indexem <strong>0</strong> se
+                startuje první (<code>SceneManager.LoadScene(1)</code> přepne na další).</li>
+              <li><strong>Výběr cílové platformy</strong>: <em>PC, Mac &amp; Linux</em>, Android, iOS, PS5,
+                Xbox, Meta Quest&hellip; <strong>Pro nás použijeme PC</strong> (případně Android pro Quest).
+              </li>
+              <li><strong>SDK &amp; licenční omezení</strong>: pro <strong>iOS, PS4/PS5 a Xbox</strong> je třeba
+                mít příslušné <strong>SDK</strong> a podepsanou NDA s výrobcem konzole.</li>
+              <li><strong>Rychlost</strong>: build je <strong>oproti Unreal Enginu rychlý</strong>; build provede jen
+                to, co se změnilo.</li>
+            </ul>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card"
+              style="margin: 12px 0 0 0; border-left: 4px solid var(--accent-rose); padding: 8px 12px;">
+              <h3 style="color: var(--accent-rose);">Meta Quest</h3>
+              <ul class="custom-list" style="font-size: 0.71em; margin: 0;">
+                <li><strong>1.</strong> V Build Settings přepnout platformu na <strong>Android</strong> (přepnutí
+                  trvá, naimportuje se Android SDK).</li>
+                <li><strong>2.</strong> Zařídit <strong>Developer Mode</strong> na Questu (bezplatný vývojářský účet
+                  Meta + aplikace Meta Quest na telefonu) a v headsetu povolit neznámé zdroje.</li>
+                <li><strong>3.</strong> Testovat <strong>za běhu přes Quest Link / AirLink</strong>:
+                  <em>File &gt; Build And Run</em> pošle appku do headsetu přes USB či Wi-Fi; odpadá zdlouhavé
+                  dokola-buildování APK.
+                </li>
+              </ul>
+            </div>
+            <div class="image-showcase" style="max-height: 420px; margin: 0;">
+              <img src="../bordel/images-pvr/03_unity3d/slide_19_img_01.png"
+                alt="Okno Build Settings s listem scén, volbou platformy a tlačítky Build a Build And Run"
+                data-preview-image style="max-height: 300px;">
+
+            </div>
+          </div>
+
+
+          <!-- </div> -->
+        </div>
+        <aside class="notes">
+          Build je to, co z projektu udělá aplikaci, kterou můžete někomu poslat. Otevřete File, Build Settings.
+          Nahoře je seznam scén — zaškrtněte ty, které mají být součástí aplikace, a pohlídejte si pořadí. Scéna
+          s nulovou pozicí je ta úvodní.
+          Vlevo dole přepnete platformu. My cílíme na PC. U mobilu je to Android — a totéž zvolíte pro Meta Quest.
+          Pro iOS, PlayStation a Xbox si bez registračního SDK a smlouvy s výrobcem nesáhnete; to je důvod, proč se
+          konzolové porty dělají přes specializované firmy.
+          A dobrá zpráva: build v Unity trvá řádově minuty, kdežto u Unreal Enginu při změně shaderů čekáte i desítky
+          minut.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 20: UKÁZKA VYTVOŘENÍ SCÉNY
+           ========================================== -->
+      <!-- <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)" class="dense">
+        <span class="slide-category">Závěr &bull; Praktická ukázka</span>
+        <h2>Ukázka vytvoření scény</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="continuum-container" style="margin-top: 0;">
+              <div class="continuum-bar"></div>
+              <div class="continuum-labels">
+                <div class="continuum-node">
+                  <div class="continuum-title" style="color: var(--accent-cyan);">1 &bull; Objekty</div>
+                  <div class="continuum-desc">Světlo, kamera, primitiva</div>
+                </div>
+                <div class="continuum-node">
+                  <div class="continuum-title" style="color: var(--accent-purple);">2 &bull; Komponenty</div>
+                  <div class="continuum-desc">Fyzika, kolize, skript</div>
+                </div>
+                <div class="continuum-node">
+                  <div class="continuum-title" style="color: var(--accent-emerald);">3 &bull; Assety</div>
+                  <div class="continuum-desc">Modely, materiály, zvuk</div>
+                </div>
+                <div class="continuum-node">
+                  <div class="continuum-title" style="color: var(--accent-rose);">4 &bull; Spuštění</div>
+                  <div class="continuum-desc">Play &rarr; Build &rarr; aplikace</div>
+                </div>
+              </div>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.80em; margin-top: 16px;">
+              <li><strong>Přidání objektů různých typů</strong>: světlo, kamera, krychle, rovina
+                (<em>GameObject &gt; 3D Object / Light / Camera</em>).</li>
+              <li><strong>Práce s komponentami</strong>: Mesh Renderer, Collider, Rigidbody, Physics Material a
+                vlastní skript v Inspektoru.</li>
+              <li><strong>Přidání assetů</strong>: model z Asset Store, materiály, textury, zvuk; z prefabu
+                vytvoříme instance.</li>
+              <li><strong>Spuštění projektu</strong>: tlačítko <kbd>Play</kbd>; scéna se chová přesně tak, jak
+                poběží build.</li>
+              <li><strong>Build</strong>: <em>File &gt; Build Settings &gt; PC</em> &rarr; spustitelný
+                soubor.</li>
+            </ul>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="highlight-card" style="margin: 0; text-align: center; padding: 20px;">
+              <span style="font-weight: 800; color: var(--text-main); font-size: 1.1em;">
+                Unity dnes = <span style="color: var(--accent-cyan);">Scéna</span> + <span
+                  style="color: var(--accent-purple);">GameObject</span> + <span
+                  style="color: var(--accent-emerald);">Komponenty</span>
+              </span>
+              <p style="color: var(--text-muted); font-size: 0.79em; margin: 10px 0 0 0; line-height: 1.45;">
+                Celá architektura Unity se dá shrnout do jedné věty: scéna je strom GameObjectů, každý si nese
+                komponenty, komponenty čtou assety a prefaby jsou jejich šablony.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald">
+              <div class="spec-badge emerald" style="margin-bottom: 8px;">Checklist pro první VR projekt</div>
+              <ul class="custom-list" style="font-size: 0.75em; margin: 0;">
+                <li><strong>&#10003; Projekt v Unity LTS</strong>: šablona <strong>URP</strong> (ne 2D, ne URP
+                  2D), pro Quest šablona <em>XR: Mobile</em>.</li>
+                <li><strong>&#10003; Balíčky</strong>: <em>XR Plugin Management</em> &amp;
+                  <strong>OpenXR</strong> zapnuté v <em>Project Settings &gt; XR Plug-in Management</em>, dále
+                  <em>Input System</em> a <strong>XR Interaction Toolkit</strong>.
+                </li>
+                <li><strong>&#10003; XR Origin</strong>: vHierarchii místo <em>Main Camera</em>; Camera Offset
+                  nastaven na výšku očí.</li>
+                <li><strong>&#10003; Měřítko</strong>: krychle o&nbsp;1&nbsp;unitu = 1&nbsp;m; zkontrolovat
+                  Scale Factor importovaných modelů.</li>
+                <li><strong>&#10003; Cíl &amp; výkon</strong>: Android + IL2CPP, Stereo = Single Pass Instanced,
+                  cílových 72&ndash;90&nbsp;FPS změřeno <strong>v headsetu</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card">
+              <div class="spec-badge purple" style="margin-bottom: 8px;">Co dělat dál</div>
+              <ul class="custom-list" style="font-size: 0.75em; margin: 0;">
+                <li><strong>Hotový projekt ke stažení na courses</strong>: scéna i se skripty, rozeberte si ji
+                  komponentu po komponentě.</li>
+                <li><strong>Nainstalujte si Unity Hub</strong> a verzi LTS: do další přednášky mějte
+                  rozběhnutý prázdný 3D projekt.</li>
+                <li><strong>Příště</strong>: programování ve skriptech, komponenta Script do detailu a první VR
+                  scéna s XR rigem.</li>
+              </ul>
+            </div>
+
+            <div class="badge-group" style="justify-content: center;">
+              <span class="spec-badge cyan">courses.fit.cvut.cz</span>
+              <span class="spec-badge purple">Materiály i se skripty</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Uzavřeme to prakticky. V editoru si teď ukážeme celý řetězec: přidáme světlo a kameru, doplníme primitiva,
+          nasadíme jim kolize, fyziku a vlastní skript, přetáhneme do scény model z Asset Store a vytvoříme z něj
+          prefab s několika instancemi.
+          Pak scénu spustíme tlačítkem Play — a všimněte si, že editační a runtime stav je jeden svět; co vidíte
+          v editoru, to dostanete v buildu.
+          Hotový projekt včetně skriptů najdete ke stažení na courses. Rozberte si ho komponentu po komponentě a do
+          příště si rozběhněte vlastní prázdný 3D projekt v LTS verzi Unity.
+        </aside>
+      </section>
+
+    </div>
+  </div> -->
+
+      <!-- Reveal.js Scripts -->
+      <script src="../bordel/vendor/reveal/reveal.js"></script>
+      <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+      <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+      <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+      <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+      <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+      <script src="../bordel/vendor/reveal/plugin/multimodal/multimodal.js"></script>
+      <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+      <script src="../bordel/js/tooltips.js"></script>
+
+      <script>
+        Reveal.initialize({
+          hash: true,
+          slideNumber: 'c/t',
+          controls: true,
+          progress: true,
+          center: false,
+          touch: true,
+          transition: 'slide',
+          transitionSpeed: 'default',
+          backgroundTransition: 'fade',
+          width: 1280,
+          height: 720,
+          margin: 0.04,
+          minScale: 0.2,
+          maxScale: 2.0,
+          plugins: [RevealNotes, RevealHighlight, RevealSearch, RevealZoom, RevealPointer, Multimodal, RevealMath.KaTeX],
+          pointer: {
+            key: "q", // key to enable pointer, default "q", not case-sensitive
+            color: "red", // color of a cursor, default "red" any valid CSS color
+            opacity: 0.8, // opacity of cursor, default 0.8
+            pointerSize: 25, // pointer size in px, default 12
+            alwaysVisible: false, // should pointer mode be always visible? default "false"
+            tailLength: 10, // NOT IMPLEMENTED YET!!! how long the "tail" should be? default 10
+          }
+        });
+      </script>
+</body>
+
+</html>

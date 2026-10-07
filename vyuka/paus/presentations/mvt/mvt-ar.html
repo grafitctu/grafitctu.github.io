@@ -1,0 +1,2068 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>MVT: Virtuální realita (VR) — ČVUT</title>
+  <meta name="description"
+    content="Přednáška Moderní vizualizační technologie: Virtuální realita (VR) — Petr Pauš, Jiří Chludil">
+  <meta name="author" content="Petr Pauš, Jiří Chludil">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+</head>
+
+<body>
+
+
+  <!-- Top Persistent Header -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+    <!-- <div class="logo-badge">
+      <span class="cvut-tag">ČVUT</span>
+      <span>MVT &bull; <span class="highlight">Virtuální realita</span></span>
+    </div>
+    <div class="logo-badge">
+      <span>Petr Pauš | Jiří Chludil</span>
+    </div> -->
+  </header>
+
+  <!-- Bottom Persistent Footer Navigation Helper -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div>
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==========================================
+           BLOK 1: ÚVOD A ZÁKLADNÍ POJMY
+           ========================================== -->
+
+      <!-- SLIDE 1: Title -->
+      <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)">
+        <div class="title-hero">
+          <div class="vr-badge">MVT &bull; Moderní vizualizační technologie</div>
+          <h1>Rozšířená realita</h1>
+          <p style="color: var(--text-muted); font-size: 1.2em; margin-bottom: 24px;">AR / MR / XR &mdash; pojmy,
+            historie, tracking a využití v praxi</p>
+
+          <div class="authors">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Vítejte na přednášce věnované Rozšířené realitě (AR, MR, XR) v rámci předmětu Moderní vizualizační
+          technologie.
+          Dnes si vysvětlíme základní pojmy, projdeme historii, principy trackingu a konkrétní aplikace v průmyslu,
+          medicíně i komerci.
+        </aside>
+      </section>
+
+      <!-- SLIDE 2: Základní pojmy -->
+      <section>
+        <span class="slide-category">Úvod &bull; Definice</span>
+        <h2>Základní pojmy</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">XR (Extended Reality)</h3>
+              <p style="margin: 0; font-size: 0.95em; color: var(--text-main); line-height: 1.45;">
+                Rozšířená realita (XR) je reálná scéna doplněná o počítačem generovaný <strong>obraz, zvuk a
+                  vjem</strong>.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em; margin-top: 14px;">
+              <li><strong>Zastřešující pojem:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  XR pokrývá celé spektrum od AR přes MR až po plnou VR.
+                </div>
+              </li>
+              <li><strong>Společný cíl:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Propojit digitální obsah s fyzickým světem a uživatelem v reálném čase.
+                </div>
+              </li>
+            </ul>
+
+            <div class="glass-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Augmented Reality (AR)</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; line-height: 1.45; margin: 0;">
+                AR je vylepšená realita vytvořená technologií, která přidá novou vrstvu digitální informace na reálný
+                obraz zobrazovanou nějakým zařízením (headset, smartphone).<br>
+                <em>(Merriam Webster)</em>
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.1em; margin-bottom: 6px;">Mixed Reality (MR)</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; line-height: 1.45; margin: 0;">
+                MR je spojení reálného a virtuálního světa. Základem je promítání 3D objektů do reálné scény, kdy jsou
+                tyto objekty <strong>ukotveny ve scéně</strong> a jsou <strong>responzivní</strong>.
+              </p>
+            </div>
+            <div class="glass-card accent-emerald">
+              <h3 style="color: var(--accent-emerald); font-size: 1.1em; margin-bottom: 6px;">Spatial Computing</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; line-height: 1.45; margin: 0;">
+                Interakce s technologií <strong>v trojrozměrném prostoru kolem uživatele</strong> &mdash; pojem
+                popularizovaný firmami Apple (Vision Pro) a Magic Leap. Počítačové prostředí se "rozpouští" do
+                fyzického světa.
+              </p>
+            </div>
+            <div class="glass-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Passthrough (Video
+                See-Through)</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; line-height: 1.45; margin: 0;">
+                Reálný svět se uživateli zobrazuje <strong>přes kamery</strong> (ne přes průhledné sklo) &mdash; typické
+                pro Quest 3/Pro, Apple Vision Pro a mobilní AR.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Rozlišujeme XR jako zastřešující pojem, AR jako vrstvu digitálních informací nad reálným obrazem a MR jako
+          plnohodnotné ukotvení interaktivních 3D objektů do reálné scény. K moderním pojmům patří Spatial Computing
+          (Apple/Magic Leap) a Passthrough, kdy se svět zobrazuje přes kamery místo přes průhledné sklo.
+        </aside>
+      </section>
+
+      <!-- SLIDE 3: Spektrum AR / VR / MR -->
+      <section>
+        <span class="slide-category">Pojmový rámec &bull; Spektrum smíšené reality</span>
+        <h2>Spektrum AR, VR, MR</h2>
+        <p style="color: var(--text-muted); font-size: 0.85em; text-align: left; margin: 0 0 8px 0;">
+          Reálné prostředí a virtuální prostředí jsou dva konce spektra &mdash; mezi nimi leží kontinuum smíšené
+          reality:
+        </p>
+        <div class="image-showcase" style="max-width: 860px; margin: 0 auto;">
+          <img src="../bordel/images-mvt/ar_s03_f01.jpg" alt="Spektrum AR, VR, MR podle aniwaa.com">
+          <div class="image-caption">Spektrum smíšené reality &bull; zdroj: aniwaa.com</div>
+        </div>
+        <div class="glass-card"
+          style="margin: 10px auto 0 auto; max-width: 860px; text-align: left; padding: 10px 16px;">
+          <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+            Základem je <strong>Milgramovo kontinuum reality–virtuality</strong> (Paul Milgram, 1994):
+            reálné prostředí &rarr; AR &rarr; augmented virtuality (AV) &rarr; virtuální prostředí. Vše mezi oběma
+            konci &mdash; včetně AR i VR &mdash; označujeme jako <strong>Mixed Reality (MR)</strong>.
+          </p>
+        </div>
+        <aside class="notes">
+          Spektrum názorně ukazuje, kam se zařazují jednotlivé technologie: od čistě reálného prostředí přes rozšířenou
+          realitu (AR), rozšířenou virtualitu (AV), až po plně virtuální prostředí (VR). Toto spektrum formalizoval Paul
+          Milgram v roce 1994 jako Reality–Virtuality Continuum &mdash; vše mezi oběma konci označil jako Mixed Reality.
+        </aside>
+      </section>
+
+      <!-- SLIDE 4: Smíšená realita (AR) -->
+      <section>
+        <span class="slide-category">Fundamenty &bull; Charakteristika</span>
+        <h2>Smíšená realita (AR)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <p style="margin: 0; font-size: 0.95em; color: var(--text-main); line-height: 1.45;">
+                <strong>Augmented Reality</strong><br>Charakteristické vlastnosti dle <strong>Azuma
+                  (1997)</strong>:
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.88em; margin-top: 14px;">
+              <li><strong>Kombinace reálného a virtuálního obrazu</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">Obojí je vidět zároveň.</div>
+              </li>
+              <li><strong>Interaktivní v reálném čase</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">Digitální obsah reaguje na vstup uživatele.
+                </div>
+              </li>
+              <li><strong>Registrace objektu v prostoru</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">Virtuální objekty jsou pevně ukotveny
+                  v prostoru.</div>
+              </li>
+              <li>
+                <a class="video-card" href="https://www.ronaldazuma.com/papers/cga2001.pdf" target="_blank"
+                  style="float:right">
+                  <div class="video-icon"><svg width="800px" height="800px" viewBox="0 0 24 24" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <g id="Interface / External_Link">
+                        <path id="Vector"
+                          d="M10.0002 5H8.2002C7.08009 5 6.51962 5 6.0918 5.21799C5.71547 5.40973 5.40973 5.71547 5.21799 6.0918C5 6.51962 5 7.08009 5 8.2002V15.8002C5 16.9203 5 17.4801 5.21799 17.9079C5.40973 18.2842 5.71547 18.5905 6.0918 18.7822C6.5192 19 7.07899 19 8.19691 19H15.8031C16.921 19 17.48 19 17.9074 18.7822C18.2837 18.5905 18.5905 18.2839 18.7822 17.9076C19 17.4802 19 16.921 19 15.8031V14M20 9V4M20 4H15M20 4L13 11"
+                          stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </g>
+                    </svg></div>
+                  <div class="video-details">
+                    <div class="video-title">Paper</div>
+                  </div>
+                </a>
+                <strong>Rozšíření definice (Azuma et al., 2001)</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">Koncept rozšířen o <strong>mobilní a
+                    outdoor AR</strong> &mdash; scéna už nemusí být jen vnitřní, ale i venkovní, přenášená.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s04_f01.jpg" alt="Příklad rozšířené reality">
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Definice AR podle Ronalda Azumy (1997) je stále uznávaným základem: kombinace obrazu, interaktivita v reálném
+          čase a správná registrace virtuálních objektů do reálného prostoru. V roce 2001 (Azuma et al.) byla definice
+          rozšířena o mobilní a outdoor AR &mdash; scéna přestává být omezena na vnitřní prostory.
+        </aside>
+      </section>
+
+      <!-- SLIDE 5: Ukázky -->
+      <section>
+        <span class="slide-category">Přehled &bull; Ukázky</span>
+        <h2>Ukázky</h2>
+        <div class="image-gallery" style="margin-top: 16px;">
+          <div class="image-gallery-item">
+            <img src="../bordel/images-mvt/ar_s05_f01.jpg" alt="Ukázka AR č. 1" data-preview-image>
+          </div>
+          <div class="image-gallery-item">
+            <img src="../bordel/images-mvt/ar_s05_f02.jpg" alt="Ukázka AR č. 2" data-preview-image>
+          </div>
+          <div class="image-gallery-item">
+            <img src="../bordel/images-mvt/ar_s05_f03.jpg" alt="Ukázka AR č. 3" data-preview-image>
+          </div>
+          <div class="image-gallery-item">
+            <img src="../bordel/images-mvt/ar_s05_f04.jpg" alt="Ukázka AR č. 4" data-preview-image>
+          </div>
+        </div>
+        <aside class="notes">
+          Různé podoby rozšířené reality ve vizuálních ukázkách &mdash; od produktové vizualizace po interakci s
+          digitálním obsahem v reálném prostředí.
+        </aside>
+      </section>
+
+      <!-- SLIDE 6: AR – použití -->
+      <section>
+        <span class="slide-category">Přehled &bull; Oblasti využití</span>
+        <h2>AR &mdash; Kde se používá?</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <ul class="custom-list" style="font-size: 0.85em; margin: 6px 0 0 0;">
+                <li>AR Marketing</li>
+                <li>Produktové vizualizace a kampaně</li>
+                <li><strong>TV:</strong> Volby, sporty, počasí</li>
+                <li><strong>Hry:</strong> Pokemon Go, Wizards Unite, &hellip;</li>
+                <li><strong>E-commerce:</strong> Shopify AR, Google Search 3D/AR objekty</li>
+                <li><strong>Sociální sítě:</strong> TikTok / Instagram filtry</li>
+                <li><strong>Průmysl:</strong> servis, montáže, prodej</li>
+              </ul>
+            </div>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/mcd.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/mcd.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka AR marketingu (McDonald's)</div>
+              </div>
+            </a>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s06_f01.jpg" alt="AR v médiích a běžném životě">
+              <div class="image-caption">AR v televizi, sportu a marketingu</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Rozšířená realita proniká do marketingu, televizního sportovního zpravodajství, her a průmyslu. K moderním
+          oblastem patří e-commerce (Shopify AR, Google Search 3D/AR objekty) a sociální sítě (TikTok / Instagram
+          filtry). McDonald's video ukazuje klasickou AR kampaň.
+        </aside>
+      </section>
+
+      <!-- SLIDE 7: Historie -->
+      <section>
+        <span class="slide-category">Historie &bull; Milníky</span>
+        <h2>Historie</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li><strong>HUD v letadlech:</strong> Head Up Display v kokpitech.</li>
+              <li><strong>1992 &ndash; Louis Rosenberg:</strong> <em>Virtual Fixtures</em> (US Air Force) &mdash;
+                první fungující AR systém s vizuální i hmatovou odezvou.</li>
+              <li><strong>Od 1990 &ndash; Boeing:</strong> AR pro zapojování drátů.</li>
+              <li><strong>Od 1994 &ndash; akademický výzkum:</strong> teorie a knihovny.</li>
+              <li><strong>Od 1999 &ndash; ARToolKit</strong> (open source).</li>
+              <li><strong>Od 2005 &ndash; komerční využití.</strong></li>
+              <li><strong>2007 &ndash; Mainstream</strong> (Economist, MIT Tech Review).</li>
+              <li><strong>2009 &ndash; časopisy</strong> (Esquire, Wired, &hellip;).</li>
+              <li><strong>2024 &ndash; nástup VST MR:</strong> Apple Vision Pro a Meta Quest 3 &mdash; přechod
+                k masovému video-see-through.</li>
+            </ul>
+          </div>
+          <div class="image-gallery">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/fixtures.png" alt="Boeing AR pro montáž" data-preview-image>
+              <div class="image-caption">US Airforce &mdash; Virtual Fixtures (1992)</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s07_f01.jpg" alt="HUD a HMD v letectví"
+                data-preview-video="../bordel/video-mvt/f35.mp4">
+              <div class="image-caption">Stíhačka F-16 / F-35 &bull; HMD</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s07_f02.jpg" alt="HUD displej v kokpitu" data-preview-image>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s07_f03.jpg" alt="Boeing AR pro montáž" data-preview-image>
+              <div class="image-caption">Boeing &mdash; AR při montáži</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Základy AR sahají až k Ivanu Sutherlandovi (1968, Sword of Damocles) a letectví (HUD, HMD). Historický milník
+          představuje Louis Rosenberg s projektem Virtual Fixtures (1992) pro US Air Force &mdash; první funkční AR
+          systém s hmatovou i vizuální odezvou. Boeing začal s AR montážemi v 90. letech, ARToolKit (1999) otevřel
+          cestu open-source vývoji a rok 2007 znamenal mainstreamový nápor do médií a komerce. V roce 2024 se
+          s příchodem Apple Vision Pro a Meta Quest 3 přesouvá těžiště k masovému video-see-through MR.
+        </aside>
+      </section>
+
+      <!-- SLIDE 8: V mobilu (od 2005) -->
+      <section>
+        <span class="slide-category">Historie &bull; Mobilní éra</span>
+        <h2>V mobilu (od 2005)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Potřebný HW v zařízení</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">Kamera, procesor, displej, senzory.</p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Optimalizace:</strong> jednodušší modely, zjednodušené rozpoznání obrazu.</li>
+              <li><strong>Možná spolupráce více uživatelů.</strong></li>
+              <li><strong>2007 &ndash; reklamy v tisku (print AR).</strong></li>
+            </ul>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/nokia.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/nokia.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka AR na Nokiích (2009), Symbian.</div>
+              </div>
+            </a>
+          </div>
+          <div style="text-align: center;">
+            <div class="image-showcase" style="max-width: 66%;">
+              <img src="../bordel/images-mvt/ar_s08_f01.jpg" alt="AR v mobilu">
+            </div>
+            <div class="image-showcase" style="max-width: 66%;">
+              <img src="../bordel/images-mvt/ar_s08_f02.jpg" alt="AR reklama v tisku">
+              <div class="image-caption">AR v tištěných médiích</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          S příchodem chytrých telefonů (kolem 2005) se AR přesunula do mobilů, které mají kameru, displej i senzory.
+          Kvůli omezenému výkonu se modely a rozpoznávání zjednodušovaly.
+        </aside>
+      </section>
+
+      <!-- SLIDE 9: AR v browseru, 2008 -->
+      <section>
+        <span class="slide-category">Historie &bull; Web</span>
+        <h2>AR v browseru, 2008</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>ARToolKit portováno do Flashe (2008).</strong></li>
+              <li><strong>Mnoho uživatelů:</strong> 1,6 mld. uživatelů internetu.</li>
+              <li><strong>Levný HW:</strong> kamera + browser.</li>
+              <li><strong>Jednoduchý vývoj:</strong> hodně knihoven.</li>
+            </ul>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/flash.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/flash.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka Flash AR</div>
+              </div>
+            </a>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s09_f01.jpg" alt="AR v prohlížeči">
+              <div class="image-caption">Marker-based AR ve webovém prohlížeči</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Portací ARToolKitu do Flashe (2008) se AR zpřístupnila širokému publiku, které stačilo otevřít webový
+          prohlížeč s kamerou &mdash; bez instalace speciálního softwaru.
+        </aside>
+      </section>
+
+      <!-- SLIDE 10: 2009 – info vrstva přes realitu -->
+      <section>
+        <span class="slide-category">Historie &bull; Lokalizační AR</span>
+        <h2>2009 &ndash; informační vrstva přes realitu</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Pro mobily</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">
+                Info vrstva podle lokace: <strong>GPS, kompas</strong>.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Aplikace:</strong> průvodci, reklama.</li>
+              <li><strong>Příklad:</strong> Wikitude a podobné lokální prohlížeče.</li>
+            </ul>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/gmaps.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/gmaps.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka location-based AR</div>
+              </div>
+            </a>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s10_f01.jpg" alt="Lokální informační vrstva AR">
+              <div class="image-caption">Lokace a kompas &mdash; AR průvodce městem</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Rok 2009 přinesl první vlnu lokálně orientované AR &mdash; informace se zobrazovaly podle polohy uživatele a
+          natočení telefonu (GPS + kompas), typicky průvodci městy a reklama.
+        </aside>
+      </section>
+
+      <!-- SLIDE 11: 2011 - Google Glass -->
+      <section>
+        <span class="slide-category">Historie &bull; Nositelná elektronika</span>
+        <h2>2011 &ndash; Google Glass & další</h2>
+        <div class="slide-grid-2 equal">
+          <div class="glass-card">
+            <a href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/gglass.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/gglass.mp4">
+              <span class="video-icon" style="float: right;">▶</span>
+            </a>
+            <h3>Google Glass</h3>
+            <ul class="custom-list" style="font-size: 0.85em; margin: 6px 0 0 0;">
+              <li>Brýle pro smíšenou realitu.</li>
+              <li>Nahrávání videa a fotek.</li>
+              <li>Menší průhledný displej v rohu.</li>
+              <li><strong>Konec pro spotřebitele (2015):</strong> chybějící killer app, obavy o soukromí
+                (&bdquo;Glassholes&ldquo;).</li>
+              <li><strong>Google Glass Enterprise Edition 2 (2019):</strong> nasazení v průmyslu a logistice.</li>
+            </ul>
+            <!-- <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/gglass.mp4" target="_blank" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/gglass.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka Google Glass</div>
+              </div>
+            </a> -->
+            <div style="text-align: center;">
+              <img src="../bordel/images-mvt/gglass1.png" style="max-width: 66%;" data-preview-image>
+            </div>
+          </div>
+          <div class="glass-card accent-purple">
+            <a href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/epson.mp4" target="_blank" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/epson.mp4">
+              <span class="video-icon" style="float: right;">▶</span>
+            </a>
+            <h3>Epson Moverio</h3>
+            <ul class="custom-list" style="font-size: 0.85em; margin: 6px 0 0 0;">
+              <li>Stereo průhledný displej, <strong>1280&times;720</strong>.</li>
+              <li><strong>23&deg; FOV</strong>, 30 Hz, 69 g.</li>
+              <li>Android, VGA kamera, GPS, gyro, akcelerometr.</li>
+            </ul>
+            <div style="text-align: center;">
+              <img src="../bordel/images-mvt/epson.png" style="max-width: 66%;" data-preview-image>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Google Glass (2011) ukázal vizi nositelné AR, ale pro běžné spotřebitele skončil (2015) &mdash; chyběla killer
+          app a budil obavy o soukromí (&bdquo;Glassholes&ldquo;). Uchytil se ale v průmyslu jako Google Glass
+          Enterprise Edition 2 (2019). Konkurenční Epson Moverio nabídl stereo průhledný displej s 23° FOV a mobilní
+          senzory (GPS, gyro, akcelerometr).
+        </aside>
+      </section>
+
+      <!-- SLIDE 12: 2016 - MS Hololens -->
+      <section>
+        <span class="slide-category">Historie &bull; HMD stanice</span>
+        <h2>2016 &ndash; Microsoft HoloLens</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <a href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/holo.mp4" target="_blank" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/holo.mp4">
+                <span class="video-icon" style="float: right;">▶</span>
+              </a>
+              <p style="margin: 0; font-size: 0.92em; color: var(--text-main); line-height: 1.45;">
+                První samostatný AR headset s <strong>integrovaným počítačem</strong>:
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em; margin-top: 12px;">
+              <li><strong>Průhledný displej</strong> (Holographic lenses).</li>
+              <li><strong>Kamera pro 3D skenování</strong> prostoru.</li>
+              <li><strong>Ovládání hlasem a gesty.</strong></li>
+              <li><strong>Podzim 2019 &ndash; HoloLens 2:</strong>
+                <ul class="custom-list" style="margin: 4px 0;">
+                  <li class="sub-item">2K displej.</li>
+                  <li class="sub-item">4 kamery pro lokaci, 2 pro oči, 1&times; ToF 1 MPix.</li>
+                  <li class="sub-item">Snapdragon 850, 4/64 GB.</li>
+                  <li class="sub-item">Cena &asymp; $3500.</li>
+                </ul>
+              </li>
+              <li><strong>Aktuální stav:</strong> vývoj HoloLens 2 byl utlumen
+                (Microsoft IVAS pro armádu USA) &mdash; důraz se přesouvá na passthrough headsety.</li>
+            </ul>
+            <!-- <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/holo.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/holo.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka Microsoft HoloLens</div>
+              </div>
+            </a> -->
+          </div>
+          <div>
+            <div class="image-showcase" style="max-width: 66%; margin: 0 auto;">
+              <img src="../bordel/images-mvt/ar_s12_f01.png" alt="Microsoft HoloLens" data-preview-image>
+              <div class="image-caption">Microsoft HoloLens &mdash; 3D skenování prostoru</div>
+            </div>
+            <div class="image-showcase" style="max-width: 66%; margin: 0 auto;">
+              <img src="../bordel/images-mvt/ar_s12_f02.jpg" alt="HoloLens v praxi" data-preview-image>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          HoloLens (2016) byla první samostatná AR jednotka s vestavěným počítačem, hlasovým a gestikulačním ovládáním.
+          Druhá generace (2019) přinesla vyšší rozlišení, lepší tracking a cenu kolem 3500 dolarů. Vývoj HoloLens 2 byl
+          později utlumen (Microsoft se zaměřil na projekt IVAS pro armádu USA) a důraz v oboru se přesunul na
+          passthrough
+          headsety.
+        </aside>
+      </section>
+
+      <!-- SLIDE 13: 2018 - MagicLeap ML-1 -->
+      <section>
+        <span class="slide-category">Historie &bull; HMD stanice</span>
+        <h2>2018 &ndash; Magic Leap ML-1</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Displej:</strong> 40&times;30&deg; FOV, 1280&times;960, eye-tracking.</li>
+              <li><strong>Oddělený displej od počítače</strong> (lightpack).</li>
+              <li><strong>CPU:</strong> Nvidia Tegra X2.</li>
+              <li><strong>RAM / úložiště:</strong> 8 GB / 128 GB.</li>
+              <li><strong>6-DoF ovladač</strong> (controller).</li>
+              <li><strong>Magic Leap 2 (2022/2023):</strong> nová generace s <strong>dynamickým stmíváním</strong>
+                (segmental dimming) &mdash; lepší kontrast AR obsahu na přímém světle.</li>
+            </ul>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/leap.mp4" target="_blank" rel="noopener noreferrer"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/leap.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka Magic Leap</div>
+              </div>
+            </a>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s13_f01.jpg" alt="Magic Leap ML-1">
+              <div class="image-caption">Magic Leap ML-1 &mdash; oddělená jednotka s 6-DoF ovladačem</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Magic Leap ML-1 (2018) oddělil výpočetní jednotku (lightpack) od displeje. Nabídl 40° FOV, eye-tracking a
+          6-DoF ovladač &mdash; cenově a architektonicky odlišný přístup k AR. Nástupce Magic Leap 2 (2022/2023) přinesl
+          dynamické stmívání (segmental dimming), které výrazně zlepšilo čitelnost AR obsahu na jasném světle.
+        </aside>
+      </section>
+
+      <!-- SLIDE 14: >2015: Mobilní app -->
+      <section>
+        <span class="slide-category">Moderní AR &bull; Mobilní aplikace</span>
+        <h2>Od 2015 důraz na mobilní aplikace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.9em;">
+              <li><strong>SnapChat &ndash; Lenses.</strong></li>
+              <li><strong>Facebook Camera.</strong></li>
+              <li><strong>Google Translate</strong> (OCR + AR překlad).</li>
+              <li><strong>Hry.</strong></li>
+              <li>Propojení s mobilem: <strong>Ray-Ban Meta Smart Glasses (2023/2024):</strong> <em>&bdquo;Screenless
+                  AR&ldquo;</em>
+                &mdash; brýle bez displeje s kamerou, hlasovým asistentem a multimodální AI.</li>
+            </ul>
+          </div>
+          <div class="image-gallery">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s14_f01.jpg" alt="Snapchat Lenses" data-preview-image>
+              <div class="image-caption">Snapchat &mdash; AR filtry</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s14_f03.jpg" alt="Google Translate AR" data-preview-image>
+              <div class="image-caption">Google Translate &mdash; AR překlad</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/rayban.png" alt="Ray-Ban Meta Smart Glasses" data-preview-image>
+              <div class="image-caption">Ray-Ban Meta Smart Glasses &mdash; Screenless AR</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Po roce 2015 se AR rozšířila v mobilních aplikacích pro masy &mdash; od Snapchat filtrů, přes Facebook kameru,
+          Google Translate s živým překladem, až po FaceApp a YouCam Makeup. Trendem posledních let jsou chytré brýle
+          bez
+          displeje s kamerou a multimodální AI, typicky Ray-Ban Meta Smart Glasses (2023/2024) &mdash; tzv. Screenless
+          AR.
+        </aside>
+      </section>
+
+      <!-- SLIDE 15: Toolkity pro MT -->
+      <section>
+        <span class="slide-category">Technologie &bull; SDK a toolkity</span>
+        <h2>Toolkity pro mobilní tracking</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 4px;">Visual Inertial Odometry
+                (VIO)</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">
+                metoda, která kombinuje data z kamery a inerciální měřicí jednotky (IMU) k určení přesné pozice,
+                orientace a rychlosti pohybujícího se objektu<br>
+                <strong>AR Kit (iOS)</strong> a <strong>AR Core (Android)</strong>.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>V telefonech:</strong> kamera, akcelerometr, gyroskop, kompas, &hellip;</li>
+              <li><strong>Funkce:</strong> detekce rovin, odhad osvětlení, rozpoznání obličejů a předmětů.</li>
+              <li><strong>ARKit 3 / 6 / 7:</strong> People Occlusion, Scene Geometry, LiDAR pro lepší hloubku.</li>
+              <li><strong>ARCore (Google):</strong>
+                <ul class="custom-list" style="margin: 4px 0;">
+                  <li class="sub-item"><strong>Geospatial API:</strong> AR na základě dat Street View.</li>
+                  <li class="sub-item"><strong>Scene Semantics:</strong> rozpoznání stěn, podlahy a nábytku v reálném
+                    čase.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="image-gallery">
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/ar_s15_f01.jpg" alt="ARKit detekce rovin"
+                  data-preview-image="../bordel/images-mvt/arcore_plane.gif">
+                <div class="image-caption">AR Core &mdash; detekce rovin</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/ar_s15_f02.jpg" alt="ARCore">
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/arkit_occ.png" alt="People occlusion v ARKit 3"
+                  data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/arkit_occ.mp4">
+              </div>
+            </div>
+            <a href="../bordel/images-mvt/arcore_plane.gif" target="_blank" class="video-card"
+              data-preview-image="../bordel/images-mvt/arcore_plane.gif">
+              <span class="video-icon">▶</span>
+              <div class="video-details">
+                <div class="video-title">Ukázka &mdash; ARCore plane detection</div>
+              </div>
+            </a>
+            <a href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/arkit_occ.mp4" target="_blank" class="video-card"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/arkit_occ.mp4">
+              <span class="video-icon">▶</span>
+              <div class="video-details">
+                <div class="video-title">Ukázka &mdash; ARKit occlusion</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <aside class="notes">
+          Moderní mobilní AR staví na odhadu pohybu z kamery a inerciálních senzorů (VIO). ARKit a AR Core dnes
+          umožňují detekci rovin, odhad osvětlení a u ARKit 3 i věrohodné překrytí lidí digitálním obsahem. Novější
+          verze
+          (ARKit 6/7) využívají LiDAR a ARCore nabízí Geospatial API (AR postavený na datech Street View) a Scene
+          Semantics pro rozpoznání stěn, podlahy a nábytku v reálném čase.
+        </aside>
+      </section>
+
+      <!-- SLIDE 16: Překrývání v AR -->
+      <section>
+        <span class="slide-category">Technologie &bull; Occlusion</span>
+        <h2>Překrývání v AR (Occlusion)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card alert">
+              <p style="margin: 0; font-size: 0.95em; color: var(--text-main); line-height: 1.45;">
+                <strong>Složitý problém</strong> &mdash; virtuální objekty se musí správně schovávat za reálnými
+                překážkami.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.9em; margin-top: 14px;">
+              <li><strong>Odhad 3D scény</strong> z obrazu.</li>
+              <li><strong>Dnes pomáhá ToF senzor</strong> (nízké rozlišení) nebo <strong>LiDAR</strong>.</li>
+            </ul>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/niantic.mp4" target="_blank" rel="noopener noreferrer"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/niantic.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka Niantic &mdash; occlusion v AR</div>
+              </div>
+            </a>
+          </div>
+          <div>
+            <div class="glass-card" style="text-align: left; padding: 22px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.1em;">Jak to celé funguje?</h3>
+              <p style="color: var(--text-muted); font-size: 0.85em; line-height: 1.5;">
+                Pro věrohodné <strong>překrytí</strong> potřebuje systém znát hloubku scény. Hluboké senzory (ToF,
+                LiDAR) či odhad hloubky z obrazu umožní, aby reálné objekty správně zakrývaly objekty virtuální.
+              </p>
+              <div style="font-size: 0.82em; color: var(--text-main); line-height: 1.45; margin-top: 10px;">
+                <p style="margin: 0 0 6px 0;"><strong>Hardware Depth</strong> &mdash; reálné měření senzorem
+                  (<strong>LiDAR</strong>, <strong>ToF</strong>).</p>
+                <p style="margin: 0;"><strong>Neural Depth</strong> &mdash; neuronová síť odhadne hloubku z jedné
+                  <strong>RGB kamery</strong> (bez hloubkového senzoru).
+                </p>
+              </div>
+              <div class="highlight-card" style="margin-top: 14px; font-size: 0.82em;">
+                &check; Bez hloubkové informace vypadají virtuální objekty &bdquo;nalepené&ldquo; před scénou.
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Occlusion (překrývání) je klíčem fotorealistické AR. Bez znalosti hloubky scény působí virtuální objekty
+          plochě. Hloubku získáme buď hardwarově (LiDAR, ToF senzory), nebo softwarově pomocí neuronové sítě odhadující
+          hloubku z jedné RGB kamery (Neural Depth).
+        </aside>
+      </section>
+
+      <!-- SLIDE 17: Silné a slabé AR -->
+      <!-- <section>
+        <span class="slide-category">Klasifikace &bull; Weak / Strong AR</span>
+        <h2>Silná a slabá AR</h2>
+        <div class="slide-grid-2 equal" style="margin-top: 20px;">
+          <div class="glass-card">
+            <div class="spec-badge amber" style="margin-bottom: 10px;">Weak AR</div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li>Nepřesný tracking.</li>
+              <li>Žádné informace o prostředí.</li>
+              <li>Hlavně mobilní (MT), málo interaktivní.</li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <div class="spec-badge purple" style="margin-bottom: 10px;">Strong AR</div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li>Velmi přesný tracking.</li>
+              <li>Přesná integrace do reálné scény.</li>
+              <li>Přirozená interakce, HMD.</li>
+            </ul>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/ar_s17_f01.png" alt="Slabá AR">
+            <div class="image-caption">Weak AR</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/ar_s17_f02.png" alt="Silná AR">
+            <div class="image-caption">Strong AR</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Slabá AR (marker/plochá) má nepřesný tracking a málo interaktivní obsah, silná AR využívá HMD s precizním
+          trackingem a přirozenou interakcí se scénou.
+        </aside>
+      </section> -->
+
+      <!-- SLIDE 18: AR v současné době -->
+      <section>
+        <span class="slide-category">Stav oboru &bull; Současnost</span>
+        <h2>AR v současné době</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <p style="margin: 0; font-size: 0.95em; color: var(--text-main); line-height: 1.45;">
+                <strong>Technologie jsou dostupné</strong> &mdash; algoritmy pro tracking běží na běžném současném HW.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em; margin-top: 14px;">
+              <li><strong>Toolkity pro většinu HW-OS:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  ARToolKit (open source), Vuforia, ARKit, ARCore, A-Frame, OpenCV.
+                </div>
+              </li>
+              <li><strong>Roste využití v komerci:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">Hry, reklamy, navigace.</div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="padding: 22px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em;">Co se změnilo?</h3>
+              <p style="color: var(--text-muted); font-size: 0.85em; line-height: 1.5;">
+                Díky mobilním čipům, kamerám a senzorům se AR stala <strong>levnou a masovou</strong>. Stabilní SDK a
+                knihovny výrazně snižují bariéru vstupu pro vývojáře i firmy.
+              </p>
+              <div class="badge-group" style="margin-top: 12px;">
+                <span class="spec-badge cyan">Hry</span>
+                <span class="spec-badge emerald">Reklamy</span>
+                <span class="spec-badge purple">Navigace</span>
+                <span class="spec-badge amber">Průmysl</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          AR je dnes technologicky dostupná: výkonný HW je v každém telefonu a existuje široká nabídka toolkitů.
+          Nejviditelnější komerční nasazení je v hrách, reklamě a navigaci.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           BLOK 2: TRENDY A EKONOMIKA
+           ========================================== -->
+
+      <!-- SLIDE 19: Obrazový předěl -->
+      <section data-background="../bordel/images-mvt/ar_s19_f01.jpg" data-background-size="cover">
+        <div style="display: flex; justify-content: flex-end;">
+          <span class="slide-category" style="float: none; background: rgba(255,255,255,0.9);">Trendy &bull;
+            Ekonomika</span>
+        </div>
+        <aside class="notes">
+          Obrazový předěl ukazující, jak hluboko AR proniká do běžného života &mdash; od reklamy až po průmyslové
+          aplikace. Následuje blok o trhu, trendech a komerčním využití AR.
+        </aside>
+      </section>
+
+      <!-- SLIDE 20: Tržby v AR -->
+      <section>
+        <span class="slide-category">Ekonomika &bull; Trh</span>
+        <h2>Tržby v AR</h2>
+        <div class="image-showcase" style="max-width: 860px; margin: 0 auto;">
+          <img src="../bordel/images-mvt/mrmarket.png" alt="Graf růstu tržeb v AR">
+          <div class="image-caption">Predikce růstu trhu AR (mld. USD) &mdash; historická predikce</div>
+        </div>
+        <!-- <div class="badge-group" style="justify-content: center; margin-top: 12px; gap: 10px;">
+          <span class="spec-badge cyan">2024: ≈ 32 mld. USD</span>
+          <span class="spec-badge emerald">2025: mobilní AR ≈ 31 mld. USD</span>
+          <span class="spec-badge purple">2026: AR + VR ≈ 51 mld. USD</span>
+          <span class="spec-badge amber">2028: ≈ 58 mld. USD</span>
+        </div> -->
+        <aside class="notes">
+          Trh rozšířené reality rychle roste &mdash; prognózy ukazují výrazný nárůst tržeb, tažený mobilní AR,
+          průmyslem i nositelnými zařízeními. Historický graf doplňují aktuální čísla: AR trh kolem 32 mld. USD (2024),
+          mobilní AR asi 31 mld. USD (2025), AR+VR zhruba 51 mld. USD (2026) a projekce kolem 58 mld. USD (2028).
+          Pozor: čísla se liší podle zdroje a definice (AR vs. AR+VR).
+        </aside>
+      </section>
+
+      <!-- SLIDE 21: AR Gartner hype cycle -->
+      <section>
+        <span class="slide-category">Ekonomika &bull; Hype cycle</span>
+        <h2>AR &mdash; Gartner Hype Cycle</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s21_f01.jpg" alt="Gartner Hype Cycle pro AR">
+              <div class="image-caption">Vývoj očekávání AR v čase</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <div class="spec-badge amber" style="margin-bottom: 6px; float: right; font-size: 1em;">2008</div>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">Vrchol nafouknutých očekávání
+                (Peak of Inflated Expectations).</p>
+            </div>
+            <div class="glass-card">
+              <div class="spec-badge rose" style="margin-bottom: 6px; float: right; font-size: 1em;">2011</div>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">Klesání do údolí zklamání (Trough of
+                Disillusionment).</p>
+            </div>
+            <div class="glass-card">
+              <div class="spec-badge emerald" style="margin-bottom: 6px; float: right; font-size: 1em;">2018</div>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">Výstup na plato produktivity (Plateau
+                of Productivity).</p>
+            </div>
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                <strong>Po roce 2018 už AR v Hype Cycle samostatně nefiguruje</strong> &mdash; rozpadla se do dílčích
+                zralých kategorií: <strong>Spatial Computing</strong>, <strong>Immersive Workspace</strong>,
+                <strong>Metaverse Enablers</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Gartner Hype Cycle ilustruje typický cyklus očekávání: kolem roku 2008 vrcholil hype, po roce 2011 přišlo
+          zklamání a okolo roku 2018 se AR posunula na plato praktické produktivity. Po roce 2018 už AR v Hype Cycle
+          samostatně nefiguruje, protože technologie dozrála a rozpadla se do dílčích kategorií &mdash; Spatial
+          Computing,
+          Immersive Workspace a Metaverse Enablers.
+        </aside>
+      </section>
+
+      <!-- SLIDE 22: Počet uživatelů -->
+      <section>
+        <span class="slide-category">Ekonomika &bull; Adopce</span>
+        <h2>Počet uživatelů</h2>
+        <div class="image-showcase" style="max-width: 860px; margin: 0 auto;">
+          <img src="../bordel/images-mvt/users.png" alt="Graf počtu uživatelů AR">
+          <div class="image-caption">Rostoucí počet uživatelů AR technologií &mdash; historický graf</div>
+        </div>
+        <!-- <div class="badge-group" style="justify-content: center; margin-top: 12px; gap: 10px;">
+          <span class="spec-badge cyan">1,73 mld. aktivních AR zařízení (2024)</span>
+          <span class="spec-badge emerald">3,8 mld. uživatelů AR + VR (projekce 2030)</span> -->
+        <!-- </div> -->
+        <aside class="notes">
+          Počet uživatelů AR exponenciálně roste s tím, jak se AR stává standardní funkcí smartphonů a přibývá
+          nositelných zařízení a HMD. Podle Statista se v roce 2024 počítalo se zhruba 1,73 miliardy aktivních AR
+          zařízení a pro rok 2030 se v segmentu AR+VR očekává až 3,8 miliardy uživatelů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           BLOK 3: APLIKACE AR V PRAXI
+           ========================================== -->
+
+      <!-- SLIDE 23: Pokemon GO -->
+      <section>
+        <span class="slide-category">Případová studie &bull; Herní průmysl</span>
+        <h2>Pokémon GO</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <p style="margin: 0; font-size: 0.95em; color: var(--text-main); line-height: 1.45;">
+                Příklad <strong>super úspěšné hry</strong> s rozšířenou realitou.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.88em; margin-top: 14px;">
+              <li><strong>Značka + sociální stránka + mobil + geolokace + AR.</strong></li>
+              <li><strong>Nejrychlejších 500 mil. dolarů</strong> v historii (63 dní).</li>
+              <li><strong>Akcie Nintenda:</strong> +50 %.</li>
+              <li><strong>Niantic Lightship SDK</strong> &mdash; engine vzniklý z Pokémon GO zpřístupněný vývojářům.
+              </li>
+            </ul>
+            <div class="glass-card">
+              <h3>Mrtvé hry</h3>
+              <ul>
+                <li>Harry Potter: Wizards Unite</li>
+                <li>
+                  Witcher Monster Hunter
+                </li>
+                <li>Další spíš přežívají (Jurasic World Alive, Ingress)</li>
+              </ul>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s23_f01.jpg" alt="Pokémon GO logo" data-preview-image>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s23_f02.jpg" alt="Pokémon GO chytání" data-preview-image>
+            </div>
+            <div class="image-showcase" style="grid-column: span 2;">
+              <img src="../bordel/images-mvt/ar_s23_f03.png" alt="Pokémon GO ve městě" data-preview-image>
+              <div class="image-caption">Pokémon GO &mdash; AR + geolokace v městském prostředí</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Pokémon GO je učebnicový příklad úspěchu AR: kombinace silné značky, sociálního rozměru, geolokace a AR
+          přinesla rekordní tržby a nárůst akcií Nintenda. Technologie stojící za hrou zpřístupnila Niantic vývojářům
+          jako Lightship SDK pro tvorbu dalších lokalizovaných AR aplikací.
+        </aside>
+      </section>
+
+      <!-- SLIDE 24: Další AR aplikace -->
+      <section>
+        <span class="slide-category">Aplikace</span>
+        <h2>Další AR aplikace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">VR Book (2008)</h3>
+              <ul>
+                <li>Papírová kniha obohacená o 3D obsah</li>
+                <li>přes kameru.</li>
+                <li>Experimentální produkt, nepříliš úspěšný.</li>
+
+
+
+                <li>Kamera v lampičce</li>
+                <li>Přirozené ovládání AR obsahu rukama.</li>
+              </ul>
+              <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/vrbook.mp4"
+                data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/vrbook.mp4">
+                <div class="video-icon">▶</div>
+                <div class="video-details">
+                  <div class="video-title">Ukázka &mdash; VR Book</div>
+                </div>
+              </a>
+              <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/arlamp.mp4" target="_blank"
+                data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/arlamp.mp4">
+                <div class="video-icon">▶</div>
+                <div class="video-details">
+                  <div class="video-title">Ukázka &mdash; kamera v lampičce</div>
+                </div>
+              </a>
+            </div>
+
+
+          </div>
+          <div class="image-gallery">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s24_f01.jpg" alt="VR Book AR">
+              <div class="image-caption">VR Book &mdash; 3D obsah nad papírem</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s24_f02.jpg" alt="Kamera v lampičce">
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s24_f03.jpg" alt="Přirozené ovládání AR">
+              <div class="image-caption">Přirozená interakce se scénou</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Kreativní AR projekty &mdash; VR Book z roku 2008 obohacovala tištěnou knihu o 3D obsah a projekt s kamerou v
+          lampičce ukázal přirozené ovládání digitálního obsahu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 25: Další AR aplikace -->
+      <section>
+        <span class="slide-category">Aplikace &bull; Hry a komerce</span>
+        <h2>Další AR aplikace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Hlavně komerce</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">
+                IKEA, Nike, Porsche AR app, MakeUp App, Pepsi AR reklama.
+              </p>
+            </div>
+
+            <div class="image-gallery">
+              <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/porsche.mp4" target="_blank"
+                data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/porsche.mp4" style="margin: 5px;">
+                <div class="video-icon">▶</div>
+                <div class="video-details">
+                  <div class="video-title">Porsche</div>
+                </div>
+              </a>
+              <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pepsi.mp4" target="_blank"
+                data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pepsi.mp4" style="margin: 5px;">
+                <div class="video-icon">▶</div>
+                <div class="video-details">
+                  <div class="video-title">Pepsi</div>
+                </div>
+              </a>
+              <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/ikea.mp4" target="_blank"
+                data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/ikea.mp4" style="margin: 5px;">
+                <div class="video-icon">▶</div>
+                <div class="video-details">
+                  <div class="video-title">IKEA</div>
+                </div>
+              </a>
+              <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/nike.mp4" target="_blank"
+                data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/nike.mp4" style="margin: 5px;">
+                <div class="video-icon">▶</div>
+                <div class="video-details">
+                  <div class="video-title">Nike</div>
+                </div>
+              </a>
+              <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pacman.mp4" target="_blank"
+                data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pacman.mp4" style="margin: 5px;">
+                <div class="video-icon">▶</div>
+                <div class="video-details">
+                  <div class="video-title">Pizza Hut</div>
+                </div>
+              </a>
+              <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/loreal.mp4" target="_blank"
+                data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/loreal.mp4" style="margin: 5px;">
+                <div class="video-icon">▶</div>
+                <div class="video-details">
+                  <div class="video-title">L'oreal</div>
+                </div>
+              </a>
+            </div>
+            <div class="glass-card accent-purple" style="padding: 16px 20px; margin-top: 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">WebAR</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">
+                Spuštění AR přímo z <strong>QR kódu</strong> v prohlížeči, bez instalace aplikace &mdash; 8th Wall,
+                A-Frame, WebXR.
+              </p>
+            </div>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/arfps.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/arfps.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Multiplayerová AR hra</div>
+              </div>
+            </a>
+
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s25_f01.jpg" alt="AR komerční aplikace">
+              <div class="image-caption">AR v maloobchodě a reklamě</div>
+            </div>
+
+          </div>
+        </div>
+        <aside class="notes">
+          AR proniká do her a maloobchodu: IKEA umožňuje umístit nábytek do místnosti, Nike a MakeUp testuje produkty,
+          Pepsi staví AR venkovní reklamu a Harvard Business Review AR propaguje svůj obsah. Moderní komerční AR se
+          často spouští jako WebAR přímo z QR kódu (8th Wall, A-Frame / WebXR) &mdash; bez nutnosti instalovat mobilní
+          aplikaci.
+        </aside>
+      </section>
+
+      <!-- SLIDE 26: Montáž, údržba -->
+      <section>
+        <span class="slide-category">Průmysl &bull; Servis</span>
+        <h2>Montáž a údržba</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Ngrain</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">
+                Aplikace pro školení techniků &mdash; tracking na základě podoby modelu (hrany).
+              </p>
+            </div>
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">ScopeAR</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">
+                Vzdálená pomoc &mdash; tracking na základě rozpoznání obrazu.
+              </p>
+            </div>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/ar-repair.mp4" target="_blank" rel="noopener noreferrer"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/ar-repair.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka AR pro údržbu a opravy</div>
+              </div>
+            </a>
+          </div>
+          <div style="width: 66%;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s26_f01.jpg" alt="AR při montáži" data-preview-image>
+              <div class="image-caption">Ngrain &mdash; montáž a údržba</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s26_f02.jpg" alt="ScopeAR vzdálená pomoc" data-preview-image>
+              <div class="image-caption">ScopeAR &mdash; vzdálená pomoc experta</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Ngrain a ScopeAR ukazují, jak AR šetří náklady na servis: nad reálným zařízením se zobrazí kroky montáže
+          nebo se připojí vzdálený expert, který vidí totéž co technik.
+        </aside>
+      </section>
+
+      <!-- SLIDE 27: Medicína -->
+      <section>
+        <span class="slide-category">Aplikace &bull; Medicína</span>
+        <h2>AR v medicíně</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Průhledný displej
+                s videem</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">
+                <strong>Siemens Research</strong> &mdash; vizualizace medicínských dat.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.88em;">
+              <li><strong>MS HoloLens v medicíně</strong> &mdash; 3D modely orgánů, navigace při zákroku.</li>
+              <li><strong>Chirurgické systémy schválené FDA</strong> &mdash; např. <strong>Augmedics xvision</strong>:
+                AR navigace pro operace páteře, chirurg vidí rentgenový snímek &bdquo;skrz&ldquo; tělo pacienta.</li>
+            </ul>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/holo-medi.mp4" target="_blank" rel="noopener noreferrer"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/holo-medi.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">HoloLens v medicíně</div>
+              </div>
+            </a>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/vision-medi.mp4" target="_blank" rel="noopener noreferrer"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/vision-medi.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Apple Vision Pro v medicíně</div>
+              </div>
+            </a>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/vision-medi2.mp4" target="_blank" rel="noopener noreferrer"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/vision-medi2.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Apple Vision Pro v chirurgii</div>
+              </div>
+            </a>
+          </div>
+          <div style="width: 66%;text-align: right;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s27_f01.jpg" alt="AR v medicíně">
+              <div class="image-caption">Siemens Research &mdash; vizualizace dat</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s27_f02.png" alt="HoloLens v medicíně">
+              <div class="image-caption">MS HoloLens &mdash; medicínské modely</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          V medicíně slouží AR k vizualizaci tomografických dat přímo nad pacientem, což usnadňuje plánování i průběh
+          zákroku. Siemens Research a Microsoft HoloLens jsou typickými příklady. Konkrétní chirurgické systémy, jako je
+          Augmedics xvision (schválený FDA), přenášejí rentgenové snímky přímo do zorného pole chirurga při operacích
+          páteře.
+        </aside>
+      </section>
+
+      <!-- SLIDE 28: Interaktivní prohlídky a muzea -->
+      <section>
+        <span class="slide-category">Aplikace &bull; Kultura</span>
+        <h2>Interaktivní prohlídky a muzea</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Virtuální Aš</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">Probouzení historie města přes
+                reálnou kameru (archeologie, památky).</p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.88em;">
+              <li><strong>Věnná města českých královen</strong> &mdash; AR rekonstrukce.</li>
+              <li><strong>CityViewAR (Christchurch)</strong> &mdash; znovuzpřítomnění zničených budov.</li>
+            </ul>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/virtual-as.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/virtual-as.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka Virtuální Aš</div>
+              </div>
+            </a>
+          </div>
+          <div class="image-gallery">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s28_f01.png" alt="Virtuální Aš">
+              <div class="image-caption">Virtuální Aš &mdash; turistická AR prohlídka</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/vmck.png" alt="Venná města" data-preview-image>
+              <div class="image-caption">Věnná města českých královen &mdash; AR rekonstrukce</div>
+            </div>
+
+          </div>
+        </div>
+        <aside class="notes">
+          Kultura využívá AR k návratu zaniklých objektů: Virtuální Aš oživuje historii, rekonstrukce věnných měst a
+          projekt CityViewAR znovuzpřítomňuje budovy zničené zemětřesením v Christchurchi.
+        </aside>
+      </section>
+
+      <!-- SLIDE 29: Průmysl -->
+      <section>
+        <span class="slide-category">Aplikace &bull; Průmysl</span>
+        <h2>AR v průmyslu</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Konstrukce</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">Kontrola a montáž konstrukcí v
+                měřítku 1:1.</p>
+            </div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">Sklady (DHL)</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">AR navigace a výběr zboží v logistice.
+              </p>
+            </div>
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Pomoc experta pomocí AR
+              </h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">Vzdálené sdílení pohledu a anotace.</p>
+            </div>
+          </div>
+          <div class="image-gallery">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s29_f01.jpg" alt="AR v konstrukci" data-preview-image>
+              <div class="image-caption">Konstrukce a montáž</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s29_f02.jpg" alt="AR ve skladech DHL" data-preview-image>
+              <div class="image-caption">DHL &mdash; logistika a sklady</div>
+            </div>
+            <!-- <div style="display: flex; gap: 8px; flex-wrap: wrap;"> -->
+            <a class="video-card" style="flex: 1; min-width: 180px;" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/konstrukce.mp4"
+              target="_blank" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/konstrukce.mp4">
+              <div class="video-icon" style="width: 34px; height: 34px;">▶</div>
+              <div class="video-details">
+                <div class="video-title" style="font-size: 0.85em;">Konstrukce</div>
+              </div>
+            </a>
+            <a class="video-card" style="flex: 1; min-width: 180px;" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/dhl.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/dhl.mp4">
+              <div class="video-icon" style="width: 34px; height: 34px;">▶</div>
+              <div class="video-details">
+                <div class="video-title" style="font-size: 0.85em;">DHL sklady</div>
+              </div>
+            </a>
+            <a class="video-card" style="flex: 1; min-width: 180px;" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/porsche-repair.mp4"
+              target="_blank" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/porsche-repair.mp4">
+              <div class="video-icon" style="width: 34px; height: 34px;">▶</div>
+              <div class="video-details">
+                <div class="video-title" style="font-size: 0.85em;">Expert pomoc</div>
+              </div>
+            </a>
+            <a class="video-card" style="flex: 1; min-width: 180px;" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/konstrukce2.mp4"
+              target="_blank" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/konstrukce2.mp4">
+              <div class="video-icon" style="width: 34px; height: 34px;">▶</div>
+              <div class="video-details">
+                <div class="video-title" style="font-size: 0.85em;">Montáž</div>
+              </div>
+            </a>
+          </div>
+          <!-- </div> -->
+        </div>
+        <aside class="notes">
+          Průmysl nasazuje AR ve třech typických rolích: kontrola konstrukcí v měřítku 1:1, navigace v logistice (DHL)
+          a vzdálená odborná pomoc s anotacemi v reálném čase.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           BLOK 4: TRACKING A REGISTRACE
+           ========================================== -->
+
+      <!-- SLIDE 30: Požadavky AR -->
+      <section>
+        <span class="slide-category">Principy AR &bull; Požadavky</span>
+        <h2>Požadavky AR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-bottom: 12px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Tracking</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">
+                Spojitě zjišťovat <strong>pohyb a otočení</strong> zorného pole uživatele.
+              </p>
+            </div>
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Registrace (registration)
+              </h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">
+                Umístění virtuálního objektu do reálné scény &mdash; <strong>pevná pozice ve scéně</strong> vzhledem
+                k reálnému objektu.
+              </p>
+            </div>
+            <div class="glass-card" style="padding: 16px 20px;margin-top: 12px;">
+              <h3 style="color: var(--accent-amber); font-size: 1.05em; margin-bottom: 6px;">Nízká latence (M2P)</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 0;">
+                <strong>Motion-to-Photon</strong> &mdash; zpoždění mezi pohybem a zobrazením musí být pod
+                <strong>&asymp; 20 ms</strong>, jinak dochází ke kineatóze (mořské nemoci).
+              </p>
+            </div>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s30_f01.jpg" alt="Tracking a registrace">
+              <div class="image-caption">Tracking a registrace &mdash; dva pilíře AR</div>
+            </div>
+            <div class="highlight-card" style="margin-top: 12px; font-size: 0.82em;">
+              Bez přesné <strong>registrace</strong> se virtuální objekt &bdquo;plazí&ldquo; po scéně a iluze se
+              hroutí.
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Základ AR tvoří tři požadavky: tracking spojitě sleduje pohyb zorného pole, registrace pevně ukotvuje
+          virtuální objekt vůči reálné scéně a nízká latence (Motion-to-Photon pod zhruba 20 ms) zajišťuje pohodlí.
+          Pokud registrace nesedí nebo je latence vysoká, iluze se hroutí a dochází ke kineatóze.
+        </aside>
+      </section>
+
+      <!-- SLIDE 31: Tracking pohybu -->
+      <section>
+        <span class="slide-category">Principy AR &bull; Trackování</span>
+        <h2>Tracking pohybu</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 14px 18px; margin-bottom: 10px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Aktivní trackování</h3>
+              <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">
+                Mechanické, magnetické, ultrazvuk, GPS, Wi-Fi, &hellip;
+              </p>
+            </div>
+            <div class="glass-card" style="padding: 14px 18px; margin-bottom: 10px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">Pasivní trackování</h3>
+              <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">
+                Senzory (gyro, akcelerometr, kompas) a metody počítačového vidění.
+              </p>
+            </div>
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Smíšené (hybridní)</h3>
+              <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">Kombinace obou metod.</p>
+            </div>
+            <p style="color: var(--text-main); font-size: 0.8em; margin: 12px 0 0 0; font-weight: 600;">
+              Stabilizace vůči &hellip; hlavě &rarr; tělu &rarr; okolnímu světu
+            </p>
+          </div>
+          <div class="image-gallery">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s31_f01.jpg" alt="Tracking vůči hlavě">
+              <div class="image-caption">vůči hlavě</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s31_f02.jpg" alt="Tracking vůči tělu">
+              <div class="image-caption">vůči tělu</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s31_f03.jpg" alt="Tracking vůči okolnímu světu">
+              <div class="image-caption">vůči světu</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Trackingy dělíme na aktivní (vlastní zdroj signálu), pasivní (senzory a počítačové vidění) a hybridní.
+          Složitost
+          roste od stabilizace vůči hlavě, přes tělo, až po stabilizaci vůči okolnímu světu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 32: Rozdělení trackování -->
+      <section>
+        <span class="slide-category">Přehled &bull; Taxonomie trackování</span>
+        <h2>Rozdělení trackování</h2>
+        <img src="../bordel/images-mvt/tracking.svg">
+        <aside class="notes">
+          Taxonomie trackování: magnetické, inerciální, ultrazvukové, optické a mechanické. Optické metody dále dělíme
+          na specializované, markerové a bezmarkerové (např. SLAM). Důležité rozdělení je i umístění senzorů: Inside-Out
+          (kamery na headsetu &mdash; dnešní standard) versus Outside-In (externí základny, např. HTC Vive).
+        </aside>
+      </section>
+
+      <!-- SLIDE 33: Mechanické -->
+      <section>
+        <span class="slide-category">Typy trackování &bull; Mechanické</span>
+        <h2>Mechanické trackování</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li>Mechanické <strong>ruce</strong> (exoskeletony).</li>
+              <li><strong>Senzory v kloubech.</strong></li>
+              <li><strong>Vysoká přesnost.</strong></li>
+              <li>Zpětná vazba.</li>
+              <li>Drahé.</li>
+              <li>Komplikované.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s33_f01.jpg" alt="Mechanické trackování">
+              <div class="image-caption">Mechanická ruka se senzory v kloubech</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Mechanické trackování používá kloubové konstrukce se senzory. Je velmi přesné, poskytuje zpětnou vazbu, ale
+          je drahé a objemné.
+        </aside>
+      </section>
+
+      <!-- SLIDE 34: Magnetické -->
+      <section>
+        <span class="slide-category">Typy trackování &bull; Magnetické</span>
+        <h2>Magnetické trackování</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li>Cívky generují proud, když se pohybují v <strong>magnetickém poli</strong>.</li>
+              <li>Měření proudu určí <strong>polohu a rotaci</strong>.</li>
+              <li>Hodnoty jsou relativní vůči zdroji magnetického pole.</li>
+              <li><strong>6 stupňů volnosti.</strong></li>
+              <li>Robustní.</li>
+              <li>Jsou potřeba dráty.</li>
+              <li>Náchylné na kovové materiály.</li>
+              <li>Drahé.</li>
+            </ul>
+          </div>
+          <div class="image-gallery">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s34_f01.png" alt="Flock of birds senzor">
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s34_f02.jpg" alt="Magnetický tracking">
+              <div class="image-caption">Flock of Birds</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Magnetický tracking (např. Flock of Birds) měří indukovaný proud v cívkách. Je robustní a nabízí 6 DoF, ale
+          vyžaduje dráty a je citlivý na kovové materiály.
+        </aside>
+      </section>
+
+      <!-- SLIDE 35: Inerciální -->
+      <section>
+        <span class="slide-category">Typy trackování &bull; Inerciální</span>
+        <h2>Inerciální trackování</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li>Měření <strong>lineární a úhlové orientace</strong> (akcelerometr, gyroskop).</li>
+              <li>Není třeba vysílač &mdash; <strong>bezdrátové</strong>.</li>
+              <li>Malé a levné.</li>
+              <li>Vysoká frekvence snímání.</li>
+              <li><strong>Rostoucí chyba s časem</strong> (drift).</li>
+              <li>Hystereze.</li>
+              <li><strong>Drift v praxi řeší fúze:</strong> Kalmanův filtr / Extended Kalman Filter (EKF) pro spojení
+                IMU s optickou kamerou.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s35_f01.jpg" alt="Inerciální senzory">
+              <div class="image-caption">Akcelerometr + gyroskop (IMU)</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Inerciální tracking je bezdrátový, malý a levný, díky IMU umí snímek s vysokou frekvencí. Hlavní nevýhodou je
+          narůstající chyba s časem (drift) &mdash; proto se data IMU v praxi fúzují s optickou kamerou pomocí
+          Kalmanova filtru nebo jeho nelineární varianty EKF.
+        </aside>
+      </section>
+
+      <!-- SLIDE 36: Ultrazvukový -->
+      <section>
+        <span class="slide-category">Typy trackování &bull; Ultrazvukové</span>
+        <h2>Ultrazvukové trackování</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li>Založen na <strong>změně fáze</strong> ultrazvukové vlny.</li>
+              <li>Nebo na <strong>času šíření</strong> zvukového signálu.</li>
+              <li>Levné, malé.</li>
+              <li>Menší přesnost.</li>
+              <li><strong>Viditelnost vysílače</strong> je nutná.</li>
+              <li>Ovlivněno okolím (tlak, teplota).</li>
+            </ul>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s36_f01.jpg" alt="Ultrazvukové trackování">
+              <div class="image-caption">Ultrazvukové vysílače a přijímače</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Ultrazvukové trackování měří fázi nebo čas šíření zvuku. Je levné a malé, ale méně přesné, vyžaduje
+          viditelnost
+          vysílače a je citlivé na okolní podmínky.
+        </aside>
+      </section>
+
+      <!-- SLIDE 37: GPS -->
+      <section>
+        <span class="slide-category">Typy trackování &bull; Družicová navigace</span>
+        <h2>GPS (Global Positioning System)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li><strong>USA &ndash; 1978</strong> (aktuálně 31 satelitů).</li>
+              <li><strong>Signál ze satelitu:</strong> poloha a čas.</li>
+              <li><strong>Přijímač:</strong>
+                <ul class="custom-list" style="margin: 4px 0;">
+                  <li class="sub-item">Měří rozdíl času ze satelitů.</li>
+                  <li class="sub-item">Aspoň 4 satelity nutné.</li>
+                  <li class="sub-item">Triangulace polohy.</li>
+                </ul>
+              </li>
+              <li><strong>Přesnost:</strong> 5&ndash;30 m, blokování budovami, počasím &hellip;</li>
+              <li><strong>Další možnosti:</strong> Galileo, GLONASS, BeiDou.</li>
+              <li><strong>Přesnější alternativa &mdash; VPS (Visual Positioning System):</strong>
+                <ul class="custom-list" style="margin: 4px 0;">
+                  <li class="sub-item">Kombinace GPS s porovnáváním obrazu z kamery proti 3D databázi světa.</li>
+                  <li class="sub-item">Např. Google Visual Positioning, Niantic VPS &mdash; až centimetrová přesnost.
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s37_f01.jpg" alt="GPS">
+              <div class="image-caption">Družicová navigace pro lokální AR</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          GPS poskytuje absolutní polohu ze satelitů s přesností 5&ndash;30 m. Používá se pro lokální (venkovní)
+          aplikace AR, kde není potřeba velká přesnost. Existují i další systémy: Galileo, GLONASS, BeiDou. Pro
+          náročnější scénáře se používá Visual Positioning System (VPS), který kombinuje GPS s porovnáním obrazu z
+          kamery
+          proti 3D databázi světa (Google, Niantic) a dosahuje až centimetrové přesnosti.
+        </aside>
+      </section>
+
+      <!-- SLIDE 38: Optické trackování – Proč? -->
+      <section>
+        <span class="slide-category">Typy trackování &bull; Optické</span>
+        <h2>Optické trackování &mdash; proč?</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li><strong>Mobily/tablety mají foťák/kameru</strong> &mdash; &bdquo;Video see-through display&ldquo;.
+              </li>
+              <li><strong>Přesné zaměření virtuálního objektu do scény:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Využití významných bodů z obrazu pro přesné umístění.
+                </div>
+              </li>
+              <li><strong>Reálná scéna má hodně významných bodů</strong> (features, interest points).</li>
+              <li><strong>Počítačové vidění je rozvinutá disciplína:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Přes 40 let výzkumu; staré algoritmy lze nyní provádět real-time.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s38_f01.png" alt="Významné body v obraze">
+              <div class="image-caption">Interest points / features</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s38_f02.png" alt="Detekce features">
+              <div class="image-caption">Detekce korespondencí v obraze</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Optické trackování těží z toho, že každý mobil má kameru (video see-through) a že počítačové vidění – více než
+          40 let výzkumu – dnes umí běžet v reálném čase.
+        </aside>
+      </section>
+
+      <!-- SLIDE 39: Běžné metody optického trackování -->
+      <section>
+        <span class="slide-category">Optické trackování &bull; Metody</span>
+        <h2>Běžné metody optického trackování</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="padding: 14px 18px; margin-bottom: 10px;">
+              <h3>Pomocí markeru</h3>
+              <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">
+                Marker = speciální značka v reálném světě (ARToolKit).
+              </p>
+            </div>
+            <div class="glass-card" style="padding: 14px 18px; margin-bottom: 10px;">
+              <h3>Bez markeru</h3>
+              <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">
+                Pomocí známých prvků z reálného světa &mdash; šablony, textury, tvary.
+              </p>
+            </div>
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3>Tracking neznámého prostředí</h3>
+              <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">
+                Algoritmy <strong>SLAM</strong> (Simultaneous Localization and Mapping).
+              </p>
+              <ul class=" custom-list" style="font-size: 0.8em;">
+                <li><strong>vSLAM</strong> &mdash; čistě vizuální lokalizace a mapování.</li>
+                <li><strong>VIO</strong> &mdash; fúze vizuálního SLAMu s IMU (Visual-Inertial Odometry) &mdash; základ
+                  ARKit/ARCore a headsetů.</li>
+              </ul>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s39_f01.jpg" alt="Marker tracking">
+              <div class="image-caption">Marker-based</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s39_f02.jpg" alt="Tracker bez markeru">
+              <div class="image-caption">Marker-less</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s39_f03.jpg" alt="SLAM">
+              <div class="image-caption">SLAM &mdash; neznámé prostředí</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Optické metody dělíme na markerové, bezmarkerové a tracking neznámého prostředí (SLAM). Každá má jiné nároky
+          na scénu a přesnost. V rámci SLAMu rozlišujeme čistě vizuální vSLAM a VIO (Visual-Inertial Odometry), který
+          fúzuje kameru s inerciálními senzory &mdash; právě VIO je základem ARKitu, ARCore a moderních headsetů.
+        </aside>
+      </section>
+
+      <!-- SLIDE 40: Marker tracking -->
+      <section>
+        <span class="slide-category">Optické trackování &bull; Markery</span>
+        <h2>Marker tracking</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Rozšířené víc než 10 let.</strong></li>
+              <li><strong>Mnoho open-source knihoven:</strong> ARToolKit, ARTag, &hellip;</li>
+              <li><strong>Celkem jednoduché na implementaci.</strong></li>
+              <li><strong>Obdélník poskytuje 4 rohové body</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  &mdash; stačí pro výpočet pozice a otočení kamery.
+                </div>
+              </li>
+            </ul>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/hiro.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/hiro.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka marker trackingu</div>
+              </div>
+            </a>
+          </div>
+          <div class="image-gallery">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s40_f01.jpg" alt="ARToolKit marker">
+              <div class="image-caption">Marker &mdash; ARToolKit</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s40_f02.jpg" alt="Trackování markeru">
+              <div class="image-caption">4 rohové body &rarr; poloha + rotace</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Marker tracking je nejjednodušší optická metoda: černobílá značka dává 4 rohové body, ze kterých se přímo
+          spočítá pozice a rotace kamery. ARToolKit a ARTag jsou standardem už více než 10 let.
+        </aside>
+      </section>
+
+      <!-- SLIDE 41: Trackování bez markeru -->
+      <section>
+        <span class="slide-category">Optické trackování &bull; Bez markeru</span>
+        <h2>Trackování bez markeru</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <p style="margin: 0; font-size: 0.95em; color: var(--text-main); line-height: 1.45;">
+                Využití <strong>přirozených významných bodů</strong> ze scény:
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.9em; margin-top: 12px;">
+              <li><strong>Hrany</strong> (edges).</li>
+              <li><strong>Textury</strong>.</li>
+              <li><strong>Rohy</strong> (corners).</li>
+            </ul>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s41_f01.jpg" alt="Bezmarkerové trackování — textury">
+              <div class="image-caption">Textury a hrany</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/ar_s41_f02.jpg" alt="Významné body v obraze">
+              <div class="image-caption">Významné body (features)</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Bezmarkerové trackování nespoléhá na umělou značku, ale na přirozené prvky scény &mdash; hrany, textury a
+          rohy,
+          které se detekují a sledují v čase.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           BLOK 5: MODERNÍ AR/MR (2023–2026)
+           ========================================== -->
+
+      <!-- SLIDE 42: Nová vlna AR/MR -->
+      <section>
+        <span class="slide-category">Současnost &bull; Nová vlna AR/MR</span>
+        <h2>Nová vlna AR/MR (2023&ndash;2026)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <p style="margin: 0; font-size: 0.92em; color: var(--text-main); line-height: 1.45;">
+                Po klasických optical see-through brýlích (&bdquo;HoloLens éra&ldquo;) přichází <strong>passthrough
+                  MR</strong> a <strong>Spatial Computing</strong>.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em; margin-top: 14px;">
+              <li><strong>Apple Vision Pro (2024):</strong> ultravysoké rozlišení <strong>Video See-Through
+                  (VST)</strong>
+                a nové paradigma ovládání &mdash; <strong>eye tracking + mikrogesta</strong> (stačí jemný pohyb prstů).
+              </li>
+              <li><strong>Meta Quest 3 / Quest Pro:</strong> barevný passthrough, depth senzory a IR tracking &mdash;
+                masově dostupné MR headsety.</li>
+              <li><strong>Google &amp; Samsung &mdash; Android XR (2024/2025):</strong> nový otevřený ekosystém pro XR
+                na
+                čipu <strong>Qualcomm Snapdragon XR2+ Gen 2</strong>.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="padding: 20px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em;">Co přinesla nová vlna?</h3>
+              <p style="color: var(--text-muted); font-size: 0.85em; line-height: 1.5;">
+                Posun od průhledné optiky k <strong>VST přes kamery</strong>, větší zorné pole, vyšší rozlišení a
+                ovládání
+                bez ovladače &mdash; jeden headset zvládá AR i plnou VR.
+              </p>
+              <div class="badge-group" style="margin-top: 12px;">
+                <span class="spec-badge cyan">VST</span>
+                <span class="spec-badge emerald">Eye tracking</span>
+                <span class="spec-badge purple">Micro-gestures</span>
+                <span class="spec-badge amber">Spatial audio</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Rok 2024 přinesl novou vlnu AR/MR. Apple Vision Pro definoval Spatial Computing a posun k videosee-through
+          passthrough MR s eye trackingem a mikrogesty. Meta Quest 3/Pro zpřístupnily barevný passthrough masám. Google
+          a
+          Samsung připravily Android XR na Snapdragonu XR2+ Gen 2 jako konkurenci uzavřených ekosystémů.
+        </aside>
+      </section>
+
+      <!-- SLIDE 43: OST vs VST -->
+      <section>
+        <span class="slide-category">Optika &bull; Displeje</span>
+        <h2>Optical See-Through vs. Video See-Through</h2>
+        <div class="slide-grid-2 equal">
+          <div class="glass-card">
+            <div class="spec-badge amber" style="margin-bottom: 8px;">Optical See-Through (OST)</div>
+            <ul class="custom-list" style="font-size: 0.83em; margin: 4px 0 0 0;">
+              <li>Průhledná optika &mdash; obraz se promítá přes <strong>vlnovody (waveguides)</strong> (HoloLens, Magic
+                Leap).</li>
+              <li><strong>Difraktivní</strong> i <strong>reflektivní</strong> vlnovody + mikrozdroje
+                (<strong>Micro-OLED,
+                  Micro-LED</strong>).</li>
+              <li>Reálný svět vidíte naplno, ale černá selhává a kontrast na světle je slabý.</li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <div class="spec-badge cyan" style="margin-bottom: 8px;">Video See-Through (VST)</div>
+            <ul class="custom-list" style="font-size: 0.83em; margin: 4px 0 0 0;">
+              <li>Svět zprostředkovávají <strong>kamery</strong> a zobrazují displeje (Quest, Vision Pro).</li>
+              <li><strong>Dokonalé překrytí, perfektní kontrast</strong>, plná VR i AR v jednom zařízení.</li>
+              <li>Cena: <strong>latence</strong>, rozlišení kamer a přirozenost obrazu.</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Průhledné displeje staví na vlnovodech a mikrodisplejích (Micro-OLED, Micro-LED); reálný svět vidíte přímou
+          optikou (OST). Videosee-through (VST) zobrazuje svět přes kamery, čímž dosahuje dokonalého překrytí a
+          kontrastu
+          s cenou latence a nižší přirozenosti obrazu. Moderní headsety kombinují oba přístupy.
+        </aside>
+      </section>
+
+      <!-- SLIDE 44: AI v AR -->
+      <section>
+        <span class="slide-category">Současnost &bull; Spatial AI</span>
+        <h2>Generativní a prostorová AI v AR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Real-time segmentace scény:</strong> SAM (Segment Anything Model) &mdash; porozumění objektům
+                pro interakci i occlusions.</li>
+              <li><strong>On-device AI:</strong> přeměna 2D fotek na 3D mesh přímo v zařízení.</li>
+              <li><strong>Vizuální vyhledávání a multimodální asistenti:</strong> Ray-Ban Meta Smart Glasses, Google
+                Gemini Live / Project Astra &mdash; &bdquo;řekni mi popis toho, co vidíš&ldquo;.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="padding: 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.1em;">Spatial AI</h3>
+              <p style="color: var(--text-muted); font-size: 0.85em; line-height: 1.5;">
+                Spojení porozumění scéně (hloubka, segmentace, sémantika) s jazykovým modelem &mdash; AR se stává
+                <strong>inteligentním průvodcem</strong> reálným světem, nikoli jen vrstvou grafiky.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Moderní AR se prolíná s AI. Generativní a prostorová AI umožňují real-time segmentaci scény (SAM), on-device
+          převod 2D fotek na 3D a multimodální asistenty v brýlích (Ray-Ban Meta, Gemini Live, Project Astra), kteří
+          rozumějí tomu, co kamera vidí.
+        </aside>
+      </section>
+
+      <!-- SLIDE 45: Standardy -->
+      <section>
+        <span class="slide-category">Standardy &bull; Interoperabilita</span>
+        <h2>OpenXR a WebXR</h2>
+        <div class="slide-grid-2 equal">
+          <div class="glass-card">
+            <div class="spec-badge cyan" style="margin-bottom: 8px;">OpenXR (Khronos Group)</div>
+            <ul class="custom-list" style="font-size: 0.83em; margin: 4px 0 0 0;">
+              <li>Otevřený standard pro <strong>cross-platform XR vývoj</strong> v Unity / Unreal Engine.</li>
+              <li>Jeden zápis aplikace &rarr; běh na Quest, HoloLens, Vision Pro &hellip; bez vendor lock-inu.</li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <div class="spec-badge emerald" style="margin-bottom: 8px;">WebXR (W3C)</div>
+            <ul class="custom-list" style="font-size: 0.83em; margin: 4px 0 0 0;">
+              <li>AR/VR přímo v <strong>prohlížeči</strong> (A-Frame, Three.js / Babylon.js).</li>
+              <li>Spuštění z <strong>QR kódu</strong> bez instalace aplikace &mdash; WebAR.</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          AR už není vázaná na uzavřená SDK. Standard OpenXR (Khronos) umožňuje cross-platform vývoj v Unity a Unrealu a
+          WebXR (W3C) přináší AR přímo do webového prohlížeče &mdash; komerční AR se tak často spouští z QR kódu bez
+          nutnosti instalovat aplikaci.
+        </aside>
+      </section>
+
+      <!-- SLIDE 46: Spatial Audio -->
+      <section>
+        <span class="slide-category">Imerze &bull; Zvuk</span>
+        <h2>Prostorový zvuk (Spatial Audio)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <p style="margin: 0; font-size: 0.92em; color: var(--text-main); line-height: 1.45;">
+                Zvuk je polovina imerze &mdash; v definicích AR se o něm mluví, ale dál se s ním často nepracuje.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.88em; margin-top: 14px;">
+              <li><strong>HRTF (Head-Related Transfer Function)</strong> &mdash; model, jak hlavy trup a uši ovlivňují
+                přicházející zvuk.</li>
+              <li>Sluchátka lokalizují zdroj ve 3D (před, nad, vedle, vzadu).</li>
+              <li>Ukotvuje obsah ke scéně &mdash; zvukový bod u virtuálního objektu zvyšuje věrohodnost.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="padding: 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.1em;">Proč je důležitý?</h3>
+              <p style="color: var(--text-muted); font-size: 0.85em; line-height: 1.5;">
+                Bez prostorového zvuku působí AR tiše a ploše. Se zvukem uživatel vnímá <strong>směr, vzdálenost a
+                  velikost</strong> objektů a snáze zaměří pozornost &mdash; klíčové pro navigaci i imerzi.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Prostorový zvuk zvyšuje imerzi v AR/MR. Na základě HRTF sluchátka lokalizují zdroj ve 3D prostoru, takže zvuk
+          odpovídá tomu, co uživatel vidí, a pomáhá ukotvit virtuální obsah i zaměřit pozornost.
+        </aside>
+      </section>
+
+      <!-- SLIDE 47: Závěr -->
+      <section>
+        <span class="slide-category">Shrnutí &bull; Závěr</span>
+        <h2>Závěr</h2>
+        <div class="slide-grid-2 equal" style="margin-top: 20px;">
+          <div>
+            <div class="glass-card" style="margin-bottom: 14px;">
+              <div class="spec-badge cyan" style="margin-bottom: 8px;">Využití</div>
+              <p style="color: var(--text-muted); font-size: 0.85em; margin: 0;">
+                AR má spoustu využití a je <strong>dostupná na mobilních telefonech</strong> i přes WebXR v prohlížeči.
+              </p>
+            </div>
+            <div class="glass-card accent-purple">
+              <div class="spec-badge purple" style="margin-bottom: 8px;">Hlavní problémy</div>
+              <p style="color: var(--text-muted); font-size: 0.85em; margin: 0;">
+                <strong>Tracking a registrace</strong> &mdash; nejnáročnější část AR. Často se kombinuje více
+                technologií
+                trackování.
+              </p>
+            </div>
+          </div>
+          <div>
+            <div class="glass-card" style="margin-bottom: 14px;">
+              <div class="spec-badge emerald" style="margin-bottom: 8px;">Současnost a výzkum</div>
+              <ul class="custom-list" style="font-size: 0.85em; margin: 6px 0 0 0;">
+                <li><strong>SLAM / VIO</strong> &mdash; registrace v neznámém prostředí.</li>
+                <li><strong>Mobile + VST headsety</strong> &mdash; výkon a senzory.</li>
+                <li><strong>AI a standardy</strong> &mdash; Spatial AI, OpenXR, WebXR.</li>
+                <li><strong>Nová vlna</strong> &mdash; Vision Pro, Quest, Android XR (passthrough MR).</li>
+              </ul>
+            </div>
+            <div class="highlight-card" style="text-align: center; margin: 0;">
+              <span style="font-weight: 700; color: var(--text-main); font-size: 1.05em;">
+                AR = <span style="color: var(--accent-cyan);">technologie</span> + <span
+                  style="color: var(--accent-purple);">tracking</span> + <span
+                  style="color: var(--accent-emerald);">registrace</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Shrnutí: AR má široké využití a je v dosahu mobilních telefonů i webového prohlížeče (WebXR). Klíčovými
+          výzvami zůstávají tracking a registrace, aktivní výzkum směřuje ke SLAMu/VIO, mobilním platformám a
+          passthrough
+          headsetům. Současné trendy doplňuje prostorová AI a standardy OpenXR a WebXR.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/multimodal/multimodal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+  <script src="../bordel/js/tooltips.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      plugins: [RevealNotes, RevealHighlight, RevealSearch, RevealZoom, RevealPointer, Multimodal],
+      pointer: {
+        key: "q", // key to enable pointer, default "q", not case-sensitive
+        color: "red", // color of a cursor, default "red" any valid CSS color
+        opacity: 0.8, // opacity of cursor, default 0.8
+        pointerSize: 25, // pointer size in px, default 12
+        alwaysVisible: false, // should pointer mode be always visible? default "false"
+        tailLength: 10, // NOT IMPLEMENTED YET!!! how long the "tail" should be? default 10
+      }
+    });
+  </script>
+</body>
+
+</html>

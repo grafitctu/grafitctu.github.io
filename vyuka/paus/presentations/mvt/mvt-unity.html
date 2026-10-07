@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>MVT: Unity 3D: ČVUT</title>
+  <meta name="description" content="Přednáška Moderní vizualizační technologie: Unity 3D: Petr Pauš">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/atom-one-light.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/multimodal/multimodal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+</head>
+
+<body>
+
+  <!-- Horní trvale zobrazené záhlaví -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+    <!-- <div class="logo-badge">
+      <span class="cvut-tag">ČVUT</span>
+      <span>MVT &bull; <span class="highlight">Unity 3D</span></span>
+    </div>
+    <div class="logo-badge">
+      <span>Petr Pauš</span>
+    </div> -->
+  </header>
+
+  <!-- Dolní trvale zobrazené zápatí -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div>
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- =====================================================
+           BLOK 1: TITUL A ÚVOD
+      ====================================================== -->
+
+      <!-- SLIDE 1: Titulní -->
+      <section>
+        <div class="title-hero">
+          <span class="vr-badge">MVT &bull; Moderní vizualizační technologie</span>
+          <h1>UNITY 3D</h1>
+          <div class="authors">
+            <div class="author-card">
+              <div class="author-name">
+                <p style="text-align: center;">Petr Pauš</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Vítejte na přednášce o Unity 3D. Projdeme si základní pojmy: scéna, GameObject, komponenty,
+          assety, prefaby a balíčky. Pak se podíváme na editor, skriptování v C#, fyziku a kolize,
+          a nakonec na podporu VR a praktickou ukázku.
+        </aside>
+      </section>
+
+      <!-- SLIDE 2: Co je Unity -->
+      <section>
+        <span class="slide-category">Úvod</span>
+        <h2>Co je Unity 3D</h2>
+        <p>Unity je <strong>multi-platformní herní engine</strong> vyvinutý společností Unity Technologies (2005).
+          Dnes se používá daleko za hranicemi her: pro <strong>vizualizaci dat</strong>, simulace, výuku,
+          architekturu, film a <strong>VR/AR</strong>.</p>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">Editor</h3>
+            <ul class="custom-list">
+              <li>Vizuální <strong>WYSIWYG</strong> prostředí</li>
+              <li>Scéna, hierarchie, inspector</li>
+              <li>Windows, macOS, Linux</li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Engine</h3>
+            <ul class="custom-list">
+              <li>Renderovací pipeline</li>
+              <li><strong>Fyzika</strong> (NVIDIA PhysX)</li>
+              <li>Zvuk, animace, UI</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="color: var(--accent-emerald);">Skriptování</h3>
+            <ul class="custom-list">
+              <li><strong>C#</strong> (.NET / Mono)</li>
+              <li>Velká komunita a dokumentace</li>
+              <li>Asset Store s hotovými řešeními</li>
+            </ul>
+          </div>
+        </div>
+        <!-- <div class="image-showcase" style="margin-top: 12px; max-width: 88%;">
+          <a href="../bordel/images-mvt/unity_hero.jpeg" data-modal-type="image">
+            <img src="../bordel/images-mvt/unity_hero.jpeg" alt="Prostředí Unity editoru">
+          </a>
+          <div class="image-caption">Prostředí Unity editoru: scéna, hierarchie, inspector</div>
+        </div> -->
+      </section>
+
+      <!-- =====================================================
+           BLOK 2: ZÁKLADNÍ POJMY
+      ====================================================== -->
+
+      <!-- SLIDE 3: Scéna -->
+      <section>
+        <span class="slide-category">Základní pojmy</span>
+        <h2>Scéna (Scene)</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Hry (projekty) jsou rozděleny na <strong>scény</strong>.</li>
+              <li>Struktura pro <strong>hierarchický popis</strong> scény.</li>
+              <li>Obsahuje <strong>GameObjecty</strong>.</li>
+              <li>Scén může být <strong>více</strong>.</li>
+              <li>Lze je <strong>přepínat pomocí skriptu</strong>.</li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Typické dělení scén</h3>
+            <ul class="custom-list">
+              <li><strong>Menu / úvodní obrazovka</strong></li>
+              <li><strong>Vlastní obsah</strong>: hlavní scéna</li>
+              <li><strong>Načítáním</strong> (loading) mezi scénami</li>
+              <li><strong>Oddělené úrovně</strong> nebo sekce</li>
+            </ul>
+            <div class="field-viz" style="margin-top: 10px;">
+              <strong>Pozor:</strong> samostatná scéna je vhodná i pro <strong>optimalizaci výkonu</strong>:
+              méně objektů v jedné scéně = rychlejší běh.
+            </div>
+          </div>
+        </div>
+        <div class="glass-card" style="margin-top: 14px;">
+          <strong style="color: var(--accent-cyan);">Přepínání scén</strong>
+          <pre style="padding: 5px; font-size: 0.78em;width: 100%;"><code class="language-csharp">using UnityEngine.SceneManagement;
+// ... načtení scény podle názvu
+SceneManager.LoadScene("Vizualizace");</code></pre>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: GameObject -->
+      <section>
+        <span class="slide-category">Základní pojmy</span>
+        <h2>GameObject</h2>
+        <p><strong>Základní prvek ve scéně.</strong> Sám o sobě „nic neumí“: veškerou funkcionalitu
+          dostává až <strong>komponentami</strong>.</p>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">Příklady</h3>
+            <ul class="custom-list">
+              <li>Viditelné objekty ve scéně (<strong>2D, 3D</strong>)</li>
+              <li><strong>Kamera</strong></li>
+              <li><strong>Světlo</strong></li>
+              <li><strong>Částicové systémy</strong> (particle systems)</li>
+              <li><strong>Zvuk</strong></li>
+              <li><strong>Skybox</strong></li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Vlastnosti</h3>
+            <ul class="custom-list">
+              <li>Vždy má komponentu <strong>Transform</strong>
+                <span style="color: var(--text-muted);">(pozice, rotace, měřítko)</span>
+              </li>
+              <li>Lze přidávat <strong>neomezeně komponent</strong></li>
+              <li>Má <strong>jméno</strong>, <strong>tag</strong> a <strong>layer</strong></li>
+              <li>Může být <strong>aktivní / neaktivní</strong></li>
+              <li>Může mít <strong>potomky</strong> (parent–child hierarchie)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 14px;">
+          <div style="color: var(--text-muted); font-size: 0.9em;">
+            <strong style="color: var(--accent-cyan);">Hierarchie je klíčová:</strong>
+            transformace rodiče se <strong>propaguje na všechny potomky</strong>: typicky se takto
+            skládají různé objekty v hierarchii.
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Komponenty -->
+      <section class="dense">
+        <span class="slide-category">Základní pojmy</span>
+        <h2>Komponenty (Components): Entity Component System (ECS)</h2>
+        <p style="color: var(--text-muted); font-size: 0.9em; margin-top: -4px;">
+          Přidávají další vlastnosti pro <a href="https://docs.unity3d.com/Manual/GameObjects.html">GameObject</a>.
+          Skládáním jednoduchých <a href="https://docs.unity3d.com/Manual/Components.html">komponent</a> vzniká složité
+          chování.
+        </p>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">Vzhled</h3>
+            <ul class="custom-list">
+              <li><strong>Mesh</strong>: popis tvaru objektu</li>
+              <li><strong>Mesh Renderer</strong>: zobrazování objektu ve scéně</li>
+              <li><strong>Material</strong>: zobrazovací vlastnosti</li>
+              <li class="sub-item">textura, odlesky, stínování, shadery, normálové mapy</li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Fyzika</h3>
+            <ul class="custom-list">
+              <li><strong>Collider</strong>: detekuje kolize objektů</li>
+              <li><strong>RigidBody</strong>: tuhé těleso, fyzikální vlastnosti tělesa</li>
+              <li><strong>Physics Material</strong>: fyzikální vlastnosti materiálu</li>
+              <li class="sub-item">pružnost, tření, disipace energie při srážce…</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="color: var(--accent-emerald);">Chování</h3>
+            <ul class="custom-list">
+              <li><strong>Script</strong> v C#</li>
+              <li><strong>Animator</strong>: animace</li>
+              <li><strong>Audio Source</strong>: zvuk</li>
+              <li><strong>Camera</strong> / <strong>Light</strong></li>
+              <li>Spousta dalších…</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 14px;">
+          <div style="color: var(--text-muted); font-size: 0.9em;">
+            <strong style="color: var(--accent-cyan);">Filozofie Unity:</strong> žádná hluboká dědičnost tříd, ale
+            <strong>kompozice</strong>: GameObject je „kontejner“ a komponenty jsou zásuvné moduly.
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Assets -->
+      <section>
+        <span class="slide-category">Základní pojmy</span>
+        <h2>Assets</h2>
+        <p>Veškerá <strong>binární a textová data</strong> potřebná pro projekt.</p>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">Co patří mezi assety</h3>
+            <ul class="custom-list">
+              <li>Bitmapové textury</li>
+              <li>3D modely</li>
+              <li>Zvuky, Video</li>
+              <li>Skripty</li>
+              <li>Fonty</li>
+              <li>Animace</li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">V projektu</h3>
+            <ul class="custom-list">
+              <li>Ve složce <strong>Assets</strong></li>
+              <li>Složka je <strong>zrcadlena do Unity</strong></li>
+              <li>Unity vytváří <strong>.meta</strong> soubory s importními nastaveními</li>
+              <li>Ty je nutné <strong>verzovat spolu s projektem</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 14px;">
+          <strong style="color: var(--accent-amber);">Pozor na verzování</strong>
+          <span style="color: var(--text-muted); font-size: 0.92em;">
+            : složky <code>Library/</code>, <code>Temp/</code> a <code>obj/</code> se <strong>nikdy</strong>
+            necommitují (jsou to přegenerované cache). Verzuje se <code>Assets/</code>,
+            <code>ProjectSettings/</code> a <code>Packages/</code>.
+          </span>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Prefabs -->
+      <section>
+        <span class="slide-category">Základní pojmy</span>
+        <h2>Prefabs</h2>
+        <p><strong>Předpřipravené šablony prvků</strong> ve scéně.</p>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Prefab může být <strong>jeden nebo více GameObjectů</strong> v nějaké hierarchii</li>
+              <li>Mají již nastavené <strong>společné vlastnosti</strong>:
+                <ul class="custom-list">
+                  <li class="sub-item">komponenty</li>
+                  <li class="sub-item">skripty</li>
+                  <li class="sub-item">textury…</li>
+                </ul>
+              </li>
+              <li>Můžeme vytvořit <strong>novou instanci</strong> v editoru nebo pomocí skriptu</li>
+              <li>Lze následně měnit vlastnosti pro novou instanci <strong>nebo hromadně pro všechny</strong></li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Proč prefaby</h3>
+            <ul class="custom-list">
+              <li><strong>Znovupoužitelnost</strong>: jedna definice, mnoho výskytů</li>
+              <li><strong>Konzistence</strong>: změna v prefabu se promítne všude</li>
+              <li><strong>Výkon</strong>: instance sdílejí mesh a materiály</li>
+              <li>Základ pro <strong>generování scény ze skriptu</strong></li>
+            </ul>
+            <div class="field-viz" style="margin-top: 10px;">
+              <strong>Varianty:</strong> prefab variant umožňuje odvodit upravenou verzi
+              (např. jiná barva) bez duplikace celé definice.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Balíčky -->
+      <section class="dense">
+        <span class="slide-category">Základní pojmy</span>
+        <h2>Balíčky (Packages)</h2>
+        <div class="slide-grid-2" style="margin-top: 14px;">
+
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Projekty v Unity lze rozdělit na <strong>samostatné balíčky</strong>.</li>
+              <li>Balíčky poskytují nějakou <strong>funkcionalitu</strong>.</li>
+              <li>Unity 3D samo přidá do projektu <strong>základní balíčky</strong>:
+                <ul class="custom-list">
+                  <li class="sub-item">UI, práce s textem, testovací funkce…</li>
+                  <li class="sub-item">render pipeline, input system, atd.</li>
+                </ul>
+              </li>
+              <li>Z <strong>Asset storu</strong> lze přidat další:
+                <ul class="custom-list">
+                  <li class="sub-item">podpora <strong>VR</strong></li>
+                  <li class="sub-item">hotové funkce pro hry (<strong>FPS, 3rd person</strong>)</li>
+                  <li class="sub-item">modelování terénu</li>
+                  <li class="sub-item">3D text, atd.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="highlight-card">
+              <strong style="color: var(--accent-amber);">Rizika balíčků</strong>
+              <ul class="custom-list" style="margin-top: 6px;">
+                <li>Mohou být problémy s <strong>kompatibilitou balíčků s Unity</strong>
+                  (verze editoru vs. verze balíčku).</li>
+                <li>Problémy se <strong>závislostmi</strong>: „dependency hell“.</li>
+              </ul>
+            </div>
+            <div class="highlight-card" style="border-left-color: var(--accent-cyan);">
+              <strong style="color: var(--accent-cyan);">Manifest</strong>
+              <div style="color: var(--text-muted); font-size: 0.88em; margin-top: 4px;">
+                Seznam balíčků se drží v <code>Packages/manifest.json</code>: je to textový soubor,
+                takže je přehledně verzovatelný v gitu.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           BLOK 3: EDITOR
+      ====================================================== -->
+
+      <!-- SLIDE 9: Hlavní okno editoru -->
+      <section class="dense">
+        <span class="slide-category">Editor</span>
+        <h2>Hlavní okno editoru</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="ximage-showcase" style="max-width: 100%;text-align: center;">
+              <img src="../bordel/images-mvt/unity_editor.png" alt="Hlavní okno Unity editoru s popisky"
+                data-preview-image style="max-height: 350px; ">
+            </div>
+            <div class="highlight-card" style="margin-top: 12px;">
+              <div style="color: var(--text-muted); font-size: 0.9em;">
+                <strong style="color: var(--accent-cyan);">Inspector</strong>: vlastnosti vybraného objektu a jeho
+                komponent. <strong>Kontextové menu objektů</strong>: přidávání komponent, duplikace, vytvoření prefabu.
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="glass-card" style="margin-bottom: 12px;">
+              <h3 style="color: var(--accent-cyan);">Hierarchy</h3>
+              <p class="fmt-desc">Hierarchie objektů ve scéně: stromová struktura rodičů a potomků.</p>
+            </div>
+            <div class="glass-card accent-purple" style="margin-bottom: 12px;">
+              <h3 style="color: var(--accent-purple);">Project</h3>
+              <p class="fmt-desc">Složka assetů: <strong>stejná jako na disku</strong>. Odtud se vše importuje.</p>
+            </div>
+            <div class="glass-card">
+              <h3 style="color: var(--accent-emerald);">Scene &amp; Game</h3>
+              <p class="fmt-desc">Okno scény (editace) vs. Game (pohled kamery za běhu).</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Důležité komponenty -->
+      <section class="dense">
+        <span class="slide-category">Editor</span>
+        <h2>Důležité komponenty</h2>
+        <p style="color: var(--text-muted); font-size: 0.9em;">Menu &gt; <strong>Components</strong></p>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+
+            <h3 style="color: var(--accent-cyan);">Rigid body</h3>
+            <ul class="custom-list" style="font-size: 0.88em;">
+              <li>Stará se o <strong>fyziku</strong> spojenou s objektem</li>
+              <li><strong>Is Kinematic</strong> předá fyziku skriptu</li>
+            </ul>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/unity_s09_f01.png" alt="Rigidbody komponenta" data-preview-image>
+
+            </div>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Physics Material</h3>
+            <ul class="custom-list" style="font-size: 0.88em;">
+              <li><strong>Fyzikální vlastnosti povrchu</strong></li>
+              <li>tření, pružnost (bounciness)</li>
+            </ul>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/unity_s09_f02.png" alt="Physics Material" data-preview-image>
+            </div>
+
+          </div>
+          <div class="glass-card">
+            <h3 style="color: var(--accent-emerald);">Collider</h3>
+            <ul class="custom-list" style="font-size: 0.88em;">
+              <li>Pro <strong>detekci kolizí</strong></li>
+              <li>Definuje „obal“ tělesa</li>
+            </ul>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/unity_s09_f03.png" alt="Collider" data-preview-image>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Komponenta Script -->
+      <section class="dense">
+        <span class="slide-category">Editor</span>
+        <h2>Komponenta Script</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li><strong>Pro nás velmi důležitá</strong></li>
+              <li>Kód v <strong>C#</strong></li>
+              <li>Lze psát v <strong>jakémkoliv editoru</strong></li>
+              <li>Ale skvělá podpora <strong>MS Visual Studio</strong> (Mac, Win)</li>
+              <li>Lze definovat vlastní <strong>atributy viditelné v editoru</strong> Unity</li>
+            </ul>
+            <div class="image-showcase" style="margin-top: 10px;">
+              <img src="../bordel/images-mvt/unity_s10_f01.png" alt="Komponenta Script v inspectoru" data-preview-image>
+            </div>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Zveřejnění hodnot v Inspectoru</h3>
+            <pre style="font-size: 0.72em;"><code class="language-csharp">using UnityEngine;
+
+public class Rotator : MonoBehaviour
+{
+    // Veřejné pole = editovatelné v Inspectoru
+    [Tooltip("Rychlost rotace ve stupních za sekundu")]
+    public float speed = 30f;
+
+    [Range(0f, 1f)]
+    public float intensity = 0.5f;
+
+    // Skryté, ale serializované
+    [SerializeField] private Color tint = Color.white;
+}</code></pre>
+            <div class="field-viz" style="margin-top: 8px;">
+              <strong>[SerializeField]</strong>: zpřístupní i privátní pole.<br>
+              <strong>[Range]</strong>: posuvník.<br> <strong>[Tooltip]</strong>: nápověda.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: MonoBehaviour 1/2 -->
+      <section class="dense">
+        <span class="slide-category">Skriptování</span>
+        <h2>Životní cyklus MonoBehaviour 1/2</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">Důležité metody</h3>
+            <ul class="custom-list">
+              <li><strong>Start();</strong>
+                <ul class="custom-list">
+                  <li class="sub-item">Volá se <strong>před prvním updatem</strong> objektu</li>
+                  <li class="sub-item">Vhodné pro <strong>prvotní nastavení</strong> objektu</li>
+                </ul>
+              </li>
+              <li><strong>Update();</strong>
+                <ul class="custom-list">
+                  <li class="sub-item">Volá se <strong>každý frame</strong></li>
+                  <li class="sub-item">Vhodné pro zpracování <strong>vstupu uživatele</strong> a všeho,
+                    co je závislé na čase</li>
+                  <li class="sub-item">Při použití nového systému vstupu se to dělá přes
+                    <strong>Listenery a callbacky</strong>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/unity_lifecycle.png" alt="Diagram životního cyklu MonoBehaviour"
+              data-preview-image>
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 12px;">
+          <div style="color: var(--text-muted); font-size: 0.9em;">
+            <strong style="color: var(--accent-amber);">Pozor:</strong> pořadí <code>Awake</code> mezi objekty
+            <strong>není garantované</strong>. Pokud potřebujete vazby mezi objekty, řešte je v
+            <code>Start()</code>, nikoliv v <code>Awake()</code>.
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13: MonoBehaviour 2/2 -->
+      <section class="dense">
+        <span class="slide-category">Skriptování</span>
+        <h2>Životní cyklus MonoBehaviour 2/2</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Awake();</h3>
+            <ul class="custom-list">
+              <li>Volá se <strong>jen jednou pro každý skript</strong></li>
+              <li>Vhodné pro <strong>nastavení vazeb mezi objekty</strong> při startu aplikace</li>
+              <li>Příklad: <code>target = GameObject.FindWithTag("Player");</code></li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">FixedUpdate();</h3>
+            <ul class="custom-list">
+              <li>Volá se <strong>pokaždé při výpočtu fyziky</strong> ve scéně</li>
+              <li><strong>Neodpovídá framerate</strong> (default 50× / sec)</li>
+              <li>Vhodné pro <strong>aktualizaci fyziky</strong> ve scéně</li>
+              <li>Např. <strong>přidání hybné síly</strong> k objektu</li>
+            </ul>
+          </div>
+        </div>
+        <div class="slide-grid-2" style="margin-top: 14px;">
+          <div class="highlight-card">
+            <strong style="color: var(--accent-cyan);">Další hojně používané</strong>
+            <ul class="custom-list" style="margin-top: 6px; font-size: 0.92em;">
+              <li><strong>LateUpdate()</strong>: po všech Update; ideální pro kameru</li>
+              <li><strong>OnEnable() / OnDisable()</strong>: aktivace objektu</li>
+              <li><strong>OnDestroy()</strong>: úklid před zničením</li>
+            </ul>
+          </div>
+          <div class="highlight-card" style="border-left-color: var(--accent-purple);">
+            <strong style="color: var(--accent-purple);">Proč FixedUpdate</strong>
+            <div style="color: var(--text-muted); font-size: 0.9em; margin-top: 4px;">
+              Fyzika musí běžet v <strong>pevném časovém kroku</strong>, aby byla simulace
+              <strong>deterministická</strong> a nezávislá na výkonu počítače. Když je frame dlouhý,
+              Unity zavolá FixedUpdate vícekrát za sebou.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 14: Vektory -->
+      <section>
+        <span class="slide-category">Matematika</span>
+        <h2>Vektory: Vector2, Vector3</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li><strong>Vector2</strong>: vektor v $\mathbb{R}^2$</li>
+              <li><strong>Vector3</strong>: vektor v $\mathbb{R}^3$</li>
+              <li>Příklad: <code class="language-csharp">Vector2 v = new Vector2(1, 2.5);</code></li>
+              <li>Podporovány <strong>základní vektorové operace</strong></li>
+            </ul>
+            <div style="margin-top: 10px; font-size: 0.85em;">
+              <strong style="color: var(--accent-cyan);">Dokumentace:</strong>
+              <span class="spec-badge cyan" style="font-size: 0.75em;">
+                <a href="https://docs.unity3d.com/ScriptReference/Vector2.html" target="_blank"
+                  rel="noopener">Vector2</a>
+              </span>
+              <span class="spec-badge cyan" style="font-size: 0.75em;">
+                <a href="https://docs.unity3d.com/ScriptReference/Vector3.html" target="_blank"
+                  rel="noopener">Vector3</a>
+              </span>
+            </div>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Užitečné operace</h3>
+            <pre style="font-size: 0.74em;"><code class="language-csharp">Vector3 a = new Vector3(1, 0, 0);
+Vector3 b = new Vector3(0, 0, 2);
+
+float d  = Vector3.Distance(a, b);  // vzdálenost
+float dp = Vector3.Dot(a, b);       // skalární součin
+Vector3 c = Vector3.Cross(a, b);    // vektorový součin
+
+a.Normalize();                      // jednotkový vektor
+Vector3.Lerp(a, b, 0.5f);           // interpolace
+
+// Statické konstanty
+Vector3.up; Vector3.forward; Vector3.zero;</code></pre>
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 14px;">
+          <div style="color: var(--text-muted); font-size: 0.9em;">
+            <strong style="color: var(--accent-cyan);">Použití při vizualizaci:</strong> vektory nesou
+            <strong>směr i velikost</strong>: přesně to, co potřebujeme pro vektorová pole, rychlostní pole
+            nebo normály povrchů.
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 15: Quaternion -->
+      <section>
+        <span class="slide-category">Matematika</span>
+        <h2>Rotace: Quaternion</h2>
+        <p>Objekt pro <strong>popis rotace objektu</strong>. Reprezentuje rotaci čtyřmi čísly
+          $(x, y, z, w)$: je kompaktní.
+        </p>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">Eulerovy úhly</h3>
+            <ul class="custom-list">
+              <li>Jednotlivé rotace kolem os $x, y, z$</li>
+              <li>Příklad: 30 stupňů kolem osy Y:<br>
+                <code>Quaternion rotace = Quaternion.Euler(0, 30, 0);</code>
+              </li>
+              <li><code>Quaternion.eulerAngles</code>: vrátí rotace kolem os</li>
+              <li>Rotace ve směru pohledu:
+                <code>Quaternion LookRotation(Vector3 forward, Vector3 upwards = Vector3.up);</code>
+              </li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Časté operace</h3>
+            <pre style="font-size: 0.74em;"><code class="language-csharp">// Plynulá rotace k cíli
+Quaternion target = Quaternion.LookRotation(dir);
+transform.rotation = Quaternion.Slerp(
+    transform.rotation, target, Time.deltaTime * 5f);
+
+// Skládání rotací
+transform.rotation = parent.rotation * localRot;
+
+// Lokální rotace
+transform.Rotate(Vector3.up, 30f * Time.deltaTime);</code></pre>
+            <div class="field-viz" style="margin-top: 8px;">
+              <strong>Tip:</strong> v Inspectoru se zobrazují Eulery, ale interně se vždy počítá
+              s quaterniony.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 16: Kolize -->
+      <section class="dense">
+        <span class="slide-category">Fyzika</span>
+        <h2>Kolize (Colliders)</h2>
+        <p><strong>Různé typy colliderů</strong>: <code>BoxCollider</code>, <code>SphereCollider</code>,
+          <code>CapsuleCollider</code>, <code>MeshCollider</code>.
+        </p>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Detekují <strong>kolize</strong> a ovlivňují <strong>fyzikální chování</strong>
+                (odrazy, tření, pružnost), pokud mají komponentu <strong>Rigidbody</strong>.</li>
+              <li><strong>IsTrigger</strong>: při kolizi zavolá kolizní funkci
+                <code>OnTriggerEnter</code> (nedojde k fyzické odezvě).
+              </li>
+            </ul>
+            <div class="image-showcasex" style="margin-top: 0px;text-align: center;">
+              <img src="../bordel/images-mvt/unity_s15_f01.png" alt="Nastavení collideru" data-preview-image
+                style="max-height: 190px;">
+              <img src="../bordel/images-mvt/unity_s15_f02.png" alt="Detekce kolizí v praxi" data-preview-image
+                style="max-height: 190px;">
+
+            </div>
+          </div>
+          <div>
+            <div class="highlight-card" style="margin-top: 10px;">
+              <strong style="color: var(--accent-cyan);">Kolizní funkce</strong>
+              <pre style="font-size: 0.72em; margin: 6px 0 0 0;"><code class="language-csharp">// Kolize objektů s Rigidbody
+void OnCollisionEnter(Collision c) { }
+void OnTriggerEnter(Collider other) { }
+
+// Kontaktní body a síly:
+Vector3 p = c.GetContact(0).point;
+</code></pre>
+            </div>
+            <div class="highlight-card" style="margin-top: 12px;">
+              <div style="color: var(--text-muted); font-size: 0.9em;">
+                <strong style="color: var(--accent-amber);">Matice kolizí:</strong>
+                Unity počítá kolize podle <strong>Layer Collision Matrix</strong>. Vypnutím zbytečných
+                kombinací výrazně ušetříte výpočetní čas: u rozsáhlých vizualizací je to nutnost.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SLIDE 17: Import assetů -->
+      <section class="dense">
+        <span class="slide-category">Data</span>
+        <h2>Import assetů</h2>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">Způsoby importu</h3>
+            <ul class="custom-list">
+              <li>Kompatibilní formáty lze přidat <strong>rovnou</strong></li>
+              <li>Pomocí menu <strong>Assets &gt; Import</strong></li>
+              <li>Pomocí <strong>Drag&amp;Drop</strong> do okna assetů</li>
+              <li><strong>Přímé kopírování</strong> do složky <code>Assets</code> v projektu</li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Podporované formáty</h3>
+            <ul class="custom-list">
+              <li><strong>Obrázky</strong>: jpg, png, tiff, …</li>
+              <li><strong>3D modely</strong>
+                <ul class="custom-list">
+                  <li class="sub-item">základní: <strong>OBJ, FBX</strong></li>
+                  <li class="sub-item">proprietární: Maya, Blender, 3DSMax, SketchUp</li>
+                </ul>
+              </li>
+              <li><strong>Fonty</strong></li>
+              <li>Zvuk, video, animace</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="color: var(--accent-emerald);">Užitečné formáty pro data</h3>
+            <ul class="custom-list">
+              <li><span class="spec-badge cyan spec-badge-big" style="font-size: 0.75em;">PLY</span>
+                point cloud</li>
+              <li><span class="spec-badge purple spec-badge-big" style="font-size: 0.75em;">OBJ</span>
+                mesh</li>
+              <li><span class="spec-badge emerald spec-badge-big" style="font-size: 0.75em;">FBX</span>
+                animace</li>
+              <li><strong>Vlastní formáty</strong>: načtení přes C# (JSON, binárka)</li>
+            </ul>
+            <div class="field-viz" style="margin-top: 8px;">
+              Velká data se obvykle <strong>nenačítají jako asset</strong>, ale generují se
+              skriptem za běhu.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 18: Asset store -->
+      <section>
+        <span class="slide-category">Data</span>
+        <h2>Asset store</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Další možnost <strong>přidání assetů a balíčků</strong></li>
+              <li><strong>Placené i free</strong> assety
+                <ul class="custom-list">
+                  <li class="sub-item">skripty, textury, modely, balíčky</li>
+                </ul>
+              </li>
+              <li>Budeme využívat např. pro instalaci:
+                <ul class="custom-list">
+                  <li class="sub-item"><strong>Player controller</strong></li>
+                  <li class="sub-item"><strong>Text</strong></li>
+                  <li class="sub-item"><strong>Unity XR</strong></li>
+                </ul>
+              </li>
+              <li><span style="color: var(--text-muted);">Vše lze přidat i bez storu manuálně.</span></li>
+              <li>Lze tam své assety i <strong>publikovat</strong>.</li>
+            </ul>
+          </div>
+          <div class="highlight-card" style="border-left-color: var(--accent-amber);">
+            <strong style="color: var(--accent-amber);">Než něco koupíte</strong>
+            <ul class="custom-list" style="margin-top: 6px;">
+              <li>Zkontrolujte <strong>datum poslední aktualizace</strong>: opuštěné balíčky
+                často nefungují s novým Unity.</li>
+              <li>Sledujte <strong>kompatibilitu s používanou verzí</strong> Unity a render pipeline
+                (Built-in vs. URP vs. HDRP).</li>
+              <li>U vizualizace se často vyplatí <strong>vlastní řešení</strong>: máte plnou kontrolu
+                nad výkonem.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 19: Build -->
+      <section class="dense">
+        <span class="slide-category">Build</span>
+        <h2>Build projektu</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li><strong>File &gt; Build settings</strong></li>
+              <li>Výběr <strong>cílové platformy</strong></li>
+              <li>Použijeme <strong>PC</strong></li>
+              <li>Pro iOS, PS4, XBOX je třeba mít příslušné <strong>SDK</strong></li>
+              <li><strong>Build je oproti UE rychlý</strong></li>
+            </ul>
+            <div class="highlight-card" style="margin-top: 1px;">
+              <strong style="color: var(--accent-cyan);">Platformy</strong>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
+                <span class="spec-badge cyan" style="font-size: 0.72em;">Windows</span>
+                <span class="spec-badge cyan" style="font-size: 0.72em;">macOS</span>
+                <span class="spec-badge cyan" style="font-size: 0.72em;">Linux</span>
+                <span class="spec-badge purple" style="font-size: 0.72em;">WebGL</span>
+                <span class="spec-badge purple" style="font-size: 0.72em;">Android</span>
+                <span class="spec-badge purple" style="font-size: 0.72em;">iOS</span>
+                <span class="spec-badge emerald" style="font-size: 0.72em;">VR (OpenXR)</span>
+              </div>
+            </div>
+          </div>
+          <div class="image-showcasex" style="margin-top: 0px; text-align: center;">
+            <img src="../bordel/images-mvt/unity_s18_f01.png" alt="Build Settings dialog" data-preview-image
+              style="width: 90%;">
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 12px;">
+          <div style="color: var(--text-muted); font-size: 0.9em;">
+            <strong style="color: var(--accent-amber);">Poznámka k WebGL:</strong> pro vizualizaci na webu je
+            WebGL nejjednodušší cesta, ale má <strong>omezení paměti a výkonu</strong>:
+            velké datasety se do prohlížeče nevejdou.
+          </div>
+        </div>
+      </section>
+
+
+
+
+      <!-- SLIDE 23: OpenXR Action-based -->
+      <section class="dense">
+        <span class="slide-category">Unity pro VR</span>
+        <h2>Unity 3D – OpenXR: Action-based systém</h2>
+        <p><strong>Trochu složitější na nastavení</strong>, ale přenositelné mezi zařízeními.</p>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">XR Origin</h3>
+            <ul class="custom-list">
+              <li>Základní kamera a vstup rukou</li>
+              <li>Nutné přidat skript <strong>Input Actions</strong></li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">Teleporting a pohyb</h3>
+            <ul class="custom-list">
+              <li>Přímá podpora teleportace</li>
+              <li><strong>Teleport Point</strong>, <strong>Teleport Area</strong></li>
+              <li>Možnost <strong>plynulého pohybu</strong> pomocí joysticku na ovladači</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="color: var(--accent-emerald);">Interakce s objekty</h3>
+            <ul class="custom-list">
+              <li><strong>GrabInteractable</strong></li>
+              <li>Objekty lze <strong>chytat na dálku</strong> a následně s nimi manipulovat</li>
+            </ul>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SLIDE 23: OpenXR Action-based -->
+      <section class="dense">
+        <span class="slide-category">Unity pro VR</span>
+        <h2>Unity 3D – OpenXR: Action-based systém</h2>
+        <p><strong>Trochu složitější na nastavení</strong>, ale přenositelné mezi zařízeními.</p>
+
+        <div class="highlight-card" style="margin-top: 14px;">
+          <strong style="color: var(--accent-cyan);">Příklad definice akce ve skriptu</strong>
+          <pre style="margin: 8px 0 0 0; font-size: 0.74em;"><code class="language-csharp">using UnityEngine.InputSystem;
+
+public class GrabAction : MonoBehaviour
+{
+    [SerializeField] private InputActionProperty grabAction;
+
+    void OnEnable()  { grabAction.action.Enable();  }
+    void OnDisable() { grabAction.action.Disable(); }
+
+    void Update()
+    {
+        // Hodnota 0..1 podle stisku spouště
+        float value = grabAction.action.ReadValue&lt;float&gt;();
+    }
+}</code></pre>
+        </div>
+      </section>
+
+
+
+      <!-- SLIDE 24: Ukázka v Unity -->
+      <section class="dense">
+        <span class="slide-category">Ukázka</span>
+        <h2>Ukázka v Unity</h2>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">1. Tvorba jednoduché scény</h3>
+            <ul class="custom-list">
+              <li>Nová scéna</li>
+              <li>Přidání objektů</li>
+              <li>Světlo a kamera</li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple">
+            <h3 style="color: var(--accent-purple);">2. Použití komponent</h3>
+            <ul class="custom-list">
+              <li>Mesh + Material</li>
+              <li>Rigidbody + Collider</li>
+              <li>Inspector a ladění</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="color: var(--accent-emerald);">3. Jednoduchý skript</h3>
+            <ul class="custom-list">
+              <li>Rotace / pohyb objektu</li>
+              <li>Reakce na vstup</li>
+            </ul>
+          </div>
+        </div>
+        <div class="slide-grid-2" style="margin-top: 14px;">
+          <div class="glass-card">
+            <strong style="color: var(--accent-cyan);">4. XR-Rig</strong>
+            <div style="color: var(--text-muted); font-size: 0.9em; margin-top: 4px;">
+              Přidání XR Origin do scény a nastavení vstupů.
+            </div>
+          </div>
+          <div class="glass-card">
+            <strong style="color: var(--accent-purple);">5. Interakce</strong>
+            <div style="color: var(--text-muted); font-size: 0.9em; margin-top: 4px;">
+              Chytání objektů, teleportace, ověření na headsetu.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           BLOK 5: SHRNUTÍ
+      ====================================================== -->
+
+      <!-- SLIDE 25: Kdy použít Unity pro vizualizaci -->
+      <section class="dense">
+        <span class="slide-category">Shrnutí</span>
+        <h2>Kdy použít Unity pro vizualizaci</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card" style="border-left: 3px solid var(--accent-emerald);">
+            <h3 style="color: var(--accent-emerald);">Výhody</h3>
+            <ul class="custom-list">
+              <li><strong>Rychlý prototyp</strong>: vizuální editor, hotové komponenty</li>
+              <li><strong>VR/AR „out of the box“</strong>: OpenXR, XR Interaction Toolkit</li>
+              <li><strong>Multiplatformní build</strong>: PC, web, mobil, headset</li>
+              <li><strong>Velká komunita</strong> a dokumentace</li>
+              <li>Škáluje od malé ukázky po rozsáhlý projekt</li>
+            </ul>
+          </div>
+          <div class="glass-card" style="border-left: 3px solid var(--accent-amber);">
+            <h3 style="color: var(--accent-amber);">Nevýhody / rizika</h3>
+            <ul class="custom-list">
+              <li><strong>Omezení na běžná data</strong>: miliony bodů je nutné optimalizovat</li>
+              <li><strong>Závislost na balíčcích</strong>: kompatibilita napříč verzemi</li>
+              <li>Pro vědeckou vizualizaci chybí algoritmy
+                <span style="color: var(--text-muted);">(srov. ParaView)</span>
+              </li>
+              <li>Licence u větších projektů</li>
+              <li>Nutnost <strong>vlastního načítání dat</strong> v C#</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 14px;">
+          <div style="color: var(--text-muted); font-size: 0.92em;">
+            <strong style="color: var(--accent-cyan);">Pravidlo palce:</strong> Unity se hodí tam, kde
+            je potřeba <strong>interaktivní, imerzivní zážitek</strong>: VR prohlídky, interaktivní
+            modely, výuku. Na <strong>analytickou vizualizaci velkých dat</strong> zůstává
+            ParaView / VisIt / vlastní OpenGL.
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 26: Klíčové pojmy: rekapitulace -->
+      <section class="dense">
+        <span class="slide-category">Shrnutí</span>
+        <h2>Klíčové pojmy: rekapitulace</h2>
+        <div class="comparison-table" style="font-size: 0.72em;">
+          <table>
+            <thead>
+              <tr>
+                <th>Pojem</th>
+                <th>Co to je</th>
+                <th>K čemu slouží</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Scene</strong></td>
+                <td>Hierarchický popis světa</td>
+                <td>Oddělení úrovní, menu, obsahu</td>
+              </tr>
+              <tr>
+                <td><strong>GameObject</strong></td>
+                <td>Základní prvek ve scéně</td>
+                <td>Kontejner pro komponenty</td>
+              </tr>
+              <tr>
+                <td><strong>Component</strong></td>
+                <td>Modul přidávající vlastnost</td>
+                <td>Vzhled, fyzika, chování</td>
+              </tr>
+              <tr>
+                <td><strong>Asset</strong></td>
+                <td>Binární / textová data</td>
+                <td>Textury, modely, zvuk, skripty</td>
+              </tr>
+              <tr>
+                <td><strong>Prefab</strong></td>
+                <td>Šablona GameObjectu</td>
+                <td>Znovupoužitelnost, konzistence</td>
+              </tr>
+              <tr>
+                <td><strong>Package</strong></td>
+                <td>Balíček funkcionality</td>
+                <td>UI, VR, terén, nástroje</td>
+              </tr>
+              <tr>
+                <td><strong>Rigidbody</strong></td>
+                <td>Tuhé těleso</td>
+                <td>Fyzika objektu</td>
+              </tr>
+              <tr>
+                <td><strong>Collider</strong></td>
+                <td>Obal tělesa pro kolize</td>
+                <td>Detekce kolizí a triggerů</td>
+              </tr>
+              <tr>
+                <td><strong>Quaternion</strong></td>
+                <td>Reprezentace rotace</td>
+                <td>Rotace bez Gimbal lock</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+  <script src="../bordel/js/tooltips.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      plugins: [RevealNotes, RevealSearch, RevealZoom, RevealHighlight, RevealMath.KaTeX, RevealPointer],
+      pointer: {
+        key: "q", // key to enable pointer, default "q", not case-sensitive
+        color: "red", // color of a cursor, default "red" any valid CSS color
+        opacity: 0.8, // opacity of cursor, default 0.8
+        pointerSize: 25, // pointer size in px, default 12
+        alwaysVisible: false, // should pointer mode be always visible? default "false"
+        tailLength: 10, // NOT IMPLEMENTED YET!!! how long the "tail" should be? default 10
+      }
+    });
+  </script>
+
+</body>
+
+</html>

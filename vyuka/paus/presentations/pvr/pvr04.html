@@ -1,0 +1,1920 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>MI-PVR: Ovládání a user interface: ČVUT</title>
+  <meta name="description"
+    content="Přednáška MI-PVR: Ovládání a user interface: HCI, 3D rozhraní, výběr a manipulace s objekty, pohyb v prostředí, ovládání aplikace a návrh UI: Petr Pauš, FIT ČVUT v Praze">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+</head>
+
+<body>
+
+  <!-- Top Persistent Header -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+  </header>
+
+  <!-- Bottom Persistent Footer Navigation Helper -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div>
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==========================================
+           SLIDE 1: TITULNÍ SLIDE
+           ========================================== -->
+      <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)">
+        <div class="title-hero">
+          <div class="vr-badge">MI-PVR / NI-PVR &bull; Pokročilá virtuální realita</div>
+          <h1>Ovládání a user&nbsp;interface</h1>
+          <p style="color: var(--text-muted); font-size: 1.2em; margin-bottom: 24px;">
+            <strong>HCI</strong>, 3D rozhraní, výběr a manipulace s objekty, pohyb v&nbsp;prostředí,
+            ovládání aplikace a <strong>návrh UI</strong> pro aplikace virtuální reality.
+          </p>
+
+          <div class="authors">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Dnes se podíváme na ovládání a uživatelská rozhraní ve VR. Zatímco u klasické aplikace stačí myš, klávesnice
+          a monitor, ve virtuální realitě je uživatel uvnitř prostředí a rozhraní musí fungovat v trojrozměrném
+          prostoru. Projdeme si základy HCI, problémy 3D rozhraní, způsoby výběru a manipulace s objekty, pohyb
+          v prostředí, ovládání aplikace a zásady návrhu UI.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 2: HCI
+           ========================================== -->
+      <section>
+        <span class="slide-category">Úvod &bull; HCI</span>
+        <h2><abbr class="abbr-tag" title="Human-Computer Interaction">HCI</abbr> – Human-Computer Interaction</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Tradiční přístup</h3>
+              <ul class="custom-list" style="font-size: 0.88em; margin: 0;">
+                <li><strong>Vstupní zařízení</strong> (input device)</li>
+                <li><strong>Způsob interakce</strong></li>
+                <li><strong>Zpětná vazba</strong></li>
+              </ul>
+            </div>
+            <div class="highlight-card" style="margin-top: 12px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Gulf of execution</h3>
+              <ul class="custom-list" style="font-size: 0.75em; margin: 0;">
+                <li>Rozdíl mezi tím, co uživatel chce udělat, a tím, co mu rozhraní
+                  umožňuje přímo provést.</li>
+                <li><strong>Například:</strong> Čísla stránky ve Wordu (od 3. strany)
+                  <br><strong>Cíl:</strong> Začít číslovat dokument až od 3. strany.
+                  <br><strong>Akce v systému:</strong> Vložit Konec oddílu (Section Break),
+                  odpojit záhlaví/zápatí a až poté nastavit číslovanou
+                  řadu od 1.
+                  <br><strong>Proč je to Gulf of Execution</strong> Záměr je jednoduchý, ale provedení
+                  vyžaduje znalost skrytých mechanik.
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Platí i pro VR</h3>
+              <ul class="custom-list" style="font-size: 0.86em; margin: 0;">
+                <li>Stejné pojetí: vstup, interakce, vazba: ale <strong>větší možnosti vstupů</strong>
+                  (pohled, ruce, hlava, celé tělo).</li>
+                <li><strong>Pohlcení uživatele do prostředí</strong>: uživatel je součástí aplikace, rozhraní
+                  nemůže být „mimo“ scénu jako na monitoru.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 10px 14px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.15em; margin-bottom: 6px;">Důsledek pro návrh</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+                <li>Chybu, které uživatel ani nevšimne, v klasickém UI odhalí pohled na monitor; ve VR ji
+                  ohodnotí až zpětně, protože ovlivnila jeho požitek z prostředí.</li>
+                <li>Rozhraní proto musí <strong>okamžitě potvrzovat každou akci</strong>: prvek, na který uživatel
+                  sahá, má na to reagovat ještě před zmáčknutím tlačítka.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          HCI je obor, který se zabývá interakcí člověka s počítačem. Tradičně rozlišujeme vstupní zařízení, způsob
+          interakce, zpětnou vazbu a tzv. gulf of execution: propast mezi záměrem uživatele a tím, co mu rozhraní
+          skutečně umožňuje provést. Tento rámec platí i pro VR, jen přibývají možnosti vstupu: sledování pohledu,
+          gest, polohy hlavy a těla. A hlavně: uživatel je pohlcen do prostředí, nemůže se „podívat zvenčí“.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 3: 3D ROZHRANÍ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Úvod &bull; 3D rozhraní</span>
+        <h2>3D rozhraní</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Kombinace vstupu a zobrazení
+              </h3>
+              <p style="margin: 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+                Vstup a zobrazení jsou dvě nezávislé osy: aplikace mohou kombinovat 2D i 3D na straně vstupu
+                i na straně výstupu.
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.86em; margin-top: 14px;">
+              <li><strong>2D vstup, 3D zobrazení</strong>: např. Blender (myš, klávesnice, scéna na monitoru).</li>
+              <li><strong>3D vstup, 2D zobrazení</strong>: např. 3D myš pro SAGE.</li>
+              <li><strong>3D vstup, 3D VR zobrazení</strong>: virtuální realita; obě osy jsou prostorové.</li>
+            </ul>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <table class="comparison-table" style="font-size: 0.75em;">
+              <thead>
+                <tr>
+                  <th>Vstup</th>
+                  <th>Zobrazení</th>
+                  <th>Příklad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2D (myš)</td>
+                  <td>3D na monitoru</td>
+                  <td>Blender, Unity editor</td>
+                </tr>
+                <tr>
+                  <td>3D</td>
+                  <td>2D na monitoru</td>
+                  <td>SAGE </td>
+                </tr>
+                <tr>
+                  <td><strong>3D (ruce, head)</strong></td>
+                  <td><strong>3D headset</strong></td>
+                  <td><strong>VR aplikace</strong></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="glass-card">
+              <h3>Proč to řešit</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>3D vstup + 3D zobrazení</strong> klade na UI zcela nové požadavky: prvek
+                  musí být umístěn v prostoru, musí být naleznutelný a musí být dosažitelný.</li>
+                <li>Při 3D vstupu s 2D zobrazením (3D myš) má uživatel stále referenční rámec monitoru:
+                  rozhraní se navrzuje mnohem snáze.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Rozhraní lze popsat dvojicí os: jaký je vstup a jaké je zobrazení. Klasické aplikace pracují s 2D vstupem.
+          Blender má 2D vstup a 3D scénu na monitoru. 3D myš pro SAGE ICA má naopak 3D vstup, ale výstup je stále
+          2D obrazovka. Plnohodnotně prostorové je spojení 3D vstupu a 3D zobrazení, tedy virtuální realita:
+          a právě ta klade na návrh uživatelského rozhraní nové nároky.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4: PROBLÉMY S 3D ROZHRANÍM
+           ========================================== -->
+      <section>
+        <span class="slide-category">Úvod &bull; Problémy</span>
+        <h2>Problémy s 3D rozhraním</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Prostorový vstup uživatele
+              </h3>
+              <ul class="custom-list" style="font-size: 0.88em; margin: 0;">
+                <li>Ve 2D je rozhraní dáno mřížkou, standardy a dlouhodobě zažitými konvencemi.</li>
+                <li>Ve 3D prostoru z toho moc neexistuje nebo není tak rozšířené</li>
+                <li>Vstup je navíc fyzicky náročnější.</li>
+              </ul>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.86em; margin-top: 14px;">
+              <li><strong>Málo definovaných standardů</strong>: žádná „GUI knihovna pro 3D“.</li>
+              <li><strong>Málo nástrojů pro návrh 3D UI</strong>: wireframingové nástroje počítají s 2D plochou.</li>
+              <li><strong>Menší přesnost vstupu</strong> než ve 2D a <strong>únava</strong> paže při delší práci
+                nataženou rukou.</li>
+            </ul>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Výhoda i nevýhoda</h3>
+              <ul class="custom-list" style="font-size: 0.84em; margin: 0;">
+                <li><strong>Menší omezení než ve 2D</strong>: prvky nemusí být omezeny plochu monitoru,
+                  mohou existovat v hloubce a kolem uživatele.</li>
+                <li><strong>Složitější rozložení prvků</strong>: svoboda prostoru znamená, že prvek může být
+                  uživateli skrytý za zády, mimo zorné pole nebo v nedostatečné velikosti.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald">
+              <div class="spec-badge emerald" style="margin-bottom: 8px;">Dopad na design</div>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li>Protože standardy víceméně chybí, <strong>každá aplikace si rozhraní navrhuje sama</strong>:
+                  uživatel si musí zvykat na nové konvence.</li>
+                <li>Důležitost <strong>uživatelského testování</strong>: jasné věci
+                  z pohledu tvůrce mohou být v headsetu uživatelům nejasné.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          S 3D rozhraním je několik potíží. Chybí definované standardy i nástroje pro návrh: ve 2D máme desítky let
+          zažité konvence. Menší omezení prostoru je sice výhodou, ale zároveň se hůř rozkládají prvky. Vstup je
+          méně přesný než u myši a práce nataženou paží rychle unavuje.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 5: UKÁZKA UI
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Úvod &bull; Ukázka</span>
+        <h2>Ukázka UI: čtyři kategorie</h2>
+        <p style="color: var(--text-muted); font-size: 0.78em; margin: 0 0 10px 0;">
+          Dělení &bdquo;2D UI ve 3D&ldquo; vs. &bdquo;přirozené 3D UI&ldquo; je jen popisné. Zavedená herní
+          a HCI terminologie rozlišuje
+          čtyři kategorie, které se ve VR běžně kombinují (Fagerholt &amp; Lorentzon, 2009: čtyři kategorie herního UI
+          podle vztahu ke světu a postavě).
+        </p>
+
+        <div class="slide-grid-3" style="gap: 12px;">
+          <div class="glass-card" style="padding: 12px 16px;">
+            <h3 style="color: var(--accent-emerald); font-size: 1em; margin-bottom: 4px;">Diegetické UI</h3>
+            <p style="margin: 0; font-size: 0.74em; color: var(--text-muted); line-height: 1.4;">
+              Prvek je <strong>součástí světa a příběhu</strong>: hodinky na zápěstí, displej na přilbě,
+              obrazovka počítače v místnosti. Postava by ho viděla také. <a
+                href="../bordel/images-pvr/04_user_interface/deadspace.png"
+                data-preview-image="../bordel/images-pvr/04_user_interface/deadspace.png">Dead Space</a>
+            </p>
+          </div>
+
+          <div class="glass-card" style="padding: 12px 16px;">
+            <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 4px;">Non-diegetické UI</h3>
+            <p style="margin: 0; font-size: 0.74em; color: var(--text-muted); line-height: 1.4;">
+              Čistý <strong>HUD překrytý přes obraz</strong>: stav života, munice, kompas. Postava ho nevidí,
+              existuje jen pro hráče.
+            </p>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-pvr/04_user_interface/slide_05_img_01.jpg"
+              alt="Spatial UI: ploché prvky orientované ke kameře" style="max-height: 180px;" data-preview-image>
+            <div class="image-caption">Spatial UI: panel orientovaný ke kameře (&bdquo;billboard&ldquo;)</div>
+          </div>
+
+          <div class="glass-card" style="padding: 12px 16px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1em; margin-bottom: 4px;">Spatial / prostorové UI</h3>
+            <p style="margin: 0; font-size: 0.74em; color: var(--text-muted); line-height: 1.4;">
+              Prvky <strong>plovoucí ve světě</strong>, ukotvené k pozici nebo povrchu: panely, menu u ruky,
+              štítky nad objekty. Ve VR nejčastější.
+            </p>
+          </div>
+
+          <div class="glass-card" style="padding: 12px 16px;">
+            <h3 style="color: var(--accent-rose); font-size: 1em; margin-bottom: 4px;">Meta UI</h3>
+            <p style="margin: 0; font-size: 0.74em; color: var(--text-muted); line-height: 1.4;">
+              Efekt <strong>přes celé zorné pole</strong>, který mění samotný obraz: krev při zranění, mlha,
+              rozmazání, vinětace. Nese informaci o stavu uživatele.
+            </p>
+          </div>
+
+
+
+
+          <div class="image-showcase">
+            <img src="../bordel/images-pvr/04_user_interface/slide_05_img_02.jpg"
+              alt="Diegetické UI: ovládání objekty prostředí" style="max-height: 180px;" data-preview-image>
+            <div class="image-caption">Diegetické UI: páka a tlačítka jako součást světa</div>
+          </div>
+
+
+
+          <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/world.mp4" target="_blank" rel="noopener"
+            style="flex: 1 1 240px; margin-top: 0; padding: 10px 14px;"
+            data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/world.mp4">
+            <div class="video-icon" style="width: 34px; height: 34px; font-size: 14px;">&#9654;</div>
+            <div class="video-details">
+              <div class="video-title">Ukázka UI ve VR</div>
+            </div>
+          </a>
+          <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/world2.mp4" target="_blank" rel="noopener"
+            style="flex: 1 1 240px; margin-top: 0; padding: 10px 14px;"
+            data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/world2.mp4">
+            <div class="video-icon" style="width: 34px; height: 34px; font-size: 14px;">&#9654;</div>
+            <div class="video-details">
+              <div class="video-title">Další ukázka UI</div>
+            </div>
+          </a>
+
+        </div>
+        <aside class="notes">
+          Namísto popisného dělení na &bdquo;2D UI ve 3D&ldquo; a &bdquo;přirozené 3D UI&ldquo; použijme
+          zavedenou terminologii, která rozlišuje čtyři kategorie podle vztahu prvku ke světu a k postavě.
+          Diegetické UI je součástí světa: hodinky na ruce, displej na přilbě, obrazovka v místnosti. Postava
+          by ho viděla také. Non-diegetické UI je čistý HUD přes obraz: životy, munice, kompas; postava ho
+          nevidí. Spatial neboli prostorové UI pluje ve světě a je ukotvené k pozici či povrchu: ve VR
+          nejčastější případ. Meta UI mění samotný obraz přes celé zorné pole: krev při zranění, mlha,
+          rozmazání. Ve VR se kategorie běžně kombinují: typicky prostorové panely plus meta efekt při
+          zásahu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 6: UX A UI VE VR
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Úvod &bull; UX a UI</span>
+        <h2>UX a UI ve VR</h2>
+        <div class="slide-grid-2" style="gap: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">VR aplikace se skládají z
+              </h3>
+              <ul class="custom-list" style="font-size: 0.84em; margin: 0;">
+                <li><strong>Prostředí</strong>: scéna, objekty, krajina</li>
+                <li><strong>Uživatelského rozhraní</strong>: prvky pro ovládání a informaci o stavu</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Několik přístupů k UX</h3>
+              <ul class="custom-list" style="font-size: 0.8em; margin: 0;">
+                <li><strong>Spíš prostředí</strong>: převažují <strong>diegetické</strong> prvky: veškerá
+                  informace je součástí světa, UI prakticky neexistuje.</li>
+                <li><strong>Spíš UI</strong>: převažují <strong>non-diegetické a prostorové</strong> prvky:
+                  bohaté menu, panely a HUD nad jednoduchým prostředím.</li>
+                <li>Většina aplikací je <strong>někde mezi</strong>: a poměr je třeba vědomě zvolit.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="media-row" style="margin-top: 0;">
+              <div class="image-showcase" style="flex: 1 1 100%;">
+                <img src="../bordel/images-pvr/04_user_interface/slide_06_img_01.jpg"
+                  alt="Aplikace postavená na bohatém UI" style="max-height: 190px;padding: 20px;" data-preview-image>
+
+              </div>
+            </div>
+            <div class="media-row" style="margin-top: 0;">
+              <div class="image-showcase">
+                <img src="../bordel/images-pvr/04_user_interface/slide_06_img_02.jpg"
+                  alt="Aplikace, kde je vše v prostředí" style="max-height: 160px;padding-bottom: 27px;"
+                  data-preview-image>
+                <div class="image-caption">Vše v&nbsp;prostředí</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-pvr/04_user_interface/slide_06_img_03.jpg" alt="Aplikace se složitým UI"
+                  style="max-height: 160px;padding-bottom: 27px;" data-preview-image>
+                <div class="image-caption">Složité UI</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Každá VR aplikace je mix prostředí a uživatelského rozhraní. Některé se snaží vést vše prostředím:
+          informace je součástí světa (diegetické UI) a rozhraní prakticky není. Druhý extrém jsou aplikace
+          postavené na bohatém non-diegetickém a prostorovém UI nad jednoduchým prostředím. Správná odpověď
+          neexistuje, jde o záměrnou volbu designu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 7: BĚŽNÉ AKCE VE 3D
+           ========================================== -->
+      <section>
+        <span class="slide-category">Interakce &bull; Přehled</span>
+        <h2>Běžné akce ve 3D</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Pět kategorií činností</h3>
+              <p style="margin: 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+                V jakékoliv aplikaci uživatel opakuje stále stejné kategorie akcí.<br>
+                Každá má vlastní
+                způsoby implementace i vlastní úskalí.
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.86em; margin-top: 14px;">
+              <li><strong>Interakce s objekty</strong>: výběr a manipulace</li>
+              <li><strong>Pohyb</strong>: orientace a přesun v prostředí</li>
+              <li><strong>Pohyb v UI</strong>: procházení menu a panelů</li>
+              <li><strong>Systémové nastavení</strong>: provedení změny nastavení aplikace</li>
+              <li><strong>Systémový stav a Feedback</strong>: co se právě děje.</li>
+            </ul>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Na co myslet</h3>
+              <table class="comparison-table" style="font-size: 0.75em; margin: 0;">
+                <thead>
+                  <tr>
+                    <th>Akce</th>
+                    <th>Hlavní otázka</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Výběr objektu</td>
+                    <td>Jak uživatel zvolí &bdquo;tenhle&ldquo;?</td>
+                  </tr>
+                  <tr>
+                    <td>Manipulace</td>
+                    <td>Jak změní jeho vlastnosti?</td>
+                  </tr>
+                  <tr>
+                    <td>Pohyb</td>
+                    <td>Jak se dostane jinam bez nevolnosti?</td>
+                  </tr>
+                  <tr>
+                    <td>Nastavení</td>
+                    <td>Jak najde a potvrdí volbu?</td>
+                  </tr>
+                  <tr>
+                    <td>Pohyb v UI</td>
+                    <td>Jak prochází nabídky?</td>
+                  </tr>
+                  <tr>
+                    <td>Systémový stav</td>
+                    <td>Jak ví, co se právě děje?</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+          </div>
+          <aside class="notes">
+            Všechny akce, které uživatel v 3D aplikaci dělá, se dají shrnout do čtyř skupin: interakce s objekty,
+            což je výběr a manipulace, pohyb, pohyb v UI a systémové nastavení. Těmito skupinami se budeme zabývat
+            postupně.
+          </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 8: VÝBĚR – PROBLÉMY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Interakce s objekty &bull; Výběr</span>
+        <h2>Interakce s objekty: výběr</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Fáze výběru</h3>
+              <ul class="custom-list" style="font-size: 0.86em; margin: 0;">
+                <li><strong>Indikace, který objekt je interaktivní</strong>: uživatel musí na první pohled
+                  poznat, čeho se dá dotknout.</li>
+                <li><strong>Rozlišení mezi kandidáty</strong>: více objektů ve směru pohledu.</li>
+                <li><strong>Výběr objektu</strong>: určení konkrétního objektu.</li>
+                <li><strong>Přesun k objektu</strong>: pokud je mimo dosah.</li>
+                <li><strong>Potvrzení</strong> a možnost výběr zrušit.</li>
+                <li><strong>Spuštění manipulace/editace</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-green" style="padding: 14px 20px;">
+              <h3>Fittsův zákon</h3>
+              <p style="font-size: 0.86em;">
+                Čím je cíl dále a čím je menší, tím déle trvá se na něj trefit a tím více chyb uživatel udělá.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card alert" style="margin-top: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.02em; margin-bottom: 6px;">Problémy v aplikaci</h3>
+              <ul class="custom-list" style="font-size: 0.86em; margin: 0;">
+                <li><strong>Vzdálenost od uživatele</strong>: objekt mimo dosah ruky.</li>
+                <li><strong>Viditelná velikost</strong>: daleký objekt zaujímá úhlově jen malý prostor.</li>
+                <li><strong>Množství objektů v oblasti</strong>: více kandidátů ve směru pohledu.</li>
+                <li><strong>Okluze (překážky)</strong>: objekt je vidět, ale paprsek k němu neprojde.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style="margin-top: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.02em; margin-bottom: 6px;">Problémy ovládání</h3>
+              <ul class="custom-list" style="font-size: 0.86em; margin: 0;">
+                <li><strong>Motorická přesnost a třes ruky</strong>: dlouhý paprsek je úhlově extrémně citlivý.</li>
+                <li><strong>Únava (gorilla arm)</strong>: nutnost mít ruku v pozici pro zamíření.</li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Výběr je základní akce. Nejprve musí být jasné, které objekty jsou vůbec interaktivní: pak uživatel
+          objekt vybere, případně se k němu přesune a spustí manipulaci. Potíže způsobuje vzdálenost, malá viditelná
+          velikost, množství objektů v jedné oblasti a překážky na cestě paprsku. Architektuře XR Interaction
+          Toolkitu se věnujeme na dalším slidu.
+        </aside>
+      </section>
+
+      <section>
+        <span class="slide-category">Fitts's law</span>
+        <h2>Fittsův zákon ve VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="padding: 10px;">
+              <p style="font-size: 0.86em;margin-top: 0;">Předpovídá čas potřebný k dosažení cíle na základě jeho
+                <strong>vzdálenosti
+                  $D$</strong> a
+                <strong>velikosti $W$</strong>.
+              </p>
+
+
+              $$\text{Čas (MT)} \propto \log_2\left(\frac{2 \cdot \text{Vzdálenost} D}{\text{Velikost} W}\right)$$
+
+              Čím je cíl dále a čím je menší, tím je zásah pomalejší a náchylnější k chybám.
+            </div>
+
+            <div class="glass-card">
+              <h3>Jak se mění ve 3D a VR?</h3>
+              <ul class="custom-list" style="font-size:0.75em;margin-top: 0;">
+                <li><strong>Úhlová velikost vs. vzdálenost</strong>: Ve 3D rozhoduje i úhlový záběr objektu z pohledu
+                  uživatele.</li>
+                <li><strong>Ray-casting (paprsek/laser)</strong>: Bleskový pohyb, ale třes ruky na dálku výrazně
+                  zmenšuje
+                  efektivní
+                  velikost cíle ($W$).</li>
+                <li><strong>Direct Touch (přímý dotyk)</strong>: Fyzický pohyb paže, vysoká přirozenost, ale dochází k
+                  únavě (Gorilla
+                  Arm).</li>
+              </ul>
+
+            </div>
+          </div>
+          <div class="glass-card">
+            <h3>Klíčové UX dopady pro VR design</h3>
+            <ul class="custom-list">
+              <li style="font-size: .78em;"><strong>Zvětšení Hitboxu (Snap & Cone-casting)</strong>:
+                Paprsek nemusí být čára: využívá se kuželový výběr nebo magnetické přitahování k prvkům.</li>
+              <li style="font-size: .78em;"><strong>Zakřivené panely (Curved Canvas)</strong>:
+                Udržují konstantní vzdálenost ($D$) ke všem prvkům UI na obrazovce.</li>
+              <li style="font-size: .78em;"><strong>Kruhová menu (Pie / Radial Menus)</strong>:
+                Všechny položky mají stejnou vzdálenost a obrovskou úhlovou výseč $\rightarrow$ minimální čas výběru.
+              </li>
+              <li style="font-size: .78em;"><strong>Prostorové zakotvení u těla</strong>:
+                Umístění UI na zápěstí či do dlaně (diegetické UI) dramaticky zkracuje vzdálenost $D$.</li>
+            </ul </div>
+          </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9: VÝBĚR – MOŽNOSTI IMPLEMENTACE
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Interakce s objekty &bull; Výběr</span>
+        <h2>Možnosti implementace výběru</h2>
+        <div class="slide-grid-2 equal" style="gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Ruka / objekt na ovladači
+              </h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>1:1 mapování</strong> ruky na ovladač: ruka kopíruje pohyb ovladače.</li>
+                <li><strong>Přirozené</strong>, nejméně se s ním chybuje.</li>
+                <li><strong>Jen na krátké vzdálenosti</strong>: v dosahu paže.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Paprsek
+                (ray-casting)</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>Vhodné na dlouhé vzdálenosti</strong>: dosáhnu kamkoliv uvidím.</li>
+                <li><strong>Přesné, ale jen pro první objekt</strong> ve směru paprsku.</li>
+                <li>V Unity standardní řešení (<em>XR Ray Interactor</em>), výchozí volba většiny frameworků.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Menu (2D)</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li>V okolí ruky či paprsku se <strong>zobrazí menu s blízkými objekty</strong>.</li>
+                <li>Řeší překážky, které paprsek nepřekoná: uživateli <strong>nabídne kandidáty, ke kterým
+                    nevidí</strong>.</li>
+                <li>Položky menu se dají řadit podle vzdálenosti nebo významu.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Prodloužená ruka</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>Na krátké vzdálenosti normálně, na delší nelineárně</strong>: ruka se &bdquo;natáhne&ldquo;
+                  (<em>go-go gadget</em> technika).</li>
+                <li>Kombinuje přirozenost dosahu v blízkosti s dosahem paprsku.</li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Výběr lze implementovat několika způsoby. Ruka či jiný objekt na ovladači mapuje pohyb 1:1: je
+          přirozená, ale funguje jen v dosahu paže. Paprsek je vhodný na dálku a je přesný, ale vybere jen první
+          objekt v cestě. 2D menu zobrazí objekty v okolí ruky nebo paprsku a hodí se, když překážka brání přímému
+          výběru. Prodloužená ruka funguje na krátko normálně a na dálku nelineárně.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE: ARCHITEKTURA XR INTERACTION TOOLKITU
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Interakce s objekty &bull; Architektura</span>
+        <h2>Architektura XR Interaction Toolkitu</h2>
+        <p style="color: var(--text-muted); font-size: 0.8em; margin: 0 0 10px 0;">
+          Všechny čtyři metody výběru se v Unity implementují <strong>jedním návrhovým vzorem</strong>. Jeho
+          pochopení je nejlepší způsob, jak přestat psát interakce &bdquo;od nuly&ldquo; pro každý objekt zvlášť.
+        </p>
+
+        <div class="slide-grid-3" style="gap: 14px; align-items: stretch;">
+          <div class="glass-card" style="padding: 14px 16px;">
+            <span class="spec-badge cyan" style="margin-bottom: 8px;">XRBaseInteractor</span>
+            <h3 style="color: var(--accent-cyan); font-size: 1em; margin-bottom: 6px;">Kdo akci provádí</h3>
+            <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+              <li>Ruka, paprsek, přímý dotyk: každá metoda je jiný interaktor.</li>
+              <li><strong>Nemá referenci na cílový objekt</strong>: jen hlásí &bdquo;mám zásah&ldquo;
+                a &bdquo;je aktivován&ldquo;.</li>
+              <li>Vyměnit ovladač za ruku tedy znamená vyměnit interaktor, nic víc.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple" style="padding: 14px 16px;">
+            <span class="spec-badge purple" style="margin-bottom: 8px;">XRBaseInteractable</span>
+            <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 6px;">Na co se působí</h3>
+            <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+              <li>Tlačítko, páka, uchopitelný objekt: cíl interakce.</li>
+              <li><strong>Neví, čím je ovládán</strong>: jen přijímá události <em>hover</em>, <em>select</em>
+                a <em>activate</em>.</li>
+              <li>Objekt sám definuje, jak se vizuálně tváří v každém stavu.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-emerald" style="padding: 14px 16px;">
+            <span class="spec-badge emerald" style="margin-bottom: 8px;">Interaction Manager</span>
+            <h3 style="color: var(--accent-emerald); font-size: 1em; margin-bottom: 6px;">Spojení obou stran</h3>
+            <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+              <li>Páruje interaktory s interaktables podle kolizí a rozesílá události oběma směry.</li>
+              <li>Řeší <strong>prioritu</strong>, když na jeden objekt míří víc interaktorů.</li>
+              <li>Díky tomu lze přidat novou metodu výběru <strong>bez zásahu do kódu objektů</strong>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin: 12px 0 0 0;">
+          <h3 style="color: var(--accent-cyan); font-size: 1em; margin-bottom: 6px;">Proč na tom záleží</h3>
+          <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+            Je to aplikace principu <strong>&bdquo;composition over inheritance&ldquo;</strong> z přednášky
+            o Unity. Kdyby interaktor znal svůj cíl přímo, přidání <em>hand trackingu</em> by znamenalo
+            přepsat každé tlačítko v projektu. Takhle stačí přidat jeden interaktor: a všechna stávající
+            tlačítka fungují dál, včetně vizuálních stavů.
+          </p>
+        </div>
+        <aside class="notes">
+          Všechny čtyři metody výběru se v Unity implementují jedním návrhovým vzorem, a jeho pochopení je
+          nejlepší způsob, jak přestat psát interakce od nuly pro každý objekt zvlášť. Interaktor je ten, kdo
+          akci provádí: ruka, paprsek nebo přímý dotyk. Nemá referenci na cílový objekt, jen hlásí, že má
+          zásah a že je aktivován. Interaktable je to, na co se působí: tlačítko, páka, uchopitelný objekt.
+          Neví, čím je ovládán, jen přijímá události hover, select a activate, a sám si definuje, jak vypadá
+          v každém stavu. Interaction Manager obě strany páruje podle kolizí, rozesílá události a řeší prioritu,
+          když na jeden objekt míří víc interaktorů. Je to aplikace principu composition over inheritance
+          z přednášky o Unity. Kdyby interaktor znal svůj cíl přímo, přidání hand trackingu by znamenalo
+          přepsat každé tlačítko v projektu. Takhle stačí přidat jeden interaktor a všechna stávající tlačítka
+          fungují dál.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 10: MANIPULACE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Interakce s objekty &bull; Manipulace</span>
+        <h2>Manipulace s objekty</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Co manipulace znamená</h3>
+              <ul class="custom-list" style="font-size: 0.86em; margin: 0;">
+                <li><strong>Změna vlastností objektu</strong>: velikost, rotace, vzhled, přesunutí.</li>
+                <li><strong>Použití nějakého nástroje</strong>: štětec, spojení, rozdělení, barva.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Možnosti</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+                <li><strong>Ruka</strong>: přímé uchopení a přemisťování objektu.</li>
+                <li><strong>HOMER</strong>: <em>Hand-Centered Object Manipulation Extending Ray-Casting</em>:
+                  kombinuje paprsek (přesun na dálku) s rukou (doladění v blízkosti).</li>
+                <li><strong>Zmenšení / zvětšení prostředí</strong>: místo manipulace objektu se změní měřítko
+                  světa, tím se objekt &bdquo;sám přiblíží&ldquo;.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <p style="margin: 0 0 8px 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                <strong>Zkopírovaný mini svět</strong>: reprezentace scény v měřítku 1:&nbsp;desítky, držená
+                v ruce. Uživatel sahá na miniatury a změny se promítají do velké scény.
+              </p>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li>Řeší vzdálenost i <strong>únavu</strong>: ovladač s miniaturní scénou drží u hrudníku.</li>
+                <li>Nevýhoda: miniatury jsou malé a hůř se cílí na detail.</li>
+              </ul>
+            </div>
+
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/homer-unity.mp4" target="_blank" rel="noopener"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/homer-unity.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">HOMER: paprsek + ruka</div>
+
+              </div>
+            </a>
+
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pvr-interaction.mp4" target="_blank" rel="noopener"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pvr-interaction.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">VR Interakce v unity</div>
+
+              </div>
+            </a>
+
+          </div>
+        </div>
+        <aside class="notes">
+          Manipulace znamená změnu vlastností objektu: velikosti, rotace, vzhledu, polohy: nebo použití nástroje.
+          Základní možností je ruka. HOMER kombinuje paprsek na vzdálený přesun s rukou pro doladění na blízku.
+          Další trik je zmenšení nebo zvětšení celého prostředí, případně držený zkopírovaný mini svět, ve kterém
+          manipuluji s miniaturními objekty.
+        </aside>
+      </section>
+
+      <section>
+        <span class="slide-category">Nelineární ruka</span>
+        <h2>Nelineární ruka (Go-Go gadget technika)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <p style="color: var(--text-muted); font-size: 0.8em; margin: 0 0 10px 0;">
+              Přímý úchop rukou (Direct Touch) je velmi intuitivní, ale omezuje uživatele jen na objekty v dosahu jeho
+              fyzické paže.
+            </p>
+            <div>
+              <div class="highlight-card" style="margin-top: 0;">
+                <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Princip</h3>
+                <ul class="custom-list" style="font-size: 0.86em; margin: 0;">
+                  <li><strong>V blízkosti těla (přirozená zóna)</strong>: virtuální ruka kopíruje pohyb reálné ruky v
+                    poměru $1:1$. Vzdálenost virtuální ruky $r_v$ se rovná vzdálenosti reálné ruky $r_r$.
+                  </li>
+                  <li><strong>Vzdálená zóna</strong>: čím více je ruka natažená, tím víc zrychluje. $r_v = r_r + k \cdot
+                    (r_r - D)^2$, kde $r_r$ je vzdálenost reálné ruky od těla, $D$ je práh natažení a $k$ je
+                    koeficient zrychlení).
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/gogo.mp4" target="_blank" rel="noopener"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/gogo.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Go-Go technika</div>
+
+              </div>
+            </a>
+          </div>
+          <div>
+            <div class="glass-card accent-purple" style="margin-bottom: 12px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Výhody Go-Go techniky</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+                <li style="font-size: 0.82em;">
+                  <strong>Zachování metafory přímého úchopu:</strong> Na rozdíl od paprsku (Ray-casting) přímý úchop
+                  rukou.
+                </li>
+                <li style="font-size: 0.82em;">
+                  <strong>Snadná rotace a manipulace:</strong> Objekt v dlani je přirozenější než na konci dlouhé
+                  pevné tyče/paprsku.
+                </li>
+                <li style="font-size: 0.82em;">
+                  <strong>Jednoduché zaučení:</strong> Uživatel okamžitě pochopí princip „natáhnu ruku víc a ona se
+                  prodlouží“.
+                </li>
+
+              </ul>
+
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Nevýhody Go-Go techniky
+              </h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+
+                <li style="font-size: 0.82em;">
+                  <strong>Snížená přesnost na velkou vzdálenost:</strong> nelineární pohyb náchylný na velké změny na
+                  dálku.
+                </li>
+                <li style="font-size: 0.82em;">
+                  <strong>Fyzická únava:</strong> neustále natažená ruka od těla vede k rychlé únavě ramene.
+                </li>
+                <li style="font-size: 0.82em;">
+                  <strong>Problém s kolizemi:</strong> Prodloužená virtuální ruka prochází prostorem a může nechtěně
+                  vrážet do jiných virtuálních objektů.
+                </li>
+              </ul>
+            </div>
+
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Manipulace znamená změnu vlastností objektu: velikosti, rotace, vzhledu, polohy: nebo použití nástroje.
+          Základní možností je ruka. HOMER kombinuje paprsek na vzdálený přesun s rukou pro doladění na blízku.
+          Další trik je zmenšení nebo zvětšení celého prostředí, případně držený zkopírovaný mini svět, ve kterém
+          manipuluji s miniaturními objekty.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 11: DVĚ RUCE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Interakce s objekty &bull; Dvě ruce</span>
+        <h2>K dispozici 2 ruce</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Symetrická vs.
+                nesymetrická interakce</h3>
+              <ul class="custom-list" style="font-size: 0.86em; margin: 0;">
+                <li><strong>Symetrická</strong>: obě ruce dělají stejnou akci (podnos, přenášení velkého objektu,
+                  natahování luku).</li>
+                <li><strong>Nesymetrická</strong>: každá ruka má jinou funkci (levá drží objekt, pravá s ním
+                  manipuluje).</li>
+              </ul>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.86em; margin-top: 14px;">
+              <li>Ovladače i <em>hand tracking</em> dávají k dispozici <strong>6 stupňů volnosti na ruku</strong>
+                (<em>6&nbsp;DoF</em>: pozice + rotace).</li>
+              <li>Většina aplikací využívá <strong>nesymetrický režim</strong>, ale u fyzikálních úkonů
+                (zvednutí, otočení) se symetrie vyplatí.</li>
+            </ul>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Role rukou</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+                <li><strong>Nedominantní ruka</strong>: pro <strong>nepřesnou manipulaci</strong>: podepření,
+                  přechyťování, nastavení hrubé polohy a orientace.</li>
+                <li><strong>Dominantní ruka</strong>: pro <strong>přesné doladění</strong> nastavovaných parametrů:
+                  jemná rotace, zarovnání, doladění hodnot.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 10px 14px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.1em; margin-bottom: 6px;">Důsledek pro UI</h3>
+              <ul class="custom-list" style="font-size: 0.8em; margin: 0;">
+                <li>Prvky by měly jít <strong>ovládat jednou i oběma rukama</strong>: nedominantní ruka
+                  nesmí být zbytečně vázaná.</li>
+                <li>Uživatelé jsou praváci i leváci: <strong>rovnocennost obou rukou</strong> je nutnost,
+                  ne bonus.</li>
+              </ul>
+            </div>
+
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/bimanual.mp4" target="_blank" rel="noopener"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/bimanual.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka bimanuální interakce</div>
+
+              </div>
+            </a>
+          </div>
+        </div>
+        <aside class="notes">
+          Uživatel má dvě ruce a je třeba rozhodnout, zda budou symetrické, nebo nesymetrické. Při symetrické
+          interakci dělají obě ruce totéž, při nesymetrické má každá jinou funkci. Obvykle nedominantní ruka slouží
+          k nepřesné manipulaci: podržení, přechytení: a dominantní ruka k přesnému doladění parametrů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE: HAND TRACKING A GESTA
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Interakce s objekty &bull; Hand tracking</span>
+        <h2>Hand tracking a gesta</h2>
+        <div class="slide-grid-2" style="gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card" style="margin: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Interakce bez ovladače
+              </h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.4;">
+                Sledování rukou je dnes <strong>standardem</strong>: podporuje ho <em>OpenXR</em>
+                i Meta Quest a Apple Vision Pro bez přídavného zařízení. Uživatel má volné ruce, ale přichází
+                o vše, co ovladač nabízel.
+              </p>
+            </div>
+
+            <div class="highlight-card alert" style="margin: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.02em; margin-bottom: 6px;">Klíčový problém:
+                chybějící haptika</h3>
+              <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+                <li>Prst <strong>projde skrz</strong> virtuální tlačítko: stisk není cítit a uživatel si není
+                  jistý, zda akce proběhla.</li>
+                <li>Neexistuje <strong>spoušť ani tlačítko</strong> pro potvrzení volby: nahrazuje je gesto,
+                  a to musí být rozpoznáno.</li>
+                <li>Odezvu proto musí nést <strong>obraz a zvuk</strong>, výrazně silnější než u ovladače.</li>
+              </ul>
+            </div>
+
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/hands.mp4" target="_blank" rel="noopener"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/hands.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Interakce bez ovladačů</div>
+
+              </div>
+            </a>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 6px;">Základní gesta</h3>
+              <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+                <li><strong>Pinch</strong>: spojení palce a ukazováčku; nahrazuje stisk tlačítka a je
+                  nejspolehlivěji rozpoznatelné.</li>
+                <li><strong>Grab</strong>: sevření dlaně; uchopení objektu, aktivuje se až při dostatečném
+                  sevření, aby nedocházelo k planým zásahům.</li>
+                <li><strong>Raycast z ukazováčku</strong>: paprsek z prstu pro výběr na dálku.</li>
+                <li><strong>Palm / point</strong>: dlaň pro vyvolání menu, ukázání pro zamíření.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1em; margin-bottom: 6px;">Co si pohlídat</h3>
+              <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+                <li><strong>Ruce se navzájem zakrývají</strong>: při překřížení kamerám mizí prsty, stav
+                  se musí &bdquo;držet&ldquo;, ne skokově měnit.</li>
+                <li><strong>Ruce unaví</strong>: gesto ve vzduchu nemá oporu; delší práci dopřejte
+                  s ovladačem.</li>
+                <li><strong>Přechod režimů</strong>: uživatel musí mít možnost volby a vědět, jak se
+                  přepíná.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Hand tracking je dnes standard: podporuje ho OpenXR přes Hand Tracking Subsystem, Meta Quest
+          i Apple Vision Pro. Uživatel má volné ruce, ale přichází o tlačítka i o haptiku. Prst projde
+          virtuálním tlačítkem, stisk není cítit, a uživatel si není jistý, jestli akce proběhla. Odezvu proto
+          musí nést obraz a zvuk, a to výrazně silnější než u ovladače. Mezi základní gesta patří pinch, čili
+          spojení palce a ukazováčku, které nahrazuje stisk tlačítka; grab neboli sevření dlaně pro uchopení
+          objektu; raycast z ukazováčku pro výběr na dálku; a dlaň pro vyvolání menu. Pozor na to, že se ruce
+          navzájem zakrývají, že gesta ve vzduchu unavují, a že přechod mezi ovladačem a rukama musí být
+          v aplikaci zřetelný a volitelný.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE: FYZIKÁLNÍ VS. KINEMATICKÁ INTERAKCE
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Interakce s objekty &bull; Fyzika</span>
+        <h2>Fyzikální vs. kinematická interakce</h2>
+        <p style="color: var(--text-muted); font-size: 0.78em; margin: 0 0 10px 0;">
+          Když uživatel objekt uchopí, musíme se rozhodnout, <strong>jak přesně bude následovat ruku</strong>.
+          Jsou to dva zásadně odlišné přístupy s odlišnými důsledky pro imerzi i výkon.
+        </p>
+
+        <div class="slide-grid-2 equal" style="gap: 16px;">
+          <div class="glass-card" style="padding: 14px 18px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Kinematická interakce</h3>
+            <p style="margin: 0 0 8px 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.4;">
+              Objekt <strong>pevně následuje ruku</strong>: každý snímek se přepíše jeho transformace.
+              Fyzikální engine je vypnutý (<em>isKinematic</em>).
+            </p>
+            <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+              <li><strong>Výhody</strong>: absolutně přesné a stabilní, nejde přes ruce, levné na výpočet.</li>
+              <li><strong>Nevýhody</strong>: objekt <strong>prochází zdí</strong> a jinými objekty: ruka
+                &bdquo;propašuje&ldquo; předmět skrz překážku.</li>
+              <li><strong>Hodí se pro</strong>: nástroje, ukazovátka, lžíce, psací potřeby: kde přesnost
+                dráhy je důležitější než fyzika.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple" style="padding: 14px 18px;">
+            <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Fyzikální interakce</h3>
+            <p style="margin: 0 0 8px 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.4;">
+              Objekt je k ruce <strong>přitahován silami</strong>: <em>Joints</em>, pružiny, změna rychlosti.
+              Ruka je cíl posunu objektu.
+            </p>
+            <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+              <li><strong>Výhody</strong>: objekt <strong>neprojde zdí</strong>, reaguje na okolí a na váhu: vyšší
+                imerze, předmět se &bdquo;chová jako věc&ldquo;.</li>
+              <li><strong>Nevýhody</strong>: výpočetně i implementačně náročnější; špatně nastavená tuhost
+                vede k <strong>vibracím a oscilaci</strong> na hranici těles.</li>
+              <li><strong>Hodí se pro</strong>: přenášené předměty, dveře, zásuvky, skládání a montáž.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin: 12px 0 0 0;">
+          <h3 style="color: var(--accent-emerald); font-size: 1em; margin-bottom: 6px;">Možná kombinace</h3>
+          <div class="slide-grid-3" style="gap: 12px; align-items: stretch;">
+            <div style="text-align: center;">
+              <span class="spec-badge cyan">1. držení</span>
+              <p style="margin: 6px 0 0 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+                Po uchopení přepnout na <strong>kinematický</strong> režim: objekt přesně sedí v ruce
+                a nekmítá.
+              </p>
+            </div>
+            <div style="text-align: center;">
+              <span class="spec-badge purple">2. uvolnění</span>
+              <p style="margin: 6px 0 0 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+                Při puštění <strong>vrátit fyziku</strong> a předat rychlost ruky, aby předmět letěl
+                přirozeně.
+              </p>
+            </div>
+            <div style="text-align: center;">
+              <span class="spec-badge emerald">3. náraz</span>
+              <p style="margin: 6px 0 0 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+                Detekovat, že kinematický objekt narazil do překážky, a <strong>uvolnit ho</strong>: jinak
+                zdí projde.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Když uživatel objekt uchopí, musíme se rozhodnout, jak přesně bude následovat ruku. Kinematická
+          interakce znamená, že objekt pevně kopíruje ruku: každý snímek přepíšeme transformaci a fyziku
+          vypneme. Je to absolutně přesné, stabilní a levné, ale objekt prochází zdí; ruka propašuje předmět
+          skrz překážku. Hodí se pro nástroje a psací potřeby, kde je důležitější přesnost dráhy. Fyzikální
+          interakce objekt k ruce přitahuje silami přes jointy a pružiny: ruka je cíl, ne příkaz. Objekt
+          neprojde zdí, reaguje na okolí a na váhu, takže imerze je vyšší, ale výpočetně i implementačně je to
+          náročnější a špatně nastavená tuhost vede k vibracím na hranici těles. Hodí se pro přenášené předměty,
+          dveře a montáž. V praxi se používá hybrid: po uchopení přepneme na kinematický režim, aby objekt
+          v ruce nekmítal, při uvolnění vrátíme fyziku a předáme rychlost ruky, aby předmět letěl přirozeně:
+          a pokud kinematický objekt narazí do překážky, musíme ho uvolnit, jinak zdí projde.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 12: DOPORUČENÍ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Interakce s objekty &bull; Doporučení</span>
+        <h2>Doporučení</h2>
+        <div class="slide-grid-2">
+
+          <div>
+            <p>
+              Neexistuje jedno univerzální nejlepší řešení: vždy záleží na vzdálenosti, přesnosti a účelu interakce.
+            </p>
+            <div class="highlight-card" style="margin-top: 0;">
+              <ul class="custom-list" style="font-size: 0.8em; margin: 0;">
+                <li><strong>Využít všechny možnosti ovladače</strong>: tlačítka, trigger, grab, polohu
+                  i <em>hand tracking</em>.</li>
+                <li><strong>Pokud možno snížit stupně volnosti</strong>: méně os znamená méně chyb
+                  (např. otáčení kolem jedné osy).</li>
+                <li><strong>Rozlišujte vzdálenost</strong>:
+                  <ul class="custom-list" style="font-size: 0.90em; margin: 0;">
+                    <li><strong>Na blízko (Near-field)</strong>: Přímý úchop (Direct Touch / Snap): nejpřirozenější a
+                      nejrychlejší.</li>
+                    <li><strong>Na dálku (Far-field)</strong>: Paprsek (Ray-casting / Go-Go): spolehlivý na výběr,
+                      náročnější na přesnou rotaci.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">Volit přirozené
+                řešení</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>Využít běžné možnosti</strong>: to, co uživatel znal z klasických aplikací
+                  a her, nepotřebuje vysvětlovat.</li>
+                <li><strong>Vlastní metodu zavádět, jen pokud bude opravdu přínosná</strong>: vlastní interakce
+                  si vždy vyžádá naučení.</li>
+                <li><strong>Možno využít prostředí</strong>: tlačítka, páky, kolečka a další prvky světa
+                  jako ovládací prvky.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Jak to ověřit</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>Měřit, ne hádat</strong>: porovnat čas úkolu a chybovost u dvou metod na stejné
+                  skupině uživatelů: testovat v headsetu, ne na monitoru.</li>
+                <li><strong>Sledovat únavu</strong>: metoda nejrychlejší na deset pokusů může být
+                  po deseti minutách nepoužitelná.</li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+
+
+      </section>
+
+      <section>
+        <span class="slide-category">Interakce s objekty &bull; Doporučení</span>
+        <h2>Doporučení (shrnutí)</h2>
+
+        <table class="comparison-table" style="font-size: 0.72em; margin: 0;">
+          <tr>
+            <th style="padding: 10px;">Parametr</th>
+            <th style="padding: 10px;">Přímý úchop (Direct Touch / Grab)</th>
+            <th style="padding: 10px;">Vzdálený výběr (Ray-casting)</th>
+          </tr>
+          <tr>
+            <td style="padding: 10px;"><strong>Primární použití</strong></td>
+            <td style="padding: 10px;">Blízké objekty (v dosahu paže)</td>
+            <td style="padding: 10px;">Vzdálené objekty, malé cíle</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px;"><strong>Výhody</strong></td>
+            <td style="padding: 10px;">Vysoká imerze, intuice, snadná rotace</td>
+            <td style="padding: 10px;">Rychlý dosah bez nutnosti fyzického pohybu</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px;"><strong>Možný problém</strong></td>
+            <td style="padding: 10px;">Absence hmatového odporu (prsty prochází skrz)</td>
+            <td style="padding: 10px;">Třes ruky na dálku, těžkopádné otáčení v $X, Y, Z$</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px;"><strong>Řešení problému</strong></td>
+            <td style="padding: 10px;">Vizuální zvýraznění + Haptická vibrace</td>
+            <td style="padding: 10px;">Přitahování (snapping) + 3D Transform Gizmo</td>
+          </tr>
+        </table>
+        <aside class="notes">
+          Doporučení: neexistuje obecně nejlepší metoda. Využijte všechny možnosti ovladače, pokud možno snižte
+          stupně volnosti, pro výběr i manipulaci raději paprsek. Využívejte to, co je běžné a zažité; vlastní
+          metodu zavádějte jen tehdy, je-li prokazatelně přínosná. Pomoci může i prostředí samotné: tlačítka a páky.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 13: POHYB V PROSTŘEDÍ – PŘEHLED
+           ========================================== -->
+      <section>
+        <span class="slide-category">Pohyb &bull; Přehled</span>
+        <h2>Pohyb v prostředí (Locomotion)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Základní principy</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+                <li><strong>Teleport</strong>: posun z jednoho bodu do druhého bez plynulého pohybu.</li>
+                <li><strong>Plynulý pohyb ovladačem</strong>: plynulý posun, typicky na thumbsticku.</li>
+                <li><strong>Přirozený pohyb</strong>: Skutečná chůze v prostorově omezeném měřítku (Room-scale). Nulová
+                  nevolnost, ale omezený prostor.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style=" margin-top: 15px;">
+              <h3 style="color: var(--accent-rose)">Rozdíl oproti monitoru</h3>
+              <p style="font-size: 0.85em;">
+                Totéž řešení se na monitoru zdá být v pořádku, v headsetu
+                může způsobovat problémy.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <h3>Proč je pohyb komplikovaný</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li>Při plynulém pohybu se <strong>uživatel hýbe, ale jeho tělo stojí</strong>: nesoulad
+                  vestibulárního systému s tím, co vidí, způsobuje nevolnost.</li>
+                <li>Proto je <em>locomotion</em> ve VR vždy kompromis mezi volností způsobu pohybu a komfortem
+                  uživatele.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald">
+              <h3>Na co zaměřit při implementaci</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li>Ví uživatel předem, kam a jak zorientovaný dopadne?</li>
+                <li>Je přesun <strong>okamžitý, nebo plynulý</strong>: a co se děje během něj?</li>
+                <li>Dokáže se <strong>orientovat</strong> ve velkém prostoru bez toho, aby se ztratil?</li>
+                <li>Ztrácí během přesunu přehled o okolním prostoru (Spatial awareness)?</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Pohyb v prostředí řešíme dvěma principy: teleportem, tedy skokem z bodu do bodu, a plynulým pohybem
+          ovladačem. U teleportu značíme cestu paprskem nebo křivkou. Rozdíl oproti monitoru je, že v headsetu
+          je pohyb vidět celým zorným polem: a to, co na monitoru nevadí, může bolet.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 14: TELEPORT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Pohyb &bull; Teleport</span>
+        <h2>Teleport</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Jak funguje</h3>
+              <ul class="custom-list" style="font-size: 0.88em; margin: 0;">
+                <li><strong>Implementováno ve většině frameworků</strong>: výchozí pohyb ve VR.</li>
+                <li><strong>Teleport na místo označené paprskem</strong>: uživatel namíří, potvrzuje tlačítkem.</li>
+                <li><strong>Přímý paprsek</strong>: vidím cíl, zaměřím přímo na něj.</li>
+                <li><strong>Zaoblený paprsek</strong>: křivka &bdquo;hodí&ldquo; cíl za překážku nebo mimo dosah
+                  přímého pohledu.</li>
+              </ul>
+            </div>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/locomotion.mp4" target="_blank" rel="noopener"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/locomotion.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Různé metody pohybu</div>
+
+              </div>
+            </a>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="highlight-card alert">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 6px;">Doporučení: Nedělat přímý
+                skok</h3>
+
+              <ul class="custom-list" style="margin: 0; padding-bottom: 0; font-size: 0.78em; margin: 0;">
+                <li>Během přesunu <strong>ztmavit obrazovku</strong>
+                  (fade-to-black, vignette).</li>
+                <li>Přidat zvuk a krátkou animaci dráhy.</li>
+                <li>Okamžité vystřídání dvou pohledů bez mezikroku způsobuje <em>motion sickness</em>.</li>
+              </ul>
+
+            </div>
+
+            <div class="glass-card">
+              <h3>Co doladit</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>Označení cíle</strong>: kruh / terč na podlaze, aby bylo jasné, kam
+                  uživatel dosedne.</li>
+                <li><strong>Omezení míst</strong>: na zeď či stůl se teleportovat nemá; paprsek musí testovat
+                  kolizi.</li>
+                <li><strong>Rotace při došlapu</strong>: volitelné stočení směrem od cíle (strafe / snap turn)
+                  usnadňuje orientaci.</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+        <aside class="notes">
+          Teleport je v implementaci ve většině frameworků. Uživatel označí místo paprskem: buď přímým, nebo
+          zaobleným, který přehodí cíl za překážku. Důležité je nedělat přímý skok z bodu do bodu; obrazovku
+          během přesunu ztmavíme, aby změna pohledu nebyla tak szoková.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 15: POSUN MEZI BODY
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Pohyb &bull; Posun mezi body</span>
+        <h2>Plynulý posun mezi body</h2>
+        <div class="slide-grid-2" style="gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Jak se posunout</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Označení nové pozice</strong> a <strong>plynulý posun kamery</strong> (uživatele):
+                  může způsobovat nepříjemný pocit.</li>
+                <li><strong>Pohyb pomocí skutečné chůze</strong>: nejpřirozenější, ale omezený rozměrem
+                  hrací plochy (Room-scale).</li>
+                <li><strong>Využít další zařízení</strong>: trenažér, chodítko, křeslo, <em>omnidirectional
+                    treadmill</em>.</li>
+                <li><strong>Posun do bodu pohledu</strong>: kam se podívám, tam se posunuji.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin: 0;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Orientace</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Značení cesty ve velkém prostoru</strong>: šipky, trasa na zemi, světelné body.</li>
+                <li><strong>Vytvořit záchytné body</strong>: aby se uživatel neztratil.</li>
+                <li><strong>Mapa</strong>: pohled shora nebo mini mapa na zápěstí.</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/04_user_interface/slide_15_img_01.png"
+                alt="Označení cesty a přesun mezi body" style="max-height: 420px;" data-preview-image>
+            </div>
+
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pvr-movement.mp4" target="_blank" rel="noopener"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pvr-movement.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Pohyb v Unity</div>
+
+              </div>
+            </a>
+          </div>
+        </div>
+        <aside class="notes">
+          Při posunu mezi body označíme novou pozici a kameru plynule posuneme: což může způsobit nepříjemný
+          pocit, protože tělo stojí a oči se pohybují. Přirozenější je skutečná chůze, ale ta je omezená plochou,
+          takže se využívají další zařízení. V velkém prostoru je třeba značit cestu, vytvořit záchytné body
+          a nabídnout mapu, aby se uživatel neztratil.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 16: POSUN MEZI BODY – PODRUHÉ
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Pohyb &bull; Posun mezi body</span>
+        <h2>Posun mezi body: techniky</h2>
+        <div class="slide-grid-2" style="gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Techniky posunu</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Posun do bodu pohledu</strong>: přirozené, ale tvrdé na nevolnost.</li>
+                <li><strong>&bdquo;Tahání lana&ldquo;</strong>: posun uchycením se objektu v prostoru
+                  a přitažením se k němu.</li>
+                <li><strong>Posun vlastního avataru na zvolené místo</strong>: svět stojí, pohybuji se jen já.</li>
+                <li><strong>Chůze na místě</strong>: napodobení kroku <em>in-place</em> chůzí.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Velký prostor</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Značení cesty ve velkém prostoru</strong>: trasa, kterou uživatel vidí celým
+                  zorným polem.</li>
+                <li><strong>Vytvořit záchytné body</strong>: <strong>zabránit ztracení uživatele
+                    v prostoru</strong>.</li>
+                <li><strong>Mapa</strong>: kontrola polohy, aniž by se musel otáčet dokola.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/04_user_interface/slide_16_img_01.png"
+                alt="Posun pomocí uchycení v prostoru" style="max-height: 300px;" data-preview-image>
+
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 6px;">Kdy kterou volit</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Uzavřená scéna s objekty po ruce</strong>: tahání lana; pohyb iniciuje sám uživatel
+                  uživatelem, nevolnost je nižší.</li>
+                <li><strong>Rozlehlý prostor</strong>: teleport + mapa; plynulý posun na dlouhou dráhu
+                  vynechat.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Konkrétní techniky: posun do bodu pohledu je přirozený, ale nepříjemný. Tahání lana znamená, že se
+          uchytím objektu v prostoru a přitáhnu se k němu: podobně jako ve stavu beztíže. Lze posouvat
+          vlastního avataru na zvolené místo nebo napodobovat chůzi na místě. Ve velkém prostoru značíme cestu,
+          vytváříme záchytné body a mapu, aby se uživatel neztratil.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 17: OVLÁDÁNÍ APLIKACE
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Ovládání aplikace</span>
+        <h2>Ovládání aplikace</h2>
+        <div class="slide-grid-2" style="gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card" style="margin: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Co všechna řešení musí
+                obsahovat</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>Vypnutí</strong>, <strong>otevření souboru</strong>,
+                  <strong>nastavení grafiky, fyziky</strong> &hellip;
+                </li>
+                <li><strong>Nutné použít jednoduché kroky</strong>: žádná vícestupňová dialogová okna jako
+                  na desktopu.</li>
+                <li><strong>Změny by měly být okamžitě vidět</strong>: posuvník mění náhled hned,
+                  ne po potvrzení.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald">
+              <h3>Kam umístit menu</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>Prvky na zdi</strong>: panel v prostoru, který je součástí scény.</li>
+                <li><strong>Na prstech</strong>: menu se objeví, když uživatel zvedne dlaň (systém
+                  <em>Universal Menu</em>).
+                </li>
+                <li><strong>&bdquo;Tablet v ruce&ldquo;</strong>: plochý panel držený v ruce, který si uživatel
+                  sám polohuje.</li>
+                <li><strong>&bdquo;Pie menu&ldquo;</strong>: kruhové menu kolem ruky; volba směrem, tedy
+                  rychlé a bez čtení.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/04_user_interface/slide_17_img_01.png" alt="Kruhové pie menu"
+                style="max-height: 200px;" data-preview-image>
+
+            </div>
+
+            <div class="glass-card">
+              <h3>Shrnutí</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li>Uživatel v headsetu <strong>nechce zadávat text</strong> a nechce hledat nabídku v hierarchii:
+                  ovládání musí být na dva, tři zásahy.</li>
+                <li><strong>Polohovatelný panel</strong> (&bdquo;tablet&ldquo;) je nejuniverzálnější:
+                  uživatel si ho sám přiblíží a nakloní do komfortního úhlu.</li>
+                <li><strong>Pie menu</strong> je nejlepší tam, kde možností není mnoho a uživatel je zná
+                  z minula.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Ovládání aplikace znamená vypnutí, otevření souboru, nastavení grafiky či fyziky. Nutné je použít
+          jednoduché kroky a změny musí být okamžitě vidět. Umístit to lze jako prvky na zdi, na prstech, jako
+          tablet v ruce, nebo jako pie menu kolem ruky.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 18: NÁVRH UI – METODY
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Návrh UI</span>
+        <h2>Návrh UI</h2>
+        <div class="slide-grid-2" style="gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card" style="margin: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Standardní metody fungují
+              </h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.45;">
+                Postupy z klasického návrhu UI platí i pro 3D, jen je <strong>třeba trochu pozměnit</strong>:
+                všechny pracují s 2D plátnem a je třeba je převést do prostoru.
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.8em; margin-top: 6px;">
+              <li><strong>Wireframes</strong> a <strong>blueprint</strong>: i pro 3D se rozložení navrhuje
+                náčrtem, jen přibývá pohled shora a řez prostorem.</li>
+              <li><strong>Volba velikosti v prostoru</strong>: 1 unit = 1 m; prvek musí být čitelný
+                ve zvolené vzdálenosti.</li>
+              <li><strong>Typografie</strong>: fonty, velikosti písma, barvy, kontrast, řádkování; text
+                daleko menší než několik desítek centimetrů je v headsetu neostrý.</li>
+              <li><strong>Uživatelské testování</strong>: v headsetu, s reálnými uživateli, na reálném úkolu.</li>
+            </ul>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/04_user_interface/slide_18_img_01.jpg"
+                alt="Náčrtek rozložení UI v prostoru" style="max-height: 150px;" data-preview-image>
+              <img src="../bordel/images-pvr/04_user_interface/fonts.png" alt="Náčrtek rozložení UI v prostoru"
+                style="max-height: 150px;" data-preview-image>
+            </div>
+
+            <div class="highlight-card" style="font-size: 0.86em;">
+              <ul class="custom-list">
+                <li><strong>Velikost (úhlová)</strong>: UI prvky by měly zabírat alespoň
+                  <strong>3° až 4° zorného pole
+                    (FOV)</strong>.
+                </li>
+                <li><strong>Doporučená úhlová velikost</strong> písma je kolem <strong>3,45°</strong>
+                  (přibližně 6 cm na výšku při vzdálenosti 1 metru, 13 cm při 2 metrech).</li>
+                <li><strong>Bezpatková písma</strong>, medium, bold.</li>
+                <li>Nepoužívat čistě černou a bílou: zátěž pro oči.</li>
+                <li>Kontrastní kombinace: <strong>šedá/černá na světlém</strong>, <strong>tmavá na světlém</strong>.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Standardní metody návrhu fungují, ale je třeba je pozměnit: wireframes, blueprint. Důležitá je volba
+          velikosti prvků v prostoru a typografie: fonty, velikost písma, barvy. A samozřejmě uživatelské
+          testování, bez toho se neobejdeme.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 19: NÁVRH UI – ZPĚTNÁ VAZBA
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Návrh UI</span>
+        <h2>Návrh UI: interakce a vazba</h2>
+        <div class="slide-grid-2" style="gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Eliminace chyb</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Zabránit nechtěnému &bdquo;kliknutí&ldquo;</strong>: prvek se aktivuje až
+                  <em>při puštění</em> prstu, ne při stisku (&bdquo;hover-then-commit&ldquo;
+                  chování).
+                </li>
+                <li><strong>3D není vždy nejlepší</strong>: plochý panel je občas čitelnější a přesnější
+                  než prostorové tlačítko.</li>
+                <li><strong>Hybridní UI</strong>: 3D objekty pro interakci se světem, 2D prvky tam,
+                  kde se čte a zadává.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.02em; margin-bottom: 6px;">Zpětná vazba
+                je důležitá</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Animace</strong>: stisk, zvětšení, rozsvícení, povrchový efekt.</li>
+                <li><strong>Zvuky</strong>: kliknutí, potvrzení, zamítnutí; liší stav &bdquo;označeno&ldquo;
+                  od &bdquo;potvrzeno&ldquo;.</li>
+                <li><strong>Haptická odezva</strong>: vibrace ovladače v okamžiku zásahu do prvku.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="media-row" style="gap: 10px; margin-top: 0;">
+              <div class="image-showcase" style="flex: 1 1 160px;">
+                <img src="../bordel/images-pvr/04_user_interface/slide_19_img_01.gif" alt="Animovaná zpětná vazba prvku"
+                  style="max-height: 150px;" data-preview-image>
+
+              </div>
+              <div class="image-showcase" style="flex: 1 1 160px;">
+                <img src="../bordel/images-pvr/04_user_interface/slide_19_img_02.gif" alt="Zpětná vazba 3D prvku"
+                  style="max-height: 150px;" data-preview-image>
+                <div class="image-caption">„Najeto&ldquo; vs. „stisknuto&ldquo;</div>
+              </div>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Haptika: od vibrací
+                k silové odezvě</h3>
+              <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+                <li><strong>Vibrace (rumble)</strong>: dnešní standard ovladačů; rozlišuje jen intenzitu
+                  a trvání, nesdělí směr ani tvar objektu.</li>
+                <li><strong>Adaptivní triggery</strong> (<em>Force feedback</em>): spoušť klade odpor podle
+                  drženého objektu: tuhý u kovu, měkký u gumy, se zarážkou na konci zdvihu.</li>
+                <li><strong>Haptické vesty a rukavice</strong>: odezva na těle či prstech; nasazují se
+                  v enterprise VR pro nácvik montáže a chirurgických postupů.</li>
+                <li><strong>Pravidlo</strong>: haptika musí být <strong>okamžitá a krátká</strong>: zpoždění
+                  nad ~50&nbsp;ms uživatel vnímá jako chybu aplikace.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Je třeba zabránit nechtěnému kliknutí: prvek by se neměl aktivovat již při najetí. 3D řešení není vždy
+          lepší, často je vhodnější hybridní UI: 3D objekty pro manipulaci se světem, 2D panely pro čtení.
+          A zpětná vazba je nutná: animací, zvukem a haptickou odezvou ovladače musí být každá akce potvrzena.
+          U haptiky rozlišujme úrovně: běžné vibrace umí jen intenzitu a trvání, takže nesdělí směr ani tvar.
+          Adaptivní triggery umí klást odpor podle drženého objektu: měkký u gumy, tuhý u kovu, se zarážkou na
+          konci zdvihu. Haptické vesty a rukavice přenášejí odezvu na tělo či prsty a používají se v enterprise
+          VR pro nácvik. Důležité je, že haptika musí přijít okamžitě: zpoždění nad zhruba 50 milisekund
+          uživatel vyhodnotí jako chybu aplikace.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 20: NÁVRH UI – PROSTOR KOLEM UŽIVATELE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Návrh UI</span>
+        <h2>Návrh UI: prostor kolem uživatele</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <div>
+                <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Využít prostor kolem
+                  uživatele</h3>
+                <ul class="custom-list" style="font-size: 0.8em; margin: 0;">
+                  <li><strong>Možnost využít prostoru kolem uživatele</strong>: panely mohou stát vlevo,
+                    vpravo i za ním, nikoliv jen &bdquo;na monitoru&ldquo;.</li>
+                  <li><strong>Dodržet zorné pole</strong> v kombinaci s otáčením hlavy: to, co uživatel
+                    potřebuje často, musí být v pohodlném záběru hlavy.</li>
+                  <li><strong>Neotáčet tělo</strong>: prvek, k němuž uživatel musí otočit hlavu i trup,
+                    používá zřídka.</li>
+                </ul>
+              </div>
+            </div>
+
+
+
+
+          </div>
+
+          <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+            <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">Shrnutí</h3>
+            <ul class="custom-list" style="font-size: 0.74em; margin: 0;">
+              <li>3D rozhraní klade nároky na <strong>standardy, přesnost i únavu</strong>.</li>
+              <li>Výběr: <strong>ruka, paprsek, menu, prodloužená ruka</strong>; manipulace: <strong>ruka,
+                  HOMER, mini svět</strong>.</li>
+              <li>Pohyb: <strong>teleport s&nbsp;tmavnutím</strong>, plynulý posun opatrně.</li>
+              <li>Návrh: <strong>okamžitá zpětná vazba</strong>, hybridní UI a respekt
+                <strong>ke zornému poli</strong>.
+              </li>
+            </ul>
+          </div>
+
+
+        </div>
+        <div class="glass-card" style="padding: 14px 20px;margin-top: 12px;">
+          <h3 style="color: var(--accent-purple); font-size: 1.02em; margin-bottom: 6px;">Zóny kolem uživatele
+          </h3>
+          <table class="comparison-table" style="font-size: 0.7em; margin: 0;">
+            <thead>
+              <tr>
+                <th>Zóna</th>
+                <th>Zorné pole</th>
+                <th>Vhodné pro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Přímý směr pohledu</td>
+                <td>$\pm 15^\circ$ od středu</td>
+                <td>obsah, primární úkoly</td>
+              </tr>
+              <tr>
+                <td>Periferně, v dosahu hlavy</td>
+                <td>do $\pm 30^\circ$ horiz., $+15^\circ$ vert.</td>
+                <td>stav, hodiny, HUD</td>
+              </tr>
+              <tr>
+                <td>Po stranách, vyžaduje otočení</td>
+                <td>nad $\pm 60^\circ$ vyžaduje rotaci celého těla</td>
+                <td>sekundární, volitelné</td>
+              </tr>
+              <tr>
+                <td>Za zády</td>
+                <td>Úplně mimo zorné pole</td>
+                <td>Moc nepoužívat: uživatel tam nedohlédne</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="notes">
+          Na závěr: výhoda 3D je prostor kolem uživatele, který lze využít. Musíme ale dodržet zorné pole
+          v kombinaci s otáčením hlavy a neotáčet tělo: to, co uživatel potřebuje často, patří do přímého směru
+          pohledu. Připomeňme si celou přednášku: 3D rozhraní, výběr a manipulace, pohyb prostředím a návrh UI
+          se zpětnou vazbou.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE: MIXED REALITY (PASSTHROUGH) UI
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Návrh UI &bull; Mixed Reality</span>
+        <h2>Mixed Reality (passthrough) UI</h2>
+        <div class="slide-grid-2" style="gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card" style="margin: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Uživatel vidí reálné
+                okolí</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.45;">
+                U moderních headsetů (Quest 3, Vision Pro) je <em>passthrough</em> standardem. Rozhraní už
+                není jen v naší scéně, ale v <strong>reálném prostředí</strong>: to je
+                nepředvídatelné.
+              </p>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.02em; margin-bottom: 6px;">Problémy, které
+                přibývají</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Kontrast</strong>: bílý panel na bílé zdi zmizí; tmavý text na tmavém stole
+                  není čitelný. Řešením je <strong>podkladová deska a obrys</strong> (scrim + outline),
+                  ne jen barva textu.</li>
+                <li><strong>Míchání se reálným obsahem</strong>: UI nesmí splývat s fyzickými předměty;
+                  virtuální tlačítko položené na skutečný stůl musí být jednoznačně virtuální.</li>
+                <li><strong>Překreslování hloubky</strong>: virtuální panel se má <strong>ořezávat
+                    o reálné překážky</strong> (<em>Depth API</em>), jinak se zdá, že není za stolem, ale před ním.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.02em; margin-bottom: 6px;">Příležitosti: reálné
+                povrchy jako kotvy</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Stůl jako pracovní plocha</strong>: panel leží na skutečném stole, uživatel
+                  se ho může fyzicky dotknout a má o co opřít ruku.</li>
+                <li><strong>Zeď jako plocha pro menu</strong>: velký panel na zdi je stabilní a vždy
+                  na stejném místě; <em>Scene Understanding</em> najde roviny sám.</li>
+                <li><strong>Reálné objekty jako ovladače</strong>: fyzická klávesnice, hrnek nebo pero
+                  se obalí virtuálním obsahem a získají haptiku.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Pravidla pro MR
+                rozhraní</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li>Počítejte s tím, že <strong>osvětlení se mění</strong>: virtuální prvek musí být
+                  čitelný v šeru i na přímém slunci.</li>
+                <li><strong>Nespolehejte na barvu samotnou</strong>: pro odlišení stavu použijte tvar,
+                  ikonu nebo text.</li>
+                <li>Nabídněte uživateli <strong>přepínač passthrough</strong>: někdy chce být plně
+                  ve VR, jindy vidět okolí.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          U moderních headsetů je passthrough standardem: Quest 3 i Vision Pro ukazují reálné okolí.
+          Rozhraní tím přestává soupeřit samo se sebou a začíná soupeřit s nepředvídatelnou reálnou
+          místností. Přibývají tři problémy. První je kontrast: bílý panel na bílé zdi zmizí, proto
+          potřebujeme podkladovou desku a obrys, ne jen vhodnou barvu textu. Druhý je míchání s reálným
+          obsahem: virtuální tlačítko položené na skutečný stůl musí být jednoznačně rozpoznatelné jako
+          virtuální. Třetí je překreslování hloubky: panel se má ořezávat o reálné překážky přes Depth API,
+          jinak působí, že je za stolem nebo před ním. Na druhé straně reálné povrchy nabízejí skvělé kotvy:
+          stůl jako pracovní plocha, zeď jako plocha pro menu, a reálné objekty jako ovladače, které mají
+          haptiku zadarmo. Pro MR rozhraní platí, že musí být čitelné za měnícího se osvětlení, že stav
+          nemáme sdělovat jen barvou, a že uživateli máme nechat přepínač passthrough.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE: PŘÍSTUPNOST (ACCESSIBILITY) VE VR
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Návrh UI &bull; Přístupnost</span>
+        <h2>Přístupnost (accessibility) ve VR</h2>
+        <div class="slide-grid-2" style="gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card" style="margin: 0;">
+              <img src="../bordel/images-pvr/04_user_interface/access.png" style="width: 100px; float: right;"
+                data-preview-image>
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Ne každý uživatel stojí,
+                vidí a má dvě ruce</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.45;">
+                VR je fyzicky náročné médium. Přístupnost tu není &bdquo;navíc&ldquo;: bez ní aplikace
+                vylučuje část uživatelů úplně, protože neexistuje alternativní způsob ovládání jako
+                u klávesnice.
+              </p>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.02em; margin-bottom: 6px;">Základní režimy</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Seated mode</strong>: celá aplikace ovladatelná vsedě; nic nevyžaduje dosah
+                  na zem ani otočení těla. Nutnost pro uživatele na vozíku i pro dlouhé pracovní směny.</li>
+                <li><strong>One-handed mode</strong>: plná funkčnost s jedním ovladačem; druhá ruka
+                  může být zaneprázdněná, zraněná nebo chybí.</li>
+                <li><strong>Nastavitelná výška a měřítko</strong>: uživatel v sedě má jinou výšku očí
+                  i dosah; rozhraní se musí přizpůsobit, ne naopak.</li>
+              </ul>
+            </div>
+
+            <a href="https://link.springer.com/content/pdf/10.1007/s10055-023-00850-8.pdf" class="video-card">Paper:
+              Inclusive Immersion</a>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.02em; margin-bottom: 6px;">Zrak a sluch</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Barvoslepost</strong>: stav nevyjadřujte jen barvou (povinné červená/zelená);
+                  přidat ikonu, tvar nebo textový popisek.</li>
+                <li><strong>Kontrast a velikost</strong>: nabídnout zvětšení textu a režim vysokého
+                  kontrastu; v headsetu je čitelnost horší než na monitoru.</li>
+                <li><strong>Titulky a přepis</strong>: veškerý zvukový obsah mějte i textově; ve VR
+                  navíc s možností ukotvit titulky do prostoru.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Pohodlí
+                a komfort</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>Způsob pohybu volitelný</strong>: volba mezi teleportem a plynulým posunem; kinetóza je
+                  individuální.</li>
+                <li><strong>Snap turn místo plynulého otáčení</strong>: skokové otáčení o pevný úhel
+                  snáší většina uživatelů lépe.</li>
+                <li><strong>Pauzy a přestávky</strong>: aplikace má doporučit přestávku, únava z headsetu přichází dřív,
+                  než si uživatel myslí.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          VR je fyzicky náročné médium a přístupnost tu není něco navíc: bez ní aplikace část uživatelů
+          vylučuje úplně, protože neexistuje náhradní způsob ovládání jako klávesnice u počítače.
+          Základní režimy jsou tři. Seated mode, kdy je celá aplikace ovladatelná vsedě a nic nevyžaduje
+          dosah na zem ani otočení těla: to je nutnost pro uživatele na vozíku i pro dlouhé pracovní
+          směny. One-handed mode, kdy je plná funkčnost s jedním ovladačem, protože druhá ruka může být
+          zaneprázdněná, zraněná nebo chybět. A nastavitelná výška a měřítko, protože uživatel vsedě má
+          jinou výšku očí i dosah. U zraku a sluchu platí, že stav nesmíme vyjadřovat jen barvou, že
+          nabídneme zvětšení textu a vysoký kontrast, a že veškerý zvukový obsah má mít textovou podobu
+          ukotvitelnou v prostoru. A konečně komfort: způsob pohybu musí být volitelný, snap turn místo
+          plynulého otáčení snáší většina uživatelů lépe, a aplikace má uživatele upozornit, aby si udělal
+          přestávku.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/multimodal/multimodal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+  <script src="../bordel/js/tooltips.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: false,
+      touch: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      plugins: [RevealNotes, RevealHighlight, RevealSearch, RevealZoom, RevealPointer, Multimodal, RevealMath.KaTeX],
+      pointer: {
+        key: "q",
+        color: "red",
+        opacity: 0.8,
+        pointerSize: 25,
+        alwaysVisible: false,
+        tailLength: 10,
+      }
+    });
+  </script>
+</body>
+
+</html>

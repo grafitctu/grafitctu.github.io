@@ -1,0 +1,2349 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Úvod do herních enginů & Architektura</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Reveal.js CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/night.min.css" id="theme">
+  <!-- Highlight.js Theme -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <!-- KaTeX CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #0a0d14;
+      --card-bg: rgba(18, 24, 38, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-glow: rgba(0, 229, 255, 0.3);
+      --accent-cyan: #00e5ff;
+      --accent-blue: #3d84ff;
+      --accent-purple: #9d4edd;
+      --accent-green: #00e676;
+      --accent-amber: #ffb300;
+      --accent-red: #ff5252;
+      --text-main: #f0f4fc;
+      --text-muted: #94a3b8;
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 20%, #151c2d 0%, #080b11 80%);
+      color: var(--text-main);
+      font-family: var(--font-body);
+    }
+
+    .reveal {
+      font-family: var(--font-body);
+      font-size: 20px;
+      color: var(--text-main);
+    }
+
+    /* Headings */
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-transform: none;
+      color: #ffffff;
+      margin: 0 0 18px 0;
+    }
+
+    .reveal h1 {
+      font-size: 2.3em;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .reveal h2 {
+      font-size: 1.8em;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    .reveal h3 {
+      font-size: 1.25em;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      margin-bottom: 12px;
+    }
+
+    .reveal h4 {
+      font-size: 1.05em;
+      font-weight: 600;
+      color: var(--accent-blue);
+      margin-bottom: 8px;
+    }
+
+    .reveal p,
+    .reveal li {
+      font-size: 0.95em;
+      line-height: 1.55;
+      color: #cbd5e1;
+    }
+
+    .reveal ul,
+    .reveal ol {
+      margin-left: 24px;
+      margin-bottom: 14px;
+    }
+
+    .reveal li {
+      margin-bottom: 8px;
+    }
+
+    /* Badges & Pills */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.72em;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      margin-right: 8px;
+      margin-bottom: 8px;
+      vertical-align: middle;
+    }
+
+    .badge-cyan {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: rgba(0, 229, 255, 0.4);
+      color: var(--accent-cyan);
+    }
+
+    .badge-purple {
+      background: rgba(157, 78, 221, 0.15);
+      border-color: rgba(157, 78, 221, 0.4);
+      color: #c77dff;
+    }
+
+    .badge-green {
+      background: rgba(0, 230, 118, 0.15);
+      border-color: rgba(0, 230, 118, 0.4);
+      color: var(--accent-green);
+    }
+
+    .badge-amber {
+      background: rgba(255, 179, 0, 0.15);
+      border-color: rgba(255, 179, 0, 0.4);
+      color: var(--accent-amber);
+    }
+
+    /* Card Components */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      text-align: left;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .card-glow {
+      border-color: var(--card-border-glow);
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.12);
+    }
+
+    .card h3,
+    .card h4 {
+      margin-top: 0;
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-top: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-top: 16px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      align-items: stretch;
+      margin-top: 16px;
+    }
+
+    .grid-2-1 {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-top: 16px;
+    }
+
+    /* Callout Boxes */
+    .callout {
+      border-left: 4px solid var(--accent-cyan);
+      background: linear-gradient(90deg, rgba(0, 229, 255, 0.1) 0%, rgba(18, 24, 38, 0.5) 100%);
+      padding: 14px 20px;
+      border-radius: 0 10px 10px 0;
+      text-align: left;
+      margin: 16px 0;
+      font-size: 0.95em;
+    }
+
+    .callout-amber {
+      border-left-color: var(--accent-amber);
+      background: linear-gradient(90deg, rgba(255, 179, 0, 0.1) 0%, rgba(18, 24, 38, 0.5) 100%);
+    }
+
+    .callout-purple {
+      border-left-color: var(--accent-purple);
+      background: linear-gradient(90deg, rgba(157, 78, 221, 0.1) 0%, rgba(18, 24, 38, 0.5) 100%);
+    }
+
+    /* Modern Tables */
+    .reveal table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 16px 0;
+      font-size: 0.82em;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+    }
+
+    .reveal table th {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      text-align: left;
+    }
+
+    .reveal table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      text-align: left;
+    }
+
+    .reveal table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .reveal table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Code Blocks */
+    .reveal pre {
+      width: 100%;
+      margin: 12px 0;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: #181b24;
+      font-size: 0.78em;
+    }
+
+    .reveal pre code {
+      font-family: var(--font-mono);
+      padding: 14px 18px;
+      line-height: 1.45;
+      max-height: 480px;
+      tab-size: 4;
+    }
+
+    /* Interactive Diagrams & Pipelines */
+    .pipeline-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 14px 0;
+      gap: 8px;
+    }
+
+    .pipeline-node {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+      font-size: 0.82em;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .pipeline-node.accent-cyan {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.12);
+      color: var(--accent-cyan);
+    }
+
+    .pipeline-node.accent-blue {
+      border-color: var(--accent-blue);
+      background: rgba(61, 132, 255, 0.12);
+      color: #82b1ff;
+    }
+
+    .pipeline-node.accent-purple {
+      border-color: var(--accent-purple);
+      background: rgba(157, 78, 221, 0.12);
+      color: #c77dff;
+    }
+
+    .pipeline-node.accent-green {
+      border-color: var(--accent-green);
+      background: rgba(0, 230, 118, 0.12);
+      color: var(--accent-green);
+    }
+
+    .pipeline-arrow {
+      color: var(--text-muted);
+      font-weight: bold;
+      font-size: 1.1em;
+      padding: 0 4px;
+    }
+
+    /* Budget Visualizer */
+    .budget-bar {
+      display: flex;
+      height: 38px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      margin: 16px 0 10px 0;
+      font-size: 0.75em;
+      font-weight: 700;
+      text-align: center;
+      line-height: 38px;
+    }
+
+    .budget-segment {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding: 0 4px;
+      color: #000;
+    }
+
+    .budget-1 {
+      background: #00e5ff;
+      width: 3%;
+    }
+
+    .budget-2 {
+      background: #00e676;
+      width: 18%;
+    }
+
+    .budget-3 {
+      background: #ffb300;
+      width: 24%;
+    }
+
+    .budget-4 {
+      background: #9d4edd;
+      width: 18%;
+      color: #fff;
+    }
+
+    .budget-5 {
+      background: #ff5252;
+      width: 37%;
+      color: #fff;
+    }
+
+    /* Hierarchy Architecture Layer Diagram */
+    .arch-layer {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 9px 14px;
+      margin-bottom: 7px;
+      text-align: center;
+      font-size: 0.85em;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .arch-layer.l1 {
+      background: rgba(157, 78, 221, 0.2);
+      border-color: rgba(157, 78, 221, 0.5);
+      color: #e0aaff;
+    }
+
+    .arch-layer.l2 {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: rgba(0, 229, 255, 0.4);
+      color: #80f1ff;
+    }
+
+    .arch-layer.l3 {
+      background: rgba(61, 132, 255, 0.15);
+      border-color: rgba(61, 132, 255, 0.4);
+      color: #adc9ff;
+    }
+
+    .arch-layer.l4 {
+      background: rgba(0, 230, 118, 0.15);
+      border-color: rgba(0, 230, 118, 0.4);
+      color: #80ffbc;
+    }
+
+    .arch-layer.l5 {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .brand-unity {
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+
+    .brand-unreal {
+      color: #3d84ff;
+      text-shadow: 0 0 10px rgba(61, 132, 255, 0.4);
+    }
+
+    .brand-godot {
+      color: #478cbf;
+      text-shadow: 0 0 10px rgba(71, 140, 191, 0.4);
+    }
+
+    /* Tree / Flow Visual */
+    .tree-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .tree-root {
+      background: rgba(0, 229, 255, 0.15);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .tree-branches {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      margin-top: 14px;
+      gap: 16px;
+    }
+
+    .tree-branch {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .tree-branch-title {
+      font-size: 0.88em;
+      font-weight: 700;
+      color: var(--accent-amber);
+      margin-bottom: 8px;
+    }
+
+    .tree-sub-branches {
+      display: flex;
+      width: 100%;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .tree-sub-item {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 8px;
+      text-align: center;
+      font-size: 0.78em;
+    }
+
+    /* Custom Scrollbar for Pre */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+    }
+
+    /* Fix Reveal.js Center Layout */
+    .reveal .slides section {
+      padding: 10px 20px;
+      box-sizing: border-box;
+    }
+
+    .text-cyan {
+      color: var(--accent-cyan);
+    }
+
+    .text-green {
+      color: var(--accent-green);
+    }
+
+    .text-amber {
+      color: var(--accent-amber);
+    }
+
+    .text-purple {
+      color: var(--accent-purple);
+    }
+
+    .text-red {
+      color: var(--accent-red);
+    }
+
+    .text-muted {
+      color: var(--text-muted);
+    }
+
+    /* Interactive Acronym Tooltip System */
+    .abbr-tag,
+    abbr[title] {
+      text-decoration: underline dotted var(--accent-cyan) 1.5px;
+      text-underline-offset: 3px;
+      cursor: help;
+      color: inherit;
+      transition: color 0.15s ease, text-decoration-color 0.15s ease;
+    }
+
+    .abbr-tag:hover,
+    abbr[title]:hover {
+      color: var(--accent-cyan);
+      text-decoration-color: #ffffff;
+    }
+
+    #global-tooltip {
+      position: fixed;
+      z-index: 999999;
+      max-width: 320px;
+      background: rgba(13, 18, 30, 0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 229, 255, 0.45);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 229, 255, 0.2);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #e2e8f0;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      line-height: 1.4;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      text-align: left;
+    }
+
+    #global-tooltip.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #global-tooltip .tooltip-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 4px;
+    }
+
+    #global-tooltip .tooltip-abbr {
+      background: rgba(0, 229, 255, 0.15);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: #fff;
+    }
+
+    #global-tooltip .tooltip-body {
+      color: #cbd5e1;
+      font-size: 0.74rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- SLIDE 1: Titulní slajd -->
+      <section>
+        <div style="text-align: center; max-width: 950px; margin: 0 auto;">
+          <div style="margin-bottom: 20px;">
+            <span class="badge badge-cyan">PŘEDNÁŠKA #1</span>
+            <span class="badge badge-purple">Petr Pauš, Jan Matoušek</span>
+            <span class="badge badge-green">ANI-EGG 🥚</span>
+          </div>
+          <h1 style="font-size: 2.7em; margin-bottom: 16px;">Úvod do herních enginů a jejich architektura</h1>
+          <p style="font-size: 1.15em; color: var(--text-muted); margin-bottom: 30px;">
+            Herní smyčka, rendering, správa paměti a moderní architektura
+          </p>
+
+          <div class="card card-glow"
+            style="display: flex; justify-content: space-around; align-items: center; padding: 22px 30px; margin-top: 20px;">
+            <div style="text-align: center;">
+              <div style="font-size: 1.6em; font-weight: 800; color: #fff;">Unity 6</div>
+            </div>
+            <div style="width: 1px; height: 45px; background: rgba(255,255,255,0.15);"></div>
+            <div style="text-align: center;">
+              <div style="font-size: 1.6em; font-weight: 800; color: var(--accent-blue);">Unreal Engine 5</div>
+            </div>
+            <div style="width: 1px; height: 45px; background: rgba(255,255,255,0.15);"></div>
+            <div style="text-align: center;">
+              <div style="font-size: 1.6em; font-weight: 800; color: var(--accent-cyan);">Godot 4</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Přivítání studentů. Cílem dnešní přednášky je pochopit, co se děje „pod kapotou“ herního enginu a jak tyto
+          principy ovlivňují návrh a výkon moderních her.
+        </aside>
+      </section>
+
+      <!-- SLIDE 2: Harmonogram přednášky -->
+      <!-- <section>
+        <h2>Struktura 90minutové přednášky</h2>
+        <div class="grid-2" style="margin-top: 24px;">
+          <div class="card" style="border-left: 4px solid var(--accent-cyan);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3 style="margin: 0; color: var(--accent-cyan);">01. Definice &amp; Podsystémy</h3>
+              <span class="badge badge-cyan">20 min</span>
+            </div>
+            <ul style="font-size: 0.88em; margin: 0; padding-left: 18px;">
+              <li>Abstrakce HW a vrstvy enginu</li>
+              <li>Evoluce vývoje od Assembleru po moderní IDE</li>
+              <li>Přehled klíčových subsystémů</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-left: 4px solid var(--accent-blue);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3 style="margin: 0; color: #82b1ff;">02. Herní smyčka &amp; Časování</h3>
+              <span class="badge badge-cyan">25 min</span>
+            </div>
+            <ul style="font-size: 0.88em; margin: 0; padding-left: 18px;">
+              <li>Anatomie smyčky (Input, Physics, Logic, Render)</li>
+              <li>Variable vs Fixed TimeStep, koncept \(\Delta t\)</li>
+              <li>Frame Budget a 16.6ms limit (60 FPS)</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-left: 4px solid var(--accent-purple);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3 style="margin: 0; color: #c77dff;">03. Pokročilé technické detaily</h3>
+              <span class="badge badge-purple">25 min</span>
+            </div>
+            <ul style="font-size: 0.88em; margin: 0; padding-left: 18px;">
+              <li>Renderovací pipelines: Forward vs Deferred</li>
+              <li>Fyzika, kolize a prostorové dělení (Octree/BVH)</li>
+              <li>Správa paměti (GC, Pooling) a OOP vs ECS</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-left: 4px solid var(--accent-green);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3 style="margin: 0; color: var(--accent-green);">04. Srovnání Enginů &amp; Diskuse</h3>
+              <span class="badge badge-green">20 min</span>
+            </div>
+            <ul style="font-size: 0.88em; margin: 0; padding-left: 18px;">
+              <li>Srovnání: Unity 6 vs Unreal Engine 5 vs Godot 4</li>
+              <li>Licenční a obchodní modely</li>
+              <li>Rozhodovací strom &amp; Závěrečná diskuse</li>
+            </ul>
+          </div>
+        </div>
+      </section> -->
+
+      <!-- SLIDE 3: Co je to herní engine? -->
+      <section>
+        <h2>Co je to herní engine?</h2>
+
+        <div class="callout" style="margin-bottom: 24px;">
+          <h4 style="margin: 0 0 6px 0; color: var(--accent-cyan);">Formální definice</h4>
+          <p style="margin: 0; font-size: 1.05em; color: #ffffff;">
+            Herní engine je <strong>komplexní softwarová architektura</strong> poskytující univerzální abstraktní vrstvu
+            nad hardwarovými prostředky počítače (CPU, GPU, paměť, zvuková karta, vstupní zařízení).
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <h4 style="color: var(--accent-cyan);">Abstrakce HW</h4>
+            <p style="font-size: 0.85em; margin: 0;">
+              Jednotné rozhraní (API) umožňující spouštění stejného kódu na PC, konzolích, mobilních zařízeních i VR bez
+              přepisování nízkoúrovňových volání.
+            </p>
+          </div>
+          <div class="card">
+            <h4 style="color: var(--accent-blue);">Znovupoužitelnost</h4>
+            <p style="font-size: 0.85em; margin: 0;">
+              Není třeba znova programovat hotové věci. Matematika, fyzika, formáty textur a zvuk
+              jsou vyřešeny a prověřeny v praxi.
+            </p>
+          </div>
+          <div class="card">
+            <h4 style="color: var(--accent-green);">Produktivita</h4>
+            <p style="font-size: 0.85em; margin: 0;">
+              Integrované vývojové prostředí (IDE) s vizuálními editory pro správu scén, animací, fyzikálních materiálů,
+              shaderů a ladění za běhu.
+            </p>
+          </div>
+        </div>
+        <div class="r-stack">
+          <img src="../images/engines.png" alt="Description" width="50%" class="center">
+        </div>
+      </section>
+
+      <section>
+        <h2>Trocha statistických údajů (Steam 2024)</h2>
+        <div class="card">
+          <div class="callout callout-purple" style="margin-top: 14px; font-size: 0.82em;">
+            Trocha čísel ze studií <a
+              href="https://app.sensortower.com/vgi/assets/reports/The_Big_Game_Engines_Report_of_2025.pdf">Video Game
+              Insights</a> (2025)
+          </div>
+        </div>
+        <div class="r-stack">
+          <img src="../images/marketshare.png" style="border: 3px solid #7c00cf;" alt="Description" class="fragment">
+          <img src="../images/timeline.png" style="border: 3px solid #7c00cf;" class="fragment">
+          <img src="../images/smallengines.png" style="border: 3px solid #7c00cf;" class="fragment">
+          <img src="../images/genre.png" style="border: 3px solid #7c00cf;" class="fragment">
+        </div>
+
+      </section>
+
+      <section>
+        <h2>Vlastní nebo komerční engine?</h2>
+
+        <!-- Kladná strana -->
+        <div class="grid-2">
+          <div class=card">
+            <h3>Pozitiva komerčního engine
+            </h3>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li style="margin-bottom: 12px;"><strong>Okamžitý start</strong> – Možnost začít hned, místo budování
+                vlastního engine.</li>
+              <li style="margin-bottom: 12px;"><strong>Známá kvalita</strong> – Komerční enginy mají prověřenou kvalitu
+                z hlediska výkonu a grafické věrnosti.</li>
+              <li style="margin-bottom: 12px;"><strong>Nižší náklady na vývoj</strong> – Mnohem levnější než udržování
+                vlastního enginu v podobné kvalitě.</li>
+              <li style="margin-bottom: 12px;"><strong>Snadnější nábor zaměstnanců</strong> – Také množství dokumentace
+                a školících materiálů.</li>
+            </ul>
+          </div>
+
+          <!-- Záporná strana -->
+          <div class=card"">
+            <h3>Negativa komerčního engine
+            </h3>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li style="margin-bottom: 12px;"><strong>Nárůst cen</strong> – Dominance na trhu umožňuje několika málo
+                enginům diktovat cenovou politiku.</li>
+              <li style="margin-bottom: 12px;"><strong>Požadavek na úpravy</strong> – Mnohé projekty stále vyžadují
+                rozsáhlé úpravy, což snižuje úsporu práce.</li>
+              <li style="margin-bottom: 12px;"><strong>Náklady na změnu engine</strong> – Studia s existujícími staršími
+                enginy a zkušenými zaměstnanci vyžadují k přechodu značnou časovou investici.</li>
+              <li style="margin-bottom: 12px;"><strong>Řešení na míru</strong> – Vlastní engine pro konkrétní
+                žánr může být efektivnější a poskytnout konkurenční výhodu.</li>
+              <li style="margin-bottom: 12px;"><strong>Nedostatek kontroly</strong> – Závislost na jiné společnosti a
+                její vizi (roadmapě) pro vývoj nových funkcí.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Historie a evoluce -->
+      <section>
+        <h2>Evoluce vývojových nástrojů</h2>
+
+        <div class="grid-3" style="margin-top: 24px;">
+          <div class="card" style="border-top: 4px solid #ff5252;">
+            <div class="badge" style="background: rgba(255, 82, 82, 0.2); color: #ff5252; margin-bottom: 12px;">
+              1980–1995</div>
+            <h3 style="font-size: 1.1em; color: #fff;">1. Éra bez enginů</h3>
+            <ul style="font-size: 0.82em; padding-left: 16px;">
+              <li>Kód psaný přímo na míru dané hardwarové architektuře (Assembler, C).</li>
+              <li>Přímý zápis do registrů a paměti grafických/zvukových čipů.</li>
+              <li>Hry jako <em>Doom (1993)</em> využívaly specifické matematické triky: <strong>BSP stromy (Binary Space
+                  Partitioning)</strong> – rekurzivní binární dělení prostoru pro okamžité určení pořadí vykreslování
+                stěn (zepředu dozadu) bez nutnosti náročného Z-bufferu.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--accent-amber);">
+            <div class="badge"
+              style="background: rgba(255, 179, 0, 0.2); color: var(--accent-amber); margin-bottom: 12px;">1995–2010
+            </div>
+            <h3 style="font-size: 1.1em; color: #fff;">2. Modulární systémy</h3>
+            <ul style="font-size: 0.82em; padding-left: 16px;">
+              <li>Jasná separace grafického renderovacího jádra od herní logiky.</li>
+              <li>Vznik legendárních enginů: <em>Quake Engine</em> (id), <em>Unreal Engine 1</em> (Epic),
+                <em>Source</em> (Valve).
+              </li>
+              <li>Zahájení licencování jader jiným studiím (např. <em>Half-Life</em> na bázi Quake, <em>Deus
+                  Ex</em> na Unreal Engine 1, <em>Titanfall</em> &amp; <em>Vampire: Bloodlines</em> na Source enginu).
+              </li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--accent-green);">
+            <div class="badge"
+              style="background: rgba(0, 230, 118, 0.2); color: var(--accent-green); margin-bottom: 12px;">2010+</div>
+            <h3 style="font-size: 1.1em; color: #fff;">3. Demokratizace &amp; Visual IDE</h3>
+            <ul style="font-size: 0.82em; padding-left: 16px;">
+              <li>Nástup zdarma dostupných nástrojů s licenčními modely dle úspěchu (Unity, Godot, Unreal Engine).</li>
+              <li>Zpřístupnění špičkových AAA technologií nezávislým (indie) tvůrcům.</li>
+              <li>Kompletní vizuální editory a asset ekosystémy.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          Přesný rok vzniku prvních enginů není jasný, některé 2D enginy existovaly už před 1995. U 3D enginů se to dá
+          považovat za celkem verohodné.
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Hlavní podsystémy herního enginu -->
+      <section>
+        <h2>Hlavní podsystémy herního enginu</h2>
+
+        <div class="grid-2-1" style="align-items: center; margin-top: 20px;">
+          <div>
+            <div class="arch-layer l1">
+              HERNÍ LOGIKA (C# Scripts / C++ / Blueprints / GDScript)
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 7px;">
+              <div class="arch-layer l2" style="margin: 0; padding: 12px 4px; font-size: 0.78em;">Renderovací Engine
+              </div>
+              <div class="arch-layer l2" style="margin: 0; padding: 12px 4px; font-size: 0.78em;">Fyzikální Engine
+              </div>
+              <div class="arch-layer l2" style="margin: 0; padding: 12px 4px; font-size: 0.78em;">Audio Engine</div>
+              <div class="arch-layer l2" style="margin: 0; padding: 12px 4px; font-size: 0.78em;">AI &amp; Navigace
+              </div>
+            </div>
+            <div class="arch-layer l3">
+              Resource Manager / Asset Pipeline / Serializace
+            </div>
+            <div class="arch-layer l4">
+              Abstrakce HW (OS, Vulkan, DirectX 12, Metal, WebGPU, POSIX)
+            </div>
+            <div class="arch-layer l5">
+              HARDWARE (CPU, GPU, RAM, VRAM, Audio Device, Gamepad/Mouse)
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="card" style="padding: 14px 18px;">
+              <h4 style="margin: 0 0 4px 0; color: var(--accent-cyan); font-size: 0.95em;">Renderovací podsystém</h4>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted);">Zpracování geometrie, materiálů, světel,
+                stínů, post-processingu a odesílání příkazů (Draw Calls) na GPU.</p>
+            </div>
+            <div class="card" style="padding: 14px 18px;">
+              <h4 style="margin: 0 0 4px 0; color: var(--accent-green); font-size: 0.95em;">Fyzikální engine</h4>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted);">Numerická integrace Newtonovské
+                mechaniky, detekce srážek (CCD/Broadphase) a řešení kloubů (Joints).</p>
+            </div>
+            <div class="card" style="padding: 14px 18px;">
+              <h4 style="margin: 0 0 4px 0; color: var(--accent-purple); font-size: 0.95em;">Skriptovací vrstva</h4>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted);">Uživatelský kód řídící pravidla hry,
+                napojený přes bindings na optimalizované C++ jádro enginu.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5b: Renderovací podsystém & Pojmy -->
+      <section>
+        <h2>Renderovací podsystém &amp; Klíčové pojmy</h2>
+
+        <div class="grid-2" style="margin-top: 16px;">
+          <div class="card" style="border-top: 3px solid var(--accent-cyan);">
+            <h3 style="font-size: 1.05em; color: var(--accent-cyan); margin-bottom: 8px;">1. Geometrie &amp; Sítě
+              (Meshes)</h3>
+            <ul style="font-size: 0.78em; padding-left: 16px;">
+              <li><strong>Vertexy &amp; Buffery:</strong> Vrcholy definované 3D pozicí, normálou (směr povrchu),
+                tangenty a UV souřadnicemi pro textury.</li>
+              <li><strong>Index Buffer:</strong> Pole indexů spojující vrcholy do trojúhelníků (triangles).</li>
+              <li><strong>Transformační matice:</strong> Převod z Local Space \(\to\) World \(\to\) View (Camera)
+                \(\to\) Clip Space (MVP matice).</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent-blue);">
+            <h3 style="font-size: 1.05em; color: #82b1ff; margin-bottom: 8px;">2. Materiály, Textury &amp; Shadery</h3>
+            <ul style="font-size: 0.78em; padding-left: 16px;">
+              <li><strong>Shadery:</strong> Programy běžící masivně paralelně na GPU (Vertex Shader počítá pozice,
+                Fragment/Pixel Shader počítá barvu pixelu).</li>
+              <li><strong>PBR Materiály:</strong> Fyzikální parametry povrchu (Albedo/BaseColor, Roughness, Metallic,
+                Normal mapa pro iluzi detailů).</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent-amber);">
+            <h3 style="font-size: 1.05em; color: var(--accent-amber); margin-bottom: 8px;">3. Světla &amp; Stíny (Shadow
+              Mapping)</h3>
+            <ul style="font-size: 0.78em; padding-left: 16px;">
+              <li><strong>Typy světel:</strong> Directional (slunce), Point (žárovka), Spot (kužel/baterka), Area
+                lights.</li>
+              <li><strong>Shadow Maps:</strong> Render hloubky scény z pozice světla do textury \(\to\) porovnání
+                vzdálenosti pixelu k určení, zda je ve stínu.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent-purple);">
+            <h3 style="font-size: 1.05em; color: #c77dff; margin-bottom: 8px;">4. Draw Calls &amp; Post-processing</h3>
+            <ul style="font-size: 0.78em; padding-left: 16px;">
+              <li><strong>Draw Call:</strong> Příkaz CPU odeslaný GPU k vykreslení objektu (hlavní limit CPU výkonu,
+                řeší se Batchingem a Instancingem).</li>
+              <li><strong>Post-processing:</strong> Filtry aplikované na hotový 2D snímek (Bloom, Tone Mapping, Color
+                Grading, SSAO, Motion Blur).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5c: Fyzikální engine v detailu -->
+      <section>
+        <h2>Fyzikální engine: Integrace &amp; Kolize</h2>
+
+        <div class="grid-2" style="margin-top: 16px;">
+          <div class="card" style="border-top: 3px solid var(--accent-green);">
+            <h3 style="font-size: 1.05em; color: var(--accent-green); margin-bottom: 8px;">1. Numerická integrace pohybu
+            </h3>
+            <p style="font-size: 0.8em; margin-bottom: 6px;">
+              Výpočet zrychlení, rychlosti a pozice ze sil podle 2. Newtonova zákona:
+              \[\vec{a} = \frac{\sum \vec{F}}{m}\]
+            </p>
+            <ul style="font-size: 0.75em; padding-left: 16px;">
+              <li><strong><a href="https://en.wikipedia.org/wiki/Euler_method" target="_blank">Explicit
+                    Euler</a>:</strong> \(\vec{x}_{t+\Delta t} = \vec{x}_t + \vec{v}_t \Delta t\) –
+                jednoduchý, ale nestabilní a energeticky diverguje.</li>
+              <li><strong><a href="https://en.wikipedia.org/wiki/Semi-implicit_Euler_method"
+                    target="_blank">Semi-implicit
+                    Euler:</a></strong> Nejprve spočte novou rychlost, z ní novou pozici. Standard pro
+                většinu herních enginů.</li>
+              <li><strong><a href="https://en.wikipedia.org/wiki/Verlet_integration" target="_blank">Verletova
+                    integrace:</a></strong> Počítá bez explicitní rychlosti z předchozích
+                dvou pozic – ideální pro simulaci látek (Cloth) a provazů.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent-cyan);">
+            <h3 style="font-size: 1.05em; color: var(--accent-cyan); margin-bottom: 8px;">2. Detekce a řešení kolizí
+            </h3>
+            <div class="pipeline-bar" style="margin: 4px 0 8px 0; padding: 5px 6px;">
+              <div class="pipeline-node accent-green" style="font-size: 0.68em; padding: 6px 3px;">Broad Phase<br><span
+                  style="opacity: 0.75;">AABB / BVH</span></div>
+              <div class="pipeline-arrow" style="font-size: 0.8em;">➜</div>
+              <div class="pipeline-node accent-cyan" style="font-size: 0.68em; padding: 6px 3px;">Narrow Phase<br><span
+                  style="opacity: 0.75;">GJK / SAT</span></div>
+              <div class="pipeline-arrow" style="font-size: 0.8em;">➜</div>
+              <div class="pipeline-node accent-purple" style="font-size: 0.68em; padding: 6px 3px;">Solver<br><span
+                  style="opacity: 0.75;">Impulsy &amp; Vazby</span></div>
+            </div>
+            <ul style="font-size: 0.75em; padding-left: 16px;">
+              <li><strong>Broad Phase:</strong> Rychlé vyloučení vzdálených těles pomocí AABB obálek a prostorových
+                stromů (BVH, SAP) v čase \(\mathcal{O}(N \log N)\).</li>
+              <li><strong>Narrow Phase:</strong> Přesný výpočet kontaktních bodů a hloubky průniku (algoritmy
+                <em>GJK</em>, <em>SAT</em>).
+              </li>
+              <li><strong>Solver &amp; Constraints:</strong> Aplikace korekčních impulsů, tření (friction), odrazu
+                (restitution) a vazeb kloubů (Joint / Ragdoll).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5d: Skriptovací vrstva -->
+      <section>
+        <h2>Skriptovací vrstva &amp; Herní logika</h2>
+
+        <div class="grid-2" style="margin-top: 16px;">
+          <div class="card" style="border-top: 3px solid var(--accent-purple);">
+            <h3 style="font-size: 1.05em; color: #c77dff; margin-bottom: 8px;">1. Propojení s C++ jádrem (Native
+              Bindings)</h3>
+            <ul style="font-size: 0.78em; padding-left: 16px;">
+              <li><strong>Engine Core (C/C++):</strong> Maximální rychlost, správa paměti, rendering a fyzika přímo nad
+                hardwarem.</li>
+              <li><strong>Foreign Function Interface (FFI):</strong> Překlenovací vrstva (P/Invoke v .NET, PyBind, JNI,
+                C API) umožňující skriptům volat C++ jádro a naopak.</li>
+              <li><strong>Marshaling:</strong> Přenos a konverze datových struktur mezi spravovanou (managed) pamětí
+                skriptu a nativní (unmanaged) pamětí C++.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent-amber);">
+            <h3 style="font-size: 1.05em; color: var(--accent-amber); margin-bottom: 8px;">2. Modely provádění skriptů
+            </h3>
+            <ul style="font-size: 0.78em; padding-left: 16px;">
+              <li><strong>Interpreted &amp; Bytecode VM (GDScript, Lua):</strong> Rychlé načítání, minimální paměť,
+                bezpečný sandbox, snadný <em>Hot-Reload</em> za běhu.</li>
+              <li><strong>JIT &amp; AOT (C# Mono / CoreCLR / IL2CPP):</strong> Překlad mezikódu (CIL) do nativního
+                strojového kódu CPU před spuštěním či za běhu.</li>
+              <li><strong>Vizuální grafy (Blueprints):</strong> Interpretované virtuálním strojem nebo automaticky
+                nativizované do C++ před kompilací.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-purple" style="margin-top: 14px; font-size: 0.82em;">
+          <strong>Proč oddělovat skriptování od jádra?</strong> Umožňuje designérům upravovat kód hry v reálném
+          čase (hot-reload) bez rekompilací celého enginu a izoluje herní chyby od stability enginu.
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Anatomie herní smyčky -->
+      <section>
+        <h2>Anatomie herní smyčky (Game Loop)</h2>
+        <p style="text-align: left; font-size: 0.9em; margin-bottom: 14px;">
+          Srdcem každého enginu je <strong>nekonečná smyčka</strong> řídící synchronizaci vstupů, simulace a
+          vykreslování:
+        </p>
+
+        <div class="pipeline-bar">
+          <div class="pipeline-node accent-cyan">
+            <div style="font-size: 1.1em;">1. Input</div>
+            <div style="font-size: 0.75em; opacity: 0.8;">OS Event Polling</div>
+          </div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-green">
+            <div style="font-size: 1.1em;">2. Fixed Update</div>
+            <div style="font-size: 0.75em; opacity: 0.8;">Physics &amp; Determinism</div>
+          </div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-purple">
+            <div style="font-size: 1.1em;">3. Update Logic</div>
+            <div style="font-size: 0.75em; opacity: 0.8;">Gameplay &amp; \(\Delta t\)</div>
+          </div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-blue">
+            <div style="font-size: 1.1em;">4. Render Frame</div>
+            <div style="font-size: 0.75em; opacity: 0.8;">GPU Draw Calls</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 16px;">
+          <div class="card" style="padding: 14px 18px;">
+            <strong style="color: var(--accent-cyan);">1. Process Input:</strong> Sběr událostí ze vstupních zařízení
+            (klávesnice, myš, gamepad, síťové pakety).<br>
+            <strong style="color: var(--accent-green); margin-top: 6px; display: inline-block;">2. Fixed
+              Update:</strong> Výpočet pevných fyzikálních kroků a kolizí s konstantním časovým krokem.
+          </div>
+          <div class="card" style="padding: 14px 18px;">
+            <strong style="color: var(--accent-purple);">3. Update Logic:</strong> Aktualizace animací, umělé
+            inteligence (AI), herního stavu a uživatelského rozhraní.<br>
+            <strong style="color: #82b1ff; margin-top: 6px; display: inline-block;">4. Render:</strong> Culling
+            neviditelných objektů, sestavení Command Buffers a finální rasterizace na GPU.
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6b: Herní smyčka v Unity -->
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h2 style="margin: 0;">Herní smyčka v Unity (Order of Execution)</h2>
+          <span class="badge badge-cyan">Unity 6 / MonoBehaviour</span>
+        </div>
+
+        <div class="pipeline-bar" style="margin: 4px 0 12px 0; padding: 6px 10px;">
+          <div class="pipeline-node accent-cyan" style="padding: 4px 8px;">
+            <div style="font-weight: bold; font-size: 0.85em;">1. Initialization</div>
+            <div style="font-size: 0.68em; opacity: 0.85;">Awake ➜ OnEnable ➜ Start</div>
+          </div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-green" style="padding: 4px 8px;">
+            <div style="font-weight: bold; font-size: 0.85em;">2. Physics (50 Hz)</div>
+            <div style="font-size: 0.68em; opacity: 0.85;">FixedUpdate ➜ PhysX ➜ Collisions</div>
+          </div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-purple" style="padding: 4px 8px;">
+            <div style="font-weight: bold; font-size: 0.85em;">3. Game Logic</div>
+            <div style="font-size: 0.68em; opacity: 0.85;">Update ➜ Coroutines</div>
+          </div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-blue" style="padding: 4px 8px;">
+            <div style="font-weight: bold; font-size: 0.85em;">4. Camera &amp; Render</div>
+            <div style="font-size: 0.68em; opacity: 0.85;">LateUpdate ➜ URP/HDRP</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="gap: 12px;">
+          <div class="card" style="padding: 10px 14px;">
+            <h4 style="color: var(--accent-cyan); font-size: 0.88em; margin: 0 0 6px 0;">Životní cyklus MonoBehaviour
+            </h4>
+            <ul style="font-size: 0.72em; padding-left: 14px; margin: 0; line-height: 1.35;">
+              <li><strong>Awake() / Start():</strong> <code>Awake()</code> se volá ihned při inicializaci prefabu (i
+                neaktivního). <code>Start()</code> až před prvním snímkem.</li>
+              <li><strong>FixedUpdate():</strong> Běží nezávisle na FPS s konstantním krokem (\(\Delta t =
+                0.02\,\text{s}\)). Může se zavolat 0×, 1× i vícekrát za render frame. Určeno pro <code>Rigidbody</code>
+                síly.</li>
+              <li><strong>Update():</strong> Volá se jednou za renderovací snímek s proměnným
+                <code>Time.deltaTime</code>. Zde se čtou vstupy z klávesnice/myši.
+              </li>
+              <li><strong>LateUpdate():</strong> Spustí se až po dokončení <em>všech</em> <code>Update()</code>. Klíčové
+                pro follow-kamery, aby nedocházelo k trhání (jittering).</li>
+            </ul>
+            <div class="callout callout-amber" style="padding: 6px 10px; margin-top: 8px; font-size: 0.7em;">
+              Ve <code>FixedUpdate()</code> nikdy nenásobit síly
+              <code>Time.deltaTime</code> (fyzika to řeší interně). V <code>Update()</code> naopak násobit vždy.
+            </div>
+          </div>
+
+          <div class="card" style="padding: 10px 14px;">
+            <h4 style="color: var(--accent-green); font-size: 0.88em; margin: 0 0 4px 0;">Příklad: PlayerController.cs
+            </h4>
+            <pre style="margin: 0; font-size: 0.62em;"><code class="language-csharp">using UnityEngine;
+
+public class PlayerController : MonoBehaviour {
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private Transform camRig;
+    private Vector3 moveInput;
+
+    void Awake() {
+      rb = GetComponent&lt;Rigidbody&gt;();
+    }
+
+    // 1. Čtení vstupu každý vykreslený snímek (Variable FPS, starý Input System)
+    void Update() {
+        moveInput = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+    }
+
+    // 2. Fyzika s fixním krokem (např. 50 Hz, deterministické)
+    void FixedUpdate() {
+        rb.AddForce(moveInput.normalized * 15f, ForceMode.Acceleration);
+    }
+
+    // 3. Zarovnání kamery až po pohybu všech objektů a fyziky
+    void LateUpdate() {
+        camRig.position = transform.position;
+    }
+}</code></pre>
+          </div>
+        </div>
+
+        <aside class="notes">
+          V Unity je zásadní pochopit oddělení FixedUpdate a Update. FixedUpdate je volán z fyzikálního akumulátoru.
+          Pokud hra běží na 144 FPS, FixedUpdate neběží každý snímek. Pokud hra laguje na 15 FPS, FixedUpdate se v
+          jednom renderovacím snímku zavolá několikrát za sebou. LateUpdate slouží k řešení závislostí po logice,
+          zejména pro kamery.
+        </aside>
+      </section>
+
+      <!-- SLIDE 6c: Herní smyčka v Godotu -->
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h2 style="margin: 0;">Herní smyčka v Godotu (SceneTree Order)</h2>
+          <span class="badge badge-blue">Godot 4 / GDScript</span>
+        </div>
+
+        <div class="pipeline-bar" style="margin: 4px 0 12px 0; padding: 6px 10px;">
+          <div class="pipeline-node accent-cyan" style="padding: 4px 8px;">
+            <div style="font-weight: bold; font-size: 0.85em;">1. Node Tree Init</div>
+            <div style="font-size: 0.68em; opacity: 0.85;">_enter_tree ➜ _ready (bottom-up)</div>
+          </div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-amber" style="padding: 4px 8px;">
+            <div style="font-weight: bold; font-size: 0.85em;">2. Input Events</div>
+            <div style="font-size: 0.68em; opacity: 0.85;">_input ➜ GUI ➜ _unhandled_input</div>
+          </div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-green" style="padding: 4px 8px;">
+            <div style="font-weight: bold; font-size: 0.85em;">3. Physics (60 TPS)</div>
+            <div style="font-size: 0.68em; opacity: 0.85;">_physics_process(delta)</div>
+          </div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-purple" style="padding: 4px 8px;">
+            <div style="font-weight: bold; font-size: 0.85em;">4. Frame &amp; Render</div>
+            <div style="font-size: 0.68em; opacity: 0.85;">_process(delta) ➜ RenderingServer</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="gap: 12px;">
+          <div class="card" style="padding: 10px 14px;">
+            <h4 style="color: #82b1ff; font-size: 0.88em; margin: 0 0 6px 0;">Životní cyklus uzlů (Node)</h4>
+            <ul style="font-size: 0.72em; padding-left: 14px; margin: 0; line-height: 1.35;">
+              <li><strong>_ready():</strong> Volá se po vložení do stromu <em>zdola nahoru</em> (potomci jsou připraveni
+                dříve než rodič).</li>
+              <li><strong>_unhandled_input(event):</strong> Zpracuje vstupy pouze tehdy, pokud je neabsorbovalo UI
+                (např. kliknutí na tlačítko v inventáři).</li>
+              <li><strong>_physics_process(delta):</strong> Synchronizováno s interním Physics Serverem (default 60 Hz).
+                Deterministický pohyb a <code>move_and_slide()</code>.</li>
+              <li><strong>_process(delta):</strong> Běží každý renderovaný snímek (variabilní <code>delta</code>).
+                Vhodné pro vizuální efekty a UI logiku.</li>
+              <li><strong>call_deferred() &amp; queue_free():</strong> Bezpečné asynchronní modifikace scény a mazání
+                uzlů na konci frame.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="padding: 10px 14px;">
+            <h4 style="color: var(--accent-cyan); font-size: 0.88em; margin: 0 0 4px 0;">Příklad: player.gd
+              (CharacterBody3D)</h4>
+            <pre style="margin: 0; font-size: 0.60em;"><code class="language-gdscript">extends CharacterBody3D
+
+const SPEED = 5.0
+var move_dir := Vector3.ZERO
+
+func _ready() -> void:
+    # Uzel je plně inicializován ve stromu scén
+    set_physics_process(true)
+
+# 1. Čtení gameplay vstupu (pouze pokud nebyl zkonzumován UI)
+func _unhandled_input(event: InputEvent) -> void:
+    var input := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+    move_dir = Vector3(input.x, 0, input.y).normalized()
+
+# 2. Fixní fyzikální krok (konstantní delta, 60 TPS)
+func _physics_process(delta: float) -> void:
+    velocity.x = move_dir.x * SPEED
+    velocity.z = move_dir.y * SPEED
+    if not is_on_floor():
+        velocity += get_gravity() * delta
+    move_and_slide()
+
+# 3. Vizuální aktualizace renderu každý grafický snímek
+func _process(delta: float) -> void:
+    $VisualModel.rotate_y(2.0 * delta)</code></pre>
+          </div>
+        </div>
+
+        <aside class="notes">
+          V Godot enginu probíhá šíření událostí ve stromu scén: nejdříve se zavolá _input, potom GUI uzly a teprve
+          pokud nikdo událost nespotřebuje, propadne do _unhandled_input. _physics_process se volá na frekvenci
+          fyzikálního serveru a _process s každým renderovaným snímkem. queue_free zajistí bezpečné smazání objektu až
+          na konci snímku.
+        </aside>
+      </section>
+
+      <!-- SLIDE 7: Časování smyčky & DeltaTime -->
+      <section>
+        <h2>Časování smyčky: Variable vs Fixed TimeStep</h2>
+        <p style="text-align: left; font-size: 0.9em; margin-bottom: 12px;">
+          Aby hra běžela <strong>stejnou rychlostí na různě výkonném hardwaru</strong>, využívá se koncept \(\Delta t\)
+          (DeltaTime):
+        </p>
+
+        <div class="grid-2">
+          <div class="card" style="border-top: 3px solid var(--accent-cyan);">
+            <h3 style="font-size: 1.05em; color: var(--accent-cyan); margin-bottom: 8px;">1. Variable TimeStep (\(\Delta
+              t\))</h3>
+            <p style="font-size: 0.82em; margin-bottom: 6px;">
+              Reálná doba trvání předchozího snímku ($t$ je čas):
+              \[\Delta t = t_{\text{current}} - t_{\text{previous}}\]
+            </p>
+            <p style="font-size: 0.82em; margin-bottom: 8px;">
+              Korekce rychlosti posunu ($\vec{p}$ je vektor pozice):
+              \[\vec{p}_{\text{new}} = \vec{p}_{\text{old}} + \vec{v} \cdot \Delta t\]
+            </p>
+            <pre style="margin: 0;"><code class="language-csharp">// Příklad v C# (Unity):
+void Update() {
+    transform.position += transform.forward * speed * Time.deltaTime;
+}</code></pre>
+            <pre style="margin: 0;"><code class="language-gdscript">  // Příklad v Godotu
+  func _process(delta: float) -> void:
+    global_position -= global_transform.basis.z * speed * delta
+</code></pre>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent-green);">
+            <h3 style="font-size: 1.05em; color: var(--accent-green); margin-bottom: 8px;">2. Fixed TimeStep (Fyzika)
+            </h3>
+            <p style="font-size: 0.82em;">
+              Fyzikální simulátory vyžadují <strong>přísně deterministické chování</strong>.
+            </p>
+            <ul style="font-size: 0.82em; padding-left: 16px;">
+              <li>Při variabilním \(\Delta t\) způsobuje velký propad FPS chyby numerické integrace (např.
+                <em>tunelování</em> skrz zdi).
+              </li>
+              <li>Fyzika proto běží na pevné frekvenci (např. 50 Hz \(\to \Delta t = 0.02\text{ s}\)) nezávisle na
+                renderovacích FPS.</li>
+              <li>Pokud snímek trvá déle, engine v jednom snímku provede více kroků fyziky.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Časový rozpočet snímku -->
+      <section>
+        <h2>Časový rozpočet snímku (Frame Budget)</h2>
+        <p style="text-align: left; font-size: 0.88em; margin-bottom: 10px;">
+          Pro udržení plynulé snímkové frekvence musí součet operací CPU i GPU skončit v daném časovém okně
+          ($T$ = 1 / FPS):
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Cílová frekvence</th>
+              <th>Max. čas na 1 snímek</th>
+              <th>Typické využití v praxi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong class="badge badge-amber">30 FPS</strong></td>
+              <td><strong>33.33 ms</strong></td>
+              <td>Mobilní hry, náročné konzolové hry.</td>
+            </tr>
+            <tr>
+              <td><strong class="badge badge-green">60 FPS</strong></td>
+              <td><strong>16.66 ms</strong></td>
+              <td>Standardní plynulost pro moderní PC a konzolové hry.</td>
+            </tr>
+            <tr>
+              <td><strong class="badge badge-cyan">120 FPS</strong></td>
+              <td><strong>8.33 ms</strong></td>
+              <td>E-sport, rychlé kompetitivní střílečky a závodní hry</td>
+            </tr>
+            <tr>
+              <td><strong class="badge badge-purple">90–120 FPS (VR)</strong></td>
+              <td><strong>8.33 – 11.11 ms</strong></td>
+              <td>Virtuální realita (kritické pro prevenci kinetózy / nevolnosti)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="text-align: left; margin-top: 14px;">
+          <div style="font-size: 0.82em; color: var(--text-muted); margin-bottom: 4px;">Příklad rozpadu rozpočtu 16.66
+            ms (60 FPS):</div>
+          <div class="budget-bar">
+            <div class="budget-segment budget-1" title="Input: 0.5ms">Input</div>
+            <div class="budget-segment budget-2" title="Physics: 3.0ms">Physics 3.0ms</div>
+            <div class="budget-segment budget-3" title="Game Logic: 4.0ms">Game Logic 4.0ms</div>
+            <div class="budget-segment budget-4" title="Render Prep: 3.0ms">Render Prep 3.0ms</div>
+            <div class="budget-segment budget-5" title="GPU Execution: 6.1ms">GPU Execution 6.1ms</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Renderovací architektury -->
+      <section>
+        <h2>Renderovací architektury: Forward vs Deferred</h2>
+        <p style="text-align: left; font-size: 0.88em; margin-bottom: 12px; color: var(--accent-cyan);">
+          <em>Efektivní výpočet barvy pixelu pro \(O\) objektů a \(L\) světel.</em>
+        </p>
+
+        <div class="grid-2">
+          <div class="card" style="border-top: 3px solid var(--accent-blue);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="font-size: 1.05em; color: #82b1ff; margin: 0;">Forward Rendering</h3>
+              <span class="badge badge-cyan">\(\mathcal{O}(O \times L)\)</span>
+            </div>
+            <div style="font-size: 0.75em; color: var(--text-muted); margin: 6px 0;">
+              <code>[Mesh] ➜ [Vertex + Pixel Shader (Všechna světla)] ➜ [Frame]</code>
+            </div>
+            <div class="callout"
+              style="padding: 8px 12px; margin: 8px 0; font-size: 0.75em; border-left-color: var(--accent-blue);">
+              <strong>Příklad v praxi:</strong> Scéna se 100 objekty a 20 světly.<br>
+              Pro každý z 100 objektů se spustí Pixel Shader, který počítá vliv všech 20 světel (\(100 \times 20 =
+              2000\) operací). Pokud je vzdálený objekt později překryt jiným (overdraw), čas strávený jeho nasvícením
+              byl zbytečný.
+            </div>
+            <ul style="font-size: 0.75em; padding-left: 16px; margin-bottom: 0;">
+              <li><strong class="text-green">Výhody:</strong> Nízké nároky na paměť VRAM, přirozená transparentnost,
+                rychlé MSAA vyhlazování.</li>
+              <li><strong class="text-red">Nevýhody:</strong> Velmi špatně škáluje s desítkami/stovkami dynamických
+                světel.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent-purple);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="font-size: 1.05em; color: #c77dff; margin: 0;">Deferred Rendering</h3>
+              <span class="badge badge-purple">\(\mathcal{O}(O) + \mathcal{O}(L)\)</span>
+            </div>
+            <div style="font-size: 0.75em; color: var(--text-muted); margin: 6px 0;">
+              <code>[Mesh] ➜ [G-Buffer] ➜ [2D Lighting Pass nad viditelnými pixely]</code>
+            </div>
+            <div class="callout callout-purple" style="padding: 8px 12px; margin: 8px 0; font-size: 0.75em;">
+              <strong>Příklad v praxi:</strong> Stejná scéna (100 objektů, 20 světel).<br>
+              1. <em>Geometry Pass:</em> 100 objektů se bez světel vykreslí 1× do G-Buffer (pozice, normály,
+              albedo).<br>
+              2. <em>Lighting Pass:</em> 20 světel se aplikuje jako 2D post-pass pouze na reálně viditelné pixely (\(100
+              + 20 = 120\) průchodů). Žádný overdraw.
+            </div>
+            <ul style="font-size: 0.75em; padding-left: 16px; margin-bottom: 0;">
+              <li><strong class="text-green">Výhody:</strong> Stovky dynamických světel na scéně bez ztráty FPS.</li>
+              <li><strong class="text-red">Nevýhody:</strong> Vysoké paměťové nároky (VRAM bandwidth), složité řešení
+                průhlednosti.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Pokročilé grafické techniky -->
+      <section>
+        <h2>Pokročilé grafické techniky moderních enginů</h2>
+
+        <div class="grid-2" style="margin-top: 18px;">
+          <div class="card">
+            <h4 style="color: var(--accent-cyan);">1. Virtual Geometry (UE5 Nanite)</h4>
+            <p style="font-size: 0.82em; margin: 0;">
+              Automatická mikro-polygonální geometrie streamovaná v reálném čase. Vykresluje pouze pixely odpovídající
+              reálnému rozlišení obrazovky a eliminuje nutnost ruční tvorby LOD.
+            </p>
+          </div>
+
+          <div class="card">
+            <h4 style="color: var(--accent-amber);">2. Real-time Ray Tracing &amp; Lumen</h4>
+            <p style="font-size: 0.82em; margin: 0;">
+              Hardwarově akcelerovaný výpočet reálných odrazů a dynamického globálního osvětlení (GI). Nahrazuje
+              staticky
+              zapečené lightmapy (Lightmap) plně dynamickým modelem.
+            </p>
+          </div>
+
+          <div class="card">
+            <h4 style="color: var(--accent-green);">3. PBR (Physically Based Rendering)</h4>
+            <p style="font-size: 0.82em; margin: 0;">
+              Standardizovaný materiálový model založený na fyzice zachování energie (Albedo, Metallic, Roughness,
+              Normal, Ambient Occlusion).
+            </p>
+          </div>
+
+          <div class="card">
+            <h4 style="color: var(--accent-purple);">4. AI Super Sampling (DLSS / FSR / XeSS)</h4>
+            <p style="font-size: 0.82em; margin: 0;">
+              Interní renderování v nižším rozlišení (např. 1080p) a rekonstrukce obrazu do 4K pomocí neuronových sítí a
+              temporálních vektorů na GPU.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Fyzikální engine a prostorové dělení -->
+      <section>
+        <h2>Fyzikální engine a prostorové dělení</h2>
+
+        <div class="grid-2" style="margin-top: 16px;">
+          <div class="card">
+            <h3 style="font-size: 1.05em; color: var(--accent-cyan); margin-bottom: 8px;">Detekce kolizí</h3>
+            <ul style="font-size: 0.82em; padding-left: 16px;">
+              <li><strong>Discrete Collision Detection (DCD):</strong> Testuje překryv těles v diskrétních časech
+                \((t_0,
+                t_1)\). Riziko prolétnutí rychlých objektů bez detekce kolize.</li>
+              <li><strong>Continuous Collision Detection (CCD):</strong> Počítá swept-volume objemy po trajektorii
+                tělesa v čase.</li>
+              <li><strong>Raycasting:</strong> Vrhání paprsků z kamery či zbraně pro okamžitou detekci prvního
+                zasaženého objektu.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3 style="font-size: 1.05em; color: var(--accent-green); margin: 0;">Prostorové dělení</h3>
+              <span class="badge badge-green">\(\mathcal{O}(N \log N)\)</span>
+            </div>
+            <p style="font-size: 0.8em; margin-bottom: 8px;">
+              Bez prostorových struktur vyžaduje testování kolizí \(N\) těles naivní složitost \(\mathcal{O}(N^2)\).
+            </p>
+            <ul style="font-size: 0.8em; padding-left: 16px;">
+              <li><strong>Octree / Quadtree:</strong> Rekurzivní hierarchické dělení 3D prostoru na 8 krychlí (resp. 4
+                ve 2D).</li>
+              <li><strong>BVH (Bounding Volume Hierarchy):</strong> Hierarchie obalových těles (AABB kuliček a kvádrů)
+                umožňující rychlé vyloučení vzdálených objektů.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: Správa paměti a Garbage Collection -->
+      <section>
+        <h2>Správa paměti a Garbage Collection</h2>
+
+        <div class="callout callout-amber" style="margin-bottom: 16px;">
+          <strong>Problém GC Spikes:</strong> Periodické spouštění Garbage Collectoru na spravované haldě (Heap)
+          způsobuje náhodná zamrznutí herní smyčky a propady FPS.
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h4 style="color: var(--accent-cyan);">Managed Memory (Unity C# / Godot C#)</h4>
+            <ul style="font-size: 0.8em; padding-left: 16px;">
+              <li>Alokace objektů probíhá na řízené haldě (.NET GC).</li>
+              <li>Vysoká bezpečnost kódu (žádné use-after-free, memory leaks jsou vzácnější).</li>
+              <li><em>Nevýhoda:</em> Neřízené okamžiky čištění paměti.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h4 style="color: var(--accent-blue);">Manual / Unmanaged (Unreal C++)</h4>
+            <ul style="font-size: 0.8em; padding-left: 16px;">
+              <li>Přímá správa paměti, Custom arena allocator.</li>
+              <li>Reference counting a garbage collection přes <code>UPROPERTY()</code> a chytré ukazatele
+                (<code>TSharedPtr</code>).</li>
+              <li><em>Výhoda:</em> Nulové nečekané záseky při správném návrhu.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card card-glow" style="margin-top: 14px; padding: 12px 18px;">
+          <strong style="color: var(--accent-green); font-size: 0.9em;">Object Pooling vzor</strong>
+          <div class="pipeline-bar" style="margin: 8px 0 0 0; padding: 6px 12px;">
+            <div class="pipeline-node accent-green" style="font-size: 0.75em;">Při startu scény alokovat pool např. 100
+              nábojů</div>
+            <div class="pipeline-arrow">➜</div>
+            <div class="pipeline-node accent-cyan" style="font-size: 0.75em;">Při výstřelu aktivovat náboj z poolu
+            </div>
+            <div class="pipeline-arrow">➜</div>
+            <div class="pipeline-node accent-purple" style="font-size: 0.75em;">Po dopadu deaktivovat a vrátit do poolu
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13: Objektový přístup (OOP) a Pointer Chasing -->
+      <section>
+        <h2>Objektový přístup (OOP) a Pointer Chasing</h2>
+
+        <div class="grid-2" style="margin-top: 16px;">
+          <div class="card" style="border-top: 3px solid #ff5252;">
+            <h3 style="font-size: 1.05em; color: #ff5252; margin-bottom: 8px;">Dědičnost a Náhodná paměť (Godot
+              příklad)</h3>
+            <p style="font-size: 0.78em; margin-bottom: 6px;">
+              Tradiční stromová hierarchie: <code>Node</code> \(\to\) <code>CanvasItem</code> \(\to\)
+              <code>CharacterBody2D</code> \(\to\) <code>Enemy</code>.
+            </p>
+            <pre style="margin: 6px 0;"><code class="language-gdscript"># Godot GDScript - pole instancí
+var enemies: Array[Enemy] = []
+
+func _process(delta: float):
+    for e in enemies:
+        # Každý 'e' je pointer na náhodné místo v RAM!
+        e.position += e.velocity * delta</code></pre>
+            <ul style="font-size: 0.75em; padding-left: 16px; margin: 0;">
+              <li><strong>Monolitické objekty:</strong> Každý <code>Enemy</code> v paměti nese desítky položek (jméno,
+                textury, AI stav, transform, script metadata).</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent-amber);">
+            <h3 style="font-size: 1.05em; color: var(--accent-amber); margin-bottom: 8px;">Co je to „Pointer Chasing“?
+            </h3>
+            <div class="callout callout-amber" style="padding: 8px 12px; margin: 6px 0; font-size: 0.75em;">
+              <strong>Paměťová fragmentace (Heap Fragmentation):</strong><br>
+              Pole <code>enemies</code> neobsahuje samotná data, ale pouze <strong>adresy (pointery)</strong>. Objekty
+              byly alokovány v různém čase na náhodných adresách RAM.
+            </div>
+            <ul style="font-size: 0.75em; padding-left: 16px;">
+              <li><strong>Cache Miss:</strong> Při iteraci procesor nemůže předvídat další adresu v paměti. L1/L2 Cache
+                selže.</li>
+              <li><strong>Stall procesoru:</strong> CPU musí čekat <strong>100–300 cyklů</strong> na načtení 64B řádku z
+                hlavní RAM namísto okamžitého výpočtu.</li>
+              <li>\(90\%\) výkonu CPU se ztratí čekáním na sběrnici RAM!</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13b: Entity Component System (ECS) & DOTS -->
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h2 style="margin: 0;">Entity Component System (ECS) a DOTS</h2>
+          <span class="badge badge-green">Data-Oriented Design</span>
+        </div>
+
+        <div class="grid-2" style="margin-top: 12px; gap: 14px;">
+          <div class="card" style="border-top: 3px solid var(--accent-cyan); padding: 12px 16px;">
+            <h3 style="font-size: 1.0em; color: var(--accent-cyan); margin-bottom: 6px;">Data-Oriented přístup (Unity C#
+              Příklad)</h3>
+            <p style="font-size: 0.74em; margin-bottom: 4px;">Data jsou uložena v souvislých polích (Contiguous Memory):
+            </p>
+            <pre style="margin: 4px 0; font-size: 0.60em;"><code class="language-csharp">// 1. Komponenty = Čistá data bez metod (žádný overhead)
+public struct Position : IComponentData { public float3 Value; }
+public struct Velocity : IComponentData { public float3 Value; }
+
+// 2. Systém = Logika iterující nad souvislým polem struktur
+public partial class MovementSystem : SystemBase {
+    protected override void OnUpdate() {
+        float dt = SystemAPI.Time.DeltaTime;
+
+        // Blesková iterace přes pole v L1 CPU Cache:
+        Entities.ForEach((ref Position pos, in Velocity vel) => {
+            pos.Value += vel.Value * dt;
+        }).ScheduleParallel();
+    }
+}</code></pre>
+            <div style="font-size: 0.70em; color: var(--text-muted); margin-top: 4px;">
+              💡 <em>Entities.ForEach</em> automaticky rozdistribuuje výpočet na všechna dostupná CPU jádra a data
+              proudí přímo přes L1/L2 cache bez RAM stallů.
+            </div>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent-green); padding: 12px 16px;">
+            <h3 style="font-size: 1.0em; color: var(--accent-green); margin-bottom: 6px;">Unity DOTS &amp; Unreal Mass
+            </h3>
+            <div style="font-size: 0.75em; margin-bottom: 8px;">
+              <strong style="color: var(--accent-cyan);">Unity DOTS (Data-Oriented Tech Stack):</strong>
+              <ul style="padding-left: 16px; margin: 4px 0 0 0; line-height: 1.35;">
+                <li><strong>Entities:</strong> Ryzí ECS model s alokací po souvislých 16KB blocích (Chunks).</li>
+                <li><strong>C# Job System:</strong> Bezpečný multithreading bez race conditions napříč všemi CPU vlákny.
+                </li>
+                <li><strong>Burst Compiler:</strong> LLVM kompilátor překládající C# do vektorových SIMD instrukcí
+                  (AVX/NEON).</li>
+              </ul>
+            </div>
+            <div style="font-size: 0.75em;">
+              <strong style="color: var(--accent-blue);">Unreal Mass Entity (MassFramework):</strong>
+              <ul style="padding-left: 16px; margin: 4px 0 0 0; line-height: 1.35;">
+                <li>Data-oriented framework v UE5 pro simulaci <strong>masivních davů</strong> (desítky tisíc chodců a
+                  vozidel v Matrix Awakens) s minimální režií procesoru.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 14: Textový kód vs Vizuální skriptování -->
+      <section>
+        <h2>Textový kód vs Vizuální skriptování</h2>
+
+        <div class="grid-2" style="margin-top: 20px;">
+          <div class="card" style="border-top: 3px solid var(--accent-cyan);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3 style="font-size: 1.05em; color: var(--accent-cyan); margin: 0;">Textový kód (C#, C++, GDScript)</h3>
+            </div>
+            <pre style="margin-bottom: 12px;"><code class="language-csharp">void TakeDamage(float amount) {
+    health -= amount;
+    if (health <= 0) Die();
+}</code></pre>
+            <ul style="font-size: 0.78em; padding-left: 16px;">
+              <li><strong class="text-green">Výhody:</strong> Maximální výkon, perfektní pro komplexní matematiku a AI,
+                skvělé verzování v Gitu (diffy, mergování).</li>
+              <li><strong class="text-red">Nevýhody:</strong> Vyšší práh vstupu pro level designéry a umělce.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent-blue);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3 style="font-size: 1.05em; color: #82b1ff; margin: 0;">Vizuální uzly (Unreal Blueprints)</h3>
+            </div>
+            <pre style="margin-bottom: 12px;"><code class="language-text">[Event TakeDamage] ➜ [Subtract Health]
+                          │
+                          ▼
+                   [Branch (<= 0)] ➜ [Die]</code></pre>
+            <ul style="font-size: 0.78em; padding-left: 16px;">
+              <li><strong class="text-green">Výhody:</strong> Bleskové prototypování, nemožnost udělat syntaktickou
+                chybu, intuitivní pro designéry.</li>
+              <li><strong class="text-red">Nevýhody:</strong> Náročnější verzování (binární soubory), riziko vzniku
+                nepřehledného "Spaghetti kódu".</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 15: Asset Pipeline & Optimalizace -->
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <h2 style="margin: 0;">Asset Pipeline &amp; Optimalizace</h2>
+          <span class="badge badge-purple">Pipeline &amp; Performance</span>
+        </div>
+        <p style="text-align: left; font-size: 0.82em; margin-bottom: 8px;">
+          Automatizovaný převod surových dat od grafiků a zvukařů do nativních GPU/CPU binárních formátů:
+        </p>
+
+        <div class="pipeline-bar" style="margin: 4px 0 10px 0; padding: 6px 12px;">
+          <div class="pipeline-node" style="font-size: 0.75em;">🎨 Zdrojová data (.FBX, .PNG, .WAV)</div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-cyan" style="font-size: 0.75em;">⚙️ Import, Komprese &amp; Build Krok</div>
+          <div class="pipeline-arrow">➜</div>
+          <div class="pipeline-node accent-green" style="font-size: 0.75em;">⚡ Engine Asset (.UASSET / .META)</div>
+        </div>
+
+        <div class="grid-2" style="gap: 12px;">
+          <div class="card" style="padding: 10px 14px;">
+            <div style="font-size: 0.85em; font-weight: 700; color: var(--accent-cyan); margin-bottom: 4px;">1. GPU
+              Bloková komprese textur (BC7, ASTC)</div>
+            <p style="font-size: 0.72em; margin: 0; line-height: 1.35;">
+              Formáty PNG/JPG jsou pro GPU nepoužitelné — musely by se celé dekomprimovat do obrovské nekomprimované
+              VRAM (1 textura 4K = 64 MB). Blokové formáty (BC1–BC7 na PC/konzolích, ASTC na mobilech) komprimují bloky
+              4×4 pixelů v poměru 4:1 až 8:1 a <strong>GPU je čte přímo z VRAM bez nutnosti dekomprese do RAM</strong>.
+            </p>
+
+            <div
+              style="font-size: 0.85em; font-weight: 700; color: var(--accent-blue); margin-top: 8px; margin-bottom: 4px;">
+              2. Mipmapping &amp; Šetření propustnosti</div>
+            <p style="font-size: 0.72em; margin: 0; line-height: 1.35;">
+              Předpočítaná řada zmenšených verzí textury (\(1/2, 1/4, 1/8\dots\)) stojící pouze \(+33\%\) VRAM.
+              <strong>Zabraňuje třepetání pixelů (aliasing / texture shimmering)</strong> a šetří propustnost GPU
+              sběrnice načítáním miniaturních textur pro vzdálené polygony.
+            </p>
+          </div>
+
+          <div class="card" style="padding: 10px 14px;">
+            <div style="font-size: 0.85em; font-weight: 700; color: var(--accent-purple); margin-bottom: 4px;">3.
+              Kompilace shaderů &amp; PSO (Pipeline States)</div>
+            <p style="font-size: 0.72em; margin: 0; line-height: 1.35;">
+              Překlad vyšších jazyků (HLSL/GLSL) do binárního GPU mezikódu (SPIR-V, DXIL). V moderních API (D3D12,
+              Vulkan) se stavy pipeline předkompilují do <strong>PSO objektů</strong>, což zabraňuje zásekům při prvním
+              spatření nového efektu ve hře (<em>Shader Compilation Stutter</em>).
+            </p>
+
+            <div
+              style="font-size: 0.85em; font-weight: 700; color: var(--accent-green); margin-top: 8px; margin-bottom: 4px;">
+              4. LOD (Level of Detail) &amp; Nanite</div>
+            <p style="font-size: 0.72em; margin: 0; line-height: 1.35;">
+              Klasické diskrétní stupně (LOD0–LOD3) redukují počet polygonů vzdálených modelů. Moderní enginy (UE5
+              Nanite) přecházejí na <strong>mikro-polygonální geometrii (Meshlets)</strong>, která plynule streamuje
+              detail sítě odpovídající přesně hustotě pixelů na obrazovce.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 16: Přehled trhu a Velká trojka -->
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <h2 style="margin: 0;">Přehled „Velké trojky“ na trhu</h2>
+          <span class="badge badge-cyan">Srovnání platform</span>
+        </div>
+        <p style="text-align: left; font-size: 0.85em; margin-bottom: 12px;">
+          Hernímu průmyslu dnes dominantně vládne trojice prověřených univerzálních enginů:
+        </p>
+
+        <div class="grid-3" style="gap: 12px;">
+          <div class="card" style="border-top: 4px solid #ffffff; padding: 14px 14px;">
+            <h3 style="color: #fff; font-size: 1.05em; margin-bottom: 8px; text-align: center;">UNITY 6</h3>
+            <div style="font-size: 0.74em; color: var(--text-muted); line-height: 1.6; text-align: left;">
+              - Absolutní dominance na mobilním trhu (Android / iOS)<br>
+              - Excelentní 2D i 3D podpora v jednom balíku<br>
+              - Lídr v oblasti VR, AR a XR headsetů<br>
+              - Obrovský Asset Store a trh práce (C# ekosystém)<br>
+              - Data-Oriented Technology Stack (DOTS / ECS)<br>
+              - Rychlý iterační cyklus a snadný vstup pro začátečníky
+            </div>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--accent-blue); padding: 14px 14px;">
+            <h3 style="color: var(--accent-blue); font-size: 1.05em; margin-bottom: 8px; text-align: center;">UNREAL
+              ENGINE 5</h3>
+            <div style="font-size: 0.74em; color: var(--text-muted); line-height: 1.6; text-align: left;">
+              - Průmyslový standard pro AAA hry a high-end konzole<br>
+              - Špičkový fotorealismus (Nanite geometrie, Lumen GI)<br>
+              - Využití ve filmovém průmyslu (Virtual Production)<br>
+              - Kompletní přístup k C++ zdrojovému kódu na GitHubu<br>
+              - Robustní vizuální skriptování v Blueprintech<br>
+              - Integrované AAA podsystémy (Chaos Physics, GAS, Mass)
+            </div>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--accent-cyan); padding: 14px 14px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 8px; text-align: center;">GODOT 4
+            </h3>
+            <div style="font-size: 0.74em; color: var(--text-muted); line-height: 1.6; text-align: left;">
+              - Rychle rostoucí Indie scéna a aktivní komunita<br>
+              - 100% Free a Open-Source (MIT): nulové poplatky<br>
+              - Extrémně lehký (~60 MB portable editor)<br>
+              - Čistá a intuitivní stromová architektura (Node Trees)<br>
+              - Nativní dedikovaný 2D engine bez 3D projekce<br>
+              - Jazyk GDScript s podporou C# a C++ (GDExtension)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 17: Unity 6: Všestranný ekosystém -->
+      <section>
+        <h2>Unity 6: Všestranný ekosystém</h2>
+
+        <div class="callout" style="margin-bottom: 12px; padding: 8px 16px;">
+          Nejrozšířenější herní engine světa pohánějící přes <strong>\(50\%\)</strong> všech mobilních titulů a více než
+          25 platforem.
+        </div>
+
+        <div class="grid-2" style="margin-top: 10px;">
+          <div class="card" style="border-top: 3px solid var(--accent-green); padding: 14px 18px;">
+            <h3 style="font-size: 1.05em; color: var(--accent-green); margin-bottom: 8px;">Hlavní výhody (Pros)</h3>
+            <ul style="font-size: 0.75em; padding-left: 16px; margin: 0;">
+              <li><strong>Vysoká produktivita v C#:</strong> Moderní .NET CoreCLR / IL2CPP, rychlý vývoj a silný typový
+                systém.</li>
+              <li><strong>Dominance v 2D, Mobile &amp; VR:</strong> Bezkonkurenční optimalizace pro iOS, Android a Meta
+                Quest.</li>
+              <li><strong>Bohatý Asset Store &amp; Komunita:</strong> Statisíce hotových pluginů, modelů, shaderů a
+                tutoriálů.</li>
+              <li><strong>Flexibilní architektura:</strong> Volitelný přechod z klasického OOP (MonoBehaviour) na vysoce
+                výkonný <strong>DOTS (ECS)</strong>.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid #ff5252; padding: 14px 18px;">
+            <h3 style="font-size: 1.05em; color: #ff5252; margin-bottom: 8px;">Hlavní nevýhody (Cons)</h3>
+            <ul style="font-size: 0.75em; padding-left: 16px; margin: 0;">
+              <li><strong>Fragmentace renderovacích pipeline:</strong> Přechod mezi Built-in, URP a HDRP způsobuje
+                nekompatibilitu materiálů.</li>
+              <li><strong>Garbage Collection záseky:</strong> Správa paměti v C# vyžaduje pečlivý pooling, jinak hrozí
+                periodické propady FPS.</li>
+              <li><strong>Uzavřený C++ zdrojový kód:</strong> Přístup ke zdrojovému kódu jádra vyžaduje nákladnou
+                Enterprise licenci.</li>
+              <li><strong>Nestabilita API balíčků:</strong> Časté deprecations a experimentální stavy nových modulů v
+                Package Manageru.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card card-glow" style="padding: 8px 16px; font-size: 0.75em; margin-top: 10px;">
+          <strong>Známé tituly:</strong> <em>Hollow Knight, Genshin Impact, Cuphead, Beat Saber, Ori and the Will of the
+            Wisps, Subnautica</em>
+        </div>
+      </section>
+
+      <!-- SLIDE 18: Unreal Engine 5: Špičkový fotorealismus -->
+      <section>
+        <h2>Unreal Engine 5: Špičkový fotorealismus</h2>
+
+        <div class="callout callout-purple" style="margin-bottom: 12px; padding: 8px 16px;">
+          Nezpochybnitelný standard pro AAA herní produkci, filmový průmysl a vizualizace vyvíjený společností Epic
+          Games.
+        </div>
+
+        <div class="grid-2" style="margin-top: 10px;">
+          <div class="card" style="border-top: 3px solid var(--accent-cyan); padding: 14px 18px;">
+            <h3 style="font-size: 1.05em; color: var(--accent-cyan); margin-bottom: 8px;">Hlavní výhody (Pros)</h3>
+            <ul style="font-size: 0.75em; padding-left: 16px; margin: 0;">
+              <li><strong>Fotorealismus v základu:</strong> <em>Nanite</em> (neomezená geometrie bez ručních LODů) &amp;
+                <em>Lumen</em> (dynamické GI a odrazy).
+              </li>
+              <li><strong>100% přístup k C++ kódu:</strong> Kompletní zdrojový kód na GitHubu s možností přímých úprav a
+                debugování.</li>
+              <li><strong>Bezkonkurenční Blueprints:</strong> Plnohodnotný visual scripting umožňující vytvořit
+                kompletní hru i bez psaní C++.</li>
+              <li><strong>Kompletní sada AAA nástrojů:</strong> Niagara (částice), Chaos (fyzika), Control Rig
+                (animace), Mass AI.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid #ff5252; padding: 14px 18px;">
+            <h3 style="font-size: 1.05em; color: #ff5252; margin-bottom: 8px;">Hlavní nevýhody (Cons)</h3>
+            <ul style="font-size: 0.75em; padding-left: 16px; margin: 0;">
+              <li><strong>Extrémní HW nároky:</strong> Vyžaduje špičkový vývojářský počítač (výkonné vícejádrové CPU,
+                rychlé NVMe, 32GB+ RAM).</li>
+              <li><strong>Masivní velikost:</strong> Instalace &gt;100 GB; finální herní balíčky mají běžně desítky až
+                stovky gigabajtů.</li>
+              <li><strong>Strmá křivka učení:</strong> Komplexní C++ makra (<code>UCLASS</code>,
+                <code>UPROPERTY</code>), dlouhé kompilace shaderů a C++ kódu.
+              </li>
+              <li><strong>Nevhodný pro lehké 2D &amp; casual mobily:</strong> Příliš velký engine overhead pro
+                jednoduché a minimalistické hry.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card card-glow" style="padding: 8px 16px; font-size: 0.75em; margin-top: 10px;">
+          <strong>Známé tituly:</strong> <em>Fortnite, S.T.A.L.K.E.R. 2, Cyberpunk (nový díl), The Witcher 4, Black
+            Myth: Wukong, Tekken 8</em>
+        </div>
+      </section>
+
+      <!-- SLIDE 19: Godot 4: Open-source autonomie -->
+      <section>
+        <h2>Godot 4: Open-source autonomie</h2>
+
+        <div class="callout callout-amber" style="margin-bottom: 12px; padding: 8px 16px;">
+          Komunitou tvořený, nezávislý a 100% open-source engine vydaný pod plně svobodnou <strong>MIT licencí</strong>.
+        </div>
+
+        <div class="grid-2" style="margin-top: 10px;">
+          <div class="card" style="border-top: 3px solid var(--accent-green); padding: 14px 18px;">
+            <h3 style="font-size: 1.05em; color: var(--accent-green); margin-bottom: 8px;">Hlavní výhody (Pros)</h3>
+            <ul style="font-size: 0.75em; padding-left: 16px; margin: 0;">
+              <li><strong>100% Free &amp; MIT Licence:</strong> Žádné licenční poplatky, žádné povinné odvody, úplné
+                vlastnictví vytvořeného díla.</li>
+              <li><strong>Extrémně lehký (~60 MB):</strong> Rychlé spuštění, portable bez instalace, běží i na
+                starším hardwaru.</li>
+              <li><strong>Prvotřídní dedikovaný 2D engine:</strong> Skutečný pixelový 2D renderer s vlastními
+                souřadnicemi (nikoliv 3D projekce).</li>
+              <li><strong>Strom uzlů (Node Trees):</strong> Vše je uzel a vnořená scéna; maximálně intuitivní a
+                modulární návrh.</li>
+              <li><strong>GDScript a C#:</strong> Jazyk navržený pro herní vývoj s rychlým hot-reloadingem.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid #ff5252; padding: 14px 18px;">
+            <h3 style="font-size: 1.05em; color: #ff5252; margin-bottom: 8px;">Hlavní nevýhody (Cons)</h3>
+            <ul style="font-size: 0.75em; padding-left: 16px; margin: 0;">
+              <li><strong>3D grafika zaostává za AAA:</strong> Chybí ekvivalenty Nanite/Lumen, 3D renderer je vhodný
+                spíše pro stylizované hry.</li>
+              <li><strong>Chybí přímý export na konzole:</strong> Kvůli open-source povaze nelze šířit uzavřená SDK
+                (PlayStation/Xbox vyžaduje partnery).</li>
+              <li><strong>Menší ekosystém Assetů:</strong> Asset Library je podstatně menší než komerční obchody Unity a
+                Unrealu.</li>
+              <li><strong>Méně pracovních nabídek:</strong> Většina velkých herních studií stále vyžaduje primárně Unity
+                nebo Unreal C++.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card card-glow" style="padding: 8px 16px; font-size: 0.75em; margin-top: 10px;">
+          <strong>Známé tituly:</strong> <em>Brotato, Cassette Beasts, Dome Keeper, Slay the Spire 2, Buckshot Roulette,
+            Roadwarden</em>
+        </div>
+      </section>
+
+      <!-- SLIDE 20: Srovnání technických parametrů -->
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <h2 style="margin: 0;">Srovnání technických parametrů</h2>
+          <span class="badge badge-purple">Technický přehled</span>
+        </div>
+
+        <table style="font-size: 0.62em; margin: 6px 0;">
+          <thead>
+            <tr>
+              <th style="padding: 6px 10px;">Technický parametr</th>
+              <th style="padding: 6px 10px; color: var(--accent-cyan);">Unity 6</th>
+              <th style="padding: 6px 10px; color: #82b1ff;">Unreal Engine 5</th>
+              <th style="padding: 6px 10px; color: var(--accent-green);">Godot 4</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 5px 10px;"><strong>Architektura scén</strong></td>
+              <td style="padding: 5px 10px;">GameObjects &amp; Components / DOTS Entities</td>
+              <td style="padding: 5px 10px;">Actors &amp; Components / Mass Entity</td>
+              <td style="padding: 5px 10px;">Strom uzlů (Node Trees &amp; hierarchie scén)</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 10px;"><strong>Hlavní programovací jazyky</strong></td>
+              <td style="padding: 5px 10px;">C# (.NET 8 / CoreCLR / IL2CPP)</td>
+              <td style="padding: 5px 10px;">C++20, Blueprints (Visual Scripting), Verse</td>
+              <td style="padding: 5px 10px;">GDScript, C# (.NET 8), C++ (GDExtension)</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 10px;"><strong>Renderovací jádro &amp; Pipeline</strong></td>
+              <td style="padding: 5px 10px;">URP (Forward+/Deferred), HDRP, APV</td>
+              <td style="padding: 5px 10px;">Nanite (micropolygony), Lumen (GI), VSM, RHI</td>
+              <td style="padding: 5px 10px;">Forward+ (Vulkan), Mobile (D3D12), Compatibility</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 10px;"><strong>Fyzikální engine (Physics)</strong></td>
+              <td style="padding: 5px 10px;">PhysX 4.1 / Havok Physics / Box2D</td>
+              <td style="padding: 5px 10px;">Chaos Physics Engine (nativní multi-thread)</td>
+              <td style="padding: 5px 10px;">GodotPhysics 2D/3D (volitelně Jolt 3D plugin)</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 10px;"><strong>2D herní vývoj</strong></td>
+              <td style="padding: 5px 10px;">Dedikované nástroje (Tilemapy, 2D Lights, SpriteShape)</td>
+              <td style="padding: 5px 10px;">Omezená podpora (Paper2D, primárně 3D engine)</td>
+              <td style="padding: 5px 10px;"><span class="badge badge-green"
+                  style="margin: 0; padding: 2px 6px; font-size: 0.85em;">Nativní 2D engine</span> (pixel-space, 2D
+                světla)</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 10px;"><strong>Data-Oriented Tech (ECS)</strong></td>
+              <td style="padding: 5px 10px;">Unity DOTS (Entities 1.0, Job System, Burst)</td>
+              <td style="padding: 5px 10px;">MassFramework (Mass Entity)</td>
+              <td style="padding: 5px 10px;">Standardně OOP uzly (experimentální pluginy)</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 10px;"><strong>Multiplayer &amp; Networking</strong></td>
+              <td style="padding: 5px 10px;">Netcode for GameObjects (NGO) / Netcode for Entities</td>
+              <td style="padding: 5px 10px;">Robustní Client-Server model &amp; GAS (Gameplay Ability)</td>
+              <td style="padding: 5px 10px;">High-level Multiplayer API &amp; RPC replikace</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 10px;"><strong>Velikost instalace / Editoru</strong></td>
+              <td style="padding: 5px 10px;">~15–30 GB</td>
+              <td style="padding: 5px 10px;">&gt; 60–120 GB</td>
+              <td style="padding: 5px 10px;"><span class="badge badge-green"
+                  style="margin: 0; padding: 2px 6px; font-size: 0.85em;">~60 MB</span> (portable bez instalace)</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 10px;"><strong>C++ Zdrojový kód</strong></td>
+              <td style="padding: 5px 10px;">Pouze s Enterprise licencí</td>
+              <td style="padding: 5px 10px;"><span class="badge badge-cyan"
+                  style="margin: 0; padding: 2px 6px; font-size: 0.85em;">Plný přístup (GitHub)</span></td>
+              <td style="padding: 5px 10px;"><span class="badge badge-green"
+                  style="margin: 0; padding: 2px 6px; font-size: 0.85em;">Open-Source (MIT Licence)</span></td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 10px;"><strong>Licenční model</strong></td>
+              <td style="padding: 5px 10px;">Předplatné per seat (Personal do $200k / Pro $2k+)</td>
+              <td style="padding: 5px 10px;">5 % royalty z tržeb nad $1,000,000</td>
+              <td style="padding: 5px 10px;"><span class="badge badge-green"
+                  style="margin: 0; padding: 2px 6px; font-size: 0.85em;">100% Zdarma (žádné poplatky)</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <aside class="notes">
+          Tato tabulka shrnuje zásadní technické odlišnosti. Unreal exceluje v grafice (Nanite, Lumen) a vestavěném
+          multiplayeru pro AAA. Unity nabízí nejširší flexibilitu od mobilů přes 2D až po moderní ECS (DOTS). Godot
+          vyniká extrémní lehkostí (60 MB), nativním 2D renderem a nulovými licenčními poplatky (MIT).
+        </aside>
+      </section>
+
+      <!-- SLIDE 21: Licenční a finanční modely -->
+      <section>
+        <h2>Licenční a finanční modely</h2>
+        <p style="text-align: left; font-size: 0.88em; margin-bottom: 16px;">
+          Při volbě technologie je nutné kalkulovat i finanční dopad při budoucím komerčním úspěchu:
+        </p>
+
+        <div class="grid-3">
+          <div class="card" style="border-top: 4px solid #fff;">
+            <h3 style="font-size: 1.1em; color: #fff; margin-bottom: 6px;">Unity</h3>
+            <div class="badge" style="margin-bottom: 12px;">Předplatné (Per Seat)</div>
+            <ul style="font-size: 0.8em; padding-left: 16px;">
+              <li>Personal edice je zdarma do limitu $200k ročních příjmů.</li>
+              <li>Při překročení limitu povinnost platit Unity Pro <strong>$2,000+ / rok</strong> za každého vývojáře v
+                týmu.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--accent-blue);">
+            <h3 style="font-size: 1.1em; color: var(--accent-blue); margin-bottom: 6px;">Unreal Engine</h3>
+            <div class="badge badge-cyan" style="margin-bottom: 12px;">5% Royalty Fee</div>
+            <ul style="font-size: 0.8em; padding-left: 16px;">
+              <li>Kompletní nástroje i kód jsou zdarma pro všechny.</li>
+              <li>Epic si nárokuje <strong>5 % z hrubých tržeb</strong>, ale až poté, co hra vydělá první
+                <strong>$1,000,000 USD</strong>.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--accent-green);">
+            <h3 style="font-size: 1.1em; color: var(--accent-green); margin-bottom: 6px;">Godot Engine</h3>
+            <div class="badge badge-green" style="margin-bottom: 12px;">MIT Licence</div>
+            <ul style="font-size: 0.8em; padding-left: 16px;">
+              <li><strong>0 % poplatků, navždy zdarma.</strong></li>
+              <li>Žádné sledování příjmů, žádné royalty podmínky, absolutní vlastnictví vytvořeného díla.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 22: Rozhodovací matice -->
+      <section>
+        <h2>Jaký engine zvolit pro váš projekt?</h2>
+
+        <div class="tree-box">
+          <div class="tree-root">Typ projektu a cíle týmu</div>
+          <div class="tree-branches">
+            <div class="tree-branch" style="border-color: rgba(0, 229, 255, 0.3);">
+              <div class="tree-branch-title">2D Hra / Indie 3D / Menší tým</div>
+              <div class="tree-sub-branches">
+                <div class="tree-sub-item" style="border-color: var(--accent-green);">
+                  <strong style="color: var(--accent-green);">Godot</strong><br>
+                  <span style="font-size: 0.75em; color: var(--text-muted);">Open-source, bez poplatků, rychlý
+                    vývoj</span>
+                </div>
+                <div class="tree-sub-item" style="border-color: #fff;">
+                  <strong style="color: #fff;">Unity</strong><br>
+                  <span style="font-size: 0.75em; color: var(--text-muted);">C# ekosystém, bohatý Asset Store</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tree-branch" style="border-color: rgba(61, 132, 255, 0.3);">
+              <div class="tree-branch-title">AAA 3D / Fotorealismus / Velký tým</div>
+              <div class="tree-sub-branches">
+                <div class="tree-sub-item" style="border-color: #fff;">
+                  <strong style="color: #fff;">Unity</strong><br>
+                  <span style="font-size: 0.75em; color: var(--text-muted);">Mobilní tituly, AR/VR, multiplatform</span>
+                </div>
+                <div class="tree-sub-item" style="border-color: var(--accent-blue);">
+                  <strong style="color: var(--accent-blue);">Unreal</strong><br>
+                  <span style="font-size: 0.75em; color: var(--text-muted);">Nanite, Lumen, Blueprints, film</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-purple" style="margin-top: 18px; font-size: 0.82em;">
+          Vyberte nástroj podle silných stránek vašeho týmu a cílové platformy,
+          nikoliv pouze podle nejnovějších grafických ukázek.
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <!-- Reveal.js & Plugins via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/math/math.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/search/search.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/zoom/zoom.min.js"></script>
+
+  <script>
+    Reveal.initialize({
+      width: 1280,
+      height: 720,
+      margin: 0.08,
+      minScale: 0.2,
+      maxScale: 2.0,
+      controls: true,
+      progress: true,
+      center: true,
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      backgroundTransition: 'fade',
+      plugins: [RevealHighlight, RevealMath.KaTeX, RevealNotes, RevealSearch, RevealZoom]
+    });
+
+    // Comprehensive Game Development & Engine Acronym Dictionary
+    const GLOSSARY = {
+      "BSP": { title: "Binary Space Partitioning", desc: "Binární dělení 3D prostoru pro rychlé určování viditelnosti a kolizí (Doom, Quake)." },
+      "API": { title: "Application Programming Interface", desc: "Standardizované rozhraní pro komunikaci mezi softwarovými knihovnami a hardwarem." },
+      "GPU": { title: "Graphics Processing Unit", desc: "Grafický procesor specializovaný na paralelní výpočty rasterizace, shaderů a geometrie." },
+      "CPU": { title: "Central Processing Unit", desc: "Hlavní procesor počítače provádějící herní logiku, fyziku a systémové příkazy." },
+      "RAM": { title: "Random Access Memory", desc: "Rychlá operační paměť počítače pro ukládání běžícího programu a herních dat." },
+      "VRAM": { title: "Video RAM", desc: "Vyhrazená paměť na grafické kartě pro textury, shadery, geometrii a framebuffery." },
+      "FPS": { title: "Frames Per Second", desc: "Snímková frekvence udávající počet vykreslených snímků za 1 sekundu." },
+      "OS": { title: "Operating System", desc: "Operační systém (Windows, macOS, Linux, Android, iOS)." },
+      "HW": { title: "Hardware", desc: "Fyzické vybavení počítače, konzole nebo mobilního zařízení." },
+      "UI": { title: "User Interface", desc: "Uživatelské rozhraní (menu, dialogy, tlačítka, HUD)." },
+      "GUI": { title: "Graphical User Interface", desc: "Grafické uživatelské rozhraní pro ovládání programu." },
+      "HUD": { title: "Heads-Up Display", desc: "Prvky rozhraní zobrazené přímo přes herní scénu (životy, kompas, munice)." },
+      "AI": { title: "Artificial Intelligence", desc: "Umělá inteligence řídící chování NPC postav a nepřátel ve hře." },
+      "NPC": { title: "Non-Player Character", desc: "Herní postava neovládaná hráčem (např. vesničan, obchodník či nepřítel)." },
+      "PBR": { title: "Physically Based Rendering", desc: "Fyzikálně věrné vykreslování materiálů (Albedo, Roughness, Metallic, Normal)." },
+      "MVP": { title: "Model-View-Projection", desc: "Transformační matice převádějící 3D souřadnice modelu na 2D obrazovku." },
+      "MSAA": { title: "Multi-Sample Anti-Aliasing", desc: "Hardwarové vyhlazování zubatých hran polygonů vzorkováním více subpixelů." },
+      "LOD": { title: "Level of Detail", desc: "Úroveň detailu 3D modelu snižující počet polygonů u vzdálenějších objektů." },
+      "AABB": { title: "Axis-Aligned Bounding Box", desc: "Osové ohraničující kvádry pro bleskové vyloučení nemožných kolizí v Broad Phase." },
+      "BVH": { title: "Bounding Volume Hierarchy", desc: "Stromová hierarchie ohraničujících těles pro prostorové vyhledávání a kolize." },
+      "GJK": { title: "Gilbert-Johnson-Keerthi", desc: "Algoritmus pro přesný výpočet vzdálenosti a průniku konvexních těles." },
+      "SAT": { title: "Separating Axis Theorem", desc: "Věta o oddělující ose pro detekci kolizí mezi konvexními mnohostěny." },
+      "FFI": { title: "Foreign Function Interface", desc: "Rozhraní umožňující volat funkce mezi různými jazyky (např. C# a C++)." },
+      "JIT": { title: "Just-In-Time Compilation", desc: "Kompilace mezikódu (bytecode) do strojového kódu CPU až za běhu programu." },
+      "AOT": { title: "Ahead-Of-Time Compilation", desc: "Kompilace mezikódu do nativního strojového kódu předem před distribucí." },
+      "VM": { title: "Virtual Machine", desc: "Virtuální stroj provádějící mezikód (např. .NET CLR, JVM, GDScript VM)." },
+      "CLR": { title: "Common Language Runtime", desc: "Virtuální běhové prostředí pro běh .NET a C# kódu." },
+      "GC": { title: "Garbage Collector", desc: "Automatický správce paměti uvolňující nepoužívané objekty z haldy (Heap)." },
+      "OOP": { title: "Object-Oriented Programming", desc: "Objektově orientované programování (třídy, dědičnost, zapouzdření)." },
+      "DOD": { title: "Data-Oriented Design", desc: "Návrh architektury optimalizovaný pro uspořádání dat v paměti a L1/L2 CPU Cache." },
+      "ECS": { title: "Entity Component System", desc: "Architektura oddělující Entity (ID), Component (čistá data) a System (logika)." },
+      "DOTS": { title: "Data-Oriented Tech Stack", desc: "Vysoce výkonný stack Unity: Entities, Job System a Burst Compiler." },
+      "SIMD": { title: "Single Instruction, Multiple Data", desc: "Vektorové instrukce procesoru provádějící stejnou operaci nad více čísly naráz." },
+      "AVX": { title: "Advanced Vector Extensions", desc: "Sada SIMD vektorových instrukcí procesorů x86 (Intel / AMD)." },
+      "NEON": { title: "ARM Advanced SIMD", desc: "Vektorová architektura procesorů ARM (mobilní zařízení, Apple Silicon)." },
+      "URP": { title: "Universal Render Pipeline", desc: "Optimalizovaná a vysoce flexibilní renderovací pipeline v Unity." },
+      "HDRP": { title: "High Definition Render Pipeline", desc: "Renderovací pipeline v Unity pro fotorealistickou grafiku na PC a konzolích." },
+      "RHI": { title: "Render Hardware Interface", desc: "Abstrakční vrstva v Unreal Engine sjednocující DirectX, Vulkan a Metal." },
+      "GI": { title: "Global Illumination", desc: "Globální osvětlení scény počítající i nepřímé odrazy světla od povrchů." },
+      "VSM": { title: "Virtual Shadow Maps", desc: "Virtuální stínové mapy s vysokým rozlišením v Unreal Engine 5." },
+      "GAS": { title: "Gameplay Ability System", desc: "Modulární framework v Unreal Engine pro tvorbu RPG schopností a atributů." },
+      "PSO": { title: "Pipeline State Object", desc: "Předkompilovaný stav grafické pipeline eliminující záseky při kompilaci shaderů." },
+      "RPC": { title: "Remote Procedure Call", desc: "Vzdálené volání procedur přes síť pro synchronizaci stavu v multiplayeru." },
+      "TPS": { title: "Ticks Per Second", desc: "Frekvence aktualizace fyzikální simulace (počet kroků za sekundu)." },
+      "VR": { title: "Virtual Reality", desc: "Virtuální realita (zobrazení do VR brýlí/headsetu)." },
+      "AR": { title: "Augmented Reality", desc: "Rozšířená realita (vkládání 3D objektů do obrazu reálného světa)." },
+      "XR": { title: "Extended Reality", desc: "Souhrnný termín pro virtuální (VR), rozšířenou (AR) a smíšenou realitu." },
+      "AAA": { title: "Triple-A", desc: "Hry s nejvyšším rozpočtem a špičkovými produkčními hodnotami." },
+      "MIT": { title: "MIT License", desc: "Svobodná open-source licence pro volné komerční i nekomerční použití bez poplatků." },
+      "SDK": { title: "Software Development Kit", desc: "Sada nástrojů a knihoven pro vývoj softwaru pro danou platformu." },
+      "G-Buffer": { title: "Geometry Buffer", desc: "Sada textur (albedo, normály, hloubka) v Deferred renderovací pipeline." },
+      "APV": { title: "Adaptive Probe Volumes", desc: "Systém světelných sond v Unity pro efektivní globální osvětlení." },
+      "IL2CPP": { title: "Intermediate Language to C++", desc: "Nástroj Unity převádějící .NET CIL mezikód do C++ pro nativní kompilaci." },
+      "SPIR-V": { title: "Standard Portable Intermediate Representation", desc: "Binární mezikód pro shadery v rozhraní Vulkan." },
+      "DXIL": { title: "DirectX Intermediate Language", desc: "Binární mezikód pro shadery v rozhraní DirectX 12." },
+      "HLSL": { title: "High-Level Shader Language", desc: "Vyšší jazyk pro psaní shaderů vyvinutý společností Microsoft pro DirectX." },
+      "GLSL": { title: "OpenGL Shading Language", desc: "Programovací jazyk pro tvorbu shaderů pro OpenGL a Vulkan." },
+      "CCD": { title: "Continuous Collision Detection", desc: "Technika, která zabraňuje tzv. tunnelingu (procházení těles skrze sebe při vysokých rychlostech nebo v malých tloušťkách). Místo pouhého testování překryvu v jediném časovém okamžiku testuje dráhu/objem, který těleso opíše během celého časového kroku $\Delta t$." },
+      "Broadphase": { title: "Broadphase Collision Detection", desc: "Rychlý algoritmus, který z výpočtu okamžitě vyřadí dvojice těles, které jsou od sebe příliš daleko a určitě spolu nesouvisí (používá jednoduché hraniční obálky jako AABB stromy nebo Sweep-and-Prune). Výstupem je pouze užší seznam potenciálních kolizí." },
+      "Albedo": { title: "Albedo", desc: "Základní barva povrchu materiálu bez vlivu osvětlení." },
+      "Roughness": { title: "Roughness", desc: "Míra drsnosti povrchu materiálu, která ovlivňuje rozptyl světla." },
+      "Metallic": { title: "Metallic", desc: "Míra kovovosti povrchu materiálu." },
+      "Normal": { title: "Normal", desc: "Směr povrchu materiálu." },
+      "Bloom": { title: "Bloom", desc: "Post-processing efekt simulující rozptyl jasných světel ve scéně (světelná záře)." },
+      "Tone Mapping": { title: "Tone Mapping", desc: "Post-processing efekt pro převod High Dynamic Range (HDR) do Low Dynamic Range (LDR)." },
+      "Color Grading": { title: "Color Grading", desc: "Post-processing efekt pro úpravu barev a kontrastu scény." },
+      "SSAO": { title: "Screen Space Ambient Occlusion", desc: "Post-processing efekt pro simulaci ambient occlusion." },
+      "Motion Blur": { title: "Motion Blur", desc: "Post-processing efekt pro simulaci rozmazání pohybem." },
+      "SAP": { title: "Sweep and Prune", desc: "Promítnutí hranic objektů (jejich AABB) na jednu nebo více souřadnicových os ($X, Y, Z$) a v hledání překryvů pouze v těchto 1D intervalech." },
+      "Ragdoll": { title: "Ragdoll Physics", desc: "Simulace končetin lidského těla pomocí sítě kloubů, která umožňuje přirozené chování postav při pádu nebo smrti místo přehrávání předem připravené (klíčované) animace ." },
+      "Culling": { title: "Object Culling", desc: "Technika, která zabraňuje vykreslování objektů, které nejsou viditelné na obrazovce." },
+      "Frustum": { title: "View Frustum", desc: "Vykreslovací prostor kamery, který určuje, které objekty jsou viditelné na obrazovce." },
+      "Command Buffers": { title: "Command Buffer", desc: "Command buffer je paměťová struktura, do které se vkládá posloupnost příkazů pro grafickou kartu, aby je mohla později asynchronně a efektivně vykonat." },
+      "Pixel Shader": { title: "Pixel Shader", desc: "V OpenGL Fragment Shader je program běžící na GPU, který počítá barvu pixelu (při rasterizaci)." },
+      "Vertex Shader": { title: "Vertex Shader", desc: "Program běžící na GPU, který počítá pozici a další atributy vrcholů polygonů." },
+      "Lightmap": { title: "Lightmap", desc: "Textura, do které jsou předem vypočítány a „upečeny“ (baked) informace o osvětlení, stínech a odrazech světla v 3D scéně." },
+      "Ambient Occlusion": { title: "Ambient Occlusion", desc: "Ambient occlusion (zastínění okolím) je metoda stínování, která pomáhá modelům pro výpočet lokálního osvětlení dodat realistický dojem započítáním tlumení světla zastíněním." },
+      "DLSS": { title: "Deep Learning Super Sampling", desc: "Technologie NVIDIA, která využívá umělou inteligenci k rekonstrukci obrazu s nižším rozlišením na vyšší" },
+      "FSR": { title: "AMD FidelityFX Super Resolution", desc: "Technologie AMD, která využívá umělou inteligenci k rekonstrukci obrazu s nižším rozlišením na vyšší." },
+      "XeSS": { title: "Intel Xe Super Sampling", desc: "Technologie Intel, která využívá umělou inteligenci k rekonstrukci obrazu s nižším rozlišením na vyšší." },
+      "TSR": { title: "Temporal Super Resolution", desc: "Technologie v Unreal Enginu 5 pro rekonstrukci obrazu z nižšího rozlišení na vyšší." },
+      "Custom arena allocator": { title: "Custom arena allocator", desc: "Custom Arena Allocator (často nazývaný také Linear Allocator nebo Region-based Allocator) je vlastní systém správy paměti, který si od operačního systému předem vyžádá jeden velký souvislý blok paměti a následně z něj rychle přiděluje menší části prostým posouváním ukazatele." },
+      "Chaos Physics": { title: "Chaos Physics", desc: "Fyzikální engine vyvinutý společností Epic Games, který je součástí Unreal Enginu 5." },
+      "CoreCLR": { title: "CoreCLR", desc: "CoreCLR (Core Common Language Runtime) je spouštěcí prostředí (runtime execution engine) ekosystému .NET.  " }
+    }
+
+    function initAcronymTooltips() {
+      const tooltip = document.getElementById('global-tooltip');
+      const titleEl = tooltip.querySelector('.tooltip-title');
+      const abbrEl = tooltip.querySelector('.tooltip-abbr');
+      const bodyEl = tooltip.querySelector('.tooltip-body');
+
+      const terms = Object.keys(GLOSSARY).sort((a, b) => b.length - a.length);
+      const pattern = new RegExp(`\\b(${terms.map(t => t.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|')})\\b`, 'g');
+
+      const walker = document.createTreeWalker(
+        document.querySelector('.reveal .slides'),
+        NodeFilter.SHOW_TEXT,
+        {
+          acceptNode: function (node) {
+            const parent = node.parentElement;
+            if (!parent) return NodeFilter.FILTER_REJECT;
+            const tag = parent.tagName.toLowerCase();
+            if (['script', 'style', 'pre', 'code', 'textarea'].includes(tag) ||
+              parent.closest('pre') || parent.closest('code') ||
+              parent.closest('.katex') || parent.classList.contains('abbr-tag')) {
+              return NodeFilter.FILTER_REJECT;
+            }
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        }
+      );
+
+      const nodesToReplace = [];
+      while (walker.nextNode()) {
+        if (pattern.test(walker.currentNode.nodeValue)) {
+          nodesToReplace.push(walker.currentNode);
+        }
+        pattern.lastIndex = 0;
+      }
+
+      nodesToReplace.forEach(node => {
+        const span = document.createElement('span');
+        span.innerHTML = node.nodeValue.replace(pattern, (match) => {
+          return `<span class="abbr-tag" data-term="${match}">${match}</span>`;
+        });
+        node.parentNode.replaceChild(span, node);
+      });
+
+      function showTooltip(term, e) {
+        const data = GLOSSARY[term];
+        if (!data) return;
+        titleEl.textContent = data.title;
+        abbrEl.textContent = term;
+        bodyEl.textContent = data.desc;
+
+        tooltip.classList.add('active');
+        positionTooltip(e);
+      }
+
+      function hideTooltip() {
+        tooltip.classList.remove('active');
+      }
+
+      function positionTooltip(e) {
+        const padding = 15;
+        let x = e.clientX + 12;
+        let y = e.clientY + 14;
+
+        const rect = tooltip.getBoundingClientRect();
+        if (x + rect.width > window.innerWidth - padding) {
+          x = e.clientX - rect.width - 12;
+        }
+        if (y + rect.height > window.innerHeight - padding) {
+          y = e.clientY - rect.height - 12;
+        }
+
+        tooltip.style.left = `${Math.max(padding, x)}px`;
+        tooltip.style.top = `${Math.max(padding, y)}px`;
+      }
+
+      document.addEventListener('mouseover', (e) => {
+        const target = e.target.closest('.abbr-tag, abbr[title]');
+        if (target) {
+          const term = target.getAttribute('data-term') || target.textContent.trim();
+          showTooltip(term, e);
+        }
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (tooltip.classList.contains('active')) {
+          positionTooltip(e);
+        }
+      });
+
+      document.addEventListener('mouseout', (e) => {
+        if (e.target.closest('.abbr-tag, abbr[title]')) {
+          hideTooltip();
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initAcronymTooltips();
+    });
+  </script>
+</body>
+
+</html>
