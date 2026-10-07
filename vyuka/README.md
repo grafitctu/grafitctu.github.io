@@ -5,6 +5,11 @@ link from the main site navigation. The two overview pages have `noindex`.
 The routes are public and accessible to anyone who knows their address.
 
 The static table has one column per subject and one row per lecture/topic.
+It fits the available desktop width without horizontal scrolling. At 1100px
+and below, each topic row becomes a grid of labelled lecture cards (two
+columns, or one at 600px and below); empty cells are omitted. Planned
+subjects remain visible in a short status line. All navigation uses normal
+vertical page scrolling.
 `catalog.json` is its editable source. Add a course and its lecture entries
 when extending the library; the generator creates the columns automatically.
 Regenerate the two indexes with:
