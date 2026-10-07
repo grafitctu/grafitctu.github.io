@@ -1,0 +1,1519 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>MI-PVR: 3D Herní enginy pro VR — ČVUT</title>
+  <meta name="description" content="Přednáška MI-PVR: 3D herní enginy pro VR — Petr Pauš, FIT ČVUT v Praze">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+  <!-- <link rel="stylesheet" href="custom-styles.css"> -->
+</head>
+
+<body>
+
+  <!-- Top Persistent Header -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+    <!-- <div class="logo-badge">
+      <span class="cvut-tag">ČVUT</span>
+      <span>MI-PVR &bull; <span class="highlight">3D Herní enginy pro VR</span></span>
+    </div>
+    <div class="logo-badge">
+      <span>Petr Pauš</span>
+    </div> -->
+  </header>
+
+  <!-- Bottom Persistent Footer Navigation Helper -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div>
+    <!-- <div>ČVUT v Praze &bull; MI-PVR / NI-PVR</div> -->
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==========================================
+           SLIDE 1: TITULNÍ SLIDE
+           ========================================== -->
+      <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)">
+        <div class="title-hero">
+          <div class="vr-badge">NI-PVR &bull; Pokročilá virtuální realita</div>
+          <h1>3D Herní enginy pro VR</h1>
+          <p style="color: var(--text-muted); font-size: 1.2em; margin-bottom: 24px;">
+            Přehled, architektura a srovnání vývojových prostředí pro virtuální a smíšenou realitu
+          </p>
+
+          <div class="authors">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Vítejte na přednášce předmětu Pokročilá virtuální realita (MI-PVR / NI-PVR) věnované 3D herním enginům a
+          frameworkům pro VR.
+          Dnes se podíváme na klíčové nástroje: Unity3D, Unreal Engine, open-source Godot, webové technologie v čele s
+          A-Frame a WebXR, a také na unikátní český projekt Neos VR pro tvorbu světů přímo zevnitř virtuální reality.
+          Zaměříme se na jejich výhody, limity a vhodnost pro různé typy projektů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 2: VÝVOJOVÁ PROSTŘEDÍ S PODPOROU VR
+           ========================================== -->
+      <section>
+        <span class="slide-category">Přehled &bull; Ekosystém vývojových nástrojů</span>
+        <h2>Vývojová prostředí s podporou VR</h2>
+        <div class="slide-grid-2" style="align-items: stretch;">
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="glass-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">„Velké“ enginy (AAA &amp;
+                Indie)</h3>
+              <ul class="custom-list" style="font-size: 0.85em; margin: 0;">
+                <li><strong>Unity3D:</strong> Nejrozšířenější multiplatformní engine, standard pro mobilní VR (Meta
+                  Quest).</li>
+                <li><strong>Unreal Engine:</strong> Špičkový fotorealismus, nativní C++, Nanite a Lumen pro PCVR a
+                  konzole.</li>
+                <li><strong>CryEngine:</strong> Původní průkopník fotorealistického renderingu velkých exteriérů.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3 style="color: var(--accent-purple); font-size: 1.1em; margin-bottom: 6px;">Webové frameworky (WebVR /
+                WebXR)</h3>
+              <ul class="custom-list" style="font-size: 0.85em; margin: 0;">
+                <li><strong>A-Frame:</strong> Deklarativní HTML framework od Mozilly postavený nad Three.js.</li>
+                <li><strong>React VR / React 360:</strong> Komponentový přístup k tvorbě interaktivních 360° zážitků.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="glass-card accent-emerald">
+              <h3 style="color: var(--accent-emerald); font-size: 1.1em; margin-bottom: 6px;">Další možnosti</h3>
+              <ul class="custom-list" style="font-size: 0.85em; margin: 0;">
+                <li><strong>Godot Engine:</strong> 100% free open-source (MIT licence), lehký editor, podpora OpenXR.
+                </li>
+                <li><strong>Amazon Lumberyard / O3DE:</strong> Engine odvozený z CryEngine s cloudovou integrací AWS.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-amber">
+              <h3 style="color: var(--accent-amber); font-size: 1.1em; margin-bottom: 6px;">Neos VR (Resonite)</h3>
+              <ul class="custom-list" style="font-size: 0.85em; margin: 0;">
+                <li>Online kolaborativní VR editor a sociální metaverzní svět přímo uvnitř VR headsetu.</li>
+                <li><strong>Český start-up</strong> (Tomáš Mariančík), k dispozici zdarma na Steamu, výuka BI-VR1.</li>
+              </ul>
+            </div>
+
+            <div
+              style="display: flex; gap: 16px; align-items: center; justify-content: center; padding: 6px 12px; background: rgba(255,255,255,0.7); border-radius: 10px; border: 1px solid rgba(15,23,42,0.08);">
+              <img src="../bordel/images-pvr/02_frameworks/unity_logo.png" alt="Unity Logo"
+                style="height: 50px; width: auto; object-fit: contain; margin: 0 !important;" data-preview-image>
+              <span style="color: var(--text-dim); font-size: 0.8em;">&bull;</span>
+              <img src="../bordel/images-pvr/02_frameworks/unreal_logo.png" alt="Unreal Engine Logo"
+                style="height: 50px; width: auto; object-fit: contain; margin: 0 !important;" data-preview-image>
+              <span style="color: var(--text-dim); font-size: 0.8em;">&bull;</span>
+              <img src="../bordel/images-pvr/02_frameworks/cryengine_logo.png" alt="CryEngine Logo"
+                style="height: 50px; width: auto; object-fit: contain; margin: 0 !important;" data-preview-image>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Při výběru vývojového prostředí pro VR musíme volit mezi několika paradigmaty:
+          Komerční giganti Unity a Unreal Engine dominují trhu – Unity vede počtem projektů a mobilním VR (Quest),
+          zatímco Unreal nabízí bezkonkurenční fotorealismus pro PCVR.
+          Webové frameworky jako A-Frame umožňují okamžitý přístup bez instalace přes WebXR v prohlížeči.
+          Godot představuje svobodnou otevřenou alternativu s MIT licencí.
+          A Neos VR přináší revoluční koncept, kde celý svět včetně skriptů a interakcí tvoříte přímo s nasazeným
+          headsetem.
+        </aside>
+      </section>
+
+      <section>
+        <span class="slide-category">Standardizace &bull; Architektura API</span>
+        <h2>Ekosystém vývoje &amp; standard OpenXR 1.1</h2>
+        <div class="slide-grid-2" style="align-items: stretch;">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="highlight-card alert" style="margin: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 4px;">Historická fragmentace
+                (Legacy SDKs)</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.4;">
+                V minulosti museli vývojáři integrovat proprietární rozhraní pro každé zařízení zvlášť: <strong>Oculus
+                  SDK</strong>, <strong>SteamVR / OpenVR</strong>, <strong>Windows Mixed Reality</strong> nebo
+                <strong>HTC Vive Wave</strong>. To vedlo k vendor lock-in a neudržitelnému kódu.
+              </p>
+            </div>
+
+            <div class="glass-card">
+              <h3>Standard Khronos Group</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.4;">
+                <strong>OpenXR</strong> je bezplatný, otevřený průmyslový standard podporovaný společnostmi Meta, Valve,
+                Microsoft, Apple, Sony i Google.
+                Verze <strong>OpenXR 1.1</strong> sjednocuje klíčová rozšíření přímo do jádra (multi-view, hand
+                tracking, foveated rendering a spatial anchors).
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple">
+              <h3>Vrstvy architektury OpenXR</h3>
+              <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.78em;">
+                <div
+                  style="background: rgba(8,145,178,0.12); padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--accent-cyan);">
+                  <strong>1. Aplikace / Herní engine:</strong> Unity, Unreal Engine, Godot, WebXR runtime.
+                </div>
+                <div
+                  style="background: rgba(124,58,237,0.12); padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--accent-purple);">
+                  <strong>2. OpenXR API Layers:</strong> Validace, trasování, API overlay a zachytávání snímků.
+                </div>
+                <div
+                  style="background: rgba(5,150,105,0.12); padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--accent-emerald);">
+                  <strong>3. OpenXR Loader:</strong> <code>openxr_loader.dll / .so</code> detekuje aktivní runtime.
+                </div>
+                <div
+                  style="background: rgba(217,119,6,0.12); padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--accent-amber);">
+                  <strong>4. OpenXR Runtime &amp; Ovladač:</strong> Meta Quest Link/Native, SteamVR, Monado (Linux).
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Standard OpenXR vyřešil největší noční můru raného VR vývoje.
+          Dříve aplikace psaná pro Oculus Rift nefungovala na HTC Vive bez přepsání celé vstupní a renderovací pipeline.
+          Dnes engine komunikuje výhradně s OpenXR Loaderem.
+          Pokud má uživatel zapnutý SteamVR, loader předá volání SteamVR runtime. Pokud je na Questu v standalone
+          režimu, volá přímo nativní Android runtime od Mety.
+          Verze 1.1 zkonsolidovala rozhraní pro stereoskopii, prostorové kotvy a snímání rukou do jádra specifikace.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 3: LIMITY HW & FRAME BUDGET
+           ========================================== -->
+      <section>
+        <span class="slide-category">Výkon &bull; Fyziologie a časový rozpočet</span>
+        <h2>Limity hardwaru &amp; Frame Budget ve VR</h2>
+        <div class="slide-grid-2 equal">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="highlight-card alert" style="margin: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 4px;">Důležité: M2P &lt;
+                20 ms</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+                <strong>Motion-to-Photon (M2P) latence:</strong> Čas od fyzického pohybu hlavy po rozsvícení (pixelů)
+                fotonů na
+                displeji musí být <strong>striktně pod 20 ms</strong>. Překročení způsobuje vestibulární konflikt a
+                okamžitou nevolnost (kinetózu).
+              </p>
+            </div>
+
+            <div class="glass-card">
+              <h3>Přísný Frame Budget na snímek</h3>
+              <ul class="custom-list" style="font-size: 0.8em; margin: 0;">
+                <li><strong>72 FPS</strong> (Quest minimum): <strong>13,88 ms</strong> na celý snímek.</li>
+                <li><strong>90 FPS</strong> (Standard pro komfortní VR): <strong>11,11 ms</strong>.</li>
+                <li><strong>120 FPS</strong> (High-end / soutěžní tituly): <strong>8,33 ms</strong>.</li>
+              </ul>
+              <div style="font-size: 0.75em; color: var(--text-muted); margin-top: 6px;">
+                V tomto čase musí CPU spočítat logiku + fyziku (~3 ms), odeslat draw cally (~2 ms) a GPU dokončit
+                rasterizaci i kompozici (~5 ms).
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple">
+              <h3>Záchranné mechanismy: Reprojekce</h3>
+              <p style="margin: 0 0 6px 0; font-size: 0.82em; color: var(--text-main); line-height: 1.4;">
+                Pokud engine nestihne vyrenderovat snímek včas, zapojí se asynchronní warping na compositing vrstvě:
+              </p>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li>
+                  <strong>ATW (Asynchronous Timewarp):</strong> Rotace posledního hotového snímku na GPU těsně před
+                  V-Sync dle nejčastějšího čtení IMU gyroskopu.
+                </li>
+                <li>
+                  <strong>ASW (Asynchronous SpaceWarp / Motion Smoothing):</strong> Využívá pohybové vektory (Motion
+                  Vectors) a hloubku pro interpolaci chybějícího snímku při polovičním framerate (45 &rarr; 90 FPS).
+                </li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style="margin: 0;">
+              <h3>Pozor na vizuální artefakty</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Reprojekce není náhrada za špatnou optimalizaci. Vede ke zvlnění
+                hran (wobbling), chybám v okluzi a duchům při rychlém pohybu rukou.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Pro studenty je klíčové pochopit rozdíl mezi monitorem a VR headsetem.
+          Na monitoru propad z 60 na 45 FPS znamená jen mírné trhnutí.
+          Ve VR znamená propad pod 90 FPS posun obrazu vůči vnitřnímu uchu, mozek detekuje otravu jedem a vyvolá
+          kinetózu.
+          Frame budget 11.1 milisekund se dělí mezi CPU herní logiku, PhysX simulaci, render thread a GPU rasterizaci
+          obou očí.
+          Pokud nestíháte, ATW sice otočí obraz, ale nezvládne paralaxu při posunu hlavy v prostoru bez ASW.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4: STEREOSKOPICKÝ RENDERING
+           ========================================== -->
+      <!-- <section>
+        <span class="slide-category">Počítačová grafika &bull; Stereoskopie a pipeline</span>
+        <h2>Stereoskopický rendering a akcelerace</h2>
+        <div class="slide-grid-2 equal">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <h3>Evoluce vykreslování obou očí</h3>
+              <ul class="custom-list" style="font-size: 0.8em; margin: 0;">
+                <li>
+                  <strong>Multi-Pass Rendering (Legacy):</strong><br>
+                  <span style="color: var(--text-muted); font-size: 0.95em;">Scéna se celá renderuje dvakrát po sobě.
+                    2&times; více draw callů, dvojnásobný CPU culling. Dnes již zastaralé.</span>
+                </li>
+                <li style="margin-top: 8px;">
+                  <strong>Single-Pass Instanced (Stereo Instancing):</strong><br>
+                  <span style="color: var(--text-main); font-weight: 600;">Průmyslový standard.</span>
+                  <span style="color: var(--text-muted); font-size: 0.95em;"> Geometrie se posílá jednou s instancováním
+                    pro 2 vrstvy (Texture Array). GPU automaticky aplikuje posun IPD v matici pohledu. <strong>Úspora až
+                      45 % CPU overheadu!</strong></span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald">
+              <h3>Forward+ vs. Deferred Shading</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.4;">
+                Tradiční Deferred shading vyžaduje masivní G-Buffer paměť, která přehřívá mobilní tile-based GPU
+                (Snapdragon XR2) a špatně spolupracuje s MSAA.
+                Ve VR vítězí <strong>Forward+ Shading</strong>: podpora <strong>MSAA (2x/4x)</strong> bez rozmazání TAA
+                a efektivní dlaždicové vyhodnocování světel.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple">
+              <h3>Foveated Rendering (Využití lidského zraku)</h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                Lidské oko vidí ostře pouze v úzkém kuželu 2° (fovea centralis). Periferie má výrazně nižší hustotu
+                čípků.
+              </p>
+
+              <div
+                style="background: rgba(255,255,255,0.8); border: 1px solid rgba(15,23,42,0.1); border-radius: 8px; padding: 10px; margin-bottom: 8px;">
+                <div style="font-weight: 700; color: var(--accent-cyan); font-size: 0.85em; margin-bottom: 2px;">FFR
+                  &mdash; Fixed Foveated Rendering</div>
+                <div style="font-size: 0.78em; color: var(--text-muted); line-height: 1.35;">
+                  Snížené rozlišení stínování pevně na okrajích čoček, kde Fresnel/Pancake optika stejně trpí
+                  chromatickou aberací.
+                </div>
+              </div>
+
+              <div
+                style="background: rgba(255,255,255,0.8); border: 1px solid rgba(15,23,42,0.1); border-radius: 8px; padding: 10px;">
+                <div style="font-weight: 700; color: var(--accent-purple); font-size: 0.85em; margin-bottom: 2px;">ETFR
+                  &mdash; Eye-Tracked Foveated Rendering</div>
+                <div style="font-size: 0.78em; color: var(--text-muted); line-height: 1.35;">
+                  Kamery uvnitř headsetu sledují zornice (PS VR2, Apple Vision Pro, Quest Pro). Zóna plného rozlišení
+                  sleduje pohled oka. <strong>Šetří 30–50 % GPU výkonu!</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="badge-group" style="justify-content: center;">
+              <span class="spec-badge cyan">Single-Pass Instanced</span>
+              <span class="spec-badge purple">Eye-Tracking FFR</span>
+              <span class="spec-badge emerald">Forward+ MSAA</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Při stereoskopii musíme spočítat obraz pro levé i pravé oko s offsetem přibližně 64 mm (IPD).
+          Single-Pass Instancing je základní optimalizací – vrcholový shader využívá SV_RenderTargetArrayIndex k
+          nasměrování geometrie do příslušné vrstvy textury.
+          Eye-Tracked Foveated Rendering (ETFR) je klíčový průlom: místo 4K rozlišení na celé ploše renderujeme plné
+          rozlišení jen v kroužku o velikosti mince tam, kam se uživatel dívá.
+          Zbytek se vykresluje v polovičním nebo čtvrtinovém rozlišení.
+        </aside>
+      </section> -->
+
+      <!-- ==========================================
+           SLIDE 3: UNITY3D – ZÁKLADNÍ INFO
+           ========================================== -->
+      <section>
+        <span class="slide-category">Unity3D &bull; Úvod a architektura</span>
+        <h2>Unity3D: základní informace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Historie &amp; Filozofie
+              </h3>
+              <p style="margin: 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+                Vývoj od roku <strong>2004</strong> (původně vývojové prostředí pro Mac OS X postavené na běhovém
+                prostředí <strong>Mono</strong>).
+                Cílem bylo zpřístupnit herní a interaktivní 3D vývoj široké veřejnosti.
+              </p>
+            </div>
+
+            <div class="glass-card" style="margin-top: 12px;">
+              <ul class="custom-list" style="font-size: 0.84em; margin: 0;">
+                <li><strong>Cílová skupina:</strong> Mimořádně vhodné pro začínající i pokročilé vývojáře a indie týmy.
+                </li>
+                <li><strong>Programovací jazyk:</strong> Primárně <strong>C#</strong> (.NET ekosystém, IL2CPP AOT
+                  překlad).</li>
+                <li><strong>Dimenze:</strong> Plnohodnotná podpora pro <strong>2D i 3D grafiku</strong> ve stejném
+                  editoru.</li>
+                <li><strong>Cenový model:</strong>
+                  <ul class="custom-list" style="margin: 4px 0 0 0;">
+                    <li class="sub-item"><strong>Zdarma (Personal):</strong> Do obratu <strong> $200k ročně</strong>.
+                    </li>
+                    <li class="sub-item"><strong>Komerční předplatné:</strong> Měsíční poplatky za licence Unity Pro /
+                      Enterprise.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/02_frameworks/unity_editor.png" alt="Uživatelské rozhraní editoru Unity"
+                data-preview-image>
+              <div class="image-caption">Uživatelské rozhraní editoru Unity (Scene, Hierarchy, Inspector, Project)</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Unity vzniklo v Kodani v roce 2004. Z původního Mac-only nástroje se stal světový standard.
+          Používá jazyk C#, který běží na virtuálním stroji Mono nebo se pomocí nástroje IL2CPP překládá přímo do
+          nativního C++ kódu pro maximální výkon na zařízeních jako Meta Quest.
+          Licenční politika je přívětivá pro studenty a začínající tvůrce – verze Personal je zdarma až do obratu 100
+          tisíc dolarů za posledních 12 měsíců.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4: UNITY3D – VÝHODY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Unity3D &bull; Silné stránky</span>
+        <h2>Unity3D: výhody</h2>
+        <div class="slide-grid-2 equal">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <h3>Vývoj &amp; Ergonomie</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Rychlé zaučení:</strong> Intuitivní grafické rozhraní, logická hierarchie GameObjectů a
+                  komponent.</li>
+                <li><strong>C# přístupnost:</strong> Jazyk C# je výrazně jednodušší a bezpečnější než nízkoúrovňové C++
+                  (automatická správa paměti, silné typování).</li>
+                <li><strong>Blesková kompilace:</strong> Rychlý build a okamžitá iterace v režimu Play bez restartu
+                  editoru.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3>Komunita &amp; Ekosystém</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Obrovská komunita:</strong> Nepřeberné množství tutoriálů, oficiální dokumentace, učebnic a
+                  fór.</li>
+                <li><strong>Obsáhlý Asset Store:</strong> Tisíce hotových 3D modelů, animací, VR frameworků i
+                  bezplatných skriptů.</li>
+                <li><strong>Unity Ads &amp; Analytics:</strong> Vestavěné služby pro snadnou monetizaci a telemetrii
+                  projektů.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald">
+              <h3>Multiplatformnost &amp; VR</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Podpora 20+ platforem:</strong> Windows, macOS, Linux, Android, iOS, WebGL, PlayStation,
+                  Xbox.</li>
+                <li><strong>Prvotřídní VR/AR ekosystém:</strong> Meta Quest 2/3/Pro, Pico, HTC Vive, Valve Index, Apple
+                  Vision Pro.</li>
+                <li><strong>Univerzálnost:</strong> Od lehkých 2D hříček přes mobilní VR simulace až po průmyslová
+                  digitální dvojčata.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-amber">
+              <h3>Moderní grafické technologie</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Renderovací pipeliny:</strong> Universal Render Pipeline (URP pro VR/mobily) a High
+                  Definition Render Pipeline (HDRP).</li>
+                <li><strong>Vizuální shadery:</strong> Node-based nástroj Shader Graph pro tvorbu PBR materiálů bez
+                  psaní kódu.</li>
+                <li><strong>Globální osvětlení:</strong> Pečené i dynamické GI, světelné sondy a pokročilý
+                  postprocessing.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Klíčovou výhodou Unity je nízká bariéra vstupu a rychlost prototypování.
+          C# umožňuje soustředit se na aplikační logiku a interakci, nikoliv na pointery a memory leaky.
+          Asset Store dokáže zkrátit vývoj o měsíce, protože nemusíte modelovat každou židli nebo psát od nuly inverzní
+          kinematiku pro VR ruce.
+          V oblasti mobilního VR (Quest) má Unity naprostou dominanci – odhaduje se, že přes 70 % VR titulů vzniká právě
+          v Unity.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 5: UNITY3D – NEVÝHODY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Unity3D &bull; Limity a slabiny</span>
+        <h2>Unity3D: nevýhody (oproti UE)</h2>
+        <div class="slide-grid-2 equal">
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="highlight-card alert" style="margin: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 6px;">Grafika &amp; Vizuální
+                věrnost</h3>
+              <p style="margin: 0; font-size: 0.85em; color: var(--text-main); line-height: 1.45;">
+                <strong>Horší práce se světlem a materiály out-of-the-box:</strong> Dosažení filmového fotorealismu
+                vyžaduje v Unity značné úsilí a expertní ladění osvětlovacích modelů ve srovnání s Unreal Engine.
+              </p>
+            </div>
+
+            <div class="glass-card">
+              <h3>Uzavřenost jádra</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.45;">
+                <strong>Není volně dostupný zdrojový kód:</strong> C++ jádro enginu je uzavřené. Přístup ke zdrojovému
+                kódu je možný pouze pro enterprise partnery za velmi vysoké licenční poplatky.
+              </p>
+            </div>
+
+            <div class="glass-card">
+              <h3>Vizuální skriptování</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.45;">
+                Historicky <strong>chybělo vestavěné vizuální programování</strong>. Nástroj Bolt byl integrován až
+                později, ale nedosahuje popularity ani možností Unreal Blueprints.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="glass-card accent-purple">
+              <h3>Výkon a správa paměti</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                <strong>Garbage Collector spikes:</strong> Automatický úklid paměti v C# může způsobit mikrozáseky
+                (stuttering). Ve VR, kde je nutné držet stabilních <strong>72/90/120 FPS</strong>, může jakýkoliv drop
+                snímku vyvolat nevolnost (kinetózu).
+              </p>
+            </div>
+
+            <div class="glass-card">
+              <h3>AAA segment</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.45;">
+                <strong>Méně velkých AAA blockbusterů:</strong> Většina největších herních studií volí pro velké
+                fotorealistické projekty Unreal nebo vlastní interní engine.
+              </p>
+            </div>
+
+            <div class="glass-card accent-rose">
+              <h3>Správa balíčků (Package Manager)</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.45;">
+                Přechod na modulární balíčky často vede k <strong>„dependency hell“</strong>, kde se jednotlivé
+                experimentální verze balíčků navzájem vylučují nebo po aktualizaci rozbijí projekt.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Zásadní nevýhodou Unity oproti Unreal Engine je správa paměti v C#.
+          Pokud vývojář nedbá na alokace a generuje objekty v metodě Update(), Garbage Collector musí jednou za čas
+          paměť uvolnit.
+          Během tohoto GC cyklu dojde k propadu snímků, což je ve VR nepřijatelné.
+          Dále absence zdrojového kódu znamená, že pokud narazíte na chybu v renderovacím jádru, musíte čekat na
+          oficiální opravu od Unity Technologies.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 6: UNITY3D – MOŽNOSTI
+           ========================================== -->
+      <section>
+        <span class="slide-category">Unity3D &bull; Subsystémy a architektura</span>
+        <h2>Unity3D: možnosti a subsystémy</h2>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+            <h3>Grafika &amp; Vizuál</h3>
+            <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+              <li><strong>Osvětlení:</strong> Real-time i baked Global Illumination, světelné a reflexní sondy (Light
+                &amp; Reflection Probes).</li>
+              <li><strong>Částicové efekty:</strong> CPU systém Shuriken a vysoce výkonný GPU <strong>VFX Graph</strong>
+                pro miliony částic.</li>
+              <li><strong>Postprocessing:</strong> Integrovaný Volume stack (Bloom, Color Grading, Ambient Occlusion,
+                Depth of Field).</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple">
+            <h3>Fyzika &amp; Prostředí</h3>
+            <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+              <li><strong>Fyzikální simulace:</strong> Integrovaná NVIDIA PhysX (3D) a Box2D (2D fyzika).</li>
+              <li><strong>Kolize &amp; Události:</strong> Rigidbodies, konvexní a mesh collidery, triggers, Raycasting a
+                event dispatch.</li>
+              <li><strong>Terén:</strong> Výškový editor krajiny, stromy, dynamická tráva a detailní textury.</li>
+              <li><strong>Simulace látek (Cloth):</strong> Fyzika tkanin, oděvů a vlajek ve větru.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-emerald">
+            <h3>Animace, Audio &amp; VR</h3>
+            <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+              <li><strong>Animace (Mecanim):</strong> Stavové automaty, blend trees, ragdoll a Inverse Kinematics (IK).
+              </li>
+              <li><strong>Prostorový zvuk (Spatial Audio):</strong> 3D poziční audio, mixéry, audio filtry a reverb
+                zóny.</li>
+              <li><strong>VR &amp; Smíšená realita:</strong> <strong>XR Interaction Toolkit</strong>, OpenXR standard,
+                hand tracking, teleportace a grabování objektů.</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Unity nabízí ucelenou škálu modulárních subsystémů.
+          Pro VR je klíčový XR Interaction Toolkit, který standardizuje interakce: teleportaci, direct interaktory pro
+          uchopení předmětů, ray interaktory pro ovládání menu na dálku a haptickou odezvu v ovladačích.
+          Fyziku zajišťuje osvědčená NVIDIA PhysX a prostorové audio podporuje HRTF filtry pro věrné určení směru zvuku
+          v headsetu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 7: UNITY3D UKÁZKY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Unity3D &bull; Technologická dema</span>
+        <h2>Unity3D: ukázky možností enginu</h2>
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 10px;">
+          <a class="video-card" href="https://youtu.be/iQZobAhgayA" target="_blank" rel="noopener noreferrer">
+            <div
+              style="position: relative; width: 130px; height: 75px; border-radius: 8px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+              <img src="../bordel/images-pvr/02_frameworks/unity_heretic.jpg" alt="The Heretic"
+                style="width: 100%; height: 100%; object-fit: cover; margin: 0 !important;">
+              <div
+                style="position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                ▶</div>
+            </div>
+            <div class="video-details">
+              <div class="video-title">The Heretic Demo</div>
+              <!-- <div style="font-size: 0.82em; color: var(--text-muted); margin-bottom: 3px;">
+                Fotorealistický render lidské postavy v reálném čase, pokročilý skin shader, HDRP pipeline a masivní
+                částicové simulace pomocí VFX Graph.
+              </div> -->
+              <div class="video-url">https://youtu.be/iQZobAhgayA</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="https://youtu.be/YjgO6ok2xcg" target="_blank" rel="noopener noreferrer">
+            <div
+              style="position: relative; width: 130px; height: 75px; border-radius: 8px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+              <img src="../bordel/images-pvr/02_frameworks/unity_forest.jpg" alt="Book of the Dead"
+                style="width: 100%; height: 100%; object-fit: cover; margin: 0 !important;">
+              <div
+                style="position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                ▶</div>
+            </div>
+            <div class="video-details">
+              <div class="video-title">Unity Forest Demo (Book of the Dead)</div>
+              <!-- <div style="font-size: 0.82em; color: var(--text-muted); margin-bottom: 3px;">
+                Ukázka fotogrammetrie v reálném čase, dynamického osvětlení lesního prostředí a realistické vegetace
+                reagující na vítr.
+              </div> -->
+              <div class="video-url">https://youtu.be/YjgO6ok2xcg</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="https://youtu.be/gincn1XNs14" target="_blank" rel="noopener noreferrer">
+            <div
+              style="position: relative; width: 130px; height: 75px; border-radius: 8px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+              <img src="../bordel/images-pvr/02_frameworks/unity_2019.jpg" alt="Unity 2019.3"
+                style="width: 100%; height: 100%; object-fit: cover; margin: 0 !important;">
+              <div
+                style="position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                ▶</div>
+            </div>
+            <div class="video-details">
+              <div class="video-title">Unity 2019.3 Tech Demo &amp; Ray Tracing</div>
+              <!-- <div style="font-size: 0.82em; color: var(--text-muted); margin-bottom: 3px;">
+                Představení nového UI editoru, produkční verze renderovacích architektur URP/HDRP a hardwarového ray
+                tracingu v reálném čase.
+              </div> -->
+              <div class="video-url">https://youtu.be/gincn1XNs14</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="https://www.youtube.com/watch?v=o1JIK5W3DRU" target="_blank"
+            rel="noopener noreferrer">
+            <div
+              style="position: relative; width: 130px; height: 75px; border-radius: 8px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+              <img src="../bordel/images-pvr/02_frameworks/unity_6.png" alt="Unity 6"
+                style="width: 100%; height: 100%; object-fit: cover; margin: 0 !important;">
+              <div
+                style="position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                ▶</div>
+            </div>
+            <div class="video-details">
+              <div class="video-title">
+                Time Ghost | Unity 6</div>
+              <!-- <div style="font-size: 0.82em; color: var(--text-muted); margin-bottom: 3px;">
+                Představení nového UI editoru, produkční verze renderovacích architektur URP/HDRP a hardwarového ray
+                tracingu v reálném čase.
+              </div> -->
+              <div class="video-url">https://www.youtube.com/watch?v=o1JIK5W3DRU</div>
+            </div>
+          </a>
+        </div>
+        <aside class="notes">
+          Tato tři dema reprezentují technologické milníky týmu Unity Demo Team:
+          The Heretic dokázal, že Unity zvládne fotorealistickou mimiku lidské tváře v reálném čase bez ústupků.
+          Book of the Dead předvedl sílu fotogrammetrických skenů přírody s dynamickým volumetrickým světlem.
+          A demo 2019.3 ukázalo integraci hardwarového DXR ray tracingu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 8: UNREAL – ZÁKLADNÍ INFO
+           ========================================== -->
+      <section>
+        <span class="slide-category">Unreal Engine &bull; Úvod a architektura</span>
+        <h2>Unreal Engine: základní informace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Historie &amp; Pozice na
+                trhu</h3>
+              <p style="margin: 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+                Vyvíjen společností <strong>Epic Games</strong> od roku <strong>1998</strong> (původně pro průlomovou 3D
+                FPS hru <em>Unreal</em> pod vedením Tima Sweeneyho).
+                Dnes představuje absolutní špičku v oblasti fotorealistické 3D grafiky.
+              </p>
+            </div>
+
+            <div class="glass-card" style="margin-top: 12px;">
+              <ul class="custom-list" style="font-size: 0.84em; margin: 0;">
+                <li><strong>Programovací jazyky &amp; logika:</strong>
+                  <ul class="custom-list" style="margin: 4px 0;">
+                    <li class="sub-item"><strong>C++:</strong> Maximální nativní výkon a přímý přístup k jádru enginu.
+                    </li>
+                    <li class="sub-item"><strong>Blueprints:</strong> Vizuální programování bez nutnosti kompilace C++.
+                    </li>
+                    <li class="sub-item"><em>Historicky:</em> Vlastní skriptovací jazyk UnrealScript.</li>
+                  </ul>
+                </li>
+                <li><strong>Zaměření:</strong> Primárně <strong>3D grafika</strong>, špičkové shadery, dynamické GI a
+                  filmový post-processing.</li>
+                <li><strong>Multiplatformní build:</strong> PC, herní konzole (PS5, Xbox), iOS, Android a VR zařízení.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple">
+              <h3>Průmyslové nasazení</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                Masivně využívaný nejen v <strong>herním AAA průmyslu</strong>, ale i v <strong>Hollywoodu</strong>
+                (virtuální produkce seriálu <em>The Mandalorian</em> na obřích LED stěnách StageCraft), architektuře a
+                automobilovém průmyslu.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald">
+              <h3>Licenční a obchodní model</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>100% zdarma pro vývoj i výuku:</strong> Kompletní funkce bez omezení.</li>
+                <li><strong>Royalty model:</strong> Platí se <strong>5 % z tržeb</strong> až po překročení <strong>
+                    $1M</strong> hrubého zisku.</li>
+                <li><strong>0% poplatky na EGS:</strong> Při distribuci přes Epic Games Store je royalty poplatek zcela
+                  odpuštěn.</li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Unreal Engine má více než 25letou historii.
+          Jeho klíčovou architektonickou předností je dualita C++ a Blueprints.
+          V C++ píšete výkonnostně kritické algoritmy, zatímco v Blueprints mohou designéři sestavovat chování, animace
+          a UI bez nutnosti programování.
+          Velkorysý licenční model (5 % až po vydělání prvního milionu dolarů) umožňuje studentům a malým studiím
+          vyvíjet komerční hry zcela bez vstupních nákladů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9: UNREAL – VÝHODY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Unreal Engine &bull; Silné stránky</span>
+        <h2>Unreal Engine: výhody</h2>
+        <div class="slide-grid-2 equal">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <h3>Zdrojový kód &amp; Editor</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Zdroják na GitHubu:</strong> Kompletní zdrojový kód v C++ je volně přístupný po bezplatné
+                  registraci. Lze prozkoumat, ladit a upravit libovolnou část enginu.</li>
+                <li><strong>Moderní integrovaný editor:</strong> Špičkové rozhraní s propracovaným materiálovým
+                  editorem, křivkami animací a debuggingem Blueprints.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3>Výkon &amp; Optimalizace jádra</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Nativní C++ výkon:</strong> Žádný overhead virtuálního stroje ani záseky způsobené Garbage
+                  Collectorem.</li>
+                <li><strong>Špičková optimalizace:</strong> Propracovaný paměťový alokátor a paralelní task grafy pro
+                  moderní vícejádrová CPU.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald">
+              <h3>Grafický výstup &amp; Megascans</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Bezkonkurenční grafika out-of-the-box:</strong> Scéna s výchozím nastavením materiálů a
+                  světel vypadá okamžitě fotorealisticky.</li>
+                <li><strong>Quixel Megascans zdarma:</strong> Přístup k největší světové knihovně fotogrammetrických 3D
+                  modelů a textur.</li>
+                <li><strong>Měsíční bezplatný obsah:</strong> Epic dává každý měsíc komunitě zdarma profesionální
+                  balíčky a assety.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-amber">
+              <h3>Zázemí &amp; Ostrá produkce</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Zázemí v AAA produkci:</strong> Desítky světových hitů (Gears of War, Batman: Arkham,
+                  Tekken, Final Fantasy VII Remake).</li>
+                <li><strong>Testování:</strong> Epic engine neustále testuje a profiluje na hře
+                  <em>Fortnite</em> pro stovky milionů hráčů napříč všemi platformami.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Unreal má dvě obrovské zbraně: otevřenost C++ kódu a vizuální kvalitu.
+          Díky akvizici Quixelu získali všichni uživatelé UE přístup k fotogrammetrickým skenům skal, povrchů a budov v
+          filmové kvalitě zcela zdarma.
+          Zatímco v Unity musíte scénu dlouho ladit, abyste dosáhli AAA vzhledu, v Unrealu dostáváte špičkový
+          postprocessing, fyzikálně korektní materiály a filmový render hned v základu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 10: UNREAL – NEVÝHODY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Unreal Engine &bull; Limity a slabiny</span>
+        <h2>Unreal Engine: nevýhody</h2>
+        <div class="slide-grid-2 equal">
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="highlight-card alert" style="margin: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 6px;">Obtížnost učení &amp;
+                Komplexita</h3>
+              <ul class="custom-list" style="font-size: 0.83em; margin: 4px 0 0 0;">
+                <li><strong>Strmá učební křivka:</strong> Mnohem obtížnější na zvládnutí pro začátečníky než Unity.</li>
+                <li><strong>C++ komplikovanost:</strong> Nutnost chápat správu paměti, práci s pointery a specifická
+                  makra Unrealu (<code>UPROPERTY</code>, <code>UFUNCTION</code>, <code>UCLASS</code>).</li>
+                <li><strong>Úskalí Blueprints:</strong> Při komplexnější herní logice snadno vzniká nepřehledný
+                  „spaghetti kód“, který se velmi obtížně diffuje v verzovacích systémech (Git).</li>
+              </ul>
+            </div>
+
+            <div class="glass-card">
+              <h3>Komunita &amp; Podpora začátečníků</h3>
+              <p style="margin: 0; font-size: 0.83em; color: var(--text-muted); line-height: 1.45;">
+                Menší komunita pro začínající vývojáře než u Unity, méně učebnic a specializovaných návodů. Dokumentace
+                bývá u pokročilých témat nekompletní a vyžaduje studium C++ kódu.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="glass-card accent-rose">
+              <h3>Extrémní hardware &amp; Doby kompilace</h3>
+              <ul class="custom-list" style="font-size: 0.83em; margin: 4px 0 0 0;">
+                <li><strong>Extra pomalá kompilace:</strong> Sestavení C++ projektů trvá minuty až desítky minut.</li>
+                <li><strong>Kompilace shaderů:</strong> Po otevření nového projektu může engine kompilovat velký počet
+                  shaderů.</li>
+                <li><strong>Pomalý import assetů:</strong> Příprava meshů, generování Distance Fields a baking dost
+                  trvají.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card">
+              <h3>Zaměření &amp; Opuštěné segmenty</h3>
+              <ul class="custom-list" style="font-size: 0.83em; margin: 4px 0 0 0;">
+                <li><strong>2D je víceméně opuštěno:</strong> Modul Paper2D se již nevyvíjí.</li>
+                <li><strong>Silná specializace:</strong> Zaměřený hlavně na 1st a 3rd person 3D akce.</li>
+                <li><strong>HTML5 / Web:</strong> WebGL výstup byl zrušen.</li>
+                <li><strong>Menší Asset Marketplace:</strong> Menší počet.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Nevýhody Unrealu pocítíte okamžitě, pokud nemáte špičkový počítač.
+          Zatímco Unity běží hladce i na kancelářském laptopu, Unreal vyžaduje 32 až 64 GB RAM, silný vícejádrový
+          procesor a rychlé NVMe SSD pro shader cache.
+          C++ v Unrealu je navíc obaleno rozsáhlým reflexním systémem s preprocesorem UBT (Unreal Build Tool), což
+          zvyšuje komplexitu chybových hlášek.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 11: UNREAL – MOŽNOSTI A TECHNOLOGIE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Unreal Engine &bull; Pokročilé technologie</span>
+        <h2>Unreal Engine: možnosti a architektura</h2>
+        <div class="slide-grid-2 equal">
+          <div class="glass-card">
+            <h3>Tradiční subsystémy špičkové třídy</h3>
+            <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+              <li><strong>Animace:</strong> Control Rig (tvorba animací přímo v editoru), Full-body Inverse Kinematics,
+                Blend Spaces a stavové automaty.</li>
+              <li><strong>Fyzika (Chaos):</strong> Vysoce výkonná simulace destrukce zdiva, Ragdoll, vozidla a fluidní
+                efekty.</li>
+              <li><strong>Zvuk (MetaSounds):</strong> Procedurální syntéza audia a node-based zvukový subsystém nové
+                generace.</li>
+              <li><strong>VR &amp; XR:</strong> Plná podpora OpenXR, optimalizovaný Forward Shading renderer pro ostrý
+                stereoskopický obraz a MSAA vyhlazování.</li>
+              <li><strong>Materiálový editor:</strong> Pokročilý node-based systém s podporou subtilních PBR shaderů.
+              </li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple">
+            <h3>Převratné inovace v Unreal Engine 5</h3>
+            <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+              <li>
+                <strong>Nanite (Virtualizovaná geometrie):</strong>
+                <div style="color: var(--text-muted); font-size: 0.95em;">
+                  Umožňuje importovat filmové modely se <strong>stovkami milionů polygonů</strong> bez nutnosti ručně
+                  vytvářet úrovně detailů (LOD) nebo péct normálové mapy.
+                </div>
+              </li>
+              <li>
+                <strong>Lumen (Globální osvětlení a odrazy):</strong>
+                <div style="color: var(--text-muted); font-size: 0.95em;">
+                  Plně dynamické GI v reálném čase reagující okamžitě na změny geometrie a světel (žádné zdlouhavé
+                  pečení lightmap!).
+                </div>
+              </li>
+              <li>
+                <strong>Niagara:</strong> Nová generace částicového systému počítaného na GPU pro simulace kouře, ohně,
+                tekutin a hejn.
+              </li>
+              <li>
+                <strong>Chaos Cloth &amp; Groom:</strong> Fyzika látek a fotorealistické prameny vlasů a chlupů.
+              </li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Unreal Engine 5 způsobil revoluci v počítačové grafice díky technologiím Nanite a Lumen.
+          Nanite vykresluje pouze pixely odpovídající viditelným trojúhelníkům – geometrie s miliardami polygonů ze
+          ZBrush se škáluje bezeztrátově.
+          Lumen přináší dynamické odrazy a nepřímé osvětlení v reálném čase.
+          Pro VR je navíc k dispozici Forward Shading renderer, který umožňuje použít hardwarový MSAA pro eliminaci
+          zubatých hran v brýlích.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 12: UNREAL ENGINE UKÁZKY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Unreal Engine &bull; Technologická dema</span>
+        <h2>Unreal Engine: ukázky možností enginu</h2>
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 10px;">
+          <a class="video-card" href="https://youtu.be/qC5KtatMcUw?t=81" target="_blank" rel="noopener noreferrer">
+            <div
+              style="position: relative; width: 130px; height: 75px; border-radius: 8px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+              <img src="../bordel/images-pvr/02_frameworks/ue5_lumen_nanite.jpg" alt="Lumen in the Land of Nanite"
+                style="width: 100%; height: 100%; object-fit: cover; margin: 0 !important;">
+              <div
+                style="position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                ▶</div>
+            </div>
+            <div class="video-details">
+              <div class="video-title">Unreal Engine 5: Lumen in the Land of Nanite</div>
+              <!-- <div style="font-size: 0.82em; color: var(--text-muted); margin-bottom: 3px;">
+                Legendární technologické demo představené na PlayStation 5, které poprvé demonstrovalo mikropolygonální
+                geometrii Nanite a dynamické globální světlo Lumen.
+              </div> -->
+              <div class="video-url">https://youtu.be/qC5KtatMcUw?t=81</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="https://youtu.be/tn607OoVoRw" target="_blank" rel="noopener noreferrer">
+            <div
+              style="position: relative; width: 130px; height: 75px; border-radius: 8px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+              <img src="../bordel/images-pvr/02_frameworks/ue4_demo.jpg" alt="A Boy and His Kite"
+                style="width: 100%; height: 100%; object-fit: cover; margin: 0 !important;">
+              <div
+                style="position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                ▶</div>
+            </div>
+            <div class="video-details">
+              <div class="video-title">Unreal Engine 4: Open World Demo (A Boy and His Kite)</div>
+              <!-- <div style="font-size: 0.82em; color: var(--text-muted); margin-bottom: 3px;">
+                Prezentace otevřené přírodní krajiny o rozloze 100 mil čtverečních v reálném čase, plně dynamického
+                stínování a procedurálního rozmisťování vegetace.
+              </div> -->
+              <div class="video-url">https://youtu.be/tn607OoVoRw</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="https://youtu.be/J3ue35ago3Y" target="_blank" rel="noopener noreferrer">
+            <div
+              style="position: relative; width: 130px; height: 75px; border-radius: 8px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+              <img src="../bordel/images-pvr/02_frameworks/ue4_raytracing.jpg" alt="UE4 Raytracing"
+                style="width: 100%; height: 100%; object-fit: cover; margin: 0 !important;">
+              <div
+                style="position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                ▶</div>
+            </div>
+            <div class="video-details">
+              <div class="video-title">Unreal Engine 4: Real-Time Ray Tracing Demo</div>
+              <!-- <div style="font-size: 0.82em; color: var(--text-muted); margin-bottom: 3px;">
+                Technologické demo vytvořené ve spolupráci s NVIDIA demonstrující věrné ray-traced odrazy v brnění a
+                měkké kontaktní stíny na RTX GPU.
+              </div> -->
+              <div class="video-url">https://youtu.be/J3ue35ago3Y</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="https://www.youtube.com/watch?v=Nthv4xF_zHU" target="_blank"
+            rel="noopener noreferrer">
+            <div
+              style="position: relative; width: 130px; height: 75px; border-radius: 8px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+              <img src="../bordel/images-pvr/02_frameworks/ue_witcher.png" alt="UE4 Raytracing"
+                style="width: 100%; height: 100%; object-fit: cover; margin: 0 !important;">
+              <div
+                style="position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                ▶</div>
+            </div>
+            <div class="video-details">
+              <div class="video-title">Unreal Engine 5: The Witcher Tech demo</div>
+              <!-- <div style="font-size: 0.82em; color: var(--text-muted); margin-bottom: 3px;">
+                Technologické demo vytvořené ve spolupráci s NVIDIA demonstrující věrné ray-traced odrazy v brnění a
+                měkké kontaktní stíny na RTX GPU.
+              </div> -->
+              <div class="video-url">https://www.youtube.com/watch?v=Nthv4xF_zHU</div>
+            </div>
+          </a>
+        </div>
+        <aside class="notes">
+          Zde vidíte tři milníky grafické evoluce Unrealu:
+          Lumen in the Land of Nanite předvedlo, jak bude vypadat nová generace her bez ručního LODování.
+          A Boy and His Kite byl v době UE4 přelomem v procedurálním generování lesů a realistického větru.
+          A ray-tracing demo položilo základy dnešnímu hardwarovému sledování paprsků v moderních grafických kartách.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 13: GODOT – ZÁKLADNÍ PŘEHLED
+           ========================================== -->
+      <section>
+        <span class="slide-category">Godot &bull; Open-source alternativa</span>
+        <h2>Godot Engine: svobodný herní engine</h2>
+        <div class="slide-grid-2">
+          <div>
+
+
+            <div class="glass-card" style="margin-top: 12px;">
+              <ul class="custom-list" style="font-size: 0.84em; margin: 0;">
+                <li><strong>Lehký multiplatformní editor:</strong> Windows, macOS, Linux (velikost instalátoru pouze
+                  desítky MB, spustí se okamžitě bez instalace).</li>
+                <li><strong>Multiplatformní výstup:</strong> Windows, macOS, Linux, mobily (Android, iOS), Web
+                  (HTML5/WebAssembly), konzole (přes partnery).</li>
+                <li><strong>Jazyky:</strong> <strong>GDScript</strong> (Python-like skriptovací jazyk),
+                  <strong>C#</strong> (.NET) a nativní <strong>C++</strong> (GDExtension).
+                </li>
+                <li><strong>Grafický backend:</strong> Vulkan, OpenGL ES 3.0 / 2.0; podpora HDR, PBR, shaderů a
+                  FXAA/TAA.</li>
+                <li><strong>VR podpora:</strong> Integrovaný <strong>OpenXR</strong> modul v jádru.</li>
+                <li><strong>Slabina:</strong> Méně celosvětově známých AAA her (spíše indie scéna: <em>Brotato</em>,
+                  <em>Cassette Beasts</em>).
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="highlight-card" style="margin-top: 0;">
+              <p style="margin: 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+                <strong>2D a 3D free open-source engine</strong> šířený pod <strong>MIT licencí</strong>.
+                Žádné licenční poplatky, žádná procenta z tržeb.
+              </p>
+            </div>
+
+            <div class="image-showcase" style="padding: 16px; background: rgba(255,255,255,0.9);">
+              <img src="../bordel/images-pvr/02_frameworks/godot_logo.png" alt="Godot Engine Logo"
+                style="max-height: 120px;" data-preview-image>
+            </div>
+
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/02_frameworks/godot_demo.png" alt="Godot 3D Grafika" data-preview-image>
+              <div class="image-caption">Godot 3D grafické možnosti, PBR materiály a stínování</div>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Godot je nejrychleji rostoucí open-source herní engine na světě.
+          Díky licenci MIT není vývojář vázán žádnými licenčními podmínkami velkých korporací – což se stalo klíčovým po
+          kontroverzních poplatcích za instalace, které se v minulosti pokusilo zavést Unity.
+          Godot má vlastní skriptovací jazyk GDScript podobný Pythonu, ale podporuje i moderní C# a nízkoúrovňové
+          pluginy v C++ přes rozhraní GDExtension.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 14: GODOT – EDITOR A ARCHITEKTURA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Godot &bull; Editor a architektura uzlů</span>
+        <h2>Godot Engine: editor a architektura uzlů</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/02_frameworks/godot_editor.png" alt="Godot Engine Editor Interface"
+                data-preview-image>
+              <div class="image-caption">Uživatelské rozhraní editoru Godot (Scene Tree, 3D Viewport, Inspector,
+                FileSystem)</div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card">
+              <h3>Architektura: Vše je uzel (Node)</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Hierarchie uzlů:</strong> Každý herní objekt je uzlem s konkrétní funkčností
+                  (MeshInstance3D, CollisionShape3D, Camera3D).</li>
+                <li><strong>Kompozice scén:</strong> Scéna v Godotu je strom uzlů. Jednotlivé scény lze skládat a
+                  vnořovat do sebe.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3>Pracovní postup v editoru</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Integrované prostředí:</strong> Editor obsahuje zabudovaný skriptovací editor pro GDScript
+                  s
+                  našeptávačem a offline dokumentací.</li>
+                <li><strong>Okamžitý start:</strong> Spuštění a test scény trvá méně než 1 sekundu.</li>
+                <li><strong>Čistý 2D i 3D:</strong> 2D a 3D zobrazení jsou od sebe oddělena: 2D scény
+                  nepoužívají
+                  falešnou 3D kameru, ale skutečné pixelové souřadnice.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Na snímku vidíte editor Godotu s 3D platformerem.
+          Architektura Godotu je založena na uzlech (Nodes) a scénách (Scenes).
+          Zatímco v Unity rozšiřujete GameObject o komponenty a v Unrealu používáte herce (Actors), v Godotu je každá
+          znovupoužitelná část (hráč, zbraň, nepřítel) samostatnou scénou.
+          Editor je navíc extrémně rychlý a nenáročný na paměť.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 15: A-FRAME – WEBVR & WEBXR
+           ========================================== -->
+      <section>
+        <span class="slide-category">WebXR &bull; Prohlížečové frameworky</span>
+        <h2>A-Frame: virtuální realita na webu</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">WebXR bez instalace</h3>
+              <p style="margin: 0; font-size: 0.86em; color: var(--text-main); line-height: 1.45;">
+                Open-source JavaScript knihovna vyvinutá v laboratořích <strong>Mozilly</strong>. Postavená nad
+                <strong>Three.js</strong> a WebGL/WebXR API.
+              </p>
+            </div>
+
+            <div class="glass-card" style="margin-top: 12px;">
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+                <li><strong>Běží v běžném prohlížeči:</strong> Uživatel nemusí nic instalovat, stačí
+                  otevřít URL odkaz v mobilu či VR headsetu (Quest Browser, Apple Vision Pro).</li>
+                <li><strong>Podpora VR i AR:</strong> Automaticky detekuje headset, prostorové ovladače a trackování
+                  rukou.</li>
+                <li><strong>Deklarativní HTML syntax:</strong> Zápis 3D scén pomocí <strong>Entity-Component-System
+                    (ECS)</strong> přímo do DOM stromu.</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div>
+            <div class="glass-card" style="padding: 14px 18px;">
+              <pre style="margin: 0; font-size: 0.68em; line-height: 1.15; width: 100%;"><code class="language-html" data-trim data-noescape>&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Hello, WebVR! • A-Frame&lt;/title&gt;
+    &lt;script src="https://aframe.io/releases/1.4.0/aframe.min.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;a-scene background="color: #FAFAFA"&gt;
+      &lt;!-- Krychle s rotací a stínem --&gt;
+      &lt;a-box position="-1 0.5 -3" rotation="0 45 0"
+             color="#4CC3D9" shadow&gt;&lt;/a-box&gt;
+
+      &lt;!-- Koule --&gt;
+      &lt;a-sphere position="0 1.25 -5" radius="1.25"
+                color="#EF2D5E" shadow&gt;&lt;/a-sphere&gt;
+
+      &lt;!-- Válec --&gt;
+      &lt;a-cylinder position="1 0.75 -3" radius="0.5"
+                  height="1.5" color="#FFC65D" shadow&gt;&lt;/a-cylinder&gt;
+
+      &lt;!-- Podlaha / rovina --&gt;
+      &lt;a-plane position="0 0 -4" rotation="-90 0 0"
+               width="4" height="4" color="#7BC8A4" shadow&gt;&lt;/a-plane&gt;
+    &lt;/a-scene&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+
+            <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+              <a class="video-card" style="margin-top: 0; padding: 10px 14px;"
+                href="https://aframe.io/aframe/examples/showcase/shopping/" target="_blank" rel="noopener noreferrer">
+                <div class="video-icon"
+                  style="width: 32px; height: 32px; font-size: 14px; background: #0891b2; box-shadow: none;">🌐</div>
+                <div class="video-details">
+                  <div class="video-title" style="font-size: 0.88em;">Ukázka: VR Shopping Showcase</div>
+                  <div class="video-url" style="font-size: 0.7em;">aframe.io/examples/showcase/shopping</div>
+                </div>
+              </a>
+              <a class="video-card" style="margin-top: 0; padding: 10px 14px;"
+                href="https://aframe.io/aframe/examples/showcase/composite/" target="_blank" rel="noopener noreferrer">
+                <div class="video-icon"
+                  style="width: 32px; height: 32px; font-size: 14px; background: #7c3aed; box-shadow: none;">🌐</div>
+                <div class="video-details">
+                  <div class="video-title" style="font-size: 0.88em;">Ukázka: Composite WebXR Demo</div>
+                  <div class="video-url" style="font-size: 0.7em;">aframe.io/examples/showcase/composite</div>
+                </div>
+              </a>
+              <a class="video-card" style="margin-top: 0; padding: 10px 14px;"
+                href="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/a-frame-ar-web-app/src/index.html" target="_blank"
+                rel="noopener noreferrer">
+                <div class="video-icon"
+                  style="width: 32px; height: 32px; font-size: 14px; background: #7c3aed; box-shadow: none;">🌐</div>
+                <div class="video-details">
+                  <div class="video-title" style="font-size: 0.88em;">Ukázka: AR Web App v A-Frame</div>
+                  <div class="video-url" style="font-size: 0.7em;">
+                    kmlinux.fjfi.cvut.cz/~pauspetr/mvt/a-frame-ar-web-app/src/index.html</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          A-Frame přináší revoluci v dostupnosti virtuální reality.
+          Pokud chcete klientovi ukázat 3D produkt, nepotřebujete ho nutit stahovat 2GB aplikaci z Meta Quest Storu.
+          Stačí mu poslat odkaz. Když si stránku otevře v headsetu, klikne na tlačítko Enter VR a ocitne se v imerzivním
+          prostoru.
+          Syntaxe je geniálně jednoduchá – vytváříte HTML tagy jako &lt;a-box&gt; nebo &lt;a-sphere&gt; a skriptujete je
+          běžným JavaScriptem.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 16: NEOS VR – TVORBA SVĚTŮ VE VR
+           ========================================== -->
+      <section>
+        <span class="slide-category">VR Nativní &bull; Editace uvnitř virtuální reality</span>
+        <h2>Neos VR / Resonite: software pro tvoření světů ve VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <p style="margin: 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+                Platforma umožňující <strong>vytvářet, editovat a programovat kompletní virtuální světy přímo
+                  s nasazeným headsetem</strong> v kooperaci s ostatními uživateli.
+              </p>
+            </div>
+
+            <div class="glass-card" style="margin-top: 12px;">
+              <ul class="custom-list" style="font-size: 0.84em; margin: 0;">
+                <li><strong>Český start-up:</strong> Založeno českým vývojářem <strong>Tomášem Mariančíkem</strong>
+                  (Frooxius) a studiem Solirax (dnešní pokračovatel: <em>Resonite</em>).</li>
+                <li><strong>Zdarma na Steamu:</strong> Volně ke stažení pro libovolný PCVR headset.</li>
+                <li><strong>Výuka na FIT ČVUT:</strong> Platforma využívaná v předmětu <strong>BI-VR1</strong>
+                  (Virtuální realita 1).</li>
+                <li><strong>Vizuální programování LogiX:</strong> Tvorba kompletní aplikační logiky a skriptů manipulací
+                  s 3D uzly a vodiči v prostoru.</li>
+                <li><strong>Sociální síť a metaverzum:</strong> Import 3D modelů pouhým přetažením myší či rukou do
+                  prostoru a okamžité sdílení s přáteli.</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div>
+            <a class="video-card" style="margin-bottom: 12px;" href="https://youtu.be/Vta9iqHmwNY" target="_blank"
+              rel="noopener noreferrer">
+              <div
+                style="position: relative; width: 110px; height: 62px; border-radius: 8px; overflow: hidden; flex-shrink: 0;">
+                <img src="../bordel/images-pvr/02_frameworks/neosvr_demo.jpg" alt="Neos VR Demo"
+                  style="width: 100%; height: 100%; object-fit: cover; margin: 0 !important;">
+                <div
+                  style="position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;">
+                  ▶</div>
+              </div>
+              <div class="video-details">
+                <div class="video-title" style="font-size: 0.9em;">Ukázka: Tvorba a skriptování v Neos VR</div>
+                <div class="video-url" style="font-size: 0.72em;">https://youtu.be/Vta9iqHmwNY</div>
+              </div>
+            </a>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/02_frameworks/neosvr_screenshot.png" alt="Ukázka tvorby ve VR v Neos VR"
+                data-preview-image>
+              <div class="image-caption">Tvorba a manipulace s 3D objekty a logikou přímo ve virtuální realitě v Neos VR
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Neos VR (jehož nástupcem je projekt Resonite) představuje fascinující český úspěch.
+          Hlavní tvůrce Tomáš Mariančík (Frooxius) vyvinul systém, kde nepotřebujete sedět u plochého monitoru a
+          kompilovat kód.
+          Nasadíte si brýle, teleportujete se do prázdného prostoru a pomocí virtuálního paprsku si vytáhnete 3D
+          objekty, světla a pomocí uzlového systému LogiX je propojíte do funkčních her.
+          Využíváme ho ve výuce na FIT ČVUT v předmětu BI-VR1.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 17: VELKÉ SROVNÁNÍ ENGINŮ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Srovnání &bull; Rozhodovací matice</span>
+        <h2>Srovnání herních enginů pro VR</h2>
+        <p style="color: var(--text-muted); font-size: 0.82em; text-align: left; margin: 0 0 10px 0;">
+          Přehledné porovnání klíčových parametrů pro volbu optimálního vývojového prostředí:
+        </p>
+
+        <table class="comparison-table" style="font-size: 0.76em;">
+          <thead>
+            <tr>
+              <th>Engine / Nástroj</th>
+              <th>Jazyky &amp; Skriptování</th>
+              <th>Licence &amp; Cena</th>
+              <th>VR Ekosystém &amp; Silné stránky</th>
+              <th>Kdy zvolit pro projekt?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Unity3D</strong></td>
+              <td><span style="color: var(--accent-cyan); font-weight: 700;">C# (.NET)</span><br><span
+                  style="font-size: 0.85em; color: var(--text-dim);">Visual Scripting</span></td>
+              <td>Zdarma do $200k obratu,<br>poté roční předplatné</td>
+              <td>Jednička na trhu mobilního VR (Quest), masivní Asset Store, XR Interaction Toolkit.</td>
+              <td><strong>Doporučeno pro většinu VR/AR projektů</strong>, mobilní headsety a začátečníky.</td>
+            </tr>
+            <tr>
+              <td><strong>Unreal Engine</strong></td>
+              <td><span style="color: var(--accent-purple); font-weight: 700;">C++</span> &amp; <span
+                  style="color: var(--accent-cyan); font-weight: 700;">Blueprints</span></td>
+              <td>Zdarma, 5 % royalty až po překročení zisku $1M hrubého</td>
+              <td>Absolutní špička fotorealismu, Nanite &amp; Lumen, Quixel Megascans, filmová kvalita.</td>
+              <td>High-end PCVR tituly, fotorealistické simulace, virtuální produkce a AAA hry.</td>
+            </tr>
+            <tr>
+              <td><strong>Godot Engine</strong></td>
+              <td><span style="color: var(--accent-emerald); font-weight: 700;">GDScript, C#, C++</span></td>
+              <td><span style="color: var(--accent-emerald); font-weight: 700;">100% Free (MIT)</span><br>žádné poplatky
+              </td>
+              <td>Extrémně lehký (~50 MB), bleskový start, nezávislost na korporacích, OpenXR.</td>
+              <td>Indie tituly, open-source projekty, výuka a týmy s nulovým rozpočtem.</td>
+            </tr>
+            <tr>
+              <td><strong>A-Frame (WebXR)</strong></td>
+              <td><span style="color: var(--accent-amber); font-weight: 700;">HTML &amp; JavaScript</span><br><span
+                  style="font-size: 0.85em; color: var(--text-dim);">Three.js ECS</span></td>
+              <td><span style="color: var(--accent-emerald); font-weight: 700;">100% Free (MIT)</span></td>
+              <td>Okamžitá dostupnost v prohlížeči přes URL, žádná instalace, webové AR/VR.</td>
+              <td>Webové showroomy, interaktivní prezentace na konferencích, e-commerce v AR.</td>
+            </tr>
+            <tr>
+              <td><strong>Neos VR / Resonite</strong></td>
+              <td><span style="color: var(--accent-rose); font-weight: 700;">LogiX (ve VR)</span> &amp; C#</td>
+              <td>Zdarma na Steamu</td>
+              <td>Editace zevnitř VR prostoru v kooperativním multiplayeru v reálném čase.</td>
+              <td>Kolaborativní setkávání, výuka v imerzi (BI-VR1), tvorba metaverzních světů.</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Tato srovnávací tabulka shrnuje rozhodovací strom pro vývojáře:
+          Pokud cílíte na samostatný headset Meta Quest s omezeným mobilním čipsetem, Unity je díky URP a optimalizaci
+          nejčastější volbou.
+          Pokud máte k dispozici silné PC s RTX kartou a cílíte na fotorealistickou grafiku, zvolte Unreal Engine.
+          Pro svobodu od licenčních podmínek je tu Godot, a pokud potřebujete nulové tření pro uživatele na webu,
+          sáhněte po A-Frame.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 18: ZÁVĚR A DOPORUČENÍ PRO VÝUKU
+           ========================================== -->
+      <!-- <section>
+        <span class="slide-category">Závěr &bull; Shrnutí a výuka</span>
+        <h2>Závěr a doporučení pro semestr</h2>
+        <div class="slide-grid-2 equal" style="margin-top: 20px;">
+          <div>
+            <div class="glass-card" style="margin-bottom: 14px;">
+              <div class="spec-badge cyan" style="margin-bottom: 8px;">Volba pro cvičení MI-PVR</div>
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Proč v předmětu volíme
+                Unity3D?</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Průmyslový standard pro XR:</strong> Široce adoptovaný pro Meta Quest, HTC Vive, Pico i
+                  Apple Vision Pro.</li>
+                <li><strong>Přístupnost C#:</strong> Rychlé osvojení principů VR interakcí bez zdlouhavého ladění správy
+                  paměti v C++.</li>
+                <li><strong>XR Interaction Toolkit:</strong> Hotové standardizované komponenty pro teleportaci,
+                  grabování a prostorové UI.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin: 0;">
+              <p style="margin: 0; font-size: 0.88em; color: var(--text-main); font-weight: 600;">
+                V následujících přednáškách a cvičeních se detailně zaměříme na prostředí <strong>Unity3D</strong> a
+                skriptování v <strong>C#</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card accent-purple" style="margin-bottom: 14px;">
+              <div class="spec-badge purple" style="margin-bottom: 8px;">Klíčová ponaučení</div>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 4px 0 0 0;">
+                <li><strong>Žádný engine není univerzálně nejlepší:</strong> Volba závisí na cílovém hardwaru (PCVR vs.
+                  Standalone mobilní headset vs. Web).</li>
+                <li><strong>Výkon ve VR je zákon:</strong> Stabilních <strong>90 FPS</strong> bez záseků je nutností pro
+                  eliminaci kinetózy.</li>
+                <li><strong>Standardy vítězí:</strong> API <strong>OpenXR</strong> sjednocuje přístup k brýlím napříč
+                  všemi moderními enginy.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald">
+              <div class="spec-badge emerald" style="margin-bottom: 8px;">Otázky &amp; Diskuze</div>
+              <p style="margin: 0; font-size: 0.85em; color: var(--text-muted);">
+                Máte dotazy k herním enginům nebo zkušenosti s některým z nich?<br>
+                <strong>Děkuji za pozornost!</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Shrnutí na závěr přednášky: V našem předmětu MI-PVR budeme na cvičeních pracovat primárně s Unity3D a jazykem
+          C#.
+          Důvodem je jeho vyváženost, vynikající podpora headsetů Meta Quest a přehledné API.
+          V příštím bloku se podíváme na základy jazyka C# a následně na samotné prostředí Unity a skriptování VR
+          interakcí.
+        </aside>
+      </section> -->
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/multimodal/multimodal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+  <script src="../bordel/js/tooltips.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      plugins: [RevealNotes, RevealHighlight, RevealSearch, RevealZoom, RevealPointer, Multimodal],
+      pointer: {
+        key: "q", // key to enable pointer, default "q", not case-sensitive
+        color: "red", // color of a cursor, default "red" any valid CSS color
+        opacity: 0.8, // opacity of cursor, default 0.8
+        pointerSize: 25, // pointer size in px, default 12
+        alwaysVisible: false, // should pointer mode be always visible? default "false"
+        tailLength: 10, // NOT IMPLEMENTED YET!!! how long the "tail" should be? default 10
+      }
+    });
+  </script>
+</body>
+
+</html>

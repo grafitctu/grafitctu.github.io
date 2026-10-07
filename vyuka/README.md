@@ -25,12 +25,22 @@ appear in each cell: 04, 05, 06, 10 and 11–13. The last item is one PDF used
 for both parts of the Fourier/Wiener lecture. The source PDF numbering follows
 the school course plan rather than the older consolidated LaTeX filenames.
 
-VGA (Computer game architecture) and EGG (Engines for games and graphics)
-have reserved columns. Prepared web lecture copies were not found in the
-current source workspace, so their cells have no links yet.
+VGA (Computer game architecture) still has a reserved column.
+The 2026-10-07 snapshot adds eight current public web presentations from
+Petr Pauš: three MVT, one EGG (coauthored with Jan Matoušek) and four PVR.
+Their entrypoints were verified against the current official course plans.
+The two presentations for MVT lecture 02 share one table cell, each with
+its own title and links. Cells can contain a lecture object or an array.
+All lectures retain the author's attribution and controls, with a source link
+in the overview. Lecture code/library/images are mirrored in `paus/` using
+their original directory structure. Videos and project archives retain
+absolute links to the author's server. One MVT AR GIF link returning 404 was
+corrected to the working image already specified by the source's preview.
 
 `source-manifest.json` records the relative source path, destination, byte count
-and SHA-256 of each copied file. The snapshot is dated 2026-10-05. The PDF.js
+and SHA-256 of each copied file. For mirrored Pauš lectures it additionally
+records the original URL, original hash and documented link adaptations.
+The latest snapshot is dated 2026-10-07. The PDF.js
 license is preserved as `vhs/pdf/PDFJS-LICENSE.txt`.
 
 The local teaching workspace contains `tools/build_grafit_teaching.cjs`, which
@@ -41,6 +51,8 @@ regenerates `catalog.json` and the copy manifest. Run it from that workspace:
 node tools/build_grafit_teaching.cjs <isolated-GRAFIT-checkout>
 node tools/add_grafit_pga.cjs <isolated-GRAFIT-checkout>
 node tools/add_grafit_course_columns.cjs <isolated-GRAFIT-checkout>
+python tools/mirror_paus_lectures.py
+node tools/add_grafit_paus.cjs <isolated-GRAFIT-checkout>
 ```
 
 Then regenerate the indexes, verify the copied lectures, and publish only the

@@ -1,0 +1,2017 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>MVT: Virtuální realita (VR) — ČVUT</title>
+  <meta name="description"
+    content="Přednáška Moderní vizualizační technologie: Virtuální realita (VR) — Petr Pauš, Jiří Chludil">
+  <meta name="author" content="Petr Pauš, Jiří Chludil">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+</head>
+
+<body>
+
+
+  <!-- Top Persistent Header -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+    <!-- <div class="logo-badge">
+      <span class="cvut-tag">ČVUT</span>
+      <span>MVT &bull; <span class="highlight">Virtuální realita</span></span>
+    </div>
+    <div class="logo-badge">
+      <span>Petr Pauš | Jiří Chludil</span>
+    </div> -->
+  </header>
+
+  <!-- Bottom Persistent Footer Navigation Helper -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div>
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==========================================
+           BLOK 1: DEFINICE & FUNDAMENTY
+           ========================================== -->
+
+      <!-- SLIDE 1: Title -->
+      <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)">
+        <div class="title-hero">
+          <div class="vr-badge">MVT &bull; Moderní vizualizační technologie</div>
+          <h1>Virtuální realita</h1>
+          <p style="color: var(--text-muted); font-size: 1.2em; margin-bottom: 24px;">Principy, hardware, vnímání,
+            prostorová rozhraní a vývojové nástroje</p>
+
+          <div class="authors">
+            <div class="author-card">
+              <div class="author-name">Petr Pauš</div>
+            </div>
+            <!-- <div class="author-card">
+              <div class="author-name">Jiří Chludil</div>
+            </div> -->
+          </div>
+        </div>
+        <aside class="notes">
+          Vítejte na přednášce věnované Virtuální realitě (VR) v rámci předmětu Moderní vizualizační technologie (MVT).
+          Dnes projdeme základní definice, fyzikální a optické principy, hardware, psychologii vnímání, 3D rozhraní a
+          vývojové nástroje.
+        </aside>
+      </section>
+
+      <!-- SLIDE 2: Obsah -->
+      <section>
+        <span class="slide-category">Přehled přednášky</span>
+        <h2>Obsah</h2>
+        <div class="slide-grid-3" style="margin-top: 20px;">
+          <div class="glass-card">
+            <div class="spec-badge cyan" style="margin-bottom: 8px;">01 &bull; Fundamenty</div>
+            <h3 style="font-size: 1.05em; color: var(--text-main);">Pojmy & Kontinuum</h3>
+            <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">Co je to VR, Milgramovo kontinuum, XR,
+              3-DoF vs. 6-DoF, optika a latence.</p>
+          </div>
+          <div class="glass-card">
+            <div class="spec-badge emerald" style="margin-bottom: 8px;">02 &bull; Percepce</div>
+            <h3 style="font-size: 1.05em; color: var(--text-main);">Vnímání & Fyziologie</h3>
+            <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">Immersion vs. Presence, multimodální
+              vnímání (Birdly), kinetóza a VAC konflikt.</p>
+          </div>
+          <div class="glass-card">
+            <div class="spec-badge amber" style="margin-bottom: 8px;">03 &bull; Interakce</div>
+            <h3 style="font-size: 1.05em; color: var(--text-main);">Uživatelské rozhraní</h3>
+            <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">HCI ve 3D, Gulf of execution, 2D vs.
+              diegetické 3D UI, manipulace a lokomoce.</p>
+          </div>
+          <div class="glass-card">
+            <div class="spec-badge cyan" style="margin-bottom: 8px;">04 &bull; Standardy</div>
+            <h3 style="font-size: 1.05em; color: var(--text-main);">Vývoj & OpenXR</h3>
+            <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">Sjednocení API přes OpenXR, herní enginy
+              (Unity, Unreal, Godot), WebXR a Resonite.</p>
+          </div>
+          <div class="glass-card">
+            <div class="spec-badge purple" style="margin-bottom: 8px;">05 &bull; Praxe</div>
+            <h3 style="font-size: 1.05em; color: var(--text-main);">Aplikace v praxi</h3>
+            <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">Vědecká vizualizace dat, medicína, CAD/BIM
+              v měřítku 1:1, krizové simulace.</p>
+          </div>
+
+          <div class="glass-card">
+            <div class="spec-badge purple" style="margin-bottom: 8px;">06 &bull; Hardware</div>
+            <h3 style="font-size: 1.05em; color: var(--text-main);">Evoluce headsetů</h3>
+            <p style="color: var(--text-muted); font-size: 0.8em; margin: 0;">PC VR (Vive, Rift, Index), Standalone
+              (Quest
+              1–3), PS VR 1 & 2 a Apple Vision Pro.</p>
+          </div>
+        </div>
+        <aside class="notes">
+          Přednáška je strukturována od teoretických a fyzikálních základů, přes přehled hardwaru a percepce, až po
+          architekturu 3D rozhraní a reálné aplikace v průmyslu a vědě.
+        </aside>
+      </section>
+
+      <!-- SLIDE 3: Co je to VR? & Burdea Triad -->
+      <section>
+        <span class="slide-category">Fundamenty &bull; Definice</span>
+        <h2>Co je to Virtuální realita?</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <p style="margin: 0; font-size: 0.95em; color: var(--text-main); line-height: 1.45;">
+                <strong>Virtuální realita (VR)</strong> je interaktivní, počítačem generované trojrozměrné prostředí
+                (syntetický svět), které v reálném čase reaguje na podněty uživatele a stimuluje jeho smysly tak, aby
+                vyvolalo pocit fyzické přítomnosti.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em; margin-top: 14px;">
+              <li><strong>Klíčové charakteristiky:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Generování v reálném čase (minimálně 72–120 snímků za sekundu).<br>
+                  Stereoskopické zobrazení odpovídající pozici obou očí (binokulární disparita).<br>
+                  Sledování hlavy s minimální latencí (Head-tracking 6 DoF).
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="text-align: center; padding: 24px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 12px;">Triáda VR dle Grigore
+                Burdea<br>(I³ Triangle)</h3>
+              <div style="display: flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 14px;">
+                <div class="highlight-card" style="margin: 0; padding: 10px 14px;">
+                  <strong style="color: var(--accent-cyan);">1. Immersion (Ponoření):</strong>
+                  <div style="font-size: 0.8em; color: var(--text-muted);">Technologická izolace a stimulace smyslů.
+                  </div>
+                </div>
+                <div class="highlight-card" style="margin: 0; padding: 10px 14px;">
+                  <strong style="color: var(--accent-purple);">2. Interaction (Interakce):</strong>
+                  <div style="font-size: 0.8em; color: var(--text-muted);">Možnost manipulovat s objekty a měnit stav
+                    světa v reálném čase.</div>
+                </div>
+                <div class="highlight-card" style="margin: 0; padding: 10px 14px;">
+                  <strong style="color: var(--accent-emerald);">3. Imagination (Představivost):</strong>
+                  <div style="font-size: 0.8em; color: var(--text-muted);">Kognitivní schopnost mozku uvěřit novému
+                    prostředí a řešit v něm úkoly.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Burdeův trojúhelník (I3: Immersion, Interaction, Imagination) z roku 1993 je dodnes základní akademickou
+          definicí VR. Pokud chybí interakce (např. pasivní 360° video), nejedná se o plnohodnotnou VR.
+        </aside>
+      </section>
+
+      <!-- SLIDE 4: Milgramovo kontinuum (XR / MR / AR / VR) -->
+      <section>
+        <span class="slide-category">Fundamenty &bull; Pojmový rámec</span>
+        <h2>Milgramovo kontinuum (XR / MR / AR / VR)</h2>
+        <p style="color: var(--text-muted); font-size: 0.85em; text-align: left; margin: 0 0 10px 0;">
+          Paul Milgram a Fumio Kishino (1994) definovali plynulý přechod mezi reálným a plně virtuálním světem:
+        </p>
+
+        <div class="continuum-container">
+          <div class="continuum-bar"></div>
+          <div class="continuum-labels">
+            <div class="continuum-node">
+              <div class="continuum-title" style="color: #10b981;">Reálné prostředí</div>
+              <div class="continuum-desc">Fyzický svět bez syntetických prvků.</div>
+            </div>
+            <div class="continuum-node">
+              <div class="continuum-title" style="color: var(--accent-cyan);">Rozšířená realita (AR)</div>
+              <div class="continuum-desc">Digitální 2D/3D objekty promítané do reálného světa (opticky nebo kamerou).
+              </div>
+            </div>
+            <div class="continuum-node">
+              <div class="continuum-title" style="color: var(--accent-purple);">Rozšířená virtualita (AV)</div>
+              <div class="continuum-desc">Virtuální svět obohacený o reálné fyzické objekty a osoby (video streams).
+              </div>
+            </div>
+            <div class="continuum-node">
+              <div class="continuum-title" style="color: var(--accent-magenta);">Virtuální realita (VR)</div>
+              <div class="continuum-desc">Plně syntetické prostředí zcela izolované od reality.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-grid-2 equal" style="margin-top: 16px;">
+          <div class="glass-card" style="padding: 14px 18px;">
+            <strong style="color: var(--accent-cyan);">XR (Extended Reality):</strong>
+            <span style="font-size: 0.82em; color: var(--text-muted);">
+              Zastřešující pojem zahrnující celé spektrum (AR + MR + VR).
+            </span>
+          </div>
+          <div class="glass-card accent-purple" style="padding: 14px 18px;">
+            <strong style="color: var(--accent-purple);">MR (Mixed Reality) dnes:</strong>
+            <span style="font-size: 0.82em; color: var(--text-muted);">
+              Prolínání reality a virtuálna umožněné stereoskopickými barevnými kamerami (Passthrough u Quest 3 a Apple
+              Vision Pro).
+            </span>
+          </div>
+        </div>
+        <aside class="notes">
+          Milgramovo kontinuum je základní terminologický koncept. Dnes se hranice mezi AR a VR stírá díky nástupu
+          Passthrough MR headsetů, které jsou hardwarově VR headsetem, ale promítají uživateli stereoskopický obraz
+          reálného pokoje.
+        </aside>
+      </section>
+
+      <!-- SLIDE 5: 3-DoF vs. 6-DoF -->
+      <section>
+        <span class="slide-category">Technické principy &bull; Dimenze volnosti</span>
+        <h2>Stupně volnosti: 3-DoF vs. 6-DoF</h2>
+        <div class="slide-grid-2 equal" style="margin-top: 20px;">
+          <div class="glass-card">
+
+            <h3 style="color: var(--text-main); font-size: 1.15em; margin: 10px 0 6px 0;">Orientation Tracking (3-DoF
+              Rotace)</h3>
+            <p style="color: var(--text-muted); font-size: 0.83em; line-height: 1.45;">
+              Snímání pouze úhlového otočení hlavy v pevném bodě prostoru pomocí gyroskopu a akcelerometru (IMU):
+            </p>
+            <div style="margin: 10px 0;">
+              <span class="dof-pill rot">Pitch (Kývání nahoru/dolů)</span>
+              <span class="dof-pill rot">Yaw (Otáčení vlevo/vpravo)</span>
+              <span class="dof-pill rot">Roll (Naklánění do stran)</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.8em; margin-top: 10px;">
+              <li><strong>Zařízení:</strong> Google Cardboard, Oculus Go, 360° panoramatická videa.</li>
+              <li><strong>Limit:</strong> Pokud se uživatel předkloní nebo udělá krok, obraz se pohne s ním &rarr; silný
+                spouštěč kinetózy!</li>
+              <li><a href="../bordel/images-mvt/dof.png" data-title="3-DoF vs. 6-DoF"
+                  data-preview-image="../bordel/images-mvt/dof.png">🖼
+                  3-DoF vs.
+                  6-DoF</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple">
+
+            <h3 style="color: var(--text-main); font-size: 1.15em; margin: 10px 0 6px 0;">Positional + Orientation
+              Tracking <br>(6-DoF Rotace + Pozice)
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.83em; line-height: 1.45;">
+              Plné prostorové sledování. K 3 úhlům rotace přidává sledování polohy v kartézských osách:
+            </p>
+            <div style="margin: 10px 0;">
+              <span class="dof-pill trans">X (Sway &bull; doleva/doprava)</span>
+              <span class="dof-pill trans">Y (Heave &bull; nahoru/dolů)</span>
+              <span class="dof-pill trans">Z (Surge &bull; dopředu/dozadu)</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.8em; margin-top: 10px;">
+              <li><strong>Zařízení:</strong> HTC Vive, Oculus Rift/Quest, Valve Index, PS VR, Vision Pro.</li>
+              <li><strong>Výhoda:</strong> Možnost dřepnout si, obcházet objekty a přirozeně nahlížet za rohy
+                (Room-scale
+                VR).</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Pochopení 3-DoF vs. 6-DoF je naprosto zásadní. U 3-DoF funguje pouze orientace, u 6-DoF má uživatel plnou
+          translaci v místnosti. Pro bezproblémovou VR bez nevolnosti je 6-DoF nezbytné.
+        </aside>
+      </section>
+
+      <!-- SLIDE 6: Optika a čočky -->
+      <section>
+        <span class="slide-category">Technické principy &bull; Displeje a optika</span>
+        <h2>Optika a čočky: Proč je potřebujeme?</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.83em;">
+              <li><strong>Fyziologický limit oka:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Lidské oko není schopné zaostřit na displej vzdálený pouhých 3–5 cm od obličeje.
+                </div>
+              </li>
+              <li><strong>Účel čoček ve VR:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Čočky kolimují světlo a posouvají virtuální ohniskovou rovinu obrazu do dálky (~1.5 až 2 metry).
+                </div>
+              </li>
+              <li><strong>Evoluce optiky:</strong>
+                <ul class="custom-list" style="margin-top: 4px;">
+                  <li class="sub-item"><strong>Klasické asférické čočky:</strong> Těžké, silné, chromatická aberace.
+                  </li>
+                  <li class="sub-item"><strong><a href="../bordel/images-mvt/fresnel.png"
+                        data-preview-image="../bordel/images-mvt/fresnel.png" data-title="Fresnelovy čočky">Fresnelovy
+                        čočky
+                        🖼</a>:</strong> Vroubkovaný profil (Rift, Vive,
+                    Quest 2).
+                    Lehčí, ale trpí na světelné paprsky („God Rays“) a rozmazání okrajů.</li>
+                  <li class="sub-item"><strong><a href="../bordel/images-mvt/pancake.png"
+                        data-preview-image="../bordel/images-mvt/pancake.png" data-title="Pancake čočky">Pancake čočky
+                        🖼</a>:</strong> Skládaná polarizační optika
+                    (Quest 3, Vision Pro). Umožnila zkrátit vzdálenost mezi okem a displejem až o 40 % a zajistila
+                    ostrost v celém poli.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="padding: 20px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em;">IPD (Interpupillary Distance)</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; line-height: 1.45;">
+                Vzdálenost mezi středy zorniček lidských očí (obvykle 58 – 72 mm).
+              </p>
+              <div class="highlight-card" style="padding: 10px 14px; font-size: 0.8em; margin: 10px 0;">
+                Pokud optický střed čoček neodpovídá reálnému IPD uživatele, dochází ke ztrátě ostrosti (Sweet Spot),
+                geometrické distorzi a rychlé únavě očí.
+              </div>
+              <div style="font-size: 0.8em; color: var(--accent-emerald);">
+                &check; Kvalitní headsety nabízejí plynulý hardwarový posuv čoček pro nastavení IPD.
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Přechod z Fresnelových čoček na Pancake čočky byl největším skokem v optice za posledních 8 let. Umožnil
+          radikálně zmenšit hloubku headsetu a odstranil rušivé odlesky v kontrastních scénách.
+        </aside>
+      </section>
+
+      <!-- SLIDE 7: Latence a Motion-to-Photon -->
+      <section>
+        <span class="slide-category">Technické principy &bull; Výpočetní řetězec</span>
+        <h2>Latence a „Motion-to-Photon“</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 4px;">Motion-to-Photon (M2P)
+                Latence
+              </h3>
+              <p style="color: var(--text-main); font-size: 0.85em; margin: 0;">
+                Časová prodleva od okamžiku, kdy <strong>uživatel pohne hlavou</strong> (změna detekovaná IMU senzorem),
+                až po chvíli, kdy <strong>odpovídající pixel na displeji vyzáří foton</strong> do sítnice.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.83em; margin-top: 14px;">
+              <li><strong>Kritický limit:</strong> Musí být <strong>pod 20 ms</strong> (ideálně 7–15 ms).</li>
+              <li>Při překročení 20 ms mozek zaznamená zpoždění &rarr; vzniká okamžitá kinetóza a dezorientace.</li>
+              <li>Vyžaduje obnovovací frekvence <strong>90 Hz, 120 Hz až 144 Hz</strong>.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="padding: 22px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.1em;">Techniky záchrany frameratu:</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin-top: 10px;">
+                <li><strong>Asynchronous Timewarp (ATW):</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Pokud renderovací engine nestihne spočítat nový snímek, GPU těsně před zobrazením vezme předchozí
+                    snímek a geometricky ho pootočí podle nejčerstvější polohy hlavy.
+                  </div>
+                </li>
+                <li><strong>Asynchronous Spacewarp (ASW):</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Využívá pohybové vektory (motion vectors) k extrapolaci syntetických mezisnímků při poklesu výkonu
+                    na
+                    polovinu (např. z 45 FPS na 90 Hz).
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Technologie ATW (časová reprojekce) byla klíčem k tomu, proč moderní VR vůbec funguje. Zabraňuje tomu, aby i
+          jediný vynechaný snímek způsobil uživateli nevolnost.
+        </aside>
+      </section>
+
+
+
+      <!-- ==========================================
+           BLOK 3: VNÍMÁNÍ A FYZIOLOGIE
+           ========================================== -->
+
+      <!-- SLIDE 22: Vnímání VR -->
+      <section>
+        <span class="slide-category">Percepce &bull; Fyziologie vnímání</span>
+        <h2>Vnímání VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <p style="margin: 0; font-size: 0.95em; color: var(--text-main);">
+                VR se snaží <strong>„ošálit“ co nejvíce lidských smyslů</strong> a simulovat reálné fyzické ovládání i
+                reakce okolního světa.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Cíl:</strong> Navodit věrohodný pocit přítomnosti v novém prostředí.</li>
+              <li><strong>Klíčové faktory úspěchu:</strong>
+                <ul class="custom-list" style="margin: 4px 0;">
+                  <li class="sub-item">Ošálit smysly co nejvěrněji a bez zpoždění (Motion-to-Photon latence < 20
+                      ms).</li>
+                  <li class="sub-item">Působit na co nejvíce smyslů současně (zrak, sluch, hmat, rovnováha).</li>
+                  <li class="sub-item">Vytvořit přirozené a ergonomické uživatelské prostředí.</li>
+                </ul>
+              </li>
+              <li><strong>Rizika nedokonalého ošálení:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Může vést k nekontrolovaným reakcím, ztrátě stability, pádům a úrazům.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="text-align: center; padding: 32px 24px;">
+              <h3 style="color: var(--text-main); font-size: 1.2em;">Multisenzorická syntéza</h3>
+              <p style="color: var(--text-muted); font-size: 0.85em; line-height: 1.5; margin-top: 10px;">
+                Pokud vizuální obraz odpovídá pohybům hlavy a prostorový zvuk reaguje na natočení uší, mozek přijímá
+                virtuální scénu jako skutečnost.
+              </p>
+              <div class="highlight-card alert" style="margin-top: 16px; text-align: left; font-size: 0.82em;">
+                <strong>Pozor na bezpečnost:</strong> V plném ponoření uživatel snadno zapomene na reálné zdi, stoly
+                a překážky v místnosti.
+              </div>
+            </div>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/richie.mp4" target="_blank" rel="noopener noreferrer"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/richie.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Ukázka: Reakce uživatelů a pády ve VR</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <aside class="notes">
+          Klíčem k úspěšné VR je ošálení smyslů s minimální latencí (ideálně pod 20 ms). Pokud dojde k prodlevě, mozek
+          iluzi odmítne.
+        </aside>
+      </section>
+
+      <!-- SLIDE 23: Immersion - Presence -->
+      <section>
+        <span class="slide-category">Teorie VR &bull; Dva klíčové pojmy</span>
+        <h2>Immersion vs. Presence</h2>
+        <div class="slide-grid-2 equal" style="margin-top: 24px;">
+          <div class="glass-card">
+            <div class="spec-badge cyan" style="margin-bottom: 12px;">Technologická dimenze</div>
+            <h3 style="color: var(--accent-cyan); font-size: 1.3em;">Immersion (Ponoření)</h3>
+            <p style="color: #1e293b; font-size: 0.9em; line-height: 1.5;">
+              <strong>Objektivní míra</strong> toho, jak moc technologie a systém vytváří skutečný dojem reality pro
+              lidské smysly.
+            </p>
+            <ul class="custom-list" style="font-size: 0.82em; margin-top: 14px;">
+              <li>Zorné pole (FOV) a rozlišení displeje</li>
+              <li>Obnovovací frekvence a latence (Hz, ms)</li>
+              <li>Přesnost a stupně volnosti trackingu (6 DoF)</li>
+              <li>Binaurální prostorové 3D audio a haptika</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple">
+            <div class="spec-badge purple" style="margin-bottom: 12px;">Psychologická dimenze</div>
+            <h3 style="color: var(--accent-purple); font-size: 1.3em;">Presence (Přítomnost)</h3>
+            <p style="color: #1e293b; font-size: 0.9em; line-height: 1.5;">
+              <strong>Subjektivní psychologický stav</strong> – jak moc je u uživatele vytvořena vnitřní iluze, že se
+              skutečně nachází ve virtuálním světě.
+            </p>
+            <ul class="custom-list" style="font-size: 0.82em; margin-top: 14px;">
+              <li>Pocit: <em>„Jsem tady a teď uvnitř scény.“</em></li>
+              <li>Podvědomá víra v realitu podnětů</li>
+              <li>Přirozené reflexivní chování a emoce</li>
+              <li>Cíl vývojáře: Dosáhnout co nejlepší <strong>Presence</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 20px; text-align: center;">
+          <span style="font-weight: 700; color: var(--text-main); font-size: 1.05em;">
+            <span style="color: var(--accent-cyan);">Immersion</span> (technologie) &rarr; vyvolává pocit &rarr; <span
+              style="color: var(--accent-purple);">Presence</span> (psychologická přítomnost)
+          </span>
+        </div>
+        <aside class="notes">
+          Rozlišujte mezi Immersion (vlastnost systému, objektivně měřitelná) a Presence (duševní stav uživatele). Cílem
+          veškerého VR designu je maximalizovat Presence.
+        </aside>
+      </section>
+
+      <!-- SLIDE 24: Vjemy a VR (Birdly) -->
+      <section>
+        <span class="slide-category">Multimodální vnímání &bull; Případová studie</span>
+        <h2>Vjemy a VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Člověk vnímá svět pomocí smyslů:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Hmat, zrak, sluch, čich, chuť, vestibulární aparát...
+                </div>
+              </li>
+              <li><strong>Vnímání se skládá ze dvou procesů:</strong>
+                <ol class="custom-list" style="margin: 6px 0;">
+                  <li><strong>Vnímání okolí:</strong> Získání surových informací přes senzory těla.</li>
+                  <li><strong>Následný pocit:</strong> Kognitivní vyhodnocení informací mozkem.</li>
+                </ol>
+              </li>
+            </ul>
+
+            <div class="glass-card" style="margin-top: 14px;">
+              <h3 style="font-size: 1.1em; color: var(--accent-cyan); margin-bottom: 6px;">Příklad: Birdly (simulátor
+                letu ptáka)</h3>
+              <div class="badge-group">
+                <span class="spec-badge cyan">Obraz (VR)</span>
+                <span class="spec-badge emerald">Vítr (Ventilátor)</span>
+                <span class="spec-badge purple">Pohyb & Hmat (Křídla)</span>
+                <span class="spec-badge amber">Zvuk (Audio)</span>
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 6px 0 0 0;">
+                Kombinace motorizovaného náklonu, mechanického mávání křídly a dynamického větru dle rychlosti letu.
+              </p>
+            </div>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_16_img_19.jpg" alt="Birdly VR simulátor v akci">
+              <div class="image-caption">Birdly – Komplexní multisenzorický simulátor ptačího letu</div>
+            </div>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/birdly.mp4" target="_blank" rel="noopener noreferrer"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/birdly.mp4">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Video ukázka: Birdly VR Experience</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <aside class="notes">
+          Projekt Birdly ze Švýcarska demonstruje sílu multisenzorického zapojení: uživatel leží na břiše, mává křídly a
+          ventilátor mu fouká do obličeje rychlostí odpovídající střemhlavému letu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 25: Kinetóza -->
+      <section>
+        <span class="slide-category">Senzorický konflikt &bull; Kinetóza</span>
+        <h2>Co když smysly nepasují k sobě?</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card alert">
+              <h3 style="color: var(--accent-rose); font-size: 1.2em; margin-bottom: 4px;">Kinetóza ve VR (Cybersickness
+                / Motion Sickness)</h3>
+              <p style="color: var(--text-main); font-size: 0.9em; margin: 0;">
+                <strong>20 – 30 % uživatelů</strong> zažije při nevhodně navržené VR aplikaci <strong>silnou</strong>
+                nevolnost a závratě. 40 - 60% ji zažije v nějaké míře.
+              </p>
+            </div>
+
+            <ul class="custom-list" style="font-size: 0.85em; margin-top: 14px;">
+              <li><strong>Podstata problému:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Smyslové vstupy neodpovídají situaci (Sensor Conflict Theory).
+                </div>
+              </li>
+              <li><strong>Klasický konflikt:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Podle <strong>zraku</strong> se tělo pohybuje (např. virtuální jízda v autě nebo běh joystickem), ale
+                  podle <strong>vestibulárního aparátu</strong> ve vnitřním uchu je tělo v klidu bez zrychlení.
+                </div>
+              </li>
+              <li><strong>Zdroje potíží:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Vysoká latence, propady snímkové frekvence (pod 72 FPS), umělá rotace scény joystickem.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_17_img_20.jpg" alt="Vestibulární aparát a konflikt smyslů">
+              <div class="image-caption">Vestibulární aparát vnitřního ucha versus vizuální vjem</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Kinetóza vzniká rozchodem mezi zrakem a vnitřním uchem. Mozek tento konflikt evolučně vyhodnotí jako otravu
+          neurotoxiny a reaguje nevolností.
+        </aside>
+      </section>
+
+      <!-- SLIDE 26: VAC (Vergence-Accommodation Conflict) -->
+      <section>
+        <span class="slide-category">Fyziologie zraku &bull; Optický konflikt</span>
+        <h2>Vergence-Accommodation Conflict (VAC)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card alert">
+              <h3 style="color: var(--text-main); font-size: 1.1em; margin-bottom: 4px;">Proč bolí oči po hodině ve VR?
+              </h3>
+              <p style="color: var(--text-muted); font-size: 0.85em; margin: 0;">
+                V reálném světě jsou dva mechanismy oka pevně propojeny; ve VR headsetech dochází k jejich rozpojení.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.83em; margin-top: 14px;">
+              <li><strong>1. Vergence (Sbíhavost):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Pohyb obou očí směrem k sobě nebo od sebe, aby se jejich optické osy proťaly na sledovaném objektu
+                  (např. 25 cm před nosem).
+                </div>
+              </li>
+              <li><strong>2. Akomodace (Zaostření):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Svaly v oku mění tvar oční čočky, aby zaostřily obraz na sítnici.
+                </div>
+              </li>
+              <li><strong>Podstata VAC konfliktu:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Ve VR je displej opticky v konstantní vzdálenosti (~1.5–2 m) &rarr; <strong>akomodace je
+                    fixní</strong>,
+                  ale virtuální předmět si přiblížíte k obličeji &rarr; <strong>vergence nutí oči šilhat</strong>.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="padding: 24px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em;">Důsledky & Budoucí řešení:</h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin-top: 10px;">
+                <li><strong>Projevy:</strong> Únava očí (eye strain), rozostřené vidění po sundání headsetu, bolest
+                  hlavy.
+                </li>
+                <li><strong>Designové pravidlo pro VR UI:</strong> Neumísťovat interaktivní prvky a texty blíže než
+                  <strong>0.75 – 1.0 m</strong> od očí uživatele!
+                </li>
+                <li><strong>Budoucí technologická řešení:</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em; margin-top: 4px;">
+                    <em>Varifokální displeje</em> (mechanicky či tekutými krystaly posouvající ohniskovou rovinu dle eye
+                    trackingu) nebo <em>Light-field displeje</em>.
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          VAC konflikt je po kinetóze druhým největším limitem VR brýlí. Dokud nebudou mít headsety varifokální
+          displeje,
+          je zásadní neumísťovat texty a ovládací panely těsně před obličej uživatele.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           BLOK 4: UŽIVATELSKÉ ROZHRANÍ & INTERAKCE
+           ========================================== -->
+
+      <!-- SLIDE 27: Uživatelské rozhraní (HCI) -->
+      <section>
+        <span class="slide-category">HCI &bull; Interakce člověka s počítačem</span>
+        <h2>Uživatelské rozhraní</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin-bottom: 16px;">
+              <h3>HCI (Human-Computer Interaction)</h3>
+              <p style="color: var(--text-main); font-size: 0.88em; margin: 8px 0 0 0;">
+                Tradiční interakční cyklus v počítačových systémech:
+              </p>
+              <ul class="custom-list" style="font-size: 0.82em; margin-top: 8px;">
+                <li><strong>Vstupní zařízení (Input Device)</strong> – Myš, klávesnice, VR ovladač, sledování rukou.
+                </li>
+                <li><strong>Způsob interakce</strong> – Point & Click, gesta, hlasové příkazy.</li>
+                <li><strong>Zpětná vazba (Feedback)</strong> – Vizuální změna, haptická odezva, zvuk.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3>Gulf of Execution & Evaluation</h3>
+              <p style="color: var(--text-muted); font-size: 0.82em; margin: 8px 0 0 0;">
+                Propast mezi tím, co chce uživatel udělat, a jak systém tato přání převádí na fyzické akce a zpětné
+                potvrzení.
+              </p>
+            </div>
+          </div>
+          <div>
+            <div class="glass-card" style="padding: 28px;">
+              <h3 style="color: var(--text-main); ;">Specifika pro Virtuální realitu</h3>
+              <ul class="custom-list" style="font-size: 0.85em; margin-top: 14px;">
+                <li><strong>Mnohem větší možnosti vstupů:</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Sledování hlavy, 6-DoF ovladače, sledování prstů, směr pohledu očí (Eye tracking).
+                  </div>
+                </li>
+                <li><strong>Pohlcení uživatele:</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Uživatel není pouhým pozorovatelem za monitorem, ale je přímo součástí 3D scény.
+                  </div>
+                </li>
+                <li><strong>Vysoké nároky na odezvu:</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Chybějící haptický odpor vzduchu vyžaduje okamžitou vizuální a zvukovou reakci.
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tradiční HCI koncepty jako "Gulf of Execution" (Don Norman) platí i ve VR, ale přibývají nové dimenze: volnost
+          pohybu, prostorový zvuk a absence fyzických překážek.
+        </aside>
+      </section>
+
+      <!-- SLIDE 28: 3D rozhraní - Typologie -->
+      <section>
+        <span class="slide-category">Typologie &bull; Vstupní a výstupní dimenze</span>
+        <h2>3D rozhraní</h2>
+        <div class="slide-grid-3" style="margin-top: 24px;">
+          <div class="glass-card">
+            <div class="spec-badge cyan" style="margin-bottom: 10px;">2D Vstup &bull; 3D Výstup</div>
+            <h3 style="font-size: 1.1em; color: var(--text-main);">Desktop 3D nástroje</h3>
+            <p style="color: var(--text-muted); font-size: 0.85em;">
+              Ovládání 3D scény pomocí standardní 2D myši a klávesnice na plochém monitoru.
+            </p>
+            <div class="highlight-card" style="padding: 10px 14px; margin-top: 12px; font-size: 0.8em;">
+              <strong>Příklady:</strong> Blender, Autodesk Maya, 3ds Max, CAD systémy.
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="spec-badge purple" style="margin-bottom: 10px;">3D Vstup &bull; 2D Výstup</div>
+            <h3 style="font-size: 1.1em; color: var(--text-main);">Prostorové periferie</h3>
+            <p style="color: var(--text-muted); font-size: 0.85em;">
+              Využití 3D vstupních ovladačů pro manipulaci s obsahem na velké 2D stěně či obrazovce.
+            </p>
+            <div class="highlight-card" style="padding: 10px 14px; margin-top: 12px; font-size: 0.8em;">
+              <strong>Příklady:</strong> 3D SpaceMouse pro CAD, SAGE2 stěna, gyroskopické ukazovátko.
+            </div>
+          </div>
+
+          <div class="glass-card accent-purple">
+            <div class="spec-badge emerald" style="margin-bottom: 10px;">3D Vstup &bull; 3D Výstup</div>
+            <h3 style="font-size: 1.1em; color: var(--text-main);">Imerzivní realita</h3>
+            <p style="color: var(--text-muted); font-size: 0.85em;">
+              Přirozená prostorová interakce ve stereoskopickém 3D prostoru v plném zorném poli.
+            </p>
+            <div class="highlight-card" style="padding: 10px 14px; margin-top: 12px; font-size: 0.8em;">
+              <strong>Příklady:</strong> Virtuální realita (VR), Rozšířená realita (AR / MR).
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Kombinace vstupní a výstupní dimenze určuje typ rozhraní. VR představuje čistý model 3D vstup + 3D výstup.
+        </aside>
+      </section>
+
+      <!-- SLIDE 29: Problémy s 3D rozhraním -->
+      <section>
+        <span class="slide-category">Výzvy &bull; Úskalí prostorového UI</span>
+        <h2>Problémy s 3D rozhraním</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin-bottom: 16px;">
+              <h3 style="color: var(--accent-amber); font-size: 1.15em;">Prostorový vstup uživatele</h3>
+              <ul class="custom-list" style="font-size: 0.85em; margin-top: 8px;">
+                <li><strong>Málo definovaných standardů:</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Zatímco ve 2D máme okna, scrollbary a kurzory, ve 3D chybí jednotný standard.
+                  </div>
+                </li>
+                <li><strong>Nedostatek nástrojů pro návrh 3D UI:</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Běžné prototyping nástroje (Figma) jsou 2D a špatně modelují hloubku a dosah ruky.
+                  </div>
+                </li>
+                <li><strong>Menší omezení než ve 2D:</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Příliš velká volnost může vést k nepřehlednému a chaotickému designu.
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="glass-card" style="margin-bottom: 16px;">
+              <h3 style="color: var(--accent-rose); font-size: 1.15em;">Fyzikální a ergonomické limity</h3>
+              <ul class="custom-list" style="font-size: 0.85em; margin-top: 8px;">
+                <li><strong>Menší přesnost vstupu:</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Ruka ve volném prostoru se chvěje (tremor) – chybí pevná opěrná deska stolu.
+                  </div>
+                </li>
+                <li><strong>Únava („Gorilla Arm syndrom“):</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Držení paží v předpažení způsobuje po několika minutách svalovou vyčerpanost.
+                  </div>
+                </li>
+                <li><strong>Složitější rozložení prvků:</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Nutnost řešit vzájemný překryv (occlusion), velikost dle vzdálenosti a zorné pole (FOV).
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Problém "Gorilla Arm" je zásadní ergonomická překážka: pokud uživatel musí déle než pár minut manipulovat s
+          prvky ve výšce očí bez opory, rychle se unaví.
+        </aside>
+      </section>
+
+      <!-- SLIDE 30: Ukázka UI -->
+      <section>
+        <span class="slide-category">Koncepty &bull; 2D vs. Přirozené 3D UI</span>
+        <h2>Ukázka UI</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>2D UI ve 3D prostoru:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Ploché plovoucí panely, tabulky a okna umístěná v prostoru kolem uživatele (často používané pro
+                  snadnou čitelnost textu).
+                </div>
+              </li>
+              <li><strong>Přirozené 3D UI (Diegetické prvky):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Prostorové ovládací prvky (páky, otočné knoflíky, virtuální nářadí).
+                </div>
+              </li>
+              <li><strong>Typické problémy:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Omezený dosah paží, nutnost otáčení celé hlavy, zhoršená čitelnost malého textu.
+                </div>
+              </li>
+            </ul>
+
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 14px;">
+              <a class="video-card" style="margin-top: 0;" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/world2.mp4" target="_blank"
+                rel="noopener noreferrer" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/world2.mp4">
+                <div class="video-icon">▶</div>
+                <div class="video-details">
+                  <div class="video-title">Video 1: World Builder</div>
+                </div>
+              </a>
+              <a class="video-card" style="margin-top: 0;" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/world.mp4" target="_blank"
+                rel="noopener noreferrer" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/world.mp4">
+                <div class="video-icon">▶</div>
+                <div class="video-details">
+                  <div class="video-title">Video 2: 3D VR Interface Concepts</div>
+
+                </div>
+              </a>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_21_img_21.png" alt="2D plovoucí panely ve VR">
+              <div class="image-caption">2D panely plovoucí ve 3D virtuálním prostředí</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_21_img_22.png" alt="Přirozené 3D UI prvky">
+              <div class="image-caption">Přirozená 3D prostorová tlačítka a widgety</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Většina aplikací kombinuje 2D plovoucí panely pro komplexní nastavení s přirozenými 3D diegetickými objekty
+          pro přímou manipulaci.
+        </aside>
+      </section>
+
+      <!-- SLIDE 31: UX a UI ve VR -->
+      <section>
+        <span class="slide-category">Architektura &bull; Návrhové přístupy</span>
+        <h2>UX a UI ve VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin-bottom: 14px;">
+              <h3 style="font-size: 1.1em; color: var(--text-main);">VR Aplikace se skládají z:</h3>
+              <ul class="custom-list" style="font-size: 0.85em; margin: 8px 0 0 0;">
+                <li><strong>Prostředí (Environment):</strong> Architektura, světlo, modely a atmosféra světa.</li>
+                <li><strong>Uživatelské rozhraní (UI):</strong> Prvky pro ovládání a systémové volby.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple">
+              <h3 style="font-size: 1.1em; color: var(--accent-cyan);">Dva protichůdné přístupy k UX:</h3>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
+                <div class="highlight-card" style="margin: 0; padding: 12px;">
+                  <strong style="color: var(--accent-emerald);">1. Spíš prostředí</strong><br>
+                  <span style="font-size: 0.8em; color: var(--text-muted);">Vše je integrováno přímo v objektech světa
+                    (např. Job Simulator, Tilt Brush).</span>
+                </div>
+                <div class="highlight-card" style="margin: 0; padding: 12px;">
+                  <strong style="color: var(--accent-blue);">2. Spíš UI</strong><br>
+                  <span style="font-size: 0.8em; color: var(--text-muted);">Složité plovoucí menu, konfigurační tabulky
+                    a profesionální editory.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_22_img_23.png" alt="Příklad prostředí VR" data-preview-image>
+              <div class="image-caption">Job Simulator</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_22_img_24.png" alt="Tilt Brush UI" data-preview-image>
+              <div class="image-caption">Tilt Brush paleta</div>
+            </div>
+            <div class="image-showcase" style="grid-column: span 2;">
+              <img src="../bordel/images-mvt/slide_22_img_25.png" style="max-height: 180px;" alt="Složité VR UI"
+                data-preview-image>
+              <div class="image-caption">Komplexní prostorové menu a nástroje</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Rozhodnutí, zda zvolit čistě diegetické UI (prvky přímo v herním světě) nebo explicitní plovoucí menu, zásadně
+          ovlivňuje pocit přítomnosti i efektivitu práce.
+        </aside>
+      </section>
+
+      <!-- SLIDE 32: Běžné akce ve 3D -->
+      <section>
+        <span class="slide-category">Interakce &bull; Základní vzory</span>
+        <h2>Běžné akce ve 3D</h2>
+        <div class="slide-grid-3" style="margin-top: 20px;">
+          <div class="glass-card">
+            <div class="spec-badge cyan" style="margin-bottom: 10px;">01 &bull; Manipulace</div>
+            <a href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pvr-interaction.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pvr-interaction.mp4">
+              <span class="video-icon" style="float: right;">▶</span>
+            </a>
+            <h3 style="font-size: 1.1em; color: var(--text-main);">Interakce s objekty</h3>
+
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li><strong>Výběr (Selection):</strong> Dotykem ruky nebo laserovým paprskem (Ray casting).</li>
+              <li><strong>Manipulace:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em; margin-top: 4px;">
+                  Ruka 1:1, virtuální paprsek, kontextové menu, prodloužená ruka (Go-Go technika).
+                </div>
+              </li>
+              <li><strong>Problémy:</strong> Vzdálenost, vzájemný překryv objektů a zorné pole.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple">
+            <div class="spec-badge purple" style="margin-bottom: 10px;">02 &bull; Pohyb</div>
+            <a href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pvr-movement.mp4" target="_blank"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/pvr-movement.mp4">
+              <span class="video-icon" style="float: right;">▶</span>
+            </a>
+            <h3 style="font-size: 1.1em; color: var(--text-main);">Pohyb v prostoru</h3>
+
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li><strong>Teleport:</strong> Okamžitý skok s parabolickým zaměřováním (eliminuje kinetózu).</li>
+              <li><strong>Snap Turn:</strong> Otáčení pohledu v diskrétních skocích (např. po 30° nebo 45°).</li>
+              <li><strong>Smooth Locomotion:</strong> Plynulý posun joystickem doplněný o dynamické zúžení zorného pole
+                (Vinětaci pohledu).</li>
+            </ul>
+          </div>
+
+          <div class="glass-card">
+            <div class="spec-badge emerald" style="margin-bottom: 10px;">03 &bull; Systém</div>
+            <h3 style="font-size: 1.1em; color: var(--text-main);">Systémové nastavení</h3>
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li>Provedení změny nastavení aplikace a parametrů scény.</li>
+              <li>Zápěstní menu (Wrist UI / hodinky).</li>
+              <li>Rychlé vyvolání systémového překryvu tlačítkem na ovladači nebo gestem otočení dlaně.</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Tři základní pilíře 3D interakce: Výběr a manipulace, locomotion v prostoru a systémové volby. Teleportace a
+          Snap Turn jsou osvědčeným lékem proti kinetóze.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           BLOK 5: STANDARDY & VÝVOJOVÝ EKOSYSTÉM
+           ========================================== -->
+
+      <!-- SLIDE 33: Standard OpenXR -->
+      <section>
+        <span class="slide-category">Standardy &bull; Konec fragmentace</span>
+        <h2>Standard OpenXR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 4px;">Konec éry roztříštěných SDK
+              </h3>
+              <p style="color: var(--text-main); font-size: 0.85em; margin: 0;">
+                Otevřený, bezlicenční průmyslový standard vyvinutý konsorciem <strong>Khronos Group</strong> pro přístup
+                k
+                hardwaru virtuální a rozšířené reality.
+              </p>
+            </div>
+            <ul class="custom-list" style="font-size: 0.83em; margin-top: 14px;">
+              <li><strong>Situace před OpenXR:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Každý výrobce měl vlastní proprietární SDK (Oculus SDK, OpenVR/SteamVR, Windows Mixed Reality, PS VR).
+                  Vývojář musel psát samostatný integrační kód pro každý headset.
+                </div>
+              </li>
+              <li><strong>Výhoda OpenXR:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Jedno společné aplikační rozhraní (API). Jedna binárka aplikace běží na libovolném headsetu
+                  podporujícím
+                  OpenXR runtime.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="padding: 22px;">
+              <h3 style="color: var(--text-main); font-size: 1.1em;">Jednotná vrstva ekosystému</h3>
+              <div style="display: flex; flex-direction: column; gap: 8px; margin: 14px 0;">
+                <div class="highlight-card" style="margin: 0; padding: 10px; text-align: center; font-size: 0.85em;">
+                  <strong>Herní a vývojové enginy</strong> (Unity, Unreal Engine, Godot, WebXR)
+                </div>
+                <div style="text-align: center; color: var(--accent-cyan); font-weight: bold;">&darr; &uarr;</div>
+                <div class="highlight-card"
+                  style="margin: 0; padding: 10px; text-align: center; font-size: 0.9em; background: rgba(0, 242, 254, 0.2); border-color: var(--accent-cyan);">
+                  <strong>OpenXR API</strong> (Standard Khronos Group)
+                </div>
+                <div style="text-align: center; color: var(--accent-cyan); font-weight: bold;">&darr; &uarr;</div>
+                <div class="highlight-card" style="margin: 0; padding: 10px; text-align: center; font-size: 0.85em;">
+                  <strong>Hardware Runtimes</strong> (Meta, Valve, Microsoft, Sony, HTC, Apple)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Dnes již žádný seriózní vývojář nepíše kód přímo proti proprietárnímu Oculus SDK nebo OpenVR. Standardem je
+          OpenXR, což umožnilo masivní zjednodušení multiplatformního vývoje.
+        </aside>
+      </section>
+
+      <!-- SLIDE 34: Vývojová prostředí -->
+      <section>
+        <span class="slide-category">Ekosystém &bull; Nástroje pro tvorbu VR</span>
+        <h2>Vývojová prostředí s podporou VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>„Velké“ herní enginy:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 6px;">
+                  <strong>Unity3D:</strong> Nejpopulárnější engine pro mobilní a standalone VR, podpora OpenXR & XR
+                  Interaction Toolkit.<br>
+                  <strong>Unreal Engine:</strong> Špičkový fotorealismus (Lumen, Nanite), rendering velkých scén a
+                  C++.<br>
+                  <strong>Godot Engine:</strong> Populární, lehký a otevřený Open Source engine s nativní OpenXR
+                  podporou.
+                </div>
+              </li>
+              <li><strong>Webové frameworky (WebXR):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em; margin-bottom: 6px;">
+                  <strong>A-Frame:</strong> Deklarativní HTML tagy nad Three.js pro okamžité spuštění VR scény přímo v
+                  prohlížeči bez instalace.<br>
+                  <strong>React XR / Three.js:</strong> Programátorská tvorba 3D rozhraní.
+                </div>
+              </li>
+              <li><strong>Resonite (původně Neos VR):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Online kolaborativní VR metaverse a živý editor světů v reálném čase, český start-up dostupný na
+                  platformě Steam.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="image-showcase" style="background: #f0f4fa;">
+                <img src="../bordel/images-mvt/slide_24_img_28.png" style="max-height: 120px;" alt="Unity 3D Engine">
+              </div>
+              <div class="image-showcase" style="background: #f0f4fa;">
+                <img src="../bordel/images-mvt/slide_24_img_27.png" style="max-height: 120px;" alt="A-Frame WebXR">
+              </div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_24_img_26.png" alt="Cry">
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Pro vývoj máme dnes standard OpenXR podporovaný Unity i Unreal Enginem. Pro webové aplikace slouží standard
+          WebXR a framework A-Frame. Českým unikátem je projekt Resonite (původně Neos VR).
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           BLOK 6: PRAKTICKÉ VYUŽITÍ & ZÁVĚR
+           ========================================== -->
+
+      <!-- SLIDE 35: Využití VR v praxi -->
+      <section>
+        <span class="slide-category">Aplikace &bull; Věda a Průmysl</span>
+        <h2>Využití VR v praxi (Mimo herní svět)</h2>
+        <div class="slide-grid-4" style="margin-top: 20px;">
+          <div class="app-domain-card">
+            <div class="app-domain-title">Medicína a chirurgie</div>
+            <ul class="app-domain-list">
+              <li>Předoperační plánování z 3D CT/MRI skenů</li>
+              <li>Trénink náročných laparoskopických a neurochirurgických zákroků</li>
+              <li>Rehabilitace pacientů po mrtvici a terapie fobií (VRET)</li>
+            </ul>
+          </div>
+
+          <div class="app-domain-card">
+            <div class="app-domain-title">Průmysl & CAD/BIM</div>
+            <ul class="app-domain-list">
+              <li>Digitální dvojčata výrobních linek v měřítku 1:1</li>
+              <li>Testování ergonomie interiérů aut (Škoda Auto, BMW)</li>
+              <li>Architektonické procházky v budovách před položením základů</li>
+            </ul>
+          </div>
+
+          <div class="app-domain-card">
+            <div class="app-domain-title">Krizový výcvik a simulace</div>
+            <ul class="app-domain-list">
+              <li>Letecké a vojenské simulátory v bezpečném prostředí</li>
+              <li>Trénink hasičů a zásahů při chemických haváriích</li>
+              <li>Virtuální laboratoře pro nebezpečné chemické pokusy na školách</li>
+            </ul>
+          </div>
+
+          <div class="app-domain-card">
+            <div class="app-domain-title">Vědecká vizualizace dat</div>
+            <ul class="app-domain-list">
+              <li>Manipulace s proteinovými strukturami a molekulami</li>
+              <li>Astrofyzikální simulace galaxií a proudění tekutin (CFD)</li>
+              <li>Kolaborativní analýza velkých multidimenzionálních dat</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Jako studenti MVT byste měli vnímat VR primárně jako seriózní vizualizační médium. V automobilovém průmyslu
+          (Škoda Auto) i v medicíně šetří VR miliony korun a lidské životy při plánování operací.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           BLOK 2: HARDWARE & HEADSETY
+           ========================================== -->
+
+      <!-- SLIDE 8: Současná zařízení (Kategorie) -->
+      <section>
+        <span class="slide-category">Kategorie hardwaru</span>
+        <h2>Současná zařízení</h2>
+        <div class="slide-grid-4" style="margin-top: 20px;">
+          <div class="glass-card">
+            <h3 style="font-size: 1.1em; color: var(--accent-cyan);">PC VR</h3>
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li>HTC Vive, Pro 1/2, Cosmos</li>
+              <li>Oculus Rift, Rift S</li>
+              <li>Valve Index (High-end standard)</li>
+              <li>HP Reverb G2 / Bigscreen Beyond</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="font-size: 1.1em; color: var(--accent-purple);">Konzole</h3>
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li>PlayStation VR (PS4)</li>
+              <li>PlayStation VR 2 (PS5, 4K HDR OLED)</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="font-size: 1.1em; color: var(--accent-emerald);">Samostatné (Standalone)</h3>
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li>Meta Quest 2 / Quest 3 & 3S</li>
+              <li>Apple Vision Pro (Spatial Computing)</li>
+              <li>Pico 4 / HTC Vive Focus 3</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="font-size: 1.1em; color: var(--accent-amber);">Mobilní VR (Historie)</h3>
+            <ul class="custom-list" style="font-size: 0.82em;">
+              <li>Google Daydream / Cardboard</li>
+              <li>Samsung Gear VR</li>
+              <li class="sub-item" style="color: var(--accent-rose);">Trh zcela zanikl</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Základní kategorizace hardwaru podle platformy a výpočetního zdroje:
+          PC VR nabízí neomezený grafický výkon, Standalone a Spatial Computing představují budoucnost přenositelnosti.
+        </aside>
+      </section>
+
+      <!-- SLIDE 9: HTC Vive -->
+      <section>
+        <span class="slide-category">PC VR &bull; Vlajková loď 2016</span>
+        <h2>PC: HTC Vive (2016)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge cyan">110° FOV</span>
+              <span class="spec-badge cyan">90 Hz</span>
+              <span class="spec-badge purple">1080x1200 / oko (OLED)</span>
+              <span class="spec-badge emerald">SteamVR Tracking</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Headset:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em; margin-top: 4px;">
+                  1080×1200 na oko (celkem 2160×1200), 90 Hz, duální OLED panely.<br>
+                  Přední kamera (Chaperone), akcelerometr, gyroskop, proximity senzor.
+                </div>
+              </li>
+              <li><strong>Ovladače (Wands):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em; margin-top: 4px;">
+                  Prostorové sledování s přesností sub-milimetru (< 1 mm).<br>
+                    Aktualizační frekvence polohy 250 – 1000 Hz.
+                </div>
+              </li>
+              <li><strong>Base station (Lighthouse):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em; margin-top: 4px;">
+                  IR pulzy 60 Hz, prostor až 6 m úhlopříčně (Room-scale VR).
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_4_img_0.png" alt="HTC Vive Headset a ovladače">
+              <div class="image-caption">HTC Vive Headset & Ovladače</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="image-showcase" style="background: #f0f4fa;">
+                <img src="../bordel/images-mvt/slide_4_img_1.png" style="max-height: 140px;"
+                  alt="Lighthouse Base Station">
+                <div class="image-caption">Base Station</div>
+              </div>
+              <div class="image-showcase" style="background: #f0f4fa;">
+                <img src="../bordel/images-mvt/slide_4_img_2.png" style="max-height: 140px;" alt="HTC Vive Controller">
+                <div class="image-caption">Ovladač</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          HTC Vive definoval standard pro tzv. "Room-scale VR" sledování pomocí majáků (Lighthouse base stations).
+          Přesnost sledování polohy je pod 1 mm a frekvence aktualizace senzoru až 1000 Hz.
+        </aside>
+      </section>
+
+      <!-- SLIDE 10: HTC Vive Pro 1, 2 -->
+      <section>
+        <span class="slide-category">PC VR &bull; Profesionální řada</span>
+        <h2>PC: HTC Vive Pro 1, 2 (2019/21)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin-bottom: 16px;">
+              <div class="spec-badge cyan">Vive Pro 1</div>
+              <ul class="custom-list" style="font-size: 0.85em; margin: 8px 0 0 0;">
+                <li><strong>Displej:</strong> 1440×1600 na oko (celkem 2880×1600), 90 Hz, OLED</li>
+                <li><strong>Zorné pole (FOV):</strong> 110 stupňů</li>
+                <li><strong>Base station 2.0:</strong> Laser pulzy 60 Hz, prostor až 10×10 m (se 4 stanicemi)</li>
+              </ul>
+            </div>
+            <div class="glass-card" style="margin-bottom: 16px;">
+              <div class="spec-badge purple">Vive Pro Eye</div>
+              <ul class="custom-list" style="font-size: 0.85em; margin: 8px 0 0 0;">
+                <li>Integrované sledování pohybu očí (Eye tracking)</li>
+                <li>Podpora Foveated rendering a analytiky pohledu</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="glass-card">
+              <div class="spec-badge emerald">Vive Pro 2 (2021)</div>
+              <ul class="custom-list" style="font-size: 0.85em;">
+                <li><strong>Displej:</strong> 2448×2448 na oko (5K celkem), LCD</li>
+                <li><strong>Obnovovací frekvence:</strong> 120 Hz refresh rate</li>
+                <li>Zpětná kompatibilita s Base station z Pro 1</li>
+              </ul>
+            </div>
+            <div class="image-showcase" style="margin: 8px 0 0 0;">
+              <img src="../bordel/images-mvt/slide_5_img_3.jpg" alt="HTC Vive Pro a Vive Pro Eye">
+              <div class="image-caption">HTC Vive Pro & Vive Pro Eye s integrovaným Eye Trackingem</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Vive Pro cílil na profesionální segment a výzkum. Model Vive Pro Eye přinesl integrovaný eye tracking pro
+          foveated rendering.
+          Model Vive Pro 2 navýšil rozlišení až na 5K (2448x2448 na oko) při 120 Hz.
+        </aside>
+      </section>
+
+      <!-- SLIDE 11: Vive Cosmos -->
+      <section>
+        <span class="slide-category">PC VR &bull; Modulární systém</span>
+        <h2>PC: Vive Cosmos (Elite) 2019</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge cyan">Inside-out Tracking</span>
+              <span class="spec-badge cyan">110° FOV</span>
+              <span class="spec-badge purple">1440×1700 / oko (LCD)</span>
+              <span class="spec-badge emerald">90 Hz</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Nejnovější řada Vive (říjen 2019):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Přechod na optické sledování bez nutnosti externích majáků.
+                </div>
+              </li>
+              <li><strong>Inside-out tracking:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  6 kamer na headsetu pro sledování okolního prostoru a ovladačů.
+                </div>
+              </li>
+              <li><strong>Displej:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  1440×1700 pixelů na oko, 90 Hz obnovovací frekvence, RGB LCD panel.
+                </div>
+              </li>
+              <li><strong>Verze Elite:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Výměnný přední kryt (Faceplate) s podporou trackování pomocí bázových stanic (SteamVR Lighthouse).
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_6_img_4.png" alt="HTC Vive Cosmos Headset">
+              <div class="image-caption">HTC Vive Cosmos s kamerami pro Inside-out tracking</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_6_img_5.jpg" alt="Vive Cosmos Modularita">
+              <div class="image-caption">Modulární výměnné čelní kryty</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Vive Cosmos se pokusil o modulární koncept: uživatel mohl vyměnit přední kryt a přejít z inside-out trackingu
+          na laserové sledování Lighthouse (verze Cosmos Elite).
+        </aside>
+      </section>
+
+      <!-- SLIDE 12: Oculus Rift -->
+      <section>
+        <span class="slide-category">PC VR &bull; Počátek moderní éry</span>
+        <h2>PC: Oculus Rift (CV1)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge cyan">110° FOV</span>
+              <span class="spec-badge cyan">90 Hz</span>
+              <span class="spec-badge purple">1080×1200 / oko (PenTile OLED)</span>
+              <span class="spec-badge emerald">Constellation IR</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Headset:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  1080×1200 na oko, 90 Hz, PenTile OLED panely, integrovaná audio sluchátka.
+                </div>
+              </li>
+              <li><strong>Constellation senzor:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Externí infračervené kamery snímající neviditelné IR diody na headsetu a ovladačích.<br>
+                  Velmi nízká latence a vysoká přesnost.
+                </div>
+              </li>
+              <li><strong>Ovladače:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Původně dodáván s Xbox One gamepadem.<br>
+                  Následně nahrazen průlomovými ergonomickými ovladači <strong>Oculus Touch</strong> s kapacitními
+                  senzory prstů.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_7_img_7.png" alt="Oculus Rift CV1 a Touch">
+              <div class="image-caption">Oculus Rift CV1 & Ovladače Touch</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="image-showcase" style="background: #f0f4fa;">
+                <img src="../bordel/images-mvt/slide_7_img_6.png" style="max-height: 130px;" alt="Constellation Sensor">
+                <div class="image-caption">Constellation IR senzor</div>
+              </div>
+              <div class="image-showcase" style="background: #f0f4fa;">
+                <img src="../bordel/images-mvt/slide_7_img_8.png" style="max-height: 130px;"
+                  alt="Oculus Touch ovladače">
+                <div class="image-caption">Oculus Touch</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Oculus Rift CV1 zahájil komerční vlnu VR v roce 2016. Klíčovým přínosem byly ovladače Oculus Touch, které
+          poprvé umožnily detekci dotyku a polohy jednotlivých prstů.
+        </aside>
+      </section>
+
+      <!-- SLIDE 13: Oculus Rift S -->
+      <section>
+        <span class="slide-category">PC VR &bull; Květen 2019</span>
+        <h2>PC: Oculus Rift S</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge cyan">115° FOV</span>
+              <span class="spec-badge cyan">80 Hz</span>
+              <span class="spec-badge purple">1280×1440 / oko (Fast-LCD)</span>
+              <span class="spec-badge emerald">Oculus Insight 5×</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Inside-out tracking (Oculus Insight):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  5 integrovaných kamer na těle headsetu – nepotřebuje externí senzory na stole.
+                </div>
+              </li>
+              <li><strong>Ovladače:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Stejné jako Oculus Quest;<br>
+                  Sledování polohy pomocí kamer na headsetu.
+                </div>
+              </li>
+              <li><strong>Konektivita a hardware:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  DisplayPort + USB 3.0<br>
+                  Vývoj ve spolupráci se společností Lenovo (Halo popruh).
+                </div>
+              </li>
+              <li><strong>Snížení SDE (Screen Door Effect):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  RGB subpixelová matice LCD panelu výrazně omezila viditelnost mezer mezi pixely.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_8_img_9.png" alt="Oculus Rift S Tracking pohled">
+              <div class="image-caption">Oculus Insight – 5 kamer pro sledování okolí</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Rift S nahradil původní CV1. Odboural nutnost externích USB kamer na stole a přešel na LCD panel s RGB maticí,
+          což výrazně potlačilo tzv. Screen Door Effect.
+        </aside>
+      </section>
+
+      <!-- SLIDE 14: Valve Index -->
+      <section>
+        <span class="slide-category">PC VR &bull; High-end referenční headset</span>
+        <h2>PC: Valve Index</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge cyan">120°–130° FOV</span>
+              <span class="spec-badge cyan">120–144 Hz</span>
+              <span class="spec-badge purple">1440×1600 / oko (Ultra-low persistence LCD)</span>
+              <span class="spec-badge emerald">Knuckles Track</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>High-end Headset:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Špičková optika s nastavitelným reliéfem očí a fyzickým IPD posuvem.<br>
+                  Obnovovací frekvence 120 Hz s experimentálním režimem 144 Hz.
+                </div>
+              </li>
+              <li><strong>Ovladače „Knuckles“ (Index Controllers):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  87 optických, kapacitních a tlakových senzorů pro sledování jednotlivých prstů.<br>
+                  Možnost zcela otevřít ruku a přirozeně házet předměty.
+                </div>
+              </li>
+              <li><strong>Base station 2.0 (SteamVR):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Laserové majáky s polem záběru 160°×115° a frekvencí 100 Hz.
+                </div>
+              </li>
+              <li><strong>Off-ear BMR reproduktory:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Pohlcující prostorový zvuk bez přímého tlaku na uši.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_9_img_11.png" alt="Valve Index Headset a Knuckles ovladače">
+              <div class="image-caption">Valve Index Headset & Finger-tracking Knuckles ovladače</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Valve Index představuje zlatý standard PC VR: nabízí extrémní plynulost (až 144 Hz), široké zorné pole a
+          ovladače Knuckles sledující všech 5 prstů.
+        </aside>
+      </section>
+
+      <!-- SLIDE 15: HP Reverb G2 -->
+      <section>
+        <span class="slide-category">PC VR &bull; Ultra vysoké rozlišení</span>
+        <h2>PC: HP Reverb G2</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge cyan">114° FOV</span>
+              <span class="spec-badge cyan">90 Hz</span>
+              <span class="spec-badge purple">2160×2160 / oko (4K+ celkem)</span>
+              <span class="spec-badge emerald">WMR + SteamVR</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Headset:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Špičkový LCD panel 2160×2160 na oko (celkem 4320×2160), 90 Hz, 114° FOV.<br>
+                  Optika a off-ear reproduktory vyvinuté ve spolupráci s Valve.
+                </div>
+              </li>
+              <li><strong>Inside-Out tracking:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  4 kamery pro sledování rotace a polohy bez externích bázových stanic.
+                </div>
+              </li>
+              <li><strong>Platformní podpora & Stav:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Nativní Windows Mixed Reality (WMR) + SteamVR.<br>
+                  <span class="notice-pill" style="margin-top: 4px;">Microsoft WMR oficiálně
+                    ukončil ve Windows 11</span>
+                </div>
+              </li>
+              <li><strong>Ovladače:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Trackování pohybu pomocí kamer, napájení 4× AA bateriemi.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px; max-width: 50%;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_10_img_12.jpg" alt="HP Reverb G2 Headset">
+              <div class="image-caption">HP Reverb G2 – 2160×2160 na oko</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_10_img_13.jpg" alt="HP Reverb G2 ovladače">
+              <div class="image-caption">WMR ovladače s LED sledováním</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          HP Reverb G2 byl oblíbený zejména v leteckých a závodních simulátorech díky vysokému rozlišení. Je však nutné
+          studenty upozornit, že Microsoft celou platformu Windows Mixed Reality odepsal.
+        </aside>
+      </section>
+
+      <!-- SLIDE 16: PlayStation VR 1 -->
+      <section>
+        <span class="slide-category">Konzole &bull; Herní ekosystém PS4</span>
+        <h2>Konzole: PS VR (PlayStation VR)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge cyan">100° FOV</span>
+              <span class="spec-badge cyan">90–120 Hz</span>
+              <span class="spec-badge purple">960×1080 / oko (RGB OLED)</span>
+              <span class="spec-badge emerald">PS Camera 6× LED</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Platforma PlayStation 4 / PS4 Pro / PS5:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  První masově rozšířený headset pro domácí herní konzole (přes 5 milionů prodaných kusů).
+                </div>
+              </li>
+              <li><strong>Displej:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  1920×1080 celkem (960×1080 na oko), 90–120 Hz, RGB OLED panel s nízkou perzistencí.
+                </div>
+              </li>
+              <li><strong>Trackování pohybu:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Optické sledování 6 viditelných modrých LED diod na headsetu pomocí PlayStation Camera.
+                </div>
+              </li>
+              <li><strong>Ovladače:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  DualShock 4 gamepad nebo pohybové ovladače PlayStation Move (původem z PS3).
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_11_img_14.png" alt="PlayStation VR Headset">
+              <div class="image-caption">Sony PlayStation VR headset s tracking LED diodami</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Sony PS VR dokázalo nabídnout plynulých 120 Hz i na hardwaru PS4 díky hardwarovému reprojekčnímu boxu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 17: PlayStation VR 2 -->
+      <section>
+        <span class="slide-category">Konzole &bull; Generační skok (2023)</span>
+        <h2>Konzole: PlayStation VR 2 (PS5)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge cyan">110° FOV</span>
+              <span class="spec-badge cyan">90 / 120 Hz</span>
+              <span class="spec-badge purple">2000×2040 / oko (OLED HDR)</span>
+              <span class="spec-badge emerald">Eye Tracking</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>Nativní 4K HDR OLED displej:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  2000×2040 pixelů na oko, podpora vysokého dynamického rozsahu (HDR) a absolutní černá.
+                </div>
+              </li>
+              <li><strong>Integrovaný Eye Tracking & Foveated Rendering:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Sledování očí umožňuje vykreslovat v plném detailu pouze místo, kam se hráč dívá &rarr; obrovská
+                  úspora
+                  GPU výkonu na PS5.
+                </div>
+              </li>
+              <li><strong>Pokročilá haptika a sensory:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Vibrační motorek přímo v hlavovém mostu headsetu + adaptivní spouště (Sense ovladače).
+                </div>
+              </li>
+              <li><strong>Konektivita:</strong> Jediný USB-C kabel k PS5 (nově i PC adaptér).</li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card accent-purple" style="padding: 24px;">
+              <a href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/foveated.mp4" target="_blank"
+                data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-mvt/foveated.mp4">
+                <span class="video-icon" style="float: right;">▶</span>
+              </a>
+              <h3 style="color: var(--accent-purple); font-size: 1.1em;">Technologický význam PS VR 2:</h3>
+              <p style="color: var(--text-muted); font-size: 0.83em; line-height: 1.5; margin-top: 8px;">
+                Sony integrovalo technologie z profesionálních výzkumných headsetů (Eye Tracking s foveated renderingem
+                a OLED HDR) do spotřebitelské konzolové cenové hladiny.
+              </p>
+              <div class="highlight-card" style="margin-top: 14px; padding: 12px; font-size: 0.8em;">
+                <strong>Foveated Rendering v praxi:</strong> Redukce počtu stínovaných pixelů až o 60–75 % bez
+                viditelné ztráty kvality pro lidské oko.
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          PS VR 2 přineslo OLED HDR a eye tracking. Foveated rendering je klíčový princip: lidské oko vidí ostře jen na
+          ploše zhruba 2 stupňů zorného pole (fovea centralis), zbytek je periferní rozostřený zrak.
+        </aside>
+      </section>
+
+      <!-- SLIDE 18: Meta Quest 1 & 2 -->
+      <section>
+        <span class="slide-category">Samostatná VR &bull; All-in-One architektura</span>
+        <h2>Samostatné: Oculus / Meta Quest 1 & 2</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin-bottom: 12px;">
+              <div class="spec-badge cyan">Oculus Quest (2019)</div>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 6px 0 0 0;">
+                <li>Nepotřebuje PC ani konzoli (zcela bez kabelů)</li>
+                <li><strong>Chipset:</strong> Qualcomm Snapdragon 835</li>
+                <li><strong>Displej:</strong> 1440×1600 / oko, 72 Hz, PenTile OLED</li>
+                <li><strong>Hmotnost:</strong> 571 g &bull; Výdrž na baterie: 2–3 hodiny</li>
+              </ul>
+            </div>
+            <div class="glass-card">
+              <div class="spec-badge purple">Meta Quest 2 (2020)</div>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 6px 0 0 0;">
+                <li><strong>Chipset:</strong> Qualcomm Snapdragon XR2 (výrazně vyšší výkon)</li>
+                <li><strong>Displej:</strong> 1832×1920 na oko, 90–120 Hz, Fast-switch LCD</li>
+                <li><strong>Hmotnost:</strong> 503 g</li>
+                <li>Podpora Oculus Link / Air Link pro PC VR</li>
+                <li>Prodejní hit: Přes 20 milionů prodaných kusů celosvětově</li>
+              </ul>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_12_img_15.png" alt="Oculus Quest architektura"
+                style="max-width: 66%;">
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_12_img_16.jpg" alt="Oculus Quest 2" style="max-width: 66%;">
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Oculus Quest přinesl revoluci – plnohodnotné 6-DoF sledování v samostatném bezdrátovém zařízení s možností
+          připojení k PC kabelem i Wi-Fi.
+        </aside>
+      </section>
+
+      <!-- SLIDE 19: Meta Quest 3 & 3S -->
+      <section>
+        <span class="slide-category">Samostatná VR / MR &bull; Současný standard (2023/24)</span>
+        <h2>Samostatné: Meta Quest 3 & 3S</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge cyan">Pancake optika</span>
+              <span class="spec-badge cyan">Snapdragon XR2 Gen 2</span>
+              <span class="spec-badge purple">2064×2208 / oko</span>
+              <span class="spec-badge emerald">Barevný Passthrough MR</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.83em;">
+              <li><strong>Pancake optika & tenčí profil:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  O 40 % tenčí optický profil těla headsetu, ostrost v celém zorném poli (odstranění rozmazání okrajů).
+                </div>
+              </li>
+              <li><strong>Snapdragon XR2 Gen 2:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  2.5× vyšší GPU grafický výkon oproti Quest 2;<br>
+                  podpora komplexnějších shaderů a fyziky.
+                </div>
+              </li>
+              <li><strong>Barevná Smíšená realita (Mixed Reality):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Duální RGB 4MP kamery + hloubkový senzor (LiDAR/Time-of-Flight) pro automatické 3D zmapování pokoje a
+                  umísťování virtuálních objektů na reálný stůl.
+                </div>
+              </li>
+              <li><strong>Bezkroužkové ovladače Touch Plus:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Odstranění sledovacích kroužků;<br>
+                  kombinace AI predikce a optického trackingu.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card" style="padding: 22px;">
+              <h3 style="color: var(--text-main); font-size: 1.1em;">Dostupná Mixed Reality</h3>
+              <p style="color: var(--text-muted); font-size: 0.83em; line-height: 1.5; margin-top: 8px;">
+                Quest 3 posunul těžiště z čisté virtuální reality směrem ke <strong>smíšené realitě</strong>. Uživatel
+                může mít v reálné místnosti otevřeno několik virtuálních monitorů nebo interagovat s modely přímo na
+                pracovním stole.
+              </p>
+              <div class="highlight-card" style="margin-top: 14px; padding: 12px; font-size: 0.8em;">
+                <strong>Meta Quest 3S:</strong> Cenově dostupná varianta kombinující čip XR2 Gen 2 a barevný passthrough
+                s Fresnelovou optikou z Quest 2.
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Quest 3 je v současnosti nejvýznamnějším zástupcem spotřebitelského trhu. Pancake čočky vyřešily ergonomii a
+          barevný stereoskopický passthrough přinesl nástup praktické smíšené reality.
+        </aside>
+      </section>
+
+      <!-- SLIDE 20: Apple Vision Pro -->
+      <section>
+        <span class="slide-category">Spatial Computing &bull; Nové paradigma</span>
+        <h2>Spatial Computing: Apple Vision Pro</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge cyan">Micro-OLED 4K / oko</span>
+              <span class="spec-badge purple">Apple M2 + R1</span>
+              <span class="spec-badge emerald">Eye + Pinch Control</span>
+              <span class="spec-badge amber">12 kamer + LiDAR</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.83em;">
+              <li><strong>Displej s extrémním rozlišením:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Custom Micro-OLED panely s 23 miliony pixelů (více než 4K pro každé oko zvlášť).
+                </div>
+              </li>
+              <li><strong>Duální čipová architektura:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Čip <strong>Apple M2</strong> (výpočty a grafika) + specializovaný koprocesor <strong>R1</strong>
+                  (zpracování 12 kamer, 5 senzorů a 6 mikrofonů v reálném čase se zpožděním 12 ms).
+                </div>
+              </li>
+              <li><strong>Interakce zcela bez ovladačů:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Výběr pohledem očí (Eye tracking) + potvrzení jemným spojením prstů (Micro-pinch gesto ruky volně
+                  položené na klíně).
+                </div>
+              </li>
+              <li><strong>EyeSight vnější displej:</strong> Vykresluje oči uživatele lidem okolo.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card accent-purple" style="padding: 24px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em;">Koncept „Prostorového počítače“</h3>
+              <p style="color: var(--text-muted); font-size: 0.83em; line-height: 1.5; margin-top: 8px;">
+                Apple se vyhýbá termínu „VR“ a prezentuje Vision Pro jako nástupce osobního počítače pro práci v
+                prostoru
+                (visionOS).
+              </p>
+              <div class="highlight-card" style="margin-top: 14px; padding: 12px; font-size: 0.8em;">
+                <strong>Otočný ovladač Digital Crown:</strong> Umožňuje plynulý přechod z plného vnímání reálného pokoje
+                až do 100% ponoření do virtuálního světa.
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Apple Vision Pro ukázal budoucnost rozhraní: kombinace přesného sledování očí a snímání prstů zcela odstranila
+          potřebu držet v ruce plastové ovladače pro běžnou práci a multitasking.
+        </aside>
+      </section>
+
+      <section>
+        <span class="slide-category">Spatial Computing &bull; Nové paradigma</span>
+        <h2>Spatial Computing: Meta VR Glasses</h2>
+        <div class="slide-grid-2">
+          <div>
+
+            <ul class="custom-list" style="font-size: 0.83em;">
+              <li><img src="../bordel/images-mvt/meta-vr.png" data-preview-image
+                  style="max-width: 200px; float: right;"><strong>5K Micro-OLED Displej</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Rozlišení 2412x2288 na oko a 120 Hz, ostrý text bez mřížky pixelů (screen door effect).<br>
+                  37 pixels per degree.
+                  Pancake lens.
+                </div>
+              </li>
+              <li><strong>12 GB RAM & Výkon</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  QualcommSnapdragon Reality Elite, 12 GB RAM, podpora SD karet.
+                </div>
+              </li>
+              <li><strong>Eye + Pinch + Voice Control</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Ovládání očima + stiskem prstů + hlasovými příkazy.
+                </div>
+              </li>
+              <li><strong>USB-C DP Alt Mode</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Přímé přenosové propojení s PC nebo Mac pro práci na více virtuálních monitorech.
+                </div>
+              </li>
+              <li><strong>Cena a dostupnost</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Bude uvedeno na trh na jaře 2027 za $1300.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card accent-purple" style="padding: 24px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em;">Předběžné recenze</h3>
+              <ul class="custom-list" style="font-size: 0.83em;">
+                <li><strong>Lehký a pohodlný</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Cca 100 gramů, ultratenký profil, pohodlné pro dlouhé nošení.
+                  </div>
+                </li>
+                <li><strong>Baterie a HW</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Většina HW a baterie je připojena kabelem k headsetu a připíná se na opasek nebo do kapsy.<br>
+                    <strong>Až 3h výdrž baterie.</strong>
+                  </div>
+                </li>
+                <li><strong>Malý FOV</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Největší nevýhoda glasses je malý FOV, 70 stupňů horizontálně a 66 stupňů vertikálně. Pro práci to
+                    nevadí, ale pro VR hry je to málo.
+                  </div>
+                </li>
+                <li><strong>Celkově chvála, ale je to od Mety</strong>
+                  <div style="color: var(--text-muted); font-size: 0.9em;">
+                    Stížnosti, že je to od Mety, kterou nemá moc lidí rádo.
+                  </div>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+          <aside class="notes">
+            Apple Vision Pro ukázal budoucnost rozhraní: kombinace přesného sledování očí a snímání prstů zcela
+            odstranila
+            potřebu držet v ruce plastové ovladače pro běžnou práci a multitasking.
+          </aside>
+      </section>
+
+      <!-- SLIDE 21: Mobilní VR (Google Daydream) -->
+      <section>
+        <span class="slide-category">Mobilní VR &bull; Historický kontext</span>
+        <h2>Mobil: Google Daydream & Gear VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="badge-group">
+              <span class="spec-badge amber">Mobilní platforma</span>
+              <span class="spec-badge cyan">Android 7.1+</span>
+              <span class="spec-badge purple">Open Source API</span>
+            </div>
+            <ul class="custom-list" style="font-size: 0.85em;">
+              <li><strong>VR platforma od Android 7.1 (Nougat):</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Certifikace telefonů a operačního systému pro nízkou latenci zobrazení.
+                </div>
+              </li>
+              <li><strong>Tvorba VR aplikací pro Android:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Nativní SDK a standardizovaný 3-DoF ovladač s touchpadem a gyroskopem.
+                </div>
+              </li>
+              <li><strong>Daydream View Headset:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Textilní lehké pouzdro pro zasunutí certifikovaného telefonu.
+                </div>
+              </li>
+              <li><strong>Vývoj a současnost:</strong>
+                <div style="color: var(--text-muted); font-size: 0.9em;">
+                  Projekt skončil, trh přešel na samostatné headsety.<br>
+                  Android VR API bylo vydáno jako Open Source.
+                </div>
+              </li>
+            </ul>
+
+            <div class="highlight-card alert">
+              <strong style="color: var(--accent-rose);font-size: 0.8em;">☠️ Mobilní VR je dnes mrtvé</strong>
+              <div style="color: var(--text-muted); font-size: 0.55em; line-height: 1.5; margin-top: 4px;">
+                Google <strong>ukončil Daydream v roce 2019</strong>, Samsung <strong>Gear VR v roce 2020</strong> a
+                poslední podpora Google Cardboard zmizela z nových verzí Androidu.
+                Mobilní VR pohřbil nástup standalone headsetů (Meta Quest) s plným 6-DoF trackingem.
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase" style="background: #f0f4fa;">
+              <img src="../bordel/images-mvt/slide_13_img_17.png" style="max-height: 90px;" alt="Google Daydream Logo">
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/slide_13_img_18.png" alt="Google Daydream View Headset a ovladač">
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Mobilní VR posloužilo jako vstupní brána pro miliony uživatelů, ale trpělo přehříváním telefonů a absencí
+          6-DoF trackingu těla v prostoru.
+        </aside>
+      </section>
+
+
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/multimodal/multimodal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+  <script src="../bordel/js/tooltips.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      plugins: [RevealNotes, RevealHighlight, RevealSearch, RevealZoom, RevealPointer],
+      pointer: {
+        key: "q", // key to enable pointer, default "q", not case-sensitive
+        color: "red", // color of a cursor, default "red" any valid CSS color
+        opacity: 0.8, // opacity of cursor, default 0.8
+        pointerSize: 25, // pointer size in px, default 12
+        alwaysVisible: false, // should pointer mode be always visible? default "false"
+        tailLength: 10, // NOT IMPLEMENTED YET!!! how long the "tail" should be? default 10
+      }
+    });
+  </script>
+</body>
+
+</html>
