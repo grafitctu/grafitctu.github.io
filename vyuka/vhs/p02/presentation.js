@@ -88,7 +88,7 @@
     $('previous').disabled = current === 0;
     $('next').disabled = current === slides.length-1;
     $('progress-value').style.width = `${(current+1)/slides.length*100}%`;
-    document.querySelector('.brand').href = `#v${version}-slide-1`;
+    if (document.querySelector('.brand').id !== 'grafit-course-link') document.querySelector('.brand').href = `#v${version}-slide-1`;
     document.querySelectorAll('.variant-switch button').forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.version) === version)));
     $('overview').querySelectorAll('nav a').forEach((link, i) => {
       if (i === current) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
@@ -152,7 +152,7 @@
   $('previous').addEventListener('click', () => go(current-1));
   $('next').addEventListener('click', () => go(current+1));
   $('contents').addEventListener('click', () => openDialog($('overview')));
-  document.querySelector('.brand').addEventListener('click', e => { e.preventDefault(); go(0); });
+  document.querySelector('.brand').addEventListener('click', e => { if (e.currentTarget.id === 'grafit-course-link') return; e.preventDefault(); go(0); });
   document.querySelectorAll('.variant-switch button').forEach(button => button.addEventListener('click', () => selectVersion(Number(button.dataset.version))));
   document.querySelectorAll('[data-open-changes]').forEach(button => button.addEventListener('click', () => openDialog($('changes'))));
   document.querySelectorAll('dialog .close').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));

@@ -88,3 +88,10 @@ link. It works without browser history or JavaScript and is hidden in print.
 `tools/add-lecture-return.cjs` is called by the overview generator after
 source copying, so weekly refreshes retain navigation. Source exports stay
 unchanged; the copy manifest records the adaptation and updated hashes.
+
+Each subject now has a Czech and English overview at `/vyuka/<subject>/`
+and `/vyuka/<subject>/en/`, generated from the same catalog. Course labels
+in the central matrix and the mobile subject navigation open these pages.
+Every lecture retains its direct central-return link; its brand now opens
+the matching subject overview. Reveal lectures receive a labelled course
+link beside the return button. The VGA overview explicitly remains pending.
