@@ -64,3 +64,19 @@ Then regenerate the indexes, verify the copied lectures, and publish only the
 intended `vyuka/` files and the overview generator.
 The VHS/DVD copy script retains additional course columns and their copy
 manifest entries when refreshing those two courses.
+
+PGA lecture 01 now has a native, offline HTML adaptation of Jiří Chludil's
+verified 40-page 2024/2025 PDF at `pga/p01/`. It reuses the VHS 01 stylesheet
+and navigation, adds DVD-style notes, retains all 17 source illustrations,
+and maps each HTML slide to its original PDF page. Four explicitly labelled
+browser models demonstrate extension methods, plugin callbacks, RGB preview
+and tiled working memory; they do not execute a real Blender/GIMP plugin.
+Historical grading and software-version claims are labelled as such. The
+original PDF, printable HTML export, editable slide data and provenance are
+included. Both public and local source PDFs had the same SHA-256.
+
+The authoring workspace uses `tools/build_chludil_p01.py` and
+`tools/add_grafit_chludil.cjs`. The builder checks the reviewed source PDF hash
+before rebuilding; a changed PDF requires a new content review. The PGA PDF
+refresh script preserves independently authored HTML lectures and their
+manifest entries.
