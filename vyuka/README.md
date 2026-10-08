@@ -81,7 +81,7 @@ before rebuilding; a changed PDF requires a new content review. The PGA PDF
 refresh script preserves independently authored HTML lectures and their
 manifest entries.
 
-All 28 HTML lecture entrypoints (including alternative PDF viewers) now have
+All 40 HTML lecture entrypoints (including alternative PDF viewers) now have
 a visible `Zpět na přehled` link to the teaching overview. Native players
 place it first in the toolbar; Reveal presentations use a fixed top-left
 link. It works without browser history or JavaScript and is hidden in print.
@@ -95,3 +95,28 @@ in the central matrix and the mobile subject navigation open these pages.
 Every lecture retains its direct central-return link; its brand now opens
 the matching subject overview. Reveal lectures receive a labelled course
 link beside the return button. The VGA overview explicitly remains pending.
+
+## PGA and PG2, 8 October 2026
+
+The PGA overview now contains all ten primary public lecture PDFs from the
+current BI-PGA lecture plan: 782 original pages. The existing 40-slide native
+PGA01 remains intact. Nine new editions preserve every original page as a
+vector SVG, with locally bundled image assets, selectable source text,
+source links, notes, zoom, reading and print preparation. Each adds one
+labelled interactive model in the same VHS/DVD player. These pages retain
+the source slide design; they are not manually rewritten slide layouts.
+PGA03 remains explicitly labelled as the author's working version.
+
+PG2 (Jiří Filip, ANI-PG2) is the eighth and rightmost subject. Three currently
+public PDFs are mirrored with the shared PDF.js viewer (32, 46 and 26 pages).
+The nine other topics from the author's course page are listed as upcoming,
+without invented lecture links. Both course overviews have CS/EN versions.
+
+`upstream-sources.json` records original source hashes, course plans, existing
+public reference materials and local author exports for the weekly content
+audit. Reference materials marked `mirrored:false` are monitored, but are not
+represented as already copied web lectures. Authenticated FIT plans can be
+unavailable; failed checks must be reported as partial, never as no changes.
+The recurring audit and Discord report run in the author's local Codex
+workspace, with a delivery ledger and a verified webhook profile; credentials
+and delivery records are not published in this repository.

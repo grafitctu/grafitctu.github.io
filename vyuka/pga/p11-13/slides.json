@@ -1,0 +1,1136 @@
+{
+  "title": "Fourierova transformace a Wienerův filtr",
+  "author": "Radek Richtr",
+  "sourceURL": "https://courses.fit.cvut.cz/BI-PGA/media/lectures/bi-pga-richtr-11-13-fourier-wiener.pdf",
+  "working": false,
+  "lab": "fourier",
+  "labTitle": "DFT a Wienerova regularizace",
+  "pages": [
+    {
+      "page": 1,
+      "title": "Programování grafických aplikací pokročilé operace s obrazem",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\n\n\n           Programování grafických aplikací\n               pokročilé operace s obrazem\n\n\n\n                         Radek Richtr\n\n\n                           Institute of Information Theory and Automation\n                     Academy of Sciences of the Czech Republic\n                                  Prague, Czech Republic\n\n                          August 14, 2026\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-001.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 2,
+      "title": "Outline I",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nOutline I\n\n     1 Příznaky\n         Definice\n         Local binary patterns\n         Haralickovy příznaky\n     2 Fourierova transformace\n         Idea a princip\n     3 Fourierova transformace 1D a 2D\n      1D\n      2D\n         Použití\n     4 Wienerův filtr v FT\n        Wienerův filtr v FT\n     5 Doplnění: od příznaků k frekvenčnímu popisu\n        Texturové příznaky\n         Fourierova transformace bez zkratek\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .     6 Doporučené zdroje\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-002.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 3,
+      "title": "Cíle přednášky",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nCíle přednášky\n\n\n\n\n   Po absolvování přednášky by měl student umět:\n      • vysvětlit roli příznaku a uvést předpoklady LBP a matice\n         souvýskytu;\n      • interpretovat amplitudu a fázi diskrétní Fourierovy\n         transformace;\n      • propojit prostorovou konvoluci s násobením ve frekvenční\n          oblasti;\n      • popsat, co Wienerova dekonvoluce předpokládá a proč může\n          selhat.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-003.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 4,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nIntro\n\n\n\n\n\n      • Teoretická přednáška\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-004.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 5,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nIntro\n\n\n\n\n\n      • Teoretická přednáška\n      • Přehled algoritmických podkladů\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-005.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 6,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nIntro\n\n\n\n\n\n      • Teoretická přednáška\n      • Přehled algoritmických podkladů\n      •  ... a matematických podkladů pro grafické algoritmy\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-006.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 7,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nIntro\n\n\n\n\n\n      • Teoretická přednáška\n      • Přehled algoritmických podkladů\n      •  ... a matematických podkladů pro grafické algoritmy\n      • matematika je základ, bez kterého to nejde (alespoň její\n          intuitivní pochopení)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-007.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 8,
+      "title": "Matematickofyzikální minimum",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nMatematickofyzikální minimum\n\n\n\n\n\n      • Fourierova transformace\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-008.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 9,
+      "title": "Matematickofyzikální minimum",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nMatematickofyzikální minimum\n\n\n\n\n\n      • Fourierova transformace\n      • Frekvence v obrazu\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-009.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 10,
+      "title": "Matematickofyzikální minimum",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nMatematickofyzikální minimum\n\n\n\n\n\n      • Fourierova transformace\n      • Frekvence v obrazu\n      • Frekvence a fáze\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-010.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 11,
+      "title": "Matematickofyzikální minimum",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nMatematickofyzikální minimum\n\n\n\n\n\n      • Fourierova transformace\n      • Frekvence v obrazu\n      • Frekvence a fáze\n      • Počítání příznaků, konvoluce\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-011.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 12,
+      "title": "Příznaky (features)",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPříznaky (features)\n\n\n\n\n      • Popisují nějakou vlastnost dat (obrazu)\n      • Často matematický význam (střední hodnoty, odchylka, barva,\n         atd.)\n      • Ulehčují práci (několik příznaků místo mnoha dat)\n      • Obvykle charakterizují nějakou skupinu dat\n\n      • Nejjednodušší příznaky?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-012.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 13,
+      "title": "Příznaky (features)",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPříznaky (features)\n\n\n\n\n      • Popisují nějakou vlastnost dat (obrazu)\n      • Často matematický význam (střední hodnoty, odchylka, barva,\n         atd.)\n      • Ulehčují práci (několik příznaků místo mnoha dat)\n      • Obvykle charakterizují nějakou skupinu dat\n\n      • Nejjednodušší příznaky?\n           - samotné barevné kanály (červenost, zelenost, intenzita, atd.)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-013.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 14,
+      "title": "Příznaky (features)",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPříznaky (features)\n\n\n\n\n      • Popisují nějakou vlastnost dat (obrazu)\n      • Často matematický význam (střední hodnoty, odchylka, barva,\n         atd.)\n      • Ulehčují práci (několik příznaků místo mnoha dat)\n      • Obvykle charakterizují nějakou skupinu dat\n\n      • Nejjednodušší příznaky?\n           - samotné barevné kanály (červenost, zelenost, intenzita, atd.)\n           - ale i např. výsledky detektoru hran\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-014.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 15,
+      "title": "Příznaky",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPříznaky\n\n\n\n\n\n      • Segmentace\n           - lidé vs. pozadí – texturální příznaky, Haralick, LBP\n      • Detekce\n           - např. rakovina v mamogramech - 3DCAR\n      • Reprezentace\n           - např. pro spojování obrazů v panoramatech - SIFT, SURF,\n         atd.\n      • A mnoho dalšího!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-015.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 16,
+      "title": "Příznaky - invarianty",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPříznaky - invarianty\n\n\n\n\n\n      • Invariantní na rotace\n      • Invariantní na afinní transformace\n      • Invariantí na změnu škálování\n      • Invariantní na změnu intenzity\n      • atd.\n\n   Za každý invariant se platí.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-016.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 17,
+      "title": "LBP",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nLBP\n\n\n\n                            P−1X\n                 LBPP,R =     s(gp −gc)2p                (1)\n                                p=0\n                 (\n                                     1,  pro x >= 0\n                       s(x) =                                    (2)\n                                     0,  pro x < 0.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-017.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 18,
+      "title": "Haralick",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nHaralick\n\n\n\n    14 příznaků reprezentujících různé vlastnosti textur (entropie,\n    směrová odchylka, korelace, momenty, ...) pro malou šedotónovou\n    matici GLCM (plovoucí okno) dané velikosti\n\n                           !\n                       Ng−1X  XNg XNg\n                     f2 =     n2           9(i, j)                 (3)\n                        n=0      i=1 j=1\n\n    kde:\n      |i −j| = n,\n     p(i, j) je intenzita pixelu se součadnicemi i a j,\n    px(i) je marginální pravděpodobnost (součet řádků),\n    py(i) je marginální pravděpodobnost(součet sloupců),\n   Ng je počet úrovní šedi\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-018.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 19,
+      "title": "FT - úvod a idea",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFT - úvod a idea\n\n\n\n\n\n      • Slouží k analýze signálů (ve 2D obraz).\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-019.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 20,
+      "title": "FT - úvod a idea",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFT - úvod a idea\n\n\n\n\n\n      • Slouží k analýze signálů (ve 2D obraz).\n      • Zjišťuje paramentry harmonických frekvencí bází ze kterých se\n         obraz/signál skládá.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-020.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 21,
+      "title": "FT - úvod a idea",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFT - úvod a idea\n\n\n\n\n\n      • Slouží k analýze signálů (ve 2D obraz).\n      • Zjišťuje paramentry harmonických frekvencí bází ze kterých se\n         obraz/signál skládá.\n      • A co to je?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-021.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 22,
+      "title": "Náhodnost?",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nNáhodnost?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-022.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 23,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • Zkusíme to vysvětlit trochu jinak...\n\n\n\n\n\n    Představme si kolečko s průměrem r0, které má vpravo od středu\n    na okraji puntík (bod), má počáteční úhel α0 a otáčí se rychlostí\n     s0. Tento puntík kreslí obrázek kružnice.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-023.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 24,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • Zkusíme to vysvětlut trochu jinak...\n\n\n\n\n\n    Představme si, že na puntíku tohoto kolečka je další kolečko s\n   průměrem r1 natočené pod úhlem α1, které se otáčí rychlosti s1.\n    Tato soustava dvou koleček kreslí už mnohem zajímavější tvar.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-024.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 25,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Zkusíme to vysvětlut trochu jinak...\n\n\n\n\n\n    Představme si, že na puntíku posledního kolečka můžeme mít další\n    kolečko, na něm další a tak dál. Koleček může být až nespočetně\n    mnoho.\n   Co všechno lze takovýmito soustavami koleček nakreslit? Čtverec?\n    Trojúhelník?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-025.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 26,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Takovému systému koleček říkáme Ptolemájský systém\n           - Ptolemy’s system of epicycles and deferents.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-026.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": [
+        {
+          "url": "https://www.youtube.com/watch?v=QVuU2YCwHjw"
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=r6sGWTCMz2k&ab_channel=3Blue1Brown"
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=r6sGWTCMz2k&ab_channel=3Blue1Brown"
+        }
+      ]
+    },
+    {
+      "page": 27,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Takovému systému koleček říkáme Ptolemájský systém\n           - Ptolemy’s system of epicycles and deferents.\n      • Nakreslit tím lze cokoli\n           - https://www.youtube.com/watch?v=QVuU2YCwHjw\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-027.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": [
+        {
+          "url": "https://www.youtube.com/watch?v=QVuU2YCwHjw"
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=r6sGWTCMz2k&ab_channel=3Blue1Brown"
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=r6sGWTCMz2k&ab_channel=3Blue1Brown"
+        }
+      ]
+    },
+    {
+      "page": 28,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Takovému systému koleček říkáme Ptolemájský systém\n           - Ptolemy’s system of epicycles and deferents.\n      • Nakreslit tím lze cokoli\n           - https://www.youtube.com/watch?v=QVuU2YCwHjw\n           - https://www.youtube.com/watch?v=r6sGWTCMz2k&ab_\n       channel=3Blue1Brown\n      • Pozorování:\n           - dvě kolečka se stejnou rychlostí lze spojit do jednoho s jiným\n       poloměrem a úhlem\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-028.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": [
+        {
+          "url": "https://www.youtube.com/watch?v=QVuU2YCwHjw"
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=r6sGWTCMz2k&ab_channel=3Blue1Brown"
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=r6sGWTCMz2k&ab_channel=3Blue1Brown"
+        }
+      ]
+    },
+    {
+      "page": 29,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • Máme tedy křivku, spojitou funkci f : R −→R2\n           - pro každý parametr t vrátí pozici (x, y) - bod křivky\n           - pro křivku hledáme soustavu koleček, která ji zvládne\n          nakreslit\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-029.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 30,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • Máme tedy křivku, spojitou funkci f : R −→R2\n           - pro každý parametr t vrátí pozici (x, y) - bod křivky\n           - pro křivku hledáme soustavu koleček, která ji zvládne\n          nakreslit\n      • Soustavu lze reprezentovat jako funci g, která pro každou\n         rychlost s vrátí dvojici (r, α)\n           - poloměr a úhel kolečka, rychlost s v dané soustavě\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-030.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 31,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • Máme tedy křivku, spojitou funkci f : R −→R2\n           - pro každý parametr t vrátí pozici (x, y) - bod křivky\n           - pro křivku hledáme soustavu koleček, která ji zvládne\n          nakreslit\n      • Soustavu lze reprezentovat jako funci g, která pro každou\n         rychlost s vrátí dvojici (r, α)\n           - poloměr a úhel kolečka, rychlost s v dané soustavě\n      • Jednoduché?\n           - Operace, která hledá soustavu koleček ke křivce funguje\n         stejně jako Fourierova transformace!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-031.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 32,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • Hledá tedy k jedné funkci jinou funkci.\n           - na jedné straně máme (x, y) na druhé (r, α)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-032.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 33,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • Hledá tedy k jedné funkci jinou funkci.\n           - na jedné straně máme (x, y) na druhé (r, α)\n      • místo 2D souřadnic na levé straně použijeme komplexní čísla\n           - (x, y) zapisujeme jako (x + yi)\n           - křivka je tedy f : ℜ−→C\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-033.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 34,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • Hledá tedy k jedné funkci jinou funkci.\n           - na jedné straně máme (x, y) na druhé (r, α)\n      • místo 2D souřadnic na levé straně použijeme komplexní čísla\n           - (x, y) zapisujeme jako (x + yi)\n           - křivka je tedy f : ℜ−→C\n      • Kolečka na druhé straně (r, α) by taky potřebovaly komplexní\n           čísla, ať je to jednotné\n           - tímto číslem nechť je počáteční poloha puntíku v komplexní\n         rovině (vzhledem ke středu kolečka)\n           - tedy místo (r, α) máme r ∗(cos(α) + sin(α) ∗i) = (a + b ∗i)\n           - nyní je i soustava koleček ve tvaru g : C −→C\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-034.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 35,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • Hledá tedy k jedné funkci jinou funkci.\n           - na jedné straně máme (x, y) na druhé (r, α)\n      • místo 2D souřadnic na levé straně použijeme komplexní čísla\n           - (x, y) zapisujeme jako (x + yi)\n           - křivka je tedy f : ℜ−→C\n      • Kolečka na druhé straně (r, α) by taky potřebovaly komplexní\n           čísla, ať je to jednotné\n           - tímto číslem nechť je počáteční poloha puntíku v komplexní\n         rovině (vzhledem ke středu kolečka)\n           - tedy místo (r, α) máme r ∗(cos(α) + sin(α) ∗i) = (a + b ∗i)\n           - nyní je i soustava koleček ve tvaru g : C −→C\n      • A jak s těmi úhly?\n           - násobením přece! otočení o 30 je násobení\n         (cos(30) + sin(30)i)\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-035.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 36,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • K čemu že byly ty komplexní čísla?\n           - soustava je nyní jednoznačná (otočení o 40◦= otočení o\n        400◦)\n           - k převodu tedy nyní lze najít i inverzi!\n           - shoduje se systém signálu (křivka) i obrazu (kolečka)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-036.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 37,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • K čemu že byly ty komplexní čísla?\n           - soustava je nyní jednoznačná (otočení o 40◦= otočení o\n        400◦)\n           - k převodu tedy nyní lze najít i inverzi!\n           - shoduje se systém signálu (křivka) i obrazu (kolečka)\n      • Znovu, jak že to funguje?\n           - transformace hledá ke křivce kolečka které ji kreslí\n           - parametr křivky je čas t\n           - chceme, aby při parametru t byl puntík (křivka) v bodu f(t)\n           - pro t = 0 jsou kolečka v počáteční poloze\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-037.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 38,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • Vlastnosti naší transformace?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-038.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 39,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • Vlastnosti naší transformace?\n      • kolečka jde určitě prohazovat\n           - ejhle, komutativnost!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-039.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 40,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • Vlastnosti naší transformace?\n      • kolečka jde určitě prohazovat\n           - ejhle, komutativnost!\n      • křivka jde zvětšovat k krát!\n           - (k × f)(t) = k × (x + yi)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-040.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 41,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • Vlastnosti naší transformace?\n      • kolečka jde určitě prohazovat\n           - ejhle, komutativnost!\n      • křivka jde zvětšovat k krát!\n           - (k × f)(t) = k × (x + yi)\n      • křivky jsou sčítat! (f1 + f2)(t) + (x1 + y1t) + (x2 + y2i))\n           - jak vypadají kolečka? prostě soustavy napojíme za sebe!\n           - A víme, že když se kolečka točí stejně rychle, jde je sloučit...\n        tedyFT(f1) + g1, FT(f2) = g2 =⇒FT(f1 + f2) = g1 + g2\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-041.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 42,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A jak že se to počítá? (začneme jednodušším inverzem, tedy\n         křivka =⇒kolečka)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-042.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 43,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A jak že se to počítá? (začneme jednodušším inverzem, tedy\n         křivka =⇒kolečka)\n           - máme g(s) a zajímá nás pohyb puntíku, tedy poloha při\n        parametru t neboli f(t)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-043.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 44,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A jak že se to počítá? (začneme jednodušším inverzem, tedy\n         křivka =⇒kolečka)\n           - máme g(s) a zajímá nás pohyb puntíku, tedy poloha při\n        parametru t neboli f(t)\n           - rychlost s, poloměr a počáteční úhel představuje kompexní\n           číslo g(s) = a + bi\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-044.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 45,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A jak že se to počítá? (začneme jednodušším inverzem, tedy\n         křivka =⇒kolečka)\n           - máme g(s) a zajímá nás pohyb puntíku, tedy poloha při\n        parametru t neboli f(t)\n           - rychlost s, poloměr a počáteční úhel představuje kompexní\n           číslo g(s) = a + bi\n           - jaká je hodnota křivky pro parametr t? Stačí natočit kolečko\n        o t × s. Otáčet už umíme!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-045.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 46,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A jak že se to počítá? (začneme jednodušším inverzem, tedy\n         křivka =⇒kolečka)\n           - máme g(s) a zajímá nás pohyb puntíku, tedy poloha při\n        parametru t neboli f(t)\n           - rychlost s, poloměr a počáteční úhel představuje kompexní\n           číslo g(s) = a + bi\n           - jaká je hodnota křivky pro parametr t? Stačí natočit kolečko\n        o t × s. Otáčet už umíme!\n\n\n             f(t) = (cos(t × s × 2π) + sin(t × s × 2π)i) × g(s)    (4)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-046.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 47,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A jak že se to počítá? (začneme jednodušším inverzem, tedy\n         křivka =⇒kolečka)\n           - máme g(s) a zajímá nás pohyb puntíku, tedy poloha při\n        parametru t neboli f(t)\n           - rychlost s, poloměr a počáteční úhel představuje kompexní\n           číslo g(s) = a + bi\n           - jaká je hodnota křivky pro parametr t? Stačí natočit kolečko\n        o t × s. Otáčet už umíme!\n\n\n             f(t) = (cos(t × s × 2π) + sin(t × s × 2π)i) × g(s)    (4)\n\n\n           - a co když je koleček n? A s různými rychlostmi? Poloměry a\n         úhly? Sčítáme!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-047.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 48,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A jak že se to počítá? (začneme jednodušším inverzem, tedy\n         křivka =⇒kolečka)\n           - máme g(s) a zajímá nás pohyb puntíku, tedy poloha při\n        parametru t neboli f(t)\n           - rychlost s, poloměr a počáteční úhel představuje kompexní\n           číslo g(s) = a + bi\n           - jaká je hodnota křivky pro parametr t? Stačí natočit kolečko\n        o t × s. Otáčet už umíme!\n\n\n             f(t) = (cos(t × s × 2π) + sin(t × s × 2π)i) × g(s)    (4)\n\n\n           - a co když je koleček n? A s různými rychlostmi? Poloměry a\n         úhly? Sčítáme!\n\n     Xn\n          f(t) =    (cos(t × sj × 2π) + sin(t × sj. ×.    . 2π)i).   .   .   .    .×.   .g(sj).    .   .   .   . (5).        .      .    .     .\n                 j=1                                                                                                             .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-048.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 49,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • A co když je koleček n? A s různými rychlostmi? Poloměry a\n         úhly? Sčítáme!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-049.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 50,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • A co když je koleček n? A s různými rychlostmi? Poloměry a\n         úhly? Sčítáme!\n\n\n     Xn\n          f(t) =    (cos(t × sj × 2π) + sin(t × sj × 2π)i) × g(sj) (6)\n                 j=1\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-050.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 51,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • A co když je koleček n? A s různými rychlostmi? Poloměry a\n         úhly? Sčítáme!\n\n\n     Xn\n          f(t) =    (cos(t × sj × 2π) + sin(t × sj × 2π)i) × g(sj) (6)\n                 j=1\n\n\n      • A nespočetně koleček?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-051.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 52,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • A co když je koleček n? A s různými rychlostmi? Poloměry a\n         úhly? Sčítáme!\n\n\n     Xn\n          f(t) =    (cos(t × sj × 2π) + sin(t × sj × 2π)i) × g(sj) (6)\n                 j=1\n\n\n      • A nespočetně koleček?\n\n             Z\n          f(t) =      (cos(t × s × 2π) + sin(t × s × 2π)i) × g(s)ds (7)\n                s∈R\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-052.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 53,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • A co když je koleček n? A s různými rychlostmi? Poloměry a\n         úhly? Sčítáme!\n\n\n     Xn\n          f(t) =    (cos(t × sj × 2π) + sin(t × sj × 2π)i) × g(sj) (6)\n                 j=1\n\n\n      • A nespočetně koleček?\n\n             Z\n          f(t) =      (cos(t × s × 2π) + sin(t × s × 2π)i) × g(s)ds (7)\n                s∈R\n\n\n           - ta dá!\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-053.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 54,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A co samotná DT?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-054.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 55,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A co samotná DT?\n           - máme křivku f a hledáme k ní soustavu koleček s\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-055.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 56,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A co samotná DT?\n           - máme křivku f a hledáme k ní soustavu koleček s\n           - zajímá nás komplexní čísla u koleček a rychlosti\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-056.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 57,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A co samotná DT?\n           - máme křivku f a hledáme k ní soustavu koleček s\n           - zajímá nás komplexní čísla u koleček a rychlosti\n\n             Z\n          g(s) =    (cos(−t×s×2π)+sin(−t×s×2π)i)×f(t)ds (8)\n                s∈R\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-057.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 58,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A co samotná DT?\n           - máme křivku f a hledáme k ní soustavu koleček s\n           - zajímá nás komplexní čísla u koleček a rychlosti\n\n             Z\n          g(s) =    (cos(−t×s×2π)+sin(−t×s×2π)i)×f(t)ds (8)\n                s∈R\n\n      • A kde je takové to e−ts2πi ?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-058.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 59,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A co samotná DT?\n           - máme křivku f a hledáme k ní soustavu koleček s\n           - zajímá nás komplexní čísla u koleček a rychlosti\n\n             Z\n          g(s) =    (cos(−t×s×2π)+sin(−t×s×2π)i)×f(t)ds (8)\n                s∈R\n\n      • A kde je takové to e−ts2πi ?\n           - Taylorův polynom a rozvoj...\n                           x0   x1   x2   x3\n                       ex =  +  +  +  + ...            (9)\n                                 0!    1!    2!    3!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-059.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 60,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A co samotná DT?\n           - máme křivku f a hledáme k ní soustavu koleček s\n           - zajímá nás komplexní čísla u koleček a rychlosti\n\n             Z\n          g(s) =    (cos(−t×s×2π)+sin(−t×s×2π)i)×f(t)ds (8)\n                s∈R\n\n      • A kde je takové to e−ts2πi ?\n           - Taylorův polynom a rozvoj...\n                           x0   x1   x2   x3\n                       ex =  +  +  +  + ...            (9)\n                                 0!    1!    2!    3!\n\n           - Eulerův vzorec\n\n                               eix = cos(x + i sin(x))               (10)\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-060.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 61,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • A co samotná DT?\n           - máme křivku f a hledáme k ní soustavu koleček s\n           - zajímá nás komplexní čísla u koleček a rychlosti\n\n             Z\n          g(s) =    (cos(−t×s×2π)+sin(−t×s×2π)i)×f(t)ds (8)\n                s∈R\n\n      • A kde je takové to e−ts2πi ?\n           - Taylorův polynom a rozvoj...\n                           x0   x1   x2   x3\n                       ex =  +  +  +  + ...            (9)\n                                 0!    1!    2!    3!\n\n           - Eulerův vzorec\n\n                               eix = cos(x + i sin(x))               (10)\n\n              , a tedy...                                                                                                                            .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-061.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 62,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n          Z\n     g(s) =    (cos(−t × s × 2π) + sin(−t × s × 2π)i) × f(t)dt (11)\n\n           t∈R\n\n                    =\n                     Z\n                                 e−ts2πi × f(t)dt                  (12)\n\n                         t∈R\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-062.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 63,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n          Z\n     g(s) =    (cos(−t × s × 2π) + sin(−t × s × 2π)i) × f(t)dt (11)\n\n           t∈R\n\n                    =\n                     Z\n                                 e−ts2πi × f(t)dt                  (12)\n\n                         t∈R\n\n      • Proč?\n           - pro zkrácení zápisu...\n           - aby to líp (chytřeji) vypadalo...\n           - pro zmatení nepřítele, ...\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-063.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 64,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n\n   Co jsme tedy zjistili?\n      • Fourierova transformace nějak dovoluje rozložit křivky, se\n         kterými se muže těžko operovat na stavební prvky\n      • Kolečka, která křivku kreslí jsou lehce upravovatelné,\n        jednoduše se s nimi zachází\n      • FT se kouká za obraz samotný, poskytuje jiný náhled\n\n   A nyní od koleček ke zpracování signálu a obrazu...\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-064.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 65,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • Obvykle ve 1D zpracování signálu zapisujeme:\n           - F(k) je obraz\n           - f(ω) je původní signál\n\n                           Z∞\n                     F(k) =    f(ω)e−2πikωdω             (13)\n\n                     −∞\n\n                           Z∞\n                       f(ω) =    F(k)e2πiωkdk             (14)\n\n                     −∞\n      • Bázové funkce jsou siny a cosiny\n      • Někdy se Fourierův obraz zapisuje jako ˆf a frekvence jako\n         reálné číslo ξ.\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-065.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 66,
+      "title": "Bázová funkce",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nBázová funkce\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-066.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 67,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Začíná to být zajímavé...\n      • Nekonečný signál ⇐⇒dva δ pulzy!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-067.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 68,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • a netriviální...\n      • Konečný signál ⇐⇒nekonečná řada sinů (Re)\n           - proč nekonečný? A skutečně nekonečný?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-068.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 69,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Diracův impuls\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-069.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 70,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Skládaní z harmonických obrazů\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-070.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 71,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • Co děje s obrazem\n           - při změně délky signálu?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-071.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 72,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • Co děje s obrazem\n           - při změně frekvence signálu?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-072.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 73,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • A ve 2D:\n           - F(u,v) je obraz, komplexní spektrum, udává váhy\n         jednotlivých harmonických složek\n           - f(x,y) je původní signál, obrázek\n                     ZZ\n                 F(u, v) =     f(x, y)e−2πi(ux+vy)dxdy       (15)\n\n                            R2\n                      ZZ\n                   f(x, y) =    F(u, v)e2πi(ux+vy)dudv        (16)\n\n                            R2\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-073.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 74,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • Bázová funkce je ’vlnitý plech’ sin a cos ve 2D\n      • f(x, y) je tedy lineární kombinací jednoduchých harmonických\n         složek e2πi(xu+yv)\n           - cos je reálná a sin imaginární složka\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-074.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 75,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Bázová funkce je ’vlnitý plech’ sin a cos ve 2D\n      • f(x, y) je tedy lineární kombinací jednoduchých harmonických\n         složek e2πi(xu+yv)\n           - cos je reálná a sin imaginární složka\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-075.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 76,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Báze\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-076.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 77,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Báze\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-077.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 78,
+      "title": "Fourierova transformace - spektrum",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace - spektrum\n\n      • Fourierův obraz F(u, v) je obecně funkcí komplexní proměnné.\n      • Komplexní spektrum\n\n                      F(u, v) = R(u, v) + iI(u, v)            (17)\n\n      • Amplitudové spektrum\n               p\n                     |F(u, v)| =   R2(u, v) + I2(u, v)          (18)\n\n      • Fázové spektrum\n\n                                           I(u, v)\n                          ϕ(u, v) = tan−1                      (19)\n                                     R(u, v)\n\n      • Výkonové spektrum\n\n                         P(u, c) = |F(u, v|2                (20)\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-078.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 79,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n      • Spektrum (obraz) je názorné zobrazovat centrovaně\n           - optický střed je ve středu obrázku\n           - nízké frekvence se přesunou do středu po kvadrantech\n           - obvykle implementováno (fftshift v matlabu, ...)\n           - vždy předpokládáme centralizované zobrazení\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-079.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 80,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • Spektrum (obraz) je názorné zobrazovat centrovaně\n           - optický střed je ve středu obrázku\n           - nízké frekvence se přesunou do středu po kvadrantech\n           - obvykle implementováno (fftshift v matlabu, ...)\n           - vždy předpokládáme centralizované zobrazení\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-080.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 81,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n      • Základní transformace ve 2D\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-081.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 82,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n      • Základní transformace ve 2D - všimnete si prohození délky a\n          šířky\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-082.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 83,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • Zvyrázenní složitějšího obrazu amplituda vs. log(amplituda +\n         1)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-083.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 84,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n      • FT něterých písmen\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-084.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 85,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n\n      • A co ty komplexní čísla? To jsou přeci parametry!\n           - Amplituda\n           - Fáze\n           - a dohromady je to výkonové spektrum (power spectrum)\n           - co nese víc informace? Amplituda, nebo fáze?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-085.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 86,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-086.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 87,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-087.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 88,
+      "title": "Fourierova transformace",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFourierova transformace\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-088.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 89,
+      "title": "Filtrace ve frekvenční oblasti",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFiltrace ve frekvenční oblasti\n\n\n\n\n\n                    F(f ∗g) = F(f)F(g)                 (21)\n\n     - konvoluce přechází v prostý násobek per pixel!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-089.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 90,
+      "title": "Filtrace ve frekvenční oblasti",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nFiltrace ve frekvenční oblasti\n\n      • F(f ⋆g) = F(f)F(g)\n              high pass        g. high pass     band pass\n\n\n\n\n\n             low pass        g. low pass       directional\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-090.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 91,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-091.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 92,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-092.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 93,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-093.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 94,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-094.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 95,
+      "title": "Reálný obraz",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nReálný obraz\n\n\n      • Mnoho jevů degraduje obraz systematicky\n      • Naměřený (pozorovaný) signál y(t)\n\n    y(t) =\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-095.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 96,
+      "title": "Reálný obraz",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nReálný obraz\n\n      • Mnoho jevů degraduje obraz systematicky\n      • Naměřený (pozorovaný) signál y(t)\n      • Naměřený (pozorovaný) signál je původní signál x(t), který\n          byl nějak pokažen.\n    y(t) = x(t)+?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-096.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 97,
+      "title": "Reálný obraz",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nReálný obraz\n\n      • Mnoho jevů degraduje obraz systematicky\n      • Naměřený (pozorovaný) signál y(t)\n      • Naměřený (pozorovaný) signál je původní signál x(t), který\n          byl nějak pokažen.\n      • Obraz byl rozmazán - konvolucí!\n    y(t) = x(t) + h(t)?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-097.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 98,
+      "title": "Reálný obraz",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nReálný obraz\n\n      • Mnoho jevů degraduje obraz systematicky\n      • Naměřený (pozorovaný) signál y(t)\n      • Naměřený (pozorovaný) signál je původní signál x(t), který\n          byl nějak pokažen.\n      • Obraz byl rozmazán - konvolucí!\n    y(t) = x(t) + h(t)?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-098.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 99,
+      "title": "Reálný obraz",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nReálný obraz\n\n      • Mnoho jevů degraduje obraz systematicky\n      • Naměřený (pozorovaný) signál y(t)\n      • Naměřený (pozorovaný) signál je původní signál x(t), který\n          byl nějak pokažen.\n      • Obraz byl rozmazán - konvolucí!\n    y(t) = (x ∗h)(t)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-099.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 100,
+      "title": "Reálný obraz",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nReálný obraz\n\n      • Mnoho jevů degraduje obraz systematicky\n      • Naměřený (pozorovaný) signál y(t)\n      • Naměřený (pozorovaný) signál je původní signál x(t), který\n          byl nějak pokažen.\n      • Obraz byl rozmazán - konvolucí!\n    y(t) = (x ∗h)(t)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-100.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 101,
+      "title": "Reálný obraz",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nReálný obraz\n\n\n      • Mnoho jevů degraduje obraz systematicky\n      • Naměřený (pozorovaný) signál y(t)\n      • Naměřený (pozorovaný) signál je původní signál x(t), který\n          byl nějak pokažen.\n      • Obraz byl rozmazán - konvolucí!\n\n    y(t) = (x ∗h)(t) + n(t)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-101.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 102,
+      "title": "Reálný obraz",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nReálný obraz\n\n\n      • Mnoho jevů degraduje obraz systematicky\n      • Naměřený (pozorovaný) signál y(t)\n      • Naměřený (pozorovaný) signál je původní signál x(t), který\n          byl nějak pokažen.\n      • Obraz byl rozmazán - konvolucí!\n\n    y(t) = (x ∗h)(t) + n(t)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-102.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 103,
+      "title": "Wienerův filtr",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nWienerův filtr\n\n      • Mnoho jevů degraduje obraz systematicky\n      • Pohyb (motion blur)\n           - jeden bod se rozmázne do křivky (zjednodušeně usečky)\n           - jak vypadá Fourierův obraz takového rozmáznutí?\n           - ale to už přece známe!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-103.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 104,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n      • Out-of-focus\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-104.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 105,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n      • Atmospheric turbulence\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-105.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 106,
+      "title": "Jak to funguje?",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nJak to funguje?\n\n\n\n\n      • Tyto distorze obrazu jsou jen obdobou konvoluce, ty se dá\n         lehce řešit ve frekvenční oblasti násobením...\n      • Známý jev lze odstranit pokud známe jeho parametry\n           - tomu říkáme impulsní odezva (jak by se zobrazil jeden bod)\n      • Wienerův filtr y(t) = (h ∗x)(t) + n(t)\n           - * je konvoluce\n           - x(t) je původní signál\n           - h(t) je neznámé impulstní odezva (PSN)\n           - n(t) je aditivní nezávislý šum\n           - y(t) je pozorovaný signál (pokažený obrázek)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-106.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 107,
+      "title": "Jak to funguje?",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nJak to funguje?\n\n\n\n\n      • Chceme najít g(t) aby jsem mohli odhadnout x(t) jako\n         x(t) = (g ∗y)(t) (minimalizací střední chyby)\n      • Wienerova dekonvoluce\n\n                             H∗(f)S(f)\n                 G(f) =                                   (22)\n                         ∥H(f)∥2S(f) + N(f)\n\n   G(f) a H(f) jsou fourierovy obrazy funkcí y a h s frekvencí f,\n    S(f) je střední hodnota power spektra x(t), N(f) pak šumu n(t),\n    hvězdičkou je označena koplexní konjugace\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-107.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 108,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n      • V podstatě odstranujeme tyto typy funkcí z G(f) ovšem s\n       neznámými parametry...\n\n        motion blur        out-of-focus       atm. turbulence\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-108.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 109,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-109.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 110,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-110.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 111,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-111.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 112,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-112.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 113,
+      "title": "Použití",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPoužití\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-113.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 114,
+      "title": "Příznak není klasifikátor",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nPříznak není klasifikátor\n\n\n\n\n    Příznak převádí okolí nebo celý obraz na vektor x ∈Rd.\n      • Dobrá reprezentace zvýrazní relevantní rozdíly a potlačí\n        změny, které nechceme rozlišovat.\n      • Invariance vůči rotaci, měřítku či jasu není automaticky\n        výhodná: může odstranit informaci potřebnou pro úlohu.\n      • Normalizace a definice okolí musí být stejné při učení i použití.\n      • Až klasifikátor nebo vzdálenost rozhoduje, co v prostoru\n         příznaků považujeme za podobné.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-114.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 115,
+      "title": "LBP krok za krokem",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nLBP krok za krokem\n\n\n\n    Pro středový pixel gc a P sousedů gp na kružnici o poloměru R:\n                           (\n                  P−1X                              1,  z ≥0,\n        LBPP,R =     s(gp −gc)2p,     s(z) =\n                                                          0,  z < 0.                    p=0\n\n\n      • Kód popisuje lokální uspořádání intenzit, histogram pak\n         rozdělení kódů v oblasti.\n      • Monotónní změna šedé škály zachová porovnání se středem.\n      • Rotace mění pořadí bitů; rotační invariance proto vyžaduje\n          další mapování kódů.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-115.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 116,
+      "title": "Haralickovy příznaky: co přesně měříme",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nHaralickovy příznaky: co přesně měříme\n\n\n\n\n    Matice souvýskytu P∆(i, j) počítá, jak často se hodnoty i a j\n    objeví ve dvojici pixelů oddělených posunem ∆.\n      • Kontrast: zvýrazňuje dvojice s velkým rozdílem intenzit.\n      • Homogenita: roste, když se četnosti soustředí poblíž\n         diagonály.\n      • Energie: roste pro několik dominantních dvojic.\n      • Výsledek závisí na kvantování šedi, směru a vzdálenosti ∆;\n         tyto parametry jsou součást metody.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-116.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 117,
+      "title": "2D DFT a její význam",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\n2D DFT a její význam\n\n\n\n    Pro obraz I[m, n] rozměru M × N:\n\n                  M−1X N−1X\n             F[u, v] =        I[m, n]e−2πi(um/M+vn/N).\n\n                   m=0 n=0\n\n      • |F[u, v]| popisuje zastoupení frekvencí, fáze arg F[u, v] jejich\n         prostorové uspořádání.\n      • Nízké frekvence popisují pomalé změny, vysoké frekvence\n        jemné struktury a ostré přechody.\n      • fftshift pouze přesune nulovou frekvenci do středu\n         zobrazení; data nefiltruje.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-117.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 118,
+      "title": "Konvoluční věta propojuje P03 a P04",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nKonvoluční věta propojuje P03 a P04\n\n\n\n\n\n                  F{I ∗h} = F{I} F{h}.\n\n\n      • Konvoluce v prostorové oblasti odpovídá bodovému násobení\n        ve frekvenční oblasti.\n      • DFT předpokládá periodické pokračování obrazu; bez\n         doplnění nul vzniká kruhová konvoluce.\n      • Pro malé jádro je rychlejší přímá nebo separabilní konvoluce;\n      FFT se vyplatí u velkých jader.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-118.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 119,
+      "title": "Wienerova dekonvoluce a její omezení",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nWienerova dekonvoluce a její omezení\n\n\n\n    Pro model Y = HX + N se Wienerův odhad zapisuje\n\n                            H∗(u, v)\n          X(u,b   v) =                                   (u, v).                    |H(u, v)|2 + SN(u, v)/SX(u, v)Y\n\n\n      • H je přenosová funkce rozmazání, SN a SX výkonová spektra\n       šumu a signálu.\n      • Člen v jmenovateli brání nekonečnému zesílení tam, kde je H\n        téměř nulové.\n      • Kvalita závisí na znalosti rozmazání a odhadu poměru signálu\n        k šumu; chybný model vytváří artefakty.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-119.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 120,
+      "title": "Shrnutí a kontrolní otázky",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nShrnutí a kontrolní otázky\n\n\n\n      • Příznak je reprezentace; jeho invariance a parametry musí\n        odpovídat úloze.\n      • Amplituda udává zastoupení frekvencí, fáze nese zásadní\n         informaci o uspořádání obrazu.\n      • Frekvenční filtrace je ekvivalentní prostorové konvoluci jen při\n        správném doplnění a okrajových podmínkách.\n\n       1 Na kterých parametrech závisí Haralickovy příznaky?\n\n       2 Co přesně mění fftshift?\n       3 Proč nelze při dekonvoluci jednoduše dělit nulovými\n        hodnotami H(u, v)?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-120.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 121,
+      "title": "Doporučené zdroje I",
+      "text": "Outline. .. .. .. .   Příznaky. .. .. .. .. .   Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. . Fourierova. .. .. .. .. .. .. .. transformace.. .. .. .. .. .. .. .. .. 1D.. .. ..a..2D.. .. .. .. .. .. .. . Wienerův. .. .. .. .. .. .. ..filtr.. .. v.. ..FT.. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .od př\n\nDoporučené zdroje I\n\n\n\n\n       [1] Rafael C. Gonzalez and Richard E. Woods.\n          Digital Image Processing.\n         Pearson, 4 edition, 2018.\n         Základní učebnice zpracování obrazu, konvoluce a frekvenční filtrace.\n\n       [2] Robert M. Haralick, K. Shanmugam, and Its’hak Dinstein.\n         Textural features for image classification.\n        IEEE Transactions on Systems, Man, and Cybernetics, SMC-3(6):610–621, 1973.\n        Dostupné z: https://doi.org/10.1109/TSMC.1973.4309314.\n\n       [3] Timo Ojala, Matti Pietikäinen, and Topi Mäenpää.\n          Multiresolution gray-scale and rotation invariant texture classification with local\n          binary patterns.\n        IEEE Transactions on Pattern Analysis and Machine Intelligence, 24(7):971–987,\n         2002.\n        Dostupné z: https://doi.org/10.1109/TPAMI.2002.1017623.\n\n       [4] Alan V. Oppenheim and Ronald W. Schafer.\n         Discrete-Time Signal Processing.\n         Prentice Hall, 3 edition, 2010.\n        Podrobný výklad diskrétních systémů a Fourierovy transformace.\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-121.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": [
+        {
+          "url": "https://doi.org/10.1109/TSMC.1973.4309314"
+        },
+        {
+          "url": "https://doi.org/10.1109/TPAMI.2002.1017623"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1123 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="GIMP a metodika programování pluginů · Jiří Chludil">
+  <title>PGA · 09 · GIMP a metodika programování pluginů</title>
+  <script>
+    (() => {
+      let saved;
+      try { saved = localStorage.getItem('pga-chludil-theme'); } catch {}
+      document.documentElement.dataset.theme = saved === 'dark' || saved === 'light'
+        ? saved : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    })();
+  </script>
+  <link rel="stylesheet" href="presentation.css">
+  <script src="presentation.js" defer></script><script src="web-extras.js" defer></script><script src="lab.js" defer></script>
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+</style>
+</head>
+<body class="grafit-toolbar-return">
+  <header class="toolbar">
+<a id="grafit-lecture-return" class="grafit-lecture-return" href="../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+    <a class="brand" id="grafit-course-link" href="../" aria-label="Přehled přednášek PGA">PGA <span>/ 09</span></a>
+    <span id="chapter">Úvod</span>
+    <nav aria-label="Nástroje prezentace">
+      <button id="contents" aria-haspopup="dialog">Obsah</button>
+      <a class="pdf-link" href="original.pdf">PDF</a><button id="print-button">Tisk</button><button id="text-toggle" aria-pressed="false">Text</button><button id="notes-toggle" aria-haspopup="dialog">Poznámky</button><button id="lab-toggle" aria-haspopup="dialog">Ukázka</button><button id="reading" aria-pressed="false">Čtení</button>
+      <button id="theme" aria-label="Tmavý režim" aria-pressed="false" title="Tmavý režim">◐</button>
+      <button id="fullscreen" aria-label="Celá obrazovka (F)">⛶ <span>Celá obrazovka</span></button>
+    </nav>
+  </header>
+  <main id="deck" aria-label="GIMP a metodika programování pluginů">
+    <article class="slide source-slide" id="slide-1" data-section="2D grafika - GIMP: Metodika programování plug" aria-label="Snímek 1: 2D grafika - GIMP: Metodika programování pluginů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-001.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-001.svg" aria-label="Zvětšit snímek 1: 2D grafika - GIMP: Metodika programování pluginů"></button></div></figure><pre class="source-transcript">  Programování grafických aplikací (BI-PGA), Přednáška č. 9
+2D grafika - GIMP: Metodika programování
+                  pluginů
+
+
+                                 Jiří Chludil
+
+
+                        Fakulta informačních technologií
+                     České vysoké učení technické v Praze
+                 https://courses.fit.cvut.cz/BI-PGA/
+
+
+
+
+
+                 ZS 2024/2025
+
+
+
+   Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          1 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=1">PDF, strana 1 ↗</a></p></article>
+<article class="slide source-slide" id="slide-2" data-section="Lety, pády, kotrmelce při vývoji zásuvných mo" aria-label="Snímek 2: Lety, pády, kotrmelce při vývoji zásuvných modulů v GIMPu"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-002.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-002.svg" aria-label="Zvětšit snímek 2: Lety, pády, kotrmelce při vývoji zásuvných modulů v GIMPu"></button></div></figure><pre class="source-transcript">Lety, pády, kotrmelce při vývoji zásuvných modulů
+v GIMPu
+
+
+
+     Mizerná dokumentace!
+     Rozdíly mezi Python a C++ implementací!
+     Špatná zpětná vazba a ladění!
+    GIMP používá Python 2 (OMG)!!!!!
+     Náročné napojení externích knihoven!
+    POZOR!! Na data uložená v hlavní aplikaci GIMP
+      Cvičící je občas zmatený (Grrrrr)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          2 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=2">PDF, strana 2 ↗</a></p></article>
+<article class="slide source-slide" id="slide-3" data-section="Co je třeba řešit u zásuvných modulů GIMPu" aria-label="Snímek 3: Co je třeba řešit u zásuvných modulů GIMPu"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-003.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-003.svg" aria-label="Zvětšit snímek 3: Co je třeba řešit u zásuvných modulů GIMPu"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů GIMPu
+
+
+
+    Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          3 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=3">PDF, strana 3 ↗</a></p></article>
+<article class="slide source-slide" id="slide-4" data-section="Vývojový jazyk a prostředí (podpora OS)" aria-label="Snímek 4: Vývojový jazyk a prostředí (podpora OS)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-004.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-004.svg" aria-label="Zvětšit snímek 4: Vývojový jazyk a prostředí (podpora OS)"></button></div></figure><pre class="source-transcript">Vývojový jazyk a prostředí (podpora OS)
+
+    C
+      ▶Linux - potřeba Cxx, knihovny jsou součástí instalace Gimpu
+      ▶Windows - potřeba Cxx,MINGW, knihovny jsou součástí
+           instalace Gimpu - velmi složité nastavení
+   C++
+       ▶nadstavba nad C API
+      ▶Linux - potřeba G++, knihovny jsou součástí instalace Gimpu
+      ▶Windows - potřeba G++ ,MINGW, knihovny jsou součástí
+           instalace Gimpu - velmi složité nastavení
+     Python (3. přednáška)
+       ▶kompilátor součástí GIMPu
+       ▶pomalejší jak C a C++
+      ▶Linux - stačí nakopírovat do správného adresáře
+      ▶Windows - stačí nakopírovat do správného adresáře
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          4 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=4">PDF, strana 4 ↗</a></p></article>
+<article class="slide source-slide" id="slide-5" data-section="Vývoj pod C/C++" aria-label="Snímek 5: Vývoj pod C/C++"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-005.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-005.svg" aria-label="Zvětšit snímek 5: Vývoj pod C/C++"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů GIMPu
+
+
+
+       Vývoj pod C/C++
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          5 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=5">PDF, strana 5 ↗</a></p></article>
+<article class="slide source-slide" id="slide-6" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 6: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-006.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-006.svg" aria-label="Zvětšit snímek 6: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          6 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=6">PDF, strana 6 ↗</a></p></article>
+<article class="slide source-slide" id="slide-7" data-section="Typy modulů u Gimpu" aria-label="Snímek 7: Typy modulů u Gimpu"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-007.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-007.svg" aria-label="Zvětšit snímek 7: Typy modulů u Gimpu"></button></div></figure><pre class="source-transcript">Typy modulů u Gimpu
+
+
+      Filtry
+     Import
+     Export
+     Formát
+     Výběr
+     Výběr Barvy
+     Automatizace
+
+    1  Primárně jde o formální dělení
+    2  Je třeba koordinovat s umístěním v menu
+    3  Funkcionální API je nezávislé na typu modulu
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          7 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=7">PDF, strana 7 ↗</a></p></article>
+<article class="slide source-slide" id="slide-8" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 8: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-008.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-008.svg" aria-label="Zvětšit snímek 8: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          8 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=8">PDF, strana 8 ↗</a></p></article>
+<article class="slide source-slide" id="slide-9" data-section="Životní cyklus modulu" aria-label="Snímek 9: Životní cyklus modulu"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-009.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-009.svg" aria-label="Zvětšit snímek 9: Životní cyklus modulu"></button></div></figure><pre class="source-transcript">Životní cyklus modulu
+
+
+ struct GimpPlugInInfo {
+     GimpInitProc init_proc;
+         // Volání při startu modulu před zobrazením GUI
+     GimpQuitProc quit_proc;
+         // Volání při ukončení modulu
+     GimpQueryProc query_proc;
+         //Instalace modulu a inicializace dle zdrojů
+     GimpRunProc run_proc;
+         // Vlastní provedení funkce modulu
+ };
+
+    1  Pokud nechceme volání použít, stačí dát NULL
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          9 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=9">PDF, strana 9 ↗</a></p></article>
+<article class="slide source-slide" id="slide-10" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 10: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-010.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-010.svg" aria-label="Zvětšit snímek 10: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+    Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         10 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=10">PDF, strana 10 ↗</a></p></article>
+<article class="slide source-slide" id="slide-11" data-section="Nastavení prostředků (konfigurace) C" aria-label="Snímek 11: Nastavení prostředků (konfigurace) C"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-011.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-011.svg" aria-label="Zvětšit snímek 11: Nastavení prostředků (konfigurace) C"></button></div></figure><pre class="source-transcript">Nastavení prostředků (konfigurace) C
+
+ void gimp_install_procedure(
+     char* name, // Název (identifikace) modulu
+     char* blurb, // Název v menu
+     char* help, //Popis modulu
+     char* author, //Jméno autora
+     char* copyright, //Copyright
+     char* menu_path, //Cesta v menu
+     char* image_types, //Podporované formáty
+     GimpPDBProcType type, //Typ procedury
+     int nparams, //Počet vstupních parametrů modulu
+     int nreturn_vals, //Počet výstupních parametrů
+     GimpParamDef* params, //Pole vstupních parametrů
+     GimpParamDef* return_vals //Pole výstup. parametrů
+ );
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         11 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=11">PDF, strana 11 ↗</a></p></article>
+<article class="slide source-slide" id="slide-12" data-section="Nastavení prostředků - Podporované formáty" aria-label="Snímek 12: Nastavení prostředků - Podporované formáty"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-012.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-012.svg" aria-label="Zvětšit snímek 12: Nastavení prostředků - Podporované formáty"></button></div></figure><pre class="source-transcript">Nastavení prostředků - Podporované formáty
+
+
+     char* image_types, //Podporované formáty
+
+   RGB
+   RGBA
+    RGB*
+    GRAY
+    GRAYA
+    GRAY*
+    INDEXED,
+    INDEXEDA
+    INDEXED*
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         12 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=12">PDF, strana 12 ↗</a></p></article>
+<article class="slide source-slide" id="slide-13" data-section="Nastavení prostředků - Typ procedury" aria-label="Snímek 13: Nastavení prostředků - Typ procedury"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-013.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-013.svg" aria-label="Zvětšit snímek 13: Nastavení prostředků - Typ procedury"></button></div></figure><pre class="source-transcript">Nastavení prostředků - Typ procedury
+
+
+
+
+     GimpPDBProcType type, //Typ procedury
+
+Enum typ
+    GIMP_INTERNAL, Interní procedura GIMP
+   GIMP_PLUGIN Zásuvný modul GIMPu
+    GIMP_EXTENSION Rozšíření GIMPu
+   GIMP_TEMPORARY Dočasná (temporary) procedura
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         13 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=13">PDF, strana 13 ↗</a></p></article>
+<article class="slide source-slide" id="slide-14" data-section="Nastavení prostředků - Parametry" aria-label="Snímek 14: Nastavení prostředků - Parametry"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-014.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-014.svg" aria-label="Zvětšit snímek 14: Nastavení prostředků - Parametry"></button></div></figure><pre class="source-transcript">Nastavení prostředků - Parametry
+
+     GimpParamDef* params, //Pole vstupních parametrů
+     GimpParamDef* return_vals //Pole výstup. parametrů
+
+ void GimpParamDef struktura(
+     GimpPDBArgType type; //Typ parametru
+     gchar *name; //Jméno parametru
+     gchar *description;//Popis parametru
+ );
+
+GimpPDBArgType
+    GIMP_PDB_INT32
+    GIMP_PDB_INT16
+    GIMP_PDB_INT8
+    GIMP_PDB_FLOAT
+    GIMP_PDB_STRING
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         14 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=14">PDF, strana 14 ↗</a></p></article>
+<article class="slide source-slide" id="slide-15" data-section="Nastavení prostředků - Parametry" aria-label="Snímek 15: Nastavení prostředků - Parametry"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-015.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-015.svg" aria-label="Zvětšit snímek 15: Nastavení prostředků - Parametry"></button></div></figure><pre class="source-transcript">Nastavení prostředků - Parametry
+
+GimpPDBArgType (Pokr.)
+    GIMP_PDB_INT32ARRAY
+    GIMP_PDB_INT16ARRAY
+    GIMP_PDB_INT8ARRAY
+    GIMP_PDB_FLOATARRAY
+    GIMP_PDB_STRINGARRAY
+    GIMP_PDB_COLOR - barva
+    GIMP_PDB_REGION - obdélníková oblast
+    GIMP_PDB_DISPLAY - ???
+    GIMP_PDB_IMAGE - obrázek
+    GIMP_PDB_LAYER - vrstva
+    GIMP_PDB_CHANNEL - kanál
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         15 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=15">PDF, strana 15 ↗</a></p></article>
+<article class="slide source-slide" id="slide-16" data-section="Nastavení prostředků - Parametry" aria-label="Snímek 16: Nastavení prostředků - Parametry"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-016.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-016.svg" aria-label="Zvětšit snímek 16: Nastavení prostředků - Parametry"></button></div></figure><pre class="source-transcript">Nastavení prostředků - Parametry
+
+
+
+GimpPDBArgType (Pokr.)
+    GIMP_PDB_DRAWABLE - výstup
+    GIMP_PDB_SELECTION - Výběr
+   GIMP_PDB_BOUNDARY - Hranice
+    GIMP_PDB_PATH - Cesta
+    GIMP_PDB_PARASITE - ???
+    GIMP_PDB_STATUS
+       - návratový status modulu např. GIMP_PDB_SUCCESS
+   GIMP_PDB_END - ???
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         16 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=16">PDF, strana 16 ↗</a></p></article>
+<article class="slide source-slide" id="slide-17" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 17: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-017.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-017.svg" aria-label="Zvětšit snímek 17: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         17 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=17">PDF, strana 17 ↗</a></p></article>
+<article class="slide source-slide" id="slide-18" data-section="Registrace v menu" aria-label="Snímek 18: Registrace v menu"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-018.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-018.svg" aria-label="Zvětšit snímek 18: Registrace v menu"></button></div></figure><pre class="source-transcript">Registrace v menu
+
+
+
+
+ void gimp_plugin_menu_register(
+     const gchar *procedure_name,
+                     // Název (identifikace) modulu
+     const gchar *menu_path //cesta v menu
+ );
+
+    1  Název modulu musí být shodný s jménem uvedeným v instalaci
+    2  Cesta musí existovat
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         18 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=18">PDF, strana 18 ↗</a></p></article>
+<article class="slide source-slide" id="slide-19" data-section="Nastavení prostředků a registrace - Příklad" aria-label="Snímek 19: Nastavení prostředků a registrace - Příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-019.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-019.svg" aria-label="Zvětšit snímek 19: Nastavení prostředků a registrace - Příklad"></button></div></figure><pre class="source-transcript">Nastavení prostředků a registrace - Příklad
+
+
+
+ static GimpParamDef args[] = {
+     {
+         GIMP_PDB_INT32, &quot;run-mode&quot;, &quot;Run mode&quot;
+     },
+     {
+         GIMP_PDB_IMAGE, &quot;image&quot;, &quot;Input image&quot;
+     },
+     {
+         GIMP_PDB_DRAWABLE, &quot;drawable&quot;, &quot;Input drawable&quot;
+     }
+ };
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         19 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=19">PDF, strana 19 ↗</a></p></article>
+<article class="slide source-slide" id="slide-20" data-section="Nastavení prostředků a registrace - Příklad" aria-label="Snímek 20: Nastavení prostředků a registrace - Příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-020.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-020.svg" aria-label="Zvětšit snímek 20: Nastavení prostředků a registrace - Příklad"></button></div></figure><pre class="source-transcript">Nastavení prostředků a registrace - Příklad
+
+
+ gimp_install_procedure (
+     &quot;add-color&quot;,
+     &quot;Posun barev ve všech kanálech&quot;,
+     &quot;Modul posune RGB barvy o hodnotu v parametru&quot;,
+     &quot;Jiří Chludil&quot;,
+     &quot;JCH&quot;,
+     &quot;2017&quot;,
+     &quot;Posun barev (bez náhledu)...&quot;,
+     &quot;RGB*, GRAY*&quot;,
+     GIMP_PLUGIN,
+     G_N_ELEMENTS (args), 0,
+     args, NULL
+ );
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         20 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=20">PDF, strana 20 ↗</a></p></article>
+<article class="slide source-slide" id="slide-21" data-section="Nastavení prostředků a registrace - Příklad" aria-label="Snímek 21: Nastavení prostředků a registrace - Příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-021.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-021.svg" aria-label="Zvětšit snímek 21: Nastavení prostředků a registrace - Příklad"></button></div></figure><pre class="source-transcript">Nastavení prostředků a registrace - Příklad
+
+
+
+
+
+ gimp_plugin_menu_register (
+     &quot;add-color&quot;,
+     “&lt;Image&gt;/Filters/Misc&quot;
+ );
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         21 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=21">PDF, strana 21 ↗</a></p></article>
+<article class="slide source-slide" id="slide-22" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 22: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-022.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-022.svg" aria-label="Zvětšit snímek 22: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         22 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=22">PDF, strana 22 ↗</a></p></article>
+<article class="slide source-slide" id="slide-23" data-section="Uživatelské rozhraní modulu C" aria-label="Snímek 23: Uživatelské rozhraní modulu C"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-023.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-023.svg" aria-label="Zvětšit snímek 23: Uživatelské rozhraní modulu C"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu C
+Použito GimpWidgets s použitím GTK (API na GIMP Widget)
+
+dialog = gimp_dialog_new (&quot;
+    Posun Barev&quot;,
+    &quot;addColor&quot;,
+    NULL,
+    0,
+    gimp_standard_help_func,
+    &quot;add-color&quot;,
+    GTK_STOCK_CANCEL,
+    GTK_RESPONSE_CANCEL,
+    GTK_STOCK_OK,
+    GTK_RESPONSE_OK,
+    NULL
+);
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         23 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=23">PDF, strana 23 ↗</a></p></article>
+<article class="slide source-slide" id="slide-24" data-section="Uživatelské rozhraní modulu C" aria-label="Snímek 24: Uživatelské rozhraní modulu C"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-024.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-024.svg" aria-label="Zvětšit snímek 24: Uživatelské rozhraní modulu C"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu C
+
+
+spinbutton = gimp_spin_button_new (
+    &amp;spinbutton_adj, bvals.level, 1,255,1,1,1,5,0);
+gtk_box_pack_start (
+    GTK_BOX (main_hbox), spinbutton, FALSE, FALSE, 0);
+gtk_widget_show (spinbutton);
+
+
+g_signal_connect_swapped (
+    spinbutton_adj,
+    &quot;value_changed&quot;,
+    G_CALLBACK (gimp_preview_invalidate),
+    preview
+);
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         24 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=24">PDF, strana 24 ↗</a></p></article>
+<article class="slide source-slide" id="slide-25" data-section="Uživatelské rozhraní modulu C" aria-label="Snímek 25: Uživatelské rozhraní modulu C"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-025.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-025.svg" aria-label="Zvětšit snímek 25: Uživatelské rozhraní modulu C"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu C
+
+
+
+
+g_signal_connect (
+    spinbutton_adj,
+    &quot;value_changed&quot;,
+    G_CALLBACK (gimp_int_adjustment_update),
+    &amp;bvals.level
+);
+
+
+gtk_widget_show (dialog);
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         25 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=25">PDF, strana 25 ↗</a></p></article>
+<article class="slide source-slide" id="slide-26" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 26: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-026.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-026.svg" aria-label="Zvětšit snímek 26: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         26 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=26">PDF, strana 26 ↗</a></p></article>
+<article class="slide source-slide" id="slide-27" data-section="Použité matematické a grafické funkce" aria-label="Snímek 27: Použité matematické a grafické funkce"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-027.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-027.svg" aria-label="Zvětšit snímek 27: Použité matematické a grafické funkce"></button></div></figure><pre class="source-transcript">Použité matematické a grafické funkce
+
+
+
+
+
+   GimpMath —Matematické definice a makra
+    GimpMatrix — Funkce pro manipulaci s maticemi pro 2D
+    GimpVector — Funkce pro manipulaci s 2D vektory
+   GimpMD5 — MD5 algoritmus
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         27 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=27">PDF, strana 27 ↗</a></p></article>
+<article class="slide source-slide" id="slide-28" data-section="GimpMath" aria-label="Snímek 28: GimpMath"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-028.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-028.svg" aria-label="Zvětšit snímek 28: GimpMath"></button></div></figure><pre class="source-transcript">GimpMath
+
+
+
+
+   RINT
+   ROUND
+   SQR
+   MAX255
+   CLAMP0255
+    gimp_deg_to_rad
+    gimp_rad_to_deg
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         28 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=28">PDF, strana 28 ↗</a></p></article>
+<article class="slide source-slide" id="slide-29" data-section="GimpMatrix" aria-label="Snímek 29: GimpMatrix"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-029.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-029.svg" aria-label="Zvětšit snímek 29: GimpMatrix"></button></div></figure><pre class="source-transcript">GimpMatrix
+
+
+
+    gimp_matrix3_mult
+    gimp_matrix3_translate
+    gimp_matrix3_scale
+    gimp_matrix3_rotate
+    gimp_matrix3_xshear, gimp_matrix3_yshear
+    gimp_matrix3_determinant
+    gimp_matrix3_invert
+    a mnoho dalších
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         29 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=29">PDF, strana 29 ↗</a></p></article>
+<article class="slide source-slide" id="slide-30" data-section="GimpVector" aria-label="Snímek 30: GimpVector"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-030.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-030.svg" aria-label="Zvětšit snímek 30: GimpVector"></button></div></figure><pre class="source-transcript">GimpVector
+
+
+
+    gimp_vector3_add
+    gimp_vector3_sub
+    gimp_vector3_cross_product
+    gimp_vector3_rotate
+    gimp_vector_2d_to_3d
+    gimp_vector3_neg
+    gimp_vector3_normalize
+    a mnoho dalších
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         30 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=30">PDF, strana 30 ↗</a></p></article>
+<article class="slide source-slide" id="slide-31" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 31: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-031.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-031.svg" aria-label="Zvětšit snímek 31: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         31 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=31">PDF, strana 31 ↗</a></p></article>
+<article class="slide source-slide" id="slide-32" data-section="API rozšiřované aplikace - GIMP Library" aria-label="Snímek 32: API rozšiřované aplikace - GIMP Library"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-032.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-032.svg" aria-label="Zvětšit snímek 32: API rozšiřované aplikace - GIMP Library"></button></div></figure><pre class="source-transcript">API rozšiřované aplikace - GIMP Library
+
+
+
+
+
+     Manipulace s obrázky
+       ▶čtení a zápis po pixelu, řádku, sloupci
+       ▶nástroje výběru
+       ▶nástroje vrstev
+     podpora výběrových nástrojů
+    GUI
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         32 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=32">PDF, strana 32 ↗</a></p></article>
+<article class="slide source-slide" id="slide-33" data-section="API rozšiřované aplikace - GIMP Base Library" aria-label="Snímek 33: API rozšiřované aplikace - GIMP Base Library"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-033.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-033.svg" aria-label="Zvětšit snímek 33: API rozšiřované aplikace - GIMP Base Library"></button></div></figure><pre class="source-transcript">API rozšiřované aplikace - GIMP Base Library
+
+
+
+
+
+     Stav aplikace GIMP
+     Správa paměti
+     Nastavení Gimpu (jednotky)
+     Správa signálů
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         33 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=33">PDF, strana 33 ↗</a></p></article>
+<article class="slide source-slide" id="slide-34" data-section="API rozšiřované aplikace - GIMP Color Library" aria-label="Snímek 34: API rozšiřované aplikace - GIMP Color Library"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-034.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-034.svg" aria-label="Zvětšit snímek 34: API rozšiřované aplikace - GIMP Color Library"></button></div></figure><pre class="source-transcript">API rozšiřované aplikace - GIMP Color Library
+
+
+
+
+
+     Manipulace s grafickou reprezentací pixelu
+     Nástroje pro změnu osvětlení, teploty atd.
+     Nástroje pro interpolaci barev
+     Převodu mezi formáty
+     Cairo
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         34 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=34">PDF, strana 34 ↗</a></p></article>
+<article class="slide source-slide" id="slide-35" data-section="API rozšiřované aplikace - GIMP Config Librar" aria-label="Snímek 35: API rozšiřované aplikace - GIMP Config Library"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-035.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-035.svg" aria-label="Zvětšit snímek 35: API rozšiřované aplikace - GIMP Config Library"></button></div></figure><pre class="source-transcript">API rozšiřované aplikace - GIMP Config Library
+
+
+
+
+
+      Serializace a deserializace objektů
+     Správa Chyb
+    Management nastavení GIMP
+     Podpora GScaner
+      Utility
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         35 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=35">PDF, strana 35 ↗</a></p></article>
+<article class="slide source-slide" id="slide-36" data-section="API rozšiřované aplikace - GIMP Widgets" aria-label="Snímek 36: API rozšiřované aplikace - GIMP Widgets"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-036.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-036.svg" aria-label="Zvětšit snímek 36: API rozšiřované aplikace - GIMP Widgets"></button></div></figure><pre class="source-transcript">API rozšiřované aplikace - GIMP Widgets
+
+
+
+
+     Funkce pro GUI
+       ▶Tlačítka
+       ▶Posuvníky
+       ▶Textová pole
+       ▶Elementy pro práci s barvou
+      ▶Výběry
+       ▶atd.
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         36 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=36">PDF, strana 36 ↗</a></p></article>
+<article class="slide source-slide" id="slide-37" data-section="API rozšiřované aplikace - GIMP Module, Thumb" aria-label="Snímek 37: API rozšiřované aplikace - GIMP Module, Thumbnail Library"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-037.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-037.svg" aria-label="Zvětšit snímek 37: API rozšiřované aplikace - GIMP Module, Thumbnail Library"></button></div></figure><pre class="source-transcript">API rozšiřované aplikace - GIMP Module,
+Thumbnail Library
+
+
+
+
+     Funkce pro miniatury
+     Funkce jádra
+    Management nastavení GIMP
+     Podpora GScaner
+      Utility
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         37 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=37">PDF, strana 37 ↗</a></p></article>
+<article class="slide source-slide" id="slide-38" data-section="Vývoj pod Pythonem" aria-label="Snímek 38: Vývoj pod Pythonem"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-038.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-038.svg" aria-label="Zvětšit snímek 38: Vývoj pod Pythonem"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů GIMPu
+
+
+
+      Vývoj pod Pythonem
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         38 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=38">PDF, strana 38 ↗</a></p></article>
+<article class="slide source-slide" id="slide-39" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 39: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-039.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-039.svg" aria-label="Zvětšit snímek 39: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+    Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         39 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=39">PDF, strana 39 ↗</a></p></article>
+<article class="slide source-slide" id="slide-40" data-section="Zásuvný modul v Pythonu" aria-label="Snímek 40: Zásuvný modul v Pythonu"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-040.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-040.svg" aria-label="Zvětšit snímek 40: Zásuvný modul v Pythonu"></button></div></figure><pre class="source-transcript">Zásuvný modul v Pythonu
+
+
+ + Script bez potřeby kompilace
+ + Triviální instalace
+ + Jednoduché GUI pro jednoduché příklady
+ + Dostupnější příklady
+ + Dobrá dokumentace API
+ + Neobjektový i objektový přístup
+  −Pomalejší než C a C++
+  −Složitější instalace, pokud jsou potřeba speciální knihovny
+  −Náročná realizace pokročilého GUI
+  −Náročná realizace náhledu
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         40 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=40">PDF, strana 40 ↗</a></p></article>
+<article class="slide source-slide" id="slide-41" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 41: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-041.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-041.svg" aria-label="Zvětšit snímek 41: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         41 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=41">PDF, strana 41 ↗</a></p></article>
+<article class="slide source-slide" id="slide-42" data-section="Typy modulů u Gimpu" aria-label="Snímek 42: Typy modulů u Gimpu"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-042.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-042.svg" aria-label="Zvětšit snímek 42: Typy modulů u Gimpu"></button></div></figure><pre class="source-transcript">Typy modulů u Gimpu
+
+      Filtry
+     Import
+     Export
+     Formát
+     Výběr
+     Výběr Barvy
+     Automatizace
+
+    1  Stejné jaku u C, C++
+    2  Primárně jde o formální dělení
+    3  Je třeba koordinovat s umístěním v menu
+    4  Funkcionální API je nezávislé na typu modulu
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         42 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=42">PDF, strana 42 ↗</a></p></article>
+<article class="slide source-slide" id="slide-43" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 43: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-043.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-043.svg" aria-label="Zvětšit snímek 43: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         43 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=43">PDF, strana 43 ↗</a></p></article>
+<article class="slide source-slide" id="slide-44" data-section="Životní cyklus modulu Python" aria-label="Snímek 44: Životní cyklus modulu Python"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-044.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-044.svg" aria-label="Zvětšit snímek 44: Životní cyklus modulu Python"></button></div></figure><pre class="source-transcript">Životní cyklus modulu Python
+
+ metody v třídě
+     def start(self):
+         ...
+
+     def init(self):
+         pass
+
+     def quit(self):
+         pass
+
+     def query(self):
+         ...
+
+    1  Pokud nechceme volání použít, stačí dát &quot;pass&quot;
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         44 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=44">PDF, strana 44 ↗</a></p></article>
+<article class="slide source-slide" id="slide-45" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 45: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-045.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-045.svg" aria-label="Zvětšit snímek 45: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+    Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         45 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=45">PDF, strana 45 ↗</a></p></article>
+<article class="slide source-slide" id="slide-46" data-section="Nastavení prostředků (konfigurace)" aria-label="Snímek 46: Nastavení prostředků (konfigurace)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-046.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-046.svg" aria-label="Zvětšit snímek 46: Nastavení prostředků (konfigurace)"></button></div></figure><pre class="source-transcript">Nastavení prostředků (konfigurace)
+
+gimp.install_procedure(
+    &quot;Jméno&quot;,
+    &quot;Popisek v menu&quot;,
+    &quot;Help&quot;,
+    &quot;Autor&quot;, &quot;Copyright&quot;,
+    &quot;Datum&quot;,&quot;Lokace v menu&quot;,
+    &quot;Typ obrázku&quot;, &quot;Typ modulu&quot;,
+    [
+        (PDB_INT32,&quot;run_mode&quot;,&quot;Run Mode&quot;),
+        (PDB_IMAGE,&quot;image&quot;,&quot;Input image&quot;),
+        (PDB_DRAWABLE,&quot;drawable&quot;,&quot;Input drawable&quot;),
+        (PF_INT32, &quot;my_param&quot;,&quot;Můj param.&quot;),
+    ], []
+)
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         46 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=46">PDF, strana 46 ↗</a></p></article>
+<article class="slide source-slide" id="slide-47" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 47: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-047.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-047.svg" aria-label="Zvětšit snímek 47: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         47 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=47">PDF, strana 47 ↗</a></p></article>
+<article class="slide source-slide" id="slide-48" data-section="Životní cyklus modulu Python" aria-label="Snímek 48: Životní cyklus modulu Python"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-048.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-048.svg" aria-label="Zvětšit snímek 48: Životní cyklus modulu Python"></button></div></figure><pre class="source-transcript">Životní cyklus modulu Python
+
+
+ #!/usr/bin/python
+ register(
+     &quot;python_fu_resize&quot;,
+     &quot;Saves the image at a maximum width and height&quot;,
+     &quot;Saves the image at a maximum width and height&quot;,
+     &quot;Nathan A. Good&quot;, &quot;Nathan A. Good&quot;,
+     &quot;2010&quot;,
+     «Image&gt;/Image/Resize to max...&quot;,
+     &quot;RGB*, GRAY*&quot;,
+     [], [],
+     plugin_main)
+ main()
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         48 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=48">PDF, strana 48 ↗</a></p></article>
+<article class="slide source-slide" id="slide-49" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 49: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-049.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-049.svg" aria-label="Zvětšit snímek 49: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         49 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=49">PDF, strana 49 ↗</a></p></article>
+<article class="slide source-slide" id="slide-50" data-section="Uživatelské rozhraní modulu I" aria-label="Snímek 50: Uživatelské rozhraní modulu I"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-050.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-050.svg" aria-label="Zvětšit snímek 50: Uživatelské rozhraní modulu I"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu I
+    Automatické generování
+
+    (PF_INT, &quot;max_width&quot;, &quot;Maximum Width&quot;, 500),
+    (PF_INT, &quot;max_height&quot;, &quot;Maximum Height&quot;, 500),
+    (PF_BOOL, &quot;copy&quot;, &quot;Make a JPEG copy&quot;, TRUE),
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         50 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=50">PDF, strana 50 ↗</a></p></article>
+<article class="slide source-slide" id="slide-51" data-section="Uživatelské rozhraní modulu II" aria-label="Snímek 51: Uživatelské rozhraní modulu II"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-051.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-051.svg" aria-label="Zvětšit snímek 51: Uživatelské rozhraní modulu II"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu II
+
+
+
+   GTK knihovna - import gtk, gimpui
+
+   1  Definice struktury UI - GTK
+      ▶button
+      ▶input
+      ▶select
+      ▶radio
+      ▶checkbutton
+   2  napojení GUI na obslužné funkce
+       ▶self.ok_button.connect(&quot;clicked&quot;, self.ok_clicked)
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         51 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=51">PDF, strana 51 ↗</a></p></article>
+<article class="slide source-slide" id="slide-52" data-section="Uživatelské rozhraní modulu III" aria-label="Snímek 52: Uživatelské rozhraní modulu III"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-052.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-052.svg" aria-label="Zvětšit snímek 52: Uživatelské rozhraní modulu III"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu III
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         52 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=52">PDF, strana 52 ↗</a></p></article>
+<article class="slide source-slide" id="slide-53" data-section="Uživatelské rozhraní modulu - náhled" aria-label="Snímek 53: Uživatelské rozhraní modulu - náhled"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-053.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-053.svg" aria-label="Zvětšit snímek 53: Uživatelské rozhraní modulu - náhled"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu - náhled
+
+
+
+
+
+    Náhled v nové vrstvě
+    Problém s dobou trvání transformace
+      ▶Snížení rozlišení
+      ▶Zjednodušení algortimu
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         53 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=53">PDF, strana 53 ↗</a></p></article>
+<article class="slide source-slide" id="slide-54" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 54: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-054.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-054.svg" aria-label="Zvětšit snímek 54: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         54 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=54">PDF, strana 54 ↗</a></p></article>
+<article class="slide source-slide" id="slide-55" data-section="Použité matematické a grafické funkce" aria-label="Snímek 55: Použité matematické a grafické funkce"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-055.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-055.svg" aria-label="Zvětšit snímek 55: Použité matematické a grafické funkce"></button></div></figure><pre class="source-transcript">Použité matematické a grafické funkce
+
+
+
+
+
+    matematická knihovna numpy
+    opencv-python
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         55 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=55">PDF, strana 55 ↗</a></p></article>
+<article class="slide source-slide" id="slide-56" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 56: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-056.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-056.svg" aria-label="Zvětšit snímek 56: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+     Vývojový jazyk a prostředí
+    Typ modulu
+     Životní cyklus modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         56 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=56">PDF, strana 56 ↗</a></p></article>
+<article class="slide source-slide" id="slide-57" data-section="API rozšiřované aplikace" aria-label="Snímek 57: API rozšiřované aplikace"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-057.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-057.svg" aria-label="Zvětšit snímek 57: API rozšiřované aplikace"></button></div></figure><pre class="source-transcript">API rozšiřované aplikace
+
+
+
+
+
+    https://www.gimp.org/docs/python/index.html
+   GIMP2 -&gt; Python Console -&gt; Browse
+    Ukázkové příklady
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         57 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=57">PDF, strana 57 ↗</a></p></article>
+<article class="slide source-slide" id="slide-58" data-section="Ladění" aria-label="Snímek 58: Ladění"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-058.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-058.svg" aria-label="Zvětšit snímek 58: Ladění"></button></div></figure><pre class="source-transcript">Ladění
+
+
+
+
+
+      print a sys.stdout = open( ’cesta.txt’, ’w’)
+     Logování do souboru
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         58 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=58">PDF, strana 58 ↗</a></p></article>
+<article class="slide source-slide" id="slide-59" data-section="Ukázkové příklady" aria-label="Snímek 59: Ukázkové příklady"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-059.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-059.svg" aria-label="Zvětšit snímek 59: Ukázkové příklady"></button></div></figure><pre class="source-transcript">Ukázkové příklady
+
+
+
+
+
+    Dokumentace
+      Styl programování
+    Memory management
+     Náhled
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         59 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=59">PDF, strana 59 ↗</a></p></article>
+<article class="slide source-slide" id="slide-60" data-section="Co bychom po dnešku měli znát" aria-label="Snímek 60: Co bychom po dnešku měli znát"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-060.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-060.svg" aria-label="Zvětšit snímek 60: Co bychom po dnešku měli znát"></button></div></figure><pre class="source-transcript">Co bychom po dnešku měli znát
+
+
+
+
+
+ Témata probraná na dnešní přednášce:
+     Základní principy psaní modulů pod C/C++
+     Základní principy psaní modulů pod Python
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         60 / 60</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=60">PDF, strana 60 ↗</a></p></article>
+  </main>
+  <footer class="controls">
+    <span class="hint">← → <span>listování</span> · F <span>celá obrazovka</span></span>
+    <div class="pager"><button id="previous" aria-label="Předchozí snímek">←</button><output id="counter">01 / 36</output><button id="next" aria-label="Další snímek">→</button></div>
+    <span class="credit">Jiří Chludil · FIT ČVUT</span>
+    <div class="progress" aria-hidden="true"><div id="progress-value"></div></div>
+  </footer>
+  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="overview" aria-labelledby="overview-title">
+    <div class="dialog-heading"><h2 id="overview-title">Obsah přednášky</h2><button class="close" aria-label="Zavřít obsah">✕</button></div>
+    <nav aria-label="Všechny snímky"><a href="#slide-1"><span>01</span><span>2D grafika - GIMP: Metodika programování pluginů</span></a><a href="#slide-2"><span>02</span><span>Lety, pády, kotrmelce při vývoji zásuvných modulů v GIMPu</span></a><a href="#slide-3"><span>03</span><span>Co je třeba řešit u zásuvných modulů GIMPu</span></a><a href="#slide-4"><span>04</span><span>Vývojový jazyk a prostředí (podpora OS)</span></a><a href="#slide-5"><span>05</span><span>Vývoj pod C/C++</span></a><a href="#slide-6"><span>06</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-7"><span>07</span><span>Typy modulů u Gimpu</span></a><a href="#slide-8"><span>08</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-9"><span>09</span><span>Životní cyklus modulu</span></a><a href="#slide-10"><span>10</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-11"><span>11</span><span>Nastavení prostředků (konfigurace) C</span></a><a href="#slide-12"><span>12</span><span>Nastavení prostředků - Podporované formáty</span></a><a href="#slide-13"><span>13</span><span>Nastavení prostředků - Typ procedury</span></a><a href="#slide-14"><span>14</span><span>Nastavení prostředků - Parametry</span></a><a href="#slide-15"><span>15</span><span>Nastavení prostředků - Parametry</span></a><a href="#slide-16"><span>16</span><span>Nastavení prostředků - Parametry</span></a><a href="#slide-17"><span>17</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-18"><span>18</span><span>Registrace v menu</span></a><a href="#slide-19"><span>19</span><span>Nastavení prostředků a registrace - Příklad</span></a><a href="#slide-20"><span>20</span><span>Nastavení prostředků a registrace - Příklad</span></a><a href="#slide-21"><span>21</span><span>Nastavení prostředků a registrace - Příklad</span></a><a href="#slide-22"><span>22</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-23"><span>23</span><span>Uživatelské rozhraní modulu C</span></a><a href="#slide-24"><span>24</span><span>Uživatelské rozhraní modulu C</span></a><a href="#slide-25"><span>25</span><span>Uživatelské rozhraní modulu C</span></a><a href="#slide-26"><span>26</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-27"><span>27</span><span>Použité matematické a grafické funkce</span></a><a href="#slide-28"><span>28</span><span>GimpMath</span></a><a href="#slide-29"><span>29</span><span>GimpMatrix</span></a><a href="#slide-30"><span>30</span><span>GimpVector</span></a><a href="#slide-31"><span>31</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-32"><span>32</span><span>API rozšiřované aplikace - GIMP Library</span></a><a href="#slide-33"><span>33</span><span>API rozšiřované aplikace - GIMP Base Library</span></a><a href="#slide-34"><span>34</span><span>API rozšiřované aplikace - GIMP Color Library</span></a><a href="#slide-35"><span>35</span><span>API rozšiřované aplikace - GIMP Config Library</span></a><a href="#slide-36"><span>36</span><span>API rozšiřované aplikace - GIMP Widgets</span></a><a href="#slide-37"><span>37</span><span>API rozšiřované aplikace - GIMP Module, Thumbnail Library</span></a><a href="#slide-38"><span>38</span><span>Vývoj pod Pythonem</span></a><a href="#slide-39"><span>39</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-40"><span>40</span><span>Zásuvný modul v Pythonu</span></a><a href="#slide-41"><span>41</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-42"><span>42</span><span>Typy modulů u Gimpu</span></a><a href="#slide-43"><span>43</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-44"><span>44</span><span>Životní cyklus modulu Python</span></a><a href="#slide-45"><span>45</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-46"><span>46</span><span>Nastavení prostředků (konfigurace)</span></a><a href="#slide-47"><span>47</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-48"><span>48</span><span>Životní cyklus modulu Python</span></a><a href="#slide-49"><span>49</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-50"><span>50</span><span>Uživatelské rozhraní modulu I</span></a><a href="#slide-51"><span>51</span><span>Uživatelské rozhraní modulu II</span></a><a href="#slide-52"><span>52</span><span>Uživatelské rozhraní modulu III</span></a><a href="#slide-53"><span>53</span><span>Uživatelské rozhraní modulu - náhled</span></a><a href="#slide-54"><span>54</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-55"><span>55</span><span>Použité matematické a grafické funkce</span></a><a href="#slide-56"><span>56</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-57"><span>57</span><span>API rozšiřované aplikace</span></a><a href="#slide-58"><span>58</span><span>Ladění</span></a><a href="#slide-59"><span>59</span><span>Ukázkové příklady</span></a><a href="#slide-60"><span>60</span><span>Co bychom po dnešku měli znát</span></a></nav>
+  </dialog>
+  <dialog id="image-view" aria-label="Zvětšený obrázek"><button class="close" aria-label="Zavřít obrázek">✕</button><img alt=""></dialog>
+  <noscript><p class="no-script">Bez JavaScriptu je přednáška zobrazena jako souvislý dokument.</p></noscript>
+<script type="application/json" id="source-data">{"title": "GIMP a metodika programování pluginů", "author": "Jiří Chludil", "sourceURL": "https://courses.fit.cvut.cz/BI-PGA/media/lectures/bi-pga-p9.pdf", "working": false, "lab": "brightness", "labTitle": "RGB náhled", "pages": [{"page": 1, "title": "2D grafika - GIMP: Metodika programování pluginů", "text": "  Programování grafických aplikací (BI-PGA), Přednáška č. 9\n2D grafika - GIMP: Metodika programování\n                  pluginů\n\n\n                                 Jiří Chludil\n\n\n                        Fakulta informačních technologií\n                     České vysoké učení technické v Praze\n                 https://courses.fit.cvut.cz/BI-PGA/\n\n\n\n\n\n                 ZS 2024/2025\n\n\n\n   Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          1 / 60", "image": "assets/page-001.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": [{"url": "https://courses.fit.cvut.cz/BI-PGA/"}]}, {"page": 2, "title": "Lety, pády, kotrmelce při vývoji zásuvných modulů v GIMPu", "text": "Lety, pády, kotrmelce při vývoji zásuvných modulů\nv GIMPu\n\n\n\n     Mizerná dokumentace!\n     Rozdíly mezi Python a C++ implementací!\n     Špatná zpětná vazba a ladění!\n    GIMP používá Python 2 (OMG)!!!!!\n     Náročné napojení externích knihoven!\n    POZOR!! Na data uložená v hlavní aplikaci GIMP\n      Cvičící je občas zmatený (Grrrrr)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          2 / 60", "image": "assets/page-002.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 3, "title": "Co je třeba řešit u zásuvných modulů GIMPu", "text": "Co je třeba řešit u zásuvných modulů GIMPu\n\n\n\n    Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          3 / 60", "image": "assets/page-003.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 4, "title": "Vývojový jazyk a prostředí (podpora OS)", "text": "Vývojový jazyk a prostředí (podpora OS)\n\n    C\n      ▶Linux - potřeba Cxx, knihovny jsou součástí instalace Gimpu\n      ▶Windows - potřeba Cxx,MINGW, knihovny jsou součástí\n           instalace Gimpu - velmi složité nastavení\n   C++\n       ▶nadstavba nad C API\n      ▶Linux - potřeba G++, knihovny jsou součástí instalace Gimpu\n      ▶Windows - potřeba G++ ,MINGW, knihovny jsou součástí\n           instalace Gimpu - velmi složité nastavení\n     Python (3. přednáška)\n       ▶kompilátor součástí GIMPu\n       ▶pomalejší jak C a C++\n      ▶Linux - stačí nakopírovat do správného adresáře\n      ▶Windows - stačí nakopírovat do správného adresáře\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          4 / 60", "image": "assets/page-004.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 5, "title": "Vývoj pod C/C++", "text": "Co je třeba řešit u zásuvných modulů GIMPu\n\n\n\n       Vývoj pod C/C++\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          5 / 60", "image": "assets/page-005.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 6, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          6 / 60", "image": "assets/page-006.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 7, "title": "Typy modulů u Gimpu", "text": "Typy modulů u Gimpu\n\n\n      Filtry\n     Import\n     Export\n     Formát\n     Výběr\n     Výběr Barvy\n     Automatizace\n\n    1  Primárně jde o formální dělení\n    2  Je třeba koordinovat s umístěním v menu\n    3  Funkcionální API je nezávislé na typu modulu\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          7 / 60", "image": "assets/page-007.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 8, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          8 / 60", "image": "assets/page-008.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 9, "title": "Životní cyklus modulu", "text": "Životní cyklus modulu\n\n\n struct GimpPlugInInfo {\n     GimpInitProc init_proc;\n         // Volání při startu modulu před zobrazením GUI\n     GimpQuitProc quit_proc;\n         // Volání při ukončení modulu\n     GimpQueryProc query_proc;\n         //Instalace modulu a inicializace dle zdrojů\n     GimpRunProc run_proc;\n         // Vlastní provedení funkce modulu\n };\n\n    1  Pokud nechceme volání použít, stačí dát NULL\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025          9 / 60", "image": "assets/page-009.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 10, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n    Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         10 / 60", "image": "assets/page-010.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 11, "title": "Nastavení prostředků (konfigurace) C", "text": "Nastavení prostředků (konfigurace) C\n\n void gimp_install_procedure(\n     char* name, // Název (identifikace) modulu\n     char* blurb, // Název v menu\n     char* help, //Popis modulu\n     char* author, //Jméno autora\n     char* copyright, //Copyright\n     char* menu_path, //Cesta v menu\n     char* image_types, //Podporované formáty\n     GimpPDBProcType type, //Typ procedury\n     int nparams, //Počet vstupních parametrů modulu\n     int nreturn_vals, //Počet výstupních parametrů\n     GimpParamDef* params, //Pole vstupních parametrů\n     GimpParamDef* return_vals //Pole výstup. parametrů\n );\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         11 / 60", "image": "assets/page-011.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 12, "title": "Nastavení prostředků - Podporované formáty", "text": "Nastavení prostředků - Podporované formáty\n\n\n     char* image_types, //Podporované formáty\n\n   RGB\n   RGBA\n    RGB*\n    GRAY\n    GRAYA\n    GRAY*\n    INDEXED,\n    INDEXEDA\n    INDEXED*\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         12 / 60", "image": "assets/page-012.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 13, "title": "Nastavení prostředků - Typ procedury", "text": "Nastavení prostředků - Typ procedury\n\n\n\n\n     GimpPDBProcType type, //Typ procedury\n\nEnum typ\n    GIMP_INTERNAL, Interní procedura GIMP\n   GIMP_PLUGIN Zásuvný modul GIMPu\n    GIMP_EXTENSION Rozšíření GIMPu\n   GIMP_TEMPORARY Dočasná (temporary) procedura\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         13 / 60", "image": "assets/page-013.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 14, "title": "Nastavení prostředků - Parametry", "text": "Nastavení prostředků - Parametry\n\n     GimpParamDef* params, //Pole vstupních parametrů\n     GimpParamDef* return_vals //Pole výstup. parametrů\n\n void GimpParamDef struktura(\n     GimpPDBArgType type; //Typ parametru\n     gchar *name; //Jméno parametru\n     gchar *description;//Popis parametru\n );\n\nGimpPDBArgType\n    GIMP_PDB_INT32\n    GIMP_PDB_INT16\n    GIMP_PDB_INT8\n    GIMP_PDB_FLOAT\n    GIMP_PDB_STRING\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         14 / 60", "image": "assets/page-014.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 15, "title": "Nastavení prostředků - Parametry", "text": "Nastavení prostředků - Parametry\n\nGimpPDBArgType (Pokr.)\n    GIMP_PDB_INT32ARRAY\n    GIMP_PDB_INT16ARRAY\n    GIMP_PDB_INT8ARRAY\n    GIMP_PDB_FLOATARRAY\n    GIMP_PDB_STRINGARRAY\n    GIMP_PDB_COLOR - barva\n    GIMP_PDB_REGION - obdélníková oblast\n    GIMP_PDB_DISPLAY - ???\n    GIMP_PDB_IMAGE - obrázek\n    GIMP_PDB_LAYER - vrstva\n    GIMP_PDB_CHANNEL - kanál\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         15 / 60", "image": "assets/page-015.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 16, "title": "Nastavení prostředků - Parametry", "text": "Nastavení prostředků - Parametry\n\n\n\nGimpPDBArgType (Pokr.)\n    GIMP_PDB_DRAWABLE - výstup\n    GIMP_PDB_SELECTION - Výběr\n   GIMP_PDB_BOUNDARY - Hranice\n    GIMP_PDB_PATH - Cesta\n    GIMP_PDB_PARASITE - ???\n    GIMP_PDB_STATUS\n       - návratový status modulu např. GIMP_PDB_SUCCESS\n   GIMP_PDB_END - ???\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         16 / 60", "image": "assets/page-016.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 17, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         17 / 60", "image": "assets/page-017.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 18, "title": "Registrace v menu", "text": "Registrace v menu\n\n\n\n\n void gimp_plugin_menu_register(\n     const gchar *procedure_name,\n                     // Název (identifikace) modulu\n     const gchar *menu_path //cesta v menu\n );\n\n    1  Název modulu musí být shodný s jménem uvedeným v instalaci\n    2  Cesta musí existovat\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         18 / 60", "image": "assets/page-018.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 19, "title": "Nastavení prostředků a registrace - Příklad", "text": "Nastavení prostředků a registrace - Příklad\n\n\n\n static GimpParamDef args[] = {\n     {\n         GIMP_PDB_INT32, \"run-mode\", \"Run mode\"\n     },\n     {\n         GIMP_PDB_IMAGE, \"image\", \"Input image\"\n     },\n     {\n         GIMP_PDB_DRAWABLE, \"drawable\", \"Input drawable\"\n     }\n };\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         19 / 60", "image": "assets/page-019.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 20, "title": "Nastavení prostředků a registrace - Příklad", "text": "Nastavení prostředků a registrace - Příklad\n\n\n gimp_install_procedure (\n     \"add-color\",\n     \"Posun barev ve všech kanálech\",\n     \"Modul posune RGB barvy o hodnotu v parametru\",\n     \"Jiří Chludil\",\n     \"JCH\",\n     \"2017\",\n     \"Posun barev (bez náhledu)...\",\n     \"RGB*, GRAY*\",\n     GIMP_PLUGIN,\n     G_N_ELEMENTS (args), 0,\n     args, NULL\n );\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         20 / 60", "image": "assets/page-020.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 21, "title": "Nastavení prostředků a registrace - Příklad", "text": "Nastavení prostředků a registrace - Příklad\n\n\n\n\n\n gimp_plugin_menu_register (\n     \"add-color\",\n     “\u003cImage>/Filters/Misc\"\n );\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         21 / 60", "image": "assets/page-021.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 22, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         22 / 60", "image": "assets/page-022.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 23, "title": "Uživatelské rozhraní modulu C", "text": "Uživatelské rozhraní modulu C\nPoužito GimpWidgets s použitím GTK (API na GIMP Widget)\n\ndialog = gimp_dialog_new (\"\n    Posun Barev\",\n    \"addColor\",\n    NULL,\n    0,\n    gimp_standard_help_func,\n    \"add-color\",\n    GTK_STOCK_CANCEL,\n    GTK_RESPONSE_CANCEL,\n    GTK_STOCK_OK,\n    GTK_RESPONSE_OK,\n    NULL\n);\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         23 / 60", "image": "assets/page-023.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 24, "title": "Uživatelské rozhraní modulu C", "text": "Uživatelské rozhraní modulu C\n\n\nspinbutton = gimp_spin_button_new (\n    &spinbutton_adj, bvals.level, 1,255,1,1,1,5,0);\ngtk_box_pack_start (\n    GTK_BOX (main_hbox), spinbutton, FALSE, FALSE, 0);\ngtk_widget_show (spinbutton);\n\n\ng_signal_connect_swapped (\n    spinbutton_adj,\n    \"value_changed\",\n    G_CALLBACK (gimp_preview_invalidate),\n    preview\n);\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         24 / 60", "image": "assets/page-024.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 25, "title": "Uživatelské rozhraní modulu C", "text": "Uživatelské rozhraní modulu C\n\n\n\n\ng_signal_connect (\n    spinbutton_adj,\n    \"value_changed\",\n    G_CALLBACK (gimp_int_adjustment_update),\n    &bvals.level\n);\n\n\ngtk_widget_show (dialog);\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         25 / 60", "image": "assets/page-025.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 26, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         26 / 60", "image": "assets/page-026.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 27, "title": "Použité matematické a grafické funkce", "text": "Použité matematické a grafické funkce\n\n\n\n\n\n   GimpMath —Matematické definice a makra\n    GimpMatrix — Funkce pro manipulaci s maticemi pro 2D\n    GimpVector — Funkce pro manipulaci s 2D vektory\n   GimpMD5 — MD5 algoritmus\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         27 / 60", "image": "assets/page-027.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 28, "title": "GimpMath", "text": "GimpMath\n\n\n\n\n   RINT\n   ROUND\n   SQR\n   MAX255\n   CLAMP0255\n    gimp_deg_to_rad\n    gimp_rad_to_deg\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         28 / 60", "image": "assets/page-028.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 29, "title": "GimpMatrix", "text": "GimpMatrix\n\n\n\n    gimp_matrix3_mult\n    gimp_matrix3_translate\n    gimp_matrix3_scale\n    gimp_matrix3_rotate\n    gimp_matrix3_xshear, gimp_matrix3_yshear\n    gimp_matrix3_determinant\n    gimp_matrix3_invert\n    a mnoho dalších\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         29 / 60", "image": "assets/page-029.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 30, "title": "GimpVector", "text": "GimpVector\n\n\n\n    gimp_vector3_add\n    gimp_vector3_sub\n    gimp_vector3_cross_product\n    gimp_vector3_rotate\n    gimp_vector_2d_to_3d\n    gimp_vector3_neg\n    gimp_vector3_normalize\n    a mnoho dalších\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         30 / 60", "image": "assets/page-030.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 31, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         31 / 60", "image": "assets/page-031.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 32, "title": "API rozšiřované aplikace - GIMP Library", "text": "API rozšiřované aplikace - GIMP Library\n\n\n\n\n\n     Manipulace s obrázky\n       ▶čtení a zápis po pixelu, řádku, sloupci\n       ▶nástroje výběru\n       ▶nástroje vrstev\n     podpora výběrových nástrojů\n    GUI\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         32 / 60", "image": "assets/page-032.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 33, "title": "API rozšiřované aplikace - GIMP Base Library", "text": "API rozšiřované aplikace - GIMP Base Library\n\n\n\n\n\n     Stav aplikace GIMP\n     Správa paměti\n     Nastavení Gimpu (jednotky)\n     Správa signálů\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         33 / 60", "image": "assets/page-033.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 34, "title": "API rozšiřované aplikace - GIMP Color Library", "text": "API rozšiřované aplikace - GIMP Color Library\n\n\n\n\n\n     Manipulace s grafickou reprezentací pixelu\n     Nástroje pro změnu osvětlení, teploty atd.\n     Nástroje pro interpolaci barev\n     Převodu mezi formáty\n     Cairo\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         34 / 60", "image": "assets/page-034.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 35, "title": "API rozšiřované aplikace - GIMP Config Library", "text": "API rozšiřované aplikace - GIMP Config Library\n\n\n\n\n\n      Serializace a deserializace objektů\n     Správa Chyb\n    Management nastavení GIMP\n     Podpora GScaner\n      Utility\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         35 / 60", "image": "assets/page-035.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 36, "title": "API rozšiřované aplikace - GIMP Widgets", "text": "API rozšiřované aplikace - GIMP Widgets\n\n\n\n\n     Funkce pro GUI\n       ▶Tlačítka\n       ▶Posuvníky\n       ▶Textová pole\n       ▶Elementy pro práci s barvou\n      ▶Výběry\n       ▶atd.\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         36 / 60", "image": "assets/page-036.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 37, "title": "API rozšiřované aplikace - GIMP Module, Thumbnail Library", "text": "API rozšiřované aplikace - GIMP Module,\nThumbnail Library\n\n\n\n\n     Funkce pro miniatury\n     Funkce jádra\n    Management nastavení GIMP\n     Podpora GScaner\n      Utility\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         37 / 60", "image": "assets/page-037.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 38, "title": "Vývoj pod Pythonem", "text": "Co je třeba řešit u zásuvných modulů GIMPu\n\n\n\n      Vývoj pod Pythonem\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         38 / 60", "image": "assets/page-038.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 39, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n    Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         39 / 60", "image": "assets/page-039.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 40, "title": "Zásuvný modul v Pythonu", "text": "Zásuvný modul v Pythonu\n\n\n + Script bez potřeby kompilace\n + Triviální instalace\n + Jednoduché GUI pro jednoduché příklady\n + Dostupnější příklady\n + Dobrá dokumentace API\n + Neobjektový i objektový přístup\n  −Pomalejší než C a C++\n  −Složitější instalace, pokud jsou potřeba speciální knihovny\n  −Náročná realizace pokročilého GUI\n  −Náročná realizace náhledu\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         40 / 60", "image": "assets/page-040.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 41, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         41 / 60", "image": "assets/page-041.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 42, "title": "Typy modulů u Gimpu", "text": "Typy modulů u Gimpu\n\n      Filtry\n     Import\n     Export\n     Formát\n     Výběr\n     Výběr Barvy\n     Automatizace\n\n    1  Stejné jaku u C, C++\n    2  Primárně jde o formální dělení\n    3  Je třeba koordinovat s umístěním v menu\n    4  Funkcionální API je nezávislé na typu modulu\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         42 / 60", "image": "assets/page-042.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 43, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         43 / 60", "image": "assets/page-043.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 44, "title": "Životní cyklus modulu Python", "text": "Životní cyklus modulu Python\n\n metody v třídě\n     def start(self):\n         ...\n\n     def init(self):\n         pass\n\n     def quit(self):\n         pass\n\n     def query(self):\n         ...\n\n    1  Pokud nechceme volání použít, stačí dát \"pass\"\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         44 / 60", "image": "assets/page-044.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 45, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n    Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         45 / 60", "image": "assets/page-045.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 46, "title": "Nastavení prostředků (konfigurace)", "text": "Nastavení prostředků (konfigurace)\n\ngimp.install_procedure(\n    \"Jméno\",\n    \"Popisek v menu\",\n    \"Help\",\n    \"Autor\", \"Copyright\",\n    \"Datum\",\"Lokace v menu\",\n    \"Typ obrázku\", \"Typ modulu\",\n    [\n        (PDB_INT32,\"run_mode\",\"Run Mode\"),\n        (PDB_IMAGE,\"image\",\"Input image\"),\n        (PDB_DRAWABLE,\"drawable\",\"Input drawable\"),\n        (PF_INT32, \"my_param\",\"Můj param.\"),\n    ], []\n)\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         46 / 60", "image": "assets/page-046.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 47, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         47 / 60", "image": "assets/page-047.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 48, "title": "Životní cyklus modulu Python", "text": "Životní cyklus modulu Python\n\n\n #!/usr/bin/python\n register(\n     \"python_fu_resize\",\n     \"Saves the image at a maximum width and height\",\n     \"Saves the image at a maximum width and height\",\n     \"Nathan A. Good\", \"Nathan A. Good\",\n     \"2010\",\n     «Image>/Image/Resize to max...\",\n     \"RGB*, GRAY*\",\n     [], [],\n     plugin_main)\n main()\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         48 / 60", "image": "assets/page-048.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 49, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         49 / 60", "image": "assets/page-049.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 50, "title": "Uživatelské rozhraní modulu I", "text": "Uživatelské rozhraní modulu I\n    Automatické generování\n\n    (PF_INT, \"max_width\", \"Maximum Width\", 500),\n    (PF_INT, \"max_height\", \"Maximum Height\", 500),\n    (PF_BOOL, \"copy\", \"Make a JPEG copy\", TRUE),\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         50 / 60", "image": "assets/page-050.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 51, "title": "Uživatelské rozhraní modulu II", "text": "Uživatelské rozhraní modulu II\n\n\n\n   GTK knihovna - import gtk, gimpui\n\n   1  Definice struktury UI - GTK\n      ▶button\n      ▶input\n      ▶select\n      ▶radio\n      ▶checkbutton\n   2  napojení GUI na obslužné funkce\n       ▶self.ok_button.connect(\"clicked\", self.ok_clicked)\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         51 / 60", "image": "assets/page-051.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 52, "title": "Uživatelské rozhraní modulu III", "text": "Uživatelské rozhraní modulu III\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         52 / 60", "image": "assets/page-052.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 53, "title": "Uživatelské rozhraní modulu - náhled", "text": "Uživatelské rozhraní modulu - náhled\n\n\n\n\n\n    Náhled v nové vrstvě\n    Problém s dobou trvání transformace\n      ▶Snížení rozlišení\n      ▶Zjednodušení algortimu\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         53 / 60", "image": "assets/page-053.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 54, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         54 / 60", "image": "assets/page-054.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 55, "title": "Použité matematické a grafické funkce", "text": "Použité matematické a grafické funkce\n\n\n\n\n\n    matematická knihovna numpy\n    opencv-python\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         55 / 60", "image": "assets/page-055.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 56, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n     Vývojový jazyk a prostředí\n    Typ modulu\n     Životní cyklus modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         56 / 60", "image": "assets/page-056.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 57, "title": "API rozšiřované aplikace", "text": "API rozšiřované aplikace\n\n\n\n\n\n    https://www.gimp.org/docs/python/index.html\n   GIMP2 -> Python Console -> Browse\n    Ukázkové příklady\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         57 / 60", "image": "assets/page-057.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 58, "title": "Ladění", "text": "Ladění\n\n\n\n\n\n      print a sys.stdout = open( ’cesta.txt’, ’w’)\n     Logování do souboru\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         58 / 60", "image": "assets/page-058.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 59, "title": "Ukázkové příklady", "text": "Ukázkové příklady\n\n\n\n\n\n    Dokumentace\n      Styl programování\n    Memory management\n     Náhled\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         59 / 60", "image": "assets/page-059.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 60, "title": "Co bychom po dnešku měli znát", "text": "Co bychom po dnešku měli znát\n\n\n\n\n\n Témata probraná na dnešní přednášce:\n     Základní principy psaní modulů pod C/C++\n     Základní principy psaní modulů pod Python\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 9                ZS 2024/2025         60 / 60", "image": "assets/page-060.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}]}</script><dialog id="notes-panel" aria-labelledby="notes-title"><div class="dialog-heading"><h2 id="notes-title">Původní text</h2><button class="close" aria-label="Zavřít poznámky">×</button></div><p class="lab-disclaimer">Původní obsah, kód a verze nástrojů odpovídají podkladu; aktuální organizaci a API ověřte u autora.</p><pre id="notes-original" class="notes-original"></pre><div id="notes-links" class="source-links"></div></dialog><dialog id="lab-dialog" class="lab-dialog" aria-labelledby="lab-title"><div class="dialog-heading"><h2 id="lab-title">RGB náhled</h2><button class="close" aria-label="Zavřít ukázku">×</button></div><div class="lab-layout"><div id="lab-settings" class="lab-settings"></div><div><canvas id="lab-canvas" class="lab-visual" width="640" height="380" aria-label="Výsledek interaktivního modelu"></canvas><pre id="lab-result" class="lab-result" aria-live="polite"></pre></div></div><p class="lab-disclaimer">Interaktivní doplněk GRAFIT · syntetická demonstrace principu. Není součástí původního PDF a nespouští plugin Blenderu ani GIMPu. <span id="lab-limits"></span></p></dialog><noscript><style>.source-transcript{display:block}.source-frame{display:none}</style></noscript></body>
+</html>
