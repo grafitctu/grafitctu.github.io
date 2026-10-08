@@ -1,0 +1,869 @@
+{
+  "title": "Zpracování obrazu: konvoluce a filtry",
+  "author": "Radek Richtr",
+  "sourceURL": "https://courses.fit.cvut.cz/BI-PGA/media/lectures/bi-pga-richtr-10-image-processing-convolution.pdf",
+  "working": false,
+  "lab": "convolution",
+  "labTitle": "Konvoluce krok za krokem",
+  "pages": [
+    {
+      "page": 1,
+      "title": "Programování grafických aplikací základní operace s obrazem",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n\n\n           Programování grafických aplikací\n                základní operace s obrazem\n\n\n\n                         Radek Richtr\n\n\n                           Institute of Information Theory and Automation\n                     Academy of Sciences of the Czech Republic\n                                  Prague, Czech Republic\n\n                          August 14, 2026\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-001.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 2,
+      "title": "Outline I",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nOutline I\n\n     1 Rovinná grafika\n        Obraz\n      2D objekty\n\n     2 Transformace\n        Barvy\n        Geometrie\n\n     3 Konvoluce\n         Definice\n        Okrajový jev\n        Konvoluční filtry\n\n     4 Doplnění: diskrétní obraz a filtrace\n      Od spojité scény k pixelům\n        Konvoluce jako lokální lineární operace\n\n     5 Doporučené zdroje                                                                                                   .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-002.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 3,
+      "title": "Cíle přednášky",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nCíle přednášky\n\n\n\n\n\n   Po absolvování přednášky by měl student umět:\n      • rozlišit spojitou scénu, vzorkovaný obraz a kvantované\n        hodnoty pixelů;\n      • vysvětlit rasterizaci základních 2D objektů a geometrickou\n          spojitost křivek;\n      • zapsat diskrétní 2D konvoluci a zvolit vhodnou okrajovou\n        podmínku;\n      • odlišit vyhlazení, detekci hran a ostření podle vlastností jádra.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-003.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 4,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nIntro\n\n\n\n\n\n      • teoretická přednáška\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-004.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 5,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nIntro\n\n\n\n\n\n      • teoretická přednáška\n      • přehled algoritmických podkladů\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-005.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 6,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nIntro\n\n\n\n\n\n      • teoretická přednáška\n      • přehled algoritmických podkladů\n      •  ... a matematických podkladů pro grafické algoritmy\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-006.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 7,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nIntro\n\n\n\n\n\n      • teoretická přednáška\n      • přehled algoritmických podkladů\n      •  ... a matematických podkladů pro grafické algoritmy\n      • matematika je základ, bez kterého to nejde (alespoň její\n          intuitivní pochopení)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-007.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 8,
+      "title": "Matematické minimum",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nMatematické minimum\n\n\n\n\n\n      • rovnice, parametrické rovnice\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-008.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 9,
+      "title": "Matematické minimum",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nMatematické minimum\n\n\n\n\n\n      • rovnice, parametrické rovnice\n      • sumy, integrály\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-009.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 10,
+      "title": "Matematické minimum",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nMatematické minimum\n\n\n\n\n\n      • rovnice, parametrické rovnice\n      • sumy, integrály\n      • matice, násobení matic\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-010.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 11,
+      "title": "Matematické minimum",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nMatematické minimum\n\n\n\n\n\n      • rovnice, parametrické rovnice\n      • sumy, integrály\n      • matice, násobení matic\n      • transformace\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-011.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 12,
+      "title": "Matematické minimum",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nMatematické minimum\n\n\n\n\n\n      • rovnice, parametrické rovnice\n      • sumy, integrály\n      • matice, násobení matic\n      • transformace\n      • determinant\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-012.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 13,
+      "title": "Obraz",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nObraz\n\n\n\n      • Nejzákladnějí pojmy bývají nejobtížněji definovatelné:\n           • obraz,\n           • textura, atd.\n      • Objekty jsou popsány matematicky (vektor) - usečky, křivky,\n          text, ...\n           • co nejpřesnější vykreslení spojitých útvarů na diskrátní mřížce\n           • ořezávání objektů na výřez daný plochou obrazovky\n           • nízkoúrovňové operace\n      • K vykreslení ale chceme matici pixelů (frame) v rastru\n      • Tedy nějaké X, Y a hodnotu\n      • Jaká je programová reprezentace restru?\n           •  int[X][Y]?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-013.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 14,
+      "title": "Reprezentace obrazu",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nReprezentace obrazu\n\n\n\n\n      • X, Y  - pozice v rastru\n      • S - Spektrum\n           • Spektrum je dáno barevým modelem zvoleným k reprezentaci\n           • Barevné modely - RGB (BGR), YUV, HSV, L*A*B, ...\n      • Rozsah obvykle 0-255 => 2563 = 16777216 odstínů\n      • Kousek historie\n           • High color - 5-6-5 (2B na RGB)\n           • True color - 8-8-8 (3B na RGB)\n      • kvantování, vzorkování - historie, nebo současnost?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-014.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 15,
+      "title": "Reprezentace obrazu",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nReprezentace obrazu\n\n\n\n\n      • Reprezentace obrazu pomocí např. RGB hodnot\n           je tzv. přímá (direct color)\n      • Alternativou je indexový mod\n       Každá barva má svůj index, neuvádní se u každého pixelu\n          složení kažé barvy, ale jen index (ukazatel) dané barvy\n      • Který je výhodnější a kdy?\n           •  při ztmavení barev\n           • v obrazu zapadajícího slunce\n           •  při kompresi obrazu\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-015.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 16,
+      "title": "Reprezentace obrazu",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nReprezentace obrazu\n\n\n\n\n\n      • Formáty\n           • bmp\n           •  gif\n           • jpg\n           • png\n           • atd.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-016.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 17,
+      "title": "Reprezentace obrazu",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nReprezentace obrazu\n\n\n\n\n\n      • A co video?\n      • Sekvece framů?\n      • Jaký datový typ a rozsah, organizace v paměti?\n      • Programová reprezentace?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-017.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 18,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n\n\n\n\n      • Úsečky\n      • Kružnice a elipsa (Bresenham)\n      • Vyplňování (semínkové vyplňování)\n      • Polygon\n      • 4-okolí a 8-okolí\n      • Ořezávání (Cohen-Sutherland)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-018.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 19,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n\n\n\n\n      • Objekty mohu být vektorové…\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-019.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 20,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n\n\n\n\n      • Objekty mohu být vektorové…\n      • ale jsou vykreslené v rastru!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-020.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 21,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n\n\n\n\n      • Objekty mohu být vektorové…\n      • ale jsou vykreslené v rastru!\n      • Které z pixelů ’rosvítit’?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-021.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 22,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Které pixely v rastru ’rozsvítit’?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-022.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 23,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Které pixely v rastru ’rozsvítit’?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-023.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 24,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Které pixely v rastru ’rozsvítit’?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-024.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 25,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Které pixely v rastru ’rozsvítit’?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-025.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 26,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Které pixely v rastru ’rozsvítit’?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-026.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 27,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Které pixely v rastru ’rozsvítit’?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-027.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 28,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Které pixely v rastru ’rozsvítit’?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-028.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 29,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Které pixely v rastru ’rozsvítit’?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-029.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 30,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Které pixely v rastru ’rozsvítit’?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-030.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 31,
+      "title": "Bresenhamův algoritmus",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nBresenhamův algoritmus\n\n\n\n\n\n      • To, který pixel rastru vykreslit je potřeba vyřešit efektivně!\n      • A efektivně nejen na úrovni logiky:\n           • dělení je náročná operace\n           • a co teprve dělení neceločíselné\n           • a co přesnost?\n      • Rychlý algoritmus, který je navíc celočíselný!\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-031.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 32,
+      "title": "Bresenhamův algoritmus",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nBresenhamův algoritmus\n\n      • Nachází body nejbíže kreslené přimce a to pomocí celočíselné\n         aritmetiky\n      • Funguje symetricky k určité řídící ose\n      • Rozhoduje, jestli je další pixel na stejné, nebo vyšší úrovni\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-032.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 33,
+      "title": "Bresenhamův algoritmus",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nBresenhamův algoritmus\n\n\n\n   var d = 2*dy - dx\n   var dy = y2-y1; var dx = x2-x1\n   var x = x1 ; var y = y1\n   while (x <= x2)\n     {\n     Draw pixel at (x,y)\n     x++\n     if( d<0 )\n      d += dy + dy\n     else\n      {\n      d += 2*(dy-dx)\n      y++\n      }\n     }                                                                                                                                                                        .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-033.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 34,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Kružnice a elipsy\n           - obdobný problém jako u přímek\n           - výhody ve větší symetrii\n      • Křivky\n           - i křivky mohou být 3D!\n           - rozdíl mezi ’křivkou’ a ’náhodnou čarou’\n      • Polynomiální křivky\n      • Spline křivky\n      • Beziérovy křivky\n      • NURBS\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-034.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 35,
+      "title": "Spojitost",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nSpojitost\n\n\n\n\n\n      • Spojitost\n           - očekávaný tvar ’budoucí’ křivky na základě ’minulé’\n           - stejný tečný vektor i jeho velikost\n           - Cm parametricá spojitost stupně m\n           - Gm geometrická spojitost stupně m\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-035.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 36,
+      "title": "Spojitost",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nSpojitost\n\n      • C0: Spojité napojení. Koncový bod první křivky a počáteční\n       bod druhé křivky jsou totožné.\n       Animace pohybu: animovaný objekt nezmění skokem polohu.\n      • C1: Tečné vektory (první derivace) jsou si v bodě spojení\n         rovny.\n       Animace pohybu: animovaný objekt nezmění skokem směr.\n      • C2: Druhé derivace v bodě spojení jsou si rovny.\n       Animace pohybu: animovaný objekt nezmění skokem rychlost.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-036.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 37,
+      "title": "Spojitost",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nSpojitost\n\n      • C0: Spojité napojení. Koncový bod první křivky a počáteční\n       bod druhé křivky jsou totožné.\n       Animace pohybu: animovaný objekt nezmění skokem polohu.\n      • C1: Tečné vektory (první derivace) jsou si v bodě spojení\n         rovny.\n       Animace pohybu: animovaný objekt nezmění skokem směr.\n      • C2: Druhé derivace v bodě spojení jsou si rovny.\n       Animace pohybu: animovaný objekt nezmění skokem rychlost.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-037.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 38,
+      "title": "Spojitost",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nSpojitost\n\n      • C0: Spojité napojení. Koncový bod první křivky a počáteční\n       bod druhé křivky jsou totožné.\n       Animace pohybu: animovaný objekt nezmění skokem polohu.\n      • C1: Tečné vektory (první derivace) jsou si v bodě spojení\n         rovny.\n       Animace pohybu: animovaný objekt nezmění skokem směr.\n      • C2: Druhé derivace v bodě spojení jsou si rovny.\n       Animace pohybu: animovaný objekt nezmění skokem rychlost.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-038.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 39,
+      "title": "Spojitost",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nSpojitost\n\n      • C0: Spojité napojení. Koncový bod první křivky a počáteční\n       bod druhé křivky jsou totožné.\n       Animace pohybu: animovaný objekt nezmění skokem polohu.\n      • C1: Tečné vektory (první derivace) jsou si v bodě spojení\n         rovny.\n       Animace pohybu: animovaný objekt nezmění skokem směr.\n      • C2: Druhé derivace v bodě spojení jsou si rovny.\n       Animace pohybu: animovaný objekt nezmění skokem rychlost.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-039.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 40,
+      "title": "Spojitost",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nSpojitost\n\n      • C0: Spojité napojení. Koncový bod první křivky a počáteční\n       bod druhé křivky jsou totožné.\n       Animace pohybu: animovaný objekt nezmění skokem polohu.\n      • C1: Tečné vektory (první derivace) jsou si v bodě spojení\n         rovny.\n       Animace pohybu: animovaný objekt nezmění skokem směr.\n      • C2: Druhé derivace v bodě spojení jsou si rovny.\n       Animace pohybu: animovaný objekt nezmění skokem rychlost.\n\n\n\n\n\n      • G0 - počáteční a koncový bod je totožný\n      • G1 - tečné vektory jsou lineárně závislé         .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-040.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 41,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n\n\n\n      • Vyplňování hranice\n           • řádkové se seznamem hran\n           • semínkový algoritmus\n      • Pozor na spojitost v rastru\n           • 4-okolí (návaznost při posunu v ose x nebo y)\n           • 8-okolí (návazost i diagonálně)\n      • Hranice × vnitřek\n           • Obojí 4-okolí?\n           • Obojí 8-okolí?\n           • Hranice 8-okolí a vnitřek 4-okolí?\n           • Hranice 4-okolí a vnitřek 8-okolí?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-041.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 42,
+      "title": "2D objekty",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\n2D objekty\n\n      • Ořezávání useček\n           - Cohen-Sutherland\n      • Koncové body p1 a p0 mají bitový kód - p1 or p0 = 0 ⇒\n        úsečka v okně\n           - p1 and p0̸ = 0 ⇒úsečka celá mimo\n           - jinak ⇒úsečka prochází několika oblastmi\n      • jinak: Zkrácení úsečky\n           - podle bitového kódu zvolíma další přímku, spočteme průsečík\n           - opakovat dokud úsečka není celá v okně\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-042.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 43,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n\n      • Změna barevné charakteristiky\n           - jas, kontrast, gama\n           - úprava k tisku nebo zobrazení\n      • Konstantní prah\n           - informace jen o hodnote barvy\n      • Náhodné rozptýlení\n           - informace jen o hodnote barvy\n      • Pravidelné (maticové) rozptýlení\n           - vyžaduje i souřadnice vstupního pixelu\n      • Distribuce zaokrouhlovací chyby\n           - pixely je nutno navíc zpracovat v určitem pořadí (řádky, ...)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-043.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 44,
+      "title": "Transformace barev - motivace",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev - motivace\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-044.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 45,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n      • Konstantní prah\n           - pevný převod do (obvykle značně) omezené palety barev\n           - paleta buď rovnoměrně rozdělená, nebo optimalizovaná\n           - často například u tisku posterů, plakátů\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-045.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 46,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n      • Konstantní prah\n           - pevný převod do (obvykle značně) omezené palety barev\n           - paleta buď rovnoměrně rozdělená, nebo optimalizovaná\n           - často například u tisku posterů, plakátů\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-046.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 47,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n      • Konstantní prah\n           - pevný převod do (obvykle značně) omezené palety barev\n           - paleta buď rovnoměrně rozdělená, nebo optimalizovaná\n           - často například u tisku posterů, plakátů\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-047.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 48,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n\n      • Náhodné rozptýlení\n           - intenzita zdrojové černé ⇒pravděpodobnost\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-048.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 49,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n\n      • Náhodné rozptýlení\n           - intenzita zdrojové černé ⇒pravděpodobnost\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-049.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 50,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n      • Maticové rozptýlení\n           - pixel nestojí sám o sobě, převádí se malé oblasti\n           - konkrétních rozptylovacích matic je mnoho\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-050.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 51,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n      • Maticové rozptýlení\n           - pixel nestojí sám o sobě, převádí se malé oblasti\n           - konkrétních rozptylovacích matic je mnoho\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-051.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 52,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n      • Maticové rozptýlení\n           - pixel nestojí sám o sobě, převádí se malé oblasti\n           - konkrétních rozptylovacích matic je mnoho\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-052.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 53,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n      • Maticové rozptýlení\n           - pixel nestojí sám o sobě, převádí se malé oblasti\n           - konkrétních rozptylovacích matic je mnoho\n\n\n\n\n\n                    [0  0 ] [0  0 ] [0  0 ] [0  1 ] [1  1 ] [0  3 ]\n    Cin = {1, 2, 3, 4, 5}                                                         ,\n                      0  0  0  1  1  1  1  1  1  1   2  1\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .   A jak by fungoval převod do ASCII?\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-053.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 54,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n\n      • Maticové rozptýlení\n           - pixel nestojí sám o sobě, převádí se malé oblasti\n           - konkrétních rozptylovacích matic je mnoho\n\n                               \n                              0  12  3  15\n                              8   4  11  7                      Mdispej =  2  14  1  13 \n                             10  6   9   5\n                              \n                             1  5   9   2\n                             8  12  13  6                      Mtisk =  4  15  14  10 \n                             0  11  7   3\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-054.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 55,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n\n      • Distribuce zaokrouhlovací chyby\n           - pixel nestojí sám o sobě\n           - při převodu do omezené palety vnikne chyba\n           - ta se rozdistribuuje do ještě nepřevedených pixelů v okolí\n      • Floyd–Steinberg dithering - distribude chyby + optimalizované\n         paleta\n\n                             \n                                             7    ...                                          ⋆   16\n                                          ...   3    5    1    ...                                   16   16   16\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-055.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 56,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n                 Originál              8bit prah.              8bit distr.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-056.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 57,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n                 Originál              8bit prah.              8bit distr.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-057.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 58,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n                 Originál              8bit prah.              8bit distr.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-058.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 59,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n                 Originál              8bit prah.              8bit distr.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-059.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 60,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n                 Originál              8bit prah.              8bit distr.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-060.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 61,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n                 Originál              8bit prah.              8bit distr.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-061.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 62,
+      "title": "Transformace barev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nTransformace barev\n\n\n                 Originál              8bit prah.              8bit distr.\n\n\n\n\n\n           8bit opt + dith.      16b paleta      16b paleta + dith.\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-062.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 63,
+      "title": "Konvoluce",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nKonvoluce\n\n\n\n\n\n                           ∫∞\n                     (f ∗g)(t) =    f(τ)g(t −τ)dτ               (1)\n\n                     −∞\n\n                      ∗: L1 × L1 −→L1                     (2)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-063.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 64,
+      "title": "Spojitá konvoluce",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nSpojitá konvoluce\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-064.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 65,
+      "title": "Spojitá konvoluce",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nSpojitá konvoluce\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-065.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 66,
+      "title": "Konvoluce",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nKonvoluce\n\n\n    Základní vlastnosti\n\n\n                           f ∗g = g ∗f                        (3)\n\n\n\n                      f ∗(g ∗h) = (f ∗g) ∗h                  (4)\n\n\n\n                    a(f ∗g) = (af) ∗g = f ∗(ag)               (5)\n\n\n\n                   f ∗(g + h) = (f ∗g) + (f ∗h)               (6)\n\n\n\n                         f ∗δ = δ ∗f = f                      (7)\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-066.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 67,
+      "title": "Konvoluce",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nKonvoluce\n\n\n\n\n                 {\n                       ∞,    if x = 0.\n                       δ(x) =                                    (8)\n                                     0,    otherwise.\n\n                       ∫\n                             δ(x)dx = 1                       (9)\n\n\n                   ∫∞\n                        f(x)δ(x −a)dx = f(a)               (10)\n\n              −∞\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-067.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 68,
+      "title": "Diskrétní Konvoluce",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nDiskrétní Konvoluce\n\n      • Diskrétní konvoluce (rastr)\n      • 1D\n          ∑∞\n                     (f ∗g) =      f[m] · g[n −m]            (11)\n                    m=−∞\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-068.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 69,
+      "title": "Diskrétní konvoluce",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nDiskrétní konvoluce\n\n      • Diskrétní konvoluce (rastr)\n      • 2D (obrázky)\n          ∑∞\n                     (f ∗g) =      f[m] · g[n −m]            (12)\n                    m=−∞\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-069.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 70,
+      "title": "Diskrétní konvoluce",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nDiskrétní konvoluce\n\n\n\n\n\n                                  video\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-070.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": [
+        {
+          "url": "https://youtu.be/8rrHTtUzyZA?t=70"
+        }
+      ]
+    },
+    {
+      "page": 71,
+      "title": "Okrajový jev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nOkrajový jev\n\n\n      • Diskrétní konvoluce (rastr)\n      • 2D (obrázky)\n      • Okrajový jev: A co na kraji obrazu?\n           - type valid\n           - type same\n           - type full\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-071.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 72,
+      "title": "Okrajový jev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nOkrajový jev\n\n      • Diskrétní konvoluce (rastr)\n      • 2D (obrázky)\n      • Okrajový jev: A co na kraji obrazu?\n           - oblepení nulami (zero padding)\n           - zrcadlové prodloužení (mirror extension)\n           - periodické prodloužení (periodic/toroid extension)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-072.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 73,
+      "title": "Okrajový jev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nOkrajový jev\n\n      • Diskrétní konvoluce (rastr)\n      • 2D (obrázky)\n      • Okrajový jev: A co na kraji obrazu?\n           - oblepení nulami (zero padding)\n           - zrcadlové prodloužení (mirror extension)\n           - periodické prodloužení (periodic/toroid extension)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-073.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 74,
+      "title": "Okrajový jev",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nOkrajový jev\n\n      • Diskrétní konvoluce (rastr)\n      • 2D (obrázky)\n      • Okrajový jev: A co na kraji obrazu?\n           - oblepení nulami (zero padding)\n           - zrcadlové prodloužení (mirror extension)\n           - periodické prodloužení (periodic/toroid extension)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-074.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 75,
+      "title": "Konvoluční filtry",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nKonvoluční filtry\n\n\n\n\n\n      • Prosté a vážené průměrování\n      • Odšumění\n      • Detekce hran\n      • Ostření\n      • Filtry ve frekvenční oblasti (příště)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-075.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 76,
+      "title": "Odšumění",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nOdšumění\n\n\n\n\n\n      • Prosté a vážené průměrování\n      • Odšumění\n      • Součet roven 1\n           - proč?\n                           \n                              1  1  1\n                         1\n                 ×  1  1  1 \n                         9\n                              1  1  1\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-076.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 77,
+      "title": "Odšumění",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nOdšumění\n\n\n\n\n\n      • Prosté a vážené růměrování\n      • Gaussův šum\n      • Součet roven 1\n           - proč?\n                           \n                               1  2  1\n                         1\n                  ×  2  4  2 \n                         16\n                               1  2  1\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-077.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 78,
+      "title": "Detekce hran",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nDetekce hran\n\n\n\n      • Sobelův operátor\n           - první derivace\n           - směrově orientovaný\n           - dvojice masek h a h\n      • Součet roven 0\n           - Proč?                               \n                −1  0  1        1   2   1\n             h =  −2  0  2 h =  0   0   0 \n                −1  0  1     −1 −2 −1\n               √\n                            |G| =   h2 + h2\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-078.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 79,
+      "title": "Detekce hran",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nDetekce hran\n\n\n\n\n      • Sobelův operátor\n           - první derivace\n           - směrově orientovaný\n           - dvojice masek h a h\n                               \n                −2 −1  0       0 −1 −2\n             h =  −1   0   1 h =  1   0  −1\n                     0   1   2       2   1   0\n               √\n                            |G| =   h2 + h2\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-079.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 80,
+      "title": "Detekce hran",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nDetekce hran\n\n\n\n\n\n      • Robinsonův operátor\n      • Kirschův operátor\n                                    \n              −1 −1 −1         −5 −5 −5\n           hRobin =  1  −2   1 hKirsch =  3   0   3 \n                   1   1   1             3   3   3\n               √\n                            |G| =   h2 + h2\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-080.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 81,
+      "title": "Detekce hran",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nDetekce hran\n\n\n\n\n\n      • Laplaceův operátor\n           - druhá derivace\n           - dvojí reakce na hranu\n                               \n                      1   1   1       0   1   0\n              λ =  1 −8  1 λ =  1 −4  1 \n                      1   1   1       0   1   0\n\n     více: [Gonz89][Gonz97][Lewi90]\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-081.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 82,
+      "title": "Detekce hran",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nDetekce hran\n\n\n      • Laplaceův operátor\n           - druhá derivace\n           - dvojí reakce na hranu\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-082.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 83,
+      "title": "Ostření",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nOstření\n\n\n\n\n      • Zaostření pomocí detekce hran\n      • Vysoké frekvence\n      • Nízké frekvence                               \n                      1   1   1       0   1   0\n              λ =  1 −8  1 λ =  1 −4  1 \n                      1   1   1       0   1   0\n               √\n                           |G| =   G2x + G2y\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-083.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 84,
+      "title": "Vzorkování a kvantování nejsou totéž",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nVzorkování a kvantování nejsou totéž\n\n\n\n\n\n      • Vzorkování určuje, kde obraz měříme: prostorové souřadnice\n       (m, n).\n      • Kvantování určuje, kolika hodnotami měření reprezentujeme:\n         například 256 úrovní na kanál.\n      • Nedostatečné vzorkování vytváří aliasing; hrubé kvantování\n          vytváří páskování a kvantizační šum.\n      • Vyšší bitová hloubka neopraví chybějící prostorové vzorky a\n          vyšší rozlišení neobnoví ztracené odstíny.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-084.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 85,
+      "title": "Nyquistova podmínka a aliasing",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nNyquistova podmínka a aliasing\n\n\n\n\n     Je-li nejvyšší prostorová frekvence obrazu fmax, musí vzorkovací\n    frekvence splnit\n                               fs > 2fmax.\n\n\n      • Frekvence nad fs/2 se po vzorkování jeví jako nižší frekvence.\n      • V obraze vzniká moaré, falešné hrany nebo blikání jemných\n         struktur v animaci.\n      • Praktické řešení: před zmenšením použít dolní propust; při\n         renderingu integrovat přes plochu pixelu.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-085.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 86,
+      "title": "Diskrétní 2D konvoluce: přesná definice",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nDiskrétní 2D konvoluce: přesná definice\n\n\n\n    Pro obraz I a jádro h rozměru (2a + 1) × (2b + 1) definujeme\n\n         ∑a ∑b\n               (I ∗h)[m, n] =            h[i, j]I[m −i, n −j].\n\n                           i=−a j=−b\n\n\n      • Jádro se při konvoluci obrací v obou osách; bez obrácení jde o\n          korelaci.\n      • U symetrických jader (např. Gaussova) mají obě operace\n         stejný výsledek.\n      • Součet koeficientů jedna zachovává konstantní jas; součet\n         nula potlačuje konstantní oblasti.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-086.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 87,
+      "title": "Co se děje na hranici obrazu?",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nCo se děje na hranici obrazu?\n\n\n\n\n    Pro výpočet poblíž okraje chybějí vzorky. Volba rozšíření je součást\n    algoritmu:\n      • nuly: jednoduché, ale vytvářejí tmavý lem;\n      • replikace: prodlužuje krajní hodnotu;\n      • zrcadlení: obvykle omezuje skok na hranici;\n      • periodické rozšíření: přirozené pro DFT, nevhodné pro\n         nenavazující obraz.\n\n    Výstup valid používá jen úplná okolí; same zachovává rozměr\n    pomocí zvolené okrajové podmínky.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-087.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 88,
+      "title": "Separabilní filtr a výpočetní cena",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nSeparabilní filtr a výpočetní cena\n\n\n\n\n   Pokud lze jádro zapsat jako h[i, j] = u[i]v[j], pak\n\n                           I ∗h = (I ∗u) ∗v.\n\n\n      • Přímá konvoluce s jádrem k × k stojí přibližně k2 operací na\n           pixel.\n      • Dvě jednorozměrné konvoluce potřebují přibližně 2k operací\n        na pixel.\n      • Gaussovské vyhlazení je separabilní; velká jádra jsou proto\n         výrazně levnější.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-088.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 89,
+      "title": "Od derivace k hraně a ostření",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nOd derivace k hraně a ostření\n\n\n\n\n      • První derivace (Sobel, Scharr) odhaduje gradient\n      ∇I = (Ix, Iy).\n            √\n      • Velikost ∥∇I∥2 =    I2x + I2y vyjadřuje sílu hrany,\n         atan2(Iy, Ix) její orientaci.\n      • Laplaceův operátor ∇2I = Ixx + Iyy je izotropní, ale citlivý na\n        šum.\n      • Unsharp masking ostří obraz jako Isharp = I + α(I −Gσ ∗I).\n    Derivaci proto obvykle předchází vyhlazení; jinak zesílíme i\n    vysokofrekvenční šum.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-089.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 90,
+      "title": "Shrnutí a kontrolní otázky",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nShrnutí a kontrolní otázky\n\n\n\n\n      • Vzorkování určuje prostorové rozlišení, kvantování rozlišení\n        hodnot.\n      • Konvoluce je lokální lineární operace; výsledek závisí také na\n          práci s okrajem.\n      • Součet koeficientů jádra napovídá reakci na konstantní jas.\n\n       1 Proč před zmenšením obrazu používáme dolní propust?\n\n       2 Kdy se konvoluce a korelace liší?\n\n       3 Proč derivace zesilují šum a jak tomu předcházet?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-090.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 91,
+      "title": "Doporučené zdroje I",
+      "text": "Outline. .. .. .. .   Rovinná. .. .. .. .. .. ..grafika.. .. .. .. .. .. .. .. .. . Transformace. .. .. .. .. .. .. .. .   Konvoluce. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . Doplnění:. .. .. .. .. .. .. .diskrétní obraz a filtrace  .Doporučené.            zdr\n\nDoporučené zdroje I\n\n\n\n\n\n       [1] Rafael C. Gonzalez and Richard E. Woods.\n          Digital Image Processing.\n         Pearson, 4 edition, 2018.\n         Základní učebnice zpracování obrazu, konvoluce a frekvenční filtrace.\n\n       [2] Alan V. Oppenheim and Ronald W. Schafer.\n         Discrete-Time Signal Processing.\n         Prentice Hall, 3 edition, 2010.\n        Podrobný výklad diskrétních systémů a Fourierovy transformace.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-091.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 92,
+      "title": "Příště",
+      "text": "Příště. .. .                                                                                                Původní. .. .      zdroje\n\nPříště\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-092.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 93,
+      "title": "Příště",
+      "text": "Příště. .. .                                                                                                Původní. .. .      zdroje\n\nPříště\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-093.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 94,
+      "title": "Zdroje",
+      "text": "Příště. .. .                                                                                                Původní. .. .      zdroje\n\nZdroje\n\n\n\n\n\n       ...\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-094.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 95,
+      "title": ". . . . Příště . . . . Původní zdroje",
+      "text": "Příště. .. .                                                                                                Původní. .. .      zdroje\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-095.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    }
+  ]
+}

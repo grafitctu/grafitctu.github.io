@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Základní a pokročilé modelovací techniky · Jiří Chludil">
+  <title>PGA · 03 · Základní a pokročilé modelovací techniky</title>
+  <script>
+    (() => {
+      let saved;
+      try { saved = localStorage.getItem('pga-chludil-theme'); } catch {}
+      document.documentElement.dataset.theme = saved === 'dark' || saved === 'light'
+        ? saved : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    })();
+  </script>
+  <link rel="stylesheet" href="presentation.css">
+  <script src="presentation.js" defer></script><script src="web-extras.js" defer></script><script src="lab.js" defer></script>
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+</style>
+</head>
+<body class="grafit-toolbar-return">
+  <header class="toolbar">
+<a id="grafit-lecture-return" class="grafit-lecture-return" href="../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+    <a class="brand" id="grafit-course-link" href="../" aria-label="Přehled přednášek PGA">PGA <span>/ 03</span></a>
+    <span id="chapter">Úvod</span>
+    <nav aria-label="Nástroje prezentace">
+      <button id="contents" aria-haspopup="dialog">Obsah</button>
+      <a class="pdf-link" href="original.pdf">PDF</a><button id="print-button">Tisk</button><button id="text-toggle" aria-pressed="false">Text</button><button id="notes-toggle" aria-haspopup="dialog">Poznámky</button><button id="lab-toggle" aria-haspopup="dialog">Ukázka</button><button id="reading" aria-pressed="false">Čtení</button>
+      <button id="theme" aria-label="Tmavý režim" aria-pressed="false" title="Tmavý režim">◐</button>
+      <button id="fullscreen" aria-label="Celá obrazovka (F)">⛶ <span>Celá obrazovka</span></button>
+    </nav>
+  </header>
+  <main id="deck" aria-label="Základní a pokročilé modelovací techniky">
+    <article class="slide source-slide" id="slide-1" data-section="3D grafika - Blender: Základní a pokročilé mo" aria-label="Snímek 1: 3D grafika - Blender: Základní a pokročilé modelovací techniky, práce s prameny."><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-001.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-001.svg" aria-label="Zvětšit snímek 1: 3D grafika - Blender: Základní a pokročilé modelovací techniky, práce s prameny."></button></div></figure><pre class="source-transcript"> Programování grafických aplikací (BI-PGA), Přednáška č. 3
+3D grafika - Blender: Základní a pokročilé
+  modelovací techniky, práce s prameny.
+
+
+                               Jiří Chludil
+
+
+                       Fakulta informačních technologií
+                   České vysoké učení technické v Praze
+                https://courses.fit.cvut.cz/BI-PGA/
+
+
+
+
+
+                ZS 2024/2025
+
+
+
+ Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          1 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=1">PDF, strana 1 ↗</a></p></article>
+<article class="slide source-slide" id="slide-2" data-section="Modelovací techniky" aria-label="Snímek 2: Modelovací techniky"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-002.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-002.svg" aria-label="Zvětšit snímek 2: Modelovací techniky"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky
+
+Modelovací techniky
+ Způsob jak (reálný) objekt interpretovat v 3D modelu.
+Mnoho způsobů:
+     Manuální modelování
+        ▶Polygoniální
+           ⋆Modelování s primitivy
+            ⋆Ploškové modelování
+     ▶NURBS
+     ▶CSG (s primitivy)
+       ▶Částicové modelování
+    3D Skenování (kontaktní a nekontaktní)
+       ▶Skener povrchu
+       ▶Fotogrametrie
+      ▶Objemové (Tomografie, Magnetická rezonance)
+      Visuální modelování.
+     Programové (procedurání) generování.
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          2 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=2">PDF, strana 2 ↗</a></p></article>
+<article class="slide source-slide" id="slide-3" data-section="Zdroje dat" aria-label="Snímek 3: Zdroje dat"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-003.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-003.svg" aria-label="Zvětšit snímek 3: Zdroje dat"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Zdroje dat
+
+Zdroje dat
+
+     Reálný svět
+      ▶Terén
+       ▶Objekty
+       ▶Živočichové
+        ▶....
+      Interpretace reálného světa (Analogová)
+      ▶Malba
+      ▶Náčrt
+       ▶Fotografie
+      ▶Plán
+      Interpretace reálného světa (Digitální)
+      ▶Bodový oblak (Bodové mračno)
+      ▶Objemové reprezentace
+        ▶....
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          3 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=3">PDF, strana 3 ↗</a></p></article>
+<article class="slide source-slide" id="slide-4" data-section="Modelování reálného světa" aria-label="Snímek 4: Modelování reálného světa"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-004.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-004.svg" aria-label="Zvětšit snímek 4: Modelování reálného světa"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky   Modelování reálného světa
+
+Modelování reálného světa
+
+     Modelování od oka
+     Měření fyzikálních vlastností
+       ▶rozměry
+        ▶vlastnosti povrchu -&gt; Textury (později v přednáškách od RR)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          4 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=4">PDF, strana 4 ↗</a></p></article>
+<article class="slide source-slide" id="slide-5" data-section="Malba (Pohlednice)" aria-label="Snímek 5: Malba (Pohlednice)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-005.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-005.svg" aria-label="Zvětšit snímek 5: Malba (Pohlednice)"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Interpretace reálného světa (Analogová)
+
+Malba (Pohlednice)
+
+     Přesnost závislá na schopnostech autora
+     Romantizující prvky
+     Požadavky zadavatele
+     Velmi nepřesné
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          5 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=5">PDF, strana 5 ↗</a></p></article>
+<article class="slide source-slide" id="slide-6" data-section="Náčrt" aria-label="Snímek 6: Náčrt"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-006.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-006.svg" aria-label="Zvětšit snímek 6: Náčrt"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Interpretace reálného světa (Analogová)
+
+Náčrt
+    Od ruky
+     Přesnost závislá na schopnostech autora
+     Nepřesné
+     Existence kót - výhoda
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          6 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=6">PDF, strana 6 ↗</a></p></article>
+<article class="slide source-slide" id="slide-7" data-section="Fotografie" aria-label="Snímek 7: Fotografie"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-007.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-007.svg" aria-label="Zvětšit snímek 7: Fotografie"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Interpretace reálného světa (Analogová)
+
+Fotografie
+
+    Vhodný zdroj, pokud není plán
+    Nutno počítat s perspektivou
+     Probléms věrohodností barvy
+     Problém se zákrýty
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          7 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=7">PDF, strana 7 ↗</a></p></article>
+<article class="slide source-slide" id="slide-8" data-section="Plán" aria-label="Snímek 8: Plán"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-008.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-008.svg" aria-label="Zvětšit snímek 8: Plán"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Interpretace reálného světa (Analogová)
+
+Plán
+    Mnoho typů
+       ▶Stavební
+        ▶Katastrální
+     ▶Mapa
+        ▶...
+    Ne vždy v měřítku (dle schopností autora)
+     Existence kót - výhoda
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          8 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=8">PDF, strana 8 ↗</a></p></article>
+<article class="slide source-slide" id="slide-9" data-section="Bodové mračno" aria-label="Snímek 9: Bodové mračno"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-009.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-009.svg" aria-label="Zvětšit snímek 9: Bodové mračno"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Interpretace reálného světa (Digitální)
+
+Bodové mračno
+
+     Výstup z digitalizačního procesu
+    3D Body (jejich součadnice X, Y, Z)
+     Barevná informace
+     Obrovské množství dat
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          9 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=9">PDF, strana 9 ↗</a></p></article>
+<article class="slide source-slide" id="slide-10" data-section="Objemové (Tomografie, Magnetická rezonance)" aria-label="Snímek 10: Objemové (Tomografie, Magnetická rezonance)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-010.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-010.svg" aria-label="Zvětšit snímek 10: Objemové (Tomografie, Magnetická rezonance)"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Interpretace reálného světa (Digitální)
+
+Objemové (Tomografie, Magnetická rezonance)
+
+     Volumetrická reprezentace
+    Možné převody do polygoniální repreyentace
+     Barevná informace
+     Obrovské množství dat
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         10 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=10">PDF, strana 10 ↗</a></p></article>
+<article class="slide source-slide" id="slide-11" data-section="Manuální modelování" aria-label="Snímek 11: Manuální modelování"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-011.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-011.svg" aria-label="Zvětšit snímek 11: Manuální modelování"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky
+
+Manuální modelování
+
+
+
+
+
+     Polygoniální modelování
+       ▶Modelování s primitivy
+       ▶Ploškové modelování
+    NURBS
+    CSG (s primitivy)
+     Částicové modelování
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         11 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=11">PDF, strana 11 ↗</a></p></article>
+<article class="slide source-slide" id="slide-12" data-section="Polygoniální modelování I - Modelování s prim" aria-label="Snímek 12: Polygoniální modelování I - Modelování s primitivy"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-012.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-012.svg" aria-label="Zvětšit snímek 12: Polygoniální modelování I - Modelování s primitivy"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Polygoniální modelování
+
+Polygoniální modelování I - Modelování s primitivy
+
+
+
+     Výchozí stav 3D primitivum
+     Opracování pomocí modifikátorů (logické operace, deformace,
+     atd)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         12 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=12">PDF, strana 12 ↗</a></p></article>
+<article class="slide source-slide" id="slide-13" data-section="Polygoniální modelování II - Modelování s pri" aria-label="Snímek 13: Polygoniální modelování II - Modelování s primitivy"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-013.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-013.svg" aria-label="Zvětšit snímek 13: Polygoniální modelování II - Modelování s primitivy"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Polygoniální modelování
+
+Polygoniální modelování II - Modelování s primitivy
+
+
+
+   + Jednoduché
+   + Dosáhnout detailu je náročné
+       - Ne vždy se klade důraz na sloučení objektů
+       - Není pod kontrolou triangulace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         13 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=13">PDF, strana 13 ↗</a></p></article>
+<article class="slide source-slide" id="slide-14" data-section="Polygoniální modelování III - Ploškové modelo" aria-label="Snímek 14: Polygoniální modelování III - Ploškové modelování"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-014.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-014.svg" aria-label="Zvětšit snímek 14: Polygoniální modelování III - Ploškové modelování"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Polygoniální modelování
+
+Polygoniální modelování III - Ploškové modelování
+
+
+     Výchozí stav 2D primitivum
+     Opracování pomocí modifikátorů (tažení, spojování, atd)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         14 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=14">PDF, strana 14 ↗</a></p></article>
+<article class="slide source-slide" id="slide-15" data-section="Polygoniální modelování IV - Ploškové modelov" aria-label="Snímek 15: Polygoniální modelování IV - Ploškové modelování"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-015.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-015.svg" aria-label="Zvětšit snímek 15: Polygoniální modelování IV - Ploškové modelování"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Polygoniální modelování
+
+Polygoniální modelování IV - Ploškové modelování
+
+
+   + Jednoduché
+   + Pěkné detaily
+       - Ne vždy se klade důraz na sloučení objektů
+       - Pozor na dvojité hrany a body
+       - Non-uniformní objekty
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         15 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=15">PDF, strana 15 ↗</a></p></article>
+<article class="slide source-slide" id="slide-16" data-section="NURBS I" aria-label="Snímek 16: NURBS I"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-016.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-016.svg" aria-label="Zvětšit snímek 16: NURBS I"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky   NURBS
+
+NURBS I
+
+
+     Non-uniform rational basis spline
+    NURBS plochy
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         16 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=16">PDF, strana 16 ↗</a></p></article>
+<article class="slide source-slide" id="slide-17" data-section="NURBS II" aria-label="Snímek 17: NURBS II"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-017.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-017.svg" aria-label="Zvětšit snímek 17: NURBS II"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky   NURBS
+
+NURBS II
+
+
+
+   + Vhodné na ladné (přírodní) tvary
+   + Efektivní nástroj na modelování
+   + Vhodný na válcovité tvary
+       - Náročné na přesnost
+       - Někdy problematická triangulace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         17 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=17">PDF, strana 17 ↗</a></p></article>
+<article class="slide source-slide" id="slide-18" data-section="CSG I" aria-label="Snímek 18: CSG I"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-018.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-018.svg" aria-label="Zvětšit snímek 18: CSG I"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky   CSG
+
+CSG I
+
+    3D primitiva (koule, válec, krychle, atd.)
+     Logické operace (průnik, sjednocení, rozdíl, negace)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         18 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=18">PDF, strana 18 ↗</a></p></article>
+<article class="slide source-slide" id="slide-19" data-section="CSG II" aria-label="Snímek 19: CSG II"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-019.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-019.svg" aria-label="Zvětšit snímek 19: CSG II"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky   CSG
+
+CSG II
+   + Vhodné pro modelování jednodušších tvarů
+   + Jde dosáhnout velké přesnosti
+   + Existence postupů pro převod z hraniční reprezentace
+       - Náročné na představivost
+       - Není pod kontrolou triangulace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         19 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=19">PDF, strana 19 ↗</a></p></article>
+<article class="slide source-slide" id="slide-20" data-section="Částicové modelování I" aria-label="Snímek 20: Částicové modelování I"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-020.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-020.svg" aria-label="Zvětšit snímek 20: Částicové modelování I"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Částicové modelování
+
+Částicové modelování I
+
+
+
+      Fyzikální simulace proudu částic
+    Pohyb částic může být ovlivněn gravitací a dalšími silami
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         20 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=20">PDF, strana 20 ↗</a></p></article>
+<article class="slide source-slide" id="slide-21" data-section="Částicové modelování II" aria-label="Snímek 21: Částicové modelování II"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-021.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-021.svg" aria-label="Zvětšit snímek 21: Částicové modelování II"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Částicové modelování
+
+Částicové modelování II
+
+   + Simulace chování plynů a kapalin.
+   + Velmi přesné výstupy
+       - Velký počet trojůhelníků
+       - Výpočetně náročné
+       - Přesnost závislá na počtu a hustotě částic
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         21 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=21">PDF, strana 21 ↗</a></p></article>
+<article class="slide source-slide" id="slide-22" data-section="Plány" aria-label="Snímek 22: Plány"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-022.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-022.svg" aria-label="Zvětšit snímek 22: Plány"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Částicové modelování
+
+Plány
+
+
+
+
+
+     Základní primitiva
+     Kótování
+     Řezy
+     Materiály
+     Plán vs skutečnost
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         22 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=22">PDF, strana 22 ↗</a></p></article>
+<article class="slide source-slide" id="slide-23" data-section="Trochu odskočení od tématu" aria-label="Snímek 23: Trochu odskočení od tématu"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-023.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-023.svg" aria-label="Zvětšit snímek 23: Trochu odskočení od tématu"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Částicové modelování
+
+Trochu odskočení od tématu
+
+
+
+
+
+     2000 - 2005: Veškeré programování bude probíhat jen ve
+      vizuálních jazycích, klasický programátor je zbytečný.
+     2008: Fakulta Informatiky je zbytečná, programátor není potřeba,
+     vše již bylo naprogramováno, stačí to jen složit z krabiček.
+        ...
+     2023: Programátory nahradí AI.
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         23 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=23">PDF, strana 23 ↗</a></p></article>
+<article class="slide source-slide" id="slide-24" data-section="Programování Grafiky (nejen)" aria-label="Snímek 24: Programování Grafiky (nejen)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-024.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-024.svg" aria-label="Zvětšit snímek 24: Programování Grafiky (nejen)"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Částicové modelování
+
+Programování Grafiky (nejen)
+
+
+
+
+ Textový programovací jazyk VS Vizuální programovací jazyk
+     Snap!
+     Scratch
+    Kodu
+     Raptor
+     Bubble
+     atd
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         24 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=24">PDF, strana 24 ↗</a></p></article>
+<article class="slide source-slide" id="slide-25" data-section="Vizuální programovací jazyk" aria-label="Snímek 25: Vizuální programovací jazyk"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-025.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-025.svg" aria-label="Zvětšit snímek 25: Vizuální programovací jazyk"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Částicové modelování
+
+Vizuální programovací jazyk
+
+
+
+
+ Základní dělení
+     Vzdělávání
+     Multimediální
+     Vývoj her
+     Simulace
+     Automatizace
+     Simulace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         25 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=25">PDF, strana 25 ↗</a></p></article>
+<article class="slide source-slide" id="slide-26" data-section="Geometry Nodes" aria-label="Snímek 26: Geometry Nodes"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-026.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-026.svg" aria-label="Zvětšit snímek 26: Geometry Nodes"></button></div></figure><pre class="source-transcript">                                      Modelovací techniky    Částicové modelování
+
+Geometry Nodes
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         26 / 26</pre><p class="slide-source">Jiří Chludil · pracovní verze zdroje · <a href="original.pdf#page=26">PDF, strana 26 ↗</a></p></article>
+  </main>
+  <footer class="controls">
+    <span class="hint">← → <span>listování</span> · F <span>celá obrazovka</span></span>
+    <div class="pager"><button id="previous" aria-label="Předchozí snímek">←</button><output id="counter">01 / 36</output><button id="next" aria-label="Další snímek">→</button></div>
+    <span class="credit">Jiří Chludil · FIT ČVUT</span>
+    <div class="progress" aria-hidden="true"><div id="progress-value"></div></div>
+  </footer>
+  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="overview" aria-labelledby="overview-title">
+    <div class="dialog-heading"><h2 id="overview-title">Obsah přednášky</h2><button class="close" aria-label="Zavřít obsah">✕</button></div>
+    <nav aria-label="Všechny snímky"><a href="#slide-1"><span>01</span><span>3D grafika - Blender: Základní a pokročilé modelovací techniky, práce s prameny.</span></a><a href="#slide-2"><span>02</span><span>Modelovací techniky</span></a><a href="#slide-3"><span>03</span><span>Zdroje dat</span></a><a href="#slide-4"><span>04</span><span>Modelování reálného světa</span></a><a href="#slide-5"><span>05</span><span>Malba (Pohlednice)</span></a><a href="#slide-6"><span>06</span><span>Náčrt</span></a><a href="#slide-7"><span>07</span><span>Fotografie</span></a><a href="#slide-8"><span>08</span><span>Plán</span></a><a href="#slide-9"><span>09</span><span>Bodové mračno</span></a><a href="#slide-10"><span>10</span><span>Objemové (Tomografie, Magnetická rezonance)</span></a><a href="#slide-11"><span>11</span><span>Manuální modelování</span></a><a href="#slide-12"><span>12</span><span>Polygoniální modelování I - Modelování s primitivy</span></a><a href="#slide-13"><span>13</span><span>Polygoniální modelování II - Modelování s primitivy</span></a><a href="#slide-14"><span>14</span><span>Polygoniální modelování III - Ploškové modelování</span></a><a href="#slide-15"><span>15</span><span>Polygoniální modelování IV - Ploškové modelování</span></a><a href="#slide-16"><span>16</span><span>NURBS I</span></a><a href="#slide-17"><span>17</span><span>NURBS II</span></a><a href="#slide-18"><span>18</span><span>CSG I</span></a><a href="#slide-19"><span>19</span><span>CSG II</span></a><a href="#slide-20"><span>20</span><span>Částicové modelování I</span></a><a href="#slide-21"><span>21</span><span>Částicové modelování II</span></a><a href="#slide-22"><span>22</span><span>Plány</span></a><a href="#slide-23"><span>23</span><span>Trochu odskočení od tématu</span></a><a href="#slide-24"><span>24</span><span>Programování Grafiky (nejen)</span></a><a href="#slide-25"><span>25</span><span>Vizuální programovací jazyk</span></a><a href="#slide-26"><span>26</span><span>Geometry Nodes</span></a></nav>
+  </dialog>
+  <dialog id="image-view" aria-label="Zvětšený obrázek"><button class="close" aria-label="Zavřít obrázek">✕</button><img alt=""></dialog>
+  <noscript><p class="no-script">Bez JavaScriptu je přednáška zobrazena jako souvislý dokument.</p></noscript>
+<script type="application/json" id="source-data">{"title": "Základní a pokročilé modelovací techniky", "author": "Jiří Chludil", "sourceURL": "https://courses.fit.cvut.cz/BI-PGA/media/lectures/bi-pga-p3.pdf", "working": true, "lab": "bezier", "labTitle": "Bézierova křivka", "pages": [{"page": 1, "title": "3D grafika - Blender: Základní a pokročilé modelovací techniky, práce s prameny.", "text": " Programování grafických aplikací (BI-PGA), Přednáška č. 3\n3D grafika - Blender: Základní a pokročilé\n  modelovací techniky, práce s prameny.\n\n\n                               Jiří Chludil\n\n\n                       Fakulta informačních technologií\n                   České vysoké učení technické v Praze\n                https://courses.fit.cvut.cz/BI-PGA/\n\n\n\n\n\n                ZS 2024/2025\n\n\n\n Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          1 / 26", "image": "assets/page-001.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": [{"url": "https://courses.fit.cvut.cz/BI-PGA/"}]}, {"page": 2, "title": "Modelovací techniky", "text": "                                      Modelovací techniky\n\nModelovací techniky\n Způsob jak (reálný) objekt interpretovat v 3D modelu.\nMnoho způsobů:\n     Manuální modelování\n        ▶Polygoniální\n           ⋆Modelování s primitivy\n            ⋆Ploškové modelování\n     ▶NURBS\n     ▶CSG (s primitivy)\n       ▶Částicové modelování\n    3D Skenování (kontaktní a nekontaktní)\n       ▶Skener povrchu\n       ▶Fotogrametrie\n      ▶Objemové (Tomografie, Magnetická rezonance)\n      Visuální modelování.\n     Programové (procedurání) generování.\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          2 / 26", "image": "assets/page-002.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 3, "title": "Zdroje dat", "text": "                                      Modelovací techniky    Zdroje dat\n\nZdroje dat\n\n     Reálný svět\n      ▶Terén\n       ▶Objekty\n       ▶Živočichové\n        ▶....\n      Interpretace reálného světa (Analogová)\n      ▶Malba\n      ▶Náčrt\n       ▶Fotografie\n      ▶Plán\n      Interpretace reálného světa (Digitální)\n      ▶Bodový oblak (Bodové mračno)\n      ▶Objemové reprezentace\n        ▶....\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          3 / 26", "image": "assets/page-003.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 4, "title": "Modelování reálného světa", "text": "                                      Modelovací techniky   Modelování reálného světa\n\nModelování reálného světa\n\n     Modelování od oka\n     Měření fyzikálních vlastností\n       ▶rozměry\n        ▶vlastnosti povrchu -> Textury (později v přednáškách od RR)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          4 / 26", "image": "assets/page-004.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 5, "title": "Malba (Pohlednice)", "text": "                                      Modelovací techniky    Interpretace reálného světa (Analogová)\n\nMalba (Pohlednice)\n\n     Přesnost závislá na schopnostech autora\n     Romantizující prvky\n     Požadavky zadavatele\n     Velmi nepřesné\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          5 / 26", "image": "assets/page-005.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 6, "title": "Náčrt", "text": "                                      Modelovací techniky    Interpretace reálného světa (Analogová)\n\nNáčrt\n    Od ruky\n     Přesnost závislá na schopnostech autora\n     Nepřesné\n     Existence kót - výhoda\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          6 / 26", "image": "assets/page-006.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 7, "title": "Fotografie", "text": "                                      Modelovací techniky    Interpretace reálného světa (Analogová)\n\nFotografie\n\n    Vhodný zdroj, pokud není plán\n    Nutno počítat s perspektivou\n     Probléms věrohodností barvy\n     Problém se zákrýty\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          7 / 26", "image": "assets/page-007.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 8, "title": "Plán", "text": "                                      Modelovací techniky    Interpretace reálného světa (Analogová)\n\nPlán\n    Mnoho typů\n       ▶Stavební\n        ▶Katastrální\n     ▶Mapa\n        ▶...\n    Ne vždy v měřítku (dle schopností autora)\n     Existence kót - výhoda\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          8 / 26", "image": "assets/page-008.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 9, "title": "Bodové mračno", "text": "                                      Modelovací techniky    Interpretace reálného světa (Digitální)\n\nBodové mračno\n\n     Výstup z digitalizačního procesu\n    3D Body (jejich součadnice X, Y, Z)\n     Barevná informace\n     Obrovské množství dat\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025          9 / 26", "image": "assets/page-009.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 10, "title": "Objemové (Tomografie, Magnetická rezonance)", "text": "                                      Modelovací techniky    Interpretace reálného světa (Digitální)\n\nObjemové (Tomografie, Magnetická rezonance)\n\n     Volumetrická reprezentace\n    Možné převody do polygoniální repreyentace\n     Barevná informace\n     Obrovské množství dat\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         10 / 26", "image": "assets/page-010.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 11, "title": "Manuální modelování", "text": "                                      Modelovací techniky\n\nManuální modelování\n\n\n\n\n\n     Polygoniální modelování\n       ▶Modelování s primitivy\n       ▶Ploškové modelování\n    NURBS\n    CSG (s primitivy)\n     Částicové modelování\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         11 / 26", "image": "assets/page-011.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 12, "title": "Polygoniální modelování I - Modelování s primitivy", "text": "                                      Modelovací techniky    Polygoniální modelování\n\nPolygoniální modelování I - Modelování s primitivy\n\n\n\n     Výchozí stav 3D primitivum\n     Opracování pomocí modifikátorů (logické operace, deformace,\n     atd)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         12 / 26", "image": "assets/page-012.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 13, "title": "Polygoniální modelování II - Modelování s primitivy", "text": "                                      Modelovací techniky    Polygoniální modelování\n\nPolygoniální modelování II - Modelování s primitivy\n\n\n\n   + Jednoduché\n   + Dosáhnout detailu je náročné\n       - Ne vždy se klade důraz na sloučení objektů\n       - Není pod kontrolou triangulace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         13 / 26", "image": "assets/page-013.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 14, "title": "Polygoniální modelování III - Ploškové modelování", "text": "                                      Modelovací techniky    Polygoniální modelování\n\nPolygoniální modelování III - Ploškové modelování\n\n\n     Výchozí stav 2D primitivum\n     Opracování pomocí modifikátorů (tažení, spojování, atd)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         14 / 26", "image": "assets/page-014.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 15, "title": "Polygoniální modelování IV - Ploškové modelování", "text": "                                      Modelovací techniky    Polygoniální modelování\n\nPolygoniální modelování IV - Ploškové modelování\n\n\n   + Jednoduché\n   + Pěkné detaily\n       - Ne vždy se klade důraz na sloučení objektů\n       - Pozor na dvojité hrany a body\n       - Non-uniformní objekty\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         15 / 26", "image": "assets/page-015.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 16, "title": "NURBS I", "text": "                                      Modelovací techniky   NURBS\n\nNURBS I\n\n\n     Non-uniform rational basis spline\n    NURBS plochy\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         16 / 26", "image": "assets/page-016.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 17, "title": "NURBS II", "text": "                                      Modelovací techniky   NURBS\n\nNURBS II\n\n\n\n   + Vhodné na ladné (přírodní) tvary\n   + Efektivní nástroj na modelování\n   + Vhodný na válcovité tvary\n       - Náročné na přesnost\n       - Někdy problematická triangulace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         17 / 26", "image": "assets/page-017.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 18, "title": "CSG I", "text": "                                      Modelovací techniky   CSG\n\nCSG I\n\n    3D primitiva (koule, válec, krychle, atd.)\n     Logické operace (průnik, sjednocení, rozdíl, negace)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         18 / 26", "image": "assets/page-018.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 19, "title": "CSG II", "text": "                                      Modelovací techniky   CSG\n\nCSG II\n   + Vhodné pro modelování jednodušších tvarů\n   + Jde dosáhnout velké přesnosti\n   + Existence postupů pro převod z hraniční reprezentace\n       - Náročné na představivost\n       - Není pod kontrolou triangulace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         19 / 26", "image": "assets/page-019.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 20, "title": "Částicové modelování I", "text": "                                      Modelovací techniky    Částicové modelování\n\nČásticové modelování I\n\n\n\n      Fyzikální simulace proudu částic\n    Pohyb částic může být ovlivněn gravitací a dalšími silami\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         20 / 26", "image": "assets/page-020.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 21, "title": "Částicové modelování II", "text": "                                      Modelovací techniky    Částicové modelování\n\nČásticové modelování II\n\n   + Simulace chování plynů a kapalin.\n   + Velmi přesné výstupy\n       - Velký počet trojůhelníků\n       - Výpočetně náročné\n       - Přesnost závislá na počtu a hustotě částic\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         21 / 26", "image": "assets/page-021.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 22, "title": "Plány", "text": "                                      Modelovací techniky    Částicové modelování\n\nPlány\n\n\n\n\n\n     Základní primitiva\n     Kótování\n     Řezy\n     Materiály\n     Plán vs skutečnost\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         22 / 26", "image": "assets/page-022.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 23, "title": "Trochu odskočení od tématu", "text": "                                      Modelovací techniky    Částicové modelování\n\nTrochu odskočení od tématu\n\n\n\n\n\n     2000 - 2005: Veškeré programování bude probíhat jen ve\n      vizuálních jazycích, klasický programátor je zbytečný.\n     2008: Fakulta Informatiky je zbytečná, programátor není potřeba,\n     vše již bylo naprogramováno, stačí to jen složit z krabiček.\n        ...\n     2023: Programátory nahradí AI.\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         23 / 26", "image": "assets/page-023.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 24, "title": "Programování Grafiky (nejen)", "text": "                                      Modelovací techniky    Částicové modelování\n\nProgramování Grafiky (nejen)\n\n\n\n\n Textový programovací jazyk VS Vizuální programovací jazyk\n     Snap!\n     Scratch\n    Kodu\n     Raptor\n     Bubble\n     atd\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         24 / 26", "image": "assets/page-024.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 25, "title": "Vizuální programovací jazyk", "text": "                                      Modelovací techniky    Částicové modelování\n\nVizuální programovací jazyk\n\n\n\n\n Základní dělení\n     Vzdělávání\n     Multimediální\n     Vývoj her\n     Simulace\n     Automatizace\n     Simulace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         25 / 26", "image": "assets/page-025.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 26, "title": "Geometry Nodes", "text": "                                      Modelovací techniky    Částicové modelování\n\nGeometry Nodes\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 3                ZS 2024/2025         26 / 26", "image": "assets/page-026.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}]}</script><dialog id="notes-panel" aria-labelledby="notes-title"><div class="dialog-heading"><h2 id="notes-title">Původní text</h2><button class="close" aria-label="Zavřít poznámky">×</button></div><p class="lab-disclaimer">Pracovní verze autora. Původní obsah, kód a verze nástrojů odpovídají podkladu; aktuální organizaci a API ověřte u autora.</p><pre id="notes-original" class="notes-original"></pre><div id="notes-links" class="source-links"></div></dialog><dialog id="lab-dialog" class="lab-dialog" aria-labelledby="lab-title"><div class="dialog-heading"><h2 id="lab-title">Bézierova křivka</h2><button class="close" aria-label="Zavřít ukázku">×</button></div><div class="lab-layout"><div id="lab-settings" class="lab-settings"></div><div><canvas id="lab-canvas" class="lab-visual" width="640" height="380" aria-label="Výsledek interaktivního modelu"></canvas><pre id="lab-result" class="lab-result" aria-live="polite"></pre></div></div><p class="lab-disclaimer">Interaktivní doplněk GRAFIT · syntetická demonstrace principu. Není součástí původního PDF a nespouští plugin Blenderu ani GIMPu. <span id="lab-limits"></span></p></dialog><noscript><style>.source-transcript{display:block}.source-frame{display:none}</style></noscript></body>
+</html>

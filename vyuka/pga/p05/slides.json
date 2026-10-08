@@ -1,0 +1,551 @@
+{
+  "title": "Pokročilé texturování a PBR",
+  "author": "Radek Richtr",
+  "sourceURL": "https://courses.fit.cvut.cz/BI-PGA/media/lectures/bi-pga-richtr-05-advanced-mapping-pbr.pdf",
+  "working": false,
+  "lab": "normal",
+  "labTitle": "Normálová mapa a osvětlení",
+  "pages": [
+    {
+      "page": 1,
+      "title": "Programování grafických aplikací pokročilé mapování a PBR",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\n\n\n           Programování grafických aplikací\n                pokročilé mapování a PBR\n\n\n\n                         Radek Richtr\n\n\n                           Institute of Information Theory and Automation\n                     Academy of Sciences of the Czech Republic\n                                  Prague, Czech Republic\n\n                          August 14, 2026\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-001.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 2,
+      "title": "Outline I",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nOutline I\n\n\n\n     1 Bump, Normal\n       Mapování textur\n\n\n     2 Physically based rendering\n        Motivace a principy\n        Mikrofacetový model\n        Textury a implementace\n        Tečný prostor\n\n\n     3 Parallax\n        Výpočet\n         Příklady\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-002.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 3,
+      "title": "Cíle přednášky",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nCíle přednášky\n\n\n\n\n   Po absolvování přednášky by měl student umět:\n      • rozlišit bump, normal, parallax a displacement mapping podle\n         toho, co skutečně mění;\n      • sestavit tečný prostor a správně transformovat normálu z\n         textury;\n      • vysvětlit význam parametrů base color, metallic, roughness a\n        normal v PBR workflow;\n      • uvést předpoklady a typické artefakty parallax occlusion\n        mappingu.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-003.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 4,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nIntro\n\n\n\n\n\n      • Teoretická přednáška\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-004.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 5,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nIntro\n\n\n\n\n\n      • Teoretická přednáška\n      • Přehled algoritmických podkladů\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-005.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 6,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nIntro\n\n\n\n\n\n      • Teoretická přednáška\n      • Přehled algoritmických podkladů\n      •  ... a matematických podkladů pro grafické algoritmy\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-006.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 7,
+      "title": "Intro",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nIntro\n\n\n\n\n\n      • Teoretická přednáška\n      • Přehled algoritmických podkladů\n      •  ... a matematických podkladů pro grafické algoritmy\n      • Matematika je základ, bez kterého to nejde\n         (alespoň její intuitivní pochopení)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-007.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 8,
+      "title": "Matematickofyzikální minimum",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nMatematickofyzikální minimum\n\n\n\n\n\n      • Vektory, skalární součin\n      • Integrály\n      • Sférické souřadnice\n      • …\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-008.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 9,
+      "title": "Vnímání tvaru",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nVnímání tvaru\n\n\n\n    Tvar povrchu\n      • Nahrubo ze zadané geometrie – podle hran a obrysů\n      • Detaily vnímáme podle osvětlení\n           • Osvětlení závisí na normále povrchu\n      • Ve fixním řetězci se počítá ve vrcholech (Phongův osv.\n        model)\n           • Pro fragmenty mezi vrcholy se při rasterizaci interpoluje\n           • Interpoluje se výsledná barva – Gouraudovo stínování\n      • V programovatelném řetězci (shadery)\n           • Pro fragmenty mezi vrcholy se interpolují vektory (normála,\n             směr ke světlu a k pozorovateli)\n           • a osvětlení se počítá pro každý pixel (Phongovo stínování)\n      • Menší detaily než zadaná geometrie se nezobrazí\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-009.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 10,
+      "title": "Bump mapping a normal mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nBump mapping a normal mapping\n\n\n\n       1 Modulovat vypočítané osvětlení texturou (Difúzní textura)\n\n       2 Počítat osvětlení na základě informací z textury\n           • Výškovou mapou – bump mapping\n                • geometrie se neposouvá; z gradientu výškové mapy se odvodí\n                    perturbovaná normála\n           • Normálovou mapou – normal mapping\n                • naklopené normály relativně vůči povrchu (v tečném prostoru -\n                    tangent space)\n                • textura s normálami kolem celého objektu (v objektovém\n                      prostoru -\n                      object space) – absolutní\n       3 Měnit přímo geometrii a posouvat vrcholy\n           • Displacement mapping a výšková mapa\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-010.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 11,
+      "title": "Phong",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nPhong\n\n\n\n\n\n                             Figure: Materiál a textura\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-011.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 12,
+      "title": "Advanced mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nAdvanced mapping\n\n\n\n\n\n                    Figure: Bump mapping a parallax mapping\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-012.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 13,
+      "title": "Advanced mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nAdvanced mapping\n\n\n\n\n\n         Figure: vlevo: difuzni textura, vpravo: vyskova.    .. a .. normalova. .   ..   ..   ..   . .   ..   ..   ..   .mapa.   ..   ..   ..   . .   ..   ..  ..     . .     ..    ..     .",
+      "image": "assets/page-013.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 14,
+      "title": "Výšková vs. normálová mapa",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nVýšková vs. normálová mapa\n\n\n\n\n      • Výšková mapa\n           • Monochromatická textura\n           • Obsahuje výšku fragmentů nad rovinou\n      • Normálová mapa – v tečném prostoru\n           • RGB textura\n           • Obsahuje normály fragmentů (odchylky od interpolovaných\n             normál v rámci tečné roviny – tangent space)\n           • (0,0,1) = neodchýlená normála\n           • Proto je textura do modra\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-014.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 15,
+      "title": "Texture mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nTexture mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-015.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 16,
+      "title": "Texture mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nTexture mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-016.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 17,
+      "title": "Co znamená PBR",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nCo znamená PBR\n\n\n\n\n\n    Physically based rendering není jediný algoritmus ani jediný shader.\n    Jde o soubor principů pro konzistentní popis světla a materiálu:\n      • výpočty probíhají v lineárním prostoru,\n      • materiály přibližně zachovávají energii,\n      • odraz závisí na úhlu prostřednictvím Fresnelova jevu,\n      • parametry mají stabilní význam při změně osvětlení,\n      • stejný materiál lze použít v rasterizaci i path tracingu.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-017.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 18,
+      "title": "PBR neznamená automaticky fotorealismus",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nPBR neznamená automaticky fotorealismus\n\n\n\n\n    Výsledek stále závisí na:\n      • kvalitě geometrie, normál a UV parametrizace,\n      • správných texturách a jejich barevném prostoru,\n      • fyzikálně smysluplném osvětlení a expozici,\n      • stínech, nepřímém osvětlení a tone mappingu,\n      • zvoleném BRDF/BSDF modelu a jeho aproximacích.\n\n\n\n   PBR omezuje nekonzistentní kombinace parametrů; negarantuje\n    správnou scénu.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-018.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 19,
+      "title": "Dielektrikum a kov",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nDielektrikum a kov\n\n\n\n\n\n                            Kov\n   Dielektrikum\n                                    • zanedbatelná difuzní     • plast, dřevo, kámen,\n                                               složka,\n       keramika,\n                                    • barevný zrcadlový odraz,     • barevná difuzní složka,\n                                    • odraz určuje komplexní     • téměř bezbarvý zrcadlový\n                                           index lomu,\n        odraz,\n                                    • oxidace a nátěr tvoří další\n     • typicky malé F0.\n                                               vrstvu.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-019.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 20,
+      "title": "Metallic–roughness workflow",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nMetallic–roughness workflow\n\n\n\n\n      • Base color: difuzní albedo dielektrika nebo barva odrazu\n         kovu.\n      • Metallic: volba mezi dielektrickým a kovovým chováním;\n          čisté materiály jsou obvykle blízko 0 nebo 1.\n      • Roughness: šířka a tvar zrcadlového laloku.\n      • Normal: lokální orientace mikrodetailu v tečném prostoru.\n      • AO: aproximace lokálního zákrytu; nenahrazuje obecné\n         globální osvětlení.\n      • Emissive: vlastní vyzářená radiance povrchu.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-020.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 21,
+      "title": "Představa mikrofacet",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nPředstava mikrofacet\n\n\n\n\n\n    Makroskopicky drsný povrch modelujeme jako soubor velmi malých\n    zrcadlových plošek.\n      • Každá mikrofaceta odráží podle Fresnelova zákona.\n      • Rozdělení orientací určuje šířku odlesku.\n      • Některé facety se navzájem zakrývají nebo stíní.\n      • Pozorovaný odraz je statistický průměr jejich příspěvků.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-021.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 22,
+      "title": "Cookův–Torranceův model",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nCookův–Torranceův model\n\n\n\n\n\n    Zrcadlovou mikrofacetovou BRDF zapisujeme\n\n                          D(h)F(ωi, h)G(ωi, ωo)\n                   fs(ωi, ωo) =                                     ,           (1)\n                                4|n · ωi| |n · ωo|\n\n    kde h = normalize(ωi + ωo) je poloviční vektor.\n      • D: distribuce orientací mikrofacet,\n      • F: Fresnelův podíl odražené energie,\n      • G: masking a shadowing mezi mikrofacetami.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-022.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 23,
+      "title": "D : distribuce mikrofacet",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\nD: distribuce mikrofacet\n\n\n\n\n\n      • Udává hustotu mikrofacet orientovaných ve směru h.\n      • GGX má delší chvost než starší Beckmannovo rozdělení a\n          vytváří výraznější široké odlesky.\n      • Roughness řídí šířku distribuce, nikoli pouze intenzitu odlesku.\n      • Parametr používaný ve vzorci bývá často α = roughness2;\n        konvence enginů se liší.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-023.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 24,
+      "title": "F : Fresnelův člen",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\nF: Fresnelův člen\n\n\n\n\n    Schlickova aproximace:\n\n                 F(θ) = F0 + (1 −F0)(1 −cos θ)5.             (2)\n\n\n      • F0 je odraz při kolmém dopadu.\n      • U dielektrik souvisí F0 s indexem lomu a bývá přibližně několik\n         procent.\n      • U kovů je F0 barevné a vysoké.\n      • Při tečném pohledu se odrazivost zvyšuje téměř k jedné.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-024.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 25,
+      "title": "G : masking a shadowing",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\nG: masking a shadowing\n\n\n\n\n\n      • Masking: mikrofaceta je zakryta ve směru pozorovatele.\n      • Shadowing: mikrofaceta je zakryta ve směru světla.\n      • Geometrický člen omezuje nerealistický nárůst energie při\n        tečných úhlech.\n      • Smithova formulace skládá jednosměrné viditelnosti pro světlo\n        a pohled.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-025.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 26,
+      "title": "Difuzní a zrcadlová složka",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nDifuzní a zrcadlová složka\n\n\n\n\n    Jednoduchý principled materiál lze chápat jako\n\n                           fr = (1 −m)fd + fs,                   (3)\n\n    kde m ∈[0, 1] je metallic parametr.\n      • Pro nekov je fd často Lambert nebo jeho upravená varianta.\n      • Pro kov se difuzní složka potlačí.\n      • Fresnelův člen a energetická kompenzace omezují součet\n          složek.\n      • Reálné vrstvené materiály mohou vyžadovat clearcoat, sheen\n        nebo subsurface složku.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-026.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 27,
+      "title": "Které mapy jsou sRGB?",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nKteré mapy jsou sRGB?\n\n\n\n\n       Mapa       interpretace    načtení\n          base color   barva         sRGB →linear\n           emissive     barva/radiance  obvykle sRGB →linear\n          normal      vektorová data   lineární\n          roughness    skalární data     lineární\n           metallic      skalární data     lineární\n         AO/height   skalární data     lineární\n\n\n\n   Chybná sRGB konverze datových map mění jejich numerický\n    význam.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-027.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 28,
+      "title": "Normal, height a displacement",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nNormal, height a displacement\n\n\n\n\n      • Normal mapping mění normálu použitou při stínování, nikoli\n          siluetu.\n      • Bump mapping odvozuje perturbaci normály z gradientu\n        výškové mapy.\n      • Parallax mapping posouvá UV souřadnice a aproximuje\n        hloubku v pohledu.\n      • Displacement mapping skutečně mění geometrii nebo její\n         mikropolygony.\n      • Roughness popisuje statistickou mikrodrsnost pod rozlišením\n         geometrie.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-028.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 29,
+      "title": "PBR v rasterizaci a ray tracingu",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nPBR v rasterizaci a ray tracingu\n\n\n\n\n    Materiálová BRDF může být stejná; liší se způsob získání\n    příchozího světla.\n      • Rasterizace: explicitní světla, shadow maps, environmentální\n       mapy a aproximace IBL.\n      • Ray tracing: stínové, odražené a lomené paprsky testují\n        skutečnou scénu.\n      • Path tracing: BRDF se používá také k pravděpodobnostnímu\n        výběru dalšího směru.\n      • Konzistentní jednotky, lineární barvy a zachování energie jsou\n          důležité v obou případech.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-029.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 30,
+      "title": "Kontrolní otázky k PBR",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nKontrolní otázky k PBR\n\n\n\n\n\n       1 Proč kov nemá běžnou difuzní složku?\n\n       2 Jak se liší roughness od intenzity odlesku?\n\n       3 Co fyzikálně představují členy D, F a G?\n       4 Proč se normal map nesmí načíst jako sRGB?\n\n       5 Která technika mění siluetu objektu?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-030.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 31,
+      "title": "Prach, námraza, plíseň a lišejníky",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nPrach, námraza, plíseň a lišejníky\n\n      • Hiererchické Markovské Pottsovo pole a 3DCAR model\n         modelující plíseň a lišejníky (v čase)\n      • Fraktály generující námrazu\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-031.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 32,
+      "title": "Prach, námraza a plíseň",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nPrach, námraza a plíseň\n\n\n      • Hiererchické Markovské Pottsovo pole a 3DCAR model\n         modelující plíseň a lišejníky (v čase)\n      • Fraktály generující námrazu\n\n\n\n\n\n                                         Originální (nahoře) a syntetizované textury (dole).\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-032.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 33,
+      "title": "Komplexní model",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nKomplexní model\n\n\n\n\n\n                          konec odbočky :-)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-033.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 34,
+      "title": "komplexní model",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nkomplexní model\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-034.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 35,
+      "title": "Bump mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nBump mapping\n\n\n\n\n\n      • Výšková mapa obsahuje posunutí vůči původnímu povrchu ve\n        směru normály (skalární hodnoty h)\n        – Z výšek se gradientem odvodí změna normály – bump\n        mapping.\n        – U normal mappingu se normála načte přímo z textury a\n         transformuje do pracovního prostoru.\n      • Nakloněné normály se použijí při zobrazení modelu\n      • Nemění se geometrie modelu, ale jen normály fragmentů\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-035.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 36,
+      "title": "Konstrukce normálové mapy z výškové mapy",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nKonstrukce normálové mapy z výškové mapy\n\n\n\n\n\n        zdroj: [Lengyal, Felkel, 182]\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-036.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 37,
+      "title": "Tečný prostor",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nTečný prostor\n\n\n      • Vektor (0,0,1) v normálové mapě odpovídá nenakloněné\n        normále\n      • Aby odpovídal interpolované normále ve vrcholu,\n        konstruujeme tečný prostor (tangent space)\n      • Směry s a t (x a y) musí odpovídat směrům s a t textury\n      • Leží v tečné rovině\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-037.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 38,
+      "title": "Tečný prostor",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\n Tečný prostor\n\n\n\n      • Normálové vektory v normálové mapě\n        – Lze chápat jako perturbace skutečné normály (0,0,1)\n        – Jsou nezávislé na souřadné soustavě objektu\n        – Nemusíme proto normály a perturbované normály\n         transformovat a následně normalizovat\n        – Přímo je použijeme pro výpočet osvětlení\n      • Osvětlení počítáme v tečném prostoru\n        – Transformujeme souřadnice vektorů ve vrcholech z prostoru\n        kamery do tečného prostoru\n        – Rasterizátor interpoluje hodnoty vektorů\n        – Osvětlení spočtené v místě fragmentu\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-038.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 39,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n      • Co je Parallax Mapping?\n           • metoda aproximace hrbolatých povrchů prostřednictvím\n              modifikace souřadnic textury\n           • zjednodušení, které vyvolá dojem hrbolatého povrchu bez\n               nutnosti měnit geometrii (a zjemňovat ji)\n           • technika snadno realizovatelná na GPU\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-039.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 40,
+      "title": "parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nparallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-040.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 41,
+      "title": "parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nparallax mapping\n\n\n\n\n\n      • Paralaxa je úhel, který svírají přímky vedené ze dvou různých\n         míst v prostoru k pozorovanému bodu.\n      • Paralaxa je zdánlivý rozdíl polohy bodu vzhledem k pozadí při\n        pozorování ze dvou různých míst.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-041.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 42,
+      "title": "parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nparallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-042.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 43,
+      "title": "Parallax mapping - polygon s texturou",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping - polygon s texturou\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-043.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 44,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n      • Aproximuje paralaxu posunem textury o offset\n      • Pro každý pixel je vstupem\n        – počáteční poloha v textuře Ta\n        – výška povrchu h – vektor od počátku ke kameře v tečných\n         souřadnicích (eyestr) (transformovaný z prostoru kamery\n        pomocí matice TBN)\n      • Výstupem je posunutá texturovací souřadnice Ta\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-044.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 45,
+      "title": "Parallax mapping - vypocet",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping - vypocet\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-045.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 46,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-046.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 47,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-047.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 48,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-048.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 49,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-049.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 50,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-050.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 51,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-051.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 52,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-052.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 53,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-053.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 54,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-054.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 55,
+      "title": "Parallax mapping",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nParallax mapping\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-055.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 56,
+      "title": "Konec",
+      "text": "Outline. .. .. .. .              Bump,. .. .. .. .. ..Normal.. .                     Physically. .. .. .. .. .. .. ..based.. .. .. ..rendering.. .. .. .. .. .. .. .. .. .. .                Parallax. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .\n\nKonec\n\n\n\n\n\n    Dotazy?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-056.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 57,
+      "title": "Materiály",
+      "text": "                                      . .. . .Doporučené.            zdroje\n\nMateriály\n\n\n    Použité materiály:\n      • Felkel15: PGR\n      • De Berg15: Computational Geometry\n      • Lengyel15\n      • Welsh04: Parallax Mapping with Offset Limiting: A Per-Pixel\n        Approximation of Uneven Surfaces\n      • TyphoonLabs: OpenGL Shading Language Course\n      • Addison-Wesley05: GPU Gems\n      • Grigorij Alexandrovič Tavričeskij Potěmkin 87\n      • Tatarchuk05: Those Delicious Texels Dynamic Image-Space\n         Per-Pixel Displacement Mapping with Silhouette Antialiasing\n          via Parallax Occlusion Mapping\n      • Hapala07: Displacement mapping\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-057.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 58,
+      "title": "Shrnutí a kontrolní otázky",
+      "text": "                                      . .. . .Doporučené.            zdroje\n\nShrnutí a kontrolní otázky\n\n\n\n      • Bump a normal mapping mění normálu pro stínování, nikoli\n         geometrii ani siluetu.\n      • Parallax mapping posouvá souřadnice textury; displacement\n       mapping skutečně mění povrch.\n      • Mikrofacetové PBR propojuje roughness, Fresnelův člen a\n        geometrické maskování v energeticky smysluplném modelu.\n\n       1 Proč musí být normála z mapy převedena z intervalu [0, 1] do\n        [−1, 1]?\n       2 Kdy selže parallax mapping na siluetě objektu?\n\n       3 Proč u kovu obvykle nepoužíváme samostatnou difuzní složku?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-058.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 59,
+      "title": "Doporučené zdroje I",
+      "text": "                                      . .. . .Doporučené.            zdroje\n\nDoporučené zdroje I\n\n\n\n\n\n       [1] Brent Burley.\n          Physically based shading at disney.\n         Siggraph course notes, Walt Disney Animation Studios, 2012.\n        Dostupné z:\n        https://blog.selfshadow.com/publications/s2012-shading-course/.\n\n       [2] Matt Pharr, Wenzel Jakob, and Greg Humphreys.\n          Physically Based Rendering: From Theory to Implementation.\n       MIT Press, Cambridge, MA, 4 edition, 2023.\n        Dostupné z: https://pbr-book.org/4ed/.\n\n       [3] Bruce Walter, Stephen R. Marschner, Hongsong Li, and Kenneth E. Torrance.\n         Microfacet models for refraction through rough surfaces.\n          In Proceedings of the Eurographics Symposium on Rendering, pages 195–206.\n       The Eurographics Association, 2007.\n        Dostupné z: https://doi.org/10.2312/EGWR/EGSR07/195-206.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .    .   .  .     .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .   .   .  .      .     .    .",
+      "image": "assets/page-059.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": [
+        {
+          "url": "https://blog.selfshadow.com/publications/s2012-shading-course/"
+        },
+        {
+          "url": "https://pbr-book.org/4ed/"
+        },
+        {
+          "url": "https://doi.org/10.2312/EGWR/EGSR07/195-206"
+        }
+      ]
+    }
+  ]
+}

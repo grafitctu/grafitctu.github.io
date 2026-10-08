@@ -1,0 +1,707 @@
+{
+  "title": "Měřený vzhled materiálů a BTF",
+  "author": "Radek Richtr",
+  "sourceURL": "https://courses.fit.cvut.cz/BI-PGA/media/lectures/bi-pga-richtr-06-measured-appearance-btf.pdf",
+  "working": false,
+  "lab": "appearance",
+  "labTitle": "Směrová závislost vzhledu",
+  "pages": [
+    {
+      "page": 1,
+      "title": "Programování grafických aplikací měřený vzhled a BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\n\n\n           Programování grafických aplikací\n                měřený vzhled a BTF\n\n\n\n                         Radek Richtr\n\n\n                           Institute of Information Theory and Automation\n                     Academy of Sciences of the Czech Republic\n                                  Prague, Czech Republic\n\n                          August 14, 2026\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-001.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 2,
+      "title": "Outline I",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nOutline I\n\n     1 Od modelu materiálu k měřenému vzhledu\n        Návaznost na P07+\n\n     2 Reprezentace vzhledu\n       BRDF, SVBRDF, BTF a BSSRDF\n\n     3 BRDF\n      BRDF\n\n     4 BTF\n        Textura\n      BTF texturování\n\n     5 DBTF\n        Časově proměnný vzhled\n      BTF + Dynamics\n\n     6 Syntéza textur\n        Syntéza textur\n\n     7 Doporučené zdroje                                                                                                   .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-002.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 3,
+      "title": "Cíle přednášky",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nCíle přednášky\n\n\n\n\n\n   Po absolvování přednášky by měl student umět:\n      • rozlišit analytický model materiálu od měřeného vzhledu;\n      • porovnat BRDF, SVBRDF, BTF, BSSRDF a jejich datové\n         nároky;\n      • vysvětlit vzorkování úhlů a prostorovou parametrizaci BTF;\n      • popsat problém syntézy statických i dynamických textur.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-003.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 4,
+      "title": "Intro",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nIntro\n\n\n\n\n\n      • Velmi rychlý úvod do osvětlení a stínování\n      • Materiál + Textura\n      • Texturování\n      • Základní přehled a ukázka\n      • Dále rozvedeno v xGy předmětech\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-004.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 5,
+      "title": "Co již známe",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nCo již známe\n\n\n\n\n      • Radiance popisuje světlo přenášené podél paprsku.\n      • BRDF mapuje příchozí a odchozí směr na odrazivost povrchu.\n      • Zobrazovací rovnice kombinuje osvětlení, geometrii a materiál.\n      • Analytické modely, například Lambert nebo mikrofacetová\n       BRDF, mají málo parametrů.\n\n\n\n    Tato přednáška se ptá: co dělat, když je skutečný povrch příliš\n     složitý pro jedinou homogenní analytickou BRDF?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-005.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 6,
+      "title": "Tři zdroje variability vzhledu",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTři zdroje variability vzhledu\n\n\n\n\n\n       1 Směrová: vzhled závisí na směru osvětlení a pohledu.\n\n       2 Prostorová: vlastnosti se mění s polohou na povrchu.\n\n       3 Časová: materiál nebo struktura se vyvíjí v čase.\n\n\n\n\n    Volba reprezentace určuje, kterou variabilitu model zachytí a kolik\n    dat potřebuje.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-006.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 7,
+      "title": "Textura parametrizuje materiál",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura parametrizuje materiál\n\n\n\n\n    Textura je obecná funkce prostorových souřadnic, která\n    parametrizuje vlastnost materiálu:\n\n                        θ = θ(u, v).                        (1)\n\n\n      • může určovat base color, roughness, normal, metallic nebo\n          další parametr,\n      • nemění sama o sobě osvětlovací model,\n      • jednotlivé mapy musí mít fyzikálně a barevně správnou\n          interpretaci.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-007.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 8,
+      "title": "Analytický model versus měření",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nAnalytický model versus měření\n\n\n\n\n\n   Analytický model             Měřený vzhled\n     • málo parametrů,               • vysoká věrnost\n     • snadná editace a                  vzorkovaného materiálu,\n        interpolace,                   • velký objem dat,\n     • nemusí zachytit složité          • nutná kalibrace,\n        materiály.                            interpolace a komprese.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-008.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 9,
+      "title": "BRDF: směrová odrazivost v jednom bodě",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF: směrová odrazivost v jednom bodě\n\n\n\n\n\n                                  dLo(x, ωo)\n                   fr(x, ωi, ωo) =                                .            (2)\n                                 Li(x, ωi)|n · ωi| dωi\n\n      • Bod x je pevný; měníme dvojici směrů.\n      • BRDF nezachytí paralaxu, vzájemné stínění ani prostorovou\n         strukturu větší než lokální bod.\n      • Analytickou BRDF popisuje několik parametrů, měřenou\n      BRDF tabulka vzorků.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-009.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 10,
+      "title": "SVBRDF: materiál se mění v ploše",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nSVBRDF: materiál se mění v ploše\n\n\n\n\n\n                            fr = fr(u, v, ωi, ωo).                    (3)\n\n\n      • Parametry BRDF jsou textury definované nad povrchem.\n      • Běžný PBR materiál je praktická nízkorozměrná SVBRDF.\n      • Zachytí prostorově proměnnou barvu a odrazivost, ale obvykle\n        předpokládá lokálně plochý povrch.\n      • Mikrogeometrie je aproximována normálovou či výškovou\n       mapou a roughness.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-010.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 11,
+      "title": "BTF: vzhled textilie a strukturovaných povrchů",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF: vzhled textilie a strukturovaných povrchů\n\n\n\n\n                BTF(u, v, ωi, ωo) →barva pixelu.             (4)\n\n\n      • BTF přímo zaznamenává obrazový vzhled pro polohu a dvojici\n        směrů.\n      • Implicitně obsahuje lokální stíny, masking, paralaxu a\n        vícenásobné odrazy.\n      • Není pouze BRDF uložená do textury.\n      • Cena za věrnost: vysoká dimenze, objem dat a obtížná\n         interpolace.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-011.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 12,
+      "title": "BSSRDF: světlo vystupuje jinde",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBSSRDF: světlo vystupuje jinde\n\n\n\n\n\n   BRDF předpokládá, že světlo vstoupí a vystoupí ve stejném bodě.\n   BSSRDF připouští různé body xi a xo.\n      • důležité pro kůži, vosk, mléko, mramor nebo listy,\n      • modeluje podpovrchový rozptyl,\n      • není totéž co průhlednost ani běžná BTDF.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-012.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 13,
+      "title": "Taxonomie reprezentací",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTaxonomie reprezentací\n\n\n\n\n\n       Model    směry      poloha       nelokální přenos\n      BRDF      ano        pevná             ne\n      SVBRDF   ano      proměnná            ne\n      BTF       ano      proměnná          implicitně\n      BSSRDF    ano     vstup/výstup         ano\n      DBTF      ano   proměnná + čas       implicitně\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-013.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 14,
+      "title": "Měřicí řetězec",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nMěřicí řetězec\n\n\n\n\n\n       1 geometrická a radiometrická kalibrace kamer a světel,\n\n       2  definice množiny směrů osvětlení a pohledu,\n\n       3 snímání v lineárním režimu s kontrolovanou expozicí,\n\n       4  registrace snímků do společných prostorových souřadnic,\n\n       5 odstranění vadných vzorků a normalizace,\n\n       6 komprese a model pro interpolaci chybějících směrů.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-014.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 15,
+      "title": "Interpolace není detail implementace",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nInterpolace není detail implementace\n\n\n\n\n\n      • Měřicí zařízení pokrývá pouze konečnou množinu směrů.\n      • Nejbližší vzorek vytváří skoky při pohybu kamery nebo světla.\n      • Lineární interpolace v úhlech nemusí odpovídat geometrii\n         jednotkové sféry.\n      • Lesklé odlesky vyžadují hustší vzorkování nebo vhodný model\n          laloku.\n      • Chybu je nutné hodnotit ve směrové i prostorové oblasti.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-015.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 16,
+      "title": "Materiál",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nMateriál\n\n\n      • Zatím jsem měli jeden materiál s několika parametry pro jeden\n         objekt.\n      • Co objekty, jejíž jednotlivé části se chovají různě?\n           - látka svatru: bavlna + výšivka\n           - bunda s našivkami z reflexní látky\n           - více druhý vláken (trojhranná, ...)\n           - chameleon nástřik u auta, CD, ...\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-016.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 17,
+      "title": "Materiál",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nMateriál\n\n\n\n\n    Empirické modely\n    Velká část chování, včetně samotného osvětlovacího modelu, má\n    daleko do realistického chování povrchů. Jde o odhad, aproximaci,\n    jen někdy přesnou a správnou.\n\n\n\n\n    Normálová mapa jde spočíst z výškové mapy. (viz. PGA)\n    Enviroment mapa jde nameřit (zjednodušeně).\n    Jak získat spekulární mapu? Ambient occlusion mapu? atd.?\n    Ukázka 0:15, Colossus.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-017.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": [
+        {
+          "url": "https://youtu.be/yOYLzXKU6TA?list=PLV3Us67ZBb6mS0G5lUsHFFb0VxzsQhpNl&t=14"
+        }
+      ]
+    },
+    {
+      "page": 18,
+      "title": "BRDF (obousměrná odrazová funkce)",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF (obousměrná odrazová funkce)\n\n      • Většina světla, která vidíme je odražené.\n      • Barva objektu je dána spektrální charakteristikou světla, které\n        na něj dopadá, ale především vlastnostmi povrchu, zejména\n         tím, jaké vlnové délky v jakém směru odráží.\n      • Obusměrná odrazová funkce BRDF charakterizuje odrazové\n        schopnostmi materiálu v určitém jeho bodě x.\n           - světlo dopadá ve směru ωi a odráží se do směru ωr\n           - BRDF se označuje fr(x, ωr, ωi) a definuje poměr odražené\n         radiance v daném bodě x označení jako dLr(x, ωr) ke vstupní\n         radianci dLi(x, ωi) promítnuté na kolmou plochu\n\n                                   dLr(x, ωr)\n                    fr(x, ωr, ωi) =                                 (5)\n                                 dLi(x, ωi)(ωin)dωi\n\n   Pokud radiance dopadá kolmo na plochu, je tedy přijatý světelný\n    výkon nejsilnější.                                                                                                                   .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-018.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 19,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n      • Měření BRDF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-019.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 20,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n      • http://btf.utia.cas.cz/\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-020.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 21,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n      • http://btf.utia.cas.cz/\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-021.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 22,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n\n\n      • http://btf.utia.cas.cz/\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-022.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 23,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n\n\n      • http://btf.utia.cas.cz/\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-023.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 24,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n\n\n      • http://btf.utia.cas.cz/\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-024.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 25,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-025.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 26,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-026.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 27,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-027.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 28,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-028.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 29,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-029.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 30,
+      "title": "BRDF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBRDF\n\n\n\n\n\n      • Umožňuje realistické chování materiálů.\n      • Různé chování v závisosti na úhlu pohledu a osvětlení.\n      • Nutný základ realistického renderování.\n      • Využívá se v kombinaci s reálěji zaěřenými technikami.\n           - např. enviroment mapy\n      • Dovoluje tedy použít anisotropní povrchy.\n      • Nejhrubější dustatečné meření, tj. 81 x 81 pohledů.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-030.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 31,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n      • Co je to vlastně textura?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-031.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 32,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-032.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 33,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-033.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 34,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-034.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 35,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-035.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 36,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-036.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 37,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-037.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 38,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-038.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 39,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-039.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 40,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-040.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 41,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-041.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 42,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-042.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 43,
+      "title": "Textura",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextura\n\n\n      • Exaktní definice textury neexistuje.\n      • Přesto je množství kritérií, které musí spňovat.\n      • Základní je homogenita ve všech dimenzích.\n      • To, že základní vlastnosti textury se průběžně nemění ji\n        umožňují syntetizovat a zacházet s ní jako s celkem.\n      • Textura tedy není libovolný obrázek napláclý na 3D model.\n\n    Základní vlastnost textury\n\n    Základní vlastností textury je to, že je (více či méně) homogenní.\n    Tj. z jedné její části je možné odhadnout, jak vypadá jiná část.\n    Jinými slovy dostatečný malý kus textury obsahuje včechny\n    frekvence, které se objevují i ve všech dalších částech textury.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-043.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 44,
+      "title": "Spatial homogeneity - random placed universal patch",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nSpatial homogeneity - random placed universal patch\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-044.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 45,
+      "title": "Spatial homogeneity - random placed universal patch",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nSpatial homogeneity - random placed universal patch\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-045.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 46,
+      "title": "Spatial homogeneity - random placed universal patch",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nSpatial homogeneity - random placed universal patch\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-046.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 47,
+      "title": "Spatial homogeneity - random placed universal patch",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nSpatial homogeneity - random placed universal patch\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-047.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 48,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n      • BTF - biderectional texture function.\n      • BRDF pracuje jen s materiálem a jeho chováním nikolik už s\n         texturou.\n      • Přidává další dimenze - u a v, tedy pohyb v samotné textuře.\n        Nejde tedy o měření jediného bodu.\n           - tj. funkce je 6 rozměrná\n           - objem dat se dostává minimálně do řádu několika GB.\n           - 81 × 81 × 512 × 512 × 3B\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-048.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 49,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n      • BTF - biderectional texture function.\n      • BRDF pracuje jen s materiálem a jeho chováním nikoliv už s\n         texturou.\n      • Přidává další dimenze - u a v, tedy pohyb v samotné textuře.\n        Nejde tedy o měření jediného bodu.\n           - tj. funkce je 7 rozměrná\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-049.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 50,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n      • BTF umožňuje naměřit více, než prostý povrch. Ten v\n        důsledku může mít větší povrch než je rozměr samotné\n         textury!\n           - proč?\n      • Povrch objektu nemusí být pouhou výškovou mapou!\n           - × paralax mapping?\n           - × displecement mapping?\n           - × bump mapping?\n      • Principielně je textura zastíněna sama sebou.\n      • Vzhledem k masivní redundanci dat existuje značné množstí\n        kompresních metod.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-050.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 51,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-051.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 52,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-052.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 53,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-053.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 54,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-054.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 55,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-055.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 56,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .    Ukázka\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-056.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": [
+        {
+          "url": "http://ro.utia.cas.cz/?q=demo/btf-modelling-using-3d-car-model"
+        }
+      ]
+    },
+    {
+      "page": 57,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-057.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 58,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-058.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 59,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-059.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 60,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-060.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 61,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-061.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 62,
+      "title": "BTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nBTF\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-062.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 63,
+      "title": "Od BTF k DBTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nOd BTF k DBTF\n\n\n\n\n\n           DBTF(u, v, ωi, ωo, t) →barva pixelu v čase t.       (6)\n\n\n      • Čas může popisovat deformaci, stárnutí, růst, vysychání nebo\n       změnu osvětlení.\n      • Data musí rozlišit změnu materiálu od pohybu a změny\n         expozice.\n      • Přímé uložení všech rozměrů je obvykle nepraktické; nutná je\n        komprese nebo generativní model.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-063.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 64,
+      "title": "Co musí časový model zachovat",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nCo musí časový model zachovat\n\n\n\n\n\n      • prostorovou koherenci: struktura nesmí mezi snímky náhodně\n         přeskakovat,\n      • směrovou koherenci: změna pohledu a světla musí být plynulá,\n      • materiálovou identitu: stejný proces má působit konzistentně\n        na celé sekvenci,\n      • kauzální interpretaci parametrů, pokud má být model\n          editovatelný.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-064.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 65,
+      "title": "DBTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nDBTF\n\n\n      • 8 (9) rozměrný model\n      • Dynamická textura zachycuje vývoj jen v čase\n      • BTF Zachycuje jen chování při změní pohledu a osvětlení\n      • Zachycení míkrostínů v textuře bez nutnosti modelování 3D\n         objektu\n      • Distorze při ostrých úhlech\n      • Změna struktury vs. mix DT\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-065.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 66,
+      "title": "DBTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nDBTF\n\n\n\n\n\n      • Sestavený Povrch\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-066.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 67,
+      "title": "DBTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nDBTF\n\n\n      • Špatný zoom :-)\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-067.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 68,
+      "title": "DBTF",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nDBTF\n\n\n\n\n\n      • Změna osvětlení\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-068.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 69,
+      "title": "DBTF - Změna osvětlení",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nDBTF - Změna osvětlení\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-069.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 70,
+      "title": "DBTF - Změna osvětlení",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nDBTF - Změna osvětlení\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-070.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 71,
+      "title": "Textury",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nTextury\n\n\n\n      • Pokud chceme použít naměřenou texturu na libovolně velkou\n         plochu, kolik dat potřebujeme?\n           - konečný vzorek nemůže přímo pokrýt plochu libovolné\n          velikosti\n      • Bezešvé textury (tileable)\n           - jejich protilehlé okraje na sebe navazují\n           - snadné u pravidelných motivů (dlaždice, látka), obtížnější u\n         nepravidelných struktur (oblaka, kovy, tráva)\n      • Syntéza textur\n           - pravděpodobnostní model (kouř, oheň, voda,... )\n           - vzorkování, získávání frekvencí\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-071.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 72,
+      "title": "Syntéza",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nSyntéza\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-072.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 73,
+      "title": "Syntéza",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nSyntéza\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-073.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": [
+        {
+          "url": "http://ro.utia.cas.cz/?q=demo/texture-tiling-and-patching-novel-path-search-algorithm-quick-and-realistic-texture-synthesis"
+        }
+      ]
+    },
+    {
+      "page": 74,
+      "title": "Shrnutí a kontrolní otázky",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nShrnutí a kontrolní otázky\n\n\n\n      • BRDF modeluje směrovou odrazivost v bodě; SVBRDF ji\n        mění s polohou.\n      • BTF zachycuje prostorově a směrově proměnný vzhled včetně\n          stínění a paralaxy mikrostruktury.\n      • Vyšší věrnost měřeného modelu znamená náročnější snímání,\n         ukládání a rekonstrukci.\n\n       1 Které jevy může BTF reprezentovat lépe než SVBRDF?\n\n       2 Proč nelze tabulku BTF ukládat ve všech možných směrech\n          spojitě?\n\n       3 Co musí zachovat syntéza dynamické textury kromě vzhledu\n         jednotlivých snímků?\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-074.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": []
+    },
+    {
+      "page": 75,
+      "title": "Doporučené zdroje I",
+      "text": "Outline. .. .. .   Od. .. .. modelu.. .     materiálu k měřenému vzhledu  Reprezentace. .. .. .. .. .. .. .   vzhledu BRDF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . BTF. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..\n\nDoporučené zdroje I\n\n\n\n\n\n       [1]  Institute of Information Theory and Automation, CAS.\n          Bidirectional texture function database.\n         Online databáze a demonstrace měřených BTF materiálů.\n        Dostupné z: http://btf.utia.cas.cz/; citováno 12. 8. 2026.\n\n       [2] Matt Pharr, Wenzel Jakob, and Greg Humphreys.\n          Physically Based Rendering: From Theory to Implementation.\n       MIT Press, Cambridge, MA, 4 edition, 2023.\n        Dostupné z: https://pbr-book.org/4ed/.\n\n       [3] Bruce Walter, Stephen R. Marschner, Hongsong Li, and Kenneth E. Torrance.\n         Microfacet models for refraction through rough surfaces.\n          In Proceedings of the Eurographics Symposium on Rendering, pages 195–206.\n       The Eurographics Association, 2007.\n        Dostupné z: https://doi.org/10.2312/EGWR/EGSR07/195-206.\n\n\n\n\n\n                                                                                                                                                                                                    .      .    .    .   .   .   .    .   .   .   .    .   .   .   .        .        .      .    .     .\n\n                                                                                                                                                                                               .    .      .     .   .   .   .    .   .   .   .    .   .   .   .    .       .          .     .    .",
+      "image": "assets/page-075.svg",
+      "width": 362.8299865722656,
+      "height": 272.1300048828125,
+      "links": [
+        {
+          "url": "http://btf.utia.cas.cz/"
+        },
+        {
+          "url": "https://pbr-book.org/4ed/"
+        },
+        {
+          "url": "https://doi.org/10.2312/EGWR/EGSR07/195-206"
+        }
+      ]
+    }
+  ]
+}

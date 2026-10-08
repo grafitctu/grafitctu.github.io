@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Blender a programování pluginů v Pythonu · Jiří Chludil">
+  <title>PGA · 02 · Blender a programování pluginů v Pythonu</title>
+  <script>
+    (() => {
+      let saved;
+      try { saved = localStorage.getItem('pga-chludil-theme'); } catch {}
+      document.documentElement.dataset.theme = saved === 'dark' || saved === 'light'
+        ? saved : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    })();
+  </script>
+  <link rel="stylesheet" href="presentation.css">
+  <script src="presentation.js" defer></script><script src="web-extras.js" defer></script><script src="lab.js" defer></script>
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+</style>
+</head>
+<body class="grafit-toolbar-return">
+  <header class="toolbar">
+<a id="grafit-lecture-return" class="grafit-lecture-return" href="../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+    <a class="brand" id="grafit-course-link" href="../" aria-label="Přehled přednášek PGA">PGA <span>/ 02</span></a>
+    <span id="chapter">Úvod</span>
+    <nav aria-label="Nástroje prezentace">
+      <button id="contents" aria-haspopup="dialog">Obsah</button>
+      <a class="pdf-link" href="original.pdf">PDF</a><button id="print-button">Tisk</button><button id="text-toggle" aria-pressed="false">Text</button><button id="notes-toggle" aria-haspopup="dialog">Poznámky</button><button id="lab-toggle" aria-haspopup="dialog">Ukázka</button><button id="reading" aria-pressed="false">Čtení</button>
+      <button id="theme" aria-label="Tmavý režim" aria-pressed="false" title="Tmavý režim">◐</button>
+      <button id="fullscreen" aria-label="Celá obrazovka (F)">⛶ <span>Celá obrazovka</span></button>
+    </nav>
+  </header>
+  <main id="deck" aria-label="Blender a programování pluginů v Pythonu">
+    <article class="slide source-slide" id="slide-1" data-section="3D grafika - Blender: Úvod, metodika, využití" aria-label="Snímek 1: 3D grafika - Blender: Úvod, metodika, využití jazyka Python"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-001.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-001.svg" aria-label="Zvětšit snímek 1: 3D grafika - Blender: Úvod, metodika, využití jazyka Python"></button></div></figure><pre class="source-transcript">    Programování grafických aplikací (BI-PGA), Přednáška č. 2
+3D grafika - Blender: Úvod, metodika, využití
+               jazyka Python
+
+
+                                  Jiří Chludil
+
+
+                          Fakulta informačních technologií
+                      České vysoké učení technické v Praze
+                   https://courses.fit.cvut.cz/BI-PGA/
+
+
+
+
+
+                  ZS 2024/2025
+
+
+
+      Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          1 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=1">PDF, strana 1 ↗</a></p></article>
+<article class="slide source-slide" id="slide-2" data-section="Ikony 3D" aria-label="Snímek 2: Ikony 3D"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-002.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-002.svg" aria-label="Zvětšit snímek 2: Ikony 3D"></button></div></figure><pre class="source-transcript">Ikony 3D
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          2 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=2">PDF, strana 2 ↗</a></p></article>
+<article class="slide source-slide" id="slide-3" data-section="Historie rozšiřování aplikací pomocí pluginů" aria-label="Snímek 3: Historie rozšiřování aplikací pomocí pluginů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-003.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-003.svg" aria-label="Zvětšit snímek 3: Historie rozšiřování aplikací pomocí pluginů"></button></div></figure><pre class="source-transcript">Historie rozšiřování aplikací pomocí pluginů
+
+
+
+
+3D Studio
+     1990 - Verze 1 - 3D Studio pod OS MS-DOS
+     1996 - Verze 1 - 3D Studio Max pod OS windows
+     2005 - Akvizice Autodeskem
+     2007-16 - Verze 2008-2017
+     2006 - podpora pluginů
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          3 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=3">PDF, strana 3 ↗</a></p></article>
+<article class="slide source-slide" id="slide-4" data-section="Historie rozšiřování aplikací pomocí pluginů" aria-label="Snímek 4: Historie rozšiřování aplikací pomocí pluginů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-004.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-004.svg" aria-label="Zvětšit snímek 4: Historie rozšiřování aplikací pomocí pluginů"></button></div></figure><pre class="source-transcript">Historie rozšiřování aplikací pomocí pluginů
+
+ Blender I
+     1994 - Verze 1.0 - začal vývoj ve studiu NeoGeo
+     1999 - Verze 1.6x - release pro Windows, PPC
+     2000 - Verze 2.1 - podpora Pythonu
+     2001 - Verze 2.2x - release pro MacOs
+     2002 - Verze 2.25 - vydán jako Open Source
+     2008 - Verze 2.48 - Python skripty
+     2009-11 - Verze 2.5x - Python API
+     2012 - Verze 2.5x - Python API (upgrade)
+     2013 - Verze 2.5x - Python API (nodes. mesh tools)
+     2016 - Verze 2.80 - Změny na API (bez zpětné kompatibility)
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          4 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=4">PDF, strana 4 ↗</a></p></article>
+<article class="slide source-slide" id="slide-5" data-section="Historie rozšiřování aplikací pomocí pluginů" aria-label="Snímek 5: Historie rozšiřování aplikací pomocí pluginů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-005.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-005.svg" aria-label="Zvětšit snímek 5: Historie rozšiřování aplikací pomocí pluginů"></button></div></figure><pre class="source-transcript">Historie rozšiřování aplikací pomocí pluginů
+
+
+
+
+ Blender II
+     2020 - Verze 2.83 - Podpora VR
+     2021 - Verze 2.92 - Geometry Nodes
+     2021 - Verze 3.0
+     2023 - Verze 4.0
+     2024 - Verze 4.2 - Současnost
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          5 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=5">PDF, strana 5 ↗</a></p></article>
+<article class="slide source-slide" id="slide-6" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 6: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-006.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-006.svg" aria-label="Zvětšit snímek 6: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+
+    Typ modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          6 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=6">PDF, strana 6 ↗</a></p></article>
+<article class="slide source-slide" id="slide-7" data-section="Typy modulů u Blenderu I" aria-label="Snímek 7: Typy modulů u Blenderu I"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-007.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-007.svg" aria-label="Zvětšit snímek 7: Typy modulů u Blenderu I"></button></div></figure><pre class="source-transcript">Typy modulů u Blenderu I
+
+     Vytváření geometrie a objektů
+       ▶Geometrie (Mesh)
+       ▶Křivky
+       ▶Objekty
+       ▶Generování složitějších struktur
+     Manipulace s objekty
+       ▶Modifikátory
+       ▶Generování
+      ▶Deformace
+       ▶Simulace
+     Import/Export
+      ▶Formáty
+     ▶API
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          7 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=7">PDF, strana 7 ↗</a></p></article>
+<article class="slide source-slide" id="slide-8" data-section="Typy modulů u Blenderu II" aria-label="Snímek 8: Typy modulů u Blenderu II"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-008.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-008.svg" aria-label="Zvětšit snímek 8: Typy modulů u Blenderu II"></button></div></figure><pre class="source-transcript">Typy modulů u Blenderu II
+
+     Materiály a textury
+       ▶Materiály
+      ▶Mapování
+       ▶Textury
+     Systém
+     ▶3D zobrazení
+      ▶Text editor
+      ▶Témata
+     Rendering
+       ▶Renderer
+      ▶Node
+    Animace
+    Game engine
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          8 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=8">PDF, strana 8 ↗</a></p></article>
+<article class="slide source-slide" id="slide-9" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 9: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-009.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-009.svg" aria-label="Zvětšit snímek 9: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+
+    Typ modulu
+    Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          9 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=9">PDF, strana 9 ↗</a></p></article>
+<article class="slide source-slide" id="slide-10" data-section="Nastavení prostředků (konfigurace)" aria-label="Snímek 10: Nastavení prostředků (konfigurace)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-010.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-010.svg" aria-label="Zvětšit snímek 10: Nastavení prostředků (konfigurace)"></button></div></figure><pre class="source-transcript">Nastavení prostředků (konfigurace)
+
+
+ bl_info = {
+     &quot;name&quot;: &quot;House&quot;,
+     &quot;description&quot;: &quot;Klasický domeček.&quot;,
+     &quot;author&quot;: &quot;Jiří Chludil&quot;,
+     &quot;version&quot;: (1, 0, 0),
+     &quot;blender&quot;: (2, 77, 0),
+     &quot;location&quot;: &quot;View3D &gt; Add &gt; Mesh &gt; House&quot;,
+     &quot;warning&quot;: &quot;&quot;,
+     &quot;wiki_url&quot;: &quot;http://adresa .addonu&quot;,
+     &quot;tracker_url&quot;: &quot;http://developer.blender.org...,
+     &quot;category&quot;: &quot;Add Mesh&quot;
+ }
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         10 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=10">PDF, strana 10 ↗</a></p></article>
+<article class="slide source-slide" id="slide-11" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 11: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-011.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-011.svg" aria-label="Zvětšit snímek 11: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+
+    Typ modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         11 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=11">PDF, strana 11 ↗</a></p></article>
+<article class="slide source-slide" id="slide-12" data-section="Registrace I" aria-label="Snímek 12: Registrace I"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-012.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-012.svg" aria-label="Zvětšit snímek 12: Registrace I"></button></div></figure><pre class="source-transcript">Registrace I
+
+def menu_func(self, context):
+    self.layout.operator(MyHouse.bl_idname)
+# store keymaps addon_keymaps = []
+
+def register():
+    bpy.utils.register_module(__name__)
+    bpy.types.INFO_MT_mesh_add.append(menu_func)
+
+def unregister():
+    bpy.utils.unregister_module(__name__)
+    bpy.types.INFO_MT_mesh_add.remove(menu_func)
+
+if __name__ == &quot;__main__&quot;:
+    register()
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         12 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=12">PDF, strana 12 ↗</a></p></article>
+<article class="slide source-slide" id="slide-13" data-section="Registrace II" aria-label="Snímek 13: Registrace II"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-013.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-013.svg" aria-label="Zvětšit snímek 13: Registrace II"></button></div></figure><pre class="source-transcript">Registrace II
+v2.79
+
+def register():
+    bpy.utils.register_module(__name__)
+
+def unregister():
+    bpy.utils.unregister_module(__name__)
+
+v2.80
+
+classes = (AClass, BClass, CClass )
+
+def register():
+    from bpy.utils import register_class
+    for cls in classes:
+        register_class(cls)
+
+def unregister():
+    from bpy.utils import unregister_class
+    for cls in reversed(classes):
+        unregister_class(cls)
+
+)
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         13 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=13">PDF, strana 13 ↗</a></p></article>
+<article class="slide source-slide" id="slide-14" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 14: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-014.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-014.svg" aria-label="Zvětšit snímek 14: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+
+    Typ modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         14 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=14">PDF, strana 14 ↗</a></p></article>
+<article class="slide source-slide" id="slide-15" data-section="Uživatelské rozhraní modulu" aria-label="Snímek 15: Uživatelské rozhraní modulu"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-015.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-015.svg" aria-label="Zvětšit snímek 15: Uživatelské rozhraní modulu"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu
+    Základní typy
+      ▶BoolProperty
+      ▶FloatProperty
+      ▶IntProperty
+      ▶StringProperty
+      ▶EnumProperty
+    Vektory
+      ▶BoolVectorProperty
+      ▶FloatVectorProperty
+       ▶IntVectorPropertyty
+    Kolekce
+       ▶CollectionProperty
+    Strukturální nástroje
+      ▶PointerProperty
+      ▶RemoveProperty
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         15 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=15">PDF, strana 15 ↗</a></p></article>
+<article class="slide source-slide" id="slide-16" data-section="Uživatelské rozhraní modulu - Minimální GUI I" aria-label="Snímek 16: Uživatelské rozhraní modulu - Minimální GUI I"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-016.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-016.svg" aria-label="Zvětšit snímek 16: Uživatelské rozhraní modulu - Minimální GUI I"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu - Minimální GUI I
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         16 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=16">PDF, strana 16 ↗</a></p></article>
+<article class="slide source-slide" id="slide-17" data-section="Uživatelské rozhraní modulu - Minimální GUI I" aria-label="Snímek 17: Uživatelské rozhraní modulu - Minimální GUI II"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-017.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-017.svg" aria-label="Zvětšit snímek 17: Uživatelské rozhraní modulu - Minimální GUI II"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu - Minimální GUI II
+
+
+roof = bpy.props.FloatProperty(
+    name = ’Strecha’,
+    description = ’vyska strechy’,
+    default = 1, min = 0.0, max=2.0, step=0.1
+    )
+
+size = bpy.props.FloatVectorProperty(
+    name = ’Size’,
+    description = ’Size’,
+    subtype = ’XYZ’,
+    default=(1.0, 1.0, 1.0),
+    )
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         17 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=17">PDF, strana 17 ↗</a></p></article>
+<article class="slide source-slide" id="slide-18" data-section="Uživatelské rozhraní modulu - Pokročilé GUI I" aria-label="Snímek 18: Uživatelské rozhraní modulu - Pokročilé GUI II"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-018.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-018.svg" aria-label="Zvětšit snímek 18: Uživatelské rozhraní modulu - Pokročilé GUI II"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu - Pokročilé GUI II
+
+UILayout
+    Formátování
+      ▶column
+      ▶column_flow
+     ▶row
+       ▶grid_flow
+     ▶box
+       ▶split
+    Elementy gui
+      ▶prop
+       ▶label
+       ▶operator
+     ▶menu
+       ▶separator
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         18 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=18">PDF, strana 18 ↗</a></p></article>
+<article class="slide source-slide" id="slide-19" data-section="Uživatelské rozhraní modulu - Pokročilé GUI I" aria-label="Snímek 19: Uživatelské rozhraní modulu - Pokročilé GUI II"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-019.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-019.svg" aria-label="Zvětšit snímek 19: Uživatelské rozhraní modulu - Pokročilé GUI II"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu - Pokročilé GUI II
+
+
+class ExamplePanel(bpy.types.Panel):
+    bl_idname = &quot;myExample&quot;
+    bl_label = &quot;Můj Panel&quot;
+    bl_space_type = ’VIEW_3D’
+    bl_region_type = ’TOOL_PROPS’
+
+    def draw(self, context):
+        row = layout.row(align=True)
+        row.prop(api, &quot;address&quot;)
+        row.prop(api, &quot;key&quot;)
+        row.operator(&quot;info.clear&quot;)
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         19 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=19">PDF, strana 19 ↗</a></p></article>
+<article class="slide source-slide" id="slide-20" data-section="Uživatelské rozhraní modulu -Pokročilé GUI II" aria-label="Snímek 20: Uživatelské rozhraní modulu -Pokročilé GUI III"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-020.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-020.svg" aria-label="Zvětšit snímek 20: Uživatelské rozhraní modulu -Pokročilé GUI III"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu -Pokročilé GUI III
+
+
+
+
+class ClearInfo(bpy.types.Operator):
+    bl_idname = ’info.clear’
+    bl_label = ’Název tlačítka’
+
+    def execute(self, context):
+        # akce tlačítka
+        return {’FINISHED’}
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         20 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=20">PDF, strana 20 ↗</a></p></article>
+<article class="slide source-slide" id="slide-21" data-section="Uživatelské rozhraní modulu -Pokročilé GUI IV" aria-label="Snímek 21: Uživatelské rozhraní modulu -Pokročilé GUI IV"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-021.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-021.svg" aria-label="Zvětšit snímek 21: Uživatelské rozhraní modulu -Pokročilé GUI IV"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu -Pokročilé GUI IV
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         21 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=21">PDF, strana 21 ↗</a></p></article>
+<article class="slide source-slide" id="slide-22" data-section="Uživatelské rozhraní modulu - Pokročilé GUI I" aria-label="Snímek 22: Uživatelské rozhraní modulu - Pokročilé GUI IV"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-022.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-022.svg" aria-label="Zvětšit snímek 22: Uživatelské rozhraní modulu - Pokročilé GUI IV"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu - Pokročilé GUI IV
+
+def draw_item(self, context, layout, data, item, icon,
+active_data, active_propname, index):
+    if self.layout_type in {’DEFAULT’, ’COMPACT’}:
+        box = layout.box()
+        row= box.split(percentage=0.8)
+        col1 = row.column()
+        col2 = row.column()
+        row1_split = col1.split(percentage=0.7,
+align=True)
+        row1_col1 = row1_split.column()
+        row1_col2 = row1_split.column()
+        row2_split = col1.split(percentage=0.5)
+        row2_col1 = row2_split.column()
+        row2_col2 = row2_split.column()
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         22 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=22">PDF, strana 22 ↗</a></p></article>
+<article class="slide source-slide" id="slide-23" data-section="Uživatelské rozhraní modulu - Pokročilé GUI I" aria-label="Snímek 23: Uživatelské rozhraní modulu - Pokročilé GUI IV"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-023.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-023.svg" aria-label="Zvětšit snímek 23: Uživatelské rozhraní modulu - Pokročilé GUI IV"></button></div></figure><pre class="source-transcript">Uživatelské rozhraní modulu - Pokročilé GUI IV
+
+        row1_col1.label(item.name)
+        row2_col1.label(&quot;Version: &quot;+str(item.version))
+        row1_col2.label(item.format)
+        row2_col2.label(&quot;Status: &quot;+str(item.status))
+        load = col2.operator(&quot;connector.load&quot;)
+        load.item.name = item.name
+        load.item.id = item.id
+        load.item.version = item.version
+        load.item.format = item.format
+        load.item.model_id = item.model_id
+        load.item.model_vers = item.model_vers
+
+    layout.template_list(&quot;FileList&quot;, &quot;&quot;,
+scene.prop_group_files, &quot;coll&quot;, scene.prop_group_files,
+&quot;index&quot;, rows=5, maxrows=5, columns=3, type=’DEFAULT’)
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         23 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=23">PDF, strana 23 ↗</a></p></article>
+<article class="slide source-slide" id="slide-24" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 24: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-024.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-024.svg" aria-label="Zvětšit snímek 24: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+
+    Typ modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         24 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=24">PDF, strana 24 ↗</a></p></article>
+<article class="slide source-slide" id="slide-25" data-section="Použité matematické a grafické funkce" aria-label="Snímek 25: Použité matematické a grafické funkce"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-025.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-025.svg" aria-label="Zvětšit snímek 25: Použité matematické a grafické funkce"></button></div></figure><pre class="source-transcript">Použité matematické a grafické funkce
+
+    math
+     mathutils
+      ▶Matematické typy (vektor, matice, barva, atd)
+      ▶Operace nad vektory a maticemi (rotace, determinat, atd.)
+       ▶interpolátory
+      ▶stromové struktury
+    SciPy
+   NumPy
+Ostatní
+     request
+     json
+    time
+    random
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         25 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=25">PDF, strana 25 ↗</a></p></article>
+<article class="slide source-slide" id="slide-26" data-section="Co je třeba řešit u zásuvných modulů" aria-label="Snímek 26: Co je třeba řešit u zásuvných modulů"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-026.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-026.svg" aria-label="Zvětšit snímek 26: Co je třeba řešit u zásuvných modulů"></button></div></figure><pre class="source-transcript">Co je třeba řešit u zásuvných modulů
+
+
+
+
+    Typ modulu
+     Nastavení prostředků (konfigurace)
+     Registrace
+     Uživatelské rozhraní modulu
+     Použité matematické a grafické funkce
+    API rozšiřované aplikace
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         26 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=26">PDF, strana 26 ↗</a></p></article>
+<article class="slide source-slide" id="slide-27" data-section="API rozšiřované aplikace" aria-label="Snímek 27: API rozšiřované aplikace"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-027.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-027.svg" aria-label="Zvětšit snímek 27: API rozšiřované aplikace"></button></div></figure><pre class="source-transcript">API rozšiřované aplikace
+
+     Context Access (bpy.context)
+       ▶režimy Blenderu a informace o scéně
+       ▶informace o výbětu
+       ▶nastavení Blenderu
+    Data Access (bpy.data)
+       ▶přístup k datům
+        ▶bpy.data.meshes[&quot;Cube&quot;]
+     Operators (bpy.ops)
+       ▶volání funkcí blenderu
+       ▶bpy.ops.mesh.subdivide(number_cuts=3, smoothness=0.5)
+     Types (bpy.types)
+       ▶struktury elementů scény
+       ▶konstanty
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         27 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=27">PDF, strana 27 ↗</a></p></article>
+<article class="slide source-slide" id="slide-28" data-section="API rozšiřované aplikace" aria-label="Snímek 28: API rozšiřované aplikace"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-028.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-028.svg" aria-label="Zvětšit snímek 28: API rozšiřované aplikace"></button></div></figure><pre class="source-transcript">API rozšiřované aplikace
+
+      Utilities (bpy.utils)
+      ▶pomocné fukce
+        ▶registrace modulů
+       ▶preview - bpy.utils submodule (bpy.utils.previews)
+     Path Utilities (bpy.path)
+       ▶správa adresářové struktury v Blenderu
+     Application Data (bpy.app)
+        ▶aplikační nastavení
+        ▶události - Application Handlers (bpy.app.handlers)
+        ▶lokalizace - Application Translations (bpy.app.translations)
+     Property Definitions (bpy.props)
+     ▶UI (bool, int float, enum, collection, vector)
+      ▶management parametrů
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         28 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=28">PDF, strana 28 ↗</a></p></article>
+<article class="slide source-slide" id="slide-29" data-section="API rozšiřované aplikace" aria-label="Snímek 29: API rozšiřované aplikace"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-029.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-029.svg" aria-label="Zvětšit snímek 29: API rozšiřované aplikace"></button></div></figure><pre class="source-transcript">API rozšiřované aplikace
+
+ from bpy.props import *
+     def create_mesh_object(context, verts, edges,
+ faces, name):
+     # Vytvoření nové a prázdné mesh
+     mesh = bpy.data.meshes.new(name)
+     # konfigurace meshe prostřednictvím
+ verts/edges/faces.
+     mesh.from_pydata(verts, edges, faces)
+     # Aktualizace mesh.
+     mesh.update()
+     from bpy_extras import object_utils
+     return object_utils.object_data_add(context, mesh,
+ operator=None)
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         29 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=29">PDF, strana 29 ↗</a></p></article>
+<article class="slide source-slide" id="slide-30" data-section="Příklad" aria-label="Snímek 30: Příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-030.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-030.svg" aria-label="Zvětšit snímek 30: Příklad"></button></div></figure><pre class="source-transcript">Příklad
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         30 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=30">PDF, strana 30 ↗</a></p></article>
+<article class="slide source-slide" id="slide-31" data-section="Příklad" aria-label="Snímek 31: Příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-031.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-031.svg" aria-label="Zvětšit snímek 31: Příklad"></button></div></figure><pre class="source-transcript">Příklad
+
+
+
+
+ def add_house(size = (1. ,1. ,1.), strecha = 1):
+     verts = []
+     edges = []
+     faces = []
+
+     size_x = size[0] / 2.0
+     size_y = size[1] / 2.0
+     size_z = size[2] / 2.0
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         31 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=31">PDF, strana 31 ↗</a></p></article>
+<article class="slide source-slide" id="slide-32" data-section="Příklad" aria-label="Snímek 32: Příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-032.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-032.svg" aria-label="Zvětšit snímek 32: Příklad"></button></div></figure><pre class="source-transcript">Příklad
+
+
+
+     verts.append((-size_x, -size_y, -size_z))
+     verts.append(( size_x, -size_y, -size_z))
+     verts.append(( size_x, size_y, -size_z))
+     verts.append((-size_x, size_y, -size_z))
+     verts.append((-size_x, -size_y, size_z))
+     verts.append(( size_x, -size_y, size_z))
+     verts.append(( size_x, size_y, size_z))
+     verts.append((-size_x, size_y, size_z))
+     verts.append((-size_x, 0, size_z+strecha))
+     verts.append(( size_x, 0, size_z+strecha))
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         32 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=32">PDF, strana 32 ↗</a></p></article>
+<article class="slide source-slide" id="slide-33" data-section="Příklad" aria-label="Snímek 33: Příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-033.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-033.svg" aria-label="Zvětšit snímek 33: Příklad"></button></div></figure><pre class="source-transcript">Příklad
+
+
+     faces.append([0,1,2,3])
+     faces.append([0,1,5,4])
+     faces.append([1,2,6,5])
+     faces.append([2,3,7,6])
+     faces.append([3,0,4,7])
+
+     faces.append([4,5,9,8])
+     faces.append([6,7,8,9])
+     faces.append([5,6,8])
+     faces.append([4,7,9])
+     return verts, edges, faces
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         33 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=33">PDF, strana 33 ↗</a></p></article>
+<article class="slide source-slide" id="slide-34" data-section="Vytváření geometrie a objektů - Geometrie (Me" aria-label="Snímek 34: Vytváření geometrie a objektů - Geometrie (Mesh)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-034.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-034.svg" aria-label="Zvětšit snímek 34: Vytváření geometrie a objektů - Geometrie (Mesh)"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Geometrie (Mesh)
+
+ Základem je objekt Mesh
+     Základní getry
+        ▶vertices, edges, loops polygons, skin_vertices
+        ▶total_vert_sel, total_edge_sel, total_face_sel
+       ▶is_editmode
+       ▶shape_keys
+     Vytvoření
+       ▶from_pydata
+     Manipulace
+       ▶transform
+     Validace a aktualizace
+        ▶validate
+      ▶update
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         34 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=34">PDF, strana 34 ↗</a></p></article>
+<article class="slide source-slide" id="slide-35" data-section="Vytváření geometrie a objektů - Geometrie (Me" aria-label="Snímek 35: Vytváření geometrie a objektů - Geometrie (Mesh)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-035.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-035.svg" aria-label="Zvětšit snímek 35: Vytváření geometrie a objektů - Geometrie (Mesh)"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Geometrie (Mesh)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         35 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=35">PDF, strana 35 ↗</a></p></article>
+<article class="slide source-slide" id="slide-36" data-section="Vytváření geometrie a objektů - Geometrie (Me" aria-label="Snímek 36: Vytváření geometrie a objektů - Geometrie (Mesh)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-036.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-036.svg" aria-label="Zvětšit snímek 36: Vytváření geometrie a objektů - Geometrie (Mesh)"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Geometrie (Mesh)
+
+
+
+     Nastavení zobrazení
+       ▶show_edges, show_faces
+      ▶show_edge_seams
+       ▶show_normal_vertex, show_normal_face
+       ▶show_weight
+     Výpočty spojení a rozdělení
+       ▶calc_normals
+        ▶calc_normals_split
+       ▶calc_smooth_groups
+        ▶free_normals_split
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         36 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=36">PDF, strana 36 ↗</a></p></article>
+<article class="slide source-slide" id="slide-37" data-section="Vytváření geometrie a objektů - Geometrie (Me" aria-label="Snímek 37: Vytváření geometrie a objektů - Geometrie (Mesh)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-037.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-037.svg" aria-label="Zvětšit snímek 37: Vytváření geometrie a objektů - Geometrie (Mesh)"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Geometrie (Mesh)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         37 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=37">PDF, strana 37 ↗</a></p></article>
+<article class="slide source-slide" id="slide-38" data-section="Vytváření geometrie a objektů - Křivky" aria-label="Snímek 38: Vytváření geometrie a objektů - Křivky"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-038.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-038.svg" aria-label="Zvětšit snímek 38: Vytváření geometrie a objektů - Křivky"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Křivky
+
+ Základem je objekt Curve
+     Manipulace
+        ▶primitive_bezier_circle_add, primitive_bezier_curve_add
+         (obdobně pro NURBS)
+        ▶duplicate, extrude, subdivide
+        ▶delete, separate, split
+       ▶make_segment,
+       ▶radius_set
+     Výběry
+        ▶de_select_first, de_select_last, select_previous, select_next
+      ▶hide
+        ▶select_all, select_linked, select_row
+       ▶select_random
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         38 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=38">PDF, strana 38 ↗</a></p></article>
+<article class="slide source-slide" id="slide-39" data-section="Vytváření geometrie a objektů - Křivky" aria-label="Snímek 39: Vytváření geometrie a objektů - Křivky"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-039.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-039.svg" aria-label="Zvětšit snímek 39: Vytváření geometrie a objektů - Křivky"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Křivky
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         39 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=39">PDF, strana 39 ↗</a></p></article>
+<article class="slide source-slide" id="slide-40" data-section="Vytváření geometrie a objektů - Křivky příkla" aria-label="Snímek 40: Vytváření geometrie a objektů - Křivky příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-040.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-040.svg" aria-label="Zvětšit snímek 40: Vytváření geometrie a objektů - Křivky příklad"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Křivky příklad
+
+
+ bl_info = {
+     &quot;name&quot;: &quot;Curly Curves&quot;,
+     &quot;description&quot;: &quot;Zjednodušený příklad&quot;,
+     &quot;author&quot;: &quot;Cmomoney&quot;,
+     &quot;version&quot;: (1, 0, 0),
+     &quot;blender&quot;: (2, 69, 0),
+     &quot;location&quot;: &quot;View3D &gt; Add &gt; Curve &gt; Curly Curve&quot;,
+     &quot;warning&quot;: &quot;&quot;,
+     &quot;wiki_url&quot;: &quot;http://adresa .addonu&quot;,
+     &quot;tracker_url&quot;:
+ &quot;https://projects.blender.org/tracker/index.php?func=deta
+     &quot;category&quot;: &quot;Add Curve&quot;
+ }
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         40 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=40">PDF, strana 40 ↗</a></p></article>
+<article class="slide source-slide" id="slide-41" data-section="Vytváření geometrie a objektů - Křivky příkla" aria-label="Snímek 41: Vytváření geometrie a objektů - Křivky příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-041.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-041.svg" aria-label="Zvětšit snímek 41: Vytváření geometrie a objektů - Křivky příklad"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Křivky příklad
+
+
+
+
+
+ import bpy
+ from bpy.types import Operator
+ from bpy.props import *
+ from bpy_extras.object_utils import AddObjectHelper,
+ object_data_add
+ from mathutils import Vector
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         41 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=41">PDF, strana 41 ↗</a></p></article>
+<article class="slide source-slide" id="slide-42" data-section="Vytváření geometrie a objektů - Křivky příkla" aria-label="Snímek 42: Vytváření geometrie a objektů - Křivky příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-042.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-042.svg" aria-label="Zvětšit snímek 42: Vytváření geometrie a objektů - Křivky příklad"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Křivky příklad
+
+
+
+
+ def add_type(self, context):
+     s_x = self.scale_x
+     s_y = self.scale_y
+     verts = [[-0.71753 * s_x, -0.087 * s_y, 0,...]]
+     lhan = [[(-0.818 * s_x, -0.143 * s_y, 0), ...)]]
+     rhan = [[(-0.616 * s_x, -0.032 * s_y, 0), ...]]
+     make_curve(self, context, verts, lhan, rhan)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         42 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=42">PDF, strana 42 ↗</a></p></article>
+<article class="slide source-slide" id="slide-43" data-section="Vytváření geometrie a objektů - Křivky příkla" aria-label="Snímek 43: Vytváření geometrie a objektů - Křivky příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-043.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-043.svg" aria-label="Zvětšit snímek 43: Vytváření geometrie a objektů - Křivky příklad"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Křivky příklad
+
+
+
+
+ def make_curve(self, context, vs, lh, rh):
+     scale_x = self.scale_x
+     scale_y = self.scale_y
+     type = self.type
+     curve_data = bpy.data.curves.new(name=’CurlyCurve’,
+ type=’CURVE’)
+     curve_data.dimensions = ’3D’
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         43 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=43">PDF, strana 43 ↗</a></p></article>
+<article class="slide source-slide" id="slide-44" data-section="Vytváření geometrie a objektů - Křivky příkla" aria-label="Snímek 44: Vytváření geometrie a objektů - Křivky příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-044.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-044.svg" aria-label="Zvětšit snímek 44: Vytváření geometrie a objektů - Křivky příklad"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Křivky příklad
+
+
+ for p in range(len(vs)):
+     c = 0
+     spline = curve_data.splines.new(type=’BEZIER’)
+     spline.bezier_points.add( len(vs[p])/3-1 )
+     spline.bezier_points.foreach_set(’co’, vs[p])
+     for bp in spline.bezier_points:
+         bp.handle_left_type = ’ALIGNED’
+         bp.handle_right_type = ’ALIGNED’
+         bp.handle_left.xyz = lh[p][c]
+         bp.handle_right.xyz = rh[p][c]
+         c += 1
+     spline.bezier_points[3].handle_left.xyz = lh[p][3]
+ object_data_add(context, curve_data, operator=self)
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         44 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=44">PDF, strana 44 ↗</a></p></article>
+<article class="slide source-slide" id="slide-45" data-section="Vytváření geometrie a objektů - Křivky příkla" aria-label="Snímek 45: Vytváření geometrie a objektů - Křivky příklad"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-045.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-045.svg" aria-label="Zvětšit snímek 45: Vytváření geometrie a objektů - Křivky příklad"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Křivky příklad
+
+
+
+ class add_curlycurve(Operator, AddObjectHelper):
+     bl_idname = &quot;curve.curlycurve&quot;
+     bl_label = &quot;Add Curly Curve&quot;
+     bl_options = {’REGISTER’, ’UNDO’}
+     scale_x = FloatProperty(name=&quot;scale x&quot;,
+ description=&quot;scale on x axis&quot;, default=1.0)
+     scale_y = FloatProperty(name=&quot;scale y&quot;,
+ description=&quot;scale on y axis&quot;, default=1.0)
+     def execute(self, context):
+         add_type(self, context)
+         return {’FINISHED’}
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         45 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=45">PDF, strana 45 ↗</a></p></article>
+<article class="slide source-slide" id="slide-46" data-section="Vytváření geometrie a objektů - Objekty" aria-label="Snímek 46: Vytváření geometrie a objektů - Objekty"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-046.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-046.svg" aria-label="Zvětšit snímek 46: Vytváření geometrie a objektů - Objekty"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Objekty
+
+
+
+
+ Základem je objekt Object
+     Vytvoření a mazání
+      ▶add, add_named
+        ▶duplicate, duplicate_move_linked
+        ▶join, join_shapes
+       ▶delete
+     Střed
+        ▶origin_clear, origin_set
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         46 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=46">PDF, strana 46 ↗</a></p></article>
+<article class="slide source-slide" id="slide-47" data-section="Vytváření geometrie a objektů - Objekty" aria-label="Snímek 47: Vytváření geometrie a objektů - Objekty"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-047.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-047.svg" aria-label="Zvětšit snímek 47: Vytváření geometrie a objektů - Objekty"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Objekty
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         47 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=47">PDF, strana 47 ↗</a></p></article>
+<article class="slide source-slide" id="slide-48" data-section="Manipulace s objekty" aria-label="Snímek 48: Manipulace s objekty"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-048.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-048.svg" aria-label="Zvětšit snímek 48: Manipulace s objekty"></button></div></figure><pre class="source-transcript">Manipulace s objekty
+
+Základem je objekt Object
+    Transformace
+       ▶transform_apply, location_clear
+       ▶rotation_clear, location_clear, scale_clear
+      ▶convert
+      ▶group_add, group_link, group_remove
+       ▶modifier_add, modifier_apply, modifier_convert.
+          modifier_copy, modifier_remove
+       ▶parent_set
+    Výběry
+       ▶select_all
+       ▶select_by_layer, select_by_type
+       ▶select_grouped, select_linked
+       ▶select_pattern
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         48 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=48">PDF, strana 48 ↗</a></p></article>
+<article class="slide source-slide" id="slide-49" data-section="Vytváření geometrie a objektů - Objekty" aria-label="Snímek 49: Vytváření geometrie a objektů - Objekty"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-049.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-049.svg" aria-label="Zvětšit snímek 49: Vytváření geometrie a objektů - Objekty"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Objekty
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         49 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=49">PDF, strana 49 ↗</a></p></article>
+<article class="slide source-slide" id="slide-50" data-section="Vytváření geometrie a objektů - Geometrie (Me" aria-label="Snímek 50: Vytváření geometrie a objektů - Geometrie (Mesh)"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-050.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-050.svg" aria-label="Zvětšit snímek 50: Vytváření geometrie a objektů - Geometrie (Mesh)"></button></div></figure><pre class="source-transcript">Vytváření geometrie a objektů - Geometrie (Mesh)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         50 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=50">PDF, strana 50 ↗</a></p></article>
+<article class="slide source-slide" id="slide-51" data-section="Import a Export" aria-label="Snímek 51: Import a Export"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-051.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-051.svg" aria-label="Zvětšit snímek 51: Import a Export"></button></div></figure><pre class="source-transcript">Import a Export
+
+
+
+
+Základem je práce se souborem a získání nastavení z GUI Blenderu
+     Serializace
+       ▶Vytvoření obsahu ve formě objektu
+      ▶formátovače (json.dumps, repr)
+    Práce se souborem, nastavení GUI Blenderu
+       ▶definice atributu (selected_only, format, extensions)
+      ▶open, write, read
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         51 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=51">PDF, strana 51 ↗</a></p></article>
+<article class="slide source-slide" id="slide-52" data-section="Import a Export" aria-label="Snímek 52: Import a Export"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-052.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-052.svg" aria-label="Zvětšit snímek 52: Import a Export"></button></div></figure><pre class="source-transcript">Import a Export
+
+
+
+
+
+           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         52 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=52">PDF, strana 52 ↗</a></p></article>
+<article class="slide source-slide" id="slide-53" data-section="Materiály a textury - Materiály" aria-label="Snímek 53: Materiály a textury - Materiály"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-053.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-053.svg" aria-label="Zvětšit snímek 53: Materiály a textury - Materiály"></button></div></figure><pre class="source-transcript">Materiály a textury - Materiály
+
+
+
+ Základem je objekt Object a Material
+     Object
+        ▶material_slot_add, material_slot_copy(),
+           material_slot_assign(), ...
+     Material
+      ▶new, copy, paste, ..
+        ▶material.node_tree
+      ▶node (location, color, label ...)
+       ▶NodeLinks (new, remove, clear)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         53 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=53">PDF, strana 53 ↗</a></p></article>
+<article class="slide source-slide" id="slide-54" data-section="Materiály a textury - Materiály" aria-label="Snímek 54: Materiály a textury - Materiály"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-054.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-054.svg" aria-label="Zvětšit snímek 54: Materiály a textury - Materiály"></button></div></figure><pre class="source-transcript">Materiály a textury - Materiály
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         54 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=54">PDF, strana 54 ↗</a></p></article>
+<article class="slide source-slide" id="slide-55" data-section="Materiály a textury - Mapování, Textury" aria-label="Snímek 55: Materiály a textury - Mapování, Textury"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-055.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-055.svg" aria-label="Zvětšit snímek 55: Materiály a textury - Mapování, Textury"></button></div></figure><pre class="source-transcript">Materiály a textury - Mapování, Textury
+
+
+
+
+
+ Vhodné řešení je využít Cycles, vše jsou uzly
+     Texture
+      ▶new, copy, paste, ..
+       ▶node_tree
+      ▶node (location, color, label ...)
+       ▶NodeLinks (new, remove, clear)
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         55 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=55">PDF, strana 55 ↗</a></p></article>
+<article class="slide source-slide" id="slide-56" data-section="Materiály a textury - Mapování, Textury" aria-label="Snímek 56: Materiály a textury - Mapování, Textury"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-056.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-056.svg" aria-label="Zvětšit snímek 56: Materiály a textury - Mapování, Textury"></button></div></figure><pre class="source-transcript">Materiály a textury - Mapování, Textury
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         56 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=56">PDF, strana 56 ↗</a></p></article>
+<article class="slide source-slide" id="slide-57" data-section="Co bychom po dnešku měli znát" aria-label="Snímek 57: Co bychom po dnešku měli znát"><figure><div class="source-frame" style="--page-ratio:1.3333344921652681"><object class="page-svg" data-src="assets/page-057.svg" type="image/svg+xml" tabindex="-1" aria-hidden="true"></object><button class="source-zoom" data-image="assets/page-057.svg" aria-label="Zvětšit snímek 57: Co bychom po dnešku měli znát"></button></div></figure><pre class="source-transcript">Co bychom po dnešku měli znát
+
+
+
+
+
+ Témata probraná na dnešní přednášce:
+     Základní struktory Blender API
+     Funkce podporující různé typy modulů
+     Základy UI
+
+
+
+
+
+             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         57 / 57</pre><p class="slide-source">Jiří Chludil · původní podklad · <a href="original.pdf#page=57">PDF, strana 57 ↗</a></p></article>
+  </main>
+  <footer class="controls">
+    <span class="hint">← → <span>listování</span> · F <span>celá obrazovka</span></span>
+    <div class="pager"><button id="previous" aria-label="Předchozí snímek">←</button><output id="counter">01 / 36</output><button id="next" aria-label="Další snímek">→</button></div>
+    <span class="credit">Jiří Chludil · FIT ČVUT</span>
+    <div class="progress" aria-hidden="true"><div id="progress-value"></div></div>
+  </footer>
+  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="overview" aria-labelledby="overview-title">
+    <div class="dialog-heading"><h2 id="overview-title">Obsah přednášky</h2><button class="close" aria-label="Zavřít obsah">✕</button></div>
+    <nav aria-label="Všechny snímky"><a href="#slide-1"><span>01</span><span>3D grafika - Blender: Úvod, metodika, využití jazyka Python</span></a><a href="#slide-2"><span>02</span><span>Ikony 3D</span></a><a href="#slide-3"><span>03</span><span>Historie rozšiřování aplikací pomocí pluginů</span></a><a href="#slide-4"><span>04</span><span>Historie rozšiřování aplikací pomocí pluginů</span></a><a href="#slide-5"><span>05</span><span>Historie rozšiřování aplikací pomocí pluginů</span></a><a href="#slide-6"><span>06</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-7"><span>07</span><span>Typy modulů u Blenderu I</span></a><a href="#slide-8"><span>08</span><span>Typy modulů u Blenderu II</span></a><a href="#slide-9"><span>09</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-10"><span>10</span><span>Nastavení prostředků (konfigurace)</span></a><a href="#slide-11"><span>11</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-12"><span>12</span><span>Registrace I</span></a><a href="#slide-13"><span>13</span><span>Registrace II</span></a><a href="#slide-14"><span>14</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-15"><span>15</span><span>Uživatelské rozhraní modulu</span></a><a href="#slide-16"><span>16</span><span>Uživatelské rozhraní modulu - Minimální GUI I</span></a><a href="#slide-17"><span>17</span><span>Uživatelské rozhraní modulu - Minimální GUI II</span></a><a href="#slide-18"><span>18</span><span>Uživatelské rozhraní modulu - Pokročilé GUI II</span></a><a href="#slide-19"><span>19</span><span>Uživatelské rozhraní modulu - Pokročilé GUI II</span></a><a href="#slide-20"><span>20</span><span>Uživatelské rozhraní modulu -Pokročilé GUI III</span></a><a href="#slide-21"><span>21</span><span>Uživatelské rozhraní modulu -Pokročilé GUI IV</span></a><a href="#slide-22"><span>22</span><span>Uživatelské rozhraní modulu - Pokročilé GUI IV</span></a><a href="#slide-23"><span>23</span><span>Uživatelské rozhraní modulu - Pokročilé GUI IV</span></a><a href="#slide-24"><span>24</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-25"><span>25</span><span>Použité matematické a grafické funkce</span></a><a href="#slide-26"><span>26</span><span>Co je třeba řešit u zásuvných modulů</span></a><a href="#slide-27"><span>27</span><span>API rozšiřované aplikace</span></a><a href="#slide-28"><span>28</span><span>API rozšiřované aplikace</span></a><a href="#slide-29"><span>29</span><span>API rozšiřované aplikace</span></a><a href="#slide-30"><span>30</span><span>Příklad</span></a><a href="#slide-31"><span>31</span><span>Příklad</span></a><a href="#slide-32"><span>32</span><span>Příklad</span></a><a href="#slide-33"><span>33</span><span>Příklad</span></a><a href="#slide-34"><span>34</span><span>Vytváření geometrie a objektů - Geometrie (Mesh)</span></a><a href="#slide-35"><span>35</span><span>Vytváření geometrie a objektů - Geometrie (Mesh)</span></a><a href="#slide-36"><span>36</span><span>Vytváření geometrie a objektů - Geometrie (Mesh)</span></a><a href="#slide-37"><span>37</span><span>Vytváření geometrie a objektů - Geometrie (Mesh)</span></a><a href="#slide-38"><span>38</span><span>Vytváření geometrie a objektů - Křivky</span></a><a href="#slide-39"><span>39</span><span>Vytváření geometrie a objektů - Křivky</span></a><a href="#slide-40"><span>40</span><span>Vytváření geometrie a objektů - Křivky příklad</span></a><a href="#slide-41"><span>41</span><span>Vytváření geometrie a objektů - Křivky příklad</span></a><a href="#slide-42"><span>42</span><span>Vytváření geometrie a objektů - Křivky příklad</span></a><a href="#slide-43"><span>43</span><span>Vytváření geometrie a objektů - Křivky příklad</span></a><a href="#slide-44"><span>44</span><span>Vytváření geometrie a objektů - Křivky příklad</span></a><a href="#slide-45"><span>45</span><span>Vytváření geometrie a objektů - Křivky příklad</span></a><a href="#slide-46"><span>46</span><span>Vytváření geometrie a objektů - Objekty</span></a><a href="#slide-47"><span>47</span><span>Vytváření geometrie a objektů - Objekty</span></a><a href="#slide-48"><span>48</span><span>Manipulace s objekty</span></a><a href="#slide-49"><span>49</span><span>Vytváření geometrie a objektů - Objekty</span></a><a href="#slide-50"><span>50</span><span>Vytváření geometrie a objektů - Geometrie (Mesh)</span></a><a href="#slide-51"><span>51</span><span>Import a Export</span></a><a href="#slide-52"><span>52</span><span>Import a Export</span></a><a href="#slide-53"><span>53</span><span>Materiály a textury - Materiály</span></a><a href="#slide-54"><span>54</span><span>Materiály a textury - Materiály</span></a><a href="#slide-55"><span>55</span><span>Materiály a textury - Mapování, Textury</span></a><a href="#slide-56"><span>56</span><span>Materiály a textury - Mapování, Textury</span></a><a href="#slide-57"><span>57</span><span>Co bychom po dnešku měli znát</span></a></nav>
+  </dialog>
+  <dialog id="image-view" aria-label="Zvětšený obrázek"><button class="close" aria-label="Zavřít obrázek">✕</button><img alt=""></dialog>
+  <noscript><p class="no-script">Bez JavaScriptu je přednáška zobrazena jako souvislý dokument.</p></noscript>
+<script type="application/json" id="source-data">{"title": "Blender a programování pluginů v Pythonu", "author": "Jiří Chludil", "sourceURL": "https://courses.fit.cvut.cz/BI-PGA/media/lectures/bi-pga-p2.pdf", "working": false, "lab": "geometry", "labTitle": "Geometrie řízená parametry", "pages": [{"page": 1, "title": "3D grafika - Blender: Úvod, metodika, využití jazyka Python", "text": "    Programování grafických aplikací (BI-PGA), Přednáška č. 2\n3D grafika - Blender: Úvod, metodika, využití\n               jazyka Python\n\n\n                                  Jiří Chludil\n\n\n                          Fakulta informačních technologií\n                      České vysoké učení technické v Praze\n                   https://courses.fit.cvut.cz/BI-PGA/\n\n\n\n\n\n                  ZS 2024/2025\n\n\n\n      Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          1 / 57", "image": "assets/page-001.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": [{"url": "https://courses.fit.cvut.cz/BI-PGA/"}]}, {"page": 2, "title": "Ikony 3D", "text": "Ikony 3D\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          2 / 57", "image": "assets/page-002.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 3, "title": "Historie rozšiřování aplikací pomocí pluginů", "text": "Historie rozšiřování aplikací pomocí pluginů\n\n\n\n\n3D Studio\n     1990 - Verze 1 - 3D Studio pod OS MS-DOS\n     1996 - Verze 1 - 3D Studio Max pod OS windows\n     2005 - Akvizice Autodeskem\n     2007-16 - Verze 2008-2017\n     2006 - podpora pluginů\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          3 / 57", "image": "assets/page-003.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 4, "title": "Historie rozšiřování aplikací pomocí pluginů", "text": "Historie rozšiřování aplikací pomocí pluginů\n\n Blender I\n     1994 - Verze 1.0 - začal vývoj ve studiu NeoGeo\n     1999 - Verze 1.6x - release pro Windows, PPC\n     2000 - Verze 2.1 - podpora Pythonu\n     2001 - Verze 2.2x - release pro MacOs\n     2002 - Verze 2.25 - vydán jako Open Source\n     2008 - Verze 2.48 - Python skripty\n     2009-11 - Verze 2.5x - Python API\n     2012 - Verze 2.5x - Python API (upgrade)\n     2013 - Verze 2.5x - Python API (nodes. mesh tools)\n     2016 - Verze 2.80 - Změny na API (bez zpětné kompatibility)\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          4 / 57", "image": "assets/page-004.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 5, "title": "Historie rozšiřování aplikací pomocí pluginů", "text": "Historie rozšiřování aplikací pomocí pluginů\n\n\n\n\n Blender II\n     2020 - Verze 2.83 - Podpora VR\n     2021 - Verze 2.92 - Geometry Nodes\n     2021 - Verze 3.0\n     2023 - Verze 4.0\n     2024 - Verze 4.2 - Současnost\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          5 / 57", "image": "assets/page-005.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 6, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n\n    Typ modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          6 / 57", "image": "assets/page-006.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 7, "title": "Typy modulů u Blenderu I", "text": "Typy modulů u Blenderu I\n\n     Vytváření geometrie a objektů\n       ▶Geometrie (Mesh)\n       ▶Křivky\n       ▶Objekty\n       ▶Generování složitějších struktur\n     Manipulace s objekty\n       ▶Modifikátory\n       ▶Generování\n      ▶Deformace\n       ▶Simulace\n     Import/Export\n      ▶Formáty\n     ▶API\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          7 / 57", "image": "assets/page-007.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 8, "title": "Typy modulů u Blenderu II", "text": "Typy modulů u Blenderu II\n\n     Materiály a textury\n       ▶Materiály\n      ▶Mapování\n       ▶Textury\n     Systém\n     ▶3D zobrazení\n      ▶Text editor\n      ▶Témata\n     Rendering\n       ▶Renderer\n      ▶Node\n    Animace\n    Game engine\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          8 / 57", "image": "assets/page-008.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 9, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n\n    Typ modulu\n    Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025          9 / 57", "image": "assets/page-009.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 10, "title": "Nastavení prostředků (konfigurace)", "text": "Nastavení prostředků (konfigurace)\n\n\n bl_info = {\n     \"name\": \"House\",\n     \"description\": \"Klasický domeček.\",\n     \"author\": \"Jiří Chludil\",\n     \"version\": (1, 0, 0),\n     \"blender\": (2, 77, 0),\n     \"location\": \"View3D > Add > Mesh > House\",\n     \"warning\": \"\",\n     \"wiki_url\": \"http://adresa .addonu\",\n     \"tracker_url\": \"http://developer.blender.org...,\n     \"category\": \"Add Mesh\"\n }\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         10 / 57", "image": "assets/page-010.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 11, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n\n    Typ modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         11 / 57", "image": "assets/page-011.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 12, "title": "Registrace I", "text": "Registrace I\n\ndef menu_func(self, context):\n    self.layout.operator(MyHouse.bl_idname)\n# store keymaps addon_keymaps = []\n\ndef register():\n    bpy.utils.register_module(__name__)\n    bpy.types.INFO_MT_mesh_add.append(menu_func)\n\ndef unregister():\n    bpy.utils.unregister_module(__name__)\n    bpy.types.INFO_MT_mesh_add.remove(menu_func)\n\nif __name__ == \"__main__\":\n    register()\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         12 / 57", "image": "assets/page-012.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 13, "title": "Registrace II", "text": "Registrace II\nv2.79\n\ndef register():\n    bpy.utils.register_module(__name__)\n\ndef unregister():\n    bpy.utils.unregister_module(__name__)\n\nv2.80\n\nclasses = (AClass, BClass, CClass )\n\ndef register():\n    from bpy.utils import register_class\n    for cls in classes:\n        register_class(cls)\n\ndef unregister():\n    from bpy.utils import unregister_class\n    for cls in reversed(classes):\n        unregister_class(cls)\n\n)\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         13 / 57", "image": "assets/page-013.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 14, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n\n    Typ modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         14 / 57", "image": "assets/page-014.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 15, "title": "Uživatelské rozhraní modulu", "text": "Uživatelské rozhraní modulu\n    Základní typy\n      ▶BoolProperty\n      ▶FloatProperty\n      ▶IntProperty\n      ▶StringProperty\n      ▶EnumProperty\n    Vektory\n      ▶BoolVectorProperty\n      ▶FloatVectorProperty\n       ▶IntVectorPropertyty\n    Kolekce\n       ▶CollectionProperty\n    Strukturální nástroje\n      ▶PointerProperty\n      ▶RemoveProperty\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         15 / 57", "image": "assets/page-015.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 16, "title": "Uživatelské rozhraní modulu - Minimální GUI I", "text": "Uživatelské rozhraní modulu - Minimální GUI I\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         16 / 57", "image": "assets/page-016.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 17, "title": "Uživatelské rozhraní modulu - Minimální GUI II", "text": "Uživatelské rozhraní modulu - Minimální GUI II\n\n\nroof = bpy.props.FloatProperty(\n    name = ’Strecha’,\n    description = ’vyska strechy’,\n    default = 1, min = 0.0, max=2.0, step=0.1\n    )\n\nsize = bpy.props.FloatVectorProperty(\n    name = ’Size’,\n    description = ’Size’,\n    subtype = ’XYZ’,\n    default=(1.0, 1.0, 1.0),\n    )\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         17 / 57", "image": "assets/page-017.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 18, "title": "Uživatelské rozhraní modulu - Pokročilé GUI II", "text": "Uživatelské rozhraní modulu - Pokročilé GUI II\n\nUILayout\n    Formátování\n      ▶column\n      ▶column_flow\n     ▶row\n       ▶grid_flow\n     ▶box\n       ▶split\n    Elementy gui\n      ▶prop\n       ▶label\n       ▶operator\n     ▶menu\n       ▶separator\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         18 / 57", "image": "assets/page-018.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 19, "title": "Uživatelské rozhraní modulu - Pokročilé GUI II", "text": "Uživatelské rozhraní modulu - Pokročilé GUI II\n\n\nclass ExamplePanel(bpy.types.Panel):\n    bl_idname = \"myExample\"\n    bl_label = \"Můj Panel\"\n    bl_space_type = ’VIEW_3D’\n    bl_region_type = ’TOOL_PROPS’\n\n    def draw(self, context):\n        row = layout.row(align=True)\n        row.prop(api, \"address\")\n        row.prop(api, \"key\")\n        row.operator(\"info.clear\")\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         19 / 57", "image": "assets/page-019.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 20, "title": "Uživatelské rozhraní modulu -Pokročilé GUI III", "text": "Uživatelské rozhraní modulu -Pokročilé GUI III\n\n\n\n\nclass ClearInfo(bpy.types.Operator):\n    bl_idname = ’info.clear’\n    bl_label = ’Název tlačítka’\n\n    def execute(self, context):\n        # akce tlačítka\n        return {’FINISHED’}\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         20 / 57", "image": "assets/page-020.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 21, "title": "Uživatelské rozhraní modulu -Pokročilé GUI IV", "text": "Uživatelské rozhraní modulu -Pokročilé GUI IV\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         21 / 57", "image": "assets/page-021.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 22, "title": "Uživatelské rozhraní modulu - Pokročilé GUI IV", "text": "Uživatelské rozhraní modulu - Pokročilé GUI IV\n\ndef draw_item(self, context, layout, data, item, icon,\nactive_data, active_propname, index):\n    if self.layout_type in {’DEFAULT’, ’COMPACT’}:\n        box = layout.box()\n        row= box.split(percentage=0.8)\n        col1 = row.column()\n        col2 = row.column()\n        row1_split = col1.split(percentage=0.7,\nalign=True)\n        row1_col1 = row1_split.column()\n        row1_col2 = row1_split.column()\n        row2_split = col1.split(percentage=0.5)\n        row2_col1 = row2_split.column()\n        row2_col2 = row2_split.column()\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         22 / 57", "image": "assets/page-022.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 23, "title": "Uživatelské rozhraní modulu - Pokročilé GUI IV", "text": "Uživatelské rozhraní modulu - Pokročilé GUI IV\n\n        row1_col1.label(item.name)\n        row2_col1.label(\"Version: \"+str(item.version))\n        row1_col2.label(item.format)\n        row2_col2.label(\"Status: \"+str(item.status))\n        load = col2.operator(\"connector.load\")\n        load.item.name = item.name\n        load.item.id = item.id\n        load.item.version = item.version\n        load.item.format = item.format\n        load.item.model_id = item.model_id\n        load.item.model_vers = item.model_vers\n\n    layout.template_list(\"FileList\", \"\",\nscene.prop_group_files, \"coll\", scene.prop_group_files,\n\"index\", rows=5, maxrows=5, columns=3, type=’DEFAULT’)\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         23 / 57", "image": "assets/page-023.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 24, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n\n    Typ modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         24 / 57", "image": "assets/page-024.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 25, "title": "Použité matematické a grafické funkce", "text": "Použité matematické a grafické funkce\n\n    math\n     mathutils\n      ▶Matematické typy (vektor, matice, barva, atd)\n      ▶Operace nad vektory a maticemi (rotace, determinat, atd.)\n       ▶interpolátory\n      ▶stromové struktury\n    SciPy\n   NumPy\nOstatní\n     request\n     json\n    time\n    random\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         25 / 57", "image": "assets/page-025.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 26, "title": "Co je třeba řešit u zásuvných modulů", "text": "Co je třeba řešit u zásuvných modulů\n\n\n\n\n    Typ modulu\n     Nastavení prostředků (konfigurace)\n     Registrace\n     Uživatelské rozhraní modulu\n     Použité matematické a grafické funkce\n    API rozšiřované aplikace\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         26 / 57", "image": "assets/page-026.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 27, "title": "API rozšiřované aplikace", "text": "API rozšiřované aplikace\n\n     Context Access (bpy.context)\n       ▶režimy Blenderu a informace o scéně\n       ▶informace o výbětu\n       ▶nastavení Blenderu\n    Data Access (bpy.data)\n       ▶přístup k datům\n        ▶bpy.data.meshes[\"Cube\"]\n     Operators (bpy.ops)\n       ▶volání funkcí blenderu\n       ▶bpy.ops.mesh.subdivide(number_cuts=3, smoothness=0.5)\n     Types (bpy.types)\n       ▶struktury elementů scény\n       ▶konstanty\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         27 / 57", "image": "assets/page-027.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 28, "title": "API rozšiřované aplikace", "text": "API rozšiřované aplikace\n\n      Utilities (bpy.utils)\n      ▶pomocné fukce\n        ▶registrace modulů\n       ▶preview - bpy.utils submodule (bpy.utils.previews)\n     Path Utilities (bpy.path)\n       ▶správa adresářové struktury v Blenderu\n     Application Data (bpy.app)\n        ▶aplikační nastavení\n        ▶události - Application Handlers (bpy.app.handlers)\n        ▶lokalizace - Application Translations (bpy.app.translations)\n     Property Definitions (bpy.props)\n     ▶UI (bool, int float, enum, collection, vector)\n      ▶management parametrů\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         28 / 57", "image": "assets/page-028.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 29, "title": "API rozšiřované aplikace", "text": "API rozšiřované aplikace\n\n from bpy.props import *\n     def create_mesh_object(context, verts, edges,\n faces, name):\n     # Vytvoření nové a prázdné mesh\n     mesh = bpy.data.meshes.new(name)\n     # konfigurace meshe prostřednictvím\n verts/edges/faces.\n     mesh.from_pydata(verts, edges, faces)\n     # Aktualizace mesh.\n     mesh.update()\n     from bpy_extras import object_utils\n     return object_utils.object_data_add(context, mesh,\n operator=None)\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         29 / 57", "image": "assets/page-029.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 30, "title": "Příklad", "text": "Příklad\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         30 / 57", "image": "assets/page-030.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 31, "title": "Příklad", "text": "Příklad\n\n\n\n\n def add_house(size = (1. ,1. ,1.), strecha = 1):\n     verts = []\n     edges = []\n     faces = []\n\n     size_x = size[0] / 2.0\n     size_y = size[1] / 2.0\n     size_z = size[2] / 2.0\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         31 / 57", "image": "assets/page-031.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 32, "title": "Příklad", "text": "Příklad\n\n\n\n     verts.append((-size_x, -size_y, -size_z))\n     verts.append(( size_x, -size_y, -size_z))\n     verts.append(( size_x, size_y, -size_z))\n     verts.append((-size_x, size_y, -size_z))\n     verts.append((-size_x, -size_y, size_z))\n     verts.append(( size_x, -size_y, size_z))\n     verts.append(( size_x, size_y, size_z))\n     verts.append((-size_x, size_y, size_z))\n     verts.append((-size_x, 0, size_z+strecha))\n     verts.append(( size_x, 0, size_z+strecha))\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         32 / 57", "image": "assets/page-032.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 33, "title": "Příklad", "text": "Příklad\n\n\n     faces.append([0,1,2,3])\n     faces.append([0,1,5,4])\n     faces.append([1,2,6,5])\n     faces.append([2,3,7,6])\n     faces.append([3,0,4,7])\n\n     faces.append([4,5,9,8])\n     faces.append([6,7,8,9])\n     faces.append([5,6,8])\n     faces.append([4,7,9])\n     return verts, edges, faces\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         33 / 57", "image": "assets/page-033.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 34, "title": "Vytváření geometrie a objektů - Geometrie (Mesh)", "text": "Vytváření geometrie a objektů - Geometrie (Mesh)\n\n Základem je objekt Mesh\n     Základní getry\n        ▶vertices, edges, loops polygons, skin_vertices\n        ▶total_vert_sel, total_edge_sel, total_face_sel\n       ▶is_editmode\n       ▶shape_keys\n     Vytvoření\n       ▶from_pydata\n     Manipulace\n       ▶transform\n     Validace a aktualizace\n        ▶validate\n      ▶update\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         34 / 57", "image": "assets/page-034.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 35, "title": "Vytváření geometrie a objektů - Geometrie (Mesh)", "text": "Vytváření geometrie a objektů - Geometrie (Mesh)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         35 / 57", "image": "assets/page-035.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 36, "title": "Vytváření geometrie a objektů - Geometrie (Mesh)", "text": "Vytváření geometrie a objektů - Geometrie (Mesh)\n\n\n\n     Nastavení zobrazení\n       ▶show_edges, show_faces\n      ▶show_edge_seams\n       ▶show_normal_vertex, show_normal_face\n       ▶show_weight\n     Výpočty spojení a rozdělení\n       ▶calc_normals\n        ▶calc_normals_split\n       ▶calc_smooth_groups\n        ▶free_normals_split\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         36 / 57", "image": "assets/page-036.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 37, "title": "Vytváření geometrie a objektů - Geometrie (Mesh)", "text": "Vytváření geometrie a objektů - Geometrie (Mesh)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         37 / 57", "image": "assets/page-037.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 38, "title": "Vytváření geometrie a objektů - Křivky", "text": "Vytváření geometrie a objektů - Křivky\n\n Základem je objekt Curve\n     Manipulace\n        ▶primitive_bezier_circle_add, primitive_bezier_curve_add\n         (obdobně pro NURBS)\n        ▶duplicate, extrude, subdivide\n        ▶delete, separate, split\n       ▶make_segment,\n       ▶radius_set\n     Výběry\n        ▶de_select_first, de_select_last, select_previous, select_next\n      ▶hide\n        ▶select_all, select_linked, select_row\n       ▶select_random\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         38 / 57", "image": "assets/page-038.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 39, "title": "Vytváření geometrie a objektů - Křivky", "text": "Vytváření geometrie a objektů - Křivky\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         39 / 57", "image": "assets/page-039.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 40, "title": "Vytváření geometrie a objektů - Křivky příklad", "text": "Vytváření geometrie a objektů - Křivky příklad\n\n\n bl_info = {\n     \"name\": \"Curly Curves\",\n     \"description\": \"Zjednodušený příklad\",\n     \"author\": \"Cmomoney\",\n     \"version\": (1, 0, 0),\n     \"blender\": (2, 69, 0),\n     \"location\": \"View3D > Add > Curve > Curly Curve\",\n     \"warning\": \"\",\n     \"wiki_url\": \"http://adresa .addonu\",\n     \"tracker_url\":\n \"https://projects.blender.org/tracker/index.php?func=deta\n     \"category\": \"Add Curve\"\n }\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         40 / 57", "image": "assets/page-040.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 41, "title": "Vytváření geometrie a objektů - Křivky příklad", "text": "Vytváření geometrie a objektů - Křivky příklad\n\n\n\n\n\n import bpy\n from bpy.types import Operator\n from bpy.props import *\n from bpy_extras.object_utils import AddObjectHelper,\n object_data_add\n from mathutils import Vector\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         41 / 57", "image": "assets/page-041.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 42, "title": "Vytváření geometrie a objektů - Křivky příklad", "text": "Vytváření geometrie a objektů - Křivky příklad\n\n\n\n\n def add_type(self, context):\n     s_x = self.scale_x\n     s_y = self.scale_y\n     verts = [[-0.71753 * s_x, -0.087 * s_y, 0,...]]\n     lhan = [[(-0.818 * s_x, -0.143 * s_y, 0), ...)]]\n     rhan = [[(-0.616 * s_x, -0.032 * s_y, 0), ...]]\n     make_curve(self, context, verts, lhan, rhan)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         42 / 57", "image": "assets/page-042.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 43, "title": "Vytváření geometrie a objektů - Křivky příklad", "text": "Vytváření geometrie a objektů - Křivky příklad\n\n\n\n\n def make_curve(self, context, vs, lh, rh):\n     scale_x = self.scale_x\n     scale_y = self.scale_y\n     type = self.type\n     curve_data = bpy.data.curves.new(name=’CurlyCurve’,\n type=’CURVE’)\n     curve_data.dimensions = ’3D’\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         43 / 57", "image": "assets/page-043.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 44, "title": "Vytváření geometrie a objektů - Křivky příklad", "text": "Vytváření geometrie a objektů - Křivky příklad\n\n\n for p in range(len(vs)):\n     c = 0\n     spline = curve_data.splines.new(type=’BEZIER’)\n     spline.bezier_points.add( len(vs[p])/3-1 )\n     spline.bezier_points.foreach_set(’co’, vs[p])\n     for bp in spline.bezier_points:\n         bp.handle_left_type = ’ALIGNED’\n         bp.handle_right_type = ’ALIGNED’\n         bp.handle_left.xyz = lh[p][c]\n         bp.handle_right.xyz = rh[p][c]\n         c += 1\n     spline.bezier_points[3].handle_left.xyz = lh[p][3]\n object_data_add(context, curve_data, operator=self)\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         44 / 57", "image": "assets/page-044.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 45, "title": "Vytváření geometrie a objektů - Křivky příklad", "text": "Vytváření geometrie a objektů - Křivky příklad\n\n\n\n class add_curlycurve(Operator, AddObjectHelper):\n     bl_idname = \"curve.curlycurve\"\n     bl_label = \"Add Curly Curve\"\n     bl_options = {’REGISTER’, ’UNDO’}\n     scale_x = FloatProperty(name=\"scale x\",\n description=\"scale on x axis\", default=1.0)\n     scale_y = FloatProperty(name=\"scale y\",\n description=\"scale on y axis\", default=1.0)\n     def execute(self, context):\n         add_type(self, context)\n         return {’FINISHED’}\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         45 / 57", "image": "assets/page-045.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 46, "title": "Vytváření geometrie a objektů - Objekty", "text": "Vytváření geometrie a objektů - Objekty\n\n\n\n\n Základem je objekt Object\n     Vytvoření a mazání\n      ▶add, add_named\n        ▶duplicate, duplicate_move_linked\n        ▶join, join_shapes\n       ▶delete\n     Střed\n        ▶origin_clear, origin_set\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         46 / 57", "image": "assets/page-046.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 47, "title": "Vytváření geometrie a objektů - Objekty", "text": "Vytváření geometrie a objektů - Objekty\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         47 / 57", "image": "assets/page-047.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 48, "title": "Manipulace s objekty", "text": "Manipulace s objekty\n\nZákladem je objekt Object\n    Transformace\n       ▶transform_apply, location_clear\n       ▶rotation_clear, location_clear, scale_clear\n      ▶convert\n      ▶group_add, group_link, group_remove\n       ▶modifier_add, modifier_apply, modifier_convert.\n          modifier_copy, modifier_remove\n       ▶parent_set\n    Výběry\n       ▶select_all\n       ▶select_by_layer, select_by_type\n       ▶select_grouped, select_linked\n       ▶select_pattern\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         48 / 57", "image": "assets/page-048.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 49, "title": "Vytváření geometrie a objektů - Objekty", "text": "Vytváření geometrie a objektů - Objekty\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         49 / 57", "image": "assets/page-049.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 50, "title": "Vytváření geometrie a objektů - Geometrie (Mesh)", "text": "Vytváření geometrie a objektů - Geometrie (Mesh)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         50 / 57", "image": "assets/page-050.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 51, "title": "Import a Export", "text": "Import a Export\n\n\n\n\nZákladem je práce se souborem a získání nastavení z GUI Blenderu\n     Serializace\n       ▶Vytvoření obsahu ve formě objektu\n      ▶formátovače (json.dumps, repr)\n    Práce se souborem, nastavení GUI Blenderu\n       ▶definice atributu (selected_only, format, extensions)\n      ▶open, write, read\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         51 / 57", "image": "assets/page-051.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 52, "title": "Import a Export", "text": "Import a Export\n\n\n\n\n\n           Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         52 / 57", "image": "assets/page-052.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 53, "title": "Materiály a textury - Materiály", "text": "Materiály a textury - Materiály\n\n\n\n Základem je objekt Object a Material\n     Object\n        ▶material_slot_add, material_slot_copy(),\n           material_slot_assign(), ...\n     Material\n      ▶new, copy, paste, ..\n        ▶material.node_tree\n      ▶node (location, color, label ...)\n       ▶NodeLinks (new, remove, clear)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         53 / 57", "image": "assets/page-053.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 54, "title": "Materiály a textury - Materiály", "text": "Materiály a textury - Materiály\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         54 / 57", "image": "assets/page-054.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 55, "title": "Materiály a textury - Mapování, Textury", "text": "Materiály a textury - Mapování, Textury\n\n\n\n\n\n Vhodné řešení je využít Cycles, vše jsou uzly\n     Texture\n      ▶new, copy, paste, ..\n       ▶node_tree\n      ▶node (location, color, label ...)\n       ▶NodeLinks (new, remove, clear)\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         55 / 57", "image": "assets/page-055.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 56, "title": "Materiály a textury - Mapování, Textury", "text": "Materiály a textury - Mapování, Textury\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         56 / 57", "image": "assets/page-056.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}, {"page": 57, "title": "Co bychom po dnešku měli znát", "text": "Co bychom po dnešku měli znát\n\n\n\n\n\n Témata probraná na dnešní přednášce:\n     Základní struktory Blender API\n     Funkce podporující různé typy modulů\n     Základy UI\n\n\n\n\n\n             Chludil (FIT)                      BI-PGA, Přednáška č. 2                ZS 2024/2025         57 / 57", "image": "assets/page-057.svg", "width": 362.8349914550781, "height": 272.1260070800781, "links": []}]}</script><dialog id="notes-panel" aria-labelledby="notes-title"><div class="dialog-heading"><h2 id="notes-title">Původní text</h2><button class="close" aria-label="Zavřít poznámky">×</button></div><p class="lab-disclaimer">Původní obsah, kód a verze nástrojů odpovídají podkladu; aktuální organizaci a API ověřte u autora.</p><pre id="notes-original" class="notes-original"></pre><div id="notes-links" class="source-links"></div></dialog><dialog id="lab-dialog" class="lab-dialog" aria-labelledby="lab-title"><div class="dialog-heading"><h2 id="lab-title">Geometrie řízená parametry</h2><button class="close" aria-label="Zavřít ukázku">×</button></div><div class="lab-layout"><div id="lab-settings" class="lab-settings"></div><div><canvas id="lab-canvas" class="lab-visual" width="640" height="380" aria-label="Výsledek interaktivního modelu"></canvas><pre id="lab-result" class="lab-result" aria-live="polite"></pre></div></div><p class="lab-disclaimer">Interaktivní doplněk GRAFIT · syntetická demonstrace principu. Není součástí původního PDF a nespouští plugin Blenderu ani GIMPu. <span id="lab-limits"></span></p></dialog><noscript><style>.source-transcript{display:block}.source-frame{display:none}</style></noscript></body>
+</html>

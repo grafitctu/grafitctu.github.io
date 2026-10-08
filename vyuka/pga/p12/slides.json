@@ -1,0 +1,1409 @@
+{
+  "title": "Datové struktury pro 3D grafiku",
+  "author": "Jiří Chludil",
+  "sourceURL": "https://courses.fit.cvut.cz/BI-PGA/media/lectures/bi-pga-p10.pdf",
+  "working": false,
+  "lab": "partition",
+  "labTitle": "Prostorové dělení",
+  "pages": [
+    {
+      "page": 1,
+      "title": "3D grafika - Blender: Datové struktury pro 3D grafiku",
+      "text": "   Programování grafických aplikací (BI-PGA), Přednáška č. 10\n3D grafika - Blender: Datové struktury pro 3D\n                    grafiku\n\n\n                                   Jiří Chludil\n\n\n                          Fakulta informačních technologií\n                       České vysoké učení technické v Praze\n                    https://courses.fit.cvut.cz/BI-PGA/\n\n\n\n\n\n                  ZS 2024/2025\n\n\n\n       Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025          1 / 155",
+      "image": "assets/page-001.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": [
+        {
+          "url": "https://courses.fit.cvut.cz/BI-PGA/"
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "title": "Motivace",
+      "text": "Motivace\n\nV různých přednáškách se často zminňují následující pojmy\n     konvexní obálka\n    K-D Stromy\n     zametací hyperrovina\n     oktalový strom\n     atd ...\n Většina těchto algoritmů souvisí s efektivními algortimy viz. BI-AG1\n dříve BI-EFA.\n .\n Tato přednáška vychází z podkladových materiálů, které vynikly pro\n BI-EFA (prof. Ing. Pavel Tvrdík, CSc., Ing. Jiří Chludil a Ing. Petr\n Matyáš).\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025          2 / 155",
+      "image": "assets/page-002.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 3,
+      "title": "Výpočetní geometrie",
+      "text": "Výpočetní geometrie\n\n\n Definice\n Cílem výpočetní geometrie je analýza a návrh efektivních algoritmů\n pro určování vlastností a vztahů geometrických objektů.\n (bezrozměrných geometrických bodů, základních grafických primitiv,\n obecně jakýchkoli množin bodů ohraničených pomocí čar nebo ploch).\n\n Řešené problémy:\n     geometrické vyhledávání,\n     reprezentace scény\n     detekce kolize objektů\n     konstrukce konvexní obálky,\n     určení polohy objektů,\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025          3 / 155",
+      "image": "assets/page-003.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 4,
+      "title": "Výpočetní geometrie",
+      "text": "                                      Výpočetní geometrie\n\nVýpočetní geometrie\n\n\n Definice\n Cílem výpočetní geometrie je analýza a návrh efektivních algoritmů\n pro určování vlastností a vztahů geometrických objektů.\n (bezrozměrných geometrických bodů, základních grafických primitiv,\n obecně jakýchkoli množin bodů ohraničených pomocí čar nebo ploch).\n\n Řešené problémy:\n     geometrické vyhledávání,\n     reprezentace scény\n     detekce kolize objektů\n     konstrukce konvexní obálky,\n     určení polohy objektů,\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025          4 / 155",
+      "image": "assets/page-004.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 5,
+      "title": "Kvadrantový strom definice",
+      "text": "                                      Kvadrantové stromy\n\nKvadrantový strom definice\n     Autory Kvadrantových stromů (Quadtree) jsou Raphael Finkel a\n      J.L. Bentley,\n\n Definice (Kvadrantový strom)\n Kvadrantový strom je 4-ární strom, který splňuje navíc následující\n podmínky:\n    1  každý vnitřní uzel reprezentuje jednu dekompozici 2D prostoru\n     na čtyři navzájem disjunktní kvadranty resp. oblasti,\n    2  každý jeho vnitřní uzel má právě 4 potomky s identifikací SV,\n     SZ, JV, JZ,\n    3  každý uzel obsahuje prostorová data definující dekompozici (liší\n     se dle použití),\n    4  každý list má definovanou maximální kapacitu obsažených\n     objektů, pokud je překročena, je list dekomponován.\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025          5 / 155",
+      "image": "assets/page-005.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 6,
+      "title": "Použití kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy\n\nPoužití kvadrantového stromu\n\n\n\n\n     tento strom je vhodný pro efektivní reprezentaci elementů (dané\n     souřadnicemi x a y) v 2D prostoru např hmotné body objektů,\n     což umožňuje:\n       ▶snížení paměťových nároků při zobrazování 2D scény\n       ▶urychlení 3D grafických algoritmů (sledování paprsku),\n       ▶zpracování a analýzu obrazu,\n        ▶efektivní uložení dat pro GIS (Geografické Informační Systémy),\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025          6 / 155",
+      "image": "assets/page-006.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 7,
+      "title": "PR kvadrantový strom (Region Point quadtree)",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPR kvadrantový strom (Region Point quadtree)\n\n\n\n\n Definice (PR kvadrantový strom)\n Je kvadrantový strom s těmito vlastnosti:\n    1  všechny dekomponované oblasti jsou stejně velké,\n    2  maximální kapacita pro obsažené elementy je 1,\n    3  uživatelská data jsou elementy a jsou uloženy jen v listech,\n    4  pro urychlení výpočtu obsahuje každý uzel souřadnice oblasti,\n     kterou uzel reprezentuje.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025          7 / 155",
+      "image": "assets/page-007.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 8,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025          8 / 155",
+      "image": "assets/page-008.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 9,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n\n             A\n                                          A\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025          9 / 155",
+      "image": "assets/page-009.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 10,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n\n             A\n                                          A\n                   B                      B\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         10 / 155",
+      "image": "assets/page-010.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 11,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n\n             A\n\n                   B                A   B\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         11 / 155",
+      "image": "assets/page-011.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 12,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n\n             A\n\n                   B                A   B        C\n\n\n\n\n                      C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         12 / 155",
+      "image": "assets/page-012.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 13,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n\n             A\n\n D\n                   B                A   B        C\n                                 D\n\n\n\n                      C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         13 / 155",
+      "image": "assets/page-013.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 14,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n\n             A\n\n D\n                   B                   B        C\n                               D A\n\n\n\n                      C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         14 / 155",
+      "image": "assets/page-014.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 15,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n\n             A\n\n D\n                   B                   B        C\n        E\n                               D A E\n\n\n\n                      C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         15 / 155",
+      "image": "assets/page-015.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 16,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B        C\n        E\n                               D A E\n                                     F\n\n\n                      C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         16 / 155",
+      "image": "assets/page-016.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 17,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B        C\n        E\n                                    A E\n\n                                    F D\n\n                      C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         17 / 155",
+      "image": "assets/page-017.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 18,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B        C\n        E                                  G                                    A E\n\n                                    F D\n\n                      C\n               G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         18 / 155",
+      "image": "assets/page-018.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 19,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E        C\n                                         G\n                                    F D\n\n                      C\n               G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         19 / 155",
+      "image": "assets/page-019.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 20,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D         C\n                                       G\n                      C\n               G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         20 / 155",
+      "image": "assets/page-020.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 21,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D\n\n                                      CG\n                      C\n               G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         21 / 155",
+      "image": "assets/page-021.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 22,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                      CG\n                      C\n               G\n\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         22 / 155",
+      "image": "assets/page-022.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 23,
+      "title": "Příklad PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nPříklad PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                      CG\n                      C\n               G\n\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         23 / 155",
+      "image": "assets/page-023.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 24,
+      "title": "Vložení elementu do PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nVložení elementu do PR kvadrantového stromu\n Postup pro vložení prvku,řekněme (coord, elem), je velmi podobné\n pro vložení do BVS jen ve dvou rozměrech.\n    1  Nejprve se podle souřadnice nalezne list, do kterého nově\n     vkládáný element patří\n       ▶Klíči jsou zadané souřadnice (dvě pro 2D prostor), které\n         porovnáváme se středem oblasti, kterou reprezentuje\n          prohledávaný uzel a vybíráme příslušný kvadrant, do kterého\n          souřadnice patří.\n    2  Pokud je list prázdný (neobsahuje žádný element), pak je\n     element elem vložen do listu.\n    3  Pokud je list plný, provede se dekompozice uzlu\n       ▶Vytvoří se čtyři potomci dekomponovaného uzlu.\n      ▶Element původně uložený v dekomponovaném uzlu se přesune\n         do odpovídajícího syna (dle souřadnice uloženého elementu).\n       ▶Rekursivně se provede operaci vkládání pro dekomponovaný\n            uzel.\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         24 / 155",
+      "image": "assets/page-024.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 25,
+      "title": "Hledání elementu v PR kvadrantovém stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nHledání elementu v PR kvadrantovém stromu\n\n\n\n Algoritmus vyhledání oblasti obsahující hledaný element s 2D\n souřadnicí coord v kvadrantovém stromu s kořenem r:\n     Otestuje se, zda je kořen r listem:\n      ▶Pokud ano, otestuje se, zda je kořen plný (obsahuje odkaz na\n          uložený element):\n          ⋆Pokud ano, provede se operace nad hledaným elementem a\n               zadanou souřadnicí coord (např. detekce kolize souřadnice s\n               uloženým elementem).\n          ⋆Pokud ne, je hledání ukončeno jako neúspěšné.\n      ▶Pokud ne, provede se rekursivně totéž pro odpovídající podstrom\n            (dle hledané souřadnice coord) reprezentující jeden z kvadrantů.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         25 / 155",
+      "image": "assets/page-025.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 26,
+      "title": "Hledání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nHledání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                      CG\n                      C\n               G\n\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         26 / 155",
+      "image": "assets/page-026.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 27,
+      "title": "Hledání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nHledání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                      CG\n                      C\n               G\n\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         27 / 155",
+      "image": "assets/page-027.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 28,
+      "title": "Hledání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nHledání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                      CG\n                      C\n               G\n\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         28 / 155",
+      "image": "assets/page-028.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 29,
+      "title": "Hledání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nHledání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                      CG\n                      C\n               G\n\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         29 / 155",
+      "image": "assets/page-029.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 30,
+      "title": "Hledání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nHledání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                      CG\n                      C\n               G\n\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         30 / 155",
+      "image": "assets/page-030.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 31,
+      "title": "Mazání elementu z PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání elementu z PR kvadrantového stromu\n\n\n\n\n\n    1  Nalezne se list, který obsahuje hledaný element.\n    2  Provede se výmaz daného elementu.\n    3  Otestují se sourozence listu, zda jsou listy a jsou prázdné:\n      ▶Pokud ano, stane se jejich otec listem. A vracím se na bod 3.\n      ▶Pokud ne, konec mazání.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         31 / 155",
+      "image": "assets/page-031.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 32,
+      "title": "Mazání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                      CG\n                      C\n               G\n\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         32 / 155",
+      "image": "assets/page-032.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 33,
+      "title": "Mazání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                          C G\n                      C\n\n\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         33 / 155",
+      "image": "assets/page-033.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 34,
+      "title": "Mazání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                          C G\n                      C\n\n\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         34 / 155",
+      "image": "assets/page-034.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 35,
+      "title": "Mazání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                          C G\n                      C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         35 / 155",
+      "image": "assets/page-035.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 36,
+      "title": "Mazání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                          C G\n                      C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         36 / 155",
+      "image": "assets/page-036.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 37,
+      "title": "Mazání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                          C G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         37 / 155",
+      "image": "assets/page-037.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 38,
+      "title": "Mazání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                          C G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         38 / 155",
+      "image": "assets/page-038.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 39,
+      "title": "Mazání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                          C G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         39 / 155",
+      "image": "assets/page-039.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 40,
+      "title": "Mazání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                          C G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         40 / 155",
+      "image": "assets/page-040.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 41,
+      "title": "Mazání v PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nMazání v PR kvadrantového stromu\n\n\n\n       F\n             A\n\n D\n                   B                   B\n        E\n                                    A E\n\n                                    F D           H\n\n                                          C G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         41 / 155",
+      "image": "assets/page-041.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 42,
+      "title": "Hodnocení PR kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nHodnocení PR kvadrantového stromu\n\n\n\n\n    1  Struktura PR kvadrantového stromu je nezávislá na pořadí\n     vkládaných elementů.\n    2 V případě větších shluků elementu podstatně roste hloubka\n     strom.\n    3 V případě nerovnoměrného rozložení elementů v prostoru je\n     strom nevyvážený.\n    4  Operace mazání je velmi jednoduchá.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         42 / 155",
+      "image": "assets/page-042.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 43,
+      "title": "R Kvadrantový strom (Region quadtree)",
+      "text": "                                      Kvadrantové stromy   PR Kvadrantový strom\n\nR Kvadrantový strom (Region quadtree)\nR Kvadrantový strom (Region quadtree)\n    Strom reprezentuje černobílý bitmapový obrázek o velikosti\n     2n × 2n pixelů.\n   V listech stromu se uchovává hodnota B nebo W.\n      Použití:\n       ▶bezeztrátová komprese,\n       ▶hledání fraktálních artefaktů.\n\n\n                                                        8 x 8\n\n\n                              1       2            3    4      4 x 4\n\n                                                        2 x 2\n\n                   1   2                                       1 pixel\n                   4   3\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         43 / 155",
+      "image": "assets/page-043.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 44,
+      "title": "P kvadrantový strom (Point quadtree)",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nP kvadrantový strom (Point quadtree)\n\n\n Definice (P kvadrantový strom)\n Je kvadrantový strom s těmito vlastnosti:\n    1  dekomponované oblasti mohou mít různou velikost, ale plně\n     pokrývají oblast,\n    2  maximální kapacita pro obsažené elementy je obvykle 1,\n    3  uživatelská data jsou elementy a jsou uloženy ve všech uzlech,\n    4  souřadnice elementu ve vnitřním uzlu určuje bod rozdělení na\n      čtyři oblasti\n\n Použití:\n    Obdobné jako u PR kvadrantových stromů.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         44 / 155",
+      "image": "assets/page-044.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 45,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         45 / 155",
+      "image": "assets/page-045.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 46,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n\n             A\n                                          A\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         46 / 155",
+      "image": "assets/page-046.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 47,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n\n             A\n                                          A\n                   B                      B\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         47 / 155",
+      "image": "assets/page-047.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 48,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n            A                             A\n\n                   B                             B\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         48 / 155",
+      "image": "assets/page-048.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 49,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n            A                             A\n\n                    B                            B\n                                              C\n\n\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         49 / 155",
+      "image": "assets/page-049.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 50,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n            A                             A\n\n                    B                            B\n\n                                               C\n\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         50 / 155",
+      "image": "assets/page-050.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 51,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n            A                             A\n\n D\n                    B                      D   B\n\n                                               C\n\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         51 / 155",
+      "image": "assets/page-051.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 52,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n            A                             A\n\n D\n                    B                      D   B\n        E                                   E\n                                               C\n\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         52 / 155",
+      "image": "assets/page-052.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 53,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n            A                             A\n  D                                                B\n                    B                     D\n        E\n                                                E   C\n\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         53 / 155",
+      "image": "assets/page-053.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 54,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n       F\n            A                             A\n  D                                                B\n                    B                F       D\n        E\n                                                E   C\n\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         54 / 155",
+      "image": "assets/page-054.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 55,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n       F\n            A                             A\n  D                                                B\n                    B                F       D\n        E\n                                                E   C\n                                             G\n\n                     C\n\n                  G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         55 / 155",
+      "image": "assets/page-055.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 56,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n       F\n            A                             A\n  D                                                B\n                    B                F       D\n        E                                         C\n                                                E\n\n                                             G\n                     C\n\n                  G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         56 / 155",
+      "image": "assets/page-056.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 57,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n       F\n            A                             A\n  D                                                B\n                    B                F       D\n        E                                         C\n                                                E  H\n\n                                             G\n                     C\n\n                  G\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         57 / 155",
+      "image": "assets/page-057.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 58,
+      "title": "Příklad P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nPříklad P kvadrantového stromu\n\n\n\n       F\n            A                             A\n  D                                                B\n                    B                F       D\n        E                                         C\n                                                E  H\n\n                                             G\n                     C\n\n                  G\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         58 / 155",
+      "image": "assets/page-058.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 59,
+      "title": "Vložení elementu do P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nVložení elementu do P kvadrantového stromu\n Postup pro vložení prvku,řekněme (coord, elem), je velmi podobné\n pro vložení do BVS jen ve dvou rozměrech.\n    1  Nejprve se podle souřadnice nalezne list, do kterého nově\n     vkládáný element patří\n       ▶Klíči jsou zadané souřadnice (dvě pro 2D prostor), které\n         porovnáváme se středem oblasti, kterou reprezentuje\n          prohledávaný uzel a vybíráme příslušný kvadrant, do kterého\n          souřadnice patří.\n    2  Pokud je list prázdný (neobsahuje žádný element), pak je\n     element elem vložen do listu.\n    3  Pokud je list plný, provede se dekompozice uzlu dle obsaženého\n     uzlu\n       ▶Vytvoří se čtyři potomci dekomponovaného uzlu (Středem\n         dekompozice je souřadnice elementu obsaženého v uzlu).\n       ▶Rekursivně se provede operaci vkládání pro dekomponovaný\n            uzel.\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         59 / 155",
+      "image": "assets/page-059.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 60,
+      "title": "Vložení elementu do P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nVložení elementu do P kvadrantového stromu\n\n\n\n\n Optimalizované vkládání\n    1  Souřadnice vkládaných elementů jsou seřazeny podle souřadnice\n      x.\n    2  Je vybrán element, jehož x-ová souřadnice je mediánem a\n     element je vložen do kořene.\n    3  Dle vybrané souřadnice jsou elementy rozděleny do čtyř skupin.\n    4  Pro každou skupinu se rekursivně opakuje tato operace.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         60 / 155",
+      "image": "assets/page-060.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 61,
+      "title": "Hledání elementu v P kvadrantovém stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nHledání elementu v P kvadrantovém stromu\n\n Algoritmus vyhledání oblasti obsahující hledaný element s 2D\n souřadnicí coord v kvadrantovém stromu s kořenem r:\n     Otestuje se, zda je kořen r listem:\n      ▶Pokud ano, otestuje se, zda je kořen plný (obsahuje odkaz na\n          uložený element):\n          ⋆Pokud ano, provede se operace nad hledaným elementem a\n               zadanou souřadnicí coord (např. detekce kolize souřadnice s\n               uloženým elementem).\n          ⋆Pokud ne, je hledání ukončeno jako neúspěšné.\n      ▶Pokud ne, provede se operace porovnání zadané souřadnice se\n           souřadnicí obsaženého elementu.\n          ⋆Pokud je shoda souřadnic, element je nalezen.\n          ⋆Pokud ne, provede se rekursivně totéž pro odpovídající podstrom\n                   (dle hledané souřadnice coord) reprezentující jeden z kvadrantů.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         61 / 155",
+      "image": "assets/page-061.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 62,
+      "title": "Mazání elementu z P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nMazání elementu z P kvadrantového stromu\n\n\n\n\n    1  Nalezne se uzel, který obsahuje hledaný element.\n    2  Otestuje se, zda je uzel listem:\n      ▶Pokud ano, odstraní se element a pokud jsou sourozence listy a\n           jsou prázdné, provede se sloučení uzlu (jako u PR).\n      ▶Pokud ne, je element nahrazen elementem ze syna, jehož\n         podstrom má nejmenší hloubku. A rekursivně se provede mazání\n          elementu v synovi, jehož element byl použit pro náhradu.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         62 / 155",
+      "image": "assets/page-062.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 63,
+      "title": "Mazání v P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nMazání v P kvadrantového stromu\n\n\n\n       F\n            A                             A\n  D                                                B\n                    B                F       D\n        E                                         C\n                                                E  H\n\n                                             G\n                     C\n\n                  G\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         63 / 155",
+      "image": "assets/page-063.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 64,
+      "title": "Mazání v P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nMazání v P kvadrantového stromu\n\n\n\n       F\n            A                             A\n  D                                            H                                         D                                       F\n        E                                         C\n                                                E\n\n                                                   znovu vložit   G\n                     C\n\n                  G\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         64 / 155",
+      "image": "assets/page-064.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 65,
+      "title": "Mazání v P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nMazání v P kvadrantového stromu\n\n\n\n        F\n                                              F\n\n  D                                            H\n                                          D\n        E                                         C\n                                                E\n\n                                             G\n                     C\n\n                  G\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         65 / 155",
+      "image": "assets/page-065.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 66,
+      "title": "Mazání v P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nMazání v P kvadrantového stromu\n\n\n\n        F\n                                              F\n\n  D                                            H\n                                          D\n        E                                         C\n                                                E\n\n                                             G\n                     C\n\n                  G\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         66 / 155",
+      "image": "assets/page-066.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 67,
+      "title": "Hodnocení P kvadrantového stromu",
+      "text": "                                      Kvadrantové stromy   P Kvadrantový strom\n\nHodnocení P kvadrantového stromu\n\n\n\n\n\n    1  Struktura PR kvadrantového stromu je závislá na pořadí\n     vkládaných elementů.\n    2  Strom lze konstruovat vyvážený (operace mají log4N složitost).\n    3  Počet uzlů stromu je blízký počtu vložených elementů\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         67 / 155",
+      "image": "assets/page-067.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 68,
+      "title": "Oktalový strom",
+      "text": "                                           Oktalový strom\n\nOktalový strom\n\n\n    Obdoba kvadrantového stromu v třírozměrném prostoru.\n     Počet potomků vnitřního uzlu je právě 8.\n     Používá se pro hierarchickou reprezentaci 3D scén.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         68 / 155",
+      "image": "assets/page-068.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 69,
+      "title": "K-D strom",
+      "text": "                                      K-D strom\n\nK-D strom\n     Autor J.L. Bentley,\n\n Definice (K-D strom)\nK-D strom je BVS provádějící dělení střídavě podle x-ové a y-ové\n souřadnice\n    1  každý vnitřní uzel reprezentuje jednu dekompozici 2D prostoru\n     na dvě navzájem disjunktní oblasti,\n    2  existuje několik variant K-D Stromu:\n      ▶dekomponované oblasti jsou vždy stejně veliké (PR K-D strom),\n        ▶listy jsou vždy prázdné,\n       ▶dekompozice je prováděna dle jedné souřadnice vloženého\n          elementu (tuto variantu budeme prezentovat)\n    3  každý jeho vnitřní uzel má právě 2 potomky,\n    4  každý uzel obsahuje navíc d-rozměrný klíč, podle kterého je\n     prováděna dekompozice,\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         69 / 155\n    5  dekompozice je cyklicky prováděna pro jednotlivé složky klíče",
+      "image": "assets/page-069.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 70,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         70 / 155",
+      "image": "assets/page-070.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 71,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n\n             A\n                                          A\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         71 / 155",
+      "image": "assets/page-071.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 72,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n\n             A\n                                          A\n                   B                      B\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         72 / 155",
+      "image": "assets/page-072.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 73,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n\n            A\n\n                                          A\n                   B\n\n                                              B\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         73 / 155",
+      "image": "assets/page-073.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 74,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n\n            A\n\n                                          A\n                   B\n\n                                              B\n                                           C\n\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         74 / 155",
+      "image": "assets/page-074.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 75,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n\n            A\n\n                                          A\n                   B\n\n                                              B\n\n                                             C\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         75 / 155",
+      "image": "assets/page-075.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 76,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n\n            A\n\n D                                        A\n                   B\n\n                                   D\n                                              B\n\n                                             C\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         76 / 155",
+      "image": "assets/page-076.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 77,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n\n            A\n\n D                                        A\n                   B\n        E\n                                   D\n                                              B                                      E\n                                             C\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         77 / 155",
+      "image": "assets/page-077.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 78,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n\n            A\n\n D                                        A\n                   B\n        E\n                                   D       B\n\n                                         E      C\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         78 / 155",
+      "image": "assets/page-078.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 79,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n       F\n            A\n\n D                                        A\n                   B\n        E\n                                   D       B\n\n                                       F    E      C\n\n                     C\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         79 / 155",
+      "image": "assets/page-079.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 80,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n       F\n            A\n\n D                                        A\n                   B\n        E\n                                   D       B\n\n                                       F    E      C\n                                          G\n                     C\n               G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         80 / 155",
+      "image": "assets/page-080.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 81,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n       F\n            A\n\n D                                        A\n                   B\n        E\n                                   D       B\n\n                                       F    E\n                                            C\n                     C                   G               G\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         81 / 155",
+      "image": "assets/page-081.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 82,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n       F\n            A\n\n D                                        A\n                   B\n        E\n                                   D       B\n\n                                       F    E\n                                            C\n                     C                   G               G\n                                          H\n               H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         82 / 155",
+      "image": "assets/page-082.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 83,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n       F\n            A\n\n D                                        A\n                   B\n        E\n                                   D       B\n\n                                       F    E\n                                            C\n                G   C\n                                       G\n               H                             H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         83 / 155",
+      "image": "assets/page-083.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 84,
+      "title": "Příklad 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad 2D K-D stromu\n\n\n\n       F\n            A\n\n D                                        A\n                   B\n        E\n                                   D       B\n\n                                       F    E\n                                            C\n                G   C\n                                       G\n               H                             H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         84 / 155",
+      "image": "assets/page-084.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 85,
+      "title": "Vložení elementů do K-D stromu",
+      "text": "                                      K-D strom\n\nVložení elementů do K-D stromu\n\n\n\n\n     Postup pro vložení elementu, je podobné jako vložení do BVS.\n     Rozdílem je, že pro porovnávání cyklicky používáme jednotlivé\n     dimense prvků.\n     Takový postup může způsobit, že K-D strom bude nevyvážený.\n     Pro vyvažování nelze použít rotace, protože strom je uspořádán\n     podle více dimensí.\n     Vyvažovaní je poměrně obtížná záležitost, kterou řeší K-D-B\n     stromy, hB stromy a Bkd stromy.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         85 / 155",
+      "image": "assets/page-085.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 86,
+      "title": "Vložení elementu do K-D stromu",
+      "text": "                                      K-D strom\n\nVložení elementu do K-D stromu\n\n Postup pro vložení prvku,řekněme (coord, elem), je velmi podobné\n pro vložení do BVS.\n    1  Nejprve se podle souřadnice nalezne list, do kterého nově\n     vkládaný element patří\n      ▶Klíčem je k-tá souřadnice (k = hloubka mod dimense), která\n           reprezentuje rozdělení oblasti podle k-té dimense na dvě\n           disjunktní podoblasti.\n    2  Provede se dekompozice uzlu:\n       ▶Vytvoří se dva potomci dekomponovaného uzlu a nastaví se\n           jeho klíč tak, aby původní a vkládaný element byly v různých\n           oblastech.\n      ▶Element původně uložený v dekomponovaném uzlu se přesune\n         do odpovídajícího syna (dle souřadnice uloženého elementu) a\n          nově vkládaný do druhého.\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         86 / 155",
+      "image": "assets/page-086.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 87,
+      "title": "Mazání bodu z K-D stromu",
+      "text": "                                      K-D strom\n\nMazání bodu z K-D stromu\n    1  Nalezne se uzel, který obsahuje hledaný bod.\n    2  Pokud existuje:\n            1  Vymaže se.\n            2  Pokud je uzel listem a jeho sourozenec neobsahuje bod, stane se\n           jeho otec listem.\n            3  Pokud není uzel listem, musí být vymazaný bod nahrazen jiným.\n\n\n                   1  Pokud uzel dělil scénu podle x-ové souřadnice, najdeme uzel R\n                  obsahující bod s maximální x-ovou souøadnicí v levém\n               podstromu nebo s minimální x-ovou souřadnicí v pravém\n               podstromu, nalezený bod použijeme jako náhradu a stejný\n                postup uplatníme na uzel R.\n                   2  Pokud uzel dělil scénu podle y-ové souřadnice, najdeme uzel R\n                  obsahující bod s maximální y-ovou souøadnicí v levém\n               podstromu nebo s minimální y-ovou souřadnicí v pravém\n               podstromu, nalezený bod použijeme jako náhradu a stejný\n                postup uplatníme na uzel R.\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         87 / 155",
+      "image": "assets/page-087.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 88,
+      "title": "Příklad mazaní z 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad mazaní z 2D K-D stromu\n\n\n\n       F\n            A\n\n D                                        A\n                   B\n        E\n                                   D       B\n\n                                       F    E\n                                            C\n                G   C\n                                       G\n               H                             H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         88 / 155",
+      "image": "assets/page-088.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 89,
+      "title": "Příklad mazaní z 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad mazaní z 2D K-D stromu\n\n\n\n       F\n            A\n\n D                                        A\n                   B\n        E\n                                   D       B\n\n                                       F    E\n                                            C\n                G   C\n                                       G\n               H                             H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         89 / 155",
+      "image": "assets/page-089.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 90,
+      "title": "Příklad mazaní z 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad mazaní z 2D K-D stromu\n\n\n\n       F\n\n D                                     H\n                   B\n        E\n                                   D       B\n\n                                       F    E\n                                            C\n                G   C\n                                       G\n                H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         90 / 155",
+      "image": "assets/page-090.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 91,
+      "title": "Příklad mazaní z 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad mazaní z 2D K-D stromu\n\n\n\n       F\n\n D                                     H\n                   B\n        E\n                                   D       B\n\n                                       F    E\n                                            C\n                G   C\n                                       G\n                H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         91 / 155",
+      "image": "assets/page-091.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 92,
+      "title": "Příklad mazaní z 2D K-D stromu",
+      "text": "                                      K-D strom\n\nPříklad mazaní z 2D K-D stromu\n\n\n\n       F\n\n D                                     H\n                   B\n        E\n                                   D       B\n\n                                       F    E\n                                            C\n                G   C                   G\n\n                H\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         92 / 155",
+      "image": "assets/page-092.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 93,
+      "title": "Hledání konvexní obálky",
+      "text": "                                    Hledání konvexní obálky\n\nHledání konvexní obálky\n\n\n\n\n Definice\n Nechť V je množina bodů nebo jiných objektů v rovině. Konvexní\n obal (convex hull) je nejmenší konvexní objekt, který obsahuje\n všechny body nebo objekty V.\n\n    Vstupem je množina bodů.\n    Výstupem je uspořádaný seznam (ve směru hodinových ručiček)\n     bodů,reprezentující konvexní obálku.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         93 / 155",
+      "image": "assets/page-093.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 94,
+      "title": "Inkrementální Grahamův algoritmus hledání konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nInkrementální Grahamův algoritmus hledání\nkonvexní obálky\n\n\n\n    1  Seřadíme množinu bodů dle x-ové souřadnice.\n    2  Nejprve nalezneme horní část konvexní obálky a to tak, že\n     postupně vkládáme do výstupního pole body ze vstupní množiny.\n    3  Testujeme, zda poslední tři body tvoří konvexní úhel. Pokud\n     poslední tři body netvoří konvexní úhel, je z výstupní množiny\n     odstraněn předposlední bod a test opakujeme\n    4 Obdobným způsobem nalezneme dolní část konvexní obálky.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         94 / 155",
+      "image": "assets/page-094.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 95,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         95 / 155",
+      "image": "assets/page-095.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 96,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         96 / 155",
+      "image": "assets/page-096.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 97,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         97 / 155",
+      "image": "assets/page-097.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 98,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         98 / 155",
+      "image": "assets/page-098.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 99,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025         99 / 155",
+      "image": "assets/page-099.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 100,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        100 / 155",
+      "image": "assets/page-100.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 101,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        101 / 155",
+      "image": "assets/page-101.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 102,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        102 / 155",
+      "image": "assets/page-102.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 103,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        103 / 155",
+      "image": "assets/page-103.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 104,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        104 / 155",
+      "image": "assets/page-104.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 105,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        105 / 155",
+      "image": "assets/page-105.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 106,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        106 / 155",
+      "image": "assets/page-106.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 107,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        107 / 155",
+      "image": "assets/page-107.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 108,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        108 / 155",
+      "image": "assets/page-108.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 109,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        109 / 155",
+      "image": "assets/page-109.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 110,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        110 / 155",
+      "image": "assets/page-110.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 111,
+      "title": "Grahamův algoritmus konstrukce konvexní obálky",
+      "text": "                                    Hledání konvexní obálky   Grahamův algoritmus\n\nGrahamův algoritmus konstrukce konvexní obálky\n\n\n\n\n\n pl\n\n\n\n                                                                pr\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        111 / 155",
+      "image": "assets/page-111.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 112,
+      "title": "Hledání konvexní obálky algorimem Rozděl a Panuj I",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky algorimem Rozděl a Panuj\nI\n\n\n\n    1  Body množiny se rozdělí na dvě stejně velké podmnožiny A a B\n      tak, že všechny body množiny B mají větší x-ovou\n     souřadnici,než bod z největší x-ovou souřadnicí z množiny A.\n    2  Rekurzivně je nalezena konvexní obálka obou množin A a B.\n    3  Konvexní obálky obálku nad oběma množinami A a B spojíme\n     nalezením horní a dolní tečny a odstraněním všech uzlů, které\n     jsou mezi těmito tečnami.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        112 / 155",
+      "image": "assets/page-112.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 113,
+      "title": "Hledání konvexní obálky algorimem Rozděl a Panuj II",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky algorimem Rozděl a Panuj\nII\n Nalezení horní tečny mezi konvexními obálkami:\n    1 Bod a je bod s největší x-ovou souřadnicí z konvexní obálky nad\n     množinou A.\n    2 Bod b je bod s nejmenší x-ovou souřadnicí z konvexní obálky\n     nad množinou B..\n    3 Dokud není ab horní tečnou prováděj\n       ▶procházej seznam bodů reprezentující konvexní obálku z bodu a\n            proti směru hodinových ručiček, dokud není ab horní tečnou\n          konvexní obálky množiny A.\n       ▶procházej seznam bodů reprezentující konvexní obálku z bodu b\n         po směru hodinových ručiček, dokud není ab horní tečnou\n          konvexní obálky množiny B.\n Nalezení dolní tečny je obdobné.\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        113 / 155",
+      "image": "assets/page-113.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 114,
+      "title": "Hledání konvexní obálky Rozdel a Panuj priklad",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky Rozdel a Panuj priklad\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        114 / 155",
+      "image": "assets/page-114.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 115,
+      "title": "Hledání konvexní obálky Rozdel a Panuj priklad",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky Rozdel a Panuj priklad\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        115 / 155",
+      "image": "assets/page-115.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 116,
+      "title": "Hledání konvexní obálky Rozdel a Panuj priklad",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky Rozdel a Panuj priklad\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        116 / 155",
+      "image": "assets/page-116.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 117,
+      "title": "Hledání konvexní obálky Rozdel a Panuj priklad",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky Rozdel a Panuj priklad\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        117 / 155",
+      "image": "assets/page-117.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 118,
+      "title": "Hledání konvexní obálky Rozdel a Panuj priklad",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky Rozdel a Panuj priklad\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        118 / 155",
+      "image": "assets/page-118.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 119,
+      "title": "Hledání konvexní obálky Rozdel a Panuj priklad",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky Rozdel a Panuj priklad\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        119 / 155",
+      "image": "assets/page-119.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 120,
+      "title": "Hledání konvexní obálky Rozdel a Panuj priklad",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky Rozdel a Panuj priklad\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        120 / 155",
+      "image": "assets/page-120.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 121,
+      "title": "Hledání konvexní obálky Rozdel a Panuj priklad",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky Rozdel a Panuj priklad\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        121 / 155",
+      "image": "assets/page-121.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 122,
+      "title": "Hledání konvexní obálky Rozdel a Panuj priklad",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky Rozdel a Panuj priklad\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        122 / 155",
+      "image": "assets/page-122.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 123,
+      "title": "Hledání konvexní obálky Rozdel a Panuj priklad",
+      "text": "                                    Hledání konvexní obálky    Rozděl a panuj\n\nHledání konvexní obálky Rozdel a Panuj priklad\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        123 / 155",
+      "image": "assets/page-123.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 124,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n    1  Vytvoření X-struktury - počáteční a koncové body úseček\n     seřazené podle x.\n    2  Vytvoření Y -struktury - seznam úseček v řezu zametací roviny\n     seřazené podle y (na začítku je prázdná)\n    3 Dokud není x-struktura prázdná prováděj:\n      ▶Jdi na první bod x-struktury, pokud je počáteční, přidej přímku\n         do Y-struktury, pokud koncový odeber ji. Pokud průsečík přímky\n          prohoď.\n       ▶Prozkoumej nově vzniklé sousedy v y-struktuře a urči\n           potenciální průsečíky na pravo od zametací přímky\n      ▶odeber zpracovaný bod z x-struktury\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        124 / 155",
+      "image": "assets/page-124.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 125,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                    6\n                                   F\n\n        2\n\n           B                                8\n\n                                                    9\n                                    G                13\n\n\n                                                       10\n      1     A\n\n\n         3  C\n\n                                   E                              14\n                                                                      12\n                                            7\n                                    5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        125 / 155",
+      "image": "assets/page-125.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 126,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                    6\n                                   F\n\n        2\n\n           B                                8\n\n                                                    9\n                                    G                13\n\n\n                                                       10\n      1     A\n\n\n         3  C\n\n                                   E                              14\n                                                                      12\n                                            7\n                                    5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        126 / 155",
+      "image": "assets/page-126.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 127,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                    6\n                                   F\n\n       2\n\n           B                                8\n\n                                                    9\n                                    G                13\n\n\n                                                       10\n      1     A\n                           P1\n\n          3  C\n\n                                   E                              14\n                                                                      12\n                                            7\n                                    5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        127 / 155",
+      "image": "assets/page-127.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 128,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                    6\n                                   F\n\n        2\n\n           B                                8\n\n                                                    9\n                                    G                13\n\n\n                                                       10\n      1     A\n                           P1\n               P2\n         3  C\n\n                                   E                              14\n                                                                      12\n                                            7\n                                    5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        128 / 155",
+      "image": "assets/page-128.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 129,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                    6\n                                   F\n\n        2\n\n          B                                8\n\n                                                    9\n                                    G                13\n\n\n                                                       10\n      1     A\n                           P1\n               P2\n         3  C\n\n                                   E                              14\n                                                                      12\n                                            7\n                                    5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        129 / 155",
+      "image": "assets/page-129.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 130,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                    6\n                                   F\n\n        2\n\n           B                                8\n\n                                                    9\n                                    G                13\n\n                     P3\n                                                       10\n      1     A\n                           P1\n                 P2\n         3  C\n\n                                   E                              14\n                                                                      12\n                                            7\n                                    5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        130 / 155",
+      "image": "assets/page-130.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 131,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                    6\n                                   F\n\n        2\n\n           B                                8\n                                  P4          9\n                                    G                13\n\n                      P3\n                                                       10\n      1     A\n                           P1\n                 P2\n         3  C\n\n                                   E                              14\n                                                                      12\n                                            7\n                                    5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        131 / 155",
+      "image": "assets/page-131.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 132,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                    6\n                                   F\n\n        2\n\n           B                                8\n                                  P4          9\n                                    G                13\n\n                      P3\n                                                       10\n      1     A\n                           P1\n                 P2\n         3  C\n\n                                   E                              14\n                                                                      12\n                                            7\n                                    5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        132 / 155",
+      "image": "assets/page-132.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 133,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                    6\n                                   F\n\n        2\n\n           B                                8\n                                  P4          9\n                                    G                13\n\n                      P3\n                                                       10\n      1     A\n                           P1\n                 P2\n         3  C\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        133 / 155",
+      "image": "assets/page-133.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 134,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                    6\n                                   F\n\n        2\n\n           B                                8\n                                   P4\n                                                    9\n                                    G                13\n\n                      P3\n                                                       10\n      1     A\n                           P1\n                 P2\n         3  C\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        134 / 155",
+      "image": "assets/page-134.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 135,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                8\n                                  P4\n                                                    9\n                                    G                13\n\n                      P3\n                                                       10\n      1     A\n                           P1\n                 P2\n                                          P6\n         3  C\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        135 / 155",
+      "image": "assets/page-135.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 136,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                      6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3\n                                                       10\n      1     A\n                           P1\n                 P2\n                                          P6\n         3  C\n\n                                   E                              14\n                                 P5                             12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        136 / 155",
+      "image": "assets/page-136.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 137,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                8\n                                  P4\n                                      P7     9\n                                    G                13\n\n                      P3\n                                                       10\n      1     A\n                           P1\n                 P2\n                                          P6\n         3  C\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        137 / 155",
+      "image": "assets/page-137.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 138,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n                                          P8\n                      P3\n                                                       10\n      1     A\n                           P1\n                 P2\n                                          P6\n         3  C\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        138 / 155",
+      "image": "assets/page-138.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 139,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n                                          P8\n                      P3\n                                                       10\n      1     A\n                           P1\n                 P2\n                                          P6\n         3  C\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        139 / 155",
+      "image": "assets/page-139.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 140,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n                                          P8\n                      P3\n                                                       10\n      1     A\n                           P1\n                 P2\n                                          P6\n         3  C                                   P9\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        140 / 155",
+      "image": "assets/page-140.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 141,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10                 P2\n                                          P6\n         3  C                                   P9\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        141 / 155",
+      "image": "assets/page-141.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 142,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10                 P2\n                                          P6\n         3  C                                   P9\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        142 / 155",
+      "image": "assets/page-142.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 143,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10                 P2\n                                          P6\n         3  C                                   P9\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        143 / 155",
+      "image": "assets/page-143.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 144,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10    P11                 P2\n                                          P6\n         3  C                                   P9\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        144 / 155",
+      "image": "assets/page-144.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 145,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10    P11                 P2\n                                          P6\n         3  C                                   P9\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        145 / 155",
+      "image": "assets/page-145.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 146,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10    P11                 P2\n                                          P6\n         3  C                                   P9        P12\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        146 / 155",
+      "image": "assets/page-146.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 147,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10    P11                 P2\n                                          P6\n         3  C                                   P9        P12\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        147 / 155",
+      "image": "assets/page-147.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 148,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10    P11                 P2\n                                          P6\n         3  C                                   P9        P12\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        148 / 155",
+      "image": "assets/page-148.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 149,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10    P11                 P2\n                                          P6\n         3  C                                   P9        P12\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        149 / 155",
+      "image": "assets/page-149.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 150,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10    P11                 P2\n                                          P6\n         3  C                                   P9        P12\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        150 / 155",
+      "image": "assets/page-150.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 151,
+      "title": "Zametací hyperrovina",
+      "text": "                                    Zametací hyperrovina\n\nZametací hyperrovina\n\n\n               4   D                     6\n                                   F\n\n        2\n\n           B                                  P4 P7  8\n                                                    9\n                                    G                13\n\n                      P3                P8\n                                                       10\n      1     A\n                           P1                 P10    P11                 P2\n                                          P6\n         3  C                                   P9        P12\n\n                                    P5  E                              14\n                                                                      12\n                                            7\n                                      5\n\n\n\n\n                                                              11\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        151 / 155",
+      "image": "assets/page-151.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 152,
+      "title": "Voroného diagram",
+      "text": "                                      Voroného diagram\n\nVoroného diagram\n\n\n\n\n Definice\n Nechť V je množina bodů nebo jiných objektů v rovině. Voroného\n buňka bodu p je množina všech bodů, které jsou k danému bodu\n nejbližší. Z vodroného buněk je tvořen voroného diagram.\n\n    Vstupem je množina bodů.\n    Výstupem je souvislý graf dělící celý prostor na voroného buňky.\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        152 / 155",
+      "image": "assets/page-152.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 153,
+      "title": "Voroného diagram",
+      "text": "                                      Voroného diagram\n\nVoroného diagram\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        153 / 155",
+      "image": "assets/page-153.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 154,
+      "title": "Voroného diagram",
+      "text": "                                      Voroného diagram\n\nVoroného diagram\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        154 / 155",
+      "image": "assets/page-154.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    },
+    {
+      "page": 155,
+      "title": "Co bychom po dnešku měli znát",
+      "text": "                                      Voroného diagram\n\nCo bychom po dnešku měli znát\n\n\n\n\n\n Témata probraná na dnešní přednášce:\n     Kvadrantové stromy a jejich odvozeniny\n     Hledání konvexní obálky\n     Zametací hyperrovina\n\n\n\n\n\n             Chludil (FIT)                     BI-PGA, Přednáška č. 10               ZS 2024/2025        155 / 155",
+      "image": "assets/page-155.svg",
+      "width": 362.8349914550781,
+      "height": 272.1260070800781,
+      "links": []
+    }
+  ]
+}
