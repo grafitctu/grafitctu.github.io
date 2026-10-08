@@ -2,6 +2,7 @@
 const fs=require('node:fs'),path=require('node:path');
 const base=path.resolve(__dirname,'../vyuka');
 const catalog=JSON.parse(fs.readFileSync(path.join(base,'catalog.json'),'utf8'));
+require('./add-lecture-return.cjs')(base,catalog);
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const languages={
  cs:{title:'Výuka',headline:'Přednášky na',accent:'jednom místě.',eyebrow:'GRAFIT · výukové materiály',lead:'Webové přednášky, interaktivní ukázky a doplňující materiály. Vyberte přednášku podle předmětu a tématu.',courses:'předmětů',topics:'témat',catalog:'Přehled přednášek',hint:'Vyberte přednášku podle předmětu a tématu.',row:'Přednáška / téma',open:'Otevřít přednášku ↗',web:'Interaktivní HTML',viewer:'Webový prohlížeč PDF',original:'PDF verze',pages:'snímků PDF',variants:'snímků ve variantách 1 / 2',supplement:'Doplněk k přednášce 02',planned:'Přednášky připravujeme',empty:'Zatím bez přednášky',lang:'Přednášky v češtině',skip:'Přeskočit na obsah',nav:'Jazyk stránky',note:'<strong>Pracovní knihovna.</strong> Postupně sem přibývají kopie vytvořených přednášek. Přehled zatím není odkazovaný z hlavní navigace GRAFITu. Číslování VHS zachovává dostupné zdroje; samostatné P10 a P11 v nich nejsou.',official:'Oficiální stránka předmětu VHS ↗',home:'GRAFIT · hlavní stránka ↗',snapshot:'Kopie aktualizované '+catalog.updated},

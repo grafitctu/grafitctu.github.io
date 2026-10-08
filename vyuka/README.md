@@ -80,3 +80,11 @@ The authoring workspace uses `tools/build_chludil_p01.py` and
 before rebuilding; a changed PDF requires a new content review. The PGA PDF
 refresh script preserves independently authored HTML lectures and their
 manifest entries.
+
+All 28 HTML lecture entrypoints (including alternative PDF viewers) now have
+a visible `Zpět na přehled` link to the teaching overview. Native players
+place it first in the toolbar; Reveal presentations use a fixed top-left
+link. It works without browser history or JavaScript and is hidden in print.
+`tools/add-lecture-return.cjs` is called by the overview generator after
+source copying, so weekly refreshes retain navigation. Source exports stay
+unchanged; the copy manifest records the adaptation and updated hashes.
