@@ -58,7 +58,7 @@
  $('contents').addEventListener('click',()=>overview.showModal());
  $('notes-toggle').addEventListener('click',()=>toggleNotes());$('notes-close').addEventListener('click',()=>toggleNotes(false));
  $('reading').addEventListener('click',toggleReading);$('fullscreen').addEventListener('click',fullscreen);
- document.querySelector('.brand').addEventListener('click',e=>{e.preventDefault();go(0);});
+ document.querySelector('.brand').addEventListener('click',e=>{if(e.currentTarget.id==='grafit-course-link')return;e.preventDefault();go(0);});
  overview.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();overview.close();go(Number(a.hash.slice(7))-1);}));
  document.querySelectorAll('dialog .close').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
  [overview,imageView].forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
