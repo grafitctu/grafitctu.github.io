@@ -1,6 +1,8 @@
 /* GRAFIT-only navigation, reapplied after each source refresh. */
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const sha=data=>crypto.createHash('sha256').update(data).digest('hex');
+const colors=require('./course-colors.cjs');
+const colorCss=Object.entries(colors).map(([id,[light,dark]])=>`#grafit-course-link[data-subject="${id}"]{color:${light}} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="${id}"]{color:${dark}}`).join('\n');
 const css=`
 .grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
 .grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
@@ -47,7 +49,7 @@ module.exports=function addLectureReturn(base,catalog){
    const toolbar=/<header\b[^>]*class="[^"]*\btoolbar\b[^"]*"[^>]*>/i;
    const href=path.relative(path.dirname(target),base).split(path.sep).join('/')+'/';
    const link=`<a id="grafit-lecture-return" class="grafit-lecture-return${toolbar.test(html)?'':' grafit-lecture-return--floating'}" href="${href}" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>`;
-   html=html.replace(/<\/head>/i,`<style id="grafit-lecture-return-style">${css}</style>\n</head>`);
+   html=html.replace(/<\/head>/i,`<style id="grafit-lecture-return-style">${css}${colorCss}</style>\n</head>`);
    if(toolbar.test(html)){
     html=html.replace(/<body\b([^>]*)>/i,(all,attrs)=>'<body'+(/\bclass="/.test(attrs)?attrs.replace(/class="([^"]*)"/,(_,v)=>`class="${v} grafit-toolbar-return"`):attrs+' class="grafit-toolbar-return"')+'>');
     html=html.replace(toolbar,all=>all+'\n'+link);
@@ -66,7 +68,8 @@ module.exports=function addLectureReturn(base,catalog){
    const version=sha(fs.readFileSync(path.join(path.dirname(target),'presentation.js'))).slice(0,12);
    html=html.replace(/src="presentation\.js(?:\?[^"]*)?"/,()=>`src="presentation.js?v=${version}"`);
   }
-  const refreshed=html.replace(/<style id="grafit-lecture-return-style">[\s\S]*?<\/style>/,`<style id="grafit-lecture-return-style">${css}</style>`);
+  html=html.replace(/<a\b[^>]*id="grafit-course-link"[^>]*>/,tag=>tag.replace(/ data-subject="[^"]*"/,'').replace(/>$/,` data-subject="${course.id}">`));
+  const refreshed=html.replace(/<style id="grafit-lecture-return-style">[\s\S]*?<\/style>/,`<style id="grafit-lecture-return-style">${css}${colorCss}</style>`);
   if(refreshed!==before.toString('utf8')){fs.writeFileSync(target,refreshed);changed++;}
   const result=fs.readFileSync(target);record.bytes=result.length;record.sha256=sha(result);
  }
