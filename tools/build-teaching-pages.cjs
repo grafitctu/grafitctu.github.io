@@ -22,7 +22,7 @@ for(const [lang,t] of Object.entries(languages)){
   if(Array.isArray(item))return `<td class="${course}" data-course="${courseLabel}">${item.map(lecture=>'<div class="lecture-card">'+cell(lecture,course,linkPrefix).replace(/^<td[^>]*>|<\/td>$/g,'')+'</div>').join('')}</td>`;
   const interactive=item.kind==='html'||item.primary.endsWith('/');
   const detail=item.description?.[lang]||(item.supplement?t.supplement:item.slides?`${item.slides.join(' / ')} ${t.variants}`:`${item.pages} ${t.pages}`);
-  const links=[`<a class="primary" href="${linkPrefix+item.primary}">${interactive?t.web:t.viewer} ↗</a>`,...(item.pdf?[`<a href="${linkPrefix+item.pdf}">PDF ↓</a>`]:[]),...(item.alternative?[`<a href="${linkPrefix+item.alternative}">${t.original} ↗</a>`]:[]),...(item.source?[`<a href="${escape(item.source)}">${lang==='cs'?'Zdroj autora':'Author source'} ↗</a>`]:[])];
+  const links=[`<a class="primary" href="${linkPrefix+item.primary}">${interactive?t.web:t.viewer} ↗</a>`,...(item.pdf?[`<a href="${linkPrefix+item.pdf}">PDF ↓</a>`]:[]),...(item.alternative?[`<a href="${linkPrefix+item.alternative}">${t.original} ↗</a>`]:[]),...(item.resources||[]).map(r=>`<a href="${linkPrefix+r.href}">${escape(r.title[lang])} ↗</a>`),...(item.source?[`<a href="${escape(item.source)}">${lang==='cs'?'Zdroj autora':'Author source'} ↗</a>`]:[])];
   return `<td class="${course}" data-course="${courseLabel}"><a class="lecture-title" href="${linkPrefix+item.primary}">${escape(item.title[lang])} <span aria-hidden="true">↗</span></a><p class="lecture-description">${escape((item.number ? course.toUpperCase()+' · '+item.number+' · ' : '')+detail)}</p><div class="lecture-links">${links.join('')}</div></td>`;
  };
  const html=`<!doctype html>

@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="VHS: GDD, základní herní smyčka, interaktivní testy a cvičení Us vs It s A/B playtestem.">
+  <title>VHS · GDD pro malý herní tým</title>
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('vhs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch{}</script>
+  <style>
+:root{color-scheme:light;--paper:#fcfbf8;--ink:#203039;--muted:#586973;--accent:#245d72;--line:#d9dfdf;--panel:#eef2f2;font-family:Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body{margin:0}button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;color:inherit;border:1px solid var(--line);background:transparent;border-radius:5px;padding:9px 14px;cursor:pointer}button:hover{background:var(--panel)}button:disabled{opacity:.3;cursor:default}a{color:var(--accent);text-underline-offset:4px}a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:4px}h1,h2,h3,p,figure{margin:0}h1{font-size:clamp(42px,5.4vw,78px);font-weight:600;line-height:1.12;letter-spacing:-.045em;max-width:1100px}h2{font-size:clamp(30px,3.2vw,48px);font-weight:600;letter-spacing:-.035em;line-height:1.15;margin-bottom:30px}h3{font-size:1em;line-height:1.3;font-weight:650;margin-bottom:10px}strong{font-weight:650}.accent{color:var(--accent)}
+.toolbar{height:76px;padding:0 4vw;display:flex;align-items:center;gap:32px;border-bottom:1px solid var(--line);font-size:14px;background:var(--paper);position:relative;z-index:5}.brand{text-decoration:none;color:var(--ink);font-size:21px;font-weight:700;letter-spacing:.08em}.brand span{color:var(--muted);font-weight:400}.toolbar nav{display:flex;gap:8px;margin-left:auto}#chapter{color:var(--muted)}
+.slide{padding:42px 5vw 38px;max-width:1600px;margin:auto;line-height:1.5;font-size:clamp(20px,2vw,29px);border-bottom:1px solid var(--line)}.content{max-width:1300px}.content> *+*{margin-top:22px}.content>ul:first-child,.content>ol:first-child{margin-top:0}ul,ol{padding-left:1.25em;margin:16px 0}li{padding-left:.2em;margin:10px 0}li::marker{color:var(--accent)}.columns{display:flex;gap:38px;align-items:center;margin:10px 0 26px}.column{flex:1;min-width:0}.column> *+*{margin-top:18px}.block{border-left:3px solid #9bafb6;padding:16px 22px;background:var(--panel);margin:20px 0}.emphasis{border-left-color:var(--accent);background:#e8eff1}.block ul,.block ol{margin-bottom:0}.source{font-size:15px;color:var(--muted)}figure{text-align:center}figure img{display:block;max-width:100%;max-height:37vh;width:auto;height:auto;object-fit:contain;margin:auto;cursor:zoom-in}figure img:focus-visible{outline:3px solid var(--accent)}.diagram{width:100%;max-height:360px;display:block}.center{text-align:center}.center table{text-align:left}.flow{display:flex;align-items:center;justify-content:center;gap:18px;margin:24px auto 36px}.flow>div{padding:18px;border:1px solid #bac8cc;border-radius:5px;background:var(--panel);flex:1}.flow.vertical{flex-direction:column;gap:7px;margin:0 auto;max-width:500px}.flow.vertical>div{padding:9px 22px;width:100%}.arrow{color:var(--accent)}.avatar-symbol{text-align:center}.avatar-symbol svg{width:230px;max-height:26vh}.avatar-symbol p{font-size:.9em}table{border-collapse:collapse;width:100%;font-size:.88em;line-height:1.4}td,th{padding:16px 18px;border-bottom:1px solid var(--line);vertical-align:top}th{text-align:left;background:var(--panel)}td:first-child{font-weight:600;min-width:120px}.table-wrap{overflow-x:auto}.cover{padding:4vh 0}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:15px;color:var(--accent);margin-bottom:30px}.byline{margin-top:40px;color:var(--muted);font-size:22px;line-height:1.6}.closing{font-size:32px;color:var(--muted)}
+.controls{height:70px;padding:0 4vw;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;background:var(--paper);border-top:1px solid var(--line);font-size:13px;color:var(--muted)}.pager{display:flex;gap:18px;align-items:center}.pager button{font-size:22px;padding:3px 16px}.pager output{font-variant-numeric:tabular-nums;min-width:68px;text-align:center;color:var(--ink)}.progress{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--line)}#progress-value{height:100%;background:var(--accent);transition:width .26s ease}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%)}
+body.presenting{height:100dvh;overflow:hidden;display:grid;grid-template-rows:76px minmax(0,1fr) 70px}.presenting #deck{position:relative;overflow:hidden;min-height:0}.presenting .slide{position:absolute;inset:0;overflow:auto;max-width:1600px;width:100%;border:0;display:flex;flex-direction:column;justify-content:safe center}.presenting .slide[hidden]{display:none}.presenting .title-slide{justify-content:center}.presenting .slide:focus{outline:none}body.reading .slide{min-height:70vh;padding-top:70px;padding-bottom:70px}.reading .toolbar{position:sticky;top:0}.reading .controls{position:sticky;bottom:0}.reading .slide{scroll-margin-top:75px}.reading #reading{background:var(--panel)}
+dialog{border:1px solid var(--line);border-radius:10px;padding:28px;color:var(--ink);background:var(--paper);max-height:85dvh;width:min(850px,92vw)}dialog::backdrop{background:rgba(25,38,44,.45)}.dialog-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}.dialog-heading h2{margin:0;font-size:30px}#overview nav{display:grid;gap:3px}#overview nav a{display:grid;grid-template-columns:35px 1fr;gap:8px;text-decoration:none;padding:12px;border-radius:4px;color:var(--ink)}#overview nav a:hover,#overview nav a[aria-current]{background:var(--panel)}#overview nav a>span:first-child{color:var(--muted);font-variant-numeric:tabular-nums}#overview small{grid-column:2;color:var(--muted)}#image-view{width:96vw;height:92dvh;padding:50px 20px 20px}#image-view img{width:100%;height:100%;object-fit:contain}#image-view .close{position:absolute;right:12px;top:9px}
+@media(min-width:1100px) and (max-height:760px){.slide{font-size:23px;padding-top:25px;padding-bottom:25px}h2{font-size:36px;margin-bottom:22px}.block{padding:12px 18px;margin:16px 0}li{margin:7px 0}.content> *+*{margin-top:17px}.columns{margin-bottom:15px}.flow.vertical{gap:3px}.flow.vertical>div{padding:4px 20px}}
+@media(max-width:760px){.toolbar{padding:0 18px;gap:12px;height:65px}.toolbar nav{gap:5px}.toolbar button{padding:8px 10px}#chapter,#fullscreen span,.hint,.credit{display:none}body.presenting{grid-template-rows:65px minmax(0,1fr) 64px}.slide{font-size:20px;padding:28px 22px}h2{font-size:30px;margin-bottom:24px}.columns{flex-direction:column;align-items:stretch;gap:20px}.column{flex:auto}.block{padding:15px 17px}figure img{max-height:32vh}.flow{flex-wrap:wrap;gap:10px}.flow>div{min-width:100px;padding:12px}.flow.vertical{gap:4px}.flow.vertical>div{min-width:0}.controls{height:64px;justify-content:center}.presenting .slide{justify-content:flex-start}.byline{font-size:20px}.cover{padding:3vh 0}table{font-size:18px}td,th{padding:12px 10px}.table-wrap{max-width:100%}dialog{padding:18px}}
+:root[data-theme="dark"]{color-scheme:dark;--paper:#151d23;--ink:#e5edf1;--muted:#afbec8;--accent:#8dcde1;--line:#384751;--panel:#223039}
+:root[data-theme="dark"] .emphasis{background:#243b46}
+:root[data-theme="dark"] .flow>div{border-color:#617783}
+:root[data-theme="dark"] .diagram rect,:root[data-theme="dark"] .avatar-symbol circle{fill:var(--panel);stroke:#8aa4b0}
+:root[data-theme="dark"] .diagram text{fill:var(--ink)}
+:root[data-theme="dark"] .diagram path[stroke],:root[data-theme="dark"] .avatar-symbol path{stroke:var(--accent)}
+:root[data-theme="dark"] .diagram marker path{fill:var(--accent)}
+#theme{font-size:20px;line-height:1;min-width:40px}
+@media(max-width:400px){.toolbar{padding-inline:12px;gap:8px}.toolbar button{padding-inline:8px}.brand{font-size:18px}#theme{min-width:34px}}
+@media print{:root[data-theme="dark"]{color-scheme:light;--paper:#fff;--ink:#203039;--muted:#586973;--accent:#245d72;--line:#d9dfdf;--panel:#eef2f2}:root[data-theme="dark"] .emphasis{background:#e8eff1}}
+@media(min-width:761px) and (max-height:820px){#slide-17 figure img{max-height:30vh}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{@page{size:A4 landscape;margin:12mm}.toolbar,.controls,dialog,.no-script{display:none!important}body.presenting{display:block;height:auto;overflow:visible}#deck{overflow:visible!important}.slide,.presenting .slide,.presenting .slide[hidden]{display:block!important;position:static!important;overflow:visible;break-after:page;border:none;min-height:0;padding:12px;font-size:18px;max-width:none}.slide:last-child{break-after:auto}h1{font-size:48px}h2{font-size:30px}.columns{display:flex;flex-direction:row}.content>*+*{margin-top:16px}figure img{max-height:100mm}.block{break-inside:avoid}li{margin:7px 0}.source{font-size:12px}}
+
+</style>
+  <style>
+/* Additive styling; the shared P01 stylesheet is never modified. */
+:root{--success:#286642;--warn:#8a4218} :root[data-theme="dark"]{--success:#9ad7af;--warn:#efb48a}
+.mobile-label{display:none}.eyebrow{margin-bottom:17px;letter-spacing:.1em}.lead{font-size:clamp(24px,2.6vw,36px);color:var(--muted);margin-top:22px}.title-slide h1{font-size:clamp(40px,4.8vw,69px)}
+.small-label{font-size:.6em;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:8px}.micro{font-size:.64em;color:var(--muted);line-height:1.5}.muted{color:var(--muted)}.intro{font-size:.9em}.takeaway{border-left:3px solid var(--accent);padding:8px 0 8px 20px;font-size:.87em}.definition{max-width:1200px;font-size:1.08em;line-height:1.5}.source{font-size:14px;line-height:1.5}
+.three-up{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}.two-up{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px}.two-up h3{margin-bottom:12px}.document-types{padding-block:24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.document-types p+p{margin-top:10px}.document-types p{font-size:.87em}.document-types h3{font-size:.86em}.document-types h3+p{font-size:1em}
+.opening-prompt{margin-top:32px;border-top:1px solid var(--line);padding-top:16px}.opening-prompt blockquote{font-size:.93em}.opening-prompt details{margin-top:10px}.opening-prompt .interpretations{font-size:.7em;padding-block:12px}.interpretations p{line-height:1.5}blockquote{margin:0;font-size:1.13em;line-height:1.45}details summary{cursor:pointer;color:var(--accent);font-size:.74em;padding:7px 0}summary:focus-visible,input:focus-visible,select:focus-visible,#parcel-board:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.brief-grid,.mechanic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 38px;margin:0}.brief-grid>div,.mechanic-grid>div{padding:14px 0;border-top:1px solid var(--line)}dt{font-weight:650;font-size:.86em;margin-bottom:7px}dd{margin:0;font-size:.83em;line-height:1.48}.mechanic-grid dt{font-size:1em}.mechanic-grid dt span{color:var(--accent);margin-right:12px;font-variant-numeric:tabular-nums}.mechanic-grid>div{padding-block:18px}.compact-flow{gap:13px;font-size:.73em;margin:26px 0 20px;justify-content:stretch}.compact-flow>div{padding:13px 12px;text-align:center;background:transparent;border:1px solid var(--line);border-radius:0}.revision-flow{font-size:.87em;margin:0 0 30px}
+.tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);padding-bottom:9px;font-size:.7em}.tabs button[aria-selected="true"]{background:var(--panel);border-color:var(--accent);color:var(--accent)}.example-panel{padding:12px 0 6px}.content>.example-panel{margin-top:0}.example-panel>p{font-size:.91em;color:var(--muted);margin-top:24px}.example-panel[hidden]{display:none}.rule-list{margin:0}.rule-list>div{display:grid;grid-template-columns:230px 1fr;gap:25px;border-bottom:1px solid var(--line);padding:8px 0}.rule-list dt,.rule-list dd{font-size:.76em;margin:0}.rule-list dd{line-height:1.4}
+.demo{border:1px solid var(--line);padding:17px 20px;background:var(--panel);font-size:.75em}.demo-controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px}.demo-controls label{display:flex;align-items:center;gap:8px}input[type="checkbox"]{accent-color:var(--accent);width:19px;height:19px;flex:none;margin:0}select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);padding:6px 9px;border-radius:4px}.demo button{background:var(--paper);padding:7px 13px}.demo-result{margin-top:13px;min-height:1.5em;font-weight:600}.quiet{color:var(--muted)}.dialogue-line{font-style:italic;margin-top:17px}.state-line{font-size:.82em;line-height:1.6}code{font:inherit;font-family:Consolas,monospace;font-size:.88em;background:var(--panel);padding:1px 5px;overflow-wrap:anywhere}.dialogue-table{font-size:.78em}.dialogue-table th:first-child{width:19%}.dialogue-table th:nth-child(2){width:42%}.dialogue-table tbody th{background:transparent;font-weight:600}.dialogue-table th,.dialogue-table td{padding:13px 17px}
+.scope-table{font-size:.83em}.scope-table th{width:33.33%;font-weight:650}.scope-table td{font-weight:400!important;line-height:1.8}.questions{font-size:.88em}.questions p{line-height:1.7}.change-entry{border-top:1px solid var(--line);padding-top:14px;font-size:.82em}.change-entry p+p{margin-top:14px}.exercise-question{font-size:1.35em;line-height:1.4;max-width:1100px}.resource-line{display:flex;flex-wrap:wrap;gap:12px 35px;font-size:.7em;line-height:1.5}.resource-line a{font-weight:600}.rules-brief{font-size:.88em}.rules-brief ol,.rules-brief ul{margin-top:12px}.rules-brief li{margin:10px 0}
+.game-layout{display:grid;grid-template-columns:1fr 1.15fr;gap:44px;align-items:start}.game-board-side{max-width:580px}.parcel-map{table-layout:fixed;border-collapse:separate;border-spacing:4px;font-size:19px;line-height:1.2}.parcel-map th,.parcel-map td{padding:0;text-align:center;border:0;vertical-align:middle;min-width:0;height:48px}.parcel-map thead th,.parcel-map tbody th,.parcel-map thead td{background:transparent;height:27px;font-size:14px;color:var(--muted);font-weight:400}.parcel-map th:first-child{width:25px}.parcel-map td.cell{border:1px solid var(--line);font-weight:600;position:relative;background:var(--panel);transition:background .15s}.parcel-map td.wall{background:var(--line);color:var(--muted)}.parcel-map td.player{background:var(--accent);color:var(--paper);border-color:var(--accent)}.parcel-map td.goal{border:2px solid var(--success)}.parcel-map td.player.goal{background:var(--success);color:var(--paper)}.parcel-map td span{display:block}.parcel-map td small{font-size:10px;display:block;font-weight:400;margin-top:2px}.game-hud{display:flex;justify-content:space-between;gap:12px;margin:12px 4px;font-size:.61em;font-variant-numeric:tabular-nums}.game-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px;font-size:.66em}.game-actions button{padding:9px 12px}.dpad{display:flex;gap:5px}.dpad button{font-size:21px;line-height:1.1;min-width:39px;min-height:41px}.game-rule-side{font-size:.82em}.game-rule-side h3{font-size:1.05em}.game-rule-side ul{margin-block:15px}.game-rule-side li{margin:9px 0}.game-status{border-left:3px solid var(--accent);background:var(--panel);padding:14px 18px;min-height:76px;font-size:.88em}.game-legend{font-size:.74em;color:var(--muted);margin-top:13px;line-height:1.7}.game-status[data-state="won"]{border-color:var(--success)}.game-status[data-state="lost"]{border-color:var(--warn)}
+.schedule-layout{font-size:.88em;gap:60px}.phase-list{list-style:none;padding:0;margin:0}.phase-list li{display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding:8px 10px;margin:0;font-size:.84em}.phase-list li[aria-current="step"]{border-left:3px solid var(--accent);background:var(--panel);padding-left:7px;font-weight:650}.phase-list li span:last-child{color:var(--muted);white-space:nowrap}.timer{border:1px solid var(--line);padding:15px 17px;margin-top:18px}.timer>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:15px;font-size:.77em}.timer output{font-size:38px;font-variant-numeric:tabular-nums;line-height:1.2;color:var(--accent)}.timer-buttons{display:flex;flex-wrap:wrap;gap:8px;margin:11px 0;font-size:.73em}.timer-buttons button{padding:7px 11px}#timer-toggle{min-width:120px}.score-list{display:grid;gap:17px;font-size:.92em}.score-list label{display:flex;gap:12px;align-items:baseline}.reflection-heading{margin-top:27px}.score-list+.micro{margin-top:12px}.source-list{font-size:.79em;list-style:none;padding:0}.source-list li{padding:14px 0;border-bottom:1px solid var(--line);margin:0}.source-list li span{display:block;font-size:.83em;color:var(--muted);margin-top:4px}.no-script{padding:20px 5vw;font-size:18px;background:var(--panel)}#notes-content{font-size:19px;line-height:1.65}#notes-content p+p{margin-top:18px}#notes-content h3{font-size:21px;color:var(--accent);margin-bottom:18px}
+.document-excerpts{display:grid;gap:14px}.document-excerpts article{border-top:1px solid var(--line);padding-top:13px}.document-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px}.document-heading h3{font-size:.94em;margin:0;min-width:0}.document-heading span{font-size:.6em;color:var(--muted);white-space:nowrap}.document-excerpts p{font-size:.79em;line-height:1.5;margin-top:7px}.reading-contract dd{font-size:.82em}.reading-contract dt{font-size:.91em}
+.long-document-titles .document-heading{align-items:flex-start}.reading-navigation{margin-top:20px}
+.unity-pitch{border-left:3px solid var(--accent);padding-left:20px;font-size:1.02em;max-width:1100px}.unity-reveal{border-top:1px solid var(--line);padding-top:8px}.unity-reveal summary{font-size:.78em}.unity-reveal p{font-size:.78em;line-height:1.5;margin-top:8px}.unity-outline{margin:0;font-size:.82em}.unity-outline>div{display:grid;grid-template-columns:220px 1fr;gap:25px;border-top:1px solid var(--line);padding:10px 0}.unity-outline dt,.unity-outline dd{font-size:1em;margin:0}.unity-reading{font-size:.87em;line-height:1.5}.unity-reading li{margin-block:12px}
+@media(max-width:760px){.unity-outline>div{grid-template-columns:1fr;gap:5px}.unity-outline{font-size:18px}.unity-reveal summary,.unity-reveal p,.unity-reading{font-size:18px}}
+@media print{.unity-reveal summary{display:none}.unity-reveal>p{display:block!important}.unity-outline{font-size:16px}.unity-outline>div{grid-template-columns:175px 1fr;padding-block:7px}.unity-reading{font-size:18px}}
+@media(min-width:1100px) and (max-height:760px){.title-slide h1{font-size:53px}.lead{font-size:27px}.opening-prompt{margin-top:20px}.brief-grid>div{padding-block:10px}.mechanic-grid>div{padding-block:14px}.document-types{padding-block:19px}.rule-list>div{padding-block:6px}.demo{padding:12px 16px}.source{font-size:12px}.parcel-map td.cell{height:44px}.game-status{min-height:60px}.timer{margin-top:13px}.phase-list li{padding-block:6px}.score-list{gap:13px}.reflection-heading{margin-top:20px}.document-excerpts{gap:10px}.document-excerpts article{padding-top:10px}}
+@media(max-width:900px){.three-up{gap:20px}.two-up{gap:30px}.rule-list>div{grid-template-columns:180px 1fr;gap:18px}.game-layout{gap:25px;grid-template-columns:1fr 1fr}.game-hud{flex-wrap:wrap}.document-types h3{font-size:.94em}.compact-flow{gap:7px;font-size:.71em}.compact-flow>div{padding:12px 8px}.toolbar{gap:15px}.toolbar nav{gap:6px}#chapter{display:none}}
+@media(max-width:760px){.mobile-label{display:inline}.desktop-label{display:none}.toolbar{padding-inline:12px;gap:8px}.toolbar nav{gap:4px}.toolbar button{padding:8px 7px;min-height:37px}#notes{min-width:33px}.brand{font-size:18px;letter-spacing:.02em;white-space:nowrap}.slide{font-size:20px}.eyebrow{font-size:11px;margin-bottom:17px}.content>*+*{margin-top:20px}h2{font-size:30px;margin-bottom:23px}.title-slide h1{font-size:42px}.lead{font-size:23px}.three-up,.two-up,.brief-grid,.mechanic-grid,.game-layout{grid-template-columns:1fr;gap:20px}.three-up.interpretations{gap:12px}.opening-prompt blockquote{font-size:1em}.opening-prompt .interpretations{font-size:.85em}.definition{font-size:1em}.document-types{padding-block:18px}.document-types h3,.document-types p,.document-types h3+p{font-size:1em}.document-types>div+div{border-top:1px solid var(--line);padding-top:17px}.brief-grid,.mechanic-grid{gap:0}.brief-grid dd,.mechanic-grid dd{font-size:1em}.brief-grid dt{font-size:1em}.mechanic-grid>div{padding-block:15px}.compact-flow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));font-size:.85em;gap:8px}.compact-flow .arrow{display:none}.compact-flow>div{min-width:0}.rule-list>div{grid-template-columns:1fr;gap:5px;padding-block:10px}.rule-list dt,.rule-list dd{font-size:1em}.tabs{font-size:16px}.example-panel>p{font-size:1em}.demo{font-size:17px;padding:15px}.demo-controls{gap:15px}.demo-controls label{width:100%}.demo-result{line-height:1.55}.dialogue-table{min-width:590px;font-size:18px}.state-line{font-size:1em}.scope-table{min-width:630px;font-size:18px}.questions,.rules-brief,.game-rule-side,.schedule-layout{font-size:1em}.change-entry{font-size:1em}.exercise-question{font-size:1.2em}.resource-line{font-size:16px;gap:14px}.game-layout{gap:27px}.game-board-side{max-width:100%}.parcel-map{border-spacing:3px;font-size:19px}.parcel-map td.cell{height:48px}.game-hud{font-size:14px;gap:8px}.game-actions{font-size:16px}.game-status{font-size:17px}.game-legend{font-size:16px}.phase-list li{font-size:17px;line-height:1.5}.timer>div:first-child{font-size:17px}.timer-buttons{font-size:16px}.score-list{font-size:18px}.micro{font-size:14px}.source,.source-list{font-size:15px}.takeaway{font-size:1em}.source-list li span{font-size:15px}.timer output{font-size:36px}#notes-content{font-size:17px}.controls .hint,.controls .credit{display:none}}
+@media(max-width:360px){.toolbar{padding-inline:10px}.brand span{display:none}.toolbar button{padding-inline:6px}}
+@media(max-width:760px){.document-heading{display:block}.document-heading h3{font-size:21px}.document-heading span{font-size:14px;white-space:normal}.document-excerpts p{font-size:18px}.reading-contract dd{font-size:18px}.reading-contract dt{font-size:20px}}
+@media print{.document-excerpts{gap:10px}.document-excerpts article{padding-top:10px}.document-excerpts p{font-size:16px}.document-heading h3{font-size:20px}.document-heading span{font-size:12px}.reading-contract dd{font-size:17px}.reading-contract dt{font-size:18px}}
+@media print{.slide .eyebrow{font-size:11px}.title-slide h1{font-size:43px}.slide .lead{font-size:25px}.three-up{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.two-up,.brief-grid,.mechanic-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 25px}.game-layout{grid-template-columns:1fr 1.15fr;gap:30px}.compact-flow{display:flex;font-size:.72em;gap:10px;margin:18px 0}.compact-flow>div{padding:10px}.compact-flow .arrow{display:inline}.document-types{padding-block:17px}.definition{font-size:1.05em}.brief-grid>div,.mechanic-grid>div{padding-block:9px}.brief-grid dt,.mechanic-grid dt{font-size:.95em}.brief-grid dd,.mechanic-grid dd{font-size:.9em}.example-panel[hidden]{display:block!important}.tabs,.demo-controls,.game-actions,.timer-buttons{display:none!important}#door-vague{display:none!important}.example-panel{padding-top:0}.rule-list>div{grid-template-columns:165px 1fr;padding:7px 0;gap:18px}.rule-list dt,.rule-list dd{font-size:.89em}.demo{font-size:.85em;background:transparent}.demo-result{display:none}.dialogue-line{margin:0}.dialogue-table,.scope-table{min-width:0;font-size:.91em}.questions,.rules-brief,.schedule-layout{font-size:.94em}.game-rule-side{font-size:.89em}.parcel-map td.cell{height:39px}.parcel-map th,.parcel-map td{height:20px}.game-hud{font-size:12px}.game-status{font-size:14px;min-height:0;padding:9px}.game-legend{font-size:13px}.phase-list li{font-size:15px;padding-block:6px}.timer{padding:10px}.timer>div:first-child{font-size:16px}.timer output{font-size:29px}.score-list{gap:13px;font-size:17px}.micro{font-size:12px}.source,.source-list{font-size:12px}.source-list li{padding-block:11px}.resource-line{font-size:13px}.takeaway{font-size:.95em}.opening-prompt{margin-top:20px}.opening-prompt details{display:none}.source-list li span{font-size:12px}.table-wrap{overflow:visible}.reflection-heading{margin-top:18px}.slide .content>*+*{margin-top:16px}}
+
+</style>
+  <style>
+/* Core-loop content follows the established VHS typography and palette. */
+.sequence-workspace{display:grid;grid-template-columns:1.25fr 1fr;gap:44px;align-items:start}.sequence-guidance>.quiz-actions{margin-top:0}.sequence-guidance>*+*{margin-top:18px}@media(max-width:760px){.sequence-workspace{grid-template-columns:1fr;gap:20px}}@media print{.sequence-workspace{grid-template-columns:1.25fr 1fr;gap:30px}}
+@media(min-width:1100px) and (max-height:760px){#slide-29 .content>*+*{margin-top:12px}}
+@media(min-width:1100px) and (max-height:760px){#loop-quiz .quiz-question{margin:6px 0}#loop-quiz .quiz-question legend{margin-bottom:8px}#loop-quiz .quiz-question label{padding:4px 0}#slide-22 .loop-feedback,#slide-23 .loop-feedback,#slide-29 .loop-feedback{min-height:48px}#slide-23 .sequence-list li{padding-top:3px;padding-bottom:3px}#slide-23 .content>*+*{margin-top:12px}#slide-29 .ab-calculator{gap:14px 28px}#slide-29 .ab-calculator input{padding:8px 10px}}
+.loop-diagram{list-style:none;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin:26px 0;font-size:.78em}.loop-diagram li{margin:0;padding:15px 0;border-top:2px solid var(--accent);min-width:0}.loop-diagram strong,.loop-diagram span{display:block}.loop-diagram span{font-size:.94em;color:var(--muted);margin-top:9px}.us-cycle{grid-template-columns:repeat(4,minmax(0,1fr))}.loop-levels{margin:0}.loop-levels>div{display:grid;grid-template-columns:240px 1fr;gap:25px;padding:17px 0;border-top:1px solid var(--line)}.loop-levels dt,.loop-levels dd{font-size:.86em;margin:0}.loop-transcript{font-size:.89em;border-left:3px solid var(--accent);padding-left:22px;color:var(--muted)}.quiz-question{border:0;padding:0;margin:18px 0}.quiz-question[hidden]{display:none}.quiz-question legend{font-weight:650;font-size:1.06em;line-height:1.45;padding:0;margin-bottom:18px}.quiz-question label{display:flex;align-items:baseline;gap:12px;padding:10px 0;font-size:.91em}.quiz-question input[type=radio]{accent-color:var(--accent);flex:none;width:18px;height:18px}.quiz-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;font-size:.73em}.loop-feedback{font-size:.81em;line-height:1.55;min-height:64px;border-left:3px solid var(--accent);padding:10px 0 10px 17px}.loop-feedback[data-state=lost]{border-color:var(--warn)}.loop-feedback[data-state=won]{border-color:var(--success)}.sequence-list{margin:0;padding-left:1.4em;font-size:.85em}.sequence-list li{border-bottom:1px solid var(--line);display:list-item;margin:0;padding:8px 0 8px 8px}.sequence-list li>span:first-child{display:inline-block;max-width:calc(100% - 110px);vertical-align:middle}.sequence-controls{float:right;display:flex;gap:7px}.sequence-controls button{padding:5px 11px;min-height:38px}.sequence-list li::after{content:"";display:block;clear:both}.loop-options{font-size:.92em}.demo button[aria-pressed=true]{background:var(--accent);color:var(--paper);border-color:var(--accent)}.ab-calculator{display:grid;grid-template-columns:1fr 1fr;gap:18px 28px;font-size:.79em}.ab-calculator label{display:block;margin-bottom:7px}.ab-calculator input{font:inherit;background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:10px;width:100%;max-width:300px}.ab-calculator button{justify-self:start}.lab-phases li{font-size:.83em}.loop-source-list{display:grid;grid-template-columns:1fr 1fr;gap:0 34px;font-size:.74em}.loop-source-list li{padding:11px 0;min-width:0}.loop-source-list li span{font-size:.88em}
+@media(max-width:760px){.loop-diagram{grid-template-columns:1fr;gap:0;font-size:18px}.loop-diagram li{padding:12px 0}.loop-diagram span{margin-top:3px}.loop-levels>div{grid-template-columns:1fr;gap:7px;padding:14px 0}.loop-levels dt,.loop-levels dd,.loop-transcript{font-size:18px}.quiz-actions{font-size:16px}.quiz-question legend{font-size:21px}.quiz-question label{font-size:18px}.loop-feedback{font-size:17px;min-height:0}.sequence-list{font-size:17px;padding-left:20px}.sequence-controls{gap:4px}.sequence-controls button{padding:5px 9px}.sequence-list li>span:first-child{max-width:calc(100% - 88px)}.ab-calculator{grid-template-columns:1fr;font-size:17px}.loop-source-list{grid-template-columns:1fr;font-size:18px}.lab-phases li{font-size:17px}.lab-phases li>span:first-child{min-width:0}}
+@media print{.quiz-actions,.sequence-controls,.ab-calculator button{display:none!important}.quiz-question[hidden]{display:block!important}.loop-test #quiz-fields{display:grid;grid-template-columns:1fr 1fr;gap:5px 22px}.quiz-question{margin:5px 0;break-inside:avoid}.quiz-question legend{font-size:15px;margin-bottom:3px}.quiz-question label{font-size:13px;padding:3px 0}.loop-test #quiz-count,#quiz-feedback,#quiz-total{display:none}.loop-diagram{grid-template-columns:repeat(5,minmax(0,1fr));font-size:15px;gap:12px;margin:18px 0}.us-cycle{grid-template-columns:repeat(4,minmax(0,1fr))}.loop-levels>div{grid-template-columns:170px 1fr;padding:13px 0;gap:20px}.loop-levels dt,.loop-levels dd{font-size:17px}.loop-transcript{font-size:18px}.loop-feedback{font-size:15px;min-height:0}.sequence-list{font-size:17px}.sequence-list li>span:first-child{max-width:100%}.ab-calculator{grid-template-columns:1fr 1fr;font-size:15px;gap:12px}.ab-calculator input{background:#fff!important;color:#203039!important;min-height:28px;padding:5px}.loop-source-list{grid-template-columns:1fr 1fr;font-size:15px;gap:0 25px}.loop-source-list li{padding:9px 0}.loop-source-list li span{font-size:13px}.lab-phases li{font-size:15px}}
+
+</style>
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+</head>
+<body class="grafit-toolbar-return">
+  <header class="toolbar">
+<a id="grafit-lecture-return" class="grafit-lecture-return" href="../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+    <a class="brand" id="grafit-course-link" href="../" aria-label="Přehled přednášek VHS" data-subject="vhs">VHS <span>· GDD</span></a>
+    <span id="chapter">Výklad · 25 minut</span>
+    <nav aria-label="Ovládání přednášky">
+      <button id="contents" type="button" title="Obsah (O)">Obsah</button>
+      <button id="reading" type="button" aria-pressed="false" title="Všechny snímky pod sebou">Čtení</button>
+      <button id="notes" type="button" title="Poznámky pro vyučujícího (N)" aria-label="Poznámky pro vyučujícího"><span class="desktop-label">Poznámky</span><span class="mobile-label" aria-hidden="true">N</span></button>
+      <button id="theme" type="button" aria-pressed="false" title="Tmavý režim" aria-label="Zapnout tmavý režim">☾</button>
+      <button id="fullscreen" type="button" title="Celá obrazovka (F)" aria-label="Celá obrazovka">⛶</button>
+    </nav>
+  </header>
+
+  <main id="deck" aria-label="Přednáška o GDD">
+    <section class="slide title-slide" id="slide-1" data-section="Výklad · 25 minut" data-minutes="2" aria-label="Snímek 1: GDD pro malý herní tým" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">VHS · GDD 25 min + herní smyčka a testy 23 min</p>
+        <h1>GDD pro malý<br>herní tým</h1>
+        <p class="lead">Jak popsat hru tak, aby ji kolega dokázal vytvořit.</p>
+        <div class="opening-prompt">
+          <p class="small-label">Stejný nápad, různé hry</p>
+          <blockquote>„Uděláme napínavou adventuru s chytrými NPC.“</blockquote>
+          <details>
+            <summary>Co si pod tím může představit tým?</summary>
+            <div class="three-up interpretations">
+              <p><strong>Programátor</strong><br>NPC plánují vlastní činnosti.</p>
+              <p><strong>Scenárista</strong><br>NPC si pamatují hráčovy odpovědi.</p>
+              <p><strong>Grafik</strong><br>NPC mají čitelné emoce a gesta.</p>
+            </div>
+          </details>
+        </div>
+        <p class="takeaway">Cíl dneška: popsat hráčovy činnosti a ověřit pravidla hraním. Cviko A/B a vlastní návrh C: 60–65 minut.</p>
+      </div>
+      <template class="speaker-notes"><h3>2 min · stejný nápad, různé představy</h3><p>Nechte studenty nejprve říct, co pro ně znamená „chytré NPC“. Teprve potom rozbalte tři interpretace. Každá může být rozumná. Problémem je nevyřčená odlišnost představ.</p><p>Základ má plán 25 minut GDD a 23 minut herní smyčky včetně testů. Volitelná dílna podle Unity na adresách 31–33 přidává 10 minut, celkem tedy 58 minut. Bez dílny po snímku 8 přejděte na adresu 19. Stacking na adrese 34 je samostatná alternativa čtení na 8 minut. Nepřičítejte automaticky všechny volitelné bloky.</p><p>Navazující cviko Us vs It zahrnuje A/B, 10–15 minut na návrh vlastních pravidel C a poslední testovací běh. Samostatný plán má 60–65 minut. Štafeta a čtení původních GDD zůstávají volitelné alternativy. Časy jsou návrh, ne měření ve třídě. Pro kratší 35minutový výklad použijte základní GDD a snímky s adresami 19, 20, 21 a 26.</p></template>
+    </section>
+
+    <section class="slide" id="slide-2" data-section="Výklad · 25 minut" data-minutes="3" aria-label="Snímek 2: Úloha GDD" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">01 · společná představa</p>
+        <h2>Úloha GDD</h2>
+        <p class="definition"><strong>Game Design Document</strong> zachycuje, jakou hru vytváříme, co v ní hráč dělá a podle jakých pravidel svět reaguje.</p>
+        <div class="three-up document-types">
+          <div><h3>Pitch</h3><p>Proč má hra vzniknout?</p><p class="muted">Nápad, publikum, přitažlivost.</p></div>
+          <div><h3>GDD</h3><p>Jak hra funguje?</p><p class="muted">Cíle, akce, pravidla a obsah.</p></div>
+          <div><h3>Technická dokumentace</h3><p>Jak ji implementujeme?</p><p class="muted">Kód, data, nástroje, rozhraní.</p></div>
+        </div>
+        <p class="takeaway">GDD může být dokument, wiki i sada propojených stránek.<br>Důležité je, aby tým našel platná rozhodnutí.</p>
+        <p class="source">Hranice dokumentů se v praxi překrývají; nejde o povinnou univerzální šablonu. Zdroje: Unity Learn; Tim Ryan (1999).</p>
+      </div>
+      <template class="speaker-notes"><h3>3 min · účel, nikoli předepsaný formát</h3><p>GDD je pracovní dohoda a pomůcka pro spolupráci, ne záruka, že hra bude dobrá, a ne náhrada komunikace. Pitch, návrh a technický popis oddělujeme podle účelu; v malém týmu mohou být v jednom místě.</p><p>Počet stran sám o sobě neříká nic o kvalitě. Podrobný text má smysl tehdy, když umožňuje rozhodnout, předat práci nebo ověřit chování.</p><p>Zdroje: <a href="https://learn.unity.com/tutorial/create-a-game-design-document?version=2022.3" target="_blank" rel="noopener">Unity Learn: Create a game design document</a>; <a href="https://www.gamedeveloper.com/design/the-anatomy-of-a-design-document-part-1-documentation-guidelines-for-the-game-concept-and-proposal" target="_blank" rel="noopener">Tim Ryan: The Anatomy of a Design Document, Part 1</a>.</p></template>
+    </section>
+
+    <section class="slide" id="slide-3" data-section="Výklad · 25 minut" data-minutes="3" aria-label="Snímek 3: Přehled hry na jedné stránce" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">02 · první vrstva dokumentu</p>
+        <h2>Přehled hry na jedné stránce</h2>
+        <p class="intro">Příklad: <strong>Poslední zásilka</strong> — malá tahová hra o plánování cesty.</p>
+        <dl class="brief-grid">
+          <div><dt>Zážitek a cíl</dt><dd>Kurýr plánuje cestu pod časovým tlakem. Zásilku musí doručit nejpozději ve 12. tahu.</dd></div>
+          <div><dt>Akce a rozhodnutí</dt><dd>Pohyb, jedna speciální akce. Volba trasy a pořadí akcí.</dd></div>
+          <div><dt>Pravidla a odezva</dt><dd>Mřížka 5 × 5. Akce stojí jeden tah. Figurka ukazuje polohu, žetony zbývající čas.</dd></div>
+          <div><dt>Platforma a rozsah</dt><dd>Papír. Jedna mapa, jeden cíl, jedna přidaná mechanika. Bez dalších úrovní.</dd></div>
+        </dl>
+        <div class="flow compact-flow" aria-label="Opakující se činnosti hráče"><div>Prohlédnout stav</div><span class="arrow" aria-hidden="true">→</span><div>Vybrat akci</div><span class="arrow" aria-hidden="true">→</span><div>Změnit stav</div><span class="arrow" aria-hidden="true">→</span><div>Ověřit cíl</div></div>
+        <p class="source">Vlastní výukový příklad. Jedna stránka je začátek pro malý projekt, ne náhrada detailů potřebných při vývoji.</p>
+      </div>
+      <template class="speaker-notes"><h3>3 min · stručný přehled, podrobnosti až podle potřeby</h3><p>Ukažte rozdíl mezi jednovětým námětem a použitelným přehledem. Přehled dovolí odhadnout velikost projektu; samostatná pravidla dále řeší výchozí stav, výjimky a chování mechanik.</p><p>Šipky představují opakující se činnosti hráče, ne strukturu programu. U digitální hry sem patří cílová platforma, způsob ovládání a přístupnost. U dnešního prototypu je platformou papír a fyzické předměty.</p><p>Ve cvičení přidají týmy jednu mechaniku. Smysluplnost volby a dosažitelnost cíle jsou otázky pro hraní, nikoli ověřené vlastnosti návrhu.</p></template>
+    </section>
+
+    <section class="slide" id="slide-4" data-section="Výklad · 25 minut" data-minutes="3" aria-label="Snímek 4: Zápis jedné mechaniky" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">03 · od nápadu k pravidlu</p>
+        <h2>Zápis jedné mechaniky</h2>
+        <dl class="mechanic-grid">
+          <div><dt><span>1</span> Vstup</dt><dd>Co přesně udělá hráč?</dd></div>
+          <div><dt><span>2</span> Podmínky</dt><dd>Kdy je akce dostupná a úspěšná?</dd></div>
+          <div><dt><span>3</span> Změna stavu</dt><dd>Co se změní ve světě, inventáři či úkolu?</dd></div>
+          <div><dt><span>4</span> Odezva</dt><dd>Jak hráč pozná výsledek?</dd></div>
+          <div><dt><span>5</span> Výjimky</dt><dd>Co když akce selže nebo se opakuje?</dd></div>
+          <div><dt><span>6</span> Smysl</dt><dd>Jakou volbu nebo zážitek pravidlo vytváří?</dd></div>
+        </dl>
+        <p class="takeaway">Popisujte pozorovatelné chování, ne jen přídavná jména.</p>
+      </div>
+      <template class="speaker-notes"><h3>3 min · šest kontrolních otázek</h3><p>Vezměte jednoduchou akci, například otevření dveří. Každý bod musí být zodpovězen přiměřeně tomu, kdo popis použije. Ke grafice může patřit skica stavů, ke zvuku seznam událostí a priorit.</p><p>Rozlišujte návrhovou hodnotu od výsledku měření. Parametr může být konkrétní a přitom nevyvážený. Ověření zábavnosti patří do prototypu a hraní.</p><p>Tyto otázky jsou vlastní výuková pomůcka. Na potřebu jasných mechanik, interakcí a krajních stavů upozorňuje i <a href="https://unity.com/blog/the-secret-to-more-efficient-playable-production" target="_blank" rel="noopener">Ori Ben-Moshe (2022)</a>; jeho text je o výrobě reklamních playable ukázek, nikoli univerzální norma pro všechna GDD.</p></template>
+    </section>
+
+    <section class="slide" id="slide-5" data-section="Výklad · 25 minut" data-minutes="4" aria-label="Snímek 5: Zamčené dveře: od věty k pravidlu" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">04 · společná oprava zápisu</p>
+        <h2>Zamčené dveře: od věty k pravidlu</h2>
+        <div class="tabs" role="tablist" aria-label="Podrobnost zápisu dveří">
+          <button type="button" role="tab" id="door-tab-vague" aria-controls="door-vague" aria-selected="true">Vágní zápis</button>
+          <button type="button" role="tab" id="door-tab-specific" aria-controls="door-specific" aria-selected="false" tabindex="-1">Použitelný zápis</button>
+        </div>
+        <div id="door-vague" class="example-panel" role="tabpanel" aria-labelledby="door-tab-vague">
+          <blockquote>„Některé dveře jsou zamčené a hráč potřebuje správný klíč.“</blockquote>
+          <p>Které dveře? Jaká interakce? Spotřebuje se klíč?<br>Co se stane bez klíče a při opakování?</p>
+        </div>
+        <div id="door-specific" class="example-panel" role="tabpanel" aria-labelledby="door-tab-specific">
+          <dl class="rule-list">
+            <div><dt>Vstup a dosah</dt><dd>Klávesa E, dosah ≤ 1,5 m (výchozí návrh), bez překážky mezi hráčem a dveřmi.</dd></div>
+            <div><dt>Výchozí stav</dt><dd>Bronzové dveře jsou zamčené.</dd></div>
+            <div><dt>S bronzovým klíčem</dt><dd>Dveře se otevřou a zůstanou otevřené. Klíč se nespotřebuje.</dd></div>
+            <div><dt>Bez klíče / dosah</dt><dd>„Chybí bronzový klíč.“ / „Přijdi blíž nebo odstraň překážku.“</dd></div>
+            <div><dt>Opakování a smysl</dt><dd>Otevřené dveře nic dalšího nezmění. Zpřístupní zkratku po průzkumu.</dd></div>
+          </dl>
+        </div>
+        <div class="demo" id="door-demo">
+          <div class="demo-controls">
+            <label><input id="door-key" type="checkbox"> Mám bronzový klíč</label>
+            <label><input id="door-range" type="checkbox" checked> V dosahu, bez překážky</label>
+            <button id="door-interact" type="button">Interakce E</button>
+            <button id="door-reset" class="quiet" type="button">Reset</button>
+          </div>
+          <p class="demo-result" id="door-result" role="status">Dveře jsou zamčené. Zkuste interakci.</p>
+        </div>
+      </div>
+      <template class="speaker-notes"><h3>4 min · nejprve opravují studenti</h3><p>Nejdříve ukažte pouze vágní zápis. Sesbírejte nejasnosti a nechte třídu navrhnout pravidla. Pak přepněte na použitelný zápis. Jsou i jiné správné varianty, pokud jsou jednoznačné a odpovídají záměru hry.</p><p>Vyzkoušejte selhání bez klíče, úspěch s klíčem, opakování a interakci mimo dosah. Priorita v této ukázce je: otevřený stav → dosah → klíč. Úspěch se hlásí textem; produkční hra může přidat animaci a zvuk bez závislosti na jediném smyslovém kanálu.</p><p>Co potřebuje grafik? Skici zamčeného a otevřeného stavu. Zvukař? Události odmítnutí a otevření. Programátor ukládání? Rozhodnutí, zda stav dveří přetrvá načtení. Poslední bod je otevřená otázka, ne tajně domyšlené pravidlo.</p></template>
+    </section>
+
+    <section class="slide" id="slide-6" data-section="Výklad · 25 minut" data-minutes="4" aria-label="Snímek 6: Příběh jako stav a reakce" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">05 · příběh, dialog a herní důsledek</p>
+        <h2>Příběh jako stav a reakce</h2>
+        <p class="state-line">Dokončený úkol <em>Záchrana převozníka</em> nastaví <code>prevoznik_zachranen = true</code>.</p>
+        <div class="table-wrap"><table class="dialogue-table"><thead><tr><th scope="col">Stav</th><th scope="col">Replika</th><th scope="col">Herní pravidlo</th></tr></thead><tbody>
+          <tr><th scope="row">Zachráněn</th><td>„Dlužím ti život. Nastup, tebe vozím zdarma.“</td><td>Přejezd stojí 0 mincí.</td></tr>
+          <tr><th scope="row">Nezachráněn</th><td>„Na druhý břeh? Dvě mince a můžeme vyrazit.“</td><td>Přejezd: 2 mince. Bez nich se nejede.</td></tr>
+        </tbody></table></div>
+        <div class="demo">
+          <div class="demo-controls">
+            <label><input id="ferry-saved" type="checkbox"> Převozník zachráněn</label>
+            <label>Mince <select id="ferry-coins"><option value="0">0</option><option value="1">1</option><option value="2" selected>2</option><option value="4">4</option></select></label>
+            <button id="ferry-cross" type="button">Přejet</button>
+            <button id="ferry-reset" class="quiet" type="button">Reset</button>
+          </div>
+          <p id="ferry-line" class="dialogue-line">„Na druhý břeh? Dvě mince a můžeme vyrazit.“</p>
+          <p class="demo-result" id="ferry-result" role="status">V inventáři: 2 mince. Zkuste přejet.</p>
+        </div>
+        <p class="micro">Dialogy a chování NPC probereme podrobněji později.</p>
+      </div>
+      <template class="speaker-notes"><h3>4 min · příběhová reakce a herní pravidlo</h3><p>Převozník si pamatuje pomoc hráče. Vděk zazní v replice a projeví se také bezplatným přejezdem. Scénář obsahuje konkrétní repliky, GDD vysvětluje podmínky a herní účinek. Bez záchrany platba proběhne pouze při uskutečněném přejezdu, a to pokaždé. Neúspěšný pokus mince nemění.</p><p>Dialogům a chování NPC se budeme věnovat podrobněji v dalších přednáškách. Zde ukazujeme vazbu mezi příběhovým stavem, reakcí postavy a cenou přejezdu.</p><p>Ukázka nemá ukládání do souboru. Ve skutečném projektu bychom museli rozhodnout, zda příznak přežije přechod mezi lokacemi a načtení hry. Označte to jako otevřenou otázku s vlastníkem. Pro studenty je to vlastní didaktický příklad, nikoli citace konkrétní komerční hry.</p><p>Doplňující otázka: co když jsou dvě různé podmínky pro dvě různé repliky současně pravdivé? Pravidla musí určit prioritu. Neodkazujte jen na „inteligenci NPC“.</p></template>
+    </section>
+
+    <section class="slide" id="slide-7" data-section="Výklad · 25 minut" data-minutes="3" aria-label="Snímek 7: Rozsah a otevřené otázky" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">06 · co skutečně vytvoříme</p>
+        <h2>Rozsah a otevřené otázky</h2>
+        <div class="table-wrap"><table class="scope-table"><thead><tr><th scope="col">Teď</th><th scope="col">Později, pokud zbude čas</th><th scope="col">Mimo tento projekt</th></tr></thead><tbody><tr>
+          <td>Jedna mapa 5 × 5.<br>Pohyb a jedna mechanika.<br>Čitelný stav a konec hry.</td>
+          <td>Druhá mapa.<br>Vyladěné ilustrace.<br>Volitelná zvuková odezva.</td>
+          <td>Procedurální svět.<br>Multiplayer.<br>Rozsáhlé větvené dialogy.</td>
+        </tr></tbody></table></div>
+        <div class="two-up questions">
+          <div><h3>Co potřebujeme ověřit hraním?</h3><p>Dá se do 12 tahů vyhrát?<br>Má hráč skutečnou volbu?<br>Pochopí pravidla jiný tým?</p></div>
+          <div><h3>Co ještě není rozhodnuto?</h3><p>„Spotřebuje se klíč?“<br>„Vozí nás převozník zdarma pokaždé, nebo jen jednou?“<br><span class="muted">Rozhodne návrhář mechaniky před předáním prototypu.</span></p></div>
+        </div>
+        <p class="takeaway">„Nevíme“ je použitelný zápis, pokud je jasné, kdo a kdy otázku uzavře.</p>
+      </div>
+      <template class="speaker-notes"><h3>3 min · zmenšení rozsahu a poctivá nejistota</h3><p>Sloupce jsou vlastní prioritizační pomůcka pro dnešní malý projekt. Budoucí vylepšení nejsou závazek ani podmínka úspěchu.</p><p>Rozlišujte neověřený předpoklad („hra je napínavá“) od nerozhodnuté specifikace („klíč se spotřebuje?“). Jedno vyžaduje test, druhé konkrétní rozhodnutí. U dveří z předchozího příkladu už bylo rozhodnuto, že klíč nezmizí; zde ukazujeme podobu otevřené otázky jiného návrhu.</p><p>U převozníka je nutné rozhodnout i četnost odměny: jeden bezplatný přejezd, nebo opakovaná výhoda? Ukázka předchozího snímku používá opakované přejezdy zdarma. Jednorázová odměna by vyžadovala další stav pro její vyčerpání a test druhé plavby.</p><p>Čitelnost, ovládání a dostupná zpětná vazba patří mezi základní požadavky, ne mezi kosmetická vylepšení. Například symbol i název předmětu, klávesnice i tlačítka a dostatečný kontrast.</p></template>
+    </section>
+
+    <section class="slide" id="slide-8" data-section="Výklad · 25 minut" data-minutes="3" aria-label="Snímek 8: Práce s živým dokumentem" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">07 · návrh se vyvíjí</p>
+        <h2>Práce s živým dokumentem</h2>
+        <div class="flow compact-flow revision-flow" aria-label="Cyklus revize návrhu"><div>Rozhodnutí</div><span class="arrow" aria-hidden="true">→</span><div>Prototyp</div><span class="arrow" aria-hidden="true">→</span><div>Hraní</div><span class="arrow" aria-hidden="true">→</span><div>Revize GDD</div></div>
+        <div class="two-up">
+          <div><h3>U každého pravidla</h3><ul><li>Jednotné názvy a aktuální verze.</li><li>Konkrétní vstup, výsledek a výjimky.</li><li>Otevřené otázky s vlastníkem.</li><li>Skica tam, kde text nestačí.</li></ul></div>
+          <div><h3>Příklad záznamu změny</h3><div class="change-entry"><p class="small-label">v0.1 → v0.2 · dveře · autor: tým A</p><p><strong>Změna:</strong> doplněno chování po druhé interakci.</p><p><strong>Důvod:</strong> tester očekával zavření dveří.</p><p><strong>Nové pravidlo:</strong> otevřené dveře další interakcí nezmění stav.</p></div></div>
+        </div>
+        <p class="takeaway">Pro malý školní tým: stručný přehled + podrobnosti potřebné k další práci.</p>
+        <nav class="resource-line" aria-label="Další blok výkladu"><a href="#slide-31">Dílna podle Unity · 10 min</a><a href="#slide-19">Přeskočit dílnu: herní smyčka</a></nav>
+      </div>
+      <template class="speaker-notes"><h3>3 min · dokument po hraní opravujeme</h3><p>Verzování může být prostý záznam změn nebo historie v repozitáři. Důležité je jediné známé místo s platným návrhem. Neaktuální PDF rozeslaná týmu jsou snadný zdroj rozporů.</p><p>Oddělujte rozhodnuté chování od nápadů. Změna musí mít důvod: odhalená nejasnost, problém při hraní, příliš velký rozsah. Není nutné zaznamenat každou typografickou úpravu.</p><p>Uzavřete osm snímků výkladu: studenti by nyní měli umět popsat jednu mechaniku tak, aby ji jiný člověk mohl realizovat a ověřit.</p></template>
+    </section>
+
+    <section class="slide" id="slide-31" data-section="Dílna podle Unity · volitelně 10 minut" data-unity-minutes="2" aria-label="GDD kolem hotového prototypu" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Unity Learn · práce s existujícím základem</p>
+        <h2>GDD kolem hotového prototypu</h2>
+        <p class="intro">Unity v této lekci vychází z už hratelného prototypu. Oba postupy mají smysl:</p>
+        <div class="two-up document-types">
+          <div><h3>Návrh před prototypem</h3><p>Zapíšeme záměr a pravidla. Prototyp ověří, zda fungují.</p></div>
+          <div><h3>Prototyp před GDD</h3><p>Popíšeme, co už funguje. Určíme téma a další rozsah.</p></div>
+        </div>
+        <p class="takeaway">Náš úkol: stejná mapa a pravidla <em>Poslední zásilky</em>, jiné zasazení. Která označení a odezva pomohou hráči chápat stav?</p>
+        <p class="source">Zdroj přístupu: <a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-dev-create-a-game-design-document?version=6.3" target="_blank" rel="noopener">Unity Learn, oddíl 2</a>. Zadání s kurýrem je naše adaptace.</p>
+      </div>
+      <template class="speaker-notes"><h3>2 min · omezení jako zadání</h3><p>Unity používá prototypy Roll-a-Ball a Sprite Flight. Nejde o předepsané pořadí pro všechny projekty. <a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-dev-create-a-game-design-document?version=6.3">Původní lekce, oddíl 2</a>.</p><p>Pro naše cvičení zachováme mapu 5 × 5, pohyb bez diagonál, start A1, cíl E5 a výhru nejpozději ve 12. tahu. Zvolenou mechaniku klíče a dveří také neměníme. Z kurýra může vzniknout robot nesoucí vzorek. Návrh musí vysvětlit, co zobrazuje zbývající čas a jak rozeznat cíl. Žádné nové pravidlo nedoplňujeme potichu.</p><p>Smysl: pojmenovat hráčovy činnosti a popsat jejich prezentaci bez zvětšování rozsahu. Ve štafetě nebo variantě C už pravidla naopak vědomě měníme. Pokud dílnu vynecháte, pokračujte rovnou na adresu 19.</p></template>
+    </section>
+
+    <section class="slide" id="slide-32" data-section="Dílna podle Unity · volitelně 10 minut" data-unity-minutes="2" aria-label="Jednovětý popis a herní slovesa" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Krátký pitch · co skutečně dělá hráč</p>
+        <h2>Jednovětý popis a herní slovesa</h2>
+        <p class="intro"><strong>Postava + činnost + cíl + hlavní překážka.</strong> Pomůcka z lekce Unity.</p>
+        <blockquote class="unity-pitch">„Kurýr volí trasu a otevírá zamčené dveře, aby doručil zásilku do 12 tahů.“</blockquote>
+        <p class="intro"><strong>Herní slovesa:</strong> prohlédnout mapu, vybrat trasu, posunout se, získat klíč, otevřít dveře.</p>
+        <details class="unity-reveal" id="pitch-reflection"><summary>„Prožívat napínavé dobrodružství“: co ještě chybí?</summary><p>Co hráč ovládá a podle čeho uspěje? Náš pitch to pojmenuje. Podrobné GDD ještě určí dosah otevření, cenu akce a chování bez klíče.</p></details>
+        <p class="source">Věta a rozbor jsou náš výukový příklad. Zdroj pomůcky: <a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-dev-create-a-game-design-document?version=6.3" target="_blank" rel="noopener">Unity Learn, oddíl 6</a>.</p>
+      </div>
+      <template class="speaker-notes"><h3>2 min · slovesa místo vágních slibů</h3><p>Před rozbalením nechte třídu říct, které akce by dokázala implementovat. „Pociťovat napětí“ je zamýšlený zážitek. „Otevřít dveře ze sousedního pole za jeden tah“ už popisuje konkrétní chování.</p><p>Pitch je vlastní formulace pro naši hru. Přídavná jména mohou vystihnout tón, ale sama neurčují pravidla. Hlavní překážkou je limit tahů, dveře vytvářejí další omezení cesty. Sloveso „získat“ lze v detailu upřesnit: vstup na pole s klíčem.</p><p><a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-dev-create-a-game-design-document?version=6.3">Zdroj: Unity Learn, oddíl 6</a>. Jednovětý popis pomáhá s orientací v projektu, neprokazuje jeho zábavnost.</p></template>
+    </section>
+
+    <section class="slide" id="slide-33" data-section="Dílna podle Unity · volitelně 10 minut" data-unity-minutes="6" aria-label="Startovací GDD ve dvojici" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Šest minut · krátká šablona, vlastní návrh</p>
+        <h2>Startovací GDD ve dvojici</h2>
+        <p class="intro">Změňte zasazení <em>Poslední zásilky</em>. Mapu, pravidla i limit 12 tahů ponechte. Ke každé části napište nejvýše dvě věty.</p>
+        <dl class="unity-outline">
+          <div><dt>Úvod</dt><dd>Pracovní název, jednovětý popis, hráčova slovesa.</dd></div>
+          <div><dt>Jádro hry</dt><dd>Cíl, pravidla, obtížnost, opakování akcí a odezva.</dd></div>
+          <div><dt>Výtvarný směr</dt><dd>Vzhled světa. Jak rozlišíme hráče, klíč, dveře a cíl?</dd></div>
+          <div><dt>Budoucí nápady</dt><dd>Jeden námět na později, oddělený od dnešního zadání.</dd></div>
+          <div><dt>Volitelné údaje</dt><dd>Žánr, publikum, platforma, monetizace. Jen relevantní položky.</dd></div>
+        </dl>
+        <p class="micro"><strong>4 min zápis, 1 min čtení partnerem, 1 min oprava.</strong> Partner označí jednu nejasnost. Vlastní doplnění výslovně pojmenujte.</p>
+        <nav class="resource-line" aria-label="Podklady Unity"><a href="https://docs.google.com/document/d/1_4h-1GrunxMWqKhVKIcD_6YUnt5mtrZskFph1_079OE/copy" target="_blank" rel="noopener">Šablona Unity v Google Docs</a><a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-dev-create-a-game-design-document?version=6.3" target="_blank" rel="noopener">Lekce a šablona pro Word</a></nav>
+      </div>
+      <template class="speaker-notes"><h3>6 min · krátký zápis a revize</h3><p>Členění adaptujeme ze šablony Unity. Tato lekce vyplňuje pouze její úvod, další části rozvíjí navazující lekce. Náš šestiminutový úkol je samostatná pedagogická adaptace, ne původní zadání Unity. <a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-dev-create-a-game-design-document?version=6.3">Zdroj, oddíly 4 a 7</a>.</p><p>První čtyři minuty dvojice píše, pak si každý přečte zápis partnera a společně opraví jednu konkrétní nejasnost. Například „robot sbírá data“ má určit, zda vstup na pole nahrazuje získání klíče, nebo nenápadně přidává nové sbírání. Zápis obou variant nemůže být současně platným pravidlem.</p><p>Pokud dvojice potřebuje mapu, otevřete naši <a href="#slide-11">hratelnou ukázku</a>. Výtvarný směr má zachovat čitelnost i bez barev. U papírové hry může oddíl monetizace zůstat výslovně „mimo zadání“. Úspěch hodnotíme podle shody zápisu a pravidel, ne podle prodejnosti názvu.</p><p>Šablona Google Docs otevírá vytvoření kopie a může vyžadovat přihlášení. V lekci je i stažení Word souboru. Dnešní úkol lze celý splnit na papíře bez účtu. U vlastního semestrálního projektu příště použijte stejné otázky, rozsah určete podle potřeb týmu.</p></template>
+    </section>
+
+    <section class="slide" id="slide-19" data-section="Herní smyčka a testy · 23 minut" data-loop-minutes="2" aria-label="Základní herní smyčka" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Core gameplay loop · hráčův pohled</p>
+        <h2>Základní herní smyčka</h2>
+        <p class="definition">Opakovaná návaznost <strong>hráčových činností, výsledků a dalších rozhodnutí</strong>. Každý průchod mění stav hry nebo hráčovo porozumění situaci.</p>
+        <ol class="loop-diagram" aria-label="Ukázka smyčky kurýra"><li><strong>Situace</strong><span>Trasa a zbývající čas</span></li><li><strong>Volba</strong><span>Bezpečná nebo rychlá cesta</span></li><li><strong>Akce</strong><span>Pohyb a doručení</span></li><li><strong>Výsledek</strong><span>Zásilka a spotřebovaný čas</span></li><li><strong>Další průchod</strong><span>Odezva a nová situace</span></li></ol>
+        <p class="takeaway">Co hráč během běžné minuty opakovaně dělá? Co zjistí z výsledku a proč svou volbu příště změní?</p>
+        <p class="source">Definice: <a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-design?version=6.3" target="_blank" rel="noopener">Unity Learn: Game Design</a>. Kurýr je náš výukový příklad.</p>
+      </div>
+      <template class="speaker-notes"><h3>2 min · cyklus z hráčova pohledu</h3><p>Požádejte o konkrétní činnosti, ne o žánr nebo téma. Změna může být ve světě, inventáři, dostupných možnostech, ale také ve znalosti hráče. Odměna nemusí mít podobu XP nebo měny. Ani opakování samo nezaručuje zábavu. Ptejte se na motivaci a odezvu.</p><p>Diagram je naše pomůcka, nikoli jediná univerzální šablona. Zdroj: <a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-design?version=6.3">Unity Learn</a>. Prostor pro vracející se rozhodnutí zapište do GDD.</p></template>
+    </section>
+
+    <section class="slide" id="slide-20" data-section="Herní smyčka a testy · 23 minut" data-loop-minutes="2" aria-label="Mechanika a různé úrovně smyčky" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Rozlišení pojmů a časových měřítek</p>
+        <h2>Mechanika a úrovně smyčky</h2>
+        <dl class="loop-levels"><div><dt>Mechanika</dt><dd>Skok. Jedna možnost, kterou hra hráči poskytuje.</dd></div><div><dt>Krátká herní smyčka</dt><dd>Čtení překážky, pokus o překonání, odezva, nový pokus nebo další překážka.</dd></div><div><dt>Dlouhodobá progrese</dt><dd>Výprava, získané vybavení, úprava postavy a další výprava.</dd></div><div><dt>Technická smyčka enginu</dt><dd>Vstup, aktualizace simulace a vykreslení. Popisuje běh programu.</dd></div></dl>
+        <p class="takeaway">U každé kresby smyčky uveďte měřítko: několik sekund, jedno kolo, jedna výprava nebo několik herních sezení.</p>
+        <p class="source">Rozlišení měřítek: <a href="https://www.riotgames.com/en/urf-academy/opposition" target="_blank" rel="noopener">Riot URF Academy, modul 3</a>, učitelský PDF str. 15. Příklady jsou naše adaptace.</p>
+      </div>
+      <template class="speaker-notes"><h3>2 min · stejná hra, více měřítek</h3><p>Skok není celou smyčkou, ale může být její klíčovou mechanikou. Hranice mezi core loopem a delší progresí závisí na měřítku a hře. Neopravujte studentovu rozumnou interpretaci jen proto, že má jiný počet uzlů. Vyzvěte ho, aby vysvětlil návaznost.</p><p>Riot v učitelském PDF na straně 15 rozlišuje okamžiky, jednotlivé hry i delší období. Technické schéma enginu uvádíme jako terminologický kontrast, ne jako programátorský výklad.</p></template>
+    </section>
+
+    <section class="slide" id="slide-21" data-section="Herní smyčka a testy · 23 minut" data-loop-minutes="3" aria-label="Třicet sekund hraní v GDD" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Krátký zápis do dokumentu · práce ve dvojici</p>
+        <h2>Třicet sekund hraní v GDD</h2>
+        <p class="intro">Pár vět zachytí jeden konkrétní průchod. Příběhové pozadí může zůstat v jiné části dokumentu.</p>
+        <blockquote class="loop-transcript">Kurýr vidí dvě trasy. Zvolí zkratku, otevře dveře klíčem a posune se na další pole. Čas klesne o dvě akce. Ukazatel upozorní, že zbývají tři. Kurýr přehodnotí další cestu.</blockquote>
+        <dl class="brief-grid"><div><dt>Vstup a volba</dt><dd>Co hráč ví a mezi čím vybírá?</dd></div><div><dt>Pravidlo a stav</dt><dd>Co se změní a kolik to stojí?</dd></div><div><dt>Odezva</dt><dd>Jak hráč pozná výsledek?</dd></div><div><dt>Pokračování</dt><dd>Jak výsledek ovlivní další volbu?</dd></div></dl>
+        <p class="source">Zadání 30 sekund gameplaye: <a href="https://ocw.mit.edu/courses/cms-301-introduction-to-game-design-methods-spring-2016/resources/mitcms_301s16_highlevel/" target="_blank" rel="noopener">MIT: High Level Design Doc Template</a>. Ukázka kurýra je náš návrh.</p>
+      </div>
+      <template class="speaker-notes"><h3>3 min · malý průchod odhalí velké mezery</h3><p>Jednu minutu píše první student, druhý zvýrazní nejasnou podmínku. Pak společně doplní odezvu a pokračování. Nejde o předepsaný děj nebo univerzální časové parametry. Zda je zkratka výhodná, musí rozhodnout konkrétní mapa a pravidla.</p><p>MIT šablona žádá popis 30 sekund z pohledu hráče a opakované klíčové akce. Naše čtyři otázky jsou zkrácená výuková adaptace. <a href="https://ocw.mit.edu/courses/cms-301-introduction-to-game-design-methods-spring-2016/resources/mitcms_301s16_highlevel/">Původní šablona</a>.</p></template>
+    </section>
+
+    <section class="slide" id="slide-22" data-section="Herní smyčka a testy · 23 minut" data-loop-minutes="4" aria-label="Interaktivní test pojmů" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Aktivní test · šest otázek s vysvětlením</p>
+        <h2>Herní smyčka a ověření návrhu</h2>
+        <form id="loop-quiz" class="loop-test"><p id="quiz-count" class="micro">Šest otázek</p><div id="quiz-fields"><p>Test po spuštění JavaScriptu nabídne otázky postupně.</p></div><div class="quiz-actions"><button id="quiz-prev" type="button">Předchozí otázka</button><button id="quiz-check" type="submit">Ověřit odpověď</button><button id="quiz-next" type="button">Další otázka</button><button id="quiz-reset" type="button">Znovu</button></div></form>
+        <p id="quiz-feedback" class="loop-feedback" role="status" aria-live="polite">Vyberte odpověď.</p>
+        <p id="quiz-total" class="micro">Výsledky zůstávají jen v této stránce.</p>
+        <p class="source">Vlastní otázky VHS. Pro další procvičení: <a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/quiz/unit-4-planning-your-game" target="_blank" rel="noopener">Unity Learn: Planning your game, 11 otázek</a>.</p>
+      </div>
+      <template class="speaker-notes"><h3>4 min · hlasování před odhalením</h3><p>Nechte třídu nejprve hlasovat. Následně ověřte odpověď a přečtěte vysvětlení. Klíč: 1 druhá možnost, 2 první, 3 třetí, 4 druhá, 5 třetí, 6 první. Výsledek neměří schopnost navrhnout dobrou hru, jen porozumění pojmům. Odpovědi ani jména se nikam neodesílají.</p><p>Otázky jsme vytvořili pro VHS, nekopírují celý test Unity. Veřejný <a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/quiz/unit-4-planning-your-game">test Unity</a> má širší záběr v plánování hry. Uložení postupu může vyžadovat účet.</p></template>
+    </section>
+
+    <section class="slide" id="slide-23" data-section="Herní smyčka a testy · 23 minut" data-loop-minutes="3" aria-label="Sestavení herní smyčky" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Aktivní test · pořadí a návaznost</p>
+        <h2>Smyčka kurýra</h2>
+        <p class="intro">Začněte výběrem trasy. Po hledání hra vyhodnotí výsledek, změní stav a ukáže ho hráči.</p>
+        <div class="sequence-workspace"><ol id="sequence-list" class="sequence-list" aria-label="Pořadí kroků smyčky"></ol><div class="sequence-guidance"><div class="quiz-actions"><button id="sequence-check" type="button">Ověřit pořadí</button><button id="sequence-reset" type="button">Promíchat znovu</button></div><p id="sequence-feedback" class="loop-feedback" role="status">Šipky lze aktivovat klávesnicí.</p><p class="micro">Jedno pořadí platí pro popsanou scénu. U jiné hry mohou změna stavu a odezva probíhat současně.</p></div></div>
+      </div>
+      <template class="speaker-notes"><h3>3 min · konkrétní smlouva, ne univerzální graf</h3><p>Vlastní cvičení VHS. Správně: volba trasy, pohyb a hledání, výsledek, změna stavu, odezva a nový výběr. Zeptejte se, zda by bez odezvy mohl hráč kvalifikovaně rozhodnout. Výsledné pořadí je vůči výslovně zadané scéně. Nevyvozujte z něj obecné pravidlo o pořadí UI a simulace.</p></template>
+    </section>
+
+    <section class="slide" id="slide-24" data-section="Herní smyčka a testy · 23 minut" data-loop-minutes="3" aria-label="Volba trasy a dominantní strategie" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Odhad před výpočtem · dvě dostupné akce</p>
+        <h2>Volba trasy</h2>
+        <p class="intro">Obě trasy stojí jednu akci. Cílem je <strong>maximalizovat průměrný počet zásilek na pokus</strong>.</p>
+        <div class="two-up loop-options"><div><h3>Bezpečná trasa</h3><p>Jedna zásilka vždy.</p></div><div><h3>Expres</h3><p>Tři zásilky při úspěchu, jinak žádná.</p></div></div>
+        <div class="demo"><label for="delivery-probability">Pravděpodobnost úspěchu expresu</label> <select id="delivery-probability"><option value="1">100 %</option><option value="0.1">10 %</option><option value="0.5">50 %</option></select><div class="quiz-actions"><button type="button" data-delivery="safe" aria-pressed="false">Bezpečná</button><button type="button" data-delivery="express" aria-pressed="false">Expres</button><button id="delivery-check" type="button">Ověřit odhad</button></div></div>
+        <p id="delivery-feedback" class="loop-feedback" role="status">Kterou trasu zvolíte? Potom změňte pravděpodobnost.</p>
+        <p class="takeaway">Při 100% úspěchu expres bezpečnou trasu převyšuje bez nevýhody. Nižší jistota přidá jiný druh rozhodování.</p>
+      </div>
+      <template class="speaker-notes"><h3>3 min · kdy dvě tlačítka představují dvě volby</h3><p>Naše záměrně malá rozhodovací úloha. Při 100 % má expres 3 zásilky oproti 1 bez dalšího nákladu. V těchto podmínkách bezpečnou trasu přísně dominuje. Při 10 % je očekávaný výsledek 0,3 a při 50 % 1,5. Maximalizaci průměru rozlište od jistoty v jednom pokusu.</p><p>Co když potřebujeme doručit právě jednu zásilku a neúspěch znamená konec? Cíl se změnil, proto může bezpečná trasa získat smysl i při 50 %. Riziko není povinný recept na zajímavou hru. Jiné možnosti: odlišný čas, znalost mapy nebo omezený zdroj. Tohle nejsou empiricky vyvážené hodnoty.</p></template>
+    </section>
+
+    <section class="slide" id="slide-25" data-section="Herní smyčka a testy · 23 minut" data-loop-minutes="3" aria-label="Test rozporu mezi GDD a prototypem" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Aktivní test · hraniční podmínka</p>
+        <h2>GDD a chování prototypu</h2>
+        <p class="definition">GDD: „Doručení nejpozději ve 12. tahu znamená výhru.“</p>
+        <div class="two-up"><div><h3>Testovací vstup</h3><p>Hráč právě vstoupil do cíle. Počítadlo ukazuje 12.</p></div><div><h3>Záměrně chybná ukázka</h3><p>Prototyp nejprve kontroluje vyčerpání tahů, až potom doručení.</p></div></div>
+        <div class="demo"><label><input id="boundary-fixed" type="checkbox"> Oprava: nejprve zkontrolovat doručení</label><div class="quiz-actions"><button id="boundary-run" type="button">Spustit stejný test</button></div></div>
+        <p id="boundary-feedback" class="loop-feedback" role="status">Co podle GDD očekáváte? Spusťte test, opravte pořadí a opakujte ho.</p>
+        <p class="micro">Chyba existuje jen v této výukové ukázce. Původní hra Poslední zásilka už má správnou prioritu doručení.</p>
+      </div>
+      <template class="speaker-notes"><h3>3 min · očekávání, pozorování, oprava</h3><p>Vlastní demonstrace. Nejde o nalezenou chybu ve vydané hře. Správný výsledek tohoto GDD je výhra. Test 11. tahu by záměrnou chybu neodhalil. Po opravě zopakujte přesně stejný vstup a doplňte případ mimo cíl ve 12. tahu, kde má zůstat prohra.</p><p>Pokud je GDD nejasné, musí tým nejprve rozhodnout pravidlo a zapsat ho. Nekorigujte automaticky dokument tak, aby každé chování prototypu vypadalo správně.</p></template>
+    </section>
+
+    <section class="slide" id="slide-26" data-section="Herní smyčka a testy · 23 minut" data-loop-minutes="3" aria-label="A/B experiment v game designu" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Porovnání dvou verzí stejné hry</p>
+        <h2>A/B experiment</h2>
+        <dl class="brief-grid"><div><dt>Otázka před hraním</dt><dd>Zkrátí dvě akce tanku dobu kola oproti třem, aniž hráči ztratí pocit rozhodování?</dd></div><div><dt>Jedna změna</dt><dd>A má 3 akce tanku. B má 2. Mapa, start, HP i robotův program zůstávají stejné.</dd></div><div><dt>Stejný postup</dt><dd>Polovina týmů hraje A pak B, druhá B pak A. Před každým během úplný reset.</dd></div><div><dt>Pozorování a závěr</dt><dd>Čas dokončených kol, výsledek a odpověď každého hráče. Doplnit důvod a omezení.</dd></div></dl>
+        <p class="takeaway">Změna může zkrátit čekání, ale zvýšit obtížnost. Oba dopady patří do vyhodnocení.</p>
+        <p class="source">Metoda: <a href="https://ocw.mit.edu/courses/cms-301-introduction-to-game-design-methods-spring-2016/resources/mitcms_301s16_assigment7/" target="_blank" rel="noopener">MIT CMS.301, A/B Playtest</a>. Parametr a krátký protokol jsou naše adaptace pro VHS.</p>
+      </div>
+      <template class="speaker-notes"><h3>3 min · smysl porovnání</h3><p>MIT žádá změnu existující hry, test obou verzí a rozhodnutí podle zamýšleného zážitku. Náš krátký skupinový test měří jeden parametr. Prohození pořadí napříč týmy omezuje část efektu učení, neodstraňuje všechny rušivé vlivy.</p><p>Neříkejte studentům, která verze má vyhrát. Předem určíme otázku, stejné instrukce, co změnit a co držet konstantní. Nejde o reprezentativní studii. Kratší čas ani vyšší úspěšnost nejsou automaticky lepší zážitek.</p></template>
+    </section>
+
+    <section class="slide" id="slide-27" data-section="Cviko A/B a vlastní C · 60–65 minut" aria-label="Us vs It, školní adaptace" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Čtyři hráči společně proti robotovi</p>
+        <h2>Us vs It</h2>
+        <p class="definition">Tým ovládá čtyři tanky. Robot provede pevný program a pak postupně hrají tanky. Tým musí robota zničit dříve, než dosáhne města.</p>
+        <ol class="loop-diagram us-cycle" aria-label="Herní smyčka Us vs It"><li><strong>Robot</strong><span>10 příkazů v pořadí</span></li><li><strong>Tým</strong><span>Živé tanky T1 až T4</span></li><li><strong>Stav</strong><span>HP, pozice, město</span></li><li><strong>Další kolo</strong><span>Nový plán hráčů</span></li></ol>
+        <p class="takeaway"><strong>Školní adaptace:</strong> mapa 7 × 7, jednodušší ovládání bez natočení, vlastní robotův program. Není to doslovná kopie pravidel Riotu.</p>
+        <nav class="resource-line"><a href="gdd-us-vs-it.html" target="_blank" rel="noopener">Hratelná ukázka A/B</a><a href="gdd-cviko.html" target="_blank" rel="noopener">Papírová sada a protokol</a><a href="https://www.riotgames.com/en/urf-academy/opposition" target="_blank" rel="noopener">Originální lekce a podklady Riot</a></nav>
+      </div>
+      <template class="speaker-notes"><h3>Uvedení cvika</h3><p>Riot URF Academy modul 3 nabízí původní hru, mapu a akční listy. Připravená česká školní sada mění mapu z 8 × 8 na 7 × 7, vynechává natočení a určuje vlastní starty, útoky a výjimky. Zachovává kooperaci čtyř tanků, 10příkazový program a cyklus robot, všechny tanky, opakování. Původní tanky mají 4 HP a robot 10 HP, tyto hodnoty zachováváme.</p><p>Po A/B navazuje vlastní varianta C. Studenti ji sepíší do mini-GDD a ověří na papírové mapě. Webová ukázka podporuje pevná pravidla A/B, nepřebírá libovolné změny C.</p><p>Školní adaptaci Us vs It poskytujeme pod CC BY-NC-SA 4.0 s uvedením Riotu a změn. Při použití originálu vytiskněte jeho vlastní podklady a před testem znovu zvolte parametr. Nekombinujte bez vysvětlení původní akční listy s naší mapou. Odkaz: <a href="https://www.riotgames.com/en/urf-academy/opposition">oficiální modul 3</a>.</p></template>
+    </section>
+
+    <section class="slide" id="slide-28" data-section="Cviko A/B a vlastní C · 60–65 minut" aria-label="Průběh cvika Us vs It, A/B a C" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Připravený plán · týmy po čtyřech</p>
+        <h2>Průběh cvika</h2>
+        <div class="two-up"><ol class="phase-list lab-phases"><li data-lab-minutes="5"><span>Pravidla a krátký nácvik</span><span>5 min</span></li><li data-lab-minutes="5"><span>Hypotéza a zápis do GDD</span><span>5 min</span></li><li data-lab-minutes="7"><span>První verze A/B</span><span>7 min</span></li><li data-lab-minutes="7"><span>Reset a druhá verze</span><span>7 min</span></li><li data-lab-minutes="8"><span>Porovnání A/B</span><span>8 min</span></li><li data-lab-minutes="15" data-lab-minutes-min="10"><span>Návrh pravidel C a mini-GDD</span><span>10–15 min</span></li><li data-lab-minutes="8"><span>Poslední testovací běh C</span><span>8 min</span></li><li data-lab-minutes="10"><span>Vyhodnocení C a sdílení</span><span>10 min</span></li></ol><div class="rules-brief"><h3>Výstup týmu</h3><ul><li>Hypotéza a záznam A/B.</li><li>Vlastní pravidla C s důvodem.</li><li>Zápis posledního testu C.</li><li>Oprava GDD podle pozorování.</li></ul><p class="micro">A/B: 7 min na běh. C: 8 min na papíře. Nedokončenou partii označte „přerušeno“.</p></div></div>
+        <nav class="resource-line"><a href="gdd-cviko.html" target="_blank" rel="noopener">Čtyři tiskové stránky: hra, A/B, vlastní C, metodika</a><a href="#slide-9">Alternativní cviko: GDD štafeta</a></nav>
+      </div>
+      <template class="speaker-notes"><h3>60–65 minut · samostatné cvičení</h3><p>Rozdejte každému týmu první tři stránky: pravidla s mapou, A/B protokol a vlastní návrh C. Čtvrtá stránka je metodika vyučujícího. Čtyři studenti ovládají každý jeden tank, rozdělí si měření a zápis. Pátý pozorovatel je volitelný.</p><p>Každý tým hraje A i B, pořadí týmů střídejte AB a BA. Nácvik mimo měření je společný. Do průměru zapisujte pouze dokončená kola, poslední neúplné vynechte. Limit pozorování není prohra.</p><p>Po porovnání dejte 10–15 minut na vlastní pravidla C a jejich přesný zápis do GDD. Potom následuje oddělený osmiminutový testovací běh na papíře. Předem obnovte start podle pravidel C a během testu je neměňte. Varianta C může změnit více věcí, proto výsledek neizoluje jednotlivý vliv. Na závěr studenti zaznamenají konkrétní situaci a opravu GDD. Při 15 minutách návrhu má cviko 65 minut, při 10 minutách 60. Časový plán je náš návrh, dosud neověřený ve třídě.</p></template>
+    </section>
+
+    <section class="slide" id="slide-29" data-section="Cviko A/B a vlastní C · 60–65 minut" aria-label="Vyhodnocení A/B pozorování" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Naměřené údaje · bez předvyplněných výsledků</p>
+        <h2>Vyhodnocení A/B</h2>
+        <form id="ab-calculator" class="ab-calculator"><div><label for="ab-a-seconds">A: čas dokončených kol (s)</label><input id="ab-a-seconds" type="number" min="0.1" step="any" required></div><div><label for="ab-a-rounds">A: počet dokončených kol</label><input id="ab-a-rounds" type="number" min="1" step="1" required></div><div><label for="ab-b-seconds">B: čas dokončených kol (s)</label><input id="ab-b-seconds" type="number" min="0.1" step="any" required></div><div><label for="ab-b-rounds">B: počet dokončených kol</label><input id="ab-b-rounds" type="number" min="1" step="1" required></div><button type="submit">Spočítat čas na kolo</button></form>
+        <p id="ab-feedback" class="loop-feedback" role="status">Údaje se nikam neodesílají a po obnovení stránky zmizí.</p>
+        <p class="takeaway">Vedle času uveďte výsledek, pocit rozhodování a konkrétní pozorování. Dva běhy jsou vodítko pro další návrh.</p>
+        <p class="micro">Po A/B následuje návrh C (10–15 min) a poslední test (8 min). Vlastní pravidla a pozorování zapisujeme do papírového GDD.</p>
+      </div>
+      <template class="speaker-notes"><h3>Výpočet a interpretace</h3><p>Vlastní kalkulátor: čas dokončených kol dělený jejich počtem. Procentní změna je (B − A) / A × 100. Záporné číslo znamená kratší průměrné kolo. Ve školním testu nepřevádějte tato čísla na statistický důkaz. Zkrácení času může znamenat svižnost, ale také ztrátu plánování.</p><p>Pro kontrolu výpočtu lze zadat syntetický příklad 120 s/2 kola a 90 s/2 kola: A 60, B 45, změna −25 %. To nejsou naměřené výsledky ani očekávaný výsledek cvika. Hodnoťte jasnost hypotézy, kontrolu podmínek, pozorování a odůvodněnou revizi, nikoli vítězství hráčů.</p></template>
+    </section>
+
+    <section class="slide" id="slide-30" data-section="Další lekce a cvičení" aria-label="Další ověřené lekce a cvičení" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Navazující úkoly · volitelný výběr</p>
+        <h2>Další lekce a cvičení</h2>
+        <ul class="source-list loop-source-list"><li><a href="https://ocw.mit.edu/courses/cms-301-introduction-to-game-design-methods-spring-2016/resources/mitcms_301s16_highlevel/" target="_blank" rel="noopener">MIT: 30 sekund gameplaye a stručný GDD</a><span>Konkrétní průchod místo neurčitého příslibu.</span></li><li><a href="https://ocw.mit.edu/courses/cms-301-introduction-to-game-design-methods-spring-2016/resources/mitcms_301s16_assigment7/" target="_blank" rel="noopener">MIT: A/B Playtest</a><span>Upravená hra, dvě verze, pozorování a rozhodnutí.</span></li><li><a href="https://ocw.mit.edu/courses/cms-301-introduction-to-game-design-methods-spring-2016/resources/mitcms_301s16_assigment3/" target="_blank" rel="noopener">MIT: Scrabbleship</a><span>Nový prototyp z mechanik dvou deskových her.</span></li><li><a href="https://www.riotgames.com/en/urf-academy/opposition" target="_blank" rel="noopener">Riot: Us vs It, flow a core game loop</a><span>Originální lekce, mapa a akční listy.</span></li><li><a href="https://gmtk.itch.io/platformer-toolkit" target="_blank" rel="noopener">GMTK: Platformer Toolkit</a><span>Jedna změna parametru pohybu a okamžité hraní.</span></li><li><a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-dev-create-a-game-design-document?version=6.3" target="_blank" rel="noopener">Unity: Create a Game Design Document</a><span>Ve výkladu: <a href="#slide-31">dílna 10 min</a>. Volitelně: <a href="#slide-34">rozbor GDD Stacking</a>.</span></li><li><a href="https://gamedesignconcepts.wordpress.com/2009/06/29/level-1-overview-what-is-a-game/" target="_blank" rel="noopener">Ian Schreiber: papírová hra za 15 minut</a><span>Cesta, pohyb, ukončení a interakce mezi hráči.</span></li></ul>
+      </div>
+      <template class="speaker-notes"><h3>Výběr podle cíle výuky</h3><p>Připravená cvika a otázky VHS jsou naše adaptace. Originály mají vlastní rozsah a předpoklady. MIT Scrabbleship vyžaduje rozbor dvou her a více iterací, nelze celý úkol slibovat na deset minut. Schreiberovo původní rychlé cvičení má 15 minut.</p><p><a href="https://gmtk.itch.io/platformer-toolkit">Platformer Toolkit</a> Mark Browna nabízí webovou verzi a více než 30 parametrů. Naše doplňkové zadání: změnit jediný parametr, předpovědět dopad a porovnat tři pokusy v téže části úrovně. To je test game feelu, ne kompletní ekonomiky.</p><p><a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-design?version=6.3">Unity Game Design</a> obsahuje reflexe a rozbor smyčky, <a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/quiz/unit-4-planning-your-game">Planning your game</a> 11 otázek. Zdroj odkazuje i na GDD Stacking od Lee Pettyho. Nepřebíráme jej do ZIPu. Starší odkazy mohou časem změnit dostupnost, ověřte je před výukou.</p></template>
+    </section>
+
+    <section class="slide" id="slide-9" data-section="Alternativa · GDD štafeta 25 minut" aria-label="Snímek 9: GDD štafeta" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Cvičení · týmy po 3–4 · 25 minut</p>
+        <h2>GDD štafeta</h2>
+        <p class="exercise-question">Dokáže jiný tým zahrát vaši hru pouze podle GDD?</p>
+        <div class="three-up document-types">
+          <div><h3>1. Navrhněte</h3><p>Malou hru <em>Poslední zásilka</em> s jednou vlastní mechanikou.</p></div>
+          <div><h3>2. Zapište</h3><p>Mapu a pravidla na jeden pracovní list. Ověřte vítěznou cestu.</p></div>
+          <div><h3>3. Předejte</h3><p>Jiný tým hraje. Autoři nepomáhají ústním vysvětlováním.</p></div>
+        </div>
+        <p class="takeaway">Při nejasnosti zapište otázku a dočasné pravidlo.<br>Nezaměňujte domněnku testerů za pravidlo autorů.</p>
+        <p class="resource-line"><a href="gdd-pracovni-list.html" target="_blank" rel="noopener">Otevřít tisknutelný pracovní list A4 ↗</a><span class="muted">Papír, tužka, figurka a mince či žetony.</span></p>
+      </div>
+      <template class="speaker-notes"><h3>Organizace cvičení</h3><p>Rozdejte pracovní list. Ve skupině může jeden člověk vést zápis, další navrhovat mapu a další ověřovat pravidla. Role je možné kombinovat. Smyslem není soutěž v psaní dlouhého textu, ale zkušenost s předáním návrhu.</p><p>Autoři nesmějí při testu pravidla dopovídat. Testeři si nejasnost poznamenají a zřetelně označí provizorní rozhodnutí, aby mohli pokračovat. Pokud zásadní rozpor znemožní hraní, uvedou jej jako výsledek testu, ne jako vlastní opravu původního GDD.</p><p>Časy a kontrolní kritéria jsou na snímku 12; lze použít vestavěný časovač.</p></template>
+    </section>
+
+    <section class="slide" id="slide-10" data-section="Cvičení · 25 minut" aria-label="Snímek 10: Poslední zásilka: společný základ" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Zadání společné pro všechny týmy</p>
+        <h2>Poslední zásilka: společný základ</h2>
+        <div class="two-up rules-brief">
+          <div><h3>Co už platí</h3><ol><li>Mapa <strong>5 × 5</strong>. Start A1, cíl E5.</li><li>Kurýr začíná se zásilkou.</li><li>Tah = krok na sousední pole <strong>nebo</strong> jedna speciální akce. Žádné diagonály.</li><li>Neplatný pokus nespotřebuje tah.</li><li>Vstup do cíle vyhrává, i ve <strong>12. tahu</strong>. Jinak po 12. tahu prohra.</li></ol></div>
+          <div><h3>Co navrhne váš tým</h3><p>Vyberte <strong>jednu</strong> mechaniku:</p><ul><li>klíč a zamčené dveře,</li><li>obchod s NPC,</li><li>hluk a reakce stráže.</li></ul><p class="muted">Nakreslete mapu, určete výchozí stav a cenu speciální akce. Zapište odezvu i neúspěch.</p></div>
+        </div>
+        <p class="takeaway">Před předáním ukažte jednu vítěznou cestu.<br>Zkontrolujte, že hráč má také o čem rozhodovat.</p>
+      </div>
+      <template class="speaker-notes"><h3>Upřesnění základních pravidel</h3><p>Souřadnice: sloupce A–E zleva doprava, řádky 1–5 shora dolů. Zdi jsou nepřístupné. Vybranou mechaniku definují studenti, včetně toho, kde a jak se aktivuje. Start a cíl se nepřesouvají.</p><p>Pokud akce proběhne platně, spotřebuje přesně jeden tah. Pasivní informace a zamítnutý vstup nejsou akcí. Vítězství se kontroluje před limitem, proto vstup do cíle při dvanácté akci vyhrává.</p><p>Například dveře mohou vyžadovat sousední pole a klíč; obchod může vyžadovat sousedství, nabídku a cenu; stráž musí mít jasné pořadí reakcí a podmínku chycení. Nezadávejte všechny tři mechanismy současně.</p></template>
+    </section>
+
+    <section class="slide" id="slide-11" data-section="Cvičení · 25 minut" aria-label="Snímek 11: Zkouška předání" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Hratelný příklad · klíč a dveře</p>
+        <h2>Zkouška předání</h2>
+        <div class="game-layout">
+          <div class="game-board-side">
+            <div id="parcel-board" tabindex="0" role="group" aria-label="Mapa Poslední zásilky. Po zaměření lze použít šipky a klávesu E pro dveře.">
+              <table class="parcel-map" aria-label="Mapa 5 krát 5"><thead><tr><td></td><th scope="col">A</th><th scope="col">B</th><th scope="col">C</th><th scope="col">D</th><th scope="col">E</th></tr></thead><tbody id="parcel-map-body"></tbody></table>
+            </div>
+            <p class="game-hud"><span id="parcel-turns">Tah 0 / 12</span><span id="parcel-key">Klíč: ne</span><span id="parcel-door">Dveře: zamčené</span></p>
+            <div class="game-actions">
+              <div class="dpad" aria-label="Pohyb kurýra"><button type="button" data-move="up" aria-label="Krok nahoru">↑</button><button type="button" data-move="left" aria-label="Krok vlevo">←</button><button type="button" data-move="down" aria-label="Krok dolů">↓</button><button type="button" data-move="right" aria-label="Krok vpravo">→</button></div>
+              <button id="parcel-open" type="button">Otevřít dveře</button><button id="parcel-reset" class="quiet" type="button">Nová hra</button>
+            </div>
+          </div>
+          <div class="game-rule-side">
+            <h3>Mini-GDD této ukázky</h3>
+            <ul><li>Klíč na B4 získáš vstupem na pole.</li><li>Dveře C3 otevřeš <strong>ze sousedního pole</strong>, pokud máš klíč.</li><li>Otevření stojí <strong>1 tah</strong>; klíč nezmizí. Průchod je další krok.</li><li>Zdi a zamčené dveře jsou neprůchodné. Neplatný pokus tah nebere.</li></ul>
+            <p id="parcel-result" class="game-status" role="status">Doruč zásilku z A1 do E5 nejpozději ve 12. tahu.</p>
+            <p class="game-legend">S = start · K = klíč · D = dveře<br>C = cíl · # = zeď · @ = kurýr</p>
+          </div>
+        </div>
+        <p class="source">Ukázka převodu konkrétního zápisu do pravidel, nikoli hotový vyvážený design. Vlastní výuková hra.</p>
+      </div>
+      <template class="speaker-notes"><h3>Volitelná demonstrace před štafetou</h3><p>Tento snímek je krátká ukázka, nikoli dalších povinných šest minut výkladu. Předveďte jej při zadání nebo jej nechte jako doplňkovou hru po cvičení. Cvičení se dá celé provést na papíře.</p><p>Vítězná cesta má 11 akcí: dolů, dolů, dolů, vpravo, nahoru, otevřít, vpravo, vpravo, vpravo, dolů, dolů. Dvoukroková zacházka vyčerpá limit před doručením.</p><p>Na obrazovce jsou všechny výchozí stavy viditelné. Ukázka nemá skryté automatické reakce. Ptejte se: započítal by každý tým otevření a průchod stejně? Kdy přesně se získá klíč?</p></template>
+    </section>
+
+    <section class="slide" id="slide-12" data-section="Cvičení · 25 minut" aria-label="Snímek 12: Průběh a vyhodnocení" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Časový plán · celkem 25 minut</p>
+        <h2>Průběh a vyhodnocení</h2>
+        <div class="two-up schedule-layout">
+          <div>
+            <ol class="phase-list" id="phase-list">
+              <li data-seconds="120"><span>Zadání</span><span>2 min</span></li>
+              <li data-seconds="480"><span>Návrh + GDD</span><span>8 min</span></li>
+              <li data-seconds="60"><span>Výměna dokumentů</span><span>1 min</span></li>
+              <li data-seconds="360"><span>Hraní cizího návrhu</span><span>6 min</span></li>
+              <li data-seconds="240"><span>Zpětná vazba + revize</span><span>4 min</span></li>
+              <li data-seconds="240"><span>Společná reflexe</span><span>4 min</span></li>
+            </ol>
+            <div class="timer" aria-label="Časovač štafety">
+              <div><span id="timer-phase">Zadání</span><output id="timer-value" aria-label="Zbývající čas aktuální fáze">02:00</output></div>
+              <div class="timer-buttons"><button type="button" id="timer-toggle">Spustit</button><button type="button" id="timer-next">Další fáze</button><button type="button" id="timer-reset" class="quiet">Reset</button></div>
+              <p class="micro" id="timer-total">Zbývá celkem 25:00. Časovač je volitelný, bez zvuku.</p>
+              <span class="sr-only" id="timer-announcement" role="status"></span>
+            </div>
+          </div>
+          <div><h3>Čtyři kontrolní body</h3><div class="score-list" aria-label="Kontrolní body, jeden bod za každý">
+            <label><input type="checkbox"> Cíl je dosažitelný.</label><label><input type="checkbox"> Hráč má smysluplnou volbu.</label><label><input type="checkbox"> Jiný tým nemusí domýšlet pravidla.</label><label><input type="checkbox"> Revize řeší konkrétní zjištění.</label>
+          </div><p class="micro">Po jednom bodu. Jde o zpětnou vazbu, ne známku.</p><h3 class="reflection-heading">Společná reflexe</h3><p>Co zůstalo jen v hlavě autora?<br>Změnili jste pravidlo, nebo pouze jeho popis?</p></div>
+        </div>
+      </div>
+      <template class="speaker-notes"><h3>25 min · přesný průběh</h3><p>2 min zadání, 8 min návrh a zápis, 1 min výměna, 6 min hraní, 4 min návrat poznámek a revize, 4 min reflexe. Vestavěný časovač lze pozastavit nebo ručně posunout; při přechodu mezi snímky pokračuje. Pokud nechcete čas hlídat automaticky, nespouštějte jej.</p><p>Výstup: verze v0.1 a opravená v0.2, jedna poznamenaná nejasnost a krátký důvod změny. Čtyři body jsou orientační kontrola kvality návrhu a předání, nikoli ověřená hodnoticí rubrika.</p><p>Při reflexi porovnejte dvě rozdílné interpretace stejné věty. Ptejte se také, kde byl vhodnější obrázek a kde přesná podmínka. Úspěšné předání nemusí znamenat zábavnou hru; pravidla i zážitek je třeba testovat zvlášť.</p></template>
+    </section>
+
+    <section class="slide" id="slide-13" data-section="Zdroje a další práce" aria-label="Snímek 13: Zdroje a vlastní projekt" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Od výukové hry k semestrálnímu projektu</p>
+        <h2>Zdroje a vlastní projekt</h2>
+        <p class="definition">Vyberte jednu mechaniku své hry. Popište ji tak, aby ji jiný člen týmu mohl implementovat a otestovat.</p>
+        <ul class="source-list">
+          <li><a href="https://learn.unity.com/tutorial/create-a-game-design-document?version=2022.3" target="_blank" rel="noopener">Unity Learn · Create a game design document</a><span>Přehled návrhu, příklad dokumentu a přístupnost.</span></li>
+          <li><a href="https://www.gamedeveloper.com/design/the-anatomy-of-a-design-document-part-1-documentation-guidelines-for-the-game-concept-and-proposal" target="_blank" rel="noopener">Tim Ryan · The Anatomy of a Design Document, Part 1 (1999)</a><span>Praktický pohled na účel a různé vrstvy dokumentace.</span></li>
+          <li><a href="https://unity.com/blog/the-secret-to-more-efficient-playable-production" target="_blank" rel="noopener">Ori Ben-Moshe · The secret to more efficient playable production (2022)</a><span>Jasné zadání mechanik a předání práce; kontext reklamních playable ukázek.</span></li>
+        </ul>
+        <p class="resource-line"><a href="gdd-pracovni-list.html" target="_blank" rel="noopener">Pracovní list pro GDD štafetu ↗</a><a href="#slide-14">Skutečné návrhy her →</a><a href="#slide-19">Herní smyčka a testy</a><span class="muted">Vlastní příklady a metodika · verze 8 · 11. 10. 2026.</span></p>
+        <p class="source">Výklad 25 min + štafeta 25 min + volitelné čtení návrhů 8 min. Zdroje ověřeny 11. 10. 2026. Nejde o povinnou průmyslovou šablonu GDD.</p>
+      </div>
+      <template class="speaker-notes"><h3>Návaznost a provenance</h3><p>Zamčené dveře, převozník a Poslední zásilka jsou původní didaktické příklady vytvořené pro tuto přednášku. Číselné hodnoty jsou návrhové a nelze je přebírat jako univerzální doporučení.</p><p>Externí texty slouží jako zdroj základních principů účelu dokumentace, jasného předání a práce s návrhem. Štafeta, časový plán a kontrolní body jsou vlastní pedagogický návrh.</p><p>Nepovinný navazující úkol: přinést jednu mechaniku vlastního semestrálního projektu, její diagram stavů a dvě testovací situace — úspěch a neúspěch.</p></template>
+    </section>
+
+    <section class="slide" id="slide-14" data-section="Čtení návrhů · volitelně 8 minut" aria-label="Snímek 14: Skutečné návrhové dokumenty" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Volitelný blok · dvojice · vyberte jeden úryvek</p>
+        <h2>Skutečné návrhové dokumenty</h2>
+        <div class="document-excerpts">
+          <article>
+            <div class="document-heading"><h3><a href="https://allowe.com/gamedesign/Torin%20Design.pdf#page=12" target="_blank" rel="noopener">A · Torin’s Passage ↗</a></h3><span>GDD · Al Lowe · 76 stran</span></div>
+            <p><strong>PDF str. 12 · Save/Restore:</strong> Kdy se hra automaticky uloží? Kam se hráč může vrátit po smrti?</p>
+          </article>
+          <article>
+            <div class="document-heading"><h3><a href="https://allowe.com/gamedesign/Freddy%20Design.pdf#page=19" target="_blank" rel="noopener">B · Freddy Pharkas ↗</a></h3><span>GDD · Al Lowe · 112 stran</span></div>
+            <p><strong>PDF str. 19 · první dva recepty:</strong> Co odemkne druhý úkol? Co musí hráč udělat, aby dokončil první?</p>
+          </article>
+          <article>
+            <div class="document-heading"><h3><a href="https://www.graybeardgames.com/download/diablo_pitch.pdf#page=3" target="_blank" rel="noopener">C · Diablo ↗</a></h3><span>Pitch · Condor · 8 stran</span></div>
+            <p><strong>PDF str. 3 · multiplayer, druhý odstavec:</strong> Co ukončí tah? Co se stane, když hráč nezvolí akci včas?</p>
+          </article>
+        </div>
+        <p class="takeaway">Pitch a produkční GDD mají různý účel. Historický návrh se může lišit od vydané hry.</p>
+        <nav class="resource-line reading-navigation" aria-label="Výběr úryvku"><a href="#slide-16">D–F · další hry</a><a href="#slide-17">G–H · Larry 5 a 6</a><a href="#slide-18">I–J · Larry 7 a Casino</a><a href="#slide-15">Zadání cvičení →</a></nav>
+        <p class="source">Dokumenty zveřejnili tvůrci: <a href="https://allowe.com/games/game-designs.html" target="_blank" rel="noopener">Al Lowe</a> a <a href="https://graybeardgames.blogspot.com/2016/03/original-diablo-pitch-document.html" target="_blank" rel="noopener">David Brevik</a>. Čísla označují stránky PDF od 1. Odkazy potřebují internet.</p>
+      </div>
+      <template class="speaker-notes"><h3>2 min · výběr jednoho úryvku z nabídky A–J</h3><p>Každá dvojice si vybere pouze jeden z deseti úryvků. A–C jsou zde, D–F na snímku 16, G–H na 17 a I–J na 18. Nabídka neslouží jako povinná série deseti rozborů. Pro Torina stačí oddíl Save/Restore. Pro Freddyho první recept a první věta druhého. Pro Diablo pouze odstavec o multiplayeru. Celý blok: 2 min uvedení, 4 min čtení a zápis, 2 min sdílení. Lze ho vložit mezi snímky 8 a 9 a po zadání na 15 přejít ke štafetě. Základních 25 + 25 minut se tím nemění.</p><p><a href="https://allowe.com/games/game-designs.html" target="_blank" rel="noopener">Al Lowe</a> uvádí, že pozdější změny zapisovali přímo do kódu. Dialogy tvořil zvlášť v Sierra Message Editoru. Nabídka zahrnuje všech šest návrhů z jeho seznamu, bez dvojího zařazení Freddyho a Torina. Roky podle tohoto seznamu: Larry 5 (1991), Freddy Pharkas (1992), Larry 6 (1993), Torin (1994), Larry 7 (1996), Casino (1998). Neoznačujte je automaticky za roky vydání her nebo exportu PDF.</p><p>Torinův PDF uvádí copyright 1995, autorův seznam 1994. Casino uvádí copyright 1997, seznam 1998. Exporty z roku 2003 nedokládají vznik návrhů. <a href="https://graybeardgames.blogspot.com/2016/03/original-diablo-pitch-document.html" target="_blank" rel="noopener">David Brevik zveřejnil původní pitch Diabla v březnu 2016</a>, sken má copyright 1994, Condor.</p><p>U Larryho upozorněte před otevřením na sexuální humor a stereotypy. Čtení těchto dokumentů je dobrovolné a A–F představují rovnocenné alternativy. Pro tuto aktivitu vybíráme technické pasáže. Pro francouzský dokument F dovolte překladač. Pokud se PDF neotevře na správné straně, zadejte číslo ručně. U souborů Al Loweho čtěte zobrazenou stránku, některé mají omezené kopírování nebo špatnou textovou vrstvu. Originály nejsou součástí ZIPu.</p></template>
+    </section>
+
+    <section class="slide" id="slide-15" data-section="Čtení návrhů · volitelně 8 minut" aria-label="Snímek 15: Čtení pravidla a jeho zpřesnění" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">4 min čtení a zápis · 2 min společné sdílení</p>
+        <h2>Čtení pravidla a jeho zpřesnění</h2>
+        <p class="intro">Vyberte jeden úryvek A–J a odevzdejte čtyři krátké položky:</p>
+        <dl class="brief-grid reading-contract">
+          <div><dt>1 · Doklad</dt><dd>Název dokumentu, stránka a oddíl.<br>Odpovězte na otázky své varianty.</dd></div>
+          <div><dt>2 · Pravidlo vlastními slovy</dt><dd>„Když [událost] a platí [podmínka], změní se [stav]. Hráč pozná výsledek podle [odezvy].“</dd></div>
+          <div><dt>3 · Otevřená otázka</dt><dd>Co v tomto úryvku není rozhodnuto?<br>Jaké dva různé výklady umožňuje?</dd></div>
+          <div><dt>4 · Váš návrh doplnění</dt><dd>Zvolte jeden výklad a připište přesné pravidlo. Označte ho: „náš návrh, ne údaj ze zdroje“.</dd></div>
+        </dl>
+        <p class="takeaway">Chybějící údaj v úryvku nemusí chybět v celém dokumentu.<br>Nic si nedoplňujte potichu a nesuďte návrh jen podle hotové hry.</p>
+        <p class="resource-line"><a href="gdd-cteni.html" target="_blank" rel="noopener">Pracovní list pro čtení GDD ↗</a><a href="#slide-14">← Výběr dokumentu</a><a href="#slide-9">Dále: GDD štafeta →</a></p>
+      </div>
+      <template class="speaker-notes"><h3>6 min · vodítka a společná reflexe</h3><p>4 min dvojice čtou a vyplní list, 2 min krátké sdílení. Nechte dvě dvojice ukázat rozdíl mezi doloženým chováním a vlastním doplněním. Neznalost hry nevadí. Oceňte přesné určení stránky i poctivé „v tomto úryvku to není uvedeno“. Vodítka D–F jsou v poznámkách 16, G–H na 17 a I–J na 18. První strana listu je nabídka pro společné zobrazení, druhá slouží k zápisu. Pro papírové řešení stačí každé dvojici druhá strana.</p><p><strong>A · Torin, str. 12:</strong> automatické uložení na konci kapitoly a při ukončení hry. Při spuštění se nabízí návrat, pokud soubor existuje. Po smrti Oops vrací těsně před neúspěch. Otevřená otázka: co přesně se obnovuje? Vlastní návrh musí určit bod a rozsah obnovy.</p><p><strong>B · Freddy, str. 19:</strong> předání prvního léku Penelope spouští druhý recept od Helen. Hráč naplní a uzavře lahvičku, odnese ji a použije na Penelope. Reakce na chybné pořadí zde není specifikovaná. Studenti ji mohou navrhnout, ne vydávat za historickou skutečnost.</p><p><strong>C · Diablo, str. 3:</strong> tah postupuje po zvolení akcí všemi hráči. Ve dvou hráčích má nastavitelný časový limit. Nezvolená akce do limitu znamená ztrátu příležitosti v tahu. Odstavec neurčuje výchozí limit ani přesnou odezvu vypršení. Hodí se pro vlastní návrh doplnění.</p><p>Vodítka parafrázují vybrané stránky. Odpověď doloženou jinde v PDF přijměte se správnou stránkou. Na závěr mohou dvě dvojice porovnat, jak různé dokumenty určují čas: tah Diabla, bonus Clawu, baterie Larryho nebo smyčka Figara. Jde o volitelnou reflexi, ne další povinné čtení. Otázky a časový plán jsou vlastní výukový návrh.</p></template>
+    </section>
+
+    <section class="slide" id="slide-16" data-section="Čtení návrhů · volitelně 8 minut" aria-label="Snímek 16: Další hry a studentský prototyp" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Další volby D–F · čtěte jen jeden úryvek</p>
+        <h2>Další hry a studentský prototyp</h2>
+        <div class="document-excerpts">
+          <article><div class="document-heading"><h3><a href="https://www.ics.uci.edu/~frost/GameDesign/ClawDesignDoc.pdf#page=30" target="_blank" rel="noopener">D · Captain Claw ↗</a></h3><span>Monolith · 100 stran · EN</span></div><p><strong>PDF str. 30 · Catnip Powerups:</strong> Co bonus mění a co nemění? Jak dlouho trvá? Určuje úryvek kombinování dvou bonusů?</p></article>
+          <article><div class="document-heading"><h3><a href="http://db-design.splashdamage.com.s3-eu-west-1.amazonaws.com/dirty_bomb-game_design_document.pdf#page=22" target="_blank" rel="noopener">E · Dirty Bomb ↗</a></h3><span>Splash Damage · 316 stran · EN</span></div><p><strong>PDF str. 22–23 · Wall Jump / Wall Checks:</strong> Je nutný přímý kontakt se zdí? Proč nestačí dotek horního nebo spodního okraje postavy? Co se stane s dosavadní rychlostí?</p></article>
+          <article><div class="document-heading"><h3><a href="https://www.wilson-xhaflaire.com/assets/documents/le-drame-du-figaro-gdd.pdf#page=16" target="_blank" rel="noopener">F · Le Drame du Figaro ↗</a></h3><span>Studentský prototyp · 30 stran · FR</span></div><p><strong>PDF str. 3 a 16 · cíl a vítězství:</strong> Jak se liší příběhový cíl a přesná podmínka vítězství? Co nastane, když hráč vůbec nezasáhne?</p></article>
+        </div>
+        <nav class="resource-line reading-navigation" aria-label="Pokračování čtení"><a href="#slide-14">A–C · původní nabídka</a><a href="#slide-17">G–H · Larry 5 a 6</a><a href="#slide-15">Zadání cvičení →</a></nav>
+        <p class="source">Dirty Bomb je výběr z interní návrhové wiki, PDF má asi 146 MB. Str. 22–23 v prohlížeči odpovídají číslům 20–21 v dokumentu. Figaro je francouzský studentský návrh s papírovým prototypem.</p>
+      </div>
+      <template class="speaker-notes"><h3>Vodítka D–F</h3><p><strong>D · Claw:</strong> Catnip zrychlí běh, zvýší skok a sílu zásahu. Neovlivňuje střelné zbraně ani zdraví. Bílý trvá standardně 15 s, červený 30 s, level designér může dobu změnit. Časovač je vlevo nahoře. Oddíl neřeší druhý sebraný bonus. Obnovení časovače nebo sčítání dob musí studenti označit za svůj návrh. <a href="https://ics.uci.edu/~emilyo/teaching/info43f2014/" target="_blank" rel="noopener">Univerzitní rozcestník</a> identifikuje návrh Monolithu. Datum exportu v patičce není rok vzniku hry.</p><p><strong>E · Dirty Bomb:</strong> přímý kontakt hráčova těla se zdí není nutný. Větší kontrolní objem přidává toleranci. Kontakt pouze nahoře nebo dole se ignoruje, aby odraz nespouštěly drobné schody a rámy dveří. Odrazový impuls se přičítá k původnímu pohybu. Šířku tolerance dokument ponechává nastavitelnou. Úkol čte jen část Wall Jump a Wall Checks. <a href="https://www.splashdamage.com/news/the-design-of-dirty-bomb/" target="_blank" rel="noopener">Studio zveřejnilo výběr své interní wiki</a>, nikoli jediný neměnný plán před výrobou. Velký soubor otevřete před hodinou. Oficiální odkaz používá HTTP.</p><p><strong>F · Figaro:</strong> str. 3 popisuje zabránění atentátu. Str. 16 počítá jako vítězství spuštění jedné z pěti alternativních koncovek klíčovou událostí do pěti minut včetně. Bez zásahu následuje atentát a automatický restart smyčky, bez definitivního game over. Přesný rozsah zachované paměti při restartu lze položit jako otázku k dalšímu hledání. <a href="https://www.wilson-xhaflaire.com/documents.html" target="_blank" rel="noopener">Portfolio Wilsona Xhaflairea</a> dokládá týmový studentský projekt Gamagora s papírovým prototypem. Netvrďte komerční vydání. Pro francouzštinu dovolte překladač a ověřte časovou podmínku v originálu.</p></template>
+    </section>
+
+    <section class="slide" id="slide-17" data-section="Čtení návrhů · volitelně 8 minut" aria-label="Snímek 17: Archiv Al Loweho, Larry 5 a 6" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Volby G–H · technické úryvky z adventur pro dospělé</p>
+        <h2>Archiv Al Loweho: Larry 5 a 6</h2>
+        <div class="document-excerpts long-document-titles">
+          <article><div class="document-heading"><h3><a href="https://allowe.com/gamedesign/Larry5%20Design.pdf#page=53" target="_blank" rel="noopener">G · Leisure Suit Larry 5: Passionate Patti Does a Little Undercover Work&nbsp;↗</a></h3><span>1991 · 86 stran</span></div><p><strong>PDF str. 53 · Objects, položka 01:</strong> Jak dlouho vydrží baterie kamery a jak hráč zjistí její stav? Určuje úryvek, zda čas běží i v menu?</p></article>
+          <article><div class="document-heading"><h3><a href="https://allowe.com/gamedesign/Larry6%20Design.pdf#page=63" target="_blank" rel="noopener">H · Leisure Suit Larry 6: Shape Up or Slip Out! ↗</a></h3><span>1993 · 68 stran</span></div><p><strong>PDF str. 63 · The Interface, File:</strong> Jak se liší Save a Save As? Je zde rozhodnuto, co Save udělá před úplně prvním uložením?</p></article>
+        </div>
+        <p class="takeaway">Dokumenty obsahují sexuální humor a dobové stereotypy. Zvolit jiný úryvek je rovnocenná možnost.</p>
+        <nav class="resource-line reading-navigation" aria-label="Pokračování archivu"><a href="#slide-14">A–C · jiné úryvky</a><a href="#slide-18">I–J · Larry 7 a Casino</a><a href="#slide-15">Zadání cvičení →</a></nav>
+        <p class="source">Zdroj: <a href="https://allowe.com/games/game-designs.html" target="_blank" rel="noopener">autorský archiv Al Loweho</a>. Roky přebírají jeho seznam. Soubory ukazují návrh, který se během vývoje mohl změnit.</p>
+      </div>
+      <template class="speaker-notes"><h3>Vodítka G–H</h3><p><strong>G · Larry 5, str. 53:</strong> položka 01 uvádí baterii na deset minut skutečného času a nutnost nabití po použití. Akce Look ukazuje stav baterie. Pravidlo odečítání při otevřeném menu zde není určeno. Pozastavení vybíjení v menu je možný studentský návrh, ne údaj z této stránky. Omezte čtení na položku 01, není nutné procházet celý inventář.</p><p><strong>H · Larry 6, str. 63:</strong> Save ukládá do aktuálního názvu souboru bez dialogu. Save As otevírá dialog s editovatelným popisem do 32 znaků. Úryvek neurčuje chování Save před prvním uložením. Studenti mohou navrhnout otevření dialogu nebo neaktivní příkaz s vysvětlením. Mají popsat i odezvu, návrh jasně oddělit od zdroje.</p><p>Odkazy vedou na originály <a href="https://allowe.com/games/game-designs.html" target="_blank" rel="noopener">z autorova archivu</a>. Roky 1991 a 1993 jsou údaje jeho seznamu. Datum pozdějšího PDF exportu nepřepisuje historii návrhu. Dokumenty mají dospělý humor. Pro společné promítání zůstaňte u technického zadání na tomto snímku, nikoho nenuťte otevírat tyto varianty.</p></template>
+    </section>
+
+    <section class="slide" id="slide-18" data-section="Čtení návrhů · volitelně 8 minut" aria-label="Snímek 18: Archiv Al Loweho, Larry 7 a Casino" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Volby I–J · rozhraní a oddělené herní režimy</p>
+        <h2>Archiv Al Loweho: Larry 7 a Casino</h2>
+        <div class="document-excerpts long-document-titles">
+          <article><div class="document-heading"><h3><a href="https://allowe.com/gamedesign/Larry7%20Design.pdf#page=9" target="_blank" rel="noopener">I · Leisure Suit Larry 7: Love for Sail! ↗</a></h3><span>1996 · 67 stran</span></div><p><strong>PDF str. 9 · Inventory:</strong> Co se děje s během hry při otevřeném inventáři? Jak hra oznámí neplatnou kombinaci předmětů?</p></article>
+          <article><div class="document-heading"><h3><a href="https://allowe.com/gamedesign/Larry%27s%20Casino%20Design.PDF#page=4" target="_blank" rel="noopener">J · Leisure Suit Larry’s Casino ↗</a></h3><span>1998 · 31 stran</span></div><p><strong>PDF str. 4 · Off-Line, první odstavec:</strong> Přenesou se výhry do online režimu? K čemu slouží offline peníze a kde je hráč nemůže použít?</p></article>
+        </div>
+        <p class="takeaway">Celý archiv tvoří šest GDD. Freddy Pharkas a Torin’s Passage jsou už ve variantách B a A.</p>
+        <nav class="resource-line reading-navigation" aria-label="Pokračování cvičení"><a href="#slide-14">A–C · jiné úryvky</a><a href="#slide-16">D–F · další hry</a><a href="#slide-17">G–H · Larry 5 a 6</a><a href="#slide-15">Zadání cvičení →</a></nav>
+        <p class="source">Zdroj: <a href="https://allowe.com/games/game-designs.html" target="_blank" rel="noopener">Al Lowe</a>. Roky podle autorova seznamu. Casino má v PDF copyright 1997. I tyto dokumenty obsahují humor pro dospělé.</p>
+      </div>
+      <template class="speaker-notes"><h3>Vodítka I–J</h3><p><strong>I · Larry 7, str. 9:</strong> inventář pozastaví hru. Nepoužitelná kombinace vyvolá krátký chybový tón. Úryvek neurčuje vizuální alternativu této odezvy. Studenti ji mohou navrhnout pro hráče bez zvuku. Například zpráva u předmětů je náš návrh, ne údaj ze zdroje. Čtěte pouze oddíl Inventory.</p><p><strong>J · Casino, str. 4:</strong> offline výhry se do online hry nepřenášejí. Offline peníze slouží k tréninku, lze je neomezeně doplňovat. Nelze je používat v online hotelu, restauracích či obchodě. Vlastní doplnění může určit, jak rozhraní při přepnutí režimu vysvětlí oddělené zůstatky. Nejde o hraní za skutečné peníze v tomto výukovém úkolu a nic na kasinových webech nezakládejte.</p><p><a href="https://allowe.com/games/game-designs.html" target="_blank" rel="noopener">Autorův seznam</a> uvádí 1996 a 1998. Copyright Casino PDF je 1997, oba údaje zachovejte s jejich významem. K dispozici jsou rovnocenné jiné úryvky A–F. Vodítka popisují tyto návrhové dokumenty, nikoli ověřené chování vydaných her.</p></template>
+    </section>
+    <section class="slide" id="slide-34" data-section="Čtení Stacking · volitelně 8 minut" data-stacking-minutes="8" aria-label="Stacking: mechanika v GDD" tabindex="-1">
+      <div class="content">
+        <p class="eyebrow">Skutečný GDD · další možnost čtení ve dvojici</p>
+        <h2>Stacking: mechanika v GDD</h2>
+        <p class="intro">Double Fine, GDD v1.3, 104 stran. Čteme jen <a href="https://storage.googleapis.com/learn-platform-bucket-production/tutorial/9c1c884e-d9e5-405c-9b40-5190d672fea4/versions%5B_key%3D%3D%2206cd1b675c1c%22%5D.materials%5B_key%3D%3D%2210bfc0c1ec7b%22%5D.file/Stacking-GDD_20260511_160707.pdf#page=46" target="_blank" rel="noopener">PDF str. 46, Doll Stacking</a>.</p>
+        <ol class="unity-reading"><li>Jaké podmínky musí splnit cíl? Jak hráč pozná dostupnou akci?</li><li>Které schopnosti hráč po vložení do větší panenky ovládá?</li><li>Který parametr nemá na této stránce číslo? Napište dotaz na autora.</li></ol>
+        <details class="unity-reveal" id="stacking-guidance"><summary>Vodítko po vlastním rozboru</summary><p>Cíl je o jednu velikost větší, otočený zády a v dosahu. Modré záření značí platný cíl. Hráč používá schopnosti vnější panenky. Číselný dosah zde chybí.</p></details>
+        <p class="micro">2 min uvedení, 4 min čtení a zápis, 2 min sdílení. Jedno doplnění označte „náš návrh, ne údaj ze zdroje“.</p>
+        <p class="source">Dokument odkazuje <a href="https://learn.unity.com/pathway/game-development/unit/planning-a-game/tutorial/game-dev-create-a-game-design-document?version=6.3" target="_blank" rel="noopener">Unity Learn</a>, který uvádí autora Lee Pettyho. Historický návrh se může lišit od hotové hry. Originál potřebuje internet.</p>
+      </div>
+      <template class="speaker-notes"><h3>8 min · konkrétní mechanika místo čtení celého GDD</h3><p>Samostatná alternativa k úryvkům A–J. Pište na volný papír: stránka a oddíl, doložené pravidlo, otevřená otázka, vlastní návrh. Pokud už třída četla jiný GDD, tento blok můžete vynechat. Časový plán a otázky jsou náš pedagogický návrh.</p><p>Vodítko ke stránce 46: podmínky musí platit současně. Cíl musí být přesně o jednu velikost větší, otočený zády a v dosahu. Dostupnost označuje modré záření. Po vložení se ovládání a schopnosti vztahují k vnější panence, ne k panenkám uvnitř. Číselný dosah na této stránce není uveden, což samo nedokládá jeho nepřítomnost v celém GDD.</p><p>Náš kontrolní případ: cíl o dvě velikosti větší zůstává nedostupný i zezadu a zblízka. Vlastní návrh dosahu by měl definovat jednotku, způsob měření a odezvu mimo dosah. Pro přístupnost lze navrhnout i symbol vedle barevného záření. Tyto návrhy nesmí studenti vydávat za údaj z historického dokumentu.</p><p><a href="https://storage.googleapis.com/learn-platform-bucket-production/tutorial/9c1c884e-d9e5-405c-9b40-5190d672fea4/versions%5B_key%3D%3D%2206cd1b675c1c%22%5D.materials%5B_key%3D%3D%2210bfc0c1ec7b%22%5D.file/Stacking-GDD_20260511_160707.pdf#page=46">Zdroj: Stacking GDD v1.3, PDF str. 46</a>. Zastaralý obsah uvádí 39, samotný oddíl i číslo v patičce jsou na straně 46. PDF má 104 stran. Originál nebalíme do offline archivu.</p></template>
+    </section>
+  </main>
+
+  <footer class="controls">
+    <span class="hint">← → snímky · O obsah · N poznámky · F celá obrazovka</span>
+    <div class="pager"><button id="previous" type="button" aria-label="Předchozí snímek">←</button><output id="counter" aria-label="Aktuální snímek">1 / 34</output><button id="next" type="button" aria-label="Další snímek">→</button></div>
+    <span class="credit">VHS · GDD · výuková verze</span>
+    <div class="progress" aria-hidden="true"><div id="progress-value"></div></div>
+  </footer>
+  <p id="announcement" class="sr-only" role="status"></p>
+  <dialog id="overview" aria-labelledby="overview-title"><div class="dialog-heading"><h2 id="overview-title">Obsah přednášky</h2><button class="close" type="button" aria-label="Zavřít obsah">×</button></div><nav aria-label="Seznam snímků"></nav></dialog>
+  <dialog id="notes-dialog" aria-labelledby="notes-title"><div class="dialog-heading"><h2 id="notes-title">Poznámky pro vyučujícího</h2><button class="close" type="button" aria-label="Zavřít poznámky">×</button></div><div id="notes-content"></div></dialog>
+  <noscript><p class="no-script">Bez JavaScriptu jsou všechny snímky pod sebou. Interaktivní ukázky vyžadují JavaScript; papírové cvičení funguje i bez něj.</p></noscript>
+  <script>
+/* Pure rules shared by the browser demonstrations and deterministic tests. */
+(function (root, factory) {
+  const rules = factory();
+  if (typeof module === 'object' && module.exports) module.exports = rules;
+  else root.GddRules = rules;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  const MAP = Object.freeze({size:5, start:0, goal:24, key:16, door:12, walls:Object.freeze([2,7,17,22]), limit:12});
+  const DIRECTIONS = Object.freeze({up:[-1,0], left:[0,-1], down:[1,0], right:[0,1]});
+  const coordinate = (position) => String.fromCharCode(65 + position % MAP.size) + (Math.floor(position / MAP.size) + 1);
+  const initial = () => ({position:MAP.start, turns:0, key:false, doorOpen:false, status:'playing'});
+  function complete(state, message) {
+    if (state.position === MAP.goal) return {state:{...state,status:'won'},message:`Doručeno! Vítězství v ${state.turns}. tahu.`};
+    if (state.turns >= MAP.limit) return {state:{...state,status:'lost'},message:'12 tahů vyčerpáno. Zásilka není v cíli — prohra.'};
+    return {state, message};
+  }
+  function step(state, action) {
+    if (state.status !== 'playing') return {state, message:'Hra skončila. Pro další pokus zvolte Nová hra.'};
+    if (action === 'open') {
+      if (state.doorOpen) return {state,message:'Dveře už jsou otevřené. Žádný tah neubyl.'};
+      const distance = Math.abs(Math.floor(state.position/5)-2) + Math.abs(state.position%5-2);
+      if (distance !== 1) return {state,message:'Dveře musí být na sousedním poli. Žádný tah neubyl.'};
+      if (!state.key) return {state,message:'Chybí klíč. Žádný tah neubyl.'};
+      return complete({...state,doorOpen:true,turns:state.turns+1}, 'Dveře otevřeny za 1 tah. Klíč zůstává; průchod je další krok.');
+    }
+    const direction = DIRECTIONS[action];
+    if (!direction) return {state,message:'Neznámá akce. Žádný tah neubyl.'};
+    const row = Math.floor(state.position/MAP.size) + direction[0];
+    const col = state.position%MAP.size + direction[1];
+    if (row < 0 || col < 0 || row >= MAP.size || col >= MAP.size) return {state,message:'Za okraj mapy nelze. Žádný tah neubyl.'};
+    const position = row*MAP.size + col;
+    if (MAP.walls.includes(position)) return {state,message:'Zeď je neprůchodná. Žádný tah neubyl.'};
+    if (position === MAP.door && !state.doorOpen) return {state,message:'Dveře jsou zamčené. Nejdříve je otevřete. Žádný tah neubyl.'};
+    const getsKey = position === MAP.key && !state.key;
+    return complete({...state,position,turns:state.turns+1,key:state.key || getsKey},
+      `Krok na ${coordinate(position)}.${getsKey ? ' Získali jste klíč; žádná další akce není potřeba.' : ''}`);
+  }
+  function door(open, hasKey, inRange) {
+    if (open) return {open:true,message:'Dveře už jsou otevřené. Další interakce nic nemění.'};
+    if (!inRange) return {open:false,message:'Přijdi blíž nebo odstraň překážku. Dveře zůstávají zamčené.'};
+    if (!hasKey) return {open:false,message:'Chybí bronzový klíč. Dveře zůstávají zamčené.'};
+    return {open:true,message:'Dveře se otevřely a zůstanou otevřené. Bronzový klíč zůstává v inventáři.'};
+  }
+  function ferry(saved, coins) {
+    if (!Number.isInteger(coins) || coins < 0) throw new Error('Coins must be a non-negative integer');
+    const price = saved ? 0 : 2;
+    if (coins < price) return {coins,crossed:false,message:`Chybí mince. Přejezd stojí ${price} mince; v inventáři zůstává ${coins}.`};
+    return {coins:coins-price,crossed:true,message:`Přejezd proběhl za ${price} ${price===0?'mincí':'mince'}. V inventáři: ${coins-price}.`};
+  }
+  function phaseAt(elapsedSeconds, durations) {
+    const total = durations.reduce((sum, value) => sum+value, 0);
+    let remainingElapsed = Math.max(0, Math.min(total, elapsedSeconds));
+    for (let index=0; index<durations.length; index++) {
+      if (remainingElapsed < durations[index]) return {index, remaining:durations[index]-remainingElapsed, totalRemaining:total-Math.max(0,elapsedSeconds), done:false};
+      remainingElapsed -= durations[index];
+    }
+    return {index:durations.length-1,remaining:0,totalRemaining:0,done:true};
+  }
+  return Object.freeze({MAP,DIRECTIONS,coordinate,initial,step,door,ferry,phaseAt});
+});
+
+</script>
+  <script>
+/* Small, dependency-free slide player based on the established VHS controls. */
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const slides = [...document.querySelectorAll('.slide')];
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const darkPreference = matchMedia('(prefers-color-scheme: dark)');
+  let current = 0, reading = false, transition = 0;
+  let manualTheme = false;
+  try { manualTheme = !!localStorage.getItem('vhs-theme'); } catch {}
+  function theme(mode, persist=false) {
+    document.documentElement.dataset.theme = mode;
+    const isDark = mode === 'dark';
+    $('theme').setAttribute('aria-pressed', String(isDark));
+    $('theme').setAttribute('aria-label', isDark ? 'Zapnout světlý režim' : 'Zapnout tmavý režim');
+    $('theme').title = isDark ? 'Světlý režim' : 'Tmavý režim';
+    $('theme').textContent = isDark ? '☀' : '☾';
+    if (persist) { manualTheme=true; try { localStorage.setItem('vhs-theme', mode); } catch {} }
+  }
+  theme(document.documentElement.dataset.theme || (darkPreference.matches ? 'dark' : 'light'));
+  darkPreference.addEventListener('change', (event) => {if (!manualTheme) theme(event.matches?'dark':'light');});
+  $('theme').addEventListener('click', () => theme(document.documentElement.dataset.theme==='dark'?'light':'dark',true));
+
+  function fromHash() {
+    const index=slides.findIndex(slide=>`#${slide.id}`===location.hash);
+    return index<0?0:index;
+  }
+  function updateControls() {
+    $('counter').textContent = `${current+1} / ${slides.length}`;
+    $('previous').disabled = current===0;
+    $('next').disabled = current===slides.length-1;
+    $('chapter').textContent = slides[current].dataset.section;
+    $('progress-value').style.width = `${(current+1)/slides.length*100}%`;
+    $('announcement').textContent = slides[current].getAttribute('aria-label');
+    $('overview').querySelectorAll('nav a').forEach((a,index) => {
+      if (index===current) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+    });
+  }
+  function show(number, options={}) {
+    const previous = slides[current];
+    const nextNumber = Math.max(0, Math.min(slides.length-1, number));
+    const direction = nextNumber>=current?1:-1;
+    const changed = nextNumber!==current;
+    current=nextNumber;
+    const active=slides[current];
+    const token=++transition;
+    slides.forEach((slide) => {slide.getAnimations().forEach((a)=>a.cancel()); slide.hidden=!reading && slide!==active; slide.inert=!reading && slide!==active;});
+    if (!reading && changed && options.animate!==false && !reduced.matches) {
+      previous.hidden=false;
+      previous.inert=true;
+      previous.animate([{transform:'translateX(0)',opacity:1},{transform:`translateX(${-direction*8}%)`,opacity:0}],{duration:260,easing:'ease-in'}).onfinish=()=>{if(token===transition) previous.hidden=true;};
+      active.animate([{transform:`translateX(${direction*8}%)`,opacity:0},{transform:'translateX(0)',opacity:1}],{duration:280,easing:'ease-out'});
+    }
+    if (options.write!==false && location.hash!==`#${active.id}`) history.pushState(null,'',`#${active.id}`);
+    updateControls();
+    if (options.focus) active.focus({preventScroll:true});
+    if (reading && options.scroll!==false) active.scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});
+  }
+  document.body.classList.add('presenting');
+  const nav=$('overview').querySelector('nav');
+  slides.forEach((slide,index)=>{
+    const a=document.createElement('a');
+    a.href=`#${slide.id}`;
+    const number=document.createElement('span');number.textContent=String(index+1).padStart(2,'0');
+    const title=document.createElement('span');title.textContent=slide.querySelector('h1,h2').innerText.replace(/\s+/g,' ').trim();
+    slide.setAttribute('aria-label',`Snímek ${index+1}: ${title.textContent}`);
+    const section=document.createElement('small');section.textContent=slide.dataset.section;
+    a.append(number,title,section);nav.append(a);
+    a.addEventListener('click',(event)=>{event.preventDefault();$('overview').close();show(index,{focus:true});});
+  });
+  $('contents').setAttribute('aria-haspopup','dialog');
+  $('notes').setAttribute('aria-haspopup','dialog');
+  $('contents').addEventListener('click',()=>$('overview').showModal());
+  function notes() {
+    const template=slides[current].querySelector('.speaker-notes');
+    $('notes-content').replaceChildren(template.content.cloneNode(true));
+    $('notes-title').textContent=`Poznámky · snímek ${current+1}`;
+    $('notes-dialog').showModal();
+  }
+  $('notes').addEventListener('click',notes);
+  document.querySelectorAll('dialog').forEach((dialog)=>{
+    dialog.querySelector('.close').addEventListener('click',()=>dialog.close());
+    dialog.addEventListener('click',(event)=>{const r=dialog.getBoundingClientRect();if(event.target===dialog && (event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom))dialog.close();});
+  });
+  $('previous').addEventListener('click',()=>show(current-1,{focus:true}));
+  $('next').addEventListener('click',()=>show(current+1,{focus:true}));
+  $('reading').addEventListener('click',()=>{
+    reading=!reading;
+    document.body.classList.toggle('reading',reading);
+    document.body.classList.toggle('presenting',!reading);
+    $('reading').setAttribute('aria-pressed',String(reading));
+    $('reading').textContent=reading?'Slajdy':'Čtení';
+    show(current,{animate:false,scroll:reading});
+  });
+  async function fullscreen() {
+    try {if(document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen();}
+    catch {$('announcement').textContent='Celou obrazovku lze zapnout také klávesou F11 v prohlížeči.';}
+  }
+  $('fullscreen').addEventListener('click',fullscreen);
+  document.addEventListener('keydown',(event)=>{
+    if(event.defaultPrevented||event.ctrlKey||event.metaKey||event.altKey||document.querySelector('dialog[open]'))return;
+    if(event.target.closest('input,textarea,select,button,a,summary,[contenteditable="true"],#parcel-board,#us-board,[role="tablist"]'))return;
+    if(['ArrowRight','PageDown',' '].includes(event.key)){event.preventDefault();show(current+(event.shiftKey&&event.key===' '?-1:1),{focus:true});}
+    else if(['ArrowLeft','PageUp'].includes(event.key)){event.preventDefault();show(current-1,{focus:true});}
+    else if(event.key==='Home'){event.preventDefault();show(0,{focus:true});}
+    else if(event.key==='End'){event.preventDefault();show(slides.length-1,{focus:true});}
+    else if(event.key.toLowerCase()==='o')$('overview').showModal();
+    else if(event.key.toLowerCase()==='n')notes();
+    else if(event.key.toLowerCase()==='f')fullscreen();
+  });
+  let start=null;
+  $('deck').addEventListener('touchstart',(event)=>{
+    if(reading||event.target.closest('button,input,select,a,summary,.table-wrap,#parcel-board,#us-board,.sequence-list'))return;
+    start={x:event.changedTouches[0].clientX,y:event.changedTouches[0].clientY};
+  },{passive:true});
+  $('deck').addEventListener('touchend',(event)=>{
+    if(!start)return;
+    const dx=event.changedTouches[0].clientX-start.x,dy=event.changedTouches[0].clientY-start.y;
+    start=null;
+    if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.6 && !getSelection().toString())show(current+(dx<0?1:-1));
+  },{passive:true});
+  window.addEventListener('hashchange',()=>show(fromHash(),{write:false,animate:false}));
+  window.addEventListener('popstate',()=>show(fromHash(),{write:false,animate:false}));
+  show(fromHash(),{write:false,animate:false,scroll:false});
+})();
+
+</script>
+  <script>
+(function () {
+  'use strict';
+  const $=(id)=>document.getElementById(id);
+  const rules=window.GddRules;
+  const tabButtons=[...document.querySelectorAll('[role="tab"]')];
+  function selectTab(button, focus=false) {
+    tabButtons.forEach((tab)=>{const selected=tab===button;tab.setAttribute('aria-selected',String(selected));tab.tabIndex=selected?0:-1;$(tab.getAttribute('aria-controls')).hidden=!selected;});
+    if(focus)button.focus();
+  }
+  tabButtons.forEach((tab,index)=>{
+    tab.addEventListener('click',()=>selectTab(tab));
+    tab.addEventListener('keydown',(event)=>{
+      if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){
+        event.preventDefault();event.stopPropagation();
+        const next=event.key==='Home'?0:event.key==='End'?tabButtons.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabButtons.length)%tabButtons.length;
+        selectTab(tabButtons[next],true);
+      }
+    });
+  });
+  selectTab(tabButtons[0]);
+  let doorOpen=false;
+  $('door-interact').addEventListener('click',()=>{
+    const result=rules.door(doorOpen,$('door-key').checked,$('door-range').checked);
+    doorOpen=result.open;$('door-result').textContent=result.message;
+  });
+  $('door-reset').addEventListener('click',()=>{doorOpen=false;$('door-key').checked=false;$('door-range').checked=true;$('door-result').textContent='Dveře jsou zamčené. Zkuste interakci.';});
+  function ferryLine(){ $('ferry-line').textContent=$('ferry-saved').checked?'„Dlužím ti život. Nastup, tebe vozím zdarma.“':'„Na druhý břeh? Dvě mince a můžeme vyrazit.“'; }
+  $('ferry-saved').addEventListener('change',()=>{ferryLine();$('ferry-result').textContent=`Podmínka změněna. V inventáři: ${$('ferry-coins').value} mincí.`;});
+  $('ferry-coins').addEventListener('change',()=>{$('ferry-result').textContent=`Inventář pro test: ${$('ferry-coins').value} mincí.`;});
+  $('ferry-cross').addEventListener('click',()=>{const result=rules.ferry($('ferry-saved').checked,Number($('ferry-coins').value));$('ferry-coins').value=String(result.coins);$('ferry-result').textContent=result.message;});
+  $('ferry-reset').addEventListener('click',()=>{$('ferry-saved').checked=false;$('ferry-coins').value='2';ferryLine();$('ferry-result').textContent='V inventáři: 2 mince. Zkuste přejet.';});
+
+  let state=rules.initial();
+  const rows=[];
+  for(let row=0;row<5;row++){
+    const tr=document.createElement('tr'),heading=document.createElement('th');heading.scope='row';heading.textContent=String(row+1);tr.append(heading);
+    for(let col=0;col<5;col++){const td=document.createElement('td');td.dataset.position=String(row*5+col);tr.append(td);}
+    rows.push(tr);
+  }
+  $('parcel-map-body').replaceChildren(...rows);
+  function renderGame(message) {
+    $('parcel-map-body').querySelectorAll('td').forEach((td)=>{
+      const pos=Number(td.dataset.position);
+      let symbol='·',label='volné pole',kind='';
+      if(rules.MAP.walls.includes(pos)){symbol='#';label='zeď';kind='wall';}
+      else if(pos===rules.MAP.start){symbol='S';label='start';}
+      else if(pos===rules.MAP.goal){symbol='C';label='cíl';kind='goal';}
+      else if(pos===rules.MAP.key&&!state.key){symbol='K';label='klíč';}
+      else if(pos===rules.MAP.door){symbol=state.doorOpen?'D○':'D';label=state.doorOpen?'otevřeno':'zamčeno';}
+      const player=state.position===pos;
+      td.className=`cell ${kind} ${player?'player':''}`.trim();
+      td.setAttribute('aria-label',`${rules.coordinate(pos)}: ${player?'kurýr, ':''}${label}`);
+      const large=document.createElement('span');large.textContent=player?'@':symbol;
+      const small=document.createElement('small');small.textContent=player?'kurýr':label==='volné pole'?'':label;
+      td.replaceChildren(large,small);
+    });
+    $('parcel-turns').textContent=`Tah ${state.turns} / 12`;
+    $('parcel-key').textContent=`Klíč: ${state.key?'ano':'ne'}`;
+    $('parcel-door').textContent=`Dveře: ${state.doorOpen?'otevřené':'zamčené'}`;
+    $('parcel-result').textContent=message;
+    $('parcel-result').dataset.state=state.status;
+    document.querySelectorAll('[data-move],#parcel-open').forEach((button)=>{button.disabled=state.status!=='playing';});
+  }
+  function action(name){const result=rules.step(state,name);state=result.state;renderGame(result.message);}
+  document.querySelectorAll('[data-move]').forEach((button)=>button.addEventListener('click',()=>action(button.dataset.move)));
+  $('parcel-open').addEventListener('click',()=>action('open'));
+  $('parcel-reset').addEventListener('click',()=>{state=rules.initial();renderGame('Nová hra. Doruč zásilku z A1 do E5 nejpozději ve 12. tahu.');});
+  $('parcel-board').addEventListener('keydown',(event)=>{
+    const keys={ArrowUp:'up',ArrowLeft:'left',ArrowDown:'down',ArrowRight:'right',e:'open',E:'open'};
+    if(keys[event.key]){event.preventDefault();event.stopPropagation();action(keys[event.key]);}
+  });
+  renderGame('Doruč zásilku z A1 do E5 nejpozději ve 12. tahu.');
+
+  const phases=[...$('phase-list').children];
+  const durations=phases.map((phase)=>Number(phase.dataset.seconds));
+  const phaseNames=phases.map((phase)=>phase.firstElementChild.textContent);
+  const total=durations.reduce((sum,seconds)=>sum+seconds,0);
+  let baseElapsed=0,startedAt=null,clock=null,lastPhase=-1;
+  const format=(seconds)=>{const n=Math.ceil(Math.max(0,seconds));return `${String(Math.floor(n/60)).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`;};
+  const elapsed=()=>Math.min(total,baseElapsed+(startedAt===null?0:(performance.now()-startedAt)/1000));
+  function renderTimer() {
+    const snapshot=rules.phaseAt(elapsed(),durations);
+    $('timer-phase').textContent=snapshot.done?'Štafeta dokončena':phaseNames[snapshot.index];
+    $('timer-value').textContent=format(snapshot.remaining);
+    $('timer-total').textContent=snapshot.done?'Hotovo. Časový plán lze znovu spustit resetem.':`Zbývá celkem ${format(snapshot.totalRemaining)}. Časovač je volitelný, bez zvuku.`;
+    phases.forEach((phase,index)=>{if(index===snapshot.index&&!snapshot.done)phase.setAttribute('aria-current','step');else phase.removeAttribute('aria-current');});
+    if(lastPhase!==snapshot.index||snapshot.done){$('timer-announcement').textContent=snapshot.done?'Štafeta dokončena.':`Fáze: ${phaseNames[snapshot.index]}.`;lastPhase=snapshot.index;}
+    if(snapshot.done&&clock!==null){clearInterval(clock);clock=null;startedAt=null;baseElapsed=total;}
+    $('timer-toggle').textContent=startedAt===null?'Spustit':'Pozastavit';
+    $('timer-toggle').disabled=snapshot.done;
+    $('timer-next').disabled=snapshot.done;
+  }
+  $('timer-toggle').addEventListener('click',()=>{
+    if(startedAt===null){startedAt=performance.now();clock=setInterval(renderTimer,250);}
+    else{baseElapsed=elapsed();startedAt=null;clearInterval(clock);clock=null;}
+    renderTimer();
+  });
+  $('timer-next').addEventListener('click',()=>{
+    const snapshot=rules.phaseAt(elapsed(),durations);
+    baseElapsed=durations.slice(0,snapshot.index+1).reduce((sum,seconds)=>sum+seconds,0);
+    if(startedAt!==null)startedAt=performance.now();
+    renderTimer();
+  });
+  $('timer-reset').addEventListener('click',()=>{clearInterval(clock);clock=null;baseElapsed=0;startedAt=null;lastPhase=-1;renderTimer();});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)renderTimer();});
+  renderTimer();
+})();
+
+</script>
+  <script>
+/* VHS teaching adaptations. Pure models, shared by widgets and regression tests. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.GddLoopRules = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  const QUESTIONS = Object.freeze([
+    {title:'Co nejlépe popisuje herní smyčku?', options:['Děj od úvodu po závěr','Opakované hráčovy akce a jejich důsledky','Seznam všech funkcí hry'], answer:1, explanation:'Smyčka propojuje činnost, výsledek a další situaci. Samotný seznam mechanik nepopisuje jejich návaznost.'},
+    {title:'Samotný skok postavy je…', options:['Jedna mechanika','Celá herní smyčka','Dlouhodobá progrese'], answer:0, explanation:'Skok je mechanika. V širší smyčce hráč čte překážku, zvolí skok, dostane odezvu a upraví další pokus.'},
+    {title:'Načtení vstupu, update a vykreslení patří k…', options:['Příběhovému oblouku','Metahře','Technické smyčce enginu'], answer:2, explanation:'To je technická smyčka programu. Core gameplay loop popisujeme z pohledu hráče, nikoli renderovacího kódu.'},
+    {title:'Které porovnání nejlépe izoluje jednu změnu?', options:['Jiná mapa i vyšší poškození','Stejný start, 3 nebo 2 akce tanku','A hrají nováčci, B jen experti'], answer:1, explanation:'Stejná mapa, program robota a start umožní sledovat dopad akčního rozpočtu. Pořadí A/B také může ovlivnit výsledek.'},
+    {title:'Dva týmy dávají přednost B. Co z toho plyne?', options:['B je pro všechny lepší','A už nemusíme testovat','Máme podnět pro další ověření'], answer:2, explanation:'Malý školní vzorek a efekt učení neumožňují univerzální závěr. Potřebujeme pozorování, důvody a další test.'},
+    {title:'Co do GDD nejlépe zachytí smyčku?', options:['Konkrétní průchod a změny stavu','Jen příběh a atmosféra','Seznam tlačítek bez odezvy'], answer:0, explanation:'Popis krátkého průchodu ukáže vstup, omezení, odezvu a výsledek, ze kterého hráč pokračuje.'}
+  ].map(q=>Object.freeze({...q,options:Object.freeze(q.options)})));
+  const SEQUENCE = Object.freeze([
+    'Výběr trasy podle rizika',
+    'Pohyb a hledání zásilky',
+    'Výsledek hledání',
+    'Změna inventáře a zbývajícího času',
+    'Odezva a nový výběr trasy'
+  ]);
+  function gradeQuiz(answers) {
+    if (!Array.isArray(answers) || answers.length!==QUESTIONS.length || answers.some((a,i)=>!Number.isInteger(a)||a<0||a>=QUESTIONS[i].options.length)) return {complete:false,correct:0};
+    return {complete:true,correct:answers.filter((a,i)=>a===QUESTIONS[i].answer).length};
+  }
+  function gradeSequence(order) {
+    return Array.isArray(order) && order.length===SEQUENCE.length && order.every((value,index)=>value===index);
+  }
+  function expectedDelivery(probability) {
+    if (!Number.isFinite(probability)||probability<0||probability>1) throw new RangeError('Probability must be in [0,1]');
+    const safe=1,express=3*probability;
+    return {safe,express,best:Math.abs(safe-express)<1e-9?'equal':express>safe?'express':'safe'};
+  }
+  function boundaryOutcome(atGoal,turns,fixed) {
+    if (!Number.isInteger(turns)||turns<0) throw new RangeError('Invalid turn');
+    if (fixed && atGoal) return 'won';
+    if (turns>=12) return 'lost';
+    return atGoal?'won':'playing';
+  }
+  function abSummary(aSeconds,aRounds,bSeconds,bRounds) {
+    if (![aSeconds,aRounds,bSeconds,bRounds].every(Number.isFinite)||aSeconds<=0||bSeconds<=0||aRounds<=0||bRounds<=0||!Number.isInteger(aRounds)||!Number.isInteger(bRounds)) return null;
+    const a=aSeconds/aRounds,b=bSeconds/bRounds;
+    return {a,b,difference:b-a,percent:(b-a)/a*100};
+  }
+  const SIZE=7,GOAL=45;
+  const PROGRAM=Object.freeze(['advance','pulse','north','east','south','west','wait','wait','wait','wait']);
+  const PROGRAM_LABELS=Object.freeze({advance:'Postup o pole dolů',pulse:'Zásah sousedů',north:'Výstřel nahoru',east:'Výstřel doprava',south:'Výstřel dolů',west:'Výstřel doleva',wait:'Čekání'});
+  const DELTAS=Object.freeze({up:[0,-1],right:[1,0],down:[0,1],left:[-1,0]});
+  const coord=p=>String.fromCharCode(65+p%SIZE)+(Math.floor(p/SIZE)+1);
+  const adjacent=(a,b)=>Math.abs(a%SIZE-b%SIZE)+Math.abs(Math.floor(a/SIZE)-Math.floor(b/SIZE))===1;
+  function neighbor(position,direction) {
+    const delta=DELTAS[direction];
+    if (!delta) throw new RangeError('Unknown direction');
+    const x=position%SIZE+delta[0],y=Math.floor(position/SIZE)+delta[1];
+    return x<0||x>=SIZE||y<0||y>=SIZE?null:y*SIZE+x;
+  }
+  function inRay(from,to,direction) {
+    if (!DELTAS[direction]) throw new RangeError('Unknown direction');
+    const x=from%SIZE,y=Math.floor(from/SIZE),tx=to%SIZE,ty=Math.floor(to/SIZE);
+    return direction==='up'?x===tx&&ty<y:direction==='down'?x===tx&&ty>y:direction==='left'?y===ty&&tx<x:y===ty&&tx>x;
+  }
+  function initialUs(variant='A') {
+    if (!['A','B'].includes(variant)) throw new RangeError('Unknown version');
+    return {variant,budget:variant==='A'?3:2,round:1,phase:'robot',programIndex:0,activeTank:0,used:0,status:'playing',robot:{position:3,hp:10},tanks:[14,20,36,40].map((position,id)=>({id,position,hp:4})),actions:0};
+  }
+  const clone=s=>({...s,robot:{...s.robot},tanks:s.tanks.map(t=>({...t}))});
+  function finish(s,message) {
+    if (s.robot.hp<=0) {s.status='won';s.robot.hp=0;message='Tým zvítězil. Robot má 0 HP.';}
+    else if (s.robot.position===GOAL) {s.status='lost';message='Robot dosáhl města D7. Tým prohrál.';}
+    else if (s.tanks.every(t=>t.hp<=0)) {s.status='lost';message='Všechny tanky jsou zničené. Tým prohrál.';}
+    return {state:s,message};
+  }
+  function nextTank(s) {
+    let index=s.activeTank+1;
+    while(index<4&&s.tanks[index].hp<=0)index++;
+    if(index===4){s.phase='robot';s.programIndex=0;s.round++;s.activeTank=0;}else{s.activeTank=index;}
+    s.used=0;
+  }
+  function robotStep(state) {
+    if(state.status!=='playing'||state.phase!=='robot')return {state,message:'Robot nyní není na tahu.'};
+    const s=clone(state),instruction=PROGRAM[s.programIndex];
+    let message=`Robot: ${PROGRAM_LABELS[instruction]}.`;
+    if(instruction==='advance'){
+      const target=neighbor(s.robot.position,'down');
+      if(target!==null){s.robot.position=target;const victim=s.tanks.find(t=>t.hp>0&&t.position===target);if(victim){victim.hp=0;message+=` Tank ${victim.id+1} pod robotem je zničen.`;}}
+    }else if(instruction==='pulse'){
+      s.tanks.forEach(t=>{if(t.hp>0&&adjacent(t.position,s.robot.position)){t.hp--;message+=` T${t.id+1}: −1 HP.`;}});
+    }else if(instruction!=='wait'){
+      const direction={north:'up',east:'right',south:'down',west:'left'}[instruction];
+      const targets=s.tanks.filter(t=>t.hp>0&&inRay(s.robot.position,t.position,direction)).sort((a,b)=>Math.abs(a.position-s.robot.position)-Math.abs(b.position-s.robot.position));
+      if(targets.length){targets[0].hp--;message+=` T${targets[0].id+1}: −1 HP.`;}else message+=' Bez zásahu.';
+    }
+    s.programIndex++;s.actions++;
+    if(s.programIndex===PROGRAM.length){s.phase='tanks';s.activeTank=s.tanks.findIndex(t=>t.hp>0);s.used=0;}
+    return finish(s,message);
+  }
+  function robotRound(state) {
+    let result={state,message:'Robotův program je dokončen.'};
+    const messages=[];
+    for(let i=0;i<PROGRAM.length&&result.state.status==='playing'&&result.state.phase==='robot';i++){
+      result=robotStep(result.state);messages.push(result.message);
+    }
+    return {...result,message:messages.join(' ')};
+  }
+  function tankAction(state,action,direction) {
+    if(state.status!=='playing'||state.phase!=='tanks')return {state,message:'Tanky nyní nejsou na tahu.'};
+    if(!['move','shoot','end'].includes(action))throw new RangeError('Unknown action');
+    if(action!=='end'&&!DELTAS[direction])throw new RangeError('Unknown direction');
+    const s=clone(state),tank=s.tanks[s.activeTank];
+    let message=`T${tank.id+1}: `;
+    if(action==='end') {nextTank(s);return finish(s,message+'tah ukončen.');}
+    if(action==='move'){
+      const target=neighbor(tank.position,direction);
+      if(target===null||target===s.robot.position||s.tanks.some(t=>t.hp>0&&t.position===target))message+='neplatný pohyb, akce spotřebována.';
+      else {tank.position=target;message+=`pohyb na ${coord(target)}.`;}
+    }else if(inRay(tank.position,s.robot.position,direction)){
+      s.robot.hp--;message+='robot zasažen za 1 HP.';
+    }else message+='výstřel minul, akce spotřebována.';
+    s.used++;s.actions++;
+    const finished=finish(s,message);
+    if(s.status==='playing'&&s.used===s.budget)nextTank(s);
+    return finished;
+  }
+  return Object.freeze({QUESTIONS,SEQUENCE,gradeQuiz,gradeSequence,expectedDelivery,boundaryOutcome,abSummary,SIZE,GOAL,PROGRAM,PROGRAM_LABELS,coord,initialUs,robotStep,robotRound,tankAction,inRay});
+});
+
+</script>
+  <script>
+(function () {
+  'use strict';
+  const R=window.GddLoopRules,$=id=>document.getElementById(id);
+  if(!R)return;
+  if($('loop-quiz')){
+    let current=0,answers=R.QUESTIONS.map(()=>null);
+    const fields=R.QUESTIONS.map((q,i)=>{
+      const field=document.createElement('fieldset'),legend=document.createElement('legend');
+      field.className='quiz-question';legend.textContent=`${i+1}. ${q.title}`;field.append(legend);
+      q.options.forEach((option,j)=>{
+        const label=document.createElement('label'),input=document.createElement('input'),text=document.createElement('span');
+        input.type='radio';input.name=`loop-q${i}`;input.value=String(j);text.textContent=option;
+        input.addEventListener('change',()=>{answers[i]=j;$('quiz-feedback').textContent='Odpověď zvolena. Můžete ji ověřit.';$('quiz-total').textContent='Součet se aktualizuje po ověření odpovědi.';$('quiz-check').disabled=false;});
+        label.append(input,text);field.append(label);
+      });
+      return field;
+    });
+    $('quiz-fields').replaceChildren(...fields);
+    function render(){
+      fields.forEach((field,i)=>field.hidden=i!==current);
+      $('quiz-count').textContent=`Otázka ${current+1} / ${fields.length}`;
+      $('quiz-prev').disabled=current===0;$('quiz-next').disabled=current===fields.length-1;
+      $('quiz-check').disabled=answers[current]===null;
+      $('quiz-feedback').textContent='Vyberte odpověď a ověřte ji.';
+    }
+    $('quiz-prev').addEventListener('click',()=>{current=Math.max(0,current-1);render();});
+    $('quiz-next').addEventListener('click',()=>{current=Math.min(fields.length-1,current+1);render();});
+    $('loop-quiz').addEventListener('submit',event=>{
+      event.preventDefault();
+      const q=R.QUESTIONS[current];
+      $('quiz-feedback').textContent=(answers[current]===q.answer?'Správně. ':'Zatím ne. ')+q.explanation;
+      const result=R.gradeQuiz(answers);
+      $('quiz-total').textContent=result.complete?`Celkem ${result.correct} / ${fields.length}. Odpovědi můžete dál upravovat.`:`Odpovězeno ${answers.filter(a=>a!==null).length} / ${fields.length}.`;
+    });
+    $('quiz-reset').addEventListener('click',()=>{answers=answers.map(()=>null);fields.forEach(f=>f.querySelectorAll('input').forEach(input=>input.checked=false));current=0;$('quiz-total').textContent='Výsledky zůstávají jen v této stránce.';render();});
+    render();
+  }
+  if($('sequence-list')){
+    let order=[2,4,0,3,1];
+    function render(focus){
+      const rows=order.map((value,index)=>{
+        const row=document.createElement('li'),text=document.createElement('span'),controls=document.createElement('span');
+        text.textContent=R.SEQUENCE[value];controls.className='sequence-controls';
+        for(const [delta,label,symbol] of [[-1,'Posunout nahoru','↑'],[1,'Posunout dolů','↓']]){
+          const button=document.createElement('button');button.type='button';button.textContent=symbol;
+          button.setAttribute('aria-label',`${label}: ${R.SEQUENCE[value]}`);button.disabled=index+delta<0||index+delta>=order.length;
+          button.dataset.sequence=String(value);button.dataset.delta=String(delta);
+          button.addEventListener('click',()=>{[order[index],order[index+delta]]=[order[index+delta],order[index]];render({value,delta});$('sequence-feedback').textContent='Pořadí změněno. Ověřte celou smyčku.';});
+          controls.append(button);
+        }
+        row.append(text,controls);return row;
+      });
+      $('sequence-list').replaceChildren(...rows);
+      if(focus){const button=$('sequence-list').querySelector(`[data-sequence="${focus.value}"][data-delta="${focus.delta}"]`);if(!button.disabled)button.focus();else button.parentElement.querySelector('button:not(:disabled)').focus();}
+    }
+    $('sequence-check').addEventListener('click',()=>{$('sequence-feedback').textContent=R.gradeSequence(order)?'Správně pro zadanou scénu. Výsledek mění stav a další volbu. Jiné hry mohou mít jiné pořadí.':'Zkontrolujte návaznost: nejprve hráč vybírá trasu, pak jedná. Výsledek změní stav a odezva připraví další volbu.';});
+    $('sequence-reset').addEventListener('click',()=>{order=[2,4,0,3,1];render();$('sequence-feedback').textContent='Začněte výběrem trasy. Šipky lze aktivovat klávesnicí.';});render();
+  }
+  if($('delivery-probability')){
+    let prediction=null;
+    $('delivery-probability').addEventListener('change',()=>{prediction=null;document.querySelectorAll('[data-delivery]').forEach(b=>b.setAttribute('aria-pressed','false'));$('delivery-feedback').textContent='Podmínka změněna. Nejdříve zvolte svůj odhad.';});
+    document.querySelectorAll('[data-delivery]').forEach(button=>button.addEventListener('click',()=>{prediction=button.dataset.delivery;document.querySelectorAll('[data-delivery]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));$('delivery-feedback').textContent=`Odhad: ${button.textContent}. Nyní ho můžete ověřit.`;}));
+    $('delivery-check').addEventListener('click',()=>{
+      if(prediction===null){$('delivery-feedback').textContent='Nejdříve zvolte trasu.';return;}
+      const result=R.expectedDelivery(Number($('delivery-probability').value));
+      $('delivery-feedback').textContent=`${prediction===result.best?'Správně. ':'Zkuste přepočítat. '}Bezpečná: 1 zásilka. Expres: průměrně ${result.express.toLocaleString('cs-CZ')} zásilky na pokus. Průměr přes mnoho pokusů nezaručuje výsledek jednoho pokusu.`;
+    });
+  }
+  if($('boundary-run')){
+    $('boundary-run').addEventListener('click',()=>{
+      const fixed=$('boundary-fixed').checked,result=R.boundaryOutcome(true,12,fixed);
+      $('boundary-feedback').textContent=result==='won'?'PASS. Doručení ve 12. tahu znamená výhru, jak stanoví GDD.':'FAIL. Ukázkový prototyp hlásí prohru před kontrolou cíle. GDD přitom dovoluje doručení ve 12. tahu.';
+      $('boundary-feedback').dataset.state=result==='won'?'won':'lost';
+    });
+    $('boundary-fixed').addEventListener('change',()=>{$('boundary-feedback').textContent='Po změně znovu spusťte stejný hraniční test.';});
+  }
+  if($('ab-calculator')){
+    $('ab-calculator').addEventListener('input',()=>{$('ab-feedback').textContent='Údaje změněny. Pro nový výsledek je znovu spočítejte.';});
+    $('ab-calculator').addEventListener('invalid',()=>{$('ab-feedback').textContent='Vyplňte kladné časy a kladné celé počty dokončených kol.';},true);
+    $('ab-calculator').addEventListener('submit',event=>{
+      event.preventDefault();
+      const result=R.abSummary(...['ab-a-seconds','ab-a-rounds','ab-b-seconds','ab-b-rounds'].map(id=>Number($(id).value)));
+      $('ab-feedback').textContent=result?`A: ${result.a.toFixed(1)} s/kolo. B: ${result.b.toFixed(1)} s/kolo. Změna B vůči A: ${result.percent.toFixed(1)} %. Záporné číslo znamená kratší kola. Samo neříká, která verze je příjemnější.`:'Vyplňte kladné časy a kladný celý počet dokončených kol. Do času nezahrnujte poslední nedokončené kolo.';
+    });
+  }
+  if($('us-board')){
+    let state=R.initialUs(),log=[];
+    const cells=[];
+    for(let row=0;row<R.SIZE;row++){
+      const tr=document.createElement('tr'),heading=document.createElement('th');heading.scope='row';heading.textContent=String(row+1);tr.append(heading);
+      for(let col=0;col<R.SIZE;col++){const td=document.createElement('td');td.dataset.position=String(row*R.SIZE+col);tr.append(td);cells.push(td);}
+      $('us-map-body').append(tr);
+    }
+    const instructions=R.PROGRAM.map((instruction,index)=>{const li=document.createElement('li');li.textContent=`${index+1}. ${R.PROGRAM_LABELS[instruction]}`;return li;});
+    $('us-program').replaceChildren(...instructions);
+    function render(message){
+      cells.forEach(td=>{
+        const pos=Number(td.dataset.position),tank=state.tanks.find(t=>t.hp>0&&t.position===pos),robot=state.robot.position===pos;
+        const symbol=robot?'R':tank?`T${tank.id+1}`:pos===R.GOAL?'M':'·';
+        td.textContent=symbol;td.className=robot?'robot':tank?'tank':pos===R.GOAL?'town':'';
+        td.setAttribute('aria-label',`${R.coord(pos)}: ${robot?'robot':tank?`tank ${tank.id+1}`:pos===R.GOAL?'město':'volné pole'}`);
+      });
+      $('us-hud').textContent=`Verze ${state.variant}, ${state.budget} akce na tank. Kolo ${state.round}. Robot ${state.robot.hp}/10 HP.`;
+      $('us-health').textContent=state.tanks.map(t=>`T${t.id+1}: ${t.hp}/4 HP`).join(' · ');
+      const robot=state.status==='playing'&&state.phase==='robot',tanks=state.status==='playing'&&state.phase==='tanks';
+      $('us-turn').textContent=state.status==='won'?'Vítězství tanků':state.status==='lost'?'Vítězství robota':robot?`Robot, příkaz ${state.programIndex+1}/10`:`Tank ${state.activeTank+1}, zbývá ${state.budget-state.used} akcí`;
+      $('us-robot-step').disabled=!robot;$('us-robot-all').disabled=!robot;
+      document.querySelectorAll('[data-us-move],#us-shoot,#us-end').forEach(b=>b.disabled=!tanks);
+      instructions.forEach((li,i)=>{if(robot&&i===state.programIndex)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');});
+      $('us-status').textContent=message;$('us-status').dataset.state=state.status;
+      $('us-log').replaceChildren(...log.slice(-20).map(entry=>{const li=document.createElement('li');li.textContent=entry;return li;}));
+    }
+    function act(result){state=result.state;log.push(result.message);render(result.message);}
+    $('us-robot-step').addEventListener('click',()=>act(R.robotStep(state)));
+    $('us-robot-all').addEventListener('click',()=>act(R.robotRound(state)));
+    document.querySelectorAll('[data-us-move]').forEach(b=>b.addEventListener('click',()=>act(R.tankAction(state,'move',b.dataset.usMove))));
+    $('us-shoot').addEventListener('click',()=>act(R.tankAction(state,'shoot',$('us-direction').value)));
+    $('us-end').addEventListener('click',()=>act(R.tankAction(state,'end')));
+    $('us-reset').addEventListener('click',()=>{state=R.initialUs($('us-variant').value);log=[];render(`Nová hra ${state.variant}. Začíná robot. Přepnutí verze obnovilo celý startovní stav.`);});
+    $('us-variant').addEventListener('change',()=>{$('us-status').textContent=`Zvolena verze ${$('us-variant').value} pro příští hru. Běžící hra je stále ${state.variant}. Použijte tlačítko Nová hra.`;});
+    $('us-board').addEventListener('keydown',event=>{const directions={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};if(directions[event.key]){event.preventDefault();event.stopPropagation();act(R.tankAction(state,'move',directions[event.key]));}});
+    render('Robot začne desetipříkazovým programem. Potom hrají živé tanky T1 až T4.');
+  }
+})();
+
+</script>
+</body>
+</html>
