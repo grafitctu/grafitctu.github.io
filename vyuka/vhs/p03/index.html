@@ -33,6 +33,32 @@ dialog{border:1px solid var(--line);border-radius:10px;padding:28px;color:var(--
 @media(max-width:760px){.mobile-label{display:inline}.desktop-label{display:none}.toolbar{padding:0 12px;gap:8px}.toolbar button{padding:8px 7px;min-height:37px}.brand{font-size:18px;white-space:nowrap}.two-up,.comparison,.save-display,.clock-list{grid-template-columns:1fr;gap:22px}.title-slide h1{font-size:41px}.lead{font-size:23px}.eyebrow{font-size:11px}.compact-table{font-size:17px;min-width:550px}.source-list{font-size:17px}.source-list small{font-size:14px}.module-list li{grid-template-columns:1fr;gap:3px;font-size:18px}.demo{font-size:17px;padding:13px}.demo-controls{gap:10px}.demo-state{grid-template-columns:1fr 1fr;gap:12px}.demo label{flex-wrap:wrap}.demo-status{font-size:16px}.terrain-grid{grid-template-columns:1fr 1fr}.state-code{font-size:16px}.quiz-question{font-size:21px}.quiz-options button{font-size:17px}.quiz-feedback{font-size:16px;min-height:0}.case-image img{max-height:280px}.micro,.source{font-size:14px}.economic-loop{font-size:19px}.question{font-size:23px}.clock-list dd{font-size:18px}.slide .content{min-width:0}#notes-content{font-size:17px}}
 @media(max-width:360px){.brand span{display:none}.toolbar{padding-inline:9px}.toolbar button{padding-inline:6px}}
 @media print{.slide .eyebrow{font-size:11px}.title-slide h1{font-size:43px}.slide .lead{font-size:25px}.two-up,.comparison,.save-display,.clock-list{grid-template-columns:1fr 1fr;gap:22px}.compact-table{min-width:0;font-size:17px}.compact-table td,.compact-table th{padding:9px 12px}.source-list{font-size:17px}.source-list small{font-size:12px}.demo{font-size:16px;padding:12px;background:transparent}.demo-controls,.quiz-actions,.quiz-options{display:none}.demo-state{grid-template-columns:repeat(4,1fr)}.demo-status,.scope-note{font-size:14px}.terrain-grid{grid-template-columns:repeat(4,1fr)}.quiz-question,.quiz-feedback,.print-summary{font-size:18px}.print-summary{display:block}.state-code{font-size:16px}.source,.micro{font-size:12px}.case-image img{max-height:260px}.module-list li{font-size:17px}.table-wrap{overflow:visible}.content>details:not([open])>.answer{display:block}.economic-loop{font-size:21px}}
+</style><style>/* GDD/P03 viewport fitting. Reading and print layouts keep their original sizes. */
+@media screen {
+  body.presenting .slide {
+    max-width: none;
+    margin: 0;
+    align-items: center;
+  }
+  body.presenting .slide > .content {
+    width: 100%;
+    min-width: 0;
+    flex: 0 0 auto;
+    transform: scale(var(--lecture-content-scale, 1));
+    transform-origin: center center;
+  }
+  #fullscreen {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+  }
+  #fullscreen .fullscreen-icon { display: inline-block; font-size: 20px; line-height: 1; }
+  #fullscreen .fullscreen-label { font-size: 14px; }
+  @media (max-width: 960px) {
+    #fullscreen .fullscreen-label { display: none; }
+  }
+}
 </style><style id="grafit-lecture-return-style">
 .grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
 .grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
@@ -248,6 +274,24 @@ Level → strážce B miniboss odměna
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const darkPreference = matchMedia('(prefers-color-scheme: dark)');
   let current = 0, reading = false, transition = 0;
+  let fitFrame = 0;
+  // Enlarge to the usable viewport, but never shrink a dense or mobile slide.
+  function presentationScale(width, height, contentWidth, contentHeight) {
+    if (![width, height, contentWidth, contentHeight].every(n => Number.isFinite(n) && n > 0)) return 1;
+    return Math.max(1, Math.min(width / contentWidth, height / contentHeight));
+  }
+  function fitSlide() {
+    cancelAnimationFrame(fitFrame);
+    fitFrame = requestAnimationFrame(() => {
+      const slide = slides[current], content = slide.querySelector('.content');
+      if (reading || !content || slide.hidden) return;
+      const style = getComputedStyle(slide);
+      const width = slide.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      const height = slide.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+      const scale = presentationScale(width, height, content.offsetWidth, content.offsetHeight);
+      content.style.setProperty('--lecture-content-scale', String(scale));
+    });
+  }
   let manualTheme = false;
   try { manualTheme = !!localStorage.getItem('vhs-theme'); } catch {}
   function theme(mode, persist=false) {
@@ -295,6 +339,7 @@ Level → strážce B miniboss odměna
     }
     if (options.write!==false && location.hash!==`#${active.id}`) history.pushState(null,'',`#${active.id}`);
     updateControls();
+    fitSlide();
     if (options.focus) active.focus({preventScroll:true});
     if (reading && options.scroll!==false) active.scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});
   }
@@ -337,6 +382,31 @@ Level → strážce B miniboss odměna
   async function fullscreen() {
     try {if(document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen();}
     catch {$('announcement').textContent='Celou obrazovku lze zapnout také klávesou F11 v prohlížeči.';}
+  }
+  const fullscreenIcon = document.createElement('span');
+  fullscreenIcon.className = 'fullscreen-icon';
+  fullscreenIcon.setAttribute('aria-hidden', 'true');
+  fullscreenIcon.textContent = '⛶';
+  const fullscreenLabel = document.createElement('span');
+  fullscreenLabel.className = 'fullscreen-label';
+  fullscreenLabel.textContent = 'Celá obrazovka';
+  $('fullscreen').replaceChildren(fullscreenIcon, fullscreenLabel);
+  $('fullscreen').setAttribute('aria-pressed', 'false');
+  document.addEventListener('fullscreenchange', () => {
+    const label = document.fullscreenElement ? 'Opustit celou obrazovku' : 'Celá obrazovka';
+    $('fullscreen').setAttribute('aria-pressed', String(!!document.fullscreenElement));
+    $('fullscreen').setAttribute('aria-label', label);
+    $('fullscreen').title = label + ' (F)';
+    fullscreenLabel.textContent = label;
+    fitSlide();
+  });
+  window.addEventListener('resize', fitSlide);
+  document.addEventListener('load', fitSlide, true);
+  if (document.fonts) document.fonts.ready.then(fitSlide);
+  if (typeof ResizeObserver !== 'undefined') {
+    const observer = new ResizeObserver(fitSlide);
+    observer.observe($('deck'));
+    slides.forEach(slide => observer.observe(slide.querySelector('.content')));
   }
   $('fullscreen').addEventListener('click',fullscreen);
   document.addEventListener('keydown',(event)=>{

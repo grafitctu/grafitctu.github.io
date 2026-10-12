@@ -68,6 +68,35 @@ dialog{border:1px solid var(--line);border-radius:10px;padding:28px;color:var(--
 @media print{.quiz-actions,.sequence-controls,.ab-calculator button{display:none!important}.quiz-question[hidden]{display:block!important}.loop-test #quiz-fields{display:grid;grid-template-columns:1fr 1fr;gap:5px 22px}.quiz-question{margin:5px 0;break-inside:avoid}.quiz-question legend{font-size:15px;margin-bottom:3px}.quiz-question label{font-size:13px;padding:3px 0}.loop-test #quiz-count,#quiz-feedback,#quiz-total{display:none}.loop-diagram{grid-template-columns:repeat(5,minmax(0,1fr));font-size:15px;gap:12px;margin:18px 0}.us-cycle{grid-template-columns:repeat(4,minmax(0,1fr))}.loop-levels>div{grid-template-columns:170px 1fr;padding:13px 0;gap:20px}.loop-levels dt,.loop-levels dd{font-size:17px}.loop-transcript{font-size:18px}.loop-feedback{font-size:15px;min-height:0}.sequence-list{font-size:17px}.sequence-list li>span:first-child{max-width:100%}.ab-calculator{grid-template-columns:1fr 1fr;font-size:15px;gap:12px}.ab-calculator input{background:#fff!important;color:#203039!important;min-height:28px;padding:5px}.loop-source-list{grid-template-columns:1fr 1fr;font-size:15px;gap:0 25px}.loop-source-list li{padding:9px 0}.loop-source-list li span{font-size:13px}.lab-phases li{font-size:15px}}
 
 </style>
+  <style>
+/* GDD/P03 viewport fitting. Reading and print layouts keep their original sizes. */
+@media screen {
+  body.presenting .slide {
+    max-width: none;
+    margin: 0;
+    align-items: center;
+  }
+  body.presenting .slide > .content {
+    width: 100%;
+    min-width: 0;
+    flex: 0 0 auto;
+    transform: scale(var(--lecture-content-scale, 1));
+    transform-origin: center center;
+  }
+  #fullscreen {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+  }
+  #fullscreen .fullscreen-icon { display: inline-block; font-size: 20px; line-height: 1; }
+  #fullscreen .fullscreen-label { font-size: 14px; }
+  @media (max-width: 960px) {
+    #fullscreen .fullscreen-label { display: none; }
+  }
+}
+
+</style>
 <style id="grafit-lecture-return-style">
 .grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
 .grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
@@ -737,6 +766,24 @@ body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-tem
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const darkPreference = matchMedia('(prefers-color-scheme: dark)');
   let current = 0, reading = false, transition = 0;
+  let fitFrame = 0;
+  // Enlarge to the usable viewport, but never shrink a dense or mobile slide.
+  function presentationScale(width, height, contentWidth, contentHeight) {
+    if (![width, height, contentWidth, contentHeight].every(n => Number.isFinite(n) && n > 0)) return 1;
+    return Math.max(1, Math.min(width / contentWidth, height / contentHeight));
+  }
+  function fitSlide() {
+    cancelAnimationFrame(fitFrame);
+    fitFrame = requestAnimationFrame(() => {
+      const slide = slides[current], content = slide.querySelector('.content');
+      if (reading || !content || slide.hidden) return;
+      const style = getComputedStyle(slide);
+      const width = slide.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      const height = slide.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+      const scale = presentationScale(width, height, content.offsetWidth, content.offsetHeight);
+      content.style.setProperty('--lecture-content-scale', String(scale));
+    });
+  }
   let manualTheme = false;
   try { manualTheme = !!localStorage.getItem('vhs-theme'); } catch {}
   function theme(mode, persist=false) {
@@ -784,6 +831,7 @@ body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-tem
     }
     if (options.write!==false && location.hash!==`#${active.id}`) history.pushState(null,'',`#${active.id}`);
     updateControls();
+    fitSlide();
     if (options.focus) active.focus({preventScroll:true});
     if (reading && options.scroll!==false) active.scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});
   }
@@ -826,6 +874,31 @@ body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-tem
   async function fullscreen() {
     try {if(document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen();}
     catch {$('announcement').textContent='Celou obrazovku lze zapnout také klávesou F11 v prohlížeči.';}
+  }
+  const fullscreenIcon = document.createElement('span');
+  fullscreenIcon.className = 'fullscreen-icon';
+  fullscreenIcon.setAttribute('aria-hidden', 'true');
+  fullscreenIcon.textContent = '⛶';
+  const fullscreenLabel = document.createElement('span');
+  fullscreenLabel.className = 'fullscreen-label';
+  fullscreenLabel.textContent = 'Celá obrazovka';
+  $('fullscreen').replaceChildren(fullscreenIcon, fullscreenLabel);
+  $('fullscreen').setAttribute('aria-pressed', 'false');
+  document.addEventListener('fullscreenchange', () => {
+    const label = document.fullscreenElement ? 'Opustit celou obrazovku' : 'Celá obrazovka';
+    $('fullscreen').setAttribute('aria-pressed', String(!!document.fullscreenElement));
+    $('fullscreen').setAttribute('aria-label', label);
+    $('fullscreen').title = label + ' (F)';
+    fullscreenLabel.textContent = label;
+    fitSlide();
+  });
+  window.addEventListener('resize', fitSlide);
+  document.addEventListener('load', fitSlide, true);
+  if (document.fonts) document.fonts.ready.then(fitSlide);
+  if (typeof ResizeObserver !== 'undefined') {
+    const observer = new ResizeObserver(fitSlide);
+    observer.observe($('deck'));
+    slides.forEach(slide => observer.observe(slide.querySelector('.content')));
   }
   $('fullscreen').addEventListener('click',fullscreen);
   document.addEventListener('keydown',(event)=>{
