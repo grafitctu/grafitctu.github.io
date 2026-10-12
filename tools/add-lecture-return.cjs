@@ -36,7 +36,7 @@ module.exports=function addLectureReturn(base,catalog){
    fs.writeFileSync(target,controller);record.preNavigationSha256??=sha(before);record.bytes=Buffer.byteLength(controller);record.sha256=sha(controller);record.adaptations=['Library course brand retains native navigation; first-slide controls remain available.'];
   }
  }
- const entries=[],courseByPage=new Map();for(const row of catalog.rows)for(const course of catalog.courses)for(const item of [].concat(row[course.id]||[]))for(const value of [item.primary,item.alternative])if(value&&(value.endsWith('/')||/\.html$/.test(value))){const file=value.endsWith('/')?value+'index.html':value;if(courseByPage.has(file)&&courseByPage.get(file).id!==course.id)throw Error('Ambiguous course: '+file);entries.push(file);courseByPage.set(file,course);}
+ const entries=[],courseByPage=new Map();for(const row of catalog.rows)for(const course of catalog.courses)for(const item of [].concat(row[course.id]||[]))for(const value of [item.primary,item.alternative,...(item.resources||[]).map(r=>r.href)])if(value&&(value.endsWith('/')||/\.html$/.test(value))){const file=value.endsWith('/')?value+'index.html':value;if(courseByPage.has(file)&&courseByPage.get(file).id!==course.id)throw Error('Ambiguous course: '+file);entries.push(file);courseByPage.set(file,course);}
  const pages=[...new Set(entries)];let changed=0;
  // Validate every input before changing any copy. Older PGA viewers were generated,
  // rather than copied, and did not yet have provenance entries.
