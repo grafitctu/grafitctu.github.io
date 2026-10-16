@@ -127,6 +127,12 @@ const GLOSSARY = {
     "TAA": { title: "Temporal Anti-Aliasing", desc: "Anti-aliasing, který využívá informace z předchozích snímků pro vyhlazování hran polygonů" },
     "Slerp": { title: "Spherical Linear Interpolation", desc: "Slerp je metoda pro lineární interpolaci mezi dvěma rotacemi." },
     "Gimbal lock": { title: "Gimbal lock", desc: "Gimbal lock je ztráta jednoho stupně volnosti v trojrozměrnostním prostoru, ke které dochází, když se osy dvou ze tří rotačních prstů (nebo Eulerových úhlů) srovnají do jedné přímky" },
+    "proxemika": { title: "Proxemika", desc: "Věda zabývající se studiem neverbální komunikace, zejména vzdáleností a prostorem, které lidé udržují během interakce." },
+    "Skeuomorfismus": { title: "Skeuomorfismus", desc: "Napodobení prvků reálného světa ve virtuálním rozhraní" },
+    "LBE": { title: "Location-Based Entertainment", desc: "Location-Based Entertainment neboli zábava vázaná na konkrétní lokaci označuje jakékoliv zážitky, za kterými musí člověk vyrazit osobně na určité fyzické místo. " },
+    "LLM": { title: "Large Language Model", desc: "Velký jazykový model je počítačový model jazyka založený na neuronové síti s mnoha parametry." },
+    "glTF": { title: "GL Transmission Format", desc: "glTF je otevřený standardní formát pro efektivní přenos a načítání 3D scén a modelů. Vyvíjí ho konsorcium Khronos Group." },
+
 }
 
 function initAcronymTooltips() {

@@ -1,0 +1,2 @@
+Otevřete index.html. Offline: vše kromě vnějších zdrojových odkazů funguje bez CDN. Na webu lze stáhnout offline.zip; v rozbaleném ZIPu se tentýž odkaz uplatní jen na veřejné stránce.
+Jiří Filip · původní PDF export 30.9.2026, 46 stran. HTML: obsah, čtení, poznámky, zvětšení diagramů, šipky, tisk, model a reset. Model je syntetický doplněk GRAFIT. Zdrojový autorův jazyk zachován; úplné původní texty PDF v poznámkách. Staré patičky a šablonové datum se nepovažují za termín výuky.
