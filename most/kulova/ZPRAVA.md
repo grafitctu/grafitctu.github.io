@@ -12,7 +12,7 @@ Poloha všech domů pochází z GIS vrstvy projektu, která je vektorizací hist
 
 - Tatáž karta vidí „protilehlý rohák čp. 260“, vpravo dům 259 „a níže uličkou řadu 258, 1608 a 1712“ a za ní „zídku s vraty do zahrady čp. 257 Šmeralovo nám.“ Je to jediný archivní doklad domu 1712.
 
-- Podle stejné karty na prostranství vedle schodů „kdysi stály domky pod hradbami, počínaje čp. 154 + 267, zbořené okolo r. 1954“. To je v rozporu s polohou čp. 267 v GIS na nároží s Minoritskou; viz [Rozpory](#rozpory).
+- Podle stejné karty na prostranství vedle schodů „kdysi stály domky pod hradbami, počínaje čp. 154 + 267, zbořené okolo r. 1954“. Karta z let 1957–58 však nárožní dům 267 u Minoritské ukazuje stojící, takže se údaj na něj nevztahuje; viz [Rozpory](#rozpory).
 
 ### Databázová oblast „Kulová“ je širší než ulice
 
@@ -69,13 +69,17 @@ Polohy, natočení a šířky průčelí jsou z GIS vrstvy (vektorizace plánu 1
 
 - **Kontrola.** Audit sítě (uzavřenost, orientace, překrývající se plochy, průniky domů), test zkolabovaných UV, rendery každého otvoru zepředu a z obou stran, střešní rohy a clay. Střešní otvory navíc testuje 240–270 paprsků, zda v nich není plocha hlavní střechy.
 
+- **Uzavřené podkroví (19. 10. 2026).** Ve studii čp. 265 byla vidět škvíra pod střechou. Builder proto nově vede zdi až pod krytinu všech střech, uzavírá podbití pod každým okapem, štíty sleduje po skutečné spodní ploše střechy a šikmých zdech a střechu visící nad dvorem ořízne. Každý model i texturovaná studie projde kontrolou 103 680 paprsky ze 120 pohledů a testem, že střecha kryje celé zdivo. Fasádu čteme jen z fotografií s domem v červeném rámečku.
+
 - **Sestava ulice.** Domy, chodníky, obrubníky, vozovka a mobiliář 60. let (lavice, koše, sloupy s dráty, značka, konzolové lampy); plakátový sloup z doby kolem 1900 je samostatný objekt `*_EPOCH1900`.
 
-Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), kulova_street_claude_2026-10-16\ (ulice), kulova_geo_qa_claude_2026-10-17\ a kulova_geo_qa_claude_2026-10-18\ (opravy geometrie a UV, aktuální sestava r13).
+Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), kulova_street_claude_2026-10-16\ (ulice), kulova_geo_qa_claude_2026-10-17\ , kulova_geo_qa_claude_2026-10-18\ (opravy geometrie a UV, sestava r13) a kulova_eave_fix_claude_2026-10-19\ (uzavřené podkroví, čp. 265 se čtyřmi osami, návrh sestavy r14).
 
 ## Rozpory a hypotézy
 
-- **Čp. 154 a 267.** Karta ze schodů (kolem roku 1968) uvádí, že na prostranství vedle schodů „stály domky pod hradbami, počínaje čp. 154 + 267, zbořené okolo r. 1954“. GIS (plán 1938) klade 154 ke Školní, ale 267 na opačný konec ulice, na nároží s Minoritskou; tam ho určuje i porovnání šířek parcel s fotografií. Buď karta myslí jiné domy, nebo je identita 267 chybná. Nevyřešeno. Pokud platí karta, v hlavní epoše 60. let by 154 (a možná 267) už nestály.
+- **Čp. 154 a 267.** Karta ze schodů (kolem roku 1968) uvádí, že na prostranství vedle schodů „stály domky pod hradbami, počínaje čp. 154 + 267, zbořené okolo r. 1954“. Karta z let 1957–58 (`cp_111,265,266,267_001`) ale ukazuje nárožní dům se štítkem 267 a obchodem ZBRANĚ · STŘELIVO stále stojící. Pro 267 na nároží s Minoritskou údaj o zbourání neplatí; karta ze schodů myslí jiné domky, nebo uvádí chybné číslo. U čp. 154 zůstává otázka otevřená.
+
+- **Šířky 111, 265 a 266.** Podle GIS mají průčelí 11,43 m, 15,23 m a 11,19 m. Na barevné fotografii kolem roku 1900 i na kartě z let 1957–58 je ale 265 v obraze jen o 16 až 21 % širší než 111, přestože stojí blíž k fotografovi; při GIS šířce 111 by tedy 265 měl nejvýš asi 13,3 m. Společné perspektivní přizpůsobení obou snímků se šířkou 264 (7,4 m) a celkovou GIS délkou tří domů (37,85 m) dává 13,30 / 12,70 / 11,85 m. Návrh ulice r14 tyto šířky používá a posouvá dělicí zdi o 1,87 m a 0,66 m; kanonický registr poloh zůstává beze změny. Je to odhad, ne zaměření: rozhodnout musí další pramen, například plán parcel.
 
 - **Čp. 1712** v databázi Libuše chybí. Existenci dokládá situace 1940 na listu `cp_262_005` a text karty ze schodů, podobu nic. Struktura 1721, kterou databáze vede v oblasti Kulová, je jiný dům: projekt rodinného domku z roku 1930 na Vtelenské cestě, asi 1,5 km odtud.
 
@@ -89,7 +93,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 
 - **Výšky a terén.** Výšky podlaží a střech, hloubky říms a nik jsou odhady. Historický výškopis neexistuje; podélný sklon ulice je hypotéza.
 
-- **Půdorysy v GIS se překrývají** u dvojic 265/266, 259/258 a 1608/1712. Model je ponechává, jak jsou.
+- **Půdorysy v GIS se překrývají** u dvojic 259/258 a 1608/1712. Model je ponechává, jak jsou.
 
 - **Epocha.** Hlavní scéna odpovídá 60. letům; plakátový sloup doložený snímkem kolem roku 1900 je samostatný objekt.
 
@@ -99,21 +103,21 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 
 | Čp. | Strana | Typ | Podlaží | Průčelí × okap (m) | Revize | Přílohy | Textury |
 |---|---|---|---|---|---|---|---|
-| 260 | severní | nárožní dům s arkýřem | 3 | 12,7 × 10,8 | r5 | 11 | zatím bez textur |
-| 261 | severní | dvoupodlažní dům s barokním vikýřem | 2 | 13,7 × 7,1 | r5 | 11 | Codex: pracovní textury na starší geometrii, čeká na převázání na r5 |
-| 262 | severní | dům Okresní nemocenské pokladny | 3 + půdní pás | 16,5 × 13,9 | r6 | 24 | Codex: hotové na revizi r5 (vzhled schválen), čeká na převázání na r6 |
-| 263 | severní | nízký dvoupodlažní dům | 2 | 10,3 × 6,3 | r3 | 16 | zatím bez textur |
-| 264 | severní | úzký dům s vraty | 2 | 7,4 × 7,5 | r2 | 8 | zatím bez textur |
-| 111 | severní | Lutherhaus | 2 | 11,4 × 6,9 | r6 | 7 | Codex: pracovní textury na starší geometrii, čeká na převázání na r6 |
-| 265 | severní | tmavý dvoupodlažní dům | 2 | 15,2 × 6,9 | r4 | 5 | zatím bez textur |
-| 266 | severní | zdobený třípodlažní dům | 3 | 11,2 × 12,0 | r4 | 5 | zatím bez textur |
-| 267 | severní | nárožní dům s obchodem ZBRANĚ · STŘELIVO | 3 | 22,5 × 12,2 | r4 | 6 | zatím bez textur |
-| 154 | jižní | dům do Školní (bez pramene) | 2 (hypotéza) | 11,5 × 7,0 | r2 | 2 | zatím bez textur |
-| 259 | jižní | nárožní dům Kulová × Školní | 2 | 12,1 × 7,2 | r5 | 6 | zatím bez textur |
-| 258 | jižní | dům s velkým vikýřem | 2 | 13,2 × 7,0 | r4 | 9 | Codex: zablokováno, podklad FRONT je jen částečný |
-| 1608 | jižní | novostavba podle projektu 1908 | 2 | 12,1 × 7,6 | r6 | 4 | zatím bez textur |
-| 1712 | jižní | dům bez záznamu v databázi | 2 (hypotéza) | 11,0 × 7,0 | r1 | 0 | zatím bez textur |
-| 257 | jižní | přízemní dům s valbou | 1 | 19,0 × 4,2 | r3 | 7 | zatím bez textur |
+| 260 | severní | nárožní dům s arkýřem | 3 | 12,7 × 10,8 | r6 | 11 | zatím bez textur |
+| 261 | severní | dvoupodlažní dům s barokním vikýřem | 2 | 13,7 × 7,1 | r6 | 11 | Codex: samostatná texturovaná pracovní studie |
+| 262 | severní | dům Okresní nemocenské pokladny | 3 + půdní pás | 16,5 × 13,9 | r7 | 24 | Codex: samostatná texturovaná pracovní studie – starší geometrie, čeká na revizi |
+| 263 | severní | nízký dvoupodlažní dům | 2 | 10,3 × 6,3 | r4 | 16 | zatím bez textur |
+| 264 | severní | úzký dům s vraty | 2 | 7,4 × 7,5 | r3 | 8 | zatím bez textur |
+| 111 | severní | Lutherhaus | 2 | 13,3 × 6,9 | r7w | 7 | Codex: samostatná texturovaná pracovní studie |
+| 265 | severní | dvoupodlažní dům se čtyřmi osami | 2 | 12,7 × 7,3 | r5 | 5 | Codex: samostatná texturovaná pracovní studie |
+| 266 | severní | zdobený třípodlažní dům | 3 | 11,8 × 12,0 | r5w | 5 | Codex: samostatná texturovaná pracovní studie |
+| 267 | severní | nárožní dům s obchodem ZBRANĚ · STŘELIVO | 3 | 22,5 × 12,2 | r5 | 6 | zatím bez textur |
+| 154 | jižní | dům do Školní (bez pramene) | 2 (hypotéza) | 11,5 × 7,0 | r3 | 2 | zatím bez textur |
+| 259 | jižní | nárožní dům Kulová × Školní | 2 | 12,1 × 7,2 | r6 | 6 | zatím bez textur |
+| 258 | jižní | dům s velkým vikýřem | 2 | 13,2 × 7,0 | r5 | 9 | Codex: zablokováno, podklad FRONT je jen částečný |
+| 1608 | jižní | novostavba podle projektu 1908 | 2 | 12,1 × 7,6 | r7 | 4 | zatím bez textur |
+| 1712 | jižní | dům bez záznamu v databázi | 2 (hypotéza) | 11,0 × 7,0 | r2 | 0 | zatím bez textur |
+| 257 | jižní | přízemní dům s valbou | 1 | 19,0 × 4,2 | r4 | 7 | zatím bez textur |
 
 ## Domy jednotlivě
 
@@ -122,7 +126,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - Nárožní dům Kulová × Školní (Schulgasse) s polygonálním arkýřem se štítem na západním rohu, vpravo od něj tři okenní osy ve třech podlažích, v přízemí obloukový vjezd u arkýře. Karta ze schodů (kolem roku 1968) ho jmenuje jako „protilehlý rohák čp. 260“.
 - Prameny: fotografie řady od schodů ze Školní (cp_258,259,260,1608_001), ručně kreslený plán střech bloku 260–263, GIS půdorys
 - Střecha: nárožní valba; hřeben uličního křídla podél Kulové, západního křídla podél Dobrovolců (plán střech bloku)
-- GIS půdorys id 6 (ulice Kulová); geometrie revize r5, 167 polygonů.
+- GIS půdorys id 6 (ulice Kulová); geometrie revize r6, 327 polygonů.
 - Hypotézy: výšky podlaží a okapu jsou odhad z fotografie (žádný řez); nárožní arkýř zjednodušen na hranol se střešní hmotou; na fotografii je polygonální se štítem; dlouhá fasáda do Schulgasse bez otvorů (nemodelováno); polohy os odečteny ze šikmého záběru, ne z rektifikované fotografie
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -144,7 +148,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - Dvoupodlažní dům vlevo od čp. 262. Ve střeše barokní vikýř se zaobleným vrcholem a malé volské oko výš ve svahu, vlevo vstupní dveře se schodem.
 - Prameny: řezy a půdorysy 1889 (cp_261_001), zaměření ze 60. let (cp_261_001__2), fotografie řady 261–262–263, plán střech bloku 260–263, databázový barevný FRONT
 - Střecha: sedlová, štíty na obou koncích (plán střech bloku)
-- GIS půdorys id 7 (ulice Kulová); geometrie revize r5, 288 polygonů.
+- GIS půdorys id 7 (ulice Kulová); geometrie revize r6, 353 polygonů.
 - Hypotézy: opening positions are fractions of width from prior registration, not measured; baroque dormer simplified to gable box with arched niche; right end gable abuts cp. 262 firewall; left hip per photo impression; provisional; rear facade blind; eb_top: position from FRONT photo (x~5.4 m, ~78 % up the slope), size estimated – provisional; door step 0.14 m: one step visible in photo, height estimated – provisional; baroque dormer: curved top + frame per photo; depth/rear hypothetical
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -166,7 +170,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - Historizující dům s nápisem BEZIRKS-KRANKEN-KASSA v přízemí: průjezd se segmentovým portálem, dvě patra s frontony (v 1. patře krajní trojúhelníkové a čtyři segmentové, ve 2. patře nízké trojúhelníky a zaoblené motivy v krajních osách), pilastry krajních os, v půdním pásu čtyři okna a dvě slepá pole.
 - Prameny: plán 10/1940 v měřítku 1:100 (cp_262_005), projekt průčelí z 90. let 19. století (cp_262_006), fotografie řady 261–263 z věže kostela, plán střech bloku; osy podle přijatého barevného FRONTu ověřené na černobílé fotografii
 - Střecha: valba k 261, štít nad 263, nízká valba nad pravým traktem
-- GIS půdorys id 8 (ulice Kulová); geometrie revize r6, 1847 polygonů.
+- GIS půdorys id 8 (ulice Kulová); geometrie revize r7, 1926 polygonů.
 - Hypotézy: axes_x from design elevation cp_262_006 scaled to 16.50 m; provisional; opening heights from photo/elevation proportions; provisional; rear/right-wing roof simplified, courtyard wings omitted; provisional; cornice/pediment depths are modelling defaults, not measured; pediment depths/profile steps are not measured (provisional); contour types from photo ca5bfe70 + elevation cp_262_006; attic blind fields (axes 2,5) depth 0.06 provisional; gate passage depth 0.45 provisional (no steps per plan 1940 ground floor); pilaster/capital dimensions estimated from photo; festoon ornament left to texture; gutter radius/downpipe position estimated from photo
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -201,8 +205,8 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - Nízký dvoupodlažní dům vpravo od 262 s obloukovými dveřmi a třemi volskými oky.
 - Prameny: plán 10/1910 se šířkou průčelí 10,28 m (cp_263_003), zaměření 1965, fotografie z roku 1969 (cp_111,263,264_001), plán střech bloku
 - Střecha: uliční křídlo s hřebenem podél ulice, zadní křídlo s valbou (plán střech bloku)
-- GIS půdorys id 9 (ulice Kulová); geometrie revize r3, 166 polygonů.
-- Hypotézy: identity of this facade vs. 264 remains provisional (see identity report 27.9.2026); eave/ridge heights and depth are photo/plan estimates; rear 1908 dormer and rear windows omitted; eyebrow dormer positions approximate from photo
+- GIS půdorys id 9 (ulice Kulová); geometrie revize r4, 297 polygonů.
+- Hypotézy: identity of this facade vs. 264 remains provisional (see identity report 27.9.2026); eave/ridge heights and depth are photo/plan estimates; rear 1908 dormer and rear windows omitted; eyebrow dormer positions approximate from photo; 19.10.2026: footprint = GIS polygon 9 simplified (main body 15.6 m deep as the roof, rear wing 4.7 m wide to 21.5 m); the earlier 12 m depth left 3.6 m of roof and the whole wing roof without walls. Courtyard annex x 4.7-10.5 m, y 15.6-18.9 m of GIS not modelled
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -228,7 +232,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - Úzký třiosý dům s vraty a třemi volskými oky.
 - Prameny: popsaný list 1887 se šířkou 7,4 m (cp_264_001), půdorys 1965, fotografie z roku 1969
 - Střecha: sedlová s volskými oky
-- GIS půdorys id 10 (ulice Kulová); geometrie revize r2, 153 polygonů.
+- GIS půdorys id 10 (ulice Kulová); geometrie revize r3, 250 polygonů.
 - Hypotézy: G1/G2 ground windows are a hypothesis (photo partly occluded; prior batch registered only U1-U3 and D1); facade identity (narrow 3-axis part vs. wide Lutherhaus front) provisional per prior reports; depth/rear simplified
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -244,11 +248,11 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 
 ### Čp. 111: Lutherhaus
 
-- „Lutherhaus“: dvoupodlažní dům s nápisovým pásem nad přízemím, mělce obloukovými vstupními dveřmi a pěti volskými oky ve dvou řadách. Identitu určuje pořadí domů na fotografiích ve shodě se šířkami parcel v GIS.
+- „Lutherhaus“: dvoupodlažní dům s nápisovým pásem nad přízemím, mělce obloukovými vstupními dveřmi a pěti volskými oky ve dvou řadách. Identitu určuje pořadí domů na fotografiích ve shodě se šířkami parcel v GIS. V návrhu ulice r14 má šířku 13,30 m místo 11,43 m podle GIS, protože fotografie nedovolují, aby sousední 265 byl široký 15,23 m (viz Rozpory).
 - Prameny: fotografie z roku 1969 (cp_111,263,264_001) a řady 111–267 (cp_111,154,265,266,267_001), archivní karta, GIS půdorys
 - Střecha: sedlová s pěti volskými oky; zadní křídlo bez plánu střechy (hypotéza)
-- GIS půdorys id 11 (ulice Kulová); geometrie revize r6, 330 polygonů.
-- Hypotézy: identita „tmavý dům = 111“ podle popisku karty 111,263,264; identity report ji nechává provisional; osy odečteny ze šikmého záběru; eyebrow positions read from the original B/W FRONT (3 lower at ~2.0/5.7/9.4 m, 2 upper at ~3.9/7.6 m); sizes estimated – provisional; door arch: shallow segmental per photo; rear wing unchanged – hypothesis without roof plan
+- GIS půdorys id 11 (ulice Kulová); geometrie revize r7w, 485 polygonů.
+- Hypotézy: identita „tmavý dům = 111“ podle popisku karty 111,263,264; identity report ji nechává provisional; osy odečteny ze šikmého záběru; eyebrow positions read from the original B/W FRONT (3 lower at ~2.0/5.7/9.4 m, 2 upper at ~3.9/7.6 m); sizes estimated – provisional; door arch: shallow segmental per photo; rear wing unchanged – hypothesis without roof plan; 19.10.2026 width variant 13.3 m (GIS 11.43 m): joint photo fit of the colour photo c. 1900 and the card 1957-58 with GIS total 111+265+266 = 37.85 m; needs a decision (GIS polygons 11/12/13 or photo), not a measurement; 19.10.2026: GIS annex 1.3 x 2.5 m behind the right rear corner omitted (no roof, height unknown); found by the roof-coverage check
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -260,13 +264,13 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 | cp_111,263,264_001_col.png | odvozenina (kolorovaná / FRONT) | fa22e384e1ba |
 | cp_111,265,266,267_001.jpg | archivní karta | 2bd813fa16fa |
 
-### Čp. 265: tmavý dvoupodlažní dům
+### Čp. 265: dvoupodlažní dům se čtyřmi osami
 
-- Tmavě omítaný dvoupodlažní dům mezi Lutherhausem (111) a zdobeným 266.
-- Prameny: fotografie řady 111–267, GIS půdorys (hluboká parcela tvaru L)
-- Střecha: nízká valba za hlavní římsou
-- GIS půdorys id 12 (ulice Kulová); geometrie revize r4, 194 polygonů.
-- Hypotézy: osy a výšky ze šikmé fotografie; frontony zjednodušeny; zadní L křídlo jen jako součást půdorysu bez vlastní střechy
+- Dvoupodlažní dům mezi Lutherhausem (111) a zdobeným třípodlažním 266. Na barevné fotografii z doby kolem roku 1900 je žlutý, třetí zprava; na kartě z let 1957–58 je tmavý a stojí pod rukou psaným štítkem 265. Na obou snímcích má nahoře čtyři okna, v přízemí tři okna a vpravo obloukové dveře. Model r5 má tyto čtyři osy. Šířku 12,70 m jsme odhadli z obou fotografií; GIS uvádí 15,23 m, rozpor je popsán v Rozporech.
+- Prameny: barevná fotografie řady kolem roku 1900 (cp_111,154,265,266,267_001_col), karta 1957–58 se štítky 111 | 265 | 266 | 267 (cp_111,265,266,267_001), GIS půdorys id 12 pro hloubku a zadní křídlo
+- Střecha: sedlová se štítovým vikýřem vpravo a malým větracím okénkem vlevo (podle fotografie střechy a studie Codexu G5)
+- GIS půdorys id 12 (ulice Kulová); geometrie revize r5, 331 polygonů.
+- Hypotézy: eave 7.35 m and all heights are photo ratios, not measured; width 12.70 m and axis spacing 3.08 m are photo-fit estimates (range 11-13.3 m), GIS front 15.23 m conflicts and needs a decision; neighbours 111 (13.30 m) and 266 (11.85 m) widened in the r14 layout proposal only; dormer (2.1 m wide gable box) and eyebrow vent positions mapped from Codex G5; roof damage holes of G5 not modelled (undated state); one chimney 1 m above the ridge replaces the two 16 m stacks of r4; pilaster strips 0.30 m wide on the upper floor; ground-floor rustication left to the texture; rear L wing from GIS (narrowed to the new party wall), roof hypothesis
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -278,11 +282,11 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 
 ### Čp. 266: zdobený třípodlažní dům
 
-- Třípodlažní dům s pilastry a segmentovými frontony vedle nárožního 267.
+- Třípodlažní dům s pilastry a segmentovými frontony vedle nárožního 267. V návrhu ulice r14 má šířku 11,85 m místo 11,19 m podle GIS (viz Rozpory).
 - Prameny: fotografie řady 111–267, GIS půdorys
 - Střecha: nízká valba
-- GIS půdorys id 13 (ulice Kulová); geometrie revize r4, 224 polygonů.
-- Hypotézy: zkosené nároží nemodelováno (builder nemá chamfer); dlouhá fasáda do boční ulice bez otvorů; identita 265/266 podle GIS pořadí; popisky na fotografii nejsou jednoznačné
+- GIS půdorys id 13 (ulice Kulová); geometrie revize r5w, 442 polygonů.
+- Hypotézy: zkosené nároží nemodelováno (builder nemá chamfer); dlouhá fasáda do boční ulice bez otvorů; identita 265/266 podle GIS pořadí; popisky na fotografii nejsou jednoznačné; 19.10.2026 width variant 11.85 m (GIS 11.19 m): joint photo fit of the colour photo c. 1900 and the card 1957-58 with GIS total 111+265+266 = 37.85 m; needs a decision (GIS polygons 11/12/13 or photo), not a measurement
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -294,11 +298,11 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 
 ### Čp. 267: nárožní dům s obchodem ZBRANĚ · STŘELIVO
 
-- Nárožní dům Kulová × Minoritská se zkoseným nárožím a obchodem ZBRANĚ · STŘELIVO, výkladce do obou ulic. Pozor: karta ze schodů (kolem roku 1968) uvádí čp. 154 a 267 mezi „domky pod hradbami“ zbořenými okolo roku 1954 – viz Rozpory.
+- Nárožní dům Kulová × Minoritská se zkoseným nárožím a obchodem ZBRANĚ · STŘELIVO, výkladce do obou ulic. Na kartě z let 1957–58 tento dům se štítkem 267 a nápisem ZBRANĚ · STŘELIVO ještě stojí. Údaj karty ze schodů o „domcích pod hradbami, počínaje čp. 154 + 267, zbořených okolo r. 1954“ se proto na něj nevztahuje (viz Rozpory).
 - Prameny: fotografie řady 111–267 (cp_111,154,265,266,267_001), GIS půdorys (22,5 m do Minoritské, 17,6 m do Kulové)
 - Střecha: valba (hypotéza)
-- GIS půdorys id 14 (ulice Minoritů); geometrie revize r4, 471 polygonů.
-- Hypotézy: počet os a výšky odhad ze šikmé fotografie; zkosení nároží 2,2 m (odhad); zadní křídla jen GIS obrys
+- GIS půdorys id 14 (ulice Minoritů); geometrie revize r5, 651 polygonů.
+- Hypotézy: počet os a výšky odhad ze šikmé fotografie; zkosení nároží 2,2 m (odhad); zadní křídla jen GIS obrys; 19.10.2026: rear wing eaves raised to the main eave 12.2 m (masonry tops stuck out of the 11.5 m wing roofs); west wing roof starts at the Kulová wall x 0.6 m; 19.10.2026: roof over the GIS block between the rear wings (x 16.0-19.0, y 8.1-10.9) added as a low hip wing (had no roof); shape hypothesis
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -314,7 +318,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - Dům s průčelím do Školní ulice. V databázi k němu není fotografie ani plán, model je celý hypotéza podle GIS půdorysu. Podle karty ze schodů patřil k domkům pod hradbami zbořeným okolo roku 1954.
 - Prameny: jen GIS půdorys a seznam domů u fotografie cp_111,154,265,266,267_001, kde ho nelze rozlišit
 - Střecha: valba (hypotéza)
-- GIS půdorys id 302 (ulice Školní); geometrie revize r2, 111 polygonů.
+- GIS půdorys id 302 (ulice Školní); geometrie revize r3, 164 polygonů.
 - Hypotézy: CELÝ DŮM JE HYPOTÉZA: žádný fotografický ani plánový pramen; jen GIS obrys a generické dvoupodlažní členění
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -327,7 +331,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - Nárožní dům: vstupní průčelí se čtyřmi osami a dveřmi do Školní, do Kulové bok se třemi osami; břidlicová valba.
 - Prameny: fotografie od schodů (cp_258,259,260,1608_001 a kolorovaná odvozenina), plán 1871 (cp_259_001)
 - Střecha: valba na obou koncích (plán 1871), břidlice (kolorovaná fotografie)
-- GIS půdorys id 312 (ulice Školní); geometrie revize r5, 100 polygonů.
+- GIS půdorys id 312 (ulice Školní); geometrie revize r6, 155 polygonů.
 - Hypotézy: osy odečteny ze šikmého záběru; výšky odhad; zadní část nemodelována
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -344,7 +348,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - Žlutý dvoupodlažní dům za 259 s velkým středovým sedlovým vikýřem se třemi okny. Barevný FRONT uložený v databázi pod číslem 259 zobrazuje tento dům, ale jen zčásti (vikýř, střecha a jedna řada oken).
 - Prameny: kolorovaná fotografie od schodů, databázový FRONT „259“; plány 258 z let 1888 a 1910 jsou dvorní objekty, ne uliční průčelí
 - Střecha: sedlová, štíty k sousedům
-- GIS půdorys id 313 (ulice Kulová); geometrie revize r4, 222 polygonů.
+- GIS půdorys id 313 (ulice Kulová); geometrie revize r5, 283 polygonů.
 - Hypotézy: identita: databázový FRONT „259“ přiřazen tomuto domu podle fotografie (SOL61 jej u 259 odmítla); osy a výšky odhad z fotografie; plány 258 (magazín 1888, dvorní křídlo 1910) nejsou uliční průčelí
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -364,7 +368,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - Dům podle projektu „Plan über Erbauung eines Wohnhauses“ z roku 1908 (Bauparzelle 1608 ½, Kugelgasse). Na fotografii od schodů je jen vzdáleně v pozadí za 258.
 - Prameny: projekt 1908 (cp_1608_002: pohled, řez A-B, krov), fotografie od schodů
 - Střecha: podle projektu: plná přední plocha, hřeben souběžně s ulicí, štítové konce, dva komíny; zadní křídlo s valbou
-- GIS půdorys id 2052 (ulice Kulová); geometrie revize r6, 193 polygonů.
+- GIS půdorys id 2052 (ulice Kulová); geometrie revize r7, 275 polygonů.
 - Hypotézy: členění z projektu 1908, realizace fotograficky nepotvrzena v detailu; výšky z plánu odhadem; roof r6: topology from the 1908 design sheet (front rectangle, ridge parallel to the street, gable ends); heights unchanged estimates; dormers differ from the 1908 Ansicht (2+2+1 windows) – open blocker
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -379,7 +383,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - V databázi Libuše struktura 1712 neexistuje (struktura 1721 je jiný dům na Vtelenské cestě). Existenci domu dokládá situace 1940 na listu cp_262_005 a karta ze schodů, která jmenuje „řadu 258, 1608 a 1712“. Podobu nedokládá nic: model je hypotéza podle GIS půdorysu a sousedů.
 - Prameny: GIS půdorys, situace 1940 na listu cp_262_005, text karty cp_258,259,260,1608_001
 - Střecha: sedlová se štítem k 1608 a valbou k volnému konci (hypotéza)
-- GIS půdorys id 2053 (ulice Kulová); geometrie revize r1, 126 polygonů.
+- GIS půdorys id 2053 (ulice Kulová); geometrie revize r2, 212 polygonů.
 - Hypotézy: CELÝ DŮM JE HYPOTÉZA: v Libuši neexistuje struktura 1712 (prohledány všechny oblasti); jen GIS obrys a sousedství; počet podlaží a členění odvozeno od sousedů
 
 ### Čp. 257: přízemní dům s valbou
@@ -387,7 +391,7 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 - Přízemní starý dům s valbovou střechou, na kartách už jako ruina s odkrytým krovem; půdorys tvaru L se zadním křídlem. Karta ze schodů zmiňuje „zídku s vraty do zahrady čp. 257 Šmeralovo nám.“
 - Prameny: karty cp_257_001 a cp_257_002, GIS půdorys
 - Střecha: valba
-- GIS půdorys id 314 (ulice Kulová); geometrie revize r3, 80 polygonů.
+- GIS půdorys id 314 (ulice Kulová); geometrie revize r4, 169 polygonů.
 - Hypotézy: počet a poloha otvorů odhad (fotografie šikmá, dům zarostlý); zadní křídlo jako hmota z GIS
 
 | Příloha | Typ | SHA-256 (12 znaků) |
