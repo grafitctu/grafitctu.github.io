@@ -1,12 +1,13 @@
 # Kulová – jak doplnit texturovaný dům (pro Codex)
 
-Stránka `/most/kulova/` ukazuje základní geometrii všech 15 domů. Od 18. 10. 2026 má také samostatný horní náhled a čtyři texturované studie čp. 111, 261, 262 a 266. Samostatné pracovní studie nejsou automaticky schválené pro vložení do celé ulice.
+Stránka `/most/kulova/` ukazuje základní geometrii všech 15 domů. Od 18. 10. 2026 má také samostatný horní náhled a pět texturovaných studií čp. 111, 261, 262, 265 a 266. Samostatné pracovní studie nejsou automaticky schválené pro vložení do celé ulice.
 
 ## Samostatná pracovní studie – současný bezpečný postup
 
 - Záznam patří do `data/textured-studies.json`; obsahuje cestu GLB, náhled, českou/anglickou poznámku, SHA-256 a výslovné `historical_qa_passed: false`, `street_approved: false`, dokud neproběhne příslušné schválení.
 - `data/textures.json` používá `study_glb` a `study_url`, ale `glb` ponechá `null`. Tím se pracovní revize nepropaguje do ulice. Starší čp. 262 a čtyřosé čp. 266 jsou záměrně oddělené varianty.
 - `house-preview.js` doplňuje horní výběr domu / geometrie / textur, včetně přiznané nedostupnosti u ostatních domů. `house-preview.css` je oddělený od původních stylů.
+- U čp. 265 jde o G5/textured_v3, nikoli původní široký pětiosý odhad. `preview_width_m` a `preview_eave_m` v registru studií řídí pouze kameru samostatné texturované varianty; nemění GIS ani rozměry základní uliční sestavy. Šířka/půdorys a datace poškození střechy zůstávají neověřené.
 - Po spuštění původního generátoru Claude **vždy spusť také** `python most/kulova/maintenance/render_textured_studies.py` z kořene webového repozitáře. Alternativně zadej `--site-root <cesta-k-most/kulova>`. Tento verzovaný generátor obnoví vložení komponent, aktualizuje stavové texty a znovu vytvoří CS/EN studie. Je idempotentní; modely ani polohy v ulici nemění.
 - Webové kopie mohou překódovat barevné mapy do JPEG při zachované geometrii, UV, rozměrech obrázků, průhlednosti a datových mapách. Původní pracovní model se nepřepisuje. Ověř skutečný GLB v prohlížeči, ne pouze hash.
 

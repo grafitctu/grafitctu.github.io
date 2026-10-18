@@ -27,7 +27,7 @@ function mount(host){
  const camera=new THREE.PerspectiveCamera(40,1,.05,2000),ctl=new OrbitControls(camera,renderer.domElement);ctl.enableDamping=true;ctl.enablePan=true;const loader=new GLTFLoader();let root=null,ticket=0,visible=true;
  const resize=()=>{const w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();};new ResizeObserver(resize).observe(stage);
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;},{rootMargin:'100px'}).observe(host);
- function fitFront(){if(!root)return;const b=new THREE.Box3().setFromObject(root),w=houses[cp].width_m||b.max.x-b.min.x,h=houses[cp].eave_m||b.max.y;
+ function fitFront(){if(!root)return;const b=new THREE.Box3().setFromObject(root),dims=surface==='textured'?studies[cp]:null,w=dims?.preview_width_m||houses[cp].width_m||b.max.x-b.min.x,h=dims?.preview_eave_m||houses[cp].eave_m||b.max.y;
   const x=b.min.x+w/2;ctl.target.set(x,h*.62,0);camera.position.set(x+w*.19,h*.62+h*.17,Math.max(w,h)*(camera.aspect<1?2.05:1.65));ctl.update();}
  function fitRoof(){if(!root)return;const b=new THREE.Box3().setFromObject(root),c=b.getCenter(new THREE.Vector3()),s=b.getSize(new THREE.Vector3()),r=Math.max(s.x,s.y,s.z);ctl.target.copy(c);camera.position.copy(c).add(new THREE.Vector3(.7,.8,1).normalize().multiplyScalar(r*1.65));ctl.update();}
  async function load(){const mine=++ticket;host.dataset.ready='loading';tex.disabled=!studies[cp];geo.setAttribute('aria-pressed',String(surface==='geometry'));tex.setAttribute('aria-pressed',String(surface==='textured'));
