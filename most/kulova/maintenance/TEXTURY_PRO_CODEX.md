@@ -1,7 +1,18 @@
 # Kulová – jak doplnit texturovaný dům (pro Codex)
 
-Stránka `/most/kulova/` ukazuje geometrii všech 15 domů bez textur. Texturované domy se doplňují **po jednom** a bez zásahu
-do generátoru stránek: stačí přidat jeden GLB a upravit jeden záznam v JSON.
+Stránka `/most/kulova/` ukazuje základní geometrii všech 15 domů. Od 18. 10. 2026 má také samostatný horní náhled a čtyři texturované studie čp. 111, 261, 262 a 266. Samostatné pracovní studie nejsou automaticky schválené pro vložení do celé ulice.
+
+## Samostatná pracovní studie – současný bezpečný postup
+
+- Záznam patří do `data/textured-studies.json`; obsahuje cestu GLB, náhled, českou/anglickou poznámku, SHA-256 a výslovné `historical_qa_passed: false`, `street_approved: false`, dokud neproběhne příslušné schválení.
+- `data/textures.json` používá `study_glb` a `study_url`, ale `glb` ponechá `null`. Tím se pracovní revize nepropaguje do ulice. Starší čp. 262 a čtyřosé čp. 266 jsou záměrně oddělené varianty.
+- `house-preview.js` doplňuje horní výběr domu / geometrie / textur, včetně přiznané nedostupnosti u ostatních domů. `house-preview.css` je oddělený od původních stylů.
+- Po spuštění původního generátoru Claude **vždy spusť také** `python most/kulova/maintenance/render_textured_studies.py` z kořene webového repozitáře. Alternativně zadej `--site-root <cesta-k-most/kulova>`. Tento verzovaný generátor obnoví vložení komponent, aktualizuje stavové texty a znovu vytvoří CS/EN studie. Je idempotentní; modely ani polohy v ulici nemění.
+- Webové kopie mohou překódovat barevné mapy do JPEG při zachované geometrii, UV, rozměrech obrázků, průhlednosti a datových mapách. Původní pracovní model se nepřepisuje. Ověř skutečný GLB v prohlížeči, ne pouze hash.
+
+## Vložení do celé ulice – až po geometrickém a historickém QA
+
+Následující starší rozhraní `glb` platí pouze pro model schválený k vložení do sestavy, nikoli automaticky pro zveřejněnou studii.
 
 ## 1. Model
 - Vycházej z geometrické revize uvedené u domu v `data/textures.json` (`geometry_revision`, geometrie je i v `geometry_glb`).
