@@ -43,3 +43,20 @@ Následující starší rozhraní `glb` platí pouze pro model schválený k vlo
 
 Generátor stránky (Claude): `F:\MOST\output\grafit_kulova_street_publish_20261018\gen\`. Soubor `data/textures.json`
 generátor jen čte; po prvním vytvoření ho nepřepisuje.
+
+## Kontrola uzavřeného podkroví – povinná od 19. 10. 2026
+
+Ve studii čp. 265 byla vidět škvíra pod střechou. Claude proto 19. 10. 2026 doplnil do pěti studií
+(111, 261, 262, 265, 266) uzavírací geometrii: podkrovní blok až pod krytinu a uzávěry podbití pod okapy
+(objekty `*_AtticClosure*` a `*_EaveClosure_*`, tmavý jednobarevný materiál). Existující sítě, UV a všechny
+obrázky zůstaly bajtově stejné; záznam je v `data/textured-studies.json` u klíče `geometry_patch`.
+
+- Před každým nahráním modelu nebo studie spusť z kořene repozitáře:
+  `blender -b --python most/kulova/maintenance/check_see_through.py -- vysledek.json model.glb`
+  Publikuj jen při `passed: true` (nejvýš 3 vlasové zásahy, nekryté zdivo ≤ 0,5 m², střecha nad prázdnem ≤ 1 m²).
+  Doložené díry ve střeše zapiš jako výjimku s pramenem.
+- Nové geometrie 19. 10. 2026 mají tuto úpravu přímo z builderu: `F:\MOST\output\kulova_eave_fix_claude_2026-10-19\`
+  (předávka `CODEX_HANDOFF_20261019.md`). Čp. 265 r5 má čtyři osy (4 okna nahoře, 3 dole, obloukové dveře vpravo);
+  studie G5 levou osu nemá a čeká na nové otexturování.
+- Základní sestava ulice na webu je návrh r14: 111 13,30 m, 265 12,70 m, 266 11,85 m (GIS 11,43 / 15,23 / 11,19 m).
+  Kanonický registr se nemění; rozhodnutí o šířkách je otevřené.
