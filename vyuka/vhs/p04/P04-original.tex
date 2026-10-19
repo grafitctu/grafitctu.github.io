@@ -1,0 +1,1580 @@
+﻿\documentclass[a4paper]{beamer}
+%
+% Josef Hlavac & Tomas Zahradnicky (21.10.2010)
+%
+%\usepackage{pgfpages}
+%\pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm,landscape]
+%\pgfpagesuselayout{resize}[a4paper,border shrink=5mm,landscape]
+%\usepackage[czech]{babel}
+%\usepackage[latin2]{inputenc}
+\usepackage{color}
+\usetheme{Frankfurt}
+\useinnertheme{circles}
+\usepackage{subfigure}
+\usepackage[utf8]{inputenc}
+\usepackage[czech,english]{babel}%\useinnertheme{rounded}
+%\useinnertheme{rectangles}
+%\useinnertheme{balls}
+\usepackage{listings}
+\usepackage{xmpmulti}
+\usepackage{amsmath}
+\usefonttheme{professionalfonts}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+\usepackage{soul}
+\usepackage{hyperref}
+\usepackage{svg}
+\usepackage{ulem}
+%
+\def\uv#1{\char92\relax #1\char34\relax}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\FirstName{Radek}
+\newcommand\FirstNameAbbreviated{F}
+\newcommand\LastName{Richtr}
+\newcommand\Email{richtrad@utia.cz}
+\newcommand\DissertationTitle{Virtuální herní světy \\ Cykly činností a produkce}
+%\newcommand\Department{Department of Theoretical Computer Science}
+%\newcommand\Department{Department of Digital Design}
+\newcommand\Department{Department of Software Engineering}
+%\newcommand\Department{Institute of Information Theory and Automation}
+%\newcommand\Faculty{Academy of Sciences of the Czech Republic }
+\newcommand\University{CTU Prague, Czech Republic}
+\newcommand\FacultyAndUniversityAbbr{2016 FIT CVUT, Prague}
+
+
+
+		\newlength{\texturewidth}
+		\setlength{\texturewidth}{0.5\textwidth}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\subtitle{BBB}
+\subject{SUBJECT}
+\author[\FirstNameAbbreviated. \LastName]{\FirstName{} \LastName}
+\title{\DissertationTitle}
+%\titlegraphic{\includegraphics[width=1.5cm]{pic/LogoCVUT.pdf}}%logo Útia
+%\institute[\FacultyAndUniversityAbbr]{\Department\\ \University}
+\date{\today}
+%
+
+
+\begin{document}
+\begin{frame}
+%\begin{center}
+%\includegraphics[width=1.5cm]{pic/LogoCVUT.pdf}
+%\end{center}
+\titlepage
+\centering \textit{Eat(); Sleep(); Code(); Repeat();}
+%\centering \textit{Emma mele maso. Maso davá řezník. Vidlák pěstuje vidle. Vidlák bodnul řezníka. Emme nemá co mlít. }
+%\centering \textit{To zařídí neviditelná ruka trhu...}
+\end{frame}
+
+%samo odělé jednoduchý obsah
+\section*{Outline}
+\subsection*{Outline}
+\begin{frame}[allowframebreaks]
+\frametitle{Outline}
+\tableofcontents
+\end{frame}
+
+%===================================================================
+
+%\section{Základní definice}
+
+
+
+\section{Chování postav}
+
+\begin{frame}
+\frametitle{Chování}
+
+Jako chování se dá označit celý soubor činností i jevů:
+
+ \begin{itemize}
+     \item dialogy postavy
+     \item změna lokace / Pohyb postav
+     \item jejich aktuální činnost (animace)
+     \item oblečení
+     \item reakce na prostředí
+     \item atd.
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Chování - Dialog}
+
+Dialog je po vzhledu ta nejpřímočarejší charakterizace (chování) postavy. 
+
+\vfill
+
+ \begin{itemize} 
+     \item \textbf{dialogy postavy} (P8)
+     \item změna lokace / pohyb postav
+     \item jejich aktuální činnost (animace)
+     \item oblečení
+     \item reakce na prostředí
+     \item atd.
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Chování - Lokace}
+
+Byť se to může zdát triviální, může umístění postavy hodně říct.
+
+ \begin{itemize}
+     \item Pozice postavy je neočekávaná (farmář v lese) 
+     \item Pozice postavy něco naznačuje (lovec v zámeckém lese) 
+     \item Očekávaná změna (kostel v neděli)
+     \item Neočekávaná změna (goblin za městem)     
+     \item atd.
+ \end{itemize}
+ 
+ V dobrém návrhu lze za každou neočekávanou změnou \uv{schovat} příběh. 
+ K tomu, aby něco bylo neočekávané, je však potřeba nejdříve vybudovat \uv{rutinu}. 
+ 
+ \vfill
+ Ve špatném návrhu jsou neočekávané změny projevy chyb. 
+
+
+% \vfill
+
+%  \begin{itemize} \tiny
+%      \item Dialogy postavy
+%      \item \textbf{Změna lokace / Pohyb postav}
+%      \item Jejich aktuální činnost (animace)
+%      \item Oblečení
+%      \item Reakce na prostředí
+%      \item atd.
+%  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Chování - Lokace}
+
+Byť se může zdát triviální, může umístění postavy hodně říct:
+
+ \begin{itemize}
+     \item Farmář v lese - Co tam schovává? Kam šel?
+     \item Lovec v zámeckém lese - Pytlačí? Kolik dá za mlčení?
+     \item Kostel v neděli - Jsou pak domy prázdné a nehlídané?
+     \item Goblin za městem - Chystá tlupa něco? Vyhnal ho kmen?      
+     \item atd.
+ \end{itemize}
+ 
+ V dobrém návrhu lze za každou neočekávanou změnou \uv{schovat} příběh. 
+ K tomu, aby něco bylo neočekávané, je však potřeba nejdříve vybudovat \uv{rutinu}. 
+ 
+ \vfill
+ Ve špatném návrhu jsou neočekávané změny projevy chyb. 
+
+
+% \vfill
+
+%  \begin{itemize} \tiny
+%      \item Dialogy postavy
+%      \item \textbf{Změna lokace / Pohyb postav}
+%      \item Jejich aktuální činnost (animace)
+%      \item Oblečení
+%      \item Reakce na prostředí
+%      \item atd.
+%  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Chování - Lokace}
+
+Byť se může zdát triviální, může umístění postavy hodně říct.
+
+ \begin{itemize}
+     \item Každá postava má nějaké \uv{typické} místo (místa) výskytu
+     \item Práce, domov (dům, jeskyně, atp.)
+     \item Základní a minimalistická je změna lokace v noci a ve dne
+     \item Chytré určení míst výskytu a doby cesty mezi nimi vytváří dojem života       
+     \item I minimální randomizace při velkém počtu postav stačí 
+ \end{itemize}
+ 
+  \vfill
+ 
+ V dobrém návrhu lze za každou neočekávanou změnou \uv{schovat} příběh. 
+ K tomu, aby něco bylo neočekávané, je však potřeba nejdříve vybudovat \uv{rutinu}. 
+ 
+ \vfill
+ Ve špatném návrhu jsou neočekávané změny projevy chyb. 
+
+
+% \vfill
+
+%  \begin{itemize} \tiny
+%      \item Dialogy postavy
+%      \item \textbf{Změna lokace / Pohyb postav}
+%      \item Jejich aktuální činnost (animace)
+%      \item Oblečení
+%      \item Reakce na prostředí
+%      \item atd.
+%  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Chování - činnosti}
+
+Činnost, respektive to, co postava dělá (a že něco dělá) by mělo být \emph{nějak} indikováno.
+ \vfill
+
+  \begin{itemize} 
+      \item dialogy postavy
+      \item změna lokace / pohyb postav
+      \item \textbf{jejich aktuální činnost}
+      \item oblečení
+      \item reakce na prostředí
+      \item atd.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Chování - činnosti}
+
+Činnost, respektive to, co postava dělá (a že něco dělá) by mělo být \emph{nějak} indikováno
+ \vfill
+ 
+ Vizuálně nejjasnějším indikátorem činnosti je animace dané postavy.
+ 
+ \vfill
+
+  \begin{itemize} 
+      \item Animace začínají a končí ve stejném neutrálním stavu, nebo jsou vytvořeny přechody
+      \item Animace může být v zásadě velmi obdobná a lišící se jen lokací, či nástrojem
+      \item Základní činností je pohyb!
+      \item Další častou činnosti je dialog (jak ho vizualizovat?)
+      \item atd.
+  \end{itemize}
+  
+  \vfill
+  
+\small Pro účely semestrální práce je jasné, nemusí být namapovány všechny animace. 
+ I v takovém případě, by ale \emph{nějak} mělo být patrné že se \emph{něco} děje. 
+  
+\end{frame}
+
+\begin{frame}
+\frametitle{Chování - činnosti}
+
+Činnost, respektive to, co postava dělá (a že něco dělá) by mělo být \emph{nějak} indikováno
+ \vfill
+ 
+ Vizuálně nejjasnějším indikátorem činnosti je animace dané postavy.
+ 
+ \vfill
+
+  \begin{itemize} 
+      \item Animace začínají a končí ve stejném neutrálním stavu, nebo jsou vytvořeny přechody
+      \item Animace může být v zásadě velmi obdobná a lišící se jen lokací, či nástrojem
+      \item Základní činností je \sout{pohyb} idle animace!
+      \item Další častou činnosti je dialog (jak ho vizualizovat?)
+      \item atd.
+  \end{itemize}
+  
+  \vfill
+  
+\small Pro účely semestrální práce je jasné, nemusí být namapovány všechny animace. 
+ I v takovém případě, by ale \emph{nějak} mělo být patrné že se \emph{něco} děje. 
+  
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Chování - činnosti}
+
+% Činnost, respektive to, co postava dělá (a že něco dělá) by mělo být \emph{nějak} indikováno
+%  \vfill
+ 
+%  Logicky, vizuálně nejjasnějším indikátorem činnosti je animace dané postavy.
+ 
+%  \vfill
+%  Pro účely semestrální práce je jasné, nemusí být namapovány všechny animace. 
+%  I v takovém případě, by ale \emph{nějak} mělo být patrné že se \emph{něco} děje. 
+ 
+%  \vfill
+
+ Vizualizovat činnost  \emph{bez vizualizace činnosti} lze například textem postavy, nějakým indikátorem, ikonou, popiskem, atp. Metodu je přitom vhodné volit i podle tématu - např. v surrealisticky, či komicky založené hře projde stojící dělník stěžující si na to jak strašně moc má práce, i když bude jen stát a ani se nehne. 
+ 
+\end{frame}
+
+\begin{frame}{Příklad}
+    \centering\includegraphics[width=0.5\textwidth]{assets/shared/p04_delnici_b2b09f59.jpg}
+\end{frame}
+
+\begin{frame}
+\frametitle{Chování - Oblečení}
+
+Triviální ukázkou toho, že postava reaguje na svoje okolí je případně změna oblečení (denní doba, počasí). 
+ \vfill
+
+  \begin{itemize} 
+      \item dialogy postavy
+      \item změna lokace / Pohyb postav
+      \item jejich aktuální činnost (animace)
+      \item \textbf{oblečení}
+      \item reakce na prostředí
+      \item atd.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Chování - Oblečení}
+
+Triviální ukázkou toho, že postava reaguje na svoje okolí je případně změna oblečení. 
+ \vfill
+
+Je samozřejmě kontraproduktivní měnit kompletně a chaoticky oblečení postav, zvlášť, pokud nejdou jinak rozeznat podle nějakého dominantního rysu (například konkrétní postava drží v ruce asparágus). 
+
+\vfill
+Změna, může být i v zásadě drobná a přesto mít velký vliv - například sluneční brýle v poledne, klobouk v dešti, zrezlá zbroj, nebo pracovní rukavice.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chování - Reakce}
+
+Klíčovou součástí chování postavy je to jak reaguje na okolní situace (a jestli vůbec).
+ \vfill
+
+  \begin{itemize} 
+      \item dialogy postavy
+      \item změna lokace / pohyb postav
+      \item jejich aktuální činnost (animace)
+      \item oblečení
+      \item \textbf{reakce na prostředí}
+      \item atd.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Chování - Reakce}
+
+Klíčovou součástí chování postavy je to, jak reaguje na okolní situace (a jestli vůbec).
+ \vfill
+
+Ať už postava dělá co dělá, měla by (pokud je to vnímavá NPC) reagovat na to, co se děje v jejím okolí - komentářem, změnou činnosti, útěkem před požárem, schování se před deštěm, nějak. 
+
+\vfill
+\begin{exampleblock}{Svět}
+Tím, že postavy reagují na okolí přestává být ze světa mnoho miniaturních mikrovesmírů, ale stává se jedním velkým světem. 
+\end{exampleblock} 
+\vfill
+
+%   \begin{itemize} \tiny
+%       \item Dialogy postavy
+%       \item Změna lokace / Pohyb postav
+%       \item Jejich aktuální činnost (animace)
+%       \item Oblečení
+%       \item \textbf{Reakce na prostředí}
+%       \item atd.
+%   \end{itemize}
+\end{frame}
+
+\section{Stavy}
+\subsection*{Stavy}
+
+\begin{frame}{Formalizace}
+    
+    Předchozí text je sice pěkný (je?), obsahuje spoustu zajímavých (snad?) informací, pro přenesení do virtuálního světe je však zapotřebí jej nějak konkrétněji formalizovat. 
+    
+    \vfill
+    
+    Řekněme, že to, co aktuálně postava dělá, co provádí, i to jak zrovna reaguje je \textbf{stav}. 
+    
+\end{frame}
+
+\begin{frame}{Formalizace}
+    
+   % Předchozí text je sice pěkný, obsahuje spoustu zajímavých informací, pro přenesení do virtuálního světe je však zapotřebí jej nějak konkrétněji formalizovat. 
+    
+    \vfill
+    Řekněme, že to, co aktuálně postava dělá, co provádí, i to jak zrovna reaguje je \textbf{stav}: 
+
+\vfill
+
+\begin{itemize}
+    \item spánek
+    \item pohyb někam
+    \item rychlý pohyb někam
+    \item skok
+    \item práce
+    \item panika
+    \item dialog
+    \item je zraněn
+    \item mrtev, atd.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Formalizace}
+    
+   % Řekneme, že to, co aktuálně postava dělá, co provádí, i to jak zrovna reaguje je \textbf{stav}. 
+    
+
+%    \vfill
+
+    Výčet vztahů by měl být pro daný svět/hru a typ postav \emph{kompletní}, byť je jasné, že nemusí každá postava využít všechny, teoreticky tak tomu být může (KC:D).
+\vfill
+
+\begin{itemize}
+    \item spánek
+    \item pohyb někam
+    \item rychlý pohyb někam
+    \item skok
+    \item práce
+    \item panika
+    \item dialog
+    \item je zraněn
+    \item mrtev, atd.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Formalizace}
+    
+    % Řekneme, že to, co aktuálně postava dělá, co provádí, i to jak zrovna reaguje je \textbf{stav}. 
+    
+    % \vfill
+    Můžeme bezpečně stavy prohlásit za stavy (uzly) stavového automatu.Výsledný automat pak bude charakterizovat chování určité postavy.
+
+\vfill
+
+\begin{itemize}
+    \item Spící postava
+    \item pohyb někam
+    \item rychlý pohyb někam
+    \item skok
+    \item práce
+    \item panika
+    \item dialog
+    \item je zraněn
+    \item mrtev, atd.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Graf 1}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{assets/shared/p04_drevorubec_9b87ea49.pdf}
+        %\caption{Caption}
+        %\label{fig:my_label}
+    \end{figure}
+    \centering\tiny Co je na tomto grafu ( z jedné BP) špatně?
+\end{frame}
+
+\begin{frame}
+\frametitle{Graf 2}
+\begin{center}
+\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+  \node[state] (S)                      {spánek};
+  \node[state]         (q1)     [right of=S]    {jídlo};
+  \node[state]         (q2)     [below of=q1]   {chůze };
+  \node[state]         (q3)     [below of=S]   {práce};
+  \node[state]         (q4)     [left of=q3]   {chůze};
+  \node[state]         (q5)     [left of=S]   {jídlo};
+  %   \node[state]         (q1) [right of=S]  {$Severni hory$};
+%   \node[state]         (q2) [right of=q1, below of=q3] {$Jizni hory$};
+%   \node[state]         (q3) [below of=q4] {$Les$};
+%   \node[state]         (q4) [right of=q3] {$Hluboky les$};
+%   \node[state]         (q5) [right of=q4] {$Mesto$};
+  \path[->] (S)   edge           node {} (q1)
+            (q1)  edge [ ]       node {} (q2)
+            (q2)  edge [ ]        node {} (q3)
+            (q3)  edge [ ]        node {} (q4)
+            (q4)  edge [ ]        node {} (q5)
+            (q5)  edge [ ]        node {} (S)
+                  ;
+\end{tikzpicture}
+\end{center}
+    \vfill
+Kdy se postava vzbudí? Bude to vždy ve stejnou dobu? Je třeba animovat její spánek? Co když po cestě někoho potká? Jak rychle půjde z práce a jak rychle do ní?
+    \vfill
+        % Nejde jen o určení stavu, často chceme i nějakou \emph{míru}, nějaké dodatečné informace.
+\end{frame}
+
+\begin{frame}
+\frametitle{Graf 2}
+\begin{center}
+\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+  \node[state] (S)                      {spánek};
+  \node[state]         (q1)     [right of=S]    {jídlo};
+  \node[state]         (q2)     [below of=q1]   {chůze };
+  \node[state]         (q3)     [below of=S]   {pivo};
+  \node[state]         (q4)     [left of=q3]   {chůze};
+  \node[state]         (q5)     [left of=S]   {jídlo};
+  %   \node[state]         (q1) [right of=S]  {$Severni hory$};
+%   \node[state]         (q2) [right of=q1, below of=q3] {$Jizni hory$};
+%   \node[state]         (q3) [below of=q4] {$Les$};
+%   \node[state]         (q4) [right of=q3] {$Hluboky les$};
+%   \node[state]         (q5) [right of=q4] {$Mesto$};
+  \path[->] (S)   edge           node {} (q1)
+            (q1)  edge [ ]       node {} (q2)
+            (q2)  edge [ ]        node {} (q3)
+            (q3)  edge [ ]        node {} (q4)
+            (q4)  edge [ ]        node {} (q5)
+            (q5)  edge [ ]        node {} (S)
+                  ;
+\end{tikzpicture}
+\end{center}
+    \vfill
+Kdy se postava vzbudí? Bude to vždy ve stejnou dobu? Je třeba animovat její spánek? Co když po cestě někoho potká? Jak rychle půjde z práce a jak rychle do ní?
+    \vfill
+    V sobotu se nepracuje!
+\end{frame}
+
+\begin{frame}
+\frametitle{Graf 2}
+\begin{center}
+\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+  \node[state] (S)                      {spánek};
+  \node[state]         (q1)     [right of=S]    {chůze};
+  \node[state]         (q2)     [below of=q1]   {kostel };
+  \node[state]         (q3)     [below of=S]   {jídlo};
+  \node[state]         (q4)     [left of=q3]   {pivo};
+  \node[state]         (q5)     [left of=S]   {jídlo};
+  %   \node[state]         (q1) [right of=S]  {$Severni hory$};
+%   \node[state]         (q2) [right of=q1, below of=q3] {$Jizni hory$};
+%   \node[state]         (q3) [below of=q4] {$Les$};
+%   \node[state]         (q4) [right of=q3] {$Hluboky les$};
+%   \node[state]         (q5) [right of=q4] {$Mesto$};
+  \path[->] (S)   edge           node {} (q1)
+            (q1)  edge [ ]       node {} (q2)
+            (q2)  edge [ ]        node {} (q3)
+            (q3)  edge [ ]        node {} (q4)
+            (q4)  edge [ ]        node {} (q5)
+            (q5)  edge [ ]        node {} (S)
+                  ;
+\end{tikzpicture}
+\end{center}
+    \vfill
+Kdy se postava vzbudí? Bude to vždy ve stejnou dobu? Je třeba animovat její spánek? Co když po cestě někoho potká? Jak rychle půjde z práce a jak rychle do ní?
+    \vfill
+    V neděli už vůbec  ne! 
+\end{frame}
+
+% \begin{frame}
+% \frametitle{Graf 2}
+% \begin{center}
+% \begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2cm]
+%   \node[state]         (S)                                  {všední den};
+%   \node[state]         (q1)     [below of=S, left of=S, left of=q2]    {sobota};
+%   \node[state]         (q2)     [below of=S, right of=S, right of=q1]  {neděle};
+ 
+ 
+% %   \path[->] (S)   edge           node {} (q1)
+% %             (q1)  edge [ ]       node {} (q2)
+% %             (q2)  edge [ ]        node {} (q3)
+% %             (q3)  edge [ ]        node {} (q4)
+% %             (q4)  edge [ ]        node {} (q5)
+% %             (q5)  edge [ ]        node {} (S)
+%                   ;
+% \end{tikzpicture}
+% \end{center}
+%     \vfill
+% Kdy se postava vzbudí? Bude to vždy ve stejnou dobu? Je třeba animovat její spánek? Co když po cestě někoho potká? Jak rychle půjde z práce a jak rychle do ní?
+%     \vfill
+%     Co týden dal. 
+% \end{frame}
+
+\section{Přechody}
+\subsection*{Přechody}
+
+\begin{frame}{Přechody}
+    
+    Jednotlivé stavy mezi sebou mohou přecházet jak naprosto přirozeně:
+    
+    \begin{itemize}
+        \item postava jde ke stromu, dojde ke stromu a začne pracovat, 
+        \item leží, vzbudí se vždy v 20:00 a vstane, 
+        \item atp.
+    \end{itemize} 
+    nebo naopak důsledkem vnějších vlivů
+    \begin{itemize}
+        \item v náhodný čas začne pršet
+        \item přiblíží se avatar
+        \item někdo postavu probodne
+        \item v okolí začne hořet
+    \end{itemize}
+     
+    
+     \vfill
+
+    \begin{exampleblock}{Chování}
+            Vytvořením přirozeného cyklu a reakcí na vějši vlivy získá postava chování, něco, co bude v naprosté většině do nekonečna opakovat a spoluvytvářet  prostředí virtuálního světa.
+    \end{exampleblock}
+
+        
+
+    
+\end{frame}
+
+\begin{frame}{Přechody}
+    
+ 
+
+    \vfill
+    Nestandardní situace jsou to, co dělá postavy a děj ve světe zajímavým. 
+    \vfill
+    
+\end{frame}
+
+\begin{frame}{Přechody}
+    
+ 
+
+    \vfill
+    Nestandardní situace jsou to, co dělá postavy a děj ve světe zajímavým. 
+    \vfill
+
+    Postavy normálně chodí po městě, ale občas se zastaví a začnou se vybavovat o tom, jak jejich manželky skvěle háčkují. 
+
+    \vfill
+    
+\end{frame}
+
+\begin{frame}{Formalizace}
+    Nestandardní situace a tedy plán \uv{reakce na cokoli} sice zajistí, aby se postava v průběhu požáru nezačala v klidu vybavovat s hráčem jako by se nechumelilo, ale poskytuje také obrovský prostor k tomu, aby nějaká kombinace akce a stavu unikla, nebo nebyla zpracována správně.
+    
+    \vfill
+    Aparát grafů (počty uzlů, počty hran) dává jisté možnosti, jak kontrolovat validnost výsledných grafů chování.
+    
+    \vfill
+    Pokud všechny stavy prohlásíme za součást množiny S a všechny možné akce za součást množiny A, pak hrany indukující reakci postavy na akci vytváří úplný bipartitní graf. 
+
+    Se všemi hranami je třeba počítat. Buď je vyřešit, nebo zajistit, aby nenastaly. 
+\end{frame}
+
+\begin{frame}{Formalizace}
+
+    \vfill
+    Aparát grafů (počty uzlů, počty hran) dává jisté možnosti, jak kontrolovat validnost výsledných grafů chování.
+    
+    \vfill
+    Pokud všechny stavy prohlásíme za součást množiny S a všechny možné akce za součást množiny A, pak hrany indukující reakci postavy na akci vytváří úplný bipartitní graf. 
+    
+     \vfill
+    V množině uzlů S pak požadujeme existenci nějaké uzavřené, ne nutně eulerovské kružnice délky alespoň dva. 
+    
+\end{frame}
+
+
+
+% \begin{frame}{Přechody}
+    
+%     Řekneme, že to, co aktuálně postava dělá, co provádí, i to jak zrovna reaguje je \textbf{stav}. 
+    
+%         \vfill
+    
+%     Ke každému stavu typicky přísluší animace (či jiná vizualizace), zvuky  pro něj typické (od chápání po zranění v boji, či panické křičení), stejně jako reakční  \href{https://www.youtube.com/watch?v=Vyw6n1EKlww}{dialog}, či dialogy.
+
+% \begin{itemize}
+%     \item Spící postava
+%     \item pohyb někam
+%     \item rychlý pohyb někam
+%     \tem skok
+%     \item práce
+%     \item panika
+%     \item dialog
+%     \item je zraněn
+%     \item mrtev
+%     \item atd.
+% \end{itemize}
+% \end{frame}
+
+
+\begin{frame}{Přechody}
+    
+
+    
+
+Postavu pak charakterizuje to, jaké stavy jí vybereme jako \emph{přirozené}. Mezi těmi se bude postava pohybovat, pokud nenastane nějaká vnější specifická okolnost (např. někdo ji \href{https://youtu.be/SWwToakUCs0}{zapálí}).
+    
+\vspace{1cm}
+
+Přechody tedy mohou být jak důsledky jiných akcí, mohou být nastavené na konkrétní čas, nemusí přitom jít jen o akce směrované přímo na ní, ale i na objekty v okolí. 
+
+\end{frame}
+
+\begin{frame}{Přechody}
+    
+Přechody tedy mohou být jak důsledky jiných akcí, mohou být nastavené na konkrétní čas, nemusí přitom jít jen o akce směrované přímo na ní, ale i na objekty v okolí. 
+
+\vfill
+
+\centering\includegraphics[width=0.7\textwidth]{assets/shared/p04_eheuurqw4aa3nhv_57723044.jpg}
+
+\vfill
+
+\end{frame}
+
+
+\begin{frame}{Přechody}
+    
+    Řekneme, že to, co aktuálně postava dělá, co provádí, i to jak zrovna reaguje je \textbf{stav}. 
+    
+    \vfill
+    
+    To, co nutí postavu změnit svůj stav, až už vnitřní, či vnější, jsou \textbf{přechody}.
+    
+    \vfill
+    
+    Konkrétními hodnotami - kdy postava zpanikaří, jesli bude bojovat, nebo uteče atp. se zabývá \emph{mechanika} (P9). 
+    
+% \begin{itemize}
+%     \item Spící postava
+%     \item pohyb někam
+%     \item rychlý pohyb někam
+%     \tem skok
+%     \item práce
+%     \item panika
+%     \item dialog
+%     \item je zraněn
+%     \item mrtev
+%     \item atd.
+% \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Example}
+
+    Špatné nastavení jednotlivých přechodů vede k mnoha a a mnoha zajímavým situacím. \href{https://www.youtube.com/watch?v=jFswBl5dgBY&ab_channel=GameSprout}{link}
+
+    
+\end{frame}
+
+\section{Fuzzy}
+
+\subsection{Fuzzy logika}
+
+
+\begin{frame}{Fuzzy logika - short intro}
+
+Pro potřeby her lze s výhodou upotřebit vlastnosti fuzzy logigy \cite{grantner1996reprogrammable,grantner1994fuzzy}.
+
+\vfill
+Fuzzy logika je vícehodnotová logika charakterizována tím, že operuje nikoli s jen s konkrétními (binárnimi) stavy, ale i s přechody mezi nimi. 
+
+\vfill
+Přirozeně tak reprezentuje stavy, které nemusí být přesně rozpoznatelné, resp. ohraničené na nějaké ose významnosti. Fuzzy logika tak umožňuje reprezentovat i vágnost přirozené řeči[PI12] a neurčitost, stejně jako pro reálný svět ne vždy přirozené chování při \uv{ostrém} přechodu logických stavů. 
+
+\end{frame}
+
+\begin{frame}{Fuzzy logika - short intro}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{assets/shared/p04_fuzzy_logic_temperature_cs_bdded70f.png}
+    \label{fig:my_label}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Fuzzy logika - short intro}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{assets/shared/p04_fuzzy2_f54d0598.png}
+    \label{fig:my_label}
+    
+\end{figure}
+
+\centering\tiny trapézoidy jsou nejčastější z důvodu jednoduchosti, používají se ale i sigmoidy
+\end{frame}
+
+
+\begin{frame}{Fuzzy logika - short intro}
+
+Od roku 1996, kdy se fuzzy logika začala v herním průmyslu používat její použití stoupá, udává se jako jedna z nejobecnějších a nejužitečnějších technik s možným použití v zásadě v každé hře.% \cite{}. 
+
+\vfill
+Základní výhoda v v případě rozhodovacího procesu NPC (výběr zbraně, použití zbraně, změna stavu, \ldots). její zapojení do AI je nejen přirozené, ale zlepšuje dojem z hry [Acampora2010] a chování NPC. 
+
+\vfill
+Využití funkcí fuzzy logiky jako responzních křivek pro rozhodovací logiku je přirozené a jednoduše definované.
+
+\end{frame}
+
+\begin{frame}{Fuzzy logika - short intro}
+
+AI bez Fuzzy logiky může (díky FSM) jednoduše určit co se má dělat (spatří nepřítele - změní stav na utíkat).
+
+\vfill
+Dodatečné parametry (s jakou pravděpodobností, jak rychle, atp.) je možné spočítat ale jsou \emph{mimo} základní logiku FSM, tedy jen jako nadstavba. 
+
+\vfill
+Fuzzy logika toto řeší přirozeně bez nutnosti systém rozšiřovat o nějakou mechanickou nadstavbu. 
+
+\vfill
+Jednou mechanikou se tedy řeší nejen \emph{co} se má dít (další stav) ale i \emph{jestli} se to má dít. 
+
+\end{frame}
+
+
+\begin{frame}{Intuitivně}
+Vstup: množství střeliva
+\begin{itemize}
+\item malo munice: uteč!
+\item hodne munice: útoč!
+\item jinak: bojuj defenzívně
+\end{itemize}
+
+Vstup: množství zdraví
+\begin{itemize}
+\item malo zdraví: uteč!
+\item hodne zdraví: útoč!
+\item jinak: bojuj defenzívně
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Intuitivně}
+\begin{verbatim}
+DetermineAction() 
+
+    if(health < 10)
+
+\ \ \        if(ammo < 5) return ESCAPE
+
+\ \ \        if(ammo >= 5 \&\& ammo < 20) return CAUTIOUS
+
+\ \ \        else return NORMAL
+
+    else if(health >= 10 \&\& health < 20)
+
+\ \ \        if(ammo < 5) return CAUTIOUS
+
+\ \ \        if(ammo >= 5 \&\& ammo < 20) return NORMAL
+
+\ \ \        else return ATTACK
+
+    else
+
+\ \ \        if(ammo < 5) return NORMAL
+
+\ \ \        if(ammo >= 5 \&\& ammo < 20) return ATTACK
+
+\ \ \        else return FULLATTACK
+
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}{Intiutivně}
+    Co když chceme přidat další proměnou? Co když jich přidáme víc?
+    \begin{itemize}
+        \item počet nepřatel
+        \item únava
+        \item agresivita
+        \item vhodné / nevhodné prostředí
+        \item atd. 
+    \end{itemize}
+    
+\end{frame}
+
+
+\begin{frame}{Intuitivne+: input system}
+    \begin{equation}
+        ammo_{level} = ammo / max_{ammo} \cdot 100 
+    \end{equation}
+   \centering \includegraphics[width=0.8\textwidth]{assets/shared/p04_ammo1_53d7052c.png}
+\end{frame}
+
+% \begin{frame}{Intuitivne+: input system}
+%     zjištění váhy
+    
+%     \centering\includegraphics[width=0.8\textwidth]{img4/ammo2.png}
+% \end{frame}
+
+% \begin{frame}{Intuitivne+: input system}
+%     zjištění váhy (jiný přiklad)
+    
+%     \centering\includegraphics[width=0.8\textwidth]{img4/ammo3.png}
+% \end{frame}
+
+\begin{frame}{Intuitivne+}
+Vstup: množství nepřatel
+\begin{itemize}
+\item málo nepřátel: útoč!
+\item středně nepřátel: braň se!
+\item hodně nepřátel: uteč!
+\end{itemize}
+
+škála je opačná!
+
+\begin{itemize}
+\item hodně nepřátel: uteč!
+\item středně nepřátel: braň se!
+\item málo nepřátel: útoč!
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}{komplexní příklad}
+
+Pro vytvoření složitějšího konání se typicky určuje, jestli je aktuální stav pozitivní (desirable) nebo ne. 
+
+\includegraphics[width=0.4\textwidth]{assets/shared/p04_img72_c68cc23d.jpg}
+
+    
+\end{frame}
+
+\begin{frame}{komplexní příklad}
+
+První proměnná: vzdálenost. 
+
+\includegraphics[width=0.4\textwidth]{assets/shared/p04_img73_8dbdcdbb.jpg}
+    
+\end{frame}
+
+\begin{frame}{komplexní příklad}
+
+Druhá proměnná: munice. 
+
+\includegraphics[width=0.4\textwidth]{assets/shared/p04_img74_22cb1dff.jpg}
+    
+\end{frame}
+
+\begin{frame}{komplexní příklad}
+
+Namapovat kombinace proměnných na výsledek.
+
+\includegraphics[width=0.4\textwidth]{assets/shared/p04_img75_4f4201f3.jpg}
+    
+\end{frame}
+
+\begin{frame}{komplexní příklad}
+
+\begin{enumerate}
+    \item Pro každé pravidlo
+    \begin{enumerate}
+        \item spočti DoM
+        \item vypočtěte odvozený mezivýsledek na základě DoM
+    \end{enumerate}
+    \item spočti všechny kombinované výsledky
+    \item deffuzifikuj skombinovené výsledky
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{komplexní příklad}
+
+Pro všechny pravidla urči DoM jako jejich $\min$.
+
+\includegraphics[width=0.4\textwidth]{assets/shared/p04_img78_0bcad4c2.jpg}
+    
+\end{frame}
+
+
+\begin{frame}{komplexní příklad}
+
+Mezivýsledek v tabulce.
+
+\includegraphics[width=0.4\textwidth]{assets/shared/p04_img80_3355b4fb.jpg}
+
+Použij tyto hodnoty přímo, nebo urči hodnoty desireability. 
+    
+\end{frame}
+
+\begin{frame}{komplexní příklad}
+
+Tabulka řiká \emph{jak moc} platí která základní hodnota desireability.  
+
+Nyní \emph{uprav} křivky těchto hodnot.
+
+\includegraphics[width=0.4\textwidth]{assets/shared/p04_img82_0c54d7a2.jpg}
+    
+\end{frame}
+
+\begin{frame}{komplexní příklad}
+
+Metod vyhodnocení výsledku je mnoho. 
+    
+\end{frame}
+
+\begin{frame}{komplexní příklad}
+
+Mean of maximum.
+
+\includegraphics[width=0.4\textwidth]{assets/shared/p04_img84_597e8d13.jpg}
+    
+\end{frame}
+
+\begin{frame}{Centroid}
+
+Odhad ze vzorku. Sčítají se jednotlivé hodnoty křivek a hledá se max. 
+
+\includegraphics[width=0.4\textwidth]{assets/shared/p04_img84_597e8d13.jpg}
+    
+\end{frame}
+
+\begin{frame}{komplexní příklad}
+\vfill
+Průměr maxim.
+\vfill
+$$ hodnota = \frac{\sum\left( reprezentativní hodnota \cdot confidence \right)}{\sum \left(  confidence \right) }  $$
+ \vfill
+\end{frame}
+
+% \begin{frame}{Intuitivne+: input system}
+%     Výstup
+    
+%     \centering\includegraphics[width=0.9\textwidth]{img4/output.png}
+% \end{frame}
+
+
+
+
+\begin{frame}{Fuzzy FSM - short intro}
+
+% V zásadě se tedy jedná o alternativu klasických FSM, s přesně definovanými přechody mezi stavy (a nadstavbou náhodnosti). 
+
+% \vfill
+Hybridem a pokusem využití jak přirozeně definovaného Fuzzy přechodu, tak jednoduše organizovatelného FSM jsou (nečekaně) Fuzzy FSM (FuSM).
+
+\vfill
+Objekt se pak nachází v nějakém stavu FuSM, definice jeho přechodu do jiného stavu pak závisí na responzní křivce. 
+\end{frame}
+
+
+\begin{frame}{Odkazy}
+
+
+responzní křivky v Unity:
+    https://docs.unity3d.com/ScriptReference/AnimationCurve.html
+
+https://github.com/PacktPublishing/Unity-2017-Game-AI-Programming-Third-Edition/tree/master/Chapter06
+
+    
+\end{frame}
+
+\begin{frame}{FSM to FuSM}
+
+Převod je možný na dvojí úrovni:
+
+\begin{enumerate}
+    \item Fuzzy přechod: Namapování přechodů mezi stavy pomocí responzní křivky 
+    \item Fuzzy stav: FuSM se nachází ve více stavech současně s určitou mírou věrohodnosti
+\end{enumerate}
+
+První případ je triviální pro samotnou rozhodovací mechaniku a triviálně převoditelný. Druhý případ je méně častější, přesto dobře použitelný pro abstraktnější stavy
+
+\vspace{2cm}
+
+\centering\tiny
+link: \href{http://www.byond.com/developer/hub/Gazoot/fuzzy_lib}{fuzzylib}
+\end{frame}
+
+\begin{frame}{Fuzzy logika - short intro}
+
+Nevýhody
+
+\begin{itemize}
+    \item postavený na znalostní bázi
+    \item časté kontroly stavu a přechodu
+    \item náročnější pro větší počet agentů než obyčejné FSM
+\end{itemize}
+\end{frame}
+
+% \section{ECS}
+
+
+
+% \subsection{ECS x Dědičnost}
+
+
+% \begin{frame}
+% \frametitle{ECS}
+
+% Klasickou v C++ často preferovanou architekturou pro reprezentaci herních objektů je dědičnost.
+
+% Přes značné množství výhod, se v posledních letech zvyšuje\cite{gamepatterns} podíl her, která je pro vývoj preferuji ECS.
+
+% Dopad  pozitivních vlastností ECS je ale stále předmětem výzkumu\cite{7551583,7854098}.
+
+% ECS se striktně drží principu preference kompozice před dědičností. 
+
+% \end{frame}
+
+
+% \begin{frame}
+% \frametitle{ECS}
+
+%   \begin{figure}
+%         \centering
+%         \includesvg{img4/inheritance.svg}
+%         \caption{Zásadní nevýhoda použití dědičnosti~--~provedení změn je složité a pracné.}\label{fig:inheritance}
+%     \end{figure}
+  
+% \end{frame}
+
+% \begin{frame}
+% \frametitle{ECS}
+
+% Nejčastěji  udávanou nevýhodou dědičnosti je rigidita a to, že není nakloněna změnám (resp. vynucuje si komplexnější strukturu a analýzu). 
+
+% Jednoduší může být vytvoření "balíků" funkcionalit, která jsou ve výsledné třídě vhodně zkombinovány. 
+
+% Komplikovanější je však vzájemná komunikace komponent (pohyb a kolize, atp.), které je třeba zajistit. 
+
+
+
+% \end{frame}
+
+
+% \begin{frame}
+% \frametitle{ECS}
+
+% Komponenty (příklad):
+
+% \begin{itemize}
+%     \item komponenta vykreslení
+%     \item komponenta pohybu
+%     \item komponent střelby
+%     \item komponenta boje
+%     \item komponenta života
+%     \item atd.
+% \end{itemize}
+
+% Objekt ve hře je pak charakterizován kolekcí komponent. 
+
+% \end{frame}
+
+
+
+% \begin{frame}
+% \frametitle{ECS}
+
+% \emph{Poznámka mimochodem}:  klasická a často používané pravidla pro mechaniku her (DnD/DrD) jsou v zásadě postavená na dědičnosti (levely, větvení povolání, ...). Novější pravidla jsou naopak v zasadě reprezentace ECS struktury
+
+% \begin{itemize}
+%     \item boj na blízko
+%     \item boj na dálku
+%     \item ohnivá magie
+%     \item stopování
+%     \item alchymie
+%     \item atd.
+% \end{itemize}
+
+% Povolání je charakterizováno kombinaci komponent. 
+
+% \end{frame}
+
+% \begin{frame}
+% \frametitle{ECS}
+
+%     Tato architektura pomáhá naplnit funkční požadavek na~externí konfigurovatelnost hry. 
+    
+%     \vfill
+%     Pokud bychom v~externím (textovém) souboru měli definované herní entity jako kolekce komponent s~různými parametry, je velice snadné provádět rozsáhlé změny bez zásahu do~zdrojového kódu.
+
+% \vfill
+%     Přidávání kompletně nových objektů s novou konfigurací schopností je jednodušší a nevyžaduje programovou změnu (pokud již existují komponenty).
+%     \vfill
+%     Přidání nových komponent je nejen  možné ale i jednodušší.
+
+% \end{frame}
+
+
+
+% \begin{frame}
+% \frametitle{ECS}
+
+%   \begin{figure}
+%         \centering
+%         \includesvg{img4/inheritance.svg}
+%         \caption{Zásadní nevýhoda použití dědičnosti~--~provedení změn je složité a pracné.}\label{fig:inheritance}
+%     \end{figure}
+  
+% \end{frame}
+
+
+
+
+\section{Produkce}
+
+\subsection{Ukázkové cykly}
+
+
+
+\begin{frame}
+\frametitle{Produkce}
+
+Produkce je zjevně primárně doménou her ekonomicko-strategických, nevyskytuje se však jen tam. 
+
+\vfill
+Budeme takto označovat v zásadě jakoukoli produkci čehokoliv obnovitelného, co lze následně nějak herně využít.
+
+\begin{itemize}
+    \item obilí rostoucí na poli
+    \item kokosy produkované palmou
+    \item zajíci a ptáci objevující se po lese
+    \item goblini generovaní v jeskyni
+    \item hmyz lezoucí z hnízda
+    \item Nové NPC 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Klíčové je nejen určení toho co se má produkovat, ale především toho jaký je účel.
+
+\vfill
+Tento účel přitom může být jak naprosto zjevný, tak naopak skrytý.
+
+\begin{itemize}
+    \item Obilí - je primárním zdrojem potravy
+    \item Obilí - jeho zpracování se věnuje značné množství postav
+    \item Obilí - poskytuje otevřený prostor (scéna)
+    \item Obilí - lány obilí mají i zajímavé vlastnosti (jsou hořlavé)
+    \item Obilí - Mohou být snadno zničeny (déšť, požár)
+    \item Obilí - lány obilí mají i hodnotu estetickou
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Klíčové je nejen určení toho co se má produkovat, ale především toho jaký je účel.
+
+Tento účel přitom může být jak naprosto zjevný, tak naopak skrytý.
+
+\begin{itemize}
+    \item Kokosy - mohou být zdrojem potravy
+    \item Kokosy - je třeba se k nim nějak dostat
+    \item Kokosy - mohou být i nástrojem k výrobě
+    \item Kokosy - mají zajímavé vlastnosti (padají na hlavu)
+    \item Kokosy - dají se využít (lákadlo)
+    \item Kokosy - dají se použít (munice)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Klíčové je nejen určení toho co se má produkovat, ale především toho jaký je účel.
+\vfill
+Tento účel přitom může být jak naprosto zjevný, tak naopak skrytý.
+
+\begin{itemize}
+    \item Zajíci - mohou být zdrojem potravy
+    \item Zajíci - je třeba je nějak ulovit
+    \item Zajíci - krom potravin produkují i kůži
+    \item Zajíci - mají zajímavé vlastnosti \href{https://youtu.be/z3BVMkpmC2M?t=22}{(smějí se ze křoví)} 
+    \item Zajíci - jde s nimi interagovat - lovit, stopovat
+    \item Zajíci - dají se použít (lákadlo pro divokou zvěř)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Klíčové je nejen určení toho co se má produkovat, ale především toho jaký je účel.
+\vfill
+Tento účel přitom může být jak naprosto zjevný, tak naopak skrytý.
+
+\begin{itemize}
+    \item ptáci - poskytují zvukovou kulisu
+    \item ptáci - Poskytují vizuální zpestření
+    \item ptáci - mají hnízda s vejci
+    \item ptáci - mají zajímavé vlastnosti (sojka práskačka)
+    \item ptáci - mají zajímavé vlastnosti (straka zlodějka)    
+    \item ptáci - jde s nimi interagovat - lovit, střílet
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Produkce}
+
+Klíčové je nejen určení toho co se má produkovat, ale především toho jaký je účel.
+\vfill
+Tento účel přitom může být jak naprosto zjevný, tak naopak skrytý.
+
+\begin{itemize}
+    \item goblini - základní antagonistické postavy
+    \item goblini - jejich "nekonečná" produkce dává téma scéně
+    \item goblini - mají sídla s poklady
+    \item goblini - jejich výskyt může něco napovědět o příběhu
+    \item goblini - mají zajímavé vlastnosti (šamanismus, inteligence, vzhled)    
+    \item goblini - jde s nimi interagovat - lovit, střílet, mluvit
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Klíčové je nejen určení toho co se má produkovat, ale především toho jaký je účel.
+\vfill
+Tento účel přitom může být jak naprosto zjevný, tak naopak skrytý.
+
+\begin{itemize}
+    \item hmyz - mohou být zvukovou kulisou i nepřítelem
+    \item hmyz - jejich výskyt/zvuk má jasnou konotaci
+    \item hmyz - mohou být zajímavou výzvou (repelent)
+    \item hmyz - jejich výskyt může něco napovědět o příběhu
+    \item hmyz - mají zajímavé vlastnosti (nejdou zabít mečem)    
+    \item hmyz - přenášejí nemoci (jež je třeba léčit)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Klíčové je nejen určení toho co se má produkovat, ale především toho jaký je účel.
+\vfill
+Tento účel přitom může být jak naprosto zjevný, tak naopak skrytý.
+
+\begin{itemize}
+    \item NPC - proměnlivý počet postav jako silná zpětná vazba na akce hráče
+    \item NPC - osadníci ve "vyčištěných" oblastech
+    \item NPC - mají domy, majetek, poklady
+    \item NPC - nový x staří NPC - jiné dialogy
+    \item NPC - mají zajímavé vlastnosti (nemusí se doplňovat vůbec)    
+    \item NPC - jde s nimi interagovat 
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Produkce}
+
+Samotný postup produkce je podobný vytváření chování, jen v tomto případě máme vícero druhů uzlů. 
+ \begin{figure}[ht!]
+                \centering
+                    \includegraphics[width=0.75\textwidth, clip, trim=0.0cm 5.5cm 0.0cm 5.5cm]{assets/shared/p04_chleb_8d36c70d.pdf}
+                \caption{Výroba chleba}
+            \end{figure}
+            
+            % \begin{figure}[ht!]
+            %     \centering
+            %         \includegraphics[width=0.75\textwidth, clip, trim=0.0cm 5.5cm 0.0cm 5.5cm]{assets/shared/p04_maso_7ec8d1a2.pdf}
+            %     \caption{Výroba masa}
+            % \end{figure}
+            
+
+            
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Samotný postup produkce je podobný vytváření chování, jen v tomto případě máme vícero druhů uzlů. 
+
+            \begin{figure}[ht!]
+                \centering
+                    \includegraphics[width=0.75\textwidth, clip, trim=0.0cm 5.5cm 0.0cm 5.5cm]{assets/shared/p04_maso_7ec8d1a2.pdf}
+                \caption{Výroba masa}
+            \end{figure}
+            
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Samotný postup produkce je podobný vytváření chování, jen v tomto případě máme vícero druhů uzlů. 
+
+            \begin{figure}[ht!]
+                \centering
+                    \includegraphics[width=0.75\textwidth, clip, trim=0.0cm 5.5cm 0.0cm 5.5cm]{assets/shared/p04_obleceni_54f2c532.pdf}
+                \caption{Výroba oblečení}
+            \end{figure}
+            
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Samotný postup produkce je podobný vytváření chování, jen v tomto případě máme vícero druhů uzlů. 
+
+            \begin{figure}[ht!]
+                \centering
+                    \includegraphics[width=0.75\textwidth, clip, trim=0.0cm 5.5cm 0.0cm 5.5cm]{assets/shared/p04_pivo_b0fd3497.pdf}
+                \caption{Výroba piva}
+            \end{figure}
+            
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Samotný postup produkce je podobný vytváření chování, jen v tomto případě máme vícero druhů uzlů. 
+            \begin{figure}[ht!]
+                \centering
+                    \includegraphics[width=0.50\textwidth, clip, trim=0.0cm 3.25cm 0.0cm 3.25cm]{assets/shared/p04_syr_0c4e944e.pdf}
+                \caption{Výroba sýru}
+            \end{figure}
+            
+            
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Samotný postup produkce je podobný vytváření chování, jen v tomto případě máme vícero druhů uzlů. 
+            
+            \begin{figure}[ht!]
+                \centering
+                    \includegraphics[width=1\textwidth, clip, trim=0.0cm 6.5cm 0.0cm 6.5cm]{assets/shared/p04_obleceni_54f2c532.pdf}
+                \caption{Výroba oblečení}
+                \label{fig:Vyroba obleceni}
+            \end{figure}
+            
+            
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Jednotlive řetězce je chodne si nějak strukturalizovat, navázat na sebe.
+            \begin{figure}[ht!]
+                \centering
+                    \includegraphics[width=0.90\textwidth, clip, trim=0.0cm 3.25cm 0.0cm 3.25cm]{assets/shared/p04_povolani_1e6865d6.pdf}
+                \caption{Výroba sýru}
+            \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Produkce}
+
+Zajimavé a realisticke situace nastanou, pokud se řetězec naruší a následuje nějaká reakce:
+    
+    \begin{itemize}
+        \item Pivovarnik je unesen, cena piva nejdřive začne stoupat, pak dojde. 
+        \\ - to by mělo komentovat osazenstvo hospody i hospodský
+        \item Pole je obsazeno gobliny, farmáři jsou vyháněni
+        \\ - zastaví se produkce mlýna, pekaře, pivovaru
+        \item Řezník leží doma s nemocí
+        \\ - Chovateli se množí zvířectvo
+        \\ - lovec má více a více nezpracovaného masa, jeho cena klesá (kazí se)
+    \end{itemize}
+    
+    % Komplexní ekonomické systémy (např. $X^3$: Reunion, Parkan) jdou při venhodném nastwvení limitů rozbít - zničením celé produkce jídla vyhladovit vesničany, prodáním zásob surovin snížit jejich cenu na minimum, nebo naopak velkým nákupem vyhnat vysoko nad rámcem běžného prazovacího cyklu (Skoupením všeho zboží od chovatele/lovce vyžene cenu masa a mléka nad to, co si mohou dovolit, lidi kupuji jen pečivo, jeho produkce nei dostatečná a je taky vykoupeno...). Systém se buď zotaví po dlouhé době (nikdo nekupuje, cena se pomalu snižuje), nebo nasleduje deadlock (vesmirné lodě nemohou bez paliva cestovat, vesničani pomřou hlady, ...)
+    
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Zajimavé a realisticke situace nastanou, pokud se řetězec naruší a následuje nějaká reakce:
+    
+    % \begin{itemize}
+    %     \item Pivovarnik je unesen, cena piva nejdřive začne stoupat, pak dojde. 
+    %     \\ - to by mělo komentovat osazenstvo hospody i hospodský
+    %     \item Pole je obsazeno gobliny, farmáři jsou vyháněni
+    %     \\ - zastaví se produkce mlýna, pekaře, pivovaru
+    %     \item Řezník leží doma s nemocí
+    %     \\ - Chovateli se množí zvířectvo
+    %     \\ - lovec má více a více nezpracovaného masa, jeho cena klesá (kazí se)
+    % \end{itemize}
+    \vfill
+    Komplexní ekonomické systémy (např. $X^3$: Reunion, Parkan) jdou při venhodném nastwvení limitů rozbít - zničením celé produkce jídla vyhladovit vesničany, prodáním zásob surovin snížit jejich cenu na minimum, nebo naopak velkým nákupem vyhnat vysoko nad rámcem běžného prazovacího cyklu (Skoupením všeho zboží od chovatele/lovce vyžene cenu masa a mléka nad to, co si mohou dovolit, lidi kupuji jen pečivo, jeho produkce nei dostatečná a je taky vykoupeno...). Systém se buď zotaví po dlouhé době (nikdo nekupuje, cena se pomalu snižuje), nebo nasleduje deadlock (vesmirné lodě nemohou bez paliva cestovat, vesničani pomřou hlady, ...)
+    \vfill
+    
+\end{frame}
+
+\begin{frame}
+\frametitle{Produkce}
+
+Produkční řetězec pak - podle tématu hry i podrobnosti zpracování - může poskytnout další akce (nošení suroviny), ale - a to je pro nás podstatnější - záminky k tomu aby \emph{se něco dělo}.
+
+A to již standartně:
+
+\begin{itemize}
+    \item mlýny melou, vypadají krásně a farmáři jsou happy
+\end{itemize}
+
+nebo naopak
+
+\begin{itemize}
+    \item mlýn nemele, sídlí v něm čaroděj s krkavci a chce dalšího učně aby \href{https://youtu.be/naeZCLKqppY}{mlýn zase mlel}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Konec}
+\vfill
+\centering
+Dotazy?
+\vfill
+\end{frame}
+
+
+
+\section*{Bibliography}
+\subsection*{Bibliography}
+\bibliography{VHS}
+
+\begin{frame}{Bibliography}
+\frametitle{Bibliography}
+    \bibliographystyle{alpha} %abbrv
+    
+    % J. L. Grantner and M. J. Patyra, "Fuzzy logic finite state machine models for real time systems," NAFIPS/IFIS/NASA '94. Proceedings of the First International Joint Conference of The North American Fuzzy Information Processing Society Biannual Conference. The Industrial Fuzzy Control and Intellige, San Antonio, TX, USA, 1994, pp. 296-300.
+
+
+\end{frame}
+
+\appendix
+
+
+\begin{frame}
+\frametitle{Sigmoida}
+
+Sigmoida je funkce s typickým S-tvarem. Asi nejčastějším předpisem je:
+
+$$ S(x) = \frac{1}{1+e^{-x}} = \frac{e^x}{e^x + 1}   $$
+
+  \begin{figure}
+        \centering
+        \includegraphics[width=0.4\textwidth]{assets/shared/p04_t2858_sigmoida_15466895.png}
+    \end{figure}
+    
+
+Může ale jít i o hyperbolický tangens, Gudermainnovi funkci, arkustangens atp.
+
+\end{frame}
+
+
+
+% \begin{frame}
+% \frametitle{Game}
+% \centering
+% \includegraphics[width = 0.8 \textwidth]{pic/elementy.png}
+% \end{frame}
+
+
+
+% \begin{frame}
+
+% \end{frame}
+
+%% Authors are advised to submit their bibtex database files. They are
+%% requested to list a bibtex style file in the manuscript if they do
+%% not want to use model3-num-names.bst.
+
+%% References without bibTeX database:
+
+% \begin{thebibliography}{00}
+
+%% \bibitem must have the following form:
+%%   \bibitem{key}...
+%%
+
+% \bibitem{}
+
+% \end{thebibliography}
+
+
+
+
+\end{document}
+
