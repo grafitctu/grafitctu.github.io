@@ -45,8 +45,14 @@ module.exports=function addLectureReturn(base,catalog){
   const target=path.join(base,file),before=fs.readFileSync(target),record=manifest.files.find(f=>f.copy===file);
   if(!record||record.sha256!==sha(before))throw Error('Unverified lecture copy: '+file);
   let html=before.toString('utf8');
+  // Published worksheets already have an in-flow toolbar and a subject link.
+  // Reuse it so the global return cannot cover the worksheet controls.
+  if(file.startsWith('vhs/p04/cviceni/')){
+   html=html.replace('<a href="../#slide-48">','<a class="grafit-lecture-return" href="../#slide-48">');
+   if(!html.includes('id="grafit-course-link"'))html=html.replace('<a href="../../">Přehled VHS</a>','<a class="brand" href="../../">VHS</a>');
+  }
   if(!html.includes('id="grafit-lecture-return"')){
-   const toolbar=/<header\b[^>]*class="[^"]*\btoolbar\b[^"]*"[^>]*>/i;
+   const toolbar=/<(?:header|nav)\b[^>]*class="[^"]*\btoolbar\b[^"]*"[^>]*>/i;
    const href=path.relative(path.dirname(target),base).split(path.sep).join('/')+'/';
    const link=`<a id="grafit-lecture-return" class="grafit-lecture-return${toolbar.test(html)?'':' grafit-lecture-return--floating'}" href="${href}" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>`;
    html=html.replace(/<\/head>/i,`<style id="grafit-lecture-return-style">${css}${colorCss}</style>\n</head>`);
