@@ -48,6 +48,7 @@ module.exports=function addLectureReturn(base,catalog){
   // Published worksheets already have an in-flow toolbar and a subject link.
   // Reuse it so the global return cannot cover the worksheet controls.
   if(file.startsWith('vhs/p04/cviceni/')){
+   html=html.replace(/<body(?![^>]*\bstyle=)/,'<body style="--ink:var(--text,#203039)"');
    html=html.replace('<a href="../#slide-48">','<a class="grafit-lecture-return" href="../#slide-48">');
    if(!html.includes('id="grafit-course-link"'))html=html.replace('<a href="../../">Přehled VHS</a>','<a class="brand" href="../../">VHS</a>');
   }
