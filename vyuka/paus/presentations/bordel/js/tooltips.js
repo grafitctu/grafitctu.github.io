@@ -132,6 +132,7 @@ const GLOSSARY = {
     "LBE": { title: "Location-Based Entertainment", desc: "Location-Based Entertainment neboli zábava vázaná na konkrétní lokaci označuje jakékoliv zážitky, za kterými musí člověk vyrazit osobně na určité fyzické místo. " },
     "LLM": { title: "Large Language Model", desc: "Velký jazykový model je počítačový model jazyka založený na neuronové síti s mnoha parametry." },
     "glTF": { title: "GL Transmission Format", desc: "glTF je otevřený standardní formát pro efektivní přenos a načítání 3D scén a modelů. Vyvíjí ho konsorcium Khronos Group." },
+    "AST": { title: "Abstract Syntax Tree", desc: "AST zobrazuje kód jako strom uzlů, kde každý uzel odpovídá nějaké konstrukci v kódu (např. proměnná, operátor, cyklus, volání funkce)." },
 
 }
 
