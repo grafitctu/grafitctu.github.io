@@ -57,6 +57,6 @@ obrázky zůstaly bajtově stejné; záznam je v `data/textured-studies.json` u 
   Doložené díry ve střeše zapiš jako výjimku s pramenem.
 - Nové geometrie 19. 10. 2026 mají tuto úpravu přímo z builderu: `F:\MOST\output\kulova_eave_fix_claude_2026-10-19\`
   (předávka `CODEX_HANDOFF_20261019.md`). Čp. 265 r5 má čtyři osy (4 okna nahoře, 3 dole, obloukové dveře vpravo);
-  studie G5 levou osu nemá a čeká na nové otexturování.
+  Codexova studie na r5 je publikovaná od 19. 10. 2026 (zdroj `kulova_handoff_intake_2026-10-19`).
 - Základní sestava ulice na webu je návrh r14: 111 13,30 m, 265 12,70 m, 266 11,85 m (GIS 11,43 / 15,23 / 11,19 m).
   Kanonický registr se nemění; rozhodnutí o šířkách je otevřené.
