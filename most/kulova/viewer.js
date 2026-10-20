@@ -41,7 +41,8 @@ async function applySurface() {
 }
 function show(cp) {
   const h = houses[cp]; if (!h || !info) return; info.hidden = false;
-  info.innerHTML = '<h3>' + T('Čp.', 'No.') + ' ' + cp + '</h3><p>' + h.kind + '<br>' + T('Strana', 'Side') + ': ' + h.side_cs + ' · ' + T('revize', 'revision') + ' ' + h.rev
+  const disc = T(h.disclosure_cs, h.disclosure_en);   // 20.10.2026: project / hypothesis must always be stated
+  info.innerHTML = '<h3>' + T('Čp.', 'No.') + ' ' + cp + '</h3>' + (disc ? '<p class="k-disclosure"><strong>' + T('Upozornění:', 'Note:') + '</strong> ' + disc + '</p>' : '') + '<p>' + h.kind + '<br>' + T('Strana', 'Side') + ': ' + h.side_cs + ' · ' + T('revize', 'revision') + ' ' + h.rev
     + '<br>' + T('Přílohy v databázi', 'Database attachments') + ': ' + h.n_atts + '<br>' + T('Textury', 'Textures') + ': ' + h.tex + '</p><p><a href="' + base + 'cp' + cp + '/">'
     + T('Stránka domu: prameny a model →', 'House page: sources and model →') + '</a></p><button type="button" id="info-close">' + T('Zavřít', 'Close') + '</button>';
   document.getElementById('info-close').onclick = () => { info.hidden = true; };
