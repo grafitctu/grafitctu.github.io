@@ -23,7 +23,10 @@ function applySurface() {
 }
 function show(cp) {
   const h = houses[cp]; if (!h || !info) return; info.hidden = false;
-  info.innerHTML = `<h3>${T('Čp.', 'No.')} ${cp}</h3><p>${h.kind}<br>${T('Strana', 'Side')}: ${h.side_cs} · ${T('or. č.', 'orient. no.')} ${h.orient}<br>${T('Poloha', 'Position')}: ${h.placement === 'GIS' ? T('GIS půdorys', 'GIS footprint') : T('odhad (sekvence)', 'estimate (sequence)')}<br>${T('Prameny', 'Sources')}: ${h.n_photo} ${T('fotografií', 'photos')}, ${h.n_plan} ${T('náčrt', 'sketch')}, ${h.n_card} ${T('karet', 'cards')}</p><p><a href="${base}cp${cp}/">${T('Stránka domu: prameny a model →', 'House page: sources and model →')}</a></p><button type="button" id="info-close">${T('Zavřít', 'Close')}</button>`;
+  const nPhotos = Math.max(0, (h.n_photo || 0) - (h.n_postcard || 0));
+  const nPostcards = h.n_postcard || 0;
+  const imageSources = `${nPhotos} ${T('fotografií', 'photos')}${nPostcards ? `, ${nPostcards} ${T('pohlednic', 'postcards')}` : ''}`;
+  info.innerHTML = `<h3>${T('Čp.', 'No.')} ${cp}</h3><p>${h.kind}<br>${T('Strana', 'Side')}: ${h.side_cs} · ${T('or. č.', 'orient. no.')} ${h.orient}<br>${T('Poloha', 'Position')}: ${h.placement === 'GIS' ? T('GIS půdorys', 'GIS footprint') : T('odhad (sekvence)', 'estimate (sequence)')}<br>${T('Prameny', 'Sources')}: ${imageSources}, ${h.n_plan} ${T('náčrt', 'sketch')}, ${h.n_card} ${T('karet', 'cards')}</p><p><a href="${base}cp${cp}/">${T('Stránka domu: prameny a model →', 'House page: sources and model →')}</a></p><button type="button" id="info-close">${T('Zavřít', 'Close')}</button>`;
   document.getElementById('info-close').onclick = () => { info.hidden = true; };
 }
 const ray = new THREE.Raycaster(); let down = null;

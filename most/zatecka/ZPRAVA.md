@@ -18,6 +18,8 @@ V databázi je ulice zdvojená. Oblast „Žatecká“ a oblast „Cs_Armady“ 
 
 U každé z 25 staveb jsme načetli seznam příloh a stáhli jejich soubory, pouze pro čtení. Celkem 210 příloh: 90 fotografií, 85 rubů archivních karet, 25 situačních náčrtů a 10 pohlednic. Obsahově unikátních souborů je 172, protože sdílené snímky, například `cp_1006,1019_001`, visí u obou domů. Každý soubor má v záznamu domu zapsaný kontrolní součet SHA-256.
 
+V přehledu domů a v `data/houses.json` znamená pole `n_photo` celkový počet obrazových příloh (fotografie + pohlednice); pole `n_postcard` uvádí samostatný počet pohlednic.
+
 ### Archivní karty a fotografie
 
 Fotografie a karty pocházejí z dokumentace domů před demolicí starého Mostu; karty používají název ulice Čs. armády, vznikly tedy po roce 1964 a řada z nich popisuje už zbořené sousedy. Pohlednice jsou starší, z doby před první světovou válkou až meziválečné. Karty nesou razítka „Památkové odd. KSPPOP Ústí n. L.“ a „Okresní archiv v Mostě“ a signaturu XI/D; část karet podepsal F. Čermák. Ručně psaný předmět karty říká, co snímek ukazuje, odkud byl pořízen a kdo jsou sousedé. To je hlavní doklad identity domů.
@@ -108,7 +110,7 @@ Každý dům prošel sadou 10 renderů: čtyři hlavní osy, čtyři šikmé poh
 
 - **Revize r3** opravila tyto čtyři domy. Aktuální sestava ulice je 21 domů v r2, 4 v r3 a povrchy ulice v r2.
 
-Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Kontrola se týká geometrie; textury a historická správnost tím potvrzeny nejsou. Zbývají drobnosti v ohybu osy ulice: několik hran chodníku s nekonzistentní orientací a jeden zkroucený čtyřúhelník vozovky.
+Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Tento výsledek se týká modelů domů; v sestavě povrchů ulice zůstávají drobnosti v ohybu osy — několik hran chodníku s nekonzistentní orientací a jeden zkroucený čtyřúhelník vozovky. Kontrola se týká geometrie; textury a historická správnost tím potvrzeny nejsou.
 
 ## Soubory ke stažení
 
@@ -150,7 +152,7 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ## Přehled domů
 
-| Čp. | Strana | Or. č. | Typ | Podlaží | Průčelí × okap (m) | Poloha | Foto / náčrt / karty | Revize | QA |
+| Čp. | Strana | Or. č. | Typ | Podlaží | Průčelí × okap (m) | Poloha | Foto + pohlednice / náčrt / karty | Revize | QA |
 |---|---|---|---|---|---|---|---|---|---|
 | 110 | SZ | 1 | restaurace pivovaru (čp. 110) | 2 | 62,2 × 4,4 | GIS id 1515 | 3 / 1 / 2 | r2 | pass |
 | 437 | SZ | 2 | třípodlažní dům v areálu pivovaru | 3 | 21,0 × 11,4 | GIS id 1506 | 2 / 1 / 1 | r2 | pass |
@@ -456,13 +458,13 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 ### Čp. 1006: nárožní třípodlažní dům PROBST (s 1019)
 
 - Strana JV, orientační číslo 7, poloha: GIS půdorys id 1522; model `houses/cp1006/r2/cp_1006_G_r2.glb` (690 polygonů).
-- Identita: Nárožní část dvojdomu se zkoseným nárožím a balkonem na nároží, obchod PROBST v suterénu/přízemí nároží; boční průčelí do vedlejší ulice 4 osy. Foto cp_1006,1019_001, cp_1006_001 (ulice), cp_1006_001__2, cp_1006_002 (boční/zadní s komínem), plán cp_1006_001 (L půdorys s křídlem).
+- Identita: Nárožní část dvojdomu se zkoseným nárožím a balkonem na nároží, obchod PROBST v suterénu/přízemí nároží; boční průčelí do vedlejší ulice; počet os není v dostupných dokladech jednoznačně doložen. Foto cp_1006,1019_001, cp_1006_001 (ulice), cp_1006_001__2, cp_1006_002 (boční/zadní s komínem), plán cp_1006_001 (L půdorys s křídlem).
 - Použité prameny: cp_1006_001 PLANE; cp_1006,1019_001 PLANE; cp_1006_001, cp_1006_001__2, cp_1006_002, cp_1006,1019_001/002 PHOTO; P-000936.
 - GIS: GIS id 1522 (278 m², 7 vrcholů) – poloha JZ nároží; popisek v GIS „1019“ (rozpor)
 - Rozměry: GIS id 1522 polygon with chamfer 3.85 m and rear wing; archive label 1006 (GIS 1019 - conflict recorded)
 - Průčelí: photos cp_1006,1019_001 (corner with balcony, PROBST), cp_1006_002 (side/rear), cp_1006_001 street
 - Střecha: low hip, skeleton over the L-shaped polygon
-- Kontrola: pass (r2); r2 shodné s r1: skeletonová valba nad L půdorysem, zkosené nároží s balkonem a obloukovým vstupem, boční průčelí 6 os, frontony
+- Kontrola: pass (r2); r2 shodné s r1: skeletonová valba nad L půdorysem, zkosené nároží s balkonem a obloukovým vstupem, boční průčelí se šesti osami v modelu, frontony; historický počet os není v dostupných dokladech jednoznačně doložen
 - Hypotézy: rozpor popisků GIS × archiv – provisional; zkosené nároží v GIS není, modelováno podle foto; výšky odhad; GIS/archive label conflict; shop PROBST in the chamfer simplified to an arched door; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
