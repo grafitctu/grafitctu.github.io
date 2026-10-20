@@ -41,7 +41,7 @@ U všech 26 struktur oblasti Kulová jsme 18. 10. 2026 načetli seznam příloh,
 
 ### Stavební plány
 
-Kulová má na rozdíl od mnoha jiných ulic skutečné výkresy: řezy a půdorysy čp. 261 z roku 1889, plán čp. 259 z roku 1871, popsaný list čp. 264 z roku 1887, projekt průčelí čp. 262 z 90. let 19. století a jeho plán z roku 1940 v měřítku 1:100 se situací ulice, plán čp. 263 z roku 1910, projekt čp. 1608 z roku 1908 a zaměření ze 60. let. Plány dvorních objektů (258, 263) nejsou doklad uličního průčelí. Ručně kreslený plán střech bloku 260–263 dokládá hřebeny a valby.
+Kulová má na rozdíl od mnoha jiných ulic skutečné výkresy: řezy a půdorysy čp. 261 z roku 1889, plány čp. 259 z roku 1874, popsaný list čp. 264 z roku 1887, projekt průčelí čp. 262 z 90. let 19. století a jeho plán z roku 1940 v měřítku 1:100 se situací ulice, plán čp. 263 z října 1940, projekty čp. 1608 z roku 1928 (realizace neověřena) a zaměření ze 60. let. Plány dvorních objektů (258, 263) nejsou doklad uličního průčelí; u 258 je proto celá uliční fasáda hypotéza. Ručně kreslený plán střech bloku 260–263 dokládá hřebeny a valby.
 
 ### Fotografie a karty
 
@@ -85,9 +85,9 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 
 - **Čp. 154** nemá žádný obrazový pramen; celý model je odhad podle GIS půdorysu.
 
-- **Čp. 258.** Barevný FRONT uložený pod číslem 259 zobrazuje tento dům, ale jen vikýř, střechu a jednu řadu oken; přízemí a dveře v něm chybí.
+- **Čp. 258 – celá fasáda je hypotéza.** Žádná fotografie ani plán nezobrazuje uliční průčelí v plné šířce. Model kombinuje vysoký vikýř se třemi okny ze snímku kolem roku 1968, vstup uprostřed podle neúplného půdorysu cp_258_004 a obecné osy oken.
 
-- **Čp. 1608** je modelován podle projektu z roku 1908. Realizaci zachycuje jen vzdálený snímek; vikýře projektu (dva velké se dvěma okny a malý vpravo) se od modelu liší a čekají na samostatnou opravu.
+- **Čp. 1608 – projektová hypotéza.** Model je rekonstrukce podle stavebního projektu z 20. 8. 1928 (parcela 262/2): pět oken nahoře, čtyři dole, dveře vpravo, vikýře 2 + 2 + 1 a čtyři sklepní okénka. Provedení domu ani jeho podoba v 60. letech nejsou ověřeny fotografií.
 
 - **Čp. 262.** Projekt z 90. let 19. století a fotografie se liší v nadokenních motivech; model sleduje fotografii. Osy oken jsou o 0,1 až 0,3 m jinde než v projektu.
 
@@ -114,8 +114,8 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 | 267 | severní | nárožní dům s obchodem ZBRANĚ · STŘELIVO | 3 | 22,5 × 12,2 | r5 | 6 | zatím bez textur |
 | 154 | jižní | dům do Školní (bez pramene) | 2 (hypotéza) | 11,5 × 7,0 | r3 | 2 | zatím bez textur |
 | 259 | jižní | nárožní dům Kulová × Školní | 2 | 12,1 × 7,2 | r6 | 6 | zatím bez textur |
-| 258 | jižní | dům s velkým vikýřem | 2 | 13,2 × 7,0 | r5 | 9 | Codex: zablokováno, podklad FRONT je jen částečný |
-| 1608 | jižní | novostavba podle projektu 1908 | 2 | 12,1 × 7,6 | r7 | 4 | zatím bez textur |
+| 258 | jižní | dům s velkým vikýřem – celá fasáda je hypotéza | 2 | 13,2 × 7,0 | r6 | 9 | Codex: zablokováno, podklad FRONT je jen částečný |
+| 1608 | jižní | dům podle projektu z roku 1928 – projektová hypotéza | 2 | 12,1 × 7,6 | r9 | 4 | zatím bez textur |
 | 1712 | jižní | dům bez záznamu v databázi | 2 (hypotéza) | 11,0 × 7,0 | r2 | 0 | zatím bez textur |
 | 257 | jižní | přízemní dům s valbou | 1 | 19,0 × 4,2 | r4 | 7 | zatím bez textur |
 
@@ -329,8 +329,8 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 ### Čp. 259: nárožní dům Kulová × Školní
 
 - Nárožní dům: vstupní průčelí se čtyřmi osami a dveřmi do Školní, do Kulové bok se třemi osami; břidlicová valba.
-- Prameny: fotografie od schodů (cp_258,259,260,1608_001 a kolorovaná odvozenina), plán 1871 (cp_259_001)
-- Střecha: valba na obou koncích (plán 1871), břidlice (kolorovaná fotografie)
+- Prameny: fotografie od schodů (cp_258,259,260,1608_001 a kolorovaná odvozenina), plán 1874 (cp_259_001)
+- Střecha: valba na obou koncích (plán 1874), břidlice (kolorovaná fotografie)
 - GIS půdorys id 312 (ulice Školní); geometrie revize r6, 155 polygonů.
 - Hypotézy: osy odečteny ze šikmého záběru; výšky odhad; zadní část nemodelována
 
@@ -343,13 +343,15 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 | cp_259_001_mult.png | odvozenina (kolorovaná / FRONT) | a9847da67210 |
 | cp_259_002.jpg | plán / výkres | 2986c96dc2d9 |
 
-### Čp. 258: dům s velkým vikýřem
+### Čp. 258: dům s velkým vikýřem – celá fasáda je hypotéza
 
-- Žlutý dvoupodlažní dům za 259 s velkým středovým sedlovým vikýřem se třemi okny. Barevný FRONT uložený v databázi pod číslem 259 zobrazuje tento dům, ale jen zčásti (vikýř, střecha a jedna řada oken).
-- Prameny: kolorovaná fotografie od schodů, databázový FRONT „259“; plány 258 z let 1888 a 1910 jsou dvorní objekty, ne uliční průčelí
-- Střecha: sedlová, štíty k sousedům
-- GIS půdorys id 313 (ulice Kulová); geometrie revize r5, 283 polygonů.
-- Hypotézy: identita: databázový FRONT „259“ přiřazen tomuto domu podle fotografie (SOL61 jej u 259 odmítla); osy a výšky odhad z fotografie; plány 258 (magazín 1888, dvorní křídlo 1910) nejsou uliční průčelí
+> **Stav rekonstrukce:** Celá uliční fasáda je hypotéza. Žádná fotografie ani plán nezobrazuje průčelí v plné šířce; model kombinuje vikýř se třemi okny ze snímku kolem roku 1968, vstup uprostřed podle neúplného půdorysu (cp_258_004) a obecné osy oken.
+
+- Dvoupodlažní dům mezi 259 a 1608 s vysokým středovým štítovým vikýřem se třemi okny (snímek od schodů kolem roku 1968, dům je za stromem). Uliční fasádu v plné šířce nezobrazuje žádná fotografie ani plán; vstup přibližně uprostřed uliční stěny je odvozen z neúplného půdorysu „Adaptierung des Wohnhauses Nr. 258“ (cp_258_004). Celá fasáda je proto hypotéza, kterou uživatel 20. 10. 2026 schválil jako hypotézu.
+- Prameny: snímek od schodů kolem roku 1968 (cp_258,259,260,1608_001), půdorys cp_258_004 (uliční stěna s pokojem 1 a Vorhausem), GIS půdorys; ostatní plány 258 (cp_258_001–003, 005) kreslí dvorní budovy
+- Střecha: sedlová, štíty k sousedům, středový štítový vikýř (hypotéza)
+- GIS půdorys id 313 (ulice Kulová); geometrie revize r6, 283 polygonů.
+- Hypotézy: identita: databázový FRONT „259“ přiřazen tomuto domu podle fotografie (SOL61 jej u 259 odmítla); osy a výšky odhad z fotografie; plány 258 (magazín 1888, dvorní křídlo 1910) nejsou uliční průčelí; 20.10.2026 d: celá uliční fasáda je hypotéza schválená uživatelem jako hypotéza (ne jako doložený stav); okna v přízemí i patře jsou generické osy; vikýř a vstup s nízkou mírou doložení
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -363,13 +365,15 @@ Pracovní složky: F:\MOST\output\kulova_5houses_claude_G_2026-10-16\ (domy), ku
 | cp_258_004.jpg | plán / výkres | b7646e04f54f |
 | cp_258_005.jpg | plán / výkres | 5d0b81c7b07c |
 
-### Čp. 1608: novostavba podle projektu 1908
+### Čp. 1608: dům podle projektu z roku 1928 – projektová hypotéza
 
-- Dům podle projektu „Plan über Erbauung eines Wohnhauses“ z roku 1908 (Bauparzelle 1608 ½, Kugelgasse). Na fotografii od schodů je jen vzdáleně v pozadí za 258.
-- Prameny: projekt 1908 (cp_1608_002: pohled, řez A-B, krov), fotografie od schodů
-- Střecha: podle projektu: plná přední plocha, hřeben souběžně s ulicí, štítové konce, dva komíny; zadní křídlo s valbou
-- GIS půdorys id 2052 (ulice Kulová); geometrie revize r7, 275 polygonů.
-- Hypotézy: členění z projektu 1908, realizace fotograficky nepotvrzena v detailu; výšky z plánu odhadem; roof r6: topology from the 1908 design sheet (front rectangle, ridge parallel to the street, gable ends); heights unchanged estimates; dormers differ from the 1908 Ansicht (2+2+1 windows) – open blocker
+> **Stav rekonstrukce:** Rekonstrukce podle stavebního projektu z 20. 8. 1928 (parcela 262/2). Provedení domu ani jeho podoba v 60. letech nejsou ověřeny fotografií – jde o projektovou hypotézu.
+
+- Rekonstrukce podle stavebního projektu „Plan über Erbauung eines Wohnhauses für Herrn Karl und Frau Helena Sticka, auf Bauparzelle No 262/2, Kugelgasse“ z 20. 8. 1928 (starší varianta 4. 3. 1928). Dům stál podle Lageplanu z října 1940, ale jeho provedení ani podoba v 60. letech nejsou ověřeny fotografií – na snímku od schodů je jen nečitelně za 258. Model je proto výslovně projektová hypotéza (rozhodnutí uživatele 20. 10. 2026).
+- Prameny: projekty cp_1608_001 (4. 3. 1928) a cp_1608_002 (20. 8. 1928: pohled, vikýře 2 + 2 + 1, sklepní okénka), Lageplan 1940 na listu cp_263_003
+- Střecha: podle projektu: hřeben souběžně s ulicí, štítové konce, dva štítové vikýře po dvou oknech a malý vikýř, dva komíny; zadní křídlo s valbou
+- GIS půdorys id 2052 (ulice Kulová); geometrie revize r9, 361 polygonů.
+- Hypotézy: výšky z plánu odhadem; 20.10.2026: realizace podle projektu 20. 8. 1928 není ověřena fotografií (výslovně projekt); šířka 12,14 m z GIS proti 13,00 m fronty parcely v situaci 1928; 20.10.2026 pass 2: 4 sklepní okénka v soklu pohledu 1928 nemodelována (projekt; realizace neověřena); 20.10.2026 d: sklepní okénka podle projektu; výška nad terénem zjednodušena na vodorovnou ulici (v projektu terén klesá doleva ~0,5 m)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
