@@ -2,9 +2,10 @@
 const fs=require('node:fs'),path=require('node:path');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nav=(catalog,lang,prefix,current)=>`<nav class="subject-nav" aria-label="${lang==='cs'?'Přehledy předmětů':'Course overviews'}">${catalog.courses.map(c=>`<a data-subject="${c.id}" href="${prefix+c.id+'/'+(lang==='en'?'en/':'')}"${current===c.id?' aria-current="page"':''}>${esc(c.id.toUpperCase())}</a>`).join('')}</nav>`;
-module.exports=function buildSubjects(base,catalog,lang,t,cell){
+module.exports=function buildSubjects(base,catalog,lang,sharedText,cell){
  const en=lang==='en',prefix=en?'../../':'../';
  for(const course of catalog.courses){
+  const t={...sharedText,lang:course.language?.[lang]||sharedText.lang};
   const items=catalog.rows.flatMap(row=>[].concat(row[course.id]||[]).map(item=>({row:row.label,item})));
   const back=en?'All courses':'Všechny předměty',route=course.id+'/'+(en?'en/':''),title=course.code+' · '+course.title[lang];
   const official=course.official||(course.id==='vhs'?'https://courses.fit.cvut.cz/BI-VHS/':null);
