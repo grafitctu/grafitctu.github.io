@@ -1,0 +1,2083 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="ROZ · 04 · Strojové učení · S komentářem. Michal Haindl, 2023–2024. Věrný vektorový web a samostatné studijní doplňky GRAFIT."><title>ROZ · 04 · Strojové učení · S komentářem</title><script>(()=>{let s;try{s=localStorage.getItem('roz-theme')}catch{}document.documentElement.dataset.theme=['light','dark'].includes(s)?s:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')})();</script><link rel="stylesheet" href="../shared/presentation.css"><script src="../shared/presentation.js" defer></script><script src="../shared/extras.js" defer></script><script src="../shared/models.js" defer></script><style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+</head><body class="grafit-toolbar-return"><header class="toolbar">
+<a id="grafit-lecture-return" class="grafit-lecture-return" href="../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a><a class="brand" id="grafit-course-link" href="../" aria-label="Přehled přednášek ROZ" data-subject="roz">ROZ <span>/ 04</span></a><span class="edition">S komentářem</span><div class="variant-switch"><a href="./">Původní snímky</a><a href="commented.html" aria-current="page">S komentářem</a></div><nav aria-label="Nástroje prezentace"><button id="contents" aria-haspopup="dialog">Obsah</button><button id="reading" aria-pressed="false">Čtení</button><button id="notes-toggle" aria-haspopup="dialog">Poznámky</button><button id="print-button">Tisk</button><a href="original.pdf">PDF</a><a class="offline-link" href="offline.zip">Offline ZIP</a><button id="theme" aria-label="Tmavý režim" aria-pressed="false">◐</button><button id="fullscreen" aria-label="Celá obrazovka (F)">⛶</button></nav><span id="chapter"></span></header><main id="deck" aria-label="ROZ · 04 · Strojové učení · S komentářem"><section class="slide intro" id="slide-1" data-section="Doplněk GRAFIT" aria-label="Zobrazení 1: Strojové učení"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Strojové učení</h2><p class="eyebrow">NI-ROZ · 04 · Michal Haindl</p><p class="lead">Rozlišit učení parametrů, volbu modelu a nezávislé hodnocení.</p><p>Podklad <strong>2023–2024</strong> · 23 stran PDF · 92 samostatných zobrazení včetně postupných odhalení.</p><p class="source-legal">Původní snímky zachovávají vektorovou grafiku, ilustrace i vzorce. Textový výpis je pomocný strojově obnovený přepis, nikoli ručně ověřená sazba; rozhoduje původní snímek a PDF. Čísla zobrazení se mohou lišit od autorova číslování snímků.</p><p class="callout">Česká vysvětlení, příklady, otázky a model jsou <strong>doplněk GRAFIT</strong>, nikoli text ani autorizovaný nový výklad Michala Haindla. Původní anglická přednáška následuje za tímto studijním úvodem.</p><p class="actions"><a href="source-manifest.json">Mapa snímků a SHA-256</a><a href="https://courses.fit.cvut.cz/NI-ROZ/lectures/current.html">Autorský rozcestník FIT ↗</a></p><p class="muted">Historické organizační pokyny a projektové termíny z let 2023–2024 nevyjadřují aktuální zadání. Část 10 v aktuálním seznamu není; starší archiv má jiné číslování.</p></div></section><section class="slide companion" id="slide-2" data-section="Doplněk GRAFIT" aria-label="Zobrazení 2: Co se z dat učí"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Co se z dat učí</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Učení s učitelem využívá vstupy a cílové odpovědi. Učení bez učitele hledá strukturu bez těchto třídních štítků. Rozdíl není v konkrétním programovacím jazyce, ale v dostupné informaci a cíli úlohy.</p></div></section><section class="slide companion" id="slide-3" data-section="Doplněk GRAFIT" aria-label="Zobrazení 3: Model a jeho nastavení"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Model a jeho nastavení</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Parametry se odhadují v trénování, hyperparametry se vybírají validačním postupem. I výběr příznaků, normalizace a rozhodovací práh mohou být součástí učení a musejí respektovat hranici mezi tréninkem a testem.</p></div></section><section class="slide companion" id="slide-4" data-section="Doplněk GRAFIT" aria-label="Zobrazení 4: Přeučení"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Přeučení</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Složitější model může snížit trénovací chybu a přitom zhoršit chybu na nových datech. Regularizace, vhodná kapacita a dostatek reprezentativních dat pomáhají, ale neposkytují automatickou záruku přenosu do jiné domény.</p></div></section><section class="slide companion" id="slide-5" data-section="Doplněk GRAFIT" aria-label="Zobrazení 5: Učení není důkaz kvality"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Učení není důkaz kvality</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Nízká optimalizační ztráta sama neprokazuje dobrou klasifikaci. Výsledky závisejí na rozdělení dat, metrice, rozdělení do sad i opakování experimentu. Test použijeme až pro závěrečný odhad výkonu vybraného postupu.</p></div></section><section class="slide companion" id="slide-6" data-section="Doplněk GRAFIT" aria-label="Zobrazení 6: Normalizace jako únik informace"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Normalizace jako únik informace</h2><p class="eyebrow">Řešený syntetický příklad · GRAFIT</p><p class="lead">Průměr a směrodatnou odchylku pro standardizaci spočítáme pouze z trénovací části. Stejnou transformaci potom použijeme na validaci a test. Při křížové validaci se odhad transformace opakuje uvnitř každého trénovacího foldu.</p><aside class="callout"><strong>Na co dát pozor</strong><p>Opakované ladění podle testovacího výsledku mění test v další validační sadu. Stejné osoby či téměř duplicitní vzorky ve více sadách mohou hodnocení výrazně zkreslit.</p></aside></div></section><section class="slide companion" id="slide-7" data-section="Doplněk GRAFIT" aria-label="Zobrazení 7: Minimum s kvadratickou penalizací"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Minimum s kvadratickou penalizací</h2><p>Interaktivní didaktický doplněk GRAFIT · syntetické hodnoty.</p><div class="lab" data-model="regularization"><div class="lab-inputs"><label for="model-lambda">Regularizace λ<input id="model-lambda" name="lambda" type="number" min="0" max="10" step="0.1" value="0"></label><button type="button" data-reset-model>Obnovit hodnoty</button></div><canvas width="700" height="300" role="img" aria-label="Grafický doprovod výpočtu; stejné výsledky a omezení jsou v textu pod grafem."></canvas><output aria-live="polite"></output></div><p class="muted">Ukázka izoluje jeden princip. Není benchmarkem, měřením na skutečných datech ani plnou implementací příslušného učícího algoritmu.</p></div></section><section class="slide companion" id="slide-8" data-section="Doplněk GRAFIT" aria-label="Zobrazení 8: Zkuste si odpovědět"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Zkuste si odpovědět</h2><p class="eyebrow">Kontrolní otázka · GRAFIT</p><p class="lead">Můžeme standardizaci před křížovou validací naučit na všech vzorcích?</p><details class="quiz-answer"><summary>Zobrazit vysvětlení</summary><p>Ne. Transformace se učí uvnitř každého trénovacího foldu a použije se na jeho validační část.</p></details><p><a href="#slide-9">Pokračovat původní přednáškou →</a></p></div></section><section class="slide source" id="slide-9" data-section="Původní přednáška" aria-label="Zobrazení 9: Pattern Recognition IV"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition IV</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition IV. PDF strana 1, kvadrant 1."><title>Pattern Recognition IV</title><defs><clipPath id="panel-4-1"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-1)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 1</span><span class="pill">autor: 1/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">Outline
+Pattern Recognition I⟦symbol⟧
+Machine Learning
+Michal Haindl
+Faculty of Information Technology,KTI
+Czech Technical University in Prague
+/nstitute of/nformation Theoryand Automation
+Czech AcademyofSciences Prague,Czechia
+http://ro.utia.cz/
+MI/MIE-ROZ2023-2024
+Haindl
+MI-ROZ- 04
+1/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-10" data-section="Původní přednáška" aria-label="Zobrazení 10: Outline"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Outline</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Outline. PDF strana 1, kvadrant 2."><title>Outline</title><defs><clipPath id="panel-4-2"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-2)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 2</span><span class="pill">autor: 2/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">Outline
+Outline
+1 Machine Learning
+Transfer Learning
+Learning Fairness
+2 Statistical Learning
+Convergence Concepts
+Estimator Properties
+3 Supervised Learning
+Moment Method
+Minimum χ2
+Maximum Likelihood
+Bayesian Estimation
+4 Nonparametric Distributions
+Histogram Approach
+Parzen Estimation
+Haindl
+MI-ROZ- 04
+2/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-11" data-section="Původní přednáška" aria-label="Zobrazení 11: Outline"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Outline</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Outline. PDF strana 1, kvadrant 3."><title>Outline</title><defs><clipPath id="panel-4-3"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-3)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 3</span><span class="pill">autor: 3/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">Outline
+Outline
+5 Unsupervised Learning
+6 EM Algorithm
+7 Supervised Versus Unsupervised Learning
+8 Training Set Selection
+Haindl
+MI-ROZ- 04
+3/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-12" data-section="Původní přednáška" aria-label="Zobrazení 12: Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Machine Learning. PDF strana 1, kvadrant 4."><title>Machine Learning</title><defs><clipPath id="panel-4-4"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-4)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 4</span><span class="pill">autor: 4/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Machine Learning
+Machine Learning
+Field of study that gives computers the ability to learn
+without being explicitly programmed. (A. Samual 1959)
+Building a model from an example training set of input
+observations in order to make data-driven predictions or
+decisions.
+Haindl
+MI-ROZ- 04
+4/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-13" data-section="Původní přednáška" aria-label="Zobrazení 13: Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Machine Learning. PDF strana 2, kvadrant 1."><title>Machine Learning</title><defs><clipPath id="panel-4-5"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-5)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 1</span><span class="pill">autor: 4/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Machine Learning
+Machine Learning
+Field of study that gives computers the ability to learn
+without being explicitly programmed. (A. Samual 1959)
+Building a model from an example training set of input
+observations in order to make data-driven predictions or
+decisions.
+Haindl
+MI-ROZ- 04
+4/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-14" data-section="Původní přednáška" aria-label="Zobrazení 14: Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Machine Learning. PDF strana 2, kvadrant 2."><title>Machine Learning</title><defs><clipPath id="panel-4-6"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-6)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 2</span><span class="pill">autor: 4/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Machine Learning
+Machine Learning
+Field of study that gives computers the ability to learn
+without being explicitly programmed. (A. Samual 1959)
+Building a model from an example training set of input
+observations in order to make data-driven predictions or
+decisions.
+mathematical optimization /data mining /statistical learning /
+computational learning /transfer learning /multi-task learning /
+artificial intelligence...
+Haindl
+MI-ROZ- 04
+4/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-15" data-section="Původní přednáška" aria-label="Zobrazení 15: Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Machine Learning. PDF strana 2, kvadrant 3."><title>Machine Learning</title><defs><clipPath id="panel-4-7"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-7)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 3</span><span class="pill">autor: 4/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Machine Learning
+deep learning deep NN learning
+statistical learning random variable /constants /models
+deterministic learning parameters in deterministic models
+transfer learning learning on one problem and applying it to a
+different but related problem
+multi-task learning multiple learning tasks are solved at the same
+time,while exploiting commonalities and differences
+across tasks
+federated learning bringing code to the sensitive data owners and
+only sharing intermediate model training updates
+among them
+Haindl
+MI-ROZ- 04
+4/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-16" data-section="Původní přednáška" aria-label="Zobrazení 16: Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Machine Learning. PDF strana 2, kvadrant 4."><title>Machine Learning</title><defs><clipPath id="panel-4-8"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-8)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 4</span><span class="pill">autor: 4/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Machine Learning
+current methods rely on
+⊖ huge amounts of training data
+⊖ data are subject to measurement errors
+⊖ vast computational resources
+⊖ time-consuming trial and error methodology
+⊖ learned results are difficult to generalize to related
+problems
+⊖ cannot be leveraged to learn more complex concept
+⊖ merit function is often multimodal ⇒ several minima
+Haindl
+MI-ROZ- 04
+4/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-17" data-section="Původní přednáška" aria-label="Zobrazení 17: Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Machine Learning. PDF strana 3, kvadrant 1."><title>Machine Learning</title><defs><clipPath id="panel-4-9"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-9)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 1</span><span class="pill">autor: 4/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Machine Learning
+ML should:
+⟦symbol⟧not be a black box
+⟦symbol⟧computationally efficient
+⟦symbol⟧reduce the human involvement (user-specific
+parameters,model structure,distance metric ...)
+⟦symbol⟧transparent
+⟦symbol⟧interpretable (based on a physical principle)
+⟦symbol⟧understandable
+⟦symbol⟧adaptive
+Haindl
+MI-ROZ- 04
+4/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-18" data-section="Původní přednáška" aria-label="Zobrazení 18: Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Machine Learning. PDF strana 3, kvadrant 2."><title>Machine Learning</title><defs><clipPath id="panel-4-10"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-10)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 2</span><span class="pill">autor: 6/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Machine Learning
+Let X and Ω be the input and output spaces,respectively.
+T ={(X1,ω1),(X2,ω2),...,(Xn,ωn)}be the training data,f ∈ℋ
+represents the objective function with ℋ being its hypothesis
+space,l(.,.)a specific loss function,then ML:
+f*=argmin
+f∈ℋ
+1
+n
+n
+Σ
+i=1
+l(f(Xi),ωi)
+Haindl
+MI-ROZ- 04
+6/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-19" data-section="Původní přednáška" aria-label="Zobrazení 19: Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Machine Learning. PDF strana 3, kvadrant 3."><title>Machine Learning</title><defs><clipPath id="panel-4-11"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-11)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 3</span><span class="pill">autor: 6/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Machine Learning
+Maximum Likelihood:
+θ*=argmin
+θ L(θ|X1,...,Xn)=argmin
+θ f
+θ(X1,...,Xn)
+Haindl
+MI-ROZ- 04
+6/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-20" data-section="Původní přednáška" aria-label="Zobrazení 20: Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Machine Learning. PDF strana 3, kvadrant 4."><title>Machine Learning</title><defs><clipPath id="panel-4-12"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-12)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 4</span><span class="pill">autor: 6/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Machine Learning
+Structural Risk Minimization:
+f*=argmin
+f∈ℋ
+1
+n
+n
+Σ
+i=1
+l(f(Xi),ωi)+λR(f)
+Haindl
+MI-ROZ- 04
+6/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-21" data-section="Původní přednáška" aria-label="Zobrazení 21: Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Machine Learning. PDF strana 4, kvadrant 1."><title>Machine Learning</title><defs><clipPath id="panel-4-13"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-13)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 1</span><span class="pill">autor: 6/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Machine Learning
+Statistical ML:
+Ptrain(X,Ω)=Ptest(X,Ω)
+in reality often (→ transfer learning)
+Ptrain(X,Ω)/
+=Ptest(X,Ω)
+Haindl
+MI-ROZ- 04
+6/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-22" data-section="Původní přednáška" aria-label="Zobrazení 22: Parametric /Non-parametric Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Parametric /Non-parametric Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Parametric /Non-parametric Learning. PDF strana 4, kvadrant 2."><title>Parametric /Non-parametric Learning</title><defs><clipPath id="panel-4-14"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-14)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 2</span><span class="pill">autor: 7/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Parametric /Non-parametric Learning
+Parametric (model-based)learning:
+1 assumption about the functional form f(X,θ)
+2 θ parameters estimation from T
+⊕ simplifies estimation f(X,θ)to parameters θ
+⊖ if f(.)is very different from true ˜
+f(.)⇒ poor
+estimate
+Haindl
+MI-ROZ- 04
+7/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-23" data-section="Původní přednáška" aria-label="Zobrazení 23: Parametric /Non-parametric Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Parametric /Non-parametric Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Parametric /Non-parametric Learning. PDF strana 4, kvadrant 3."><title>Parametric /Non-parametric Learning</title><defs><clipPath id="panel-4-15"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-15)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 3</span><span class="pill">autor: 7/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+Parametric /Non-parametric Learning
+Non-parametric learning:
+1 no assumption about the functional form f(X,θ)
+2 f(.)estimation from T
+⊕ potential to accurately fit a wider range of possible
+f(.)
+⊖ do not reduce f(X,θ)estimation to small number of
+parameters ⇒ much larger
+card{Tnon−par}≫ card{Tpar}is required
+Haindl
+MI-ROZ- 04
+7/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-24" data-section="Původní přednáška" aria-label="Zobrazení 24: Statistical Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Statistical Learning. PDF strana 4, kvadrant 4."><title>Statistical Learning</title><defs><clipPath id="panel-4-16"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-16)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 4</span><span class="pill">autor: 10/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Statistical Learning
+Frequentist (Classical)Approach
+Parameters are fixed but unknown constants.
+Probabilities are interpreted as long-run relative frequency.
+Statistical procedures are judged on the long run over an
+infinite number of hypothetical repetitions of the experiment.
+Haindl
+MI-ROZ- 04
+10/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-25" data-section="Původní přednáška" aria-label="Zobrazení 25: Statistical Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Statistical Learning. PDF strana 5, kvadrant 1."><title>Statistical Learning</title><defs><clipPath id="panel-4-17"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-17)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 1</span><span class="pill">autor: 10/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Statistical Learning
+Frequentist (Classical)Approach
+Parameters are fixed but unknown constants.
+Probabilities are interpreted as long-run relative frequency.
+Statistical procedures are judged on the long run over an
+infinite number of hypothetical repetitions of the experiment.
+Bayesian Approach
+Parameters are random variables.
+Probability rules used for their inferences.
+Probability statements - degree of belief.
+Prior distribution &amp;observed data → revised belief.
+Haindl
+MI-ROZ- 04
+10/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-26" data-section="Původní přednáška" aria-label="Zobrazení 26: Statistical Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Statistical Learning. PDF strana 5, kvadrant 2."><title>Statistical Learning</title><defs><clipPath id="panel-4-18"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-18)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 2</span><span class="pill">autor: 10/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Statistical Learning
+optimal Bayesian classifier design P(ωi),p(X|ωi),K
+1 P(ωi),p(X|ωi),K completely known
+2 P(ωi),Ti,K known, p(X|ωi)known up to θi
+3 P(ωi),K,Ta
+i ,Tb known, p(X|ωi)known up to θi
+4 P(ωi),T,K known, p(X|ωi)known up to θi
+5 P(ωi),T known, p(X|ωi)known up to θi
+6 P(ωi),p(X|ωi),K completely unknown
+Haindl
+MI-ROZ- 04
+10/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-27" data-section="Původní přednáška" aria-label="Zobrazení 27: Statistical Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Statistical Learning. PDF strana 5, kvadrant 3."><title>Statistical Learning</title><defs><clipPath id="panel-4-19"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-19)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 3</span><span class="pill">autor: 10/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Statistical Learning
+optimal Bayesian classifier design P(ωi),p(X|ωi),K
+1 P(ωi),p(X|ωi),K completely known
+no learning
+2 P(ωi),Ti,K known, p(X|ωi)known up to θi
+supervised
+3 P(ωi),K,Ta
+i ,Tb known, p(X|ωi)known up to θi semi-sup.
+4 P(ωi),T,K known, p(X|ωi)known up to θi
+unsupervised
+5 P(ωi),T known, p(X|ωi)known up to θi
+unsupervised
+6 P(ωi),p(X|ωi),K completely unknown
+non-parametric
+unsupervised
+Haindl
+MI-ROZ- 04
+10/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-28" data-section="Původní přednáška" aria-label="Zobrazení 28: Identifiability"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Identifiability</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Identifiability. PDF strana 5, kvadrant 4."><title>Identifiability</title><defs><clipPath id="panel-4-20"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-20)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 4</span><span class="pill">autor: 11/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Identifiability
+∃⟦symbol⟧solution if p(X|θ)is identifiable
+pdf p(X |θ)is identifiable if θ /
+=´
+θ implies ∃X :p(X|θ)/
+=p(X|´
+θ)
+p(X |θ)not identifiable → unique θ cannot be recovered
+⊕most continuous pdf (Gaussian)
+⊖discrete pdf mixtures
+⊖too many components &amp;few samples
+⊙unsupervised learning is principally impossible for not identifiable
+pdf → distinct classifications for identical data
+⊙no problem in modeling
+Haindl
+MI-ROZ- 04
+11/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-29" data-section="Původní přednáška" aria-label="Zobrazení 29: Statistical Parameter Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Parameter Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Statistical Parameter Estimation. PDF strana 6, kvadrant 1."><title>Statistical Parameter Estimation</title><defs><clipPath id="panel-4-21"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-21)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 1</span><span class="pill">autor: 12/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Statistical Parameter Estimation
+histogram method
+moment method
+minimum χ2
+maximum (pseudo-)likelihood
+parameters unknown fixed quantities
+maximize the probability of obtaining samples actually
+observed
+Bayesian estimation
+parameters random variables
+prior distribution
+posterior density
+Haindl
+MI-ROZ- 04
+12/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-30" data-section="Původní přednáška" aria-label="Zobrazení 30: Statistical Parameter Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Parameter Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Statistical Parameter Estimation. PDF strana 6, kvadrant 2."><title>Statistical Parameter Estimation</title><defs><clipPath id="panel-4-22"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-22)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 2</span><span class="pill">autor: 12/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Statistical Parameter Estimation
+histogram method
+moment method
+minimum χ2
+maximum (pseudo-)likelihood
+parameters unknown fixed quantities
+maximize the probability of obtaining samples actually
+observed
+Bayesian estimation
+parameters random variables
+prior distribution
+posterior density
+Haindl
+MI-ROZ- 04
+12/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-31" data-section="Původní přednáška" aria-label="Zobrazení 31: Statistical Parameter Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Parameter Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Statistical Parameter Estimation. PDF strana 6, kvadrant 3."><title>Statistical Parameter Estimation</title><defs><clipPath id="panel-4-23"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-23)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 3</span><span class="pill">autor: 12/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Statistical Parameter Estimation
+histogram method
+moment method
+minimum χ2
+maximum (pseudo-)likelihood
+parameters unknown fixed quantities
+maximize the probability of obtaining samples actually
+observed
+Bayesian estimation
+parameters random variables
+prior distribution
+posterior density
+Haindl
+MI-ROZ- 04
+12/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-32" data-section="Původní přednáška" aria-label="Zobrazení 32: Statistical Parameter Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Parameter Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Statistical Parameter Estimation. PDF strana 6, kvadrant 4."><title>Statistical Parameter Estimation</title><defs><clipPath id="panel-4-24"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-24)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 4</span><span class="pill">autor: 12/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Statistical Parameter Estimation
+histogram method
+moment method
+minimum χ2
+maximum (pseudo-)likelihood
+parameters unknown fixed quantities
+maximize the probability of obtaining samples actually
+observed
+Bayesian estimation
+parameters random variables
+prior distribution
+posterior density
+Haindl
+MI-ROZ- 04
+12/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-33" data-section="Původní přednáška" aria-label="Zobrazení 33: Statistical Parameter Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Parameter Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Statistical Parameter Estimation. PDF strana 7, kvadrant 1."><title>Statistical Parameter Estimation</title><defs><clipPath id="panel-4-25"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-25)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 1</span><span class="pill">autor: 12/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Statistical Parameter Estimation
+histogram method
+moment method
+minimum χ2
+maximum (pseudo-)likelihood
+parameters unknown fixed quantities
+maximize the probability of obtaining samples actually
+observed
+Bayesian estimation
+parameters random variables
+prior distribution
+posterior density
+Haindl
+MI-ROZ- 04
+12/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-34" data-section="Původní přednáška" aria-label="Zobrazení 34: Estimator Properties -biasness"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -biasness</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -biasness. PDF strana 7, kvadrant 2."><title>Estimator Properties -biasness</title><defs><clipPath id="panel-4-26"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-26)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 2</span><span class="pill">autor: 15/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -biasness
+frequentist criteria (in Bayesian statistics as a pre-posterior
+analysis)
+unbiased ⟦symbol⟧
+θ if
+E{⟦symbol⟧
+θ}=
+⟦symbol⟧
+...
+⟦symbol⟧
+⟦symbol⟧
+θp(X1,...,Xn|θ)dX1 ...dXn =θ
+bias function b(θ)=E{⟦symbol⟧
+θ}−θ
+asymptotically unbiased ⟦symbol⟧
+θ if
+lim
+n→∞ E{⟦symbol⟧
+θ}=θ
+unbiased ⟦symbol⟧
+θ ⇒ asymptotically unbiased
+asymptotically unbiased ⟦symbol⟧
+θ /
+⇒ unbiased
+consistent ⟦symbol⟧
+θ if
+lim
+n→∞
+⟦symbol⟧
+θ(X1,...,Xn)→ θ
+(convergence in probability)
+Haindl
+MI-ROZ- 04
+15/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-35" data-section="Původní přednáška" aria-label="Zobrazení 35: Estimator Properties -biasness"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -biasness</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -biasness. PDF strana 7, kvadrant 3."><title>Estimator Properties -biasness</title><defs><clipPath id="panel-4-27"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-27)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 3</span><span class="pill">autor: 15/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -biasness
+unbiased ⟦symbol⟧
+θ if
+E{⟦symbol⟧
+θ}=
+⟦symbol⟧
+...
+⟦symbol⟧
+⟦symbol⟧
+θp(X1,...,Xn|θ)dX1 ...dXn =θ
+bias function b(θ)=E{⟦symbol⟧
+θ}−θ
+asymptotically unbiased ⟦symbol⟧
+θ if
+lim
+n→∞ E{⟦symbol⟧
+θ}=θ
+unbiased ⟦symbol⟧
+θ ⇒ asymptotically unbiased
+asymptotically unbiased ⟦symbol⟧
+θ /
+⇒ unbiased
+consistent ⟦symbol⟧
+θ if
+lim
+n→∞
+⟦symbol⟧
+θ(X1,...,Xn)→ θ
+(convergence in probability)
+Haindl
+MI-ROZ- 04
+15/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-36" data-section="Původní přednáška" aria-label="Zobrazení 36: Estimator Properties -biasness ,consistency"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -biasness ,consistency</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -biasness ,consistency. PDF strana 7, kvadrant 4."><title>Estimator Properties -biasness ,consistency</title><defs><clipPath id="panel-4-28"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-28)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 4</span><span class="pill">autor: 15/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -biasness ,consistency
+unbiased ⟦symbol⟧
+θ if
+E{⟦symbol⟧
+θ}=
+⟦symbol⟧
+...
+⟦symbol⟧
+⟦symbol⟧
+θp(X1,...,Xn|θ)dX1 ...dXn =θ
+bias function b(θ)=E{⟦symbol⟧
+θ}−θ
+asymptotically unbiased ⟦symbol⟧
+θ if
+lim
+n→∞ E{⟦symbol⟧
+θ}=θ
+unbiased ⟦symbol⟧
+θ ⇒ asymptotically unbiased
+asymptotically unbiased ⟦symbol⟧
+θ /
+⇒ unbiased
+consistent ⟦symbol⟧
+θ if
+lim
+n→∞
+⟦symbol⟧
+θ(X1,...,Xn)→ θ
+(convergence in probability)
+Haindl
+MI-ROZ- 04
+15/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-37" data-section="Původní přednáška" aria-label="Zobrazení 37: Estimator Properties -efficiency"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -efficiency</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -efficiency. PDF strana 8, kvadrant 1."><title>Estimator Properties -efficiency</title><defs><clipPath id="panel-4-29"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-29)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 1</span><span class="pill">autor: 16/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -efficiency
+efficient ⟦symbol⟧
+θ if
+1 is unbiased
+2 E{(⟦symbol⟧
+θ −θ)
+2}≥
+1
+σ2
+n(θ) efficient if E{(⟦symbol⟧
+θ −θ)
+2}=
+1
+σ2
+n(θ)
+σ2
+n(θ) = E
+⟦symbol⟧⟦symbol⟧∂
+∂θ logp(X1,...,Xn |θ)
+⟦symbol⟧2⟦symbol⟧
+Fisher⟦symbol⟧s information
+= −E
+⟦symbol⟧∂2
+∂θ2 logp(X1,...,Xn |θ)
+⟦symbol⟧
+(inv.of Cramer-Rao lower bound)
+Haindl
+MI-ROZ- 04
+16/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-38" data-section="Původní přednáška" aria-label="Zobrazení 38: Estimator Properties -sufficiency"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -sufficiency</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -sufficiency. PDF strana 8, kvadrant 2."><title>Estimator Properties -sufficiency</title><defs><clipPath id="panel-4-30"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-30)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 2</span><span class="pill">autor: 17/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -sufficiency
+sufficient ⟦symbol⟧
+θ if for any other ˜
+θ
+p(˜
+θ|⟦symbol⟧
+θ,θ)=p(˜
+θ|⟦symbol⟧
+θ)
+i.e.
+p(θ|⟦symbol⟧
+θ,˜
+θ)=p(θ|⟦symbol⟧
+θ)
+Haindl
+MI-ROZ- 04
+17/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-39" data-section="Původní přednáška" aria-label="Zobrazení 39: Estimator Properties -sufficiency"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -sufficiency</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -sufficiency. PDF strana 8, kvadrant 3."><title>Estimator Properties -sufficiency</title><defs><clipPath id="panel-4-31"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-31)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 3</span><span class="pill">autor: 17/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -sufficiency
+sufficient ⟦symbol⟧
+θ if for any other ˜
+θ
+p(˜
+θ|⟦symbol⟧
+θ,θ)=p(˜
+θ|⟦symbol⟧
+θ)
+i.e.
+p(θ|⟦symbol⟧
+θ,˜
+θ)=p(θ|⟦symbol⟧
+θ)
+sufficient statistic s- a function of samples containing all the
+information necessary for θ estimation i.e. p(θ|s,T)=p(θ|s)
+Haindl
+MI-ROZ- 04
+17/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-40" data-section="Původní přednáška" aria-label="Zobrazení 40: Estimator Properties -Bias x Precision"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -Bias x Precision</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -Bias x Precision. PDF strana 8, kvadrant 4."><title>Estimator Properties -Bias x Precision</title><defs><clipPath id="panel-4-32"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-32)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 4</span><span class="pill">autor: 18/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -Bias x Precision
+low bias,high precision
+Haindl
+MI-ROZ- 04
+18/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-41" data-section="Původní přednáška" aria-label="Zobrazení 41: Estimator Properties -Bias x Precision"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -Bias x Precision</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -Bias x Precision. PDF strana 9, kvadrant 1."><title>Estimator Properties -Bias x Precision</title><defs><clipPath id="panel-4-33"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-33)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 1</span><span class="pill">autor: 18/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -Bias x Precision
+low bias,high precision high bias,low variance
+Haindl
+MI-ROZ- 04
+18/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-42" data-section="Původní přednáška" aria-label="Zobrazení 42: Estimator Properties -Bias x Precision"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -Bias x Precision</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -Bias x Precision. PDF strana 9, kvadrant 2."><title>Estimator Properties -Bias x Precision</title><defs><clipPath id="panel-4-34"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-34)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 2</span><span class="pill">autor: 18/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -Bias x Precision
+low bias,high precision high bias,low variance
+low bias,high variance
+Haindl
+MI-ROZ- 04
+18/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-43" data-section="Původní přednáška" aria-label="Zobrazení 43: Estimator Properties -Bias x Precision"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -Bias x Precision</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -Bias x Precision. PDF strana 9, kvadrant 3."><title>Estimator Properties -Bias x Precision</title><defs><clipPath id="panel-4-35"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-35)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 3</span><span class="pill">autor: 18/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -Bias x Precision
+low bias,high precision high bias,low variance
+low bias,high variance high bias and variance
+Haindl
+MI-ROZ- 04
+18/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-44" data-section="Původní přednáška" aria-label="Zobrazení 44: Estimator Properties -Bias x Precision"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Estimator Properties -Bias x Precision</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Estimator Properties -Bias x Precision. PDF strana 9, kvadrant 4."><title>Estimator Properties -Bias x Precision</title><defs><clipPath id="panel-4-36"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-36)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 4</span><span class="pill">autor: 18/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+⟦symbol⟧P
+Estimator Properties -Bias x Precision
+low bias,high precision high bias,low variance
+low bias,high variance high bias and variance
+high precision (low variance),low bias (high accuracy)
+Haindl
+MI-ROZ- 04
+18/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-45" data-section="Původní přednáška" aria-label="Zobrazení 45: Supervised Learning-Moment Method"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Supervised Learning-Moment Method</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Supervised Learning-Moment Method. PDF strana 10, kvadrant 1."><title>Supervised Learning-Moment Method</title><defs><clipPath id="panel-4-37"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-37)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 1</span><span class="pill">autor: 20/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Supervised Learning-Moment Method
+assumptions
+Xi conditional independent
+parametric form of p(X|ωi)is known
+Ti gives no information about θj j/
+=i,different classes are
+functionally independent → K problems
+theoretical moments are compared with sampling moments
+μi =E{Xi
+j} theoretical moment
+Mi = 1
+n
+Σn
+j=1 Xi
+j
+sampling moment
+⟦symbol⟧
+Mi = 1
+n
+Σn
+j=1(Xj −M1)
+i
+central sampling moment
+μi =Mi
+i =1,2,...
+Haindl
+MI-ROZ- 04
+20/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-46" data-section="Původní přednáška" aria-label="Zobrazení 46: Moment Method 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Moment Method 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Moment Method 2. PDF strana 10, kvadrant 2."><title>Moment Method 2</title><defs><clipPath id="panel-4-38"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-38)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 2</span><span class="pill">autor: 21/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Moment Method 2
+e.g. X ⟦symbol⟧𝒩(μ,σ2)
+μ1 =M1
+μ2 = ⟦symbol⟧
+M2
+⟦symbol⟧
+μ = ⟦symbol⟧
+X
+⟦symbol⟧
+σ2 = ⟦symbol⟧
+M2
+⟦symbol⟧
+σ2 is asymptotically unbiased,but biased
+Haindl
+MI-ROZ- 04
+21/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-47" data-section="Původní přednáška" aria-label="Zobrazení 47: Moment Method 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Moment Method 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Moment Method 2. PDF strana 10, kvadrant 3."><title>Moment Method 2</title><defs><clipPath id="panel-4-39"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-39)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 3</span><span class="pill">autor: 21/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Moment Method 2
+⊕ simple
+⊕ consistent
+⊖ biased ⇒ not efficient
+⊖ impossible for pdf with infinite moments (Cauchy)
+Cauchy density
+p(x;x0,⟦symbol⟧)= 1
+π⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧2
+(x −x0)
+2+⟦symbol⟧2
+⟦symbol⟧
+x0 location parameter,⟦symbol⟧scale parameter
+μn =
+⟦symbol⟧∞
+−∞
+⟦symbol⟧
+2π
+xn
+(x−m)2+(0,5⟦symbol⟧)2dx
+diverge for n ⟦symbol⟧1
+mean,variance - undefined
+Haindl
+MI-ROZ- 04
+21/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-48" data-section="Původní přednáška" aria-label="Zobrazení 48: Původní zobrazení 40"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Původní zobrazení 40</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Původní zobrazení 40. PDF strana 10, kvadrant 4."><title>Původní zobrazení 40</title><defs><clipPath id="panel-4-40"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-40)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 4</span><span class="pill">autor: 22/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Minimum ⟦symbol⟧2
+assumptions
+X ∈continuous distribution
+observations Xi classified into K intervals with frequencies
+n1,...,nK
+pi(θ)
+i =1,...,K their probabilities (function of θ)
+ni
+i =1,...,K
+observed frequencies
+E{ni}=npi(θ)
+i =1,...,K
+mean (hypothetical)
+frequencies n =Σ
+i ni
+minimum χ2
+min
+θ χ2 =min
+θ
+⟦symbol⟧Σ
+i
+[ni −npi(θ)]
+2
+npi(θ)
+⟦symbol⟧
+Haindl
+MI-ROZ- 04
+22/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-49" data-section="Původní přednáška" aria-label="Zobrazení 49: Původní zobrazení 41"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Původní zobrazení 41</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Původní zobrazení 41. PDF strana 11, kvadrant 1."><title>Původní zobrazení 41</title><defs><clipPath id="panel-4-41"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-41)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 1</span><span class="pill">autor: 23/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Minimum ⟦symbol⟧2Methods
+minimum modified χ2
+min
+θ ˜
+χ2 =min
+θ
+⟦symbol⟧Σ
+i
+[ni −npi(θ)]
+2
+ni
+⟦symbol⟧
+0 =
+Σ
+i
+[ni −npi(θ)]
+ni
+∂pi(θ)
+∂θ
+minimum Kullback-Leibler separator
+min
+θ KL=min
+θ
+⟦symbol⟧Σ
+i
+pi(θ)log pi(θ)
+ni
+n
+⟦symbol⟧
+0 =
+Σ
+i
+⟦symbol⟧ni
+n +log npi(θ)
+ni
+⟦symbol⟧∂pi(θ)
+∂θ
+⊕consistent
+⊕efficient
+Haindl
+MI-ROZ- 04
+23/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-50" data-section="Původní přednáška" aria-label="Zobrazení 50: Maximum A Posteriori Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Maximum A Posteriori Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Maximum A Posteriori Estimation. PDF strana 11, kvadrant 2."><title>Maximum A Posteriori Estimation</title><defs><clipPath id="panel-4-42"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-42)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 2</span><span class="pill">autor: 24/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Maximum A Posteriori Estimation
+θMA⟦symbol⟧ =argmax
+θ p(θ|Ti)
+Maximum likelihood:
+θM⟦symbol⟧ =argmax
+θ p(Ti |θ)
+Maximum pseudo-likelihood:
+θ⟦symbol⟧M⟦symbol⟧ =argmax
+θ
+ni
+⟦symbol⟧
+j=1
+p(
+iXj |θ)
+Haindl
+MI-ROZ- 04
+24/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-51" data-section="Původní přednáška" aria-label="Zobrazení 51: Maximum Likelihood Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Maximum Likelihood Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Maximum Likelihood Estimation. PDF strana 11, kvadrant 3."><title>Maximum Likelihood Estimation</title><defs><clipPath id="panel-4-43"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-43)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 3</span><span class="pill">autor: 25/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Maximum Likelihood Estimation
+assumptions
+parametric form of p(X|ωi)is known
+Xi conditional independent (usually /pseudo-likelihood)
+Ti gives no information about θj j/
+=i,different classes are
+functionally independent → K problems
+likelihood of θ
+p(Ti|θ)=
+ni
+⟦symbol⟧
+j=1
+p(Xj|θ)
+⟦symbol⟧
+θ =argmax
+θ {p(Ti|θ)}
+log-likelihood
+L(θ)=logp(Ti|θ)=
+ni
+Σ
+j=1
+logp(Xj|θ)
+the maximum likelihood estimate ∇θL=0
+Haindl
+MI-ROZ- 04
+25/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-52" data-section="Původní přednáška" aria-label="Zobrazení 52: Maximum Likelihood Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Maximum Likelihood Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Maximum Likelihood Estimation. PDF strana 11, kvadrant 4."><title>Maximum Likelihood Estimation</title><defs><clipPath id="panel-4-44"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-44)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 4</span><span class="pill">autor: 25/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Maximum Likelihood Estimation
+assumptions
+parametric form of p(X|ωi)is known
+Xi conditional independent (usually /pseudo-likelihood)
+Ti gives no information about θj j/
+=i,different classes are
+functionally independent → K problems
+likelihood of θ
+p(Ti|θ)=
+ni
+⟦symbol⟧
+j=1
+p(Xj|θ)
+⟦symbol⟧
+θ =argmax
+θ {p(Ti|θ)}
+log-likelihood
+L(θ)=logp(Ti|θ)=
+ni
+Σ
+j=1
+logp(Xj|θ)
+the maximum likelihood estimate ∇θL=0
+Haindl
+MI-ROZ- 04
+25/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-53" data-section="Původní přednáška" aria-label="Zobrazení 53: Supervised Bayesian Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Supervised Bayesian Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Supervised Bayesian Estimation. PDF strana 12, kvadrant 1."><title>Supervised Bayesian Estimation</title><defs><clipPath id="panel-4-45"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-45)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 1</span><span class="pill">autor: 33/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Supervised Bayesian Estimation
+assumptions
+1 the form of cpdf p(X|θ)is known except the θ vector
+2 prior pdf p(θ)is known
+3 different classes are functionally independent
+4 conditionally independent training samples Ti ={X1,...,Xni}
+are available ↓
+p(X|Ti)=
+⟦symbol⟧
+p(X|θ)p(θ|Ti)dθ
+p(θ|Ti)=
+p(Ti|θ)p(θ)
+⟦symbol⟧
+p(Ti|θ)p(θ)dθ
+(1)
+Haindl
+MI-ROZ- 04
+33/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-54" data-section="Původní přednáška" aria-label="Zobrazení 54: Bayesian Estimation 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Bayesian Estimation 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Bayesian Estimation 2. PDF strana 12, kvadrant 2."><title>Bayesian Estimation 2</title><defs><clipPath id="panel-4-46"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-46)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 2</span><span class="pill">autor: 34/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Bayesian Estimation 2
+from assumption 4.
+p(Ti|θ)=
+ni
+⟦symbol⟧
+j=1
+p(Xj|θ)
+p(θ|Ti)∝
+ni
+⟦symbol⟧
+j=1
+p(Xj|θ)p(θ)
+Bayesian learning - recursive parameter estimation
+if t &gt;1
+p(
+tTi|θ)=p(
+tX|θ)p(
+t−1Ti|θ)
+p(θ|
+tTi)=
+p(
+tX|θ)p(θ|
+t−1Ti)
+⟦symbol⟧
+p(
+tX|θ)p(θ|
+t−1Ti)dθ
+p(θ|
+0Ti)=p(θ)
+Haindl
+MI-ROZ- 04
+34/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-55" data-section="Původní přednáška" aria-label="Zobrazení 55: Bayesian Estimation 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Bayesian Estimation 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Bayesian Estimation 2. PDF strana 12, kvadrant 3."><title>Bayesian Estimation 2</title><defs><clipPath id="panel-4-47"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-47)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 3</span><span class="pill">autor: 34/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Bayesian Estimation 2
+from assumption 4.
+p(Ti|θ)=
+ni
+⟦symbol⟧
+j=1
+p(Xj|θ)
+p(θ|Ti)∝
+ni
+⟦symbol⟧
+j=1
+p(Xj|θ)p(θ)
+Bayesian learning - recursive parameter estimation
+if t &gt;1
+p(
+tTi|θ)=p(
+tX|θ)p(
+t−1Ti|θ)
+p(θ|
+tTi)=
+p(
+tX|θ)p(θ|
+t−1Ti)
+⟦symbol⟧
+p(
+tX|θ)p(θ|
+t−1Ti)dθ
+p(θ|
+0Ti)=p(θ)
+Haindl
+MI-ROZ- 04
+34/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-56" data-section="Původní přednáška" aria-label="Zobrazení 56: Bayesian Estimation 3"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Bayesian Estimation 3</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Bayesian Estimation 3. PDF strana 12, kvadrant 4."><title>Bayesian Estimation 3</title><defs><clipPath id="panel-4-48"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-48)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 4</span><span class="pill">autor: 35/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Bayesian Estimation 3
+for usual pdf the sequence converges to a delta function,i.e.,
+p(X |θ)is identifiable
+p(X |Ti)→ p(X)
+usually even for unidentifiable p(X |θ)
+Haindl
+MI-ROZ- 04
+35/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-57" data-section="Původní přednáška" aria-label="Zobrazení 57: Bayes Estimator"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Bayes Estimator</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Bayes Estimator. PDF strana 13, kvadrant 1."><title>Bayes Estimator</title><defs><clipPath id="panel-4-49"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-49)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 1</span><span class="pill">autor: 36/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+MM
+Minimum χ2
+ML B⟦symbol⟧
+Bayes Estimator
+Bayes estimator minimizes the average risk z(⟦symbol⟧
+θ)for c⟦symbol⟧
+θ,θ =(⟦symbol⟧
+θ −θ)
+2
+loss function:
+⟦symbol⟧
+θ =E{θ|Ti}=
+⟦symbol⟧
+θp(θ|Ti)dθ
+also symmetric and conve⟦symbol⟧cost functions or pdf symmetric about mean
+z(⟦symbol⟧
+θ)=Eθ{E{(⟦symbol⟧
+θ−θ)}}=
+⟦symbol⟧ ⟦symbol⟧
+...
+⟦symbol⟧
+(⟦symbol⟧
+θ−θ)p(X1,...,Xn,θ)dX1 ...dXndθ
+average risk for an estimate ⟦symbol⟧
+θ
+Bayes estimator from (1)
+Haindl
+MI-ROZ- 04
+36/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-58" data-section="Původní přednáška" aria-label="Zobrazení 58: Nonparametric Distributions -Histogram Approach"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Nonparametric Distributions -Histogram Approach</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Nonparametric Distributions -Histogram Approach. PDF strana 13, kvadrant 2."><title>Nonparametric Distributions -Histogram Approach</title><defs><clipPath id="panel-4-50"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-50)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 2</span><span class="pill">autor: 38/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+HA P⟦symbol⟧
+Nonparametric Distributions -Histogram Approach
+l=1 X
+quantized into k equal intervals
+⟦symbol⟧
+p(X |ωi)=h(X |ωi)= nij
+ni
+nij number of Xk ∈Si in the j-th interval
+ni = cardSi
+⊖
+l&gt;1 ⇒ ⟦symbol⟧bins =kl
+−→
+onI⟦symbol⟧sm⟦symbol⟧II k,l
+Haindl
+MI-ROZ- 04
+38/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-59" data-section="Původní přednáška" aria-label="Zobrazení 59: Nonparametric Distributions -Parzen Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Nonparametric Distributions -Parzen Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Nonparametric Distributions -Parzen Estimation. PDF strana 13, kvadrant 3."><title>Nonparametric Distributions -Parzen Estimation</title><defs><clipPath id="panel-4-51"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-51)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 3</span><span class="pill">autor: 39/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+HA P⟦symbol⟧
+Nonparametric Distributions -Parzen Estimation
+assumption:
+X continuous,given Xk ∈Si −→ p(X =(Xk ⟦symbol⟧⟦symbol⟧)|ωi)/
+=0
+⟦symbol⟧
+p(X |ωi)= 1
+ni
+ni
+Σ
+j=1
+K(X,Xj)
+kernel properties:
+1 K(X,Xj)=ρ−l f
+⟦symbol⟧⟦symbol⟧(X,Xj)
+⟦symbol⟧
+⟦symbol⟧
+2 parameter ρ satisfies limni→∞ ρl(ni)=0
+3 δ(X,Xj) metric
+4 ⟦symbol⟧
+K(X,Xj)dX =1 for non-negative f() (alternatively f
+mon. decreasing,f
+max → δ(X,Xj)=0)
+⊕
+2)+4) ⇒ ⟦symbol⟧
+p(X |ωi) unbiased,consistent estimate
+Haindl
+MI-ROZ- 04
+39/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-60" data-section="Původní přednáška" aria-label="Zobrazení 60: Nonparametric Distributions -Parzen Estimation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Nonparametric Distributions -Parzen Estimation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Nonparametric Distributions -Parzen Estimation. PDF strana 13, kvadrant 4."><title>Nonparametric Distributions -Parzen Estimation</title><defs><clipPath id="panel-4-52"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-52)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 4</span><span class="pill">autor: 39/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+HA P⟦symbol⟧
+Nonparametric Distributions -Parzen Estimation
+assumption:
+X continuous,given Xk ∈Si −→ p(X =(Xk ⟦symbol⟧⟦symbol⟧)|ωi)/
+=0
+⟦symbol⟧
+p(X |ωi)= 1
+ni
+ni
+Σ
+j=1
+K(X,Xj)
+kernel properties:
+1 K(X,Xj)=ρ−l f
+⟦symbol⟧⟦symbol⟧(X,Xj)
+⟦symbol⟧
+⟦symbol⟧
+2 parameter ρ satisfies limni→∞ ρl(ni)=0
+3 δ(X,Xj) metric
+4 ⟦symbol⟧
+K(X,Xj)dX =1 for non-negative f() (alternatively f
+mon. decreasing,f
+max → δ(X,Xj)=0)
+⊕
+2)+4) ⇒ ⟦symbol⟧
+p(X |ωi) unbiased,consistent estimate
+Haindl
+MI-ROZ- 04
+39/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-61" data-section="Původní přednáška" aria-label="Zobrazení 61: Parzen Kernels"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Parzen Kernels</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Parzen Kernels. PDF strana 14, kvadrant 1."><title>Parzen Kernels</title><defs><clipPath id="panel-4-53"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-53)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 1</span><span class="pill">autor: 40/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+HA P⟦symbol⟧
+Parzen Kernels
+Gaussian Kernel
+K(X,Xj)=
+⟦symbol⟧
+(ρ22π)
+l|Q|
+]−1
+2 exp
+⟦symbol⟧
+− 1
+2ρ2(X −Xj)
+⟦symbol⟧Q(X −Xj)
+⟦symbol⟧
+Q arbitrary,better Q = ⟦symbol⟧
+Σi
+Hyperspheric Kernel
+K(X,Xj)=
+⟦symbol⟧
+⟦symbol⟧−1 if δ(X,Xj)⟦symbol⟧ρ
+0
+otherwise
+δ(X,Xj)Euclidean distance,⟦symbol⟧ volume of a hypersphere with radius
+ρ
+Haindl
+MI-ROZ- 04
+40/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-62" data-section="Původní přednáška" aria-label="Zobrazení 62: Parzen Kernels"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Parzen Kernels</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Parzen Kernels. PDF strana 14, kvadrant 2."><title>Parzen Kernels</title><defs><clipPath id="panel-4-54"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-54)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 2</span><span class="pill">autor: 40/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+HA P⟦symbol⟧
+Parzen Kernels
+Gaussian Kernel
+K(X,Xj)=
+⟦symbol⟧
+(ρ22π)
+l|Q|
+]−1
+2 exp
+⟦symbol⟧
+− 1
+2ρ2(X −Xj)
+⟦symbol⟧Q(X −Xj)
+⟦symbol⟧
+Q arbitrary,better Q = ⟦symbol⟧
+Σi
+Hyperspheric Kernel
+K(X,Xj)=
+⟦symbol⟧
+⟦symbol⟧−1 if δ(X,Xj)⟦symbol⟧ρ
+0
+otherwise
+δ(X,Xj)Euclidean distance,⟦symbol⟧ volume of a hypersphere with radius
+ρ
+Haindl
+MI-ROZ- 04
+40/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-63" data-section="Původní přednáška" aria-label="Zobrazení 63: Parzen Kernels"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Parzen Kernels</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Parzen Kernels. PDF strana 14, kvadrant 3."><title>Parzen Kernels</title><defs><clipPath id="panel-4-55"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-55)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 3</span><span class="pill">autor: 41/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">ML SL SL ND
+HA P⟦symbol⟧
+Parzen Kernels
+Hypercubic Kernel
+K(X,Xj)=
+⟦symbol⟧
+(2ρ)
+−l if δ(X,Xj)⟦symbol⟧ρ
+0
+otherwise
+δ(X,Xj)=maxk |X.k −Xjk| Chebyshev distance
+a value satisfying kernel condition (2):
+ρ(ni)=n
+−⟦symbol⟧
+l
+i
+η∈(0;1)
+Haindl
+MI-ROZ- 04
+41/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-64" data-section="Původní přednáška" aria-label="Zobrazení 64: Unsupervised Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unsupervised Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Unsupervised Learning. PDF strana 14, kvadrant 4."><title>Unsupervised Learning</title><defs><clipPath id="panel-4-56"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-56)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 4</span><span class="pill">autor: 42/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Unsupervised Learning
+1 unknown form of p(X|ωi)
+mode separation methods
+clustering
+⊖χ partition,no pdf
+2 mixture decomposition techniques
+p(X |ωi)are of a known form
+Haindl
+MI-ROZ- 04
+42/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-65" data-section="Původní přednáška" aria-label="Zobrazení 65: Unsupervised Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unsupervised Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Unsupervised Learning. PDF strana 15, kvadrant 1."><title>Unsupervised Learning</title><defs><clipPath id="panel-4-57"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-57)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 1</span><span class="pill">autor: 42/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Unsupervised Learning
+1 unknown form of p(X|ωi)
+mode separation methods
+clustering
+⊖χ partition,no pdf
+2 mixture decomposition techniques
+p(X |ωi)are of a known form
+Haindl
+MI-ROZ- 04
+42/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-66" data-section="Původní přednáška" aria-label="Zobrazení 66: UNISEP"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>UNISEP</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: UNISEP. PDF strana 15, kvadrant 2."><title>UNISEP</title><defs><clipPath id="panel-4-58"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-58)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 2</span><span class="pill">autor: 43/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+UNISEP
+projection method
+1 Compute the eigenvector u associated with the max.
+eigenvalue of the sample covariance matrix and project the
+data on u,i.e.,˜
+xi =u⟦symbol⟧
+i X.
+2 Obtain a histogram approximation of the marginal pdf p( ˜
+X).
+3 Determine the points of local minima of p( ˜
+X)between all
+successive modes of the pdf and partition the data by
+hyperplanes perpendicular to u and intersecting the
+eigenvector at these points.
+4 If no such point is determined,repeat for the next eigenvector.
+5 Repeat the procedure for each individual subset that has be
+obtained by partitioning the complete sample set.
+Haindl
+MI-ROZ- 04
+43/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-67" data-section="Původní přednáška" aria-label="Zobrazení 67: UNISEP"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>UNISEP</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: UNISEP. PDF strana 15, kvadrant 3."><title>UNISEP</title><defs><clipPath id="panel-4-59"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-59)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 3</span><span class="pill">autor: 43/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+UNISEP
+projection method
+1 Compute the eigenvector u associated with the max.
+eigenvalue of the sample covariance matrix and project the
+data on u,i.e.,˜
+xi =u⟦symbol⟧
+i X.
+2 Obtain a histogram approximation of the marginal pdf p( ˜
+X).
+3 Determine the points of local minima of p( ˜
+X)between all
+successive modes of the pdf and partition the data by
+hyperplanes perpendicular to u and intersecting the
+eigenvector at these points.
+4 If no such point is determined,repeat for the next eigenvector.
+5 Repeat the procedure for each individual subset that has be
+obtained by partitioning the complete sample set.
+⊖fails on linearly unseparable sets
+⊖impossible to establish whether a peak corresponds to the actual
+data mode or to the noise
+⊖meaningless for a small data set
+Haindl
+MI-ROZ- 04
+43/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-68" data-section="Původní přednáška" aria-label="Zobrazení 68: Unsupervised Bayesian Parametric Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unsupervised Bayesian Parametric Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Unsupervised Bayesian Parametric Learning. PDF strana 15, kvadrant 4."><title>Unsupervised Bayesian Parametric Learning</title><defs><clipPath id="panel-4-60"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-60)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 4</span><span class="pill">autor: 44/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Unsupervised Bayesian Parametric Learning
+assumptions
+K is known
+class priors P(ωi) ∀i =1,...,K are known
+the forms for p(X|ωi,θi)are known except for some unknown
+parameters θi
+prior pdf p(θ1,...,θK)is known (Bayesian learning)
+the rest of knowledge about θi ∀i is available from samples
+from the mixture density
+p(X |θ1,...,θK)=
+K
+Σ
+i=1
+p(X |ωi,θi)P(ωi)
+problem - using samples from p(X |θ1,...,θK)to estimate
+unknown parameters θ =[θ1,...,θK]
+Haindl
+MI-ROZ- 04
+44/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-69" data-section="Původní přednáška" aria-label="Zobrazení 69: Unidentifiable Examples"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unidentifiable Examples</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Unidentifiable Examples. PDF strana 16, kvadrant 1."><title>Unidentifiable Examples</title><defs><clipPath id="panel-4-61"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-61)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 1</span><span class="pill">autor: 45/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Unidentifiable Examples
+continues pdf (GMM)
+p(X|θ)= P(ω1)
+⟦symbol⟧
+2π
+exp{−1
+2(X −θ1)
+2}+P(ω2)
+⟦symbol⟧
+2π
+exp{−1
+2(X −θ2)
+2}
+if P(ω1)=P(ω2) ⇒ θ1,θ2 can be interchanged without affecting
+p(X|θ)→ no identifiable solution
+Haindl
+MI-ROZ- 04
+45/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-70" data-section="Původní přednáška" aria-label="Zobrazení 70: Unidentifiable Examples"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unidentifiable Examples</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Unidentifiable Examples. PDF strana 16, kvadrant 2."><title>Unidentifiable Examples</title><defs><clipPath id="panel-4-62"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-62)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 2</span><span class="pill">autor: 46/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Unidentifiable Examples
+discrete binary Bernoulli mixture
+p(X|θ)= 1
+2θX
+1 (1 −θ1)
+1−X +1
+2θX
+2 (1 −θ2)
+1−X
+p(X|θ)=
+⟦symbol⟧
+1
+2(θ1 +θ2)
+if X =1
+1 − 1
+2(θ1 +θ2) if X =0
+e.g.,p(X =1|θ)=0.6 →
+p(X =0|θ)=0.4
+p(X|θ)is
+known but we cannot determine θ and so component distributions
+the only knowledge is θ1 +θ2 =1.2
+⊕identifiable mixtures - Poisson,gamma,Cauchy,nD Gaussian,
+nD exponential
+⊖unidentifiable mixtures - uniform,discrete,Bernoulli
+Haindl
+MI-ROZ- 04
+46/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-71" data-section="Původní přednáška" aria-label="Zobrazení 71: Unidentifiable Examples"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unidentifiable Examples</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Unidentifiable Examples. PDF strana 16, kvadrant 3."><title>Unidentifiable Examples</title><defs><clipPath id="panel-4-63"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-63)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 3</span><span class="pill">autor: 46/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Unidentifiable Examples
+discrete binary Bernoulli mixture
+p(X|θ)= 1
+2θX
+1 (1 −θ1)
+1−X +1
+2θX
+2 (1 −θ2)
+1−X
+p(X|θ)=
+⟦symbol⟧
+1
+2(θ1 +θ2)
+if X =1
+1 −1
+2(θ1 +θ2) if X =0
+e.g.,p(X =1|θ)=0.6 →
+p(X =0|θ)=0.4
+p(X|θ)is
+known but we cannot determine θ and so component distributions
+the only knowledge is θ1 +θ2 =1.2
+⊕identifiable mixtures - Poisson,gamma,Cauchy,nD Gaussian,
+nD exponential
+⊖unidentifiable mixtures - uniform,discrete,Bernoulli
+Haindl
+MI-ROZ- 04
+46/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-72" data-section="Původní přednáška" aria-label="Zobrazení 72: Unsupervised Parametric Bayesian Learning-Complexity"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unsupervised Parametric Bayesian Learning-Complexity</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Unsupervised Parametric Bayesian Learning-Complexity. PDF strana 16, kvadrant 4."><title>Unsupervised Parametric Bayesian Learning-Complexity</title><defs><clipPath id="panel-4-64"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-64)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 4</span><span class="pill">autor: 47/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Unsupervised Parametric Bayesian Learning-Complexity
+tT = t−1T +{Xt}
+θ⟦symbol⟧ =[θ⟦symbol⟧
+1 ,...,θ⟦symbol⟧
+K,P1,...,PK]
+assumptions
+1
+p(Xt|θ)=
+K
+Σ
+k=1
+Pk pk(Xt |θk)
+2 conditional independence
+p(
+tT |θ)=
+t
+⟦symbol⟧
+i=1
+p(Xi |θ)=
+t
+⟦symbol⟧
+i=1
+K
+Σ
+j=1
+Pj pj(Xi |θj)
+Haindl
+MI-ROZ- 04
+47/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-73" data-section="Původní přednáška" aria-label="Zobrazení 73: Unsupervised Parametric Bayesian Learning2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unsupervised Parametric Bayesian Learning2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Unsupervised Parametric Bayesian Learning2. PDF strana 17, kvadrant 1."><title>Unsupervised Parametric Bayesian Learning2</title><defs><clipPath id="panel-4-65"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-65)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 1</span><span class="pill">autor: 48/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Unsupervised Parametric Bayesian Learning2
+then
+p(θ|tT) =
+p(Xt |θ)p(θ|t−1T)
+⟦symbol⟧
+p(Xt |θ)p(θ|t−1T)dθ
+=
+ΣK
+k=1 Pk pk(Xt |θk)p(θ|t−1T)
+⟦symbol⟧ΣK
+k=1 Pk pk(Xt |θk)p(θ|t−1T)dθ
+⊖ p(θk |T) depends on distribution of other classes
+⊖ p(T |θ)/
+=g(θ,⟦symbol⟧)h(T) due to 1. → no reproducing density for UL
+→ p(θ|T) numerical method
+Haindl
+MI-ROZ- 04
+48/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-74" data-section="Původní přednáška" aria-label="Zobrazení 74: Gaussian Mixture Example -Moment Method"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Gaussian Mixture Example -Moment Method</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Gaussian Mixture Example -Moment Method. PDF strana 17, kvadrant 2."><title>Gaussian Mixture Example -Moment Method</title><defs><clipPath id="panel-4-66"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-66)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 2</span><span class="pill">autor: 52/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Gaussian Mixture Example -Moment Method
+f(X |θ)=pg1(X |θ1)+(1 −p)g2(X |θ2)
+g1( )⟦symbol⟧𝒩(μ1,σ2
+1)
+g2( )⟦symbol⟧𝒩(μ2,σ2
+2)
+E{X}=pμ1 +(1 −p)μ2
+E{X2}=p(μ2
+1 +σ2
+1)+(1 −p)(μ2
+2 +σ2
+2)
+E{X3}=p(μ3
+1 +3μ1σ2
+1)+(1 −p)(μ3
+2 +3μ2σ2
+2)
+if σ2
+1 =σ2
+2 known and μ2 =0 then:
+E{X}=pμ1
+E{X2}=pμ2
+1 +σ2
+E{X3}=p(μ3
+1 +3μ1σ2
+1)
+⇒
+μ1 =0
+p = 2
+3
+⊖computationally complex for K ↗ ⟦symbol⟧d ↗
+Haindl
+MI-ROZ- 04
+52/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-75" data-section="Původní přednáška" aria-label="Zobrazení 75: Unsupervised ML Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unsupervised ML Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Unsupervised ML Learning. PDF strana 17, kvadrant 3."><title>Unsupervised ML Learning</title><defs><clipPath id="panel-4-67"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-67)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 3</span><span class="pill">autor: 53/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Unsupervised ML Learning
+data in T from the mixture pdf,θ fixed but unknown
+p(X|θ)=
+K
+Σ
+i=1
+p(X|ωi,θi)P(ωi)
+likelihood of T
+p(T|θ)=
+n
+⟦symbol⟧
+j=1
+p(Xj|θ)
+⟦symbol⟧
+θ =argmax
+θ {p(T|θ)}
+log-likelihood
+L(θ)=logp(T|θ)=
+n
+Σ
+j=1
+logp(Xj|θ)
+Haindl
+MI-ROZ- 04
+53/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-76" data-section="Původní přednáška" aria-label="Zobrazení 76: Unsupervised ML Learning2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unsupervised ML Learning2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Unsupervised ML Learning2. PDF strana 17, kvadrant 4."><title>Unsupervised ML Learning2</title><defs><clipPath id="panel-4-68"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-68)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 4</span><span class="pill">autor: 54/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Unsupervised ML Learning2
+∇θiL=
+n
+Σ
+j=1
+1
+p(Xj|θ)∇θi
+⟦symbol⟧K
+Σ
+i=1
+p(Xj|ωi,θi)P(ωi)
+⟦symbol⟧
+assuming functionally independent θi,θj
+∇θiL=
+n
+Σ
+j=1
+P(ωi|Xj,θi)∇θi logp(Xj|ωi,θi)
+the maximum likelihood estimate
+∇θiL=0
+Haindl
+MI-ROZ- 04
+54/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-77" data-section="Původní přednáška" aria-label="Zobrazení 77: EM Algorithm -(Expectation &amp;Maximization)"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>EM Algorithm -(Expectation &amp;Maximization)</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: EM Algorithm -(Expectation &amp;Maximization). PDF strana 18, kvadrant 1."><title>EM Algorithm -(Expectation &amp;Maximization)</title><defs><clipPath id="panel-4-69"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-18.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-69)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 18 · kvadrant 1</span><span class="pill">autor: 55/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+EM Algorithm -(Expectation &amp;Maximization)
+⊕ iterative ML estimation from incomplete observations
+X ∈χ
+measurements (incomplete data)
+ω ∈Ω
+hidden,unobservable (complete)data
+ω −→ X(ω)
+ω ∈Ω(X)⟦symbol⟧Ω
+p(X |θ)=
+⟦symbol⟧
+Ω(X) p(ω |θ)dω
+E-step:
+f(θk |θ)=E
+⟦symbol⟧
+log p(ω |θ)|X,θk⟦symbol⟧
+=
+⟦symbol⟧
+ω log p(ω |θ)p(ω |X,θk)dω
+M-step:
+θk+1 = argmaxθ
+⟦symbol⟧
+f(θk |θ)
+⟦symbol⟧
+Haindl
+MI-ROZ- 04
+55/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=18">Původní PDF, strana 18</a></p></div></section><section class="slide source" id="slide-78" data-section="Původní přednáška" aria-label="Zobrazení 78: EM Algorithm -Example"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>EM Algorithm -Example</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: EM Algorithm -Example. PDF strana 18, kvadrant 2."><title>EM Algorithm -Example</title><defs><clipPath id="panel-4-70"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-18.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-70)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 18 · kvadrant 2</span><span class="pill">autor: 56/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+EM Algorithm -Example
+K =4, n =197, X =[125,18,20,34] multinomial
+p1 = 2+⟦symbol⟧
+4 , p2 = 1−⟦symbol⟧
+4 , p3 = 1−⟦symbol⟧
+4 , p4= ⟦symbol⟧
+4 0 ⟦symbol⟧α ⟦symbol⟧1 Σ pi =1
+P(X)=
+⟦symbol⟧Σ4
+i=1 xi
+⟦symbol⟧
+⟦symbol⟧
+Π4
+i=1 xi⟦symbol⟧
+4
+⟦symbol⟧
+i=1
+pxi
+i
+ω =[ω1,...,ω5], x1 =ω1 +ω2, x2 =ω3, x3 =ω4, x4=ω5
+ω1,ω2 unknown,ω3,...,ω5 known, P(ω) multinomial
+E-step:
+E
+⟦symbol⟧
+ωk
+1
+⟦symbol⟧
+=125
+1
+2
+2+⟦symbol⟧k
+4
+E
+⟦symbol⟧
+ωk
+2
+⟦symbol⟧
+=125
+⟦symbol⟧k
+4
+2+⟦symbol⟧k
+4
+M-step:
+∂⟦symbol⟧(ω,⟦symbol⟧)
+∂⟦symbol⟧
+=0 −→
+αk+1 =
+ωk
+2+34
+ωk
+2+34+18+20
+α8 =0.626821484 α*=0.626821498
+Haindl
+MI-ROZ- 04
+56/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=18">Původní PDF, strana 18</a></p></div></section><section class="slide source" id="slide-79" data-section="Původní přednáška" aria-label="Zobrazení 79: EM Properties"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>EM Properties</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: EM Properties. PDF strana 18, kvadrant 3."><title>EM Properties</title><defs><clipPath id="panel-4-71"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-18.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-71)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 18 · kvadrant 3</span><span class="pill">autor: 57/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+EM Properties
+p(Xr |θj)←
+⟦symbol⟧
+discrete
+continuous parametricpd⟦symbol⟧
+P(ωj)⟦symbol⟧0 ∀j,
+K
+Σ
+j=1
+P(ωj)=1
+p(Xr |θ1,...,θK)=
+K
+Σ
+j=1
+P(ωj)p(Xr |θj)
+⟦symbol⟧ =
+Σ
+Xr∈⟦symbol⟧
+log
+⟦symbol⟧
+⟦symbol⟧
+K
+Σ
+j=1
+P(Xr |θj)P(ωj)
+⟦symbol⟧
+⟦symbol⟧
+∂⟦symbol⟧
+∂θ =0 no explicit solution
+Haindl
+MI-ROZ- 04
+57/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=18">Původní PDF, strana 18</a></p></div></section><section class="slide source" id="slide-80" data-section="Původní přednáška" aria-label="Zobrazení 80: EM Properties"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>EM Properties</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: EM Properties. PDF strana 18, kvadrant 4."><title>EM Properties</title><defs><clipPath id="panel-4-72"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-18.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-72)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 18 · kvadrant 4</span><span class="pill">autor: 58/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+EM Properties
+T:
+⟦symbol⟧t+1 −⟦symbol⟧t ⟦symbol⟧0
+t =0,1,...
+T:
+if limt→∞ ⟦symbol⟧ =⟦symbol⟧*&lt;⟦symbol⟧
+⇒
+⟦symbol⟧*local maximum
+limt→∞ ⟦symbol⟧ Pt+1
+ω
+−Pt
+ω ⟦symbol⟧=0
+limt→∞ ⟦symbol⟧ Pt+1
+ω⟦symbol⟧X −Pt
+ω⟦symbol⟧X ⟦symbol⟧=0
+Pt
+ω =[Pt(ω1),...,Pt(ωK)]
+⟦symbol⟧
+Pt
+ω⟦symbol⟧X =[Pt(ωj |Xr)]
+K
+j=1, ⟦symbol⟧r
+Haindl
+MI-ROZ- 04
+58/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=18">Původní PDF, strana 18</a></p></div></section><section class="slide source" id="slide-81" data-section="Původní přednáška" aria-label="Zobrazení 81: EM 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>EM 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: EM 2. PDF strana 19, kvadrant 1."><title>EM 2</title><defs><clipPath id="panel-4-73"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-19.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-73)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 19 · kvadrant 1</span><span class="pill">autor: 59/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+EM 2
+E-step:
+Pt+1(ωj |Xr)=
+Pt+1(ωj)P(Xr |θt+1
+j )
+Pt+1(Xr |θ1,...,θK)
+M-step:
+Pt+1(ωj)= 1
+|χ|
+Σ
+⟦symbol⟧Xr∈⟦symbol⟧
+Pt(ωj |Xr)
+continuous +discrete
+θt+1
+j
+=argmax
+θj∈⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+Σ
+⟦symbol⟧Xr∈⟦symbol⟧
+Pt(ωj |Xr)logP(Xr |θj)
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+discrete unknown form
+Pt+1(Xr =⟦symbol⟧|θi)=
+1
+|χ|Pt+1(ωi)
+Σ
+⟦symbol⟧Xs
+δ(Xs,⟦symbol⟧)Pt(ωi |Xs)
+Haindl
+MI-ROZ- 04
+59/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=19">Původní PDF, strana 19</a></p></div></section><section class="slide source" id="slide-82" data-section="Původní přednáška" aria-label="Zobrazení 82: Discrete Mixture ofProduct Components"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Discrete Mixture ofProduct Components</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Discrete Mixture ofProduct Components. PDF strana 19, kvadrant 2."><title>Discrete Mixture ofProduct Components</title><defs><clipPath id="panel-4-74"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-19.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-74)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 19 · kvadrant 2</span><span class="pill">autor: 62/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Discrete Mixture ofProduct Components
+p(X1,...,XΣ)=
+K
+Σ
+j=1
+P(ωj)p(X1,...,XΣ |θj)
+assumption
+p(X1,...,XΣ |θj)=
+⟦symbol⟧
+Xr
+p(Xr |θj)
+conditional independence not restrictive for discrete mixtures
+(K ↗)
+⟦symbol⟧ = 1
+|χ|
+Σ
+⟦symbol⟧
+log
+⟦symbol⟧
+⟦symbol⟧
+K
+Σ
+j=1
+P(ωj)
+⟦symbol⟧
+Xr∈⟦symbol⟧
+P(Xr |θj)
+⟦symbol⟧
+⟦symbol⟧
+Haindl
+MI-ROZ- 04
+62/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=19">Původní PDF, strana 19</a></p></div></section><section class="slide source" id="slide-83" data-section="Původní přednáška" aria-label="Zobrazení 83: Discrete Mixture ofProduct Components 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Discrete Mixture ofProduct Components 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Discrete Mixture ofProduct Components 2. PDF strana 19, kvadrant 3."><title>Discrete Mixture ofProduct Components 2</title><defs><clipPath id="panel-4-75"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-19.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-75)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 19 · kvadrant 3</span><span class="pill">autor: 63/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Discrete Mixture ofProduct Components 2
+E-step:
+Pt+1(ωj |X1,...,XΣ)=
+Pt+1(ωj)P(X1,...,XΣ |θt+1
+j )
+ΣK
+i=1 Pt+1(X1,...,XΣ |θi)Pt+1(ωi)
+M-step:
+Pt+1(ωj)= 1
+|χ|
+Σ
+⟦symbol⟧X∈⟦symbol⟧
+Pt(ωj |X1,...,XΣ)
+Pt+1(Xr =⟦symbol⟧|θi)=
+1
+|χ|Pt+1(ωi)
+Σ
+⟦symbol⟧Xs
+δ(Xs,⟦symbol⟧)Pt(ωi |X1,...,XΣ)
+Haindl
+MI-ROZ- 04
+63/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=19">Původní PDF, strana 19</a></p></div></section><section class="slide source" id="slide-84" data-section="Původní přednáška" aria-label="Zobrazení 84: Discrete Mixture ofProduct Components 3"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Discrete Mixture ofProduct Components 3</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Discrete Mixture ofProduct Components 3. PDF strana 19, kvadrant 4."><title>Discrete Mixture ofProduct Components 3</title><defs><clipPath id="panel-4-76"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-19.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-76)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 19 · kvadrant 4</span><span class="pill">autor: 64/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Discrete Mixture ofProduct Components 3
+p(Xn |X⟦symbol⟧)=
+K
+Σ
+i=1
+P(ωi,⟦symbol⟧)p(Xn |θi)
+X⟦symbol⟧ ⟦symbol⟧χ
+P(ωi,⟦symbol⟧)=
+P(ωi)Π
+j∈⟦symbol⟧ p(Xj |θi)
+ΣK
+k=1 P(ωk)Π
+j∈⟦symbol⟧ p(Xj |θk)
+⊕simple derivation of any marginal distribution
+Haindl
+MI-ROZ- 04
+64/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=19">Původní PDF, strana 19</a></p></div></section><section class="slide source" id="slide-85" data-section="Původní přednáška" aria-label="Zobrazení 85: EM -Gaussian Mixture"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>EM -Gaussian Mixture</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: EM -Gaussian Mixture. PDF strana 20, kvadrant 1."><title>EM -Gaussian Mixture</title><defs><clipPath id="panel-4-77"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-20.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-77)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 20 · kvadrant 1</span><span class="pill">autor: 65/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+EM -Gaussian Mixture
+p(X)=
+K
+Σ
+j=1
+P(ωj)
+1
+(2π)
+d
+2|Σj|
+1
+2
+exp
+⟦symbol⟧
+−1
+2(X −μj)
+⟦symbol⟧Σ−1
+j (X −μj)
+⟦symbol⟧
+⟦symbol⟧ = 1
+|χ|
+Σ
+⟦symbol⟧
+log
+⟦symbol⟧
+⟦symbol⟧
+K
+Σ
+j=1
+P(ωj)
+1
+(2π)
+d
+2|Σj|
+1
+2
+exp
+⟦symbol⟧
+−1
+2(X −μj)
+⟦symbol⟧Σ−1
+j (X −μj)
+⟦symbol⟧⟦symbol⟧
+⟦symbol⟧
+Haindl
+MI-ROZ- 04
+65/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=20">Původní PDF, strana 20</a></p></div></section><section class="slide source" id="slide-86" data-section="Původní přednáška" aria-label="Zobrazení 86: EM -Gaussian Mixture 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>EM -Gaussian Mixture 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: EM -Gaussian Mixture 2. PDF strana 20, kvadrant 2."><title>EM -Gaussian Mixture 2</title><defs><clipPath id="panel-4-78"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-20.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-78)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 20 · kvadrant 2</span><span class="pill">autor: 66/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+EM -Gaussian Mixture 2
+E-step:
+Pt+1(ωj |X)=
+Pt+1(ωj)
+1
+(2π)
+d
+2 ⟦symbol⟧Σj⟦symbol⟧
+1
+2 exp
+⟦symbol⟧
+−1
+2(X −μj)
+⟦symbol⟧Σ−1
+j (X −μj)
+⟦symbol⟧
+ΣK
+i=1 Pt+1(ωi)
+1
+(2π)
+d
+2 ⟦symbol⟧Σi⟦symbol⟧
+1
+2 exp
+⟦symbol⟧
+−1
+2(X −μi)
+⟦symbol⟧Σ−1
+j (X −μi)
+⟦symbol⟧
+M-step:
+Pt+1(ωj)= 1
+|χ|
+Σ
+⟦symbol⟧X∈⟦symbol⟧
+Pt(ωj |X)
+μt+1
+j
+=
+1
+Σ
+⟦symbol⟧X∈⟦symbol⟧Pt(ωj |X)
+Σ
+⟦symbol⟧X∈⟦symbol⟧
+X Pt(ωj |X)
+Σt+1
+j
+=
+1
+Σ
+⟦symbol⟧X∈⟦symbol⟧Pt(ωj |X)
+Σ
+⟦symbol⟧X∈⟦symbol⟧
+X X⟦symbol⟧ Pt(ωj |X)−μt+1
+j μt+1,⟦symbol⟧
+j
+Haindl
+MI-ROZ- 04
+66/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=20">Původní PDF, strana 20</a></p></div></section><section class="slide source" id="slide-87" data-section="Původní přednáška" aria-label="Zobrazení 87: EM -Gaussian Mixture 3"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>EM -Gaussian Mixture 3</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: EM -Gaussian Mixture 3. PDF strana 20, kvadrant 3."><title>EM -Gaussian Mixture 3</title><defs><clipPath id="panel-4-79"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-20.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-79)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 20 · kvadrant 3</span><span class="pill">autor: 67/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+EM -Gaussian Mixture 3
+⊙Σt+1
+j
+possibly singular → new initialization
+⊙Σj =Σ
+j=1,...,K
+Σt+1
+j
+= 1
+|χ|
+Σ
+⟦symbol⟧X∈⟦symbol⟧
+X X⟦symbol⟧ −
+K
+Σ
+j=1
+Pt+1(ωj)μt+1
+j μt+1,⟦symbol⟧
+j
+Haindl
+MI-ROZ- 04
+67/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=20">Původní PDF, strana 20</a></p></div></section><section class="slide source" id="slide-88" data-section="Původní přednáška" aria-label="Zobrazení 88: EM Applications"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>EM Applications</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: EM Applications. PDF strana 20, kvadrant 4."><title>EM Applications</title><defs><clipPath id="panel-4-80"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-20.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-80)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 20 · kvadrant 4</span><span class="pill">autor: 68/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+EM Applications
+recognition (clustering)
+Pt+1(ωj)→ prior class probability
+assign Xr into ωj if
+ωj =argmax
+ωi
+⟦symbol⟧
+Pt+1(ωi |Xr)
+⟦symbol⟧
+Pt+1(ωj |Xr)=
+Pt+1(ωj)P(Xr |θt+1
+j )
+Pt+1(Xr |θ1,...,θK)
+unsupervised learning
+Pt+1(ωj)→ probabilistic coefficient
+θt+1
+j
+=argmax
+θj∈⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+Σ
+⟦symbol⟧Xr∈⟦symbol⟧
+Pt(ωj |Xr)logP(Xr |θj)
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+data recovering -
+sampling from the estimated mixture
+texture synthesis
+Haindl
+MI-ROZ- 04
+68/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=20">Původní PDF, strana 20</a></p></div></section><section class="slide source" id="slide-89" data-section="Původní přednáška" aria-label="Zobrazení 89: Původní zobrazení 81"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Původní zobrazení 81</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Původní zobrazení 81. PDF strana 21, kvadrant 1."><title>Původní zobrazení 81</title><defs><clipPath id="panel-4-81"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-21.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-81)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 21 · kvadrant 1</span><span class="pill">autor: 75/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+Supervised ⟦symbol⟧ersus Unsupervised Learning
+SL not identifiable p(X|θ)⇒
+1⟦symbol⟧
+θ,
+2 ⟦symbol⟧
+θ,...,the same p(X)
+UL not identifiable p(X|θ)⇒
+1⟦symbol⟧
+θ,
+2 ⟦symbol⟧
+θ,...,impossible to
+decompose
+p(X|θ) i.e. p(X|ωi,T)/
+→ p(X|ωi)
+UL no simple analytical solution for p(θ|T)
+SL new sample p(θ|
+tT)⟦symbol⟧p(
+tX|ωi,θi)p(θ|
+t−1T)
+UL new sample - less effective learning
+p(θ|
+tT)⟦symbol⟧ΣK
+j=1 p(
+tX|ωj,θj)P(θj)p(θ|
+t−1T)
+Haindl
+MI-ROZ- 04
+75/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=21">Původní PDF, strana 21</a></p></div></section><section class="slide source" id="slide-90" data-section="Původní přednáška" aria-label="Zobrazení 90: TrainingSet Selection"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection. PDF strana 21, kvadrant 2."><title>TrainingSet Selection</title><defs><clipPath id="panel-4-82"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-21.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-82)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 21 · kvadrant 2</span><span class="pill">autor: 76/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection
+ideally P(error)⟦symbol⟧f(T), T quality determines P(error)
+Required properties:
+representative (e.g.,noisy,object’s changes)
+balanced |Ti| ≈|Tj| ∀j/
+=i (e.g.,skin lesions - 80% benign,
+10% malign,10% unknown,fraud detection,natural disaster
+prediction)
+Ti homogeneity - cluster analysis,statistical tests (chi-square,
+Kolmogorov-Smirnov)
+card{T}→ ⟦symbol⟧
+- too expensive
+⟦symbol⟧
+Σ−1
+i
+→ card{Ti}⟦symbol⟧l+1
+better card{Ti}⟦symbol⟧10l
+minimal dispersion of ⟦symbol⟧
+Σ criterion (P(error)?)
+⟦symbol⟧
+Σ - Wishart distribution, →
+card{Ti}⟦symbol⟧5l
+Haindl
+MI-ROZ- 04
+76/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=21">Původní PDF, strana 21</a></p></div></section><section class="slide source" id="slide-91" data-section="Původní přednáška" aria-label="Zobrazení 91: TrainingSet Selection"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection. PDF strana 21, kvadrant 3."><title>TrainingSet Selection</title><defs><clipPath id="panel-4-83"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-21.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-83)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 21 · kvadrant 3</span><span class="pill">autor: 76/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection
+ideally P(error)⟦symbol⟧f(T), T quality determines P(error)
+Required properties:
+representative (e.g.,noisy,object’s changes)
+balanced |Ti| ≈|Tj| ∀j/
+=i (e.g.,skin lesions - 80% benign,
+10% malign,10% unknown,fraud detection,natural disaster
+prediction)
+undersampling delete iX ∈Ti if |Ti| ≫ |Tj| information loss
+oversampling copies of existing samples overfitting
+synthesis new samples synthesis reliable model
+Ti homogeneity - cluster analysis,statistical tests (chi-square,
+Kolmogorov-Smirnov)
+card{T}→ ⟦symbol⟧
+- too expensive
+⟦symbol⟧
+Σ−1
+i
+→ card{Ti}⟦symbol⟧l+1
+better card{Ti}⟦symbol⟧10l
+minimal dispersion of ⟦symbol⟧
+Σ criterion (P(error)?)
+⟦symbol⟧
+Σ - Wishart distribution, →
+card{Ti}⟦symbol⟧5l
+Haindl
+MI-ROZ- 04
+76/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=21">Původní PDF, strana 21</a></p></div></section><section class="slide source" id="slide-92" data-section="Původní přednáška" aria-label="Zobrazení 92: TrainingSet Selection"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection. PDF strana 21, kvadrant 4."><title>TrainingSet Selection</title><defs><clipPath id="panel-4-84"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-21.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-84)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 21 · kvadrant 4</span><span class="pill">autor: 76/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection
+ideally P(error)⟦symbol⟧f(T), T quality determines P(error)
+Required properties:
+representative (e.g.,noisy,object’s changes)
+balanced |Ti| ≈|Tj| ∀j/
+=i (e.g.,skin lesions - 80% benign,
+10% malign,10% unknown,fraud detection,natural disaster
+prediction)
+Ti homogeneity - cluster analysis,statistical tests (chi-square,
+Kolmogorov-Smirnov)
+card{T}→ ⟦symbol⟧
+- too expensive
+⟦symbol⟧
+Σ−1
+i
+→ card{Ti}⟦symbol⟧l+1
+better card{Ti}⟦symbol⟧10l
+minimal dispersion of ⟦symbol⟧
+Σ criterion (P(error)?)
+⟦symbol⟧
+Σ - Wishart distribution, →
+card{Ti}⟦symbol⟧5l
+Haindl
+MI-ROZ- 04
+76/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=21">Původní PDF, strana 21</a></p></div></section><section class="slide source" id="slide-93" data-section="Původní přednáška" aria-label="Zobrazení 93: TrainingSet Selection"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection. PDF strana 22, kvadrant 1."><title>TrainingSet Selection</title><defs><clipPath id="panel-4-85"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-22.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-85)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 22 · kvadrant 1</span><span class="pill">autor: 76/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection
+ideally P(error)⟦symbol⟧f(T), T quality determines P(error)
+Required properties:
+representative (e.g.,noisy,object’s changes)
+balanced |Ti| ≈|Tj| ∀j/
+=i (e.g.,skin lesions - 80% benign,
+10% malign,10% unknown,fraud detection,natural disaster
+prediction)
+Ti homogeneity - cluster analysis,statistical tests (chi-square,
+Kolmogorov-Smirnov)
+card{T}→ ⟦symbol⟧
+- too expensive
+⟦symbol⟧
+Σ−1
+i
+→ card{Ti}⟦symbol⟧l+1
+better card{Ti}⟦symbol⟧10l
+minimal dispersion of ⟦symbol⟧
+Σ criterion (P(error)?)
+⟦symbol⟧
+Σ - Wishart distribution, →
+card{Ti}⟦symbol⟧5l
+Haindl
+MI-ROZ- 04
+76/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=22">Původní PDF, strana 22</a></p></div></section><section class="slide source" id="slide-94" data-section="Původní přednáška" aria-label="Zobrazení 94: TrainingSet Selection 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection 2. PDF strana 22, kvadrant 2."><title>TrainingSet Selection 2</title><defs><clipPath id="panel-4-86"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-22.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-86)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 22 · kvadrant 2</span><span class="pill">autor: 77/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection 2
+if card{Ti}unsufficient
+feature selection
+⇒
+l↘
+Haindl
+MI-ROZ- 04
+77/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=22">Původní PDF, strana 22</a></p></div></section><section class="slide source" id="slide-95" data-section="Původní přednáška" aria-label="Zobrazení 95: TrainingSet Selection 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection 2. PDF strana 22, kvadrant 3."><title>TrainingSet Selection 2</title><defs><clipPath id="panel-4-87"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-22.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-87)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 22 · kvadrant 3</span><span class="pill">autor: 77/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection 2
+if card{Ti}unsufficient
+regularization
+common ⟦symbol⟧
+Σ
+⟦symbol⟧
+Σ = 1
+n
+K
+Σ
+i=1
+ni⟦symbol⟧
+Σi
+⟦symbol⟧
+Σi(λ)=λ⟦symbol⟧
+Σ +(1 −λ)⟦symbol⟧
+Σi
+λ ∈⟦symbol⟧0;1⟦symbol⟧
+shrinking
+c ∈⟦symbol⟧0;1⟦symbol⟧
+⟦symbol⟧
+Σi(c)=(1 −c)⟦symbol⟧
+Σi +c
+n tr(⟦symbol⟧
+Σi)I
+Haindl
+MI-ROZ- 04
+77/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=22">Původní PDF, strana 22</a></p></div></section><section class="slide source" id="slide-96" data-section="Původní přednáška" aria-label="Zobrazení 96: TrainingSet Selection 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection 2. PDF strana 22, kvadrant 4."><title>TrainingSet Selection 2</title><defs><clipPath id="panel-4-88"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-22.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-88)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 22 · kvadrant 4</span><span class="pill">autor: 77/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection 2
+if card{Ti}unsufficient
+pooled sample covariance
+⟦symbol⟧
+Σp =
+ΣK
+i=1(ni −1)⟦symbol⟧
+Σi
+⟦symbol⟧ −K
+⟦symbol⟧ =
+K
+Σ
+i=1
+ni
+ni =
+card{Ti}
+⟦symbol⟧
+Σp consistent iff ⟦symbol⟧
+Σi = ⟦symbol⟧
+Σj ∀i /
+=j
+Haindl
+MI-ROZ- 04
+77/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=22">Původní PDF, strana 22</a></p></div></section><section class="slide source" id="slide-97" data-section="Původní přednáška" aria-label="Zobrazení 97: TrainingSet Selection 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection 2. PDF strana 23, kvadrant 1."><title>TrainingSet Selection 2</title><defs><clipPath id="panel-4-89"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-23.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-89)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 23 · kvadrant 1</span><span class="pill">autor: 77/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection 2
+if card{Ti}unsufficient
+LOOC estimate
+⟦symbol⟧
+Σ⟦symbol⟧⟦symbol⟧⟦symbol⟧⟦symbol⟧
+i
+=
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+(1 −αi)diag(Σi)+αiΣi,
+0 ⟦symbol⟧αi ⟦symbol⟧1
+(2 −αi)Σi +(αi −1)Σ,
+1 &lt;αi ⟦symbol⟧2
+(3 −αi)Σ +(αi −2)diag(Σ), 2 &lt;αi ⟦symbol⟧3
+Σ =
+1
+K
+K
+Σ
+i=1
+⟦symbol⟧
+Σi
+optimization Gaussian log ML over αi
+Haindl
+MI-ROZ- 04
+77/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=23">Původní PDF, strana 23</a></p></div></section><section class="slide source" id="slide-98" data-section="Původní přednáška" aria-label="Zobrazení 98: TrainingSet Selection 3"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection 3</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection 3. PDF strana 23, kvadrant 2."><title>TrainingSet Selection 3</title><defs><clipPath id="panel-4-90"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-23.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-90)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 23 · kvadrant 2</span><span class="pill">autor: 78/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection 3
+Gaussian assumption - seldom true,small infiuence to
+P(error)
+class selection
+separable classes
+classes with information values
+feature vector dimensionality
+l→ ⟦symbol⟧
+P(error)→ 0
+the Hughes phenomenon - for card{Ti}&lt;⟦symbol⟧
+P(error)↘ ↗, i.e. ∃⟦symbol⟧l
+*
+⊖ biased ⟦symbol⟧
+μ,⟦symbol⟧
+Σ
+⊖ a class is composed from subclasses
+⊖ change in measurement conditions (atmospheric changes)
+Haindl
+MI-ROZ- 04
+78/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=23">Původní PDF, strana 23</a></p></div></section><section class="slide source" id="slide-99" data-section="Původní přednáška" aria-label="Zobrazení 99: TrainingSet Selection 3"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection 3</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection 3. PDF strana 23, kvadrant 3."><title>TrainingSet Selection 3</title><defs><clipPath id="panel-4-91"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-23.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-91)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 23 · kvadrant 3</span><span class="pill">autor: 78/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection 3
+Gaussian assumption - seldom true,small infiuence to
+P(error)
+class selection
+separable classes
+classes with information values
+feature vector dimensionality
+l→ ⟦symbol⟧
+P(error)→ 0
+the Hughes phenomenon - for card{Ti}&lt;⟦symbol⟧
+P(error)↘ ↗, i.e. ∃⟦symbol⟧l
+*
+⊖ biased ⟦symbol⟧
+μ,⟦symbol⟧
+Σ
+⊖ a class is composed from subclasses
+⊖ change in measurement conditions (atmospheric changes)
+Haindl
+MI-ROZ- 04
+78/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=23">Původní PDF, strana 23</a></p></div></section><section class="slide source" id="slide-100" data-section="Původní přednáška" aria-label="Zobrazení 100: TrainingSet Selection 3"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>TrainingSet Selection 3</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: TrainingSet Selection 3. PDF strana 23, kvadrant 4."><title>TrainingSet Selection 3</title><defs><clipPath id="panel-4-92"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-23.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-4-92)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 23 · kvadrant 4</span><span class="pill">autor: 78/77</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">⟦symbol⟧L ⟦symbol⟧M
+⟦symbol⟧S xS
+TrainingSet Selection 3
+Gaussian assumption - seldom true,small infiuence to
+P(error)
+class selection
+separable classes
+classes with information values
+feature vector dimensionality
+l→ ⟦symbol⟧
+P(error)→ 0
+the Hughes phenomenon - for card{Ti}&lt;⟦symbol⟧
+P(error)↘ ↗, i.e. ∃⟦symbol⟧l
+*
+⊖ biased ⟦symbol⟧
+μ,⟦symbol⟧
+Σ
+⊖ a class is composed from subclasses
+⊖ change in measurement conditions (atmospheric changes)
+Haindl
+MI-ROZ- 04
+78/77</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=23">Původní PDF, strana 23</a></p></div></section></main><footer class="controls"><span class="hint">← → listování · O obsah · F celá obrazovka</span><div class="pager"><button id="previous" aria-label="Předchozí snímek">←</button><output id="counter">01 / 100</output><button id="next" aria-label="Další snímek">→</button></div><span class="credit">Michal Haindl · FIT ČVUT / ÚTIA</span><div class="progress" aria-hidden="true"><div id="progress-value"></div></div></footer><div id="announcement" class="sr-only" aria-live="polite"></div><dialog id="overview" aria-labelledby="overview-title"><div class="dialog-heading"><h2 id="overview-title">Obsah přednášky</h2><button class="close" aria-label="Zavřít obsah">×</button></div><nav><a href="#slide-1"><span>01</span><span>Strojové učení</span></a><a href="#slide-2"><span>02</span><span>Co se z dat učí</span></a><a href="#slide-3"><span>03</span><span>Model a jeho nastavení</span></a><a href="#slide-4"><span>04</span><span>Přeučení</span></a><a href="#slide-5"><span>05</span><span>Učení není důkaz kvality</span></a><a href="#slide-6"><span>06</span><span>Normalizace jako únik informace</span></a><a href="#slide-7"><span>07</span><span>Minimum s kvadratickou penalizací</span></a><a href="#slide-8"><span>08</span><span>Zkuste si odpovědět</span></a><a href="#slide-9"><span>09</span><span>Pattern Recognition IV</span></a><a href="#slide-10"><span>10</span><span>Outline</span></a><a href="#slide-11"><span>11</span><span>Outline</span></a><a href="#slide-12"><span>12</span><span>Machine Learning</span></a><a href="#slide-13"><span>13</span><span>Machine Learning</span></a><a href="#slide-14"><span>14</span><span>Machine Learning</span></a><a href="#slide-15"><span>15</span><span>Machine Learning</span></a><a href="#slide-16"><span>16</span><span>Machine Learning</span></a><a href="#slide-17"><span>17</span><span>Machine Learning</span></a><a href="#slide-18"><span>18</span><span>Machine Learning</span></a><a href="#slide-19"><span>19</span><span>Machine Learning</span></a><a href="#slide-20"><span>20</span><span>Machine Learning</span></a><a href="#slide-21"><span>21</span><span>Machine Learning</span></a><a href="#slide-22"><span>22</span><span>Parametric /Non-parametric Learning</span></a><a href="#slide-23"><span>23</span><span>Parametric /Non-parametric Learning</span></a><a href="#slide-24"><span>24</span><span>Statistical Learning</span></a><a href="#slide-25"><span>25</span><span>Statistical Learning</span></a><a href="#slide-26"><span>26</span><span>Statistical Learning</span></a><a href="#slide-27"><span>27</span><span>Statistical Learning</span></a><a href="#slide-28"><span>28</span><span>Identifiability</span></a><a href="#slide-29"><span>29</span><span>Statistical Parameter Estimation</span></a><a href="#slide-30"><span>30</span><span>Statistical Parameter Estimation</span></a><a href="#slide-31"><span>31</span><span>Statistical Parameter Estimation</span></a><a href="#slide-32"><span>32</span><span>Statistical Parameter Estimation</span></a><a href="#slide-33"><span>33</span><span>Statistical Parameter Estimation</span></a><a href="#slide-34"><span>34</span><span>Estimator Properties -biasness</span></a><a href="#slide-35"><span>35</span><span>Estimator Properties -biasness</span></a><a href="#slide-36"><span>36</span><span>Estimator Properties -biasness ,consistency</span></a><a href="#slide-37"><span>37</span><span>Estimator Properties -efficiency</span></a><a href="#slide-38"><span>38</span><span>Estimator Properties -sufficiency</span></a><a href="#slide-39"><span>39</span><span>Estimator Properties -sufficiency</span></a><a href="#slide-40"><span>40</span><span>Estimator Properties -Bias x Precision</span></a><a href="#slide-41"><span>41</span><span>Estimator Properties -Bias x Precision</span></a><a href="#slide-42"><span>42</span><span>Estimator Properties -Bias x Precision</span></a><a href="#slide-43"><span>43</span><span>Estimator Properties -Bias x Precision</span></a><a href="#slide-44"><span>44</span><span>Estimator Properties -Bias x Precision</span></a><a href="#slide-45"><span>45</span><span>Supervised Learning-Moment Method</span></a><a href="#slide-46"><span>46</span><span>Moment Method 2</span></a><a href="#slide-47"><span>47</span><span>Moment Method 2</span></a><a href="#slide-48"><span>48</span><span>Původní zobrazení 40</span></a><a href="#slide-49"><span>49</span><span>Původní zobrazení 41</span></a><a href="#slide-50"><span>50</span><span>Maximum A Posteriori Estimation</span></a><a href="#slide-51"><span>51</span><span>Maximum Likelihood Estimation</span></a><a href="#slide-52"><span>52</span><span>Maximum Likelihood Estimation</span></a><a href="#slide-53"><span>53</span><span>Supervised Bayesian Estimation</span></a><a href="#slide-54"><span>54</span><span>Bayesian Estimation 2</span></a><a href="#slide-55"><span>55</span><span>Bayesian Estimation 2</span></a><a href="#slide-56"><span>56</span><span>Bayesian Estimation 3</span></a><a href="#slide-57"><span>57</span><span>Bayes Estimator</span></a><a href="#slide-58"><span>58</span><span>Nonparametric Distributions -Histogram Approach</span></a><a href="#slide-59"><span>59</span><span>Nonparametric Distributions -Parzen Estimation</span></a><a href="#slide-60"><span>60</span><span>Nonparametric Distributions -Parzen Estimation</span></a><a href="#slide-61"><span>61</span><span>Parzen Kernels</span></a><a href="#slide-62"><span>62</span><span>Parzen Kernels</span></a><a href="#slide-63"><span>63</span><span>Parzen Kernels</span></a><a href="#slide-64"><span>64</span><span>Unsupervised Learning</span></a><a href="#slide-65"><span>65</span><span>Unsupervised Learning</span></a><a href="#slide-66"><span>66</span><span>UNISEP</span></a><a href="#slide-67"><span>67</span><span>UNISEP</span></a><a href="#slide-68"><span>68</span><span>Unsupervised Bayesian Parametric Learning</span></a><a href="#slide-69"><span>69</span><span>Unidentifiable Examples</span></a><a href="#slide-70"><span>70</span><span>Unidentifiable Examples</span></a><a href="#slide-71"><span>71</span><span>Unidentifiable Examples</span></a><a href="#slide-72"><span>72</span><span>Unsupervised Parametric Bayesian Learning-Complexity</span></a><a href="#slide-73"><span>73</span><span>Unsupervised Parametric Bayesian Learning2</span></a><a href="#slide-74"><span>74</span><span>Gaussian Mixture Example -Moment Method</span></a><a href="#slide-75"><span>75</span><span>Unsupervised ML Learning</span></a><a href="#slide-76"><span>76</span><span>Unsupervised ML Learning2</span></a><a href="#slide-77"><span>77</span><span>EM Algorithm -(Expectation &amp;Maximization)</span></a><a href="#slide-78"><span>78</span><span>EM Algorithm -Example</span></a><a href="#slide-79"><span>79</span><span>EM Properties</span></a><a href="#slide-80"><span>80</span><span>EM Properties</span></a><a href="#slide-81"><span>81</span><span>EM 2</span></a><a href="#slide-82"><span>82</span><span>Discrete Mixture ofProduct Components</span></a><a href="#slide-83"><span>83</span><span>Discrete Mixture ofProduct Components 2</span></a><a href="#slide-84"><span>84</span><span>Discrete Mixture ofProduct Components 3</span></a><a href="#slide-85"><span>85</span><span>EM -Gaussian Mixture</span></a><a href="#slide-86"><span>86</span><span>EM -Gaussian Mixture 2</span></a><a href="#slide-87"><span>87</span><span>EM -Gaussian Mixture 3</span></a><a href="#slide-88"><span>88</span><span>EM Applications</span></a><a href="#slide-89"><span>89</span><span>Původní zobrazení 81</span></a><a href="#slide-90"><span>90</span><span>TrainingSet Selection</span></a><a href="#slide-91"><span>91</span><span>TrainingSet Selection</span></a><a href="#slide-92"><span>92</span><span>TrainingSet Selection</span></a><a href="#slide-93"><span>93</span><span>TrainingSet Selection</span></a><a href="#slide-94"><span>94</span><span>TrainingSet Selection 2</span></a><a href="#slide-95"><span>95</span><span>TrainingSet Selection 2</span></a><a href="#slide-96"><span>96</span><span>TrainingSet Selection 2</span></a><a href="#slide-97"><span>97</span><span>TrainingSet Selection 2</span></a><a href="#slide-98"><span>98</span><span>TrainingSet Selection 3</span></a><a href="#slide-99"><span>99</span><span>TrainingSet Selection 3</span></a><a href="#slide-100"><span>100</span><span>TrainingSet Selection 3</span></a></nav></dialog><dialog id="image-view" aria-label="Zvětšený obrázek"><button class="close" aria-label="Zavřít obrázek">×</button><img alt=""></dialog><dialog id="zoom-view" aria-label="Zvětšený původní snímek"><div class="dialog-heading"><h2>Původní snímek</h2><button class="close" aria-label="Zavřít snímek">×</button></div><p class="muted">Zvětšený snímek lze posouvat prstem, posuvníkem nebo klávesami po zaměření obrázku.</p><div class="zoom-actions"><button type="button" data-zoom-scale="1" aria-pressed="true">Přizpůsobit</button><button type="button" data-zoom-scale="2" aria-pressed="false">2×</button><button type="button" data-zoom-scale="3" aria-pressed="false">3×</button></div><div class="zoom-body" tabindex="0" aria-label="Posouvání zvětšeného snímku"></div></dialog><dialog id="notes-panel" aria-labelledby="notes-title"><div class="dialog-heading"><h2 id="notes-title">Moje poznámky</h2><button class="close" aria-label="Zavřít poznámky">×</button></div><p id="note-context"></p><label for="note-text">Poznámka k aktuálnímu zobrazení</label><textarea id="note-text"></textarea><p id="note-status" aria-live="polite">Poznámky se ukládají pouze v tomto prohlížeči, zvlášť pro každou variantu.</p><button id="note-clear">Smazat tuto poznámku</button></dialog><noscript><p class="no-script">Bez JavaScriptu je obsah souvislý dokument; interaktivní model vyžaduje JavaScript.</p></noscript></body></html>

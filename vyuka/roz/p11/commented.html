@@ -1,0 +1,1862 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="ROZ · 11 · Genetické algoritmy · S komentářem. Michal Haindl, 2023–2024. Věrný vektorový web a samostatné studijní doplňky GRAFIT."><title>ROZ · 11 · Genetické algoritmy · S komentářem</title><script>(()=>{let s;try{s=localStorage.getItem('roz-theme')}catch{}document.documentElement.dataset.theme=['light','dark'].includes(s)?s:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')})();</script><link rel="stylesheet" href="../shared/presentation.css"><script src="../shared/presentation.js" defer></script><script src="../shared/extras.js" defer></script><script src="../shared/models.js" defer></script><style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+</head><body class="grafit-toolbar-return"><header class="toolbar">
+<a id="grafit-lecture-return" class="grafit-lecture-return" href="../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a><a class="brand" id="grafit-course-link" href="../" aria-label="Přehled přednášek ROZ" data-subject="roz">ROZ <span>/ 11</span></a><span class="edition">S komentářem</span><div class="variant-switch"><a href="./">Původní snímky</a><a href="commented.html" aria-current="page">S komentářem</a></div><nav aria-label="Nástroje prezentace"><button id="contents" aria-haspopup="dialog">Obsah</button><button id="reading" aria-pressed="false">Čtení</button><button id="notes-toggle" aria-haspopup="dialog">Poznámky</button><button id="print-button">Tisk</button><a href="original.pdf">PDF</a><a class="offline-link" href="offline.zip">Offline ZIP</a><button id="theme" aria-label="Tmavý režim" aria-pressed="false">◐</button><button id="fullscreen" aria-label="Celá obrazovka (F)">⛶</button></nav><span id="chapter"></span></header><main id="deck" aria-label="ROZ · 11 · Genetické algoritmy · S komentářem"><section class="slide intro" id="slide-1" data-section="Doplněk GRAFIT" aria-label="Zobrazení 1: Genetické algoritmy"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Genetické algoritmy</h2><p class="eyebrow">NI-ROZ · 11 · Michal Haindl</p><p class="lead">Rozlišit reprezentaci řešení, fitness a stochastické operátory.</p><p>Podklad <strong>2023–2024</strong> · 18 stran PDF · 69 samostatných zobrazení včetně postupných odhalení.</p><p class="source-legal">Původní snímky zachovávají vektorovou grafiku, ilustrace i vzorce. Textový výpis je pomocný strojově obnovený přepis, nikoli ručně ověřená sazba; rozhoduje původní snímek a PDF. Čísla zobrazení se mohou lišit od autorova číslování snímků.</p><p class="callout">Česká vysvětlení, příklady, otázky a model jsou <strong>doplněk GRAFIT</strong>, nikoli text ani autorizovaný nový výklad Michala Haindla. Původní anglická přednáška následuje za tímto studijním úvodem.</p><p class="actions"><a href="source-manifest.json">Mapa snímků a SHA-256</a><a href="https://courses.fit.cvut.cz/NI-ROZ/lectures/current.html">Autorský rozcestník FIT ↗</a></p><p class="muted">Historické organizační pokyny a projektové termíny z let 2023–2024 nevyjadřují aktuální zadání. Část 10 v aktuálním seznamu není; starší archiv má jiné číslování.</p></div></section><section class="slide companion" id="slide-2" data-section="Doplněk GRAFIT" aria-label="Zobrazení 2: Co je jedinec"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Co je jedinec</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Chromozom kóduje kandidátní řešení. Fitness vyjadřuje jeho kvalitu podle konkrétního zadání. Kódování musí umožnit smysluplné vyhodnocení a buď zachovávat přípustnost, nebo mít pravidla oprav či penalizací.</p></div></section><section class="slide companion" id="slide-3" data-section="Doplněk GRAFIT" aria-label="Zobrazení 3: Selekce, křížení, mutace"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Selekce, křížení, mutace</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Selekce preferuje určité rodiče. Křížení kombinuje jejich informace, mutace zavádí další změny. Jejich účinek závisí na reprezentaci; výměna bitů není univerzálně smysluplná pro libovolnou úlohu.</p></div></section><section class="slide companion" id="slide-4" data-section="Doplněk GRAFIT" aria-label="Zobrazení 4: Prozkoumávání a využívání"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Prozkoumávání a využívání</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Silný selekční tlak může rychle zlepšit fitness a současně ztratit rozmanitost. Slabý tlak či velmi silné mutace mohou postup zpomalit. Elitismus uchová nejlepší jedince, ale sám neřeší předčasnou konvergenci.</p></div></section><section class="slide companion" id="slide-5" data-section="Doplněk GRAFIT" aria-label="Zobrazení 5: Jak vykazovat výsledek"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Jak vykazovat výsledek</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Jde o stochastickou heuristiku. Uvádíme rozpočet vyhodnocení, opakování, náhodná semena a variabilitu výsledků. Nejlepší nalezené řešení není bez dalšího důkaz globálního optima.</p></div></section><section class="slide companion" id="slide-6" data-section="Doplněk GRAFIT" aria-label="Zobrazení 6: OneMax a mutace"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>OneMax a mutace</h2><p class="eyebrow">Řešený syntetický příklad · GRAFIT</p><p class="lead">V hračkové úloze maximalizujeme počet jedniček. Řetězec 10110 má fitness 3. Převrácení druhého bitu dává 11110 s fitness 4, převrácení prvního bitu však 00110 s fitness 2. Mutace tedy nemusí zlepšovat.</p><aside class="callout"><strong>Na co dát pozor</strong><p>Neprezentujte jeden úspěšný běh jako záruku. Ukázka bitového operátoru níže není implementace celého genetického algoritmu.</p></aside></div></section><section class="slide companion" id="slide-7" data-section="Doplněk GRAFIT" aria-label="Zobrazení 7: Jeden bitový mutační operátor"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Jeden bitový mutační operátor</h2><p>Interaktivní didaktický doplněk GRAFIT · syntetické hodnoty.</p><div class="lab" data-model="mutation"><div class="lab-inputs"><label for="model-bits">Chromozom (1–16 bitů)<input id="model-bits" name="bits" type="text" maxlength="16" value="10110" spellcheck="false"></label><label for="model-position">Pozice bitu (od 1)<input id="model-position" name="position" type="number" min="1" max="16" step="1" value="2"></label><button type="button" data-reset-model>Obnovit hodnoty</button></div><canvas width="700" height="300" role="img" aria-label="Grafický doprovod výpočtu; stejné výsledky a omezení jsou v textu pod grafem."></canvas><output aria-live="polite"></output></div><p class="muted">Ukázka izoluje jeden princip. Není benchmarkem, měřením na skutečných datech ani plnou implementací příslušného učícího algoritmu.</p></div></section><section class="slide companion" id="slide-8" data-section="Doplněk GRAFIT" aria-label="Zobrazení 8: Zkuste si odpovědět"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Zkuste si odpovědět</h2><p class="eyebrow">Kontrolní otázka · GRAFIT</p><p class="lead">Zlepšuje každá mutace fitness?</p><details class="quiz-answer"><summary>Zobrazit vysvětlení</summary><p>Ne. Může ji zvýšit, snížit nebo ponechat stejnou; záleží na řešení, operátoru a cílové funkci.</p></details><p><a href="#slide-9">Pokračovat původní přednáškou →</a></p></div></section><section class="slide source" id="slide-9" data-section="Původní přednáška" aria-label="Zobrazení 9: Pattern Recognition XI"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition XI</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition XI. PDF strana 1, kvadrant 1."><title>Pattern Recognition XI</title><defs><clipPath id="panel-11-1"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-1)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 1</span><span class="pill">autor: 1/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">Outline
+Pattern Recognition XI
+GeneticAlgorithms
+Michal Haindl
+Faculty of Information Technology,KTI
+Czech Technical University in Prague
+/nstitute of /nformation Theory and Automation
+Czech Academy of Sciences
+Prague,Czechia
+http://ro.utia.cz/
+MI/MIE-ROZ2023-2024
+Haindl
+MI-ROZ- 11
+1/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-10" data-section="Původní přednáška" aria-label="Zobrazení 10: Outline"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Outline</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Outline. PDF strana 1, kvadrant 2."><title>Outline</title><defs><clipPath id="panel-11-2"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-2)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 2</span><span class="pill">autor: 2/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">Outline
+Outline
+1 Genetic Algorithms
+Fitness Function
+Genetic Operators
+2 GA Requirements
+Genetic Programming
+Genetic Clustering
+3 Genetic Segmentation
+4 Genetic Search
+5 Genetic Feature Selection
+Haindl
+MI-ROZ- 11
+2/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-11" data-section="Původní přednáška" aria-label="Zobrazení 11: Genetic Algorithms"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithms</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithms. PDF strana 1, kvadrant 3."><title>Genetic Algorithms</title><defs><clipPath id="panel-11-3"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-3)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 3</span><span class="pill">autor: 3/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Genetic Algorithms
+optimization techniques based on natural evolution mechanism,
+working in binarysearch spaces
+C.R. Darwin (1859 - On the Origin of Species)
+Survival of the fittest
+1 Variation must be copying because selection does not create
+directlyanything,but presupposes a large population to work
+on.
+2 Variation must be small-scaled in practice. Species do not
+appear suddenly.
+3 Variation is undirected (the blind watchmaker paradigm).
+G. Mendel (1865 - Versuche ¨
+uber Pfianzen-Hybriden)
+Haindl
+MI-ROZ- 11
+3/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-12" data-section="Původní přednáška" aria-label="Zobrazení 12: Genetic Algorithms"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithms</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithms. PDF strana 1, kvadrant 4."><title>Genetic Algorithms</title><defs><clipPath id="panel-11-4"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-4)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 4</span><span class="pill">autor: 3/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Genetic Algorithms
+optimization techniques based on natural evolution mechanism,
+working in binarysearch spaces
+C.R. Darwin (1859 - On the Origin of Species)
+G. Mendel (1865 - Versuche ¨
+uber Pfianzen-Hybriden)
+*12.2.1809
++19.4.1882
+*22.7.1822
++6.1.1884
+computer simulation of biological systems (1950s)
+evolutionarystrategies - Recheuberg (1973)
+GA Universityof Michigan - J. Holland (1975)
+Haindl
+MI-ROZ- 11
+3/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-13" data-section="Původní přednáška" aria-label="Zobrazení 13: Genetic Algorithms"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithms</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithms. PDF strana 2, kvadrant 1."><title>Genetic Algorithms</title><defs><clipPath id="panel-11-5"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-5)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 1</span><span class="pill">autor: 3/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Genetic Algorithms
+optimization techniques based on natural evolution mechanism,
+working in binarysearch spaces
+C.R. Darwin (1859 - On the Origin of Species)
+G. Mendel (1865 - Versuche ¨
+uber Pfianzen-Hybriden)
+differences from other optimization techniques:
+GA uses a coding (a finite length string chromosome over a
+finite alphabet,e.g.,binarystrings)of the parameter set,not
+the parameters themselves,the design of the representation is
+an important part of the GA
+GA search from a large population of possible solutions,the
+search for the optimum is driven from manypoints in the
+search space → better chance to find the global optimum
+Haindl
+MI-ROZ- 11
+3/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-14" data-section="Původní přednáška" aria-label="Zobrazení 14: Genetic Algorithms 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithms 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithms 2. PDF strana 2, kvadrant 2."><title>Genetic Algorithms 2</title><defs><clipPath id="panel-11-6"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-6)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 2</span><span class="pill">autor: 4/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Genetic Algorithms 2
+differences
+GA uses objective function information,no derivatives or
+other auxiliaryknowledge,there is no guarantee that this
+function is relevant to the solved problem,the value of the
+evaluation function is called fitness in GA
+GA uses probabilistic transition rules,theysupport good
+strings with higher fitness and remove poor strings with lower
+fitness,the best strings are allowed survive with a higher
+probability
+survival and death is achieved applying three basic operations
+reproduction,crossover,mutation
+Haindl
+MI-ROZ- 11
+4/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-15" data-section="Původní přednáška" aria-label="Zobrazení 15: Genetic Algorithms 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithms 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithms 2. PDF strana 2, kvadrant 3."><title>Genetic Algorithms 2</title><defs><clipPath id="panel-11-7"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-7)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 3</span><span class="pill">autor: 4/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Genetic Algorithms 2
+⊙combine directed and stochastic search
+⊙
+⟦symbol⟧ n + 2d−1
+2d−1
+⟦symbol⟧
+number of different populations (nchromosomes, dbits)
+⊕implicit parallelism
+⊕robust to dynamic changes
+⊕resistent to be trapped in local optima
+⊕wider solution space
+⊕easymodification for different problems
+⊕no restrictions for fitness function
+⊕discontinuities have little effect on overall optimization performance
+⊕no gradient knowledge required
+⊕good for multi-modal problems,large,poorlyunderstood search spaces
+Haindl
+MI-ROZ- 11
+4/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-16" data-section="Původní přednáška" aria-label="Zobrazení 16: Genetic Algorithms 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithms 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithms 2. PDF strana 2, kvadrant 4."><title>Genetic Algorithms 2</title><defs><clipPath id="panel-11-8"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-8)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 4</span><span class="pill">autor: 4/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Genetic Algorithms 2
+⊖do not guarantee the global optimum
+⊖cannot use gradients
+⊖problems with constraints or incorporating problem specific information
+⊖definition of representation for the problem
+⊖heuristic parameters (population size,initialization,op. probabilities,
+fitness function,number of bits,...)
+⊖no effective terminator
+⊖require large number of fitness function evaluations
+⊖not effective for smooth unimodal functions
+⊖multidimensional high-precision problems
+(e.g.,102 variables,103 range,6 digit precision ⇒ solution
+⟦symbol⟧=[v1,...,v100]
+vector length 20 → 20 ×100 =2000, 22000 ≈10600 search space)
+Haindl
+MI-ROZ- 11
+4/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-17" data-section="Původní přednáška" aria-label="Zobrazení 17: Genetic Algorithms -Encoding"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithms -Encoding</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithms -Encoding. PDF strana 3, kvadrant 1."><title>Genetic Algorithms -Encoding</title><defs><clipPath id="panel-11-9"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-9)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 1</span><span class="pill">autor: 5/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Genetic Algorithms -Encoding
+binary110100011010
+octal 15723314
+hexadecimal 5FC7DBA
+value hack,left,right,forward,downward
+tree tree of some objects (functions and commands of a
+programming language)
+other arrays,lists,...
+Haindl
+MI-ROZ- 11
+5/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-18" data-section="Původní přednáška" aria-label="Zobrazení 18: Population"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Population</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Population. PDF strana 3, kvadrant 2."><title>Population</title><defs><clipPath id="panel-11-10"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-10)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 2</span><span class="pill">autor: 6/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Population
+The initial population generation:
+random initialization,
+using anyprior information available,
+some known good solutions,
+uniform cover of the whole solution space.
+The population size:
+large more efficient to reach global optimum,
+requires much more computational cost,memoryand time.
+Haindl
+MI-ROZ- 11
+6/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-19" data-section="Původní přednáška" aria-label="Zobrazení 19: Fitness Function"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Fitness Function</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Fitness Function. PDF strana 3, kvadrant 3."><title>Fitness Function</title><defs><clipPath id="panel-11-11"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-11)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 3</span><span class="pill">autor: 7/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Fitness Function
+f (chromosomei)
+chromosome - a feasible solution
+ith generation
+f (αj,i) rank
+1100101101100111
+20
+4.
+1110001110100010
+35
+2.
+0001111001101101
+17
+5.
+1010101111000100
+22
+3.
+1110011000000010
+37
+1.
+1001111001111100
+13
+6.
+Haindl
+MI-ROZ- 11
+7/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-20" data-section="Původní přednáška" aria-label="Zobrazení 20: Fitness Function"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Fitness Function</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Fitness Function. PDF strana 3, kvadrant 4."><title>Fitness Function</title><defs><clipPath id="panel-11-12"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-12)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 4</span><span class="pill">autor: 7/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Fitness Function
+f (chromosomei)
+chromosome - a feasible solution
+ith generation
+f (αj,i) rank
+1100101101100111
+20
+4.
+1110001110100010
+35
+2.
+0001111001101101
+17
+5.
+1010101111000100
+22
+3.
+1110011000000010
+37
+1.
+1001111001111100
+13
+6.
+Haindl
+MI-ROZ- 11
+7/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-21" data-section="Původní přednáška" aria-label="Zobrazení 21: Fitness Function"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Fitness Function</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Fitness Function. PDF strana 4, kvadrant 1."><title>Fitness Function</title><defs><clipPath id="panel-11-13"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-13)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 1</span><span class="pill">autor: 7/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Fitness Function
+goodness of the solution =f (chromosomei)
+f ()depends on
+application
+selected genetic representation
+Haindl
+MI-ROZ- 11
+7/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-22" data-section="Původní přednáška" aria-label="Zobrazení 22: Fitness Function"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Fitness Function</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Fitness Function. PDF strana 4, kvadrant 2."><title>Fitness Function</title><defs><clipPath id="panel-11-14"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-14)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 2</span><span class="pill">autor: 7/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Fitness Function
+probabilistic fitness - Boltzmann (Gibbs)distribution
+P(i)=
+exp{f
+i
+i}
+E
+⟦symbol⟧
+exp{f
+i
+i}
+⟦symbol⟧
+f
+ii-th chromosome finess
+T ↘ control parameter (temperature)
+E{.}over the current generation
+Haindl
+MI-ROZ- 11
+7/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-23" data-section="Původní přednáška" aria-label="Zobrazení 23: Genetic Operators -Reproduction"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Operators -Reproduction</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Operators -Reproduction. PDF strana 4, kvadrant 3."><title>Genetic Operators -Reproduction</title><defs><clipPath id="panel-11-15"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-15)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 3</span><span class="pill">autor: 8/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Genetic Operators -Reproduction
+strings with the highest fitness are copied into the next generation
+strings
+the selection process is probabilistic,the probabilityof copying is
+given byits relative fitness in the current population
+some strings with high fitness can be copied more than once
+the total cardinalityof population set remains constant
+{0,1,1,1,0,0,0,0}→ {0,1,1,1,0,0,0,0}
+Haindl
+MI-ROZ- 11
+8/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-24" data-section="Původní přednáška" aria-label="Zobrazení 24: Crossover"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Crossover</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Crossover. PDF strana 4, kvadrant 4."><title>Crossover</title><defs><clipPath id="panel-11-16"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-16)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 4</span><span class="pill">autor: 9/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Crossover
+Exchange features of two individuals to produce two offspring.
+Selected mates mayhave good properties to survive in next
+generation.
+best individuals based upon their fitness values
+random selection
+rank selection (select randomly2chromosomes a choose the
+better,repeat that step)
+Thus we expect that exchanging features mayproduce other
+good individuals.
+Haindl
+MI-ROZ- 11
+9/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-25" data-section="Původní přednáška" aria-label="Zobrazení 25: Crossover"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Crossover</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Crossover. PDF strana 5, kvadrant 1."><title>Crossover</title><defs><clipPath id="panel-11-17"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-17)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 1</span><span class="pill">autor: 9/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Crossover
+mating of new generation string to produce new strings by
+swapping all characters between the beginning of the string pairs
+and the randomlychosen border position
+{0,0,0,0,0,0,0,0}
+{1,1,1,1,1,1,1,1}
+⟦symbol⟧
+→
+⟦symbol⟧{0,0,0,0,0|0,0,0}
+{1,1,1,1,1|1,1,1}
+Haindl
+MI-ROZ- 11
+9/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-26" data-section="Původní přednáška" aria-label="Zobrazení 26: Crossover"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Crossover</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Crossover. PDF strana 5, kvadrant 2."><title>Crossover</title><defs><clipPath id="panel-11-18"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-18)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 2</span><span class="pill">autor: 9/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Crossover
+mating of new generation string to produce new strings by
+swapping all characters between the beginning of the string pairs
+and the randomlychosen border position
+{0,0,0,0,0|0,0,0}
+{1,1,1,1,1|1,1,1}
+⟦symbol⟧
+→
+⟦symbol⟧{1,1,1,1,1,0,0,0}
+{0,0,0,0,0,1,1,1}
+Haindl
+MI-ROZ- 11
+9/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-27" data-section="Původní přednáška" aria-label="Zobrazení 27: Crossover"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Crossover</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Crossover. PDF strana 5, kvadrant 3."><title>Crossover</title><defs><clipPath id="panel-11-19"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-19)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 3</span><span class="pill">autor: 9/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Crossover
+mating of new generation string to produce new strings by
+swapping all characters between the beginning of the string pairs
+and the randomlychosen border position
+all newlyreproduced strings are subject to crossover
+probabilistic parameter represents the number of pairs
+processed bycrossover Pcrossover =
+⟦symbol⟧ 0, no crossover;
+1, all chromozomes.
+implicit parallelism - substrings (schemata)can represent
+correct solution even if string as a whole is wrong,if the
+schemata can be manipulated independently,the optimal
+solution can be located faster than if all characters are
+handled independently
+Haindl
+MI-ROZ- 11
+9/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-28" data-section="Původní přednáška" aria-label="Zobrazení 28: Crossover"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Crossover</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Crossover. PDF strana 5, kvadrant 4."><title>Crossover</title><defs><clipPath id="panel-11-20"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-20)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 4</span><span class="pill">autor: 10/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Crossover
+Single-point Crossover
+{0,0,0,0,0|0,0,0}
+{1,1,1,1,1|1,1,1}
+⟦symbol⟧
+→
+⟦symbol⟧{1,1,1,1,1,0,0,0}
+{0,0,0,0,0,1,1,1}
+Haindl
+MI-ROZ- 11
+10/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-29" data-section="Původní přednáška" aria-label="Zobrazení 29: Crossover"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Crossover</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Crossover. PDF strana 6, kvadrant 1."><title>Crossover</title><defs><clipPath id="panel-11-21"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-21)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 1</span><span class="pill">autor: 10/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Crossover
+Single-point Crossover
+{0,0,0,0,0|0,0,0}
+{1,1,1,1,1|1,1,1}
+⟦symbol⟧
+→
+⟦symbol⟧{1,1,1,1,1,0,0,0}
+{0,0,0,0,0,1,1,1}
+Two-point Crossover
+{0,0|0,0,0|0,0,0}
+{1,1|1,1,1|1,1,1}
+⟦symbol⟧
+→
+⟦symbol⟧{1,1,0,0,0,1,1,1}
+{0,0,1,1,1,0,0,0}
+Haindl
+MI-ROZ- 11
+10/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-30" data-section="Původní přednáška" aria-label="Zobrazení 30: Crossover"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Crossover</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Crossover. PDF strana 6, kvadrant 2."><title>Crossover</title><defs><clipPath id="panel-11-22"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-22)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 2</span><span class="pill">autor: 10/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Crossover
+Single-point Crossover
+{0,0,0,0,0|0,0,0}
+{1,1,1,1,1|1,1,1}
+⟦symbol⟧
+→
+⟦symbol⟧{1,1,1,1,1,0,0,0}
+{0,0,0,0,0,1,1,1}
+Two-point Crossover
+{0,0|0,0,0|0,0,0}
+{1,1|1,1,1|1,1,1}
+⟦symbol⟧
+→
+⟦symbol⟧{1,1,0,0,0,1,1,1}
+{0,0,1,1,1,0,0,0}
+Uniform Crossover
+{0,1,1,0,0,1,0,1}
+{0|0,0|0,0|0|0|0}
+{1|1,1|1,1|1|1|1}
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧ →
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧⟦symbol⟧ossove⟦symbol⟧tempI⟦symbol⟧te
+{0,1,1,0,0,1,0,1}
+{1,0,0,1,1,0,1,0}
+Haindl
+MI-ROZ- 11
+10/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-31" data-section="Původní přednáška" aria-label="Zobrazení 31: Crossover"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Crossover</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Crossover. PDF strana 6, kvadrant 3."><title>Crossover</title><defs><clipPath id="panel-11-23"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-23)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 3</span><span class="pill">autor: 10/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Crossover
+Single-point Crossover
+{0,0,0,0,0|0,0,0}
+{1,1,1,1,1|1,1,1}
+⟦symbol⟧
+→
+⟦symbol⟧{1,1,1,1,1,0,0,0}
+{0,0,0,0,0,1,1,1}
+Two-point Crossover
+{0,0|0,0,0|0,0,0}
+{1,1|1,1,1|1,1,1}
+⟦symbol⟧
+→
+⟦symbol⟧{1,1,0,0,0,1,1,1}
+{0,0,1,1,1,0,0,0}
+Uniform Crossover
+{0,1,1,0,0,1,0,1}
+{0|0,0|0,0|0|0|0}
+{1|1,1|1,1|1|1|1}
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧ →
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧⟦symbol⟧ossove⟦symbol⟧tempI⟦symbol⟧te
+{0,1,1,0,0,1,0,1}
+{1,0,0,1,1,0,1,0}
+Multipoint Crossover (N-Point)
+Haindl
+MI-ROZ- 11
+10/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-32" data-section="Původní přednáška" aria-label="Zobrazení 32: Crossover"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Crossover</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Crossover. PDF strana 6, kvadrant 4."><title>Crossover</title><defs><clipPath id="panel-11-24"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-24)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 4</span><span class="pill">autor: 10/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Crossover
+Tree Parents Crossover
+{0,1,1,0,0,1,0,0}
+{1,1,1,1,1,1,1,0}
+{1,0,0,1,1,0,0,0}
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧ → {1,1,1,1,1,1,0,0}
+1 three parents p1,p2,p3 are randomlychosen
+2
+p1,i = p2,i ⇒ oi =p1,i
+p1,i /
+= p2,i ⇒ oi =p3,i
+Haindl
+MI-ROZ- 11
+10/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-33" data-section="Původní přednáška" aria-label="Zobrazení 33: Crossover"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Crossover</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Crossover. PDF strana 7, kvadrant 1."><title>Crossover</title><defs><clipPath id="panel-11-25"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-25)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 1</span><span class="pill">autor: 10/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Crossover
+Crossover with Reduced Surrogate
+constrains crossover to always produce new individuals (restricting
+the location of crossover points such that crossover points only
+occur where gene values differ)
+{0,1,1,0,1,0,0,0}
+{1,1,1,1,1,1,1,0}
+⟦symbol⟧
+→
+⟦symbol⟧{1,1,1,1,1,1,1,0}
+{0,1,1,0,1,0,0,0}
+Haindl
+MI-ROZ- 11
+10/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-34" data-section="Původní přednáška" aria-label="Zobrazení 34: Mutation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Mutation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Mutation. PDF strana 7, kvadrant 2."><title>Mutation</title><defs><clipPath id="panel-11-26"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-26)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 2</span><span class="pill">autor: 11/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Mutation
+randomlychanges one character of some string in population from
+time to time
+idea - recovering lost configurations (in crossover / mutation)
+{0,1,1,1,0,0,0,0}→ {0,1,1,1,0,0,1,0}
+fiipping:
+{0,1,1,0,0,1,0,0}
+{1,0,0,1,1,0,0,0}
+⟦symbol⟧
+→ {1,1,1,1,1,1,0,0}
+interchanging:
+{0,1,1,1,0,0,0,0}→ {0,1,0,1,0,0,1,0}
+Haindl
+MI-ROZ- 11
+11/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-35" data-section="Původní přednáška" aria-label="Zobrazení 35: Mutation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Mutation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Mutation. PDF strana 7, kvadrant 3."><title>Mutation</title><defs><clipPath id="panel-11-27"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-27)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 3</span><span class="pill">autor: 11/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Mutation
+Pmutation → 0
+should happen with low probability
+(Pmutation =
+1
+chromosomelength)
+⊖ Pcrossover,Pmutation ↗ 1
+inefficient random search
+⊖ Pcrossover,Pmutation ↘ 0
+too long search
+Haindl
+MI-ROZ- 11
+11/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-36" data-section="Původní přednáška" aria-label="Zobrazení 36: Other Operators"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Other Operators</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Other Operators. PDF strana 7, kvadrant 4."><title>Other Operators</title><defs><clipPath id="panel-11-28"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-28)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 4</span><span class="pill">autor: 12/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Other Operators
+inversion (chromosome reversal - seldom useful)
+{0,1,1,1,0,0,0,0}→ {0,0,0,0,1,1,1,0}
+substring inversion
+{1,1,0,1,1|0,1,0}→ {1,1,0,1,1,1,0,1}
+fusion,fission,...
+Haindl
+MI-ROZ- 11
+12/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-37" data-section="Původní přednáška" aria-label="Zobrazení 37: Other Operators"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Other Operators</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Other Operators. PDF strana 8, kvadrant 1."><title>Other Operators</title><defs><clipPath id="panel-11-29"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-29)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 1</span><span class="pill">autor: 12/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Other Operators
+stop criterion
+no a significant (average)fitness improvement through several
+generations
+maximum generations
+elapsed time
+best individual
+sum / median fitness
+Haindl
+MI-ROZ- 11
+12/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-38" data-section="Původní přednáška" aria-label="Zobrazení 38: Molecular Clock"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Molecular Clock</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Molecular Clock. PDF strana 8, kvadrant 2."><title>Molecular Clock</title><defs><clipPath id="panel-11-30"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-30)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 2</span><span class="pill">autor: 13/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Molecular Clock
+human DNA mutation speed - 0.5 ⟦symbol⟧10−9 mutations per
+nukleotide/year ⇒
+AMP -adenosin monophosphate (part of RNA)
+Haindl
+MI-ROZ- 11
+13/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-39" data-section="Původní přednáška" aria-label="Zobrazení 39: Molecular Clock"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Molecular Clock</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Molecular Clock. PDF strana 8, kvadrant 3."><title>Molecular Clock</title><defs><clipPath id="panel-11-31"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-31)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 3</span><span class="pill">autor: 13/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Molecular Clock
+human DNA mutation speed - 0.5 ⟦symbol⟧10−9 mutations per
+nukleotide/year ⇒
+≈5000 generations - African Eve 100 ⟦symbol⟧103 −150 ⟦symbol⟧103 years
+non-African ancestor ≈60 ⟦symbol⟧103 −90 ⟦symbol⟧103 years
+Haindl
+MI-ROZ- 11
+13/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-40" data-section="Původní přednáška" aria-label="Zobrazení 40: Molecular Clock"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Molecular Clock</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Molecular Clock. PDF strana 8, kvadrant 4."><title>Molecular Clock</title><defs><clipPath id="panel-11-32"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-32)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 4</span><span class="pill">autor: 13/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+FF GO
+Molecular Clock
+human DNA mutation speed - 0.5 ⟦symbol⟧10−9 mutations per
+nukleotide/year ⇒
+≈5000 generations - African Eve 100 ⟦symbol⟧103 −150 ⟦symbol⟧103 years
+non-African ancestor ≈60 ⟦symbol⟧103 −90 ⟦symbol⟧103 years
+whole human genetic variability&lt;single chimp group (15 -150 individuals)
+Haindl
+MI-ROZ- 11
+13/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-41" data-section="Původní přednáška" aria-label="Zobrazení 41: Genetic Algorithm Requirements"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithm Requirements</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithm Requirements. PDF strana 9, kvadrant 1."><title>Genetic Algorithm Requirements</title><defs><clipPath id="panel-11-33"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-33)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 1</span><span class="pill">autor: 14/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Algorithm Requirements
+Criteria for GA approach:
+Completeness Anysolution should have its encoding
+Non redundancyCodes and solutions should correspond one to one
+Soundness Anycode (produced bygenetic operators)should
+have its corresponding solution
+Characteristic perseverance Offspring should inherit useful
+characteristics from parents
+Haindl
+MI-ROZ- 11
+14/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-42" data-section="Původní přednáška" aria-label="Zobrazení 42: Genetic Algorithm Requirements"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithm Requirements</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithm Requirements. PDF strana 9, kvadrant 2."><title>Genetic Algorithm Requirements</title><defs><clipPath id="panel-11-34"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-34)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 2</span><span class="pill">autor: 14/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Algorithm Requirements
+GA requirements:
+A genetic representation for potential solutions of the problem.
+Creation of an initial population of potential solutions.
+An evaluation function (environment)rating solutions
+(”fitness”).
+Genetic operators.
+Parameter values (population size,genetic operators
+probabilities,etc.).
+Haindl
+MI-ROZ- 11
+14/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-43" data-section="Původní přednáška" aria-label="Zobrazení 43: Genetic Algorithm"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithm</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithm. PDF strana 9, kvadrant 3."><title>Genetic Algorithm</title><defs><clipPath id="panel-11-35"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-35)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 3</span><span class="pill">autor: 15/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Algorithm
+Haindl
+MI-ROZ- 11
+15/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-44" data-section="Původní přednáška" aria-label="Zobrazení 44: Genetic Algorithm"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithm</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithm. PDF strana 9, kvadrant 4."><title>Genetic Algorithm</title><defs><clipPath id="panel-11-36"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-36)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 4</span><span class="pill">autor: 16/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Algorithm
+1 Create a starting population and find the value of their
+objective functions.
+2 Reproduction - probabilisticallyreproduce high fitness strings
+in the new population,remove low fitness strings.
+3 Crossover - construct new strings combining reproduced code
+strings from the previous population.
+4 Mutation - from time to time change one character of some
+string at random.
+5 Rank code strings of the current population according to the
+value of their objective function (fitness).
+6 If the maximum achieved string fitness does not increase over
+several steps stop,the desired optimum is represented bythe
+current string of maximum fitness. Otherwise,repeat from
+step 2.
+Haindl
+MI-ROZ- 11
+16/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-45" data-section="Původní přednáška" aria-label="Zobrazení 45: Genetic Algorithm"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Algorithm</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Algorithm. PDF strana 10, kvadrant 1."><title>Genetic Algorithm</title><defs><clipPath id="panel-11-37"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-37)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 1</span><span class="pill">autor: 16/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Algorithm
+prior knowledge ↓
+optimization function design (heuristics)
+starting population selection
+Haindl
+MI-ROZ- 11
+16/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-46" data-section="Původní přednáška" aria-label="Zobrazení 46: Genetic Programming"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Programming</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Programming. PDF strana 10, kvadrant 2."><title>Genetic Programming</title><defs><clipPath id="panel-11-38"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-38)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 2</span><span class="pill">autor: 17/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Programming
+automatic programming
+Haindl
+MI-ROZ- 11
+17/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-47" data-section="Původní přednáška" aria-label="Zobrazení 47: Genetic Programming"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Programming</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Programming. PDF strana 10, kvadrant 3."><title>Genetic Programming</title><defs><clipPath id="panel-11-39"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-39)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 3</span><span class="pill">autor: 17/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Programming
+automatic programming
+code snippets → chromosomes
+operators:
+reproduction a snippet unchanged
+crossover mixing two snippets
+mutation each element of a snippet can be changed
+(compatiblyto the snippet syntax⟦symbol⟧)
+insertion replacement of a single snippet element with another
+snippet randomlychosen
+⊙simple operations (multiplication,division,...)
+⊖difficult for syntacticallyrich languages (C++)
+Haindl
+MI-ROZ- 11
+17/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-48" data-section="Původní přednáška" aria-label="Zobrazení 48: Genetic Clustering"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Clustering</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Clustering. PDF strana 10, kvadrant 4."><title>Genetic Clustering</title><defs><clipPath id="panel-11-40"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-40)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 4</span><span class="pill">autor: 18/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Clustering
+chromosome {1,2,4,4,5,5,5}
+Fusion operator ⟦symbol⟧eliminates redundancy):
+{1,2,4,4,5,5,5}→ {4,2,4,4,5,5,5}
+Fission operator ⟦symbol⟧eliminates misclassification):
+{1,2,4,4,5,5,5}→ {1,2,3,4,5,5,5}
+Haindl
+MI-ROZ- 11
+18/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-49" data-section="Původní přednáška" aria-label="Zobrazení 49: Genetic Clustering"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Clustering</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Clustering. PDF strana 11, kvadrant 1."><title>Genetic Clustering</title><defs><clipPath id="panel-11-41"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-41)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 1</span><span class="pill">autor: 18/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Clustering
+chromosome {1,2,4,4,5,5,5}
+Fusion operator ⟦symbol⟧eliminates redundancy):
+{1,2,4,4,5,5,5}→ {4,2,4,4,5,5,5}
+Fission operator ⟦symbol⟧eliminates misclassification):
+{1,2,4,4,5,5,5}→ {1,2,3,4,5,5,5}
+Haindl
+MI-ROZ- 11
+18/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-50" data-section="Původní přednáška" aria-label="Zobrazení 50: Genetic Clustering -Example"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Clustering -Example</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Clustering -Example. PDF strana 11, kvadrant 2."><title>Genetic Clustering -Example</title><defs><clipPath id="panel-11-42"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-42)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 2</span><span class="pill">autor: 19/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Clustering -Example
+Old generation
+{1,2,4,4,5,5,5}
+{1,2,3,3,4,4,4}
+{1,2,2,3,4,5,5}
+{1,1,2,3,4,4,5}
+{1,2,2,2,4,4,5}
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+→
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+crossover
+crossover
+mutation
+fusion
+fission
+Haindl
+MI-ROZ- 11
+19/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-51" data-section="Původní přednáška" aria-label="Zobrazení 51: Genetic Clustering -Example"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Clustering -Example</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Clustering -Example. PDF strana 11, kvadrant 3."><title>Genetic Clustering -Example</title><defs><clipPath id="panel-11-43"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-43)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 3</span><span class="pill">autor: 19/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Clustering -Example
+New generation
+{1,2,4,4,5,5,5}
+{1,2,3,3,4,4,4}
+{1,2,2,3,4,5,5}
+{1,1,2,3,4,4,5}
+{1,2,2,2,4,4,5}
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+→
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+{1,2,4,4,4,4,4}
+{1,2,3,3,5,5,5}
+{1,2,2,3,4,4,5}
+{1,1,3,3,4,4,5}
+{1,2,2,3,4,4,5}
+crossover
+crossover
+mutation
+fusion
+fission
+Haindl
+MI-ROZ- 11
+19/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-52" data-section="Původní přednáška" aria-label="Zobrazení 52: Genetic Clustering"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Clustering</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Clustering. PDF strana 11, kvadrant 4."><title>Genetic Clustering</title><defs><clipPath id="panel-11-44"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-44)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 4</span><span class="pill">autor: 20/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Clustering
+Kfixed,solution coding:
+[μ
+J1,...,μ
+JK]=[J11,...,J1l,...,JK1,...,JKl]
+cost function:
+N =
+Σ
+Σ
+i=1
+uij δ(Xi,μ
+Jj)
+uij =
+⟦symbol⟧
+1 δ(Xi,μ
+Jj)=mink=1,...,K δ(Xi,μ
+Jk)
+0 otherwise
+Haindl
+MI-ROZ- 11
+20/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-53" data-section="Původní přednáška" aria-label="Zobrazení 53: Genetic Clustering 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Clustering 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Clustering 2. PDF strana 12, kvadrant 1."><title>Genetic Clustering 2</title><defs><clipPath id="panel-11-45"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-45)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 1</span><span class="pill">autor: 21/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Clustering 2
+reproduction more probable solutions are replicated
+crossover allowable cuts between different representatives (μ
+Jj))
+only
+mutation randomlyselects a solution vector coordinate and
+randomlydecides to add a small random number
+Haindl
+MI-ROZ- 11
+21/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-54" data-section="Původní přednáška" aria-label="Zobrazení 54: Genetic Clustering 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Clustering 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Clustering 2. PDF strana 12, kvadrant 2."><title>Genetic Clustering 2</title><defs><clipPath id="panel-11-46"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-46)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 2</span><span class="pill">autor: 21/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+GP GC
+Genetic Clustering 2
+alternative method
+1 n× a hard clustering method with different initialisation
+→ population
+2 applyreproduce operator
+(hopefullychooses between n local minima of the cost function)
+Haindl
+MI-ROZ- 11
+21/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-55" data-section="Původní přednáška" aria-label="Zobrazení 55: Genetic Segmentation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Segmentation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Segmentation. PDF strana 12, kvadrant 3."><title>Genetic Segmentation</title><defs><clipPath id="panel-11-47"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-47)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 3</span><span class="pill">autor: 22/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Segmentation
+a confidence (does not need to fulfil the total probability
+theorem)in the interpretation ωi of the object i given its
+properties Xi
+c(ωi|Xi)=p(ωi|Xi)
+a confidence in the interpretation ωi of the object i according
+to the interpretations ωj of its neighbours
+c(ωi)=
+c(ωi|Xi)Σni
+j=1 r(ωi,ωj)c(ωj|Xj)
+ni
+where r(ωi,ωj)represents the value of a compatibility
+function of two adjacent objects i,jwith labels ωi,ωj, ni is
+the number of adjacent objects to i
+a whole image interpretation confidence
+cimage=
+Σn
+j=1 c(ωj)
+n
+Haindl
+MI-ROZ- 11
+22/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-56" data-section="Původní přednáška" aria-label="Zobrazení 56: Genetic Segmentation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Segmentation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Segmentation. PDF strana 12, kvadrant 4."><title>Genetic Segmentation</title><defs><clipPath id="panel-11-48"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-48)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 4</span><span class="pill">autor: 22/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Segmentation
+a confidence (does not need to fulfil the total probability
+theorem)in the interpretation ωi of the object i given its
+properties Xi
+c(ωi|Xi)=p(ωi|Xi)
+a confidence in the interpretation ωi of the object i according
+to the interpretations ωj of its neighbours
+c(ωi)=
+c(ωi|Xi)Σni
+j=1 r(ωi,ωj)c(ωj|Xj)
+ni
+where r(ωi,ωj)represents the value of a compatibility
+function of two adjacent objects i,jwith labels ωi,ωj, ni is
+the number of adjacent objects to i
+a whole image interpretation confidence
+cimage=
+Σn
+j=1 c(ωj)
+n
+Haindl
+MI-ROZ- 11
+22/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-57" data-section="Původní přednáška" aria-label="Zobrazení 57: Genetic Segmentation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Segmentation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Segmentation. PDF strana 13, kvadrant 1."><title>Genetic Segmentation</title><defs><clipPath id="panel-11-49"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-49)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 1</span><span class="pill">autor: 22/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Segmentation
+a confidence (does not need to fulfil the total probability
+theorem)in the interpretation ωi of the object i given its
+properties Xi
+c(ωi|Xi)=p(ωi|Xi)
+a confidence in the interpretation ωi of the object i according
+to the interpretations ωj of its neighbours
+c(ωi)=
+c(ωi|Xi)Σni
+j=1 r(ωi,ωj)c(ωj|Xj)
+ni
+where r(ωi,ωj)represents the value of a compatibility
+function of two adjacent objects i,jwith labels ωi,ωj, ni is
+the number of adjacent objects to i
+a whole image interpretation confidence
+cimage=
+Σn
+j=1 c(ωj)
+n
+Haindl
+MI-ROZ- 11
+22/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-58" data-section="Původní přednáška" aria-label="Zobrazení 58: Genetic Segmentation 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Segmentation 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Segmentation 2. PDF strana 13, kvadrant 2."><title>Genetic Segmentation 2</title><defs><clipPath id="panel-11-50"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-50)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 2</span><span class="pill">autor: 23/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Segmentation 2
+1 Initialize segmentation into primaryregions,define a
+correspondence between each region and the related position
+of its label in the code string generated bya GA.
+2 Construct a primaryregion adjacencygraph.
+3 Randomlypick the starting population,possiblyusing a priori
+information.
+4 Collapse a region adjacencygraph for each code string of the
+current population. Using the current region adjacency
+graphs,compute the value of the optimization segmentation
+function for each code string.
+5 If the maximum of the optimization criterion does not
+increase significantlyin several steps,stop.
+6 Let the GA generate a new population of segmentation and
+interpretation hypothesis. Go to 4.
+7 The code string with the maximum confidence represents the
+best segmentation hypothesis.
+Haindl
+MI-ROZ- 11
+23/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-59" data-section="Původní přednáška" aria-label="Zobrazení 59: Genetic Segmentation 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Segmentation 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Segmentation 2. PDF strana 13, kvadrant 3."><title>Genetic Segmentation 2</title><defs><clipPath id="panel-11-51"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-51)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 3</span><span class="pill">autor: 23/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Segmentation 2
+1 Initialize segmentation into primaryregions,define a
+correspondence between each region and the related position
+of its label in the code string generated bya GA.
+2 Construct a primaryregion adjacencygraph.
+3 Randomlypick the starting population,possiblyusing a priori
+information.
+4 Collapse a region adjacencygraph for each code string of the
+current population. Using the current region adjacency
+graphs,compute the value of the optimization segmentation
+function for each code string.
+5 If the maximum of the optimization criterion does not
+increase significantlyin several steps,stop.
+6 Let the GA generate a new population of segmentation and
+interpretation hypothesis. Go to 4.
+7 The code string with the maximum confidence represents the
+best segmentation hypothesis.
+Haindl
+MI-ROZ- 11
+23/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-60" data-section="Původní přednáška" aria-label="Zobrazení 60: Genetic Segmentation 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Segmentation 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Segmentation 2. PDF strana 13, kvadrant 4."><title>Genetic Segmentation 2</title><defs><clipPath id="panel-11-52"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-52)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 4</span><span class="pill">autor: 23/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Segmentation 2
+1 Initialize segmentation into primaryregions,define a
+correspondence between each region and the related position
+of its label in the code string generated bya GA.
+2 Construct a primaryregion adjacencygraph.
+3 Randomlypick the starting population,possiblyusing a priori
+information.
+4 Collapse a region adjacencygraph for each code string of the
+current population. Using the current region adjacency
+graphs,compute the value of the optimization segmentation
+function for each code string.
+5 If the maximum of the optimization criterion does not
+increase significantlyin several steps,stop.
+6 Let the GA generate a new population of segmentation and
+interpretation hypothesis. Go to 4.
+7 The code string with the maximum confidence represents the
+best segmentation hypothesis.
+Haindl
+MI-ROZ- 11
+23/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-61" data-section="Původní přednáška" aria-label="Zobrazení 61: Genetic Segmentation 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Segmentation 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Segmentation 2. PDF strana 14, kvadrant 1."><title>Genetic Segmentation 2</title><defs><clipPath id="panel-11-53"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-53)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 1</span><span class="pill">autor: 23/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Segmentation 2
+1 Initialize segmentation into primaryregions,define a
+correspondence between each region and the related position
+of its label in the code string generated bya GA.
+2 Construct a primaryregion adjacencygraph.
+3 Randomlypick the starting population,possiblyusing a priori
+information.
+4 Collapse a region adjacencygraph for each code string of the
+current population. Using the current region adjacency
+graphs,compute the value of the optimization segmentation
+function for each code string.
+5 If the maximum of the optimization criterion does not
+increase significantlyin several steps,stop.
+6 Let the GA generate a new population of segmentation and
+interpretation hypothesis. Go to 4.
+7 The code string with the maximum confidence represents the
+best segmentation hypothesis.
+Haindl
+MI-ROZ- 11
+23/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-62" data-section="Původní přednáška" aria-label="Zobrazení 62: Genetic Segmentation 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Segmentation 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Segmentation 2. PDF strana 14, kvadrant 2."><title>Genetic Segmentation 2</title><defs><clipPath id="panel-11-54"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-54)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 2</span><span class="pill">autor: 23/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Segmentation 2
+1 Initialize segmentation into primaryregions,define a
+correspondence between each region and the related position
+of its label in the code string generated bya GA.
+2 Construct a primaryregion adjacencygraph.
+3 Randomlypick the starting population,possiblyusing a priori
+information.
+4 Collapse a region adjacencygraph for each code string of the
+current population. Using the current region adjacency
+graphs,compute the value of the optimization segmentation
+function for each code string.
+5 If the maximum of the optimization criterion does not
+increase significantlyin several steps,stop.
+6 Let the GA generate a new population of segmentation and
+interpretation hypothesis. Go to 4.
+7 The code string with the maximum confidence represents the
+best segmentation hypothesis.
+Haindl
+MI-ROZ- 11
+23/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-63" data-section="Původní přednáška" aria-label="Zobrazení 63: Genetic Segmentation 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Segmentation 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Segmentation 2. PDF strana 14, kvadrant 3."><title>Genetic Segmentation 2</title><defs><clipPath id="panel-11-55"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-55)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 3</span><span class="pill">autor: 23/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Segmentation 2
+1 Initialize segmentation into primaryregions,define a
+correspondence between each region and the related position
+of its label in the code string generated bya GA.
+2 Construct a primaryregion adjacencygraph.
+3 Randomlypick the starting population,possiblyusing a priori
+information.
+4 Collapse a region adjacencygraph for each code string of the
+current population. Using the current region adjacency
+graphs,compute the value of the optimization segmentation
+function for each code string.
+5 If the maximum of the optimization criterion does not
+increase significantlyin several steps,stop.
+6 Let the GA generate a new population of segmentation and
+interpretation hypothesis. Go to 4.
+7 The code string with the maximum confidence represents the
+best segmentation hypothesis.
+Haindl
+MI-ROZ- 11
+23/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-64" data-section="Původní přednáška" aria-label="Zobrazení 64: Genetic Segmentation 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Segmentation 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Segmentation 2. PDF strana 14, kvadrant 4."><title>Genetic Segmentation 2</title><defs><clipPath id="panel-11-56"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-56)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 4</span><span class="pill">autor: 23/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Segmentation 2
+1 Initialize segmentation into primaryregions,define a
+correspondence between each region and the related position
+of its label in the code string generated bya GA.
+2 Construct a primaryregion adjacencygraph.
+3 Randomlypick the starting population,possiblyusing a priori
+information.
+4 Collapse a region adjacencygraph for each code string of the
+current population. Using the current region adjacency
+graphs,compute the value of the optimization segmentation
+function for each code string.
+5 If the maximum of the optimization criterion does not
+increase significantlyin several steps,stop.
+6 Let the GA generate a new population of segmentation and
+interpretation hypothesis. Go to 4.
+7 The code string with the maximum confidence represents the
+best segmentation hypothesis.
+Haindl
+MI-ROZ- 11
+23/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-65" data-section="Původní přednáška" aria-label="Zobrazení 65: Segmentation Example"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Segmentation Example</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Segmentation Example. PDF strana 15, kvadrant 1."><title>Segmentation Example</title><defs><clipPath id="panel-11-57"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-57)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 1</span><span class="pill">autor: 24/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Segmentation Example
+ball on a lawn
+prior information
+ball is circular
+ball is inside a green lawn
+c(ωi =B|Xi)=compactness(i)
+c(ωi =L|Xi)=greenness(i)
+c(B |circular)=1 confidence in a perfect ball
+c(L|green)=1
+confidence in a perfect lawn
+r(B inside L)=1 all other combinations r()=0
+Haindl
+MI-ROZ- 11
+24/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-66" data-section="Původní přednáška" aria-label="Zobrazení 66: Segmentation Example"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Segmentation Example</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Segmentation Example. PDF strana 15, kvadrant 2."><title>Segmentation Example</title><defs><clipPath id="panel-11-58"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-58)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 2</span><span class="pill">autor: 24/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Segmentation Example
+ball on a lawn
+1)starting hypothesis (BLBLB(0),LLLBL(0))
+▲
+Haindl
+MI-ROZ- 11
+24/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-67" data-section="Původní přednáška" aria-label="Zobrazení 67: Segmentation Example"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Segmentation Example</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Segmentation Example. PDF strana 15, kvadrant 3."><title>Segmentation Example</title><defs><clipPath id="panel-11-59"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-59)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 3</span><span class="pill">autor: 24/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Segmentation Example
+ball on a lawn
+2)random crossover
+BL|BLB(0) cimage=0.00
+LL|LBL(0) cimage=0.12
+↓
+LLBLB(1) cimage=0.20
+BLLBL(x) cimage=0.00
+▲
+Haindl
+MI-ROZ- 11
+24/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-68" data-section="Původní přednáška" aria-label="Zobrazení 68: Segmentation Example"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Segmentation Example</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Segmentation Example. PDF strana 15, kvadrant 4."><title>Segmentation Example</title><defs><clipPath id="panel-11-60"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-60)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 4</span><span class="pill">autor: 24/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Segmentation Example
+ball on a lawn
+3)2.,3. are reproduced,1.,4. die,crossover
+LLL|BL(1) cimage=0.12
+LLB|LB(1) cimage=0.20
+↓
+LLLLB(x) cimage=0.14
+LLBBL(2) cimage=0.18
+▲
+die (cimage=0.0)
+Haindl
+MI-ROZ- 11
+24/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-69" data-section="Původní přednáška" aria-label="Zobrazení 69: Segmentation Example"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Segmentation Example</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Segmentation Example. PDF strana 16, kvadrant 1."><title>Segmentation Example</title><defs><clipPath id="panel-11-61"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-61)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 1</span><span class="pill">autor: 24/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Segmentation Example
+ball on a lawn
+4)another crossover
+LLBL|B(2) cimage=0.20
+LLBB|L(2) cimage=0.18
+↓
+LLBLL(3) cimage=0.10
+LLBBB(3) cimage=1.00
+stop
+▲
+Haindl
+MI-ROZ- 11
+24/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-70" data-section="Původní přednáška" aria-label="Zobrazení 70: Genetic Feature Selection"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Genetic Feature Selection</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Genetic Feature Selection. PDF strana 16, kvadrant 2."><title>Genetic Feature Selection</title><defs><clipPath id="panel-11-62"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-62)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 2</span><span class="pill">autor: 26/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Genetic Feature Selection
+{0,1,1,0,1,1,1,...,1}
+⟦symbol⟧ 0, feature absent;
+1, feature used.
+fitness function evaluates selected features
+⊖ computational cost of the search
+⊖ local minima (a non-monotonic fitness function)
+⊖ no guarantee to produce a good result
+Haindl
+MI-ROZ- 11
+26/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-71" data-section="Původní přednáška" aria-label="Zobrazení 71: Data -BarkNet 1.0"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Data -BarkNet 1.0</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Data -BarkNet 1.0. PDF strana 16, kvadrant 3."><title>Data -BarkNet 1.0</title><defs><clipPath id="panel-11-63"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-63)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 3</span><span class="pill">autor: 28/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Data -BarkNet 1.0
+BarkNet 1.0 23 000 bark samples from 23 classes, 3 cellphones Nexus 5, Samsung Galaxy S5, Samsung Galaxy S7,
+camera Panasonic Lumix DMC-TS5
+Betula alleghaniensis, Betula papyrifera, Quercus rubra, Picea glauca, Picea mariana, Picea abies, Picea rubens,
+Acer platanoides, Acer rubrum, Acer saccharum, Fraxinus americana, Fagus grandifolia, Larix laricina, Ulmus
+americana, Ostrya virginiana, Populus grandidentata, Populus tremuloides, Pinus strobus, Pinus rigida, Pinus
+resinosa, Tsuga canadensis, Abies balsamea, Thuja occidentalis.
+Haindl
+MI-ROZ- 11
+28/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-72" data-section="Původní přednáška" aria-label="Zobrazení 72: Results -BarkNet 2DSCAR Method"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Results -BarkNet 2DSCAR Method</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Results -BarkNet 2DSCAR Method. PDF strana 16, kvadrant 4."><title>Results -BarkNet 2DSCAR Method</title><defs><clipPath id="panel-11-64"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-64)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 4</span><span class="pill">autor: 29/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Results -BarkNet 2DSCAR Method
+BOJ
+BOP
+CHR
+EPB
+EPN
+EPO
+EPR
+ERB
+ERR
+ERS
+FRA
+sensitivity
+BOJ
+1169
+34
+11
+3
+3
+4
+3
+0
+7
+1
+0
+93,15%
+CHR
+5
+2
+2438
+5
+1
+5
+8
+0
+60
+55
+12
+89,50 %
+EPB
+8
+2
+7
+495
+3
+53
+6
+0
+2
+6
+0
+83,05 %
+EPN
+2
+0
+1
+3
+795
+5
+6
+0
+3
+7
+4
+89,83 %
+EPO
+13
+3
+25
+64
+5
+1191
+7
+0
+13
+12
+3
+89,95 %
+EPR
+2
+4
+12
+1
+6
+5
+617
+0
+5
+5
+8
+83,38 %
+ERB
+0
+0
+0
+0
+0
+0
+0
+69
+0
+0
+0
+98,57 %
+ERR
+1
+1
+39
+0
+1
+2
+6
+0
+1407
+52
+36
+83,95 %
+ERS
+2
+2
+40
+1
+0
+1
+7
+0
+59
+1706
+47
+85,34 %
+FRA
+0
+1
+4
+0
+3
+0
+3
+0
+14
+37
+1289
+87,57 %
+HEG
+2
+2
+8
+5
+0
+2
+3
+0
+23
+3
+1
+92,50 %
+MEL
+2
+1
+4
+5
+40
+7
+20
+0
+1
+5
+2
+96,80 %
+ORA
+2
+0
+15
+0
+1
+0
+2
+0
+21
+32
+24
+88,92 %
+OSV
+0
+1
+10
+0
+0
+0
+2
+0
+17
+12
+9
+95,42 %
+PEG
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+93,75 %
+PET
+2
+3
+17
+1
+0
+5
+3
+0
+2
+8
+1
+97,40 %
+PIB
+3
+1
+7
+1
+3
+7
+17
+0
+10
+25
+22
+89,83 %
+PID
+0
+0
+1
+0
+1
+1
+4
+0
+0
+2
+3
+82,93 %
+PIR
+2
+0
+6
+4
+5
+19
+1
+1
+2
+11
+1
+90,60 %
+PRU
+3
+2
+72
+1
+3
+12
+17
+0
+25
+16
+8
+93,31 %
+SAB
+12
+5
+2
+5
+15
+5
+5
+0
+1
+4
+1
+90,13 %
+THO
+0
+1
+3
+0
+0
+0
+1
+0
+3
+0
+0
+93,03 %
+precision 93,00% 95,98% 92,10% 83,76% 90,86% 85,25% 84,87% 100,00% 88,27% 89,46% 94,43 % Accuracy
+90,31%
+Haindl
+MI-ROZ- 11
+29/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-73" data-section="Původní přednáška" aria-label="Zobrazení 73: Results -BarkNet 2DSCAR Method"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Results -BarkNet 2DSCAR Method</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Results -BarkNet 2DSCAR Method. PDF strana 17, kvadrant 1."><title>Results -BarkNet 2DSCAR Method</title><defs><clipPath id="panel-11-65"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-65)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 1</span><span class="pill">autor: 29/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Results -BarkNet 2DSCAR Method
+HEG
+MEL
+ORA
+OSV
+PEG
+PET
+PIB
+PID
+PIR
+PRU
+SAB
+THO
+sensitivity
+BOJ
+3
+0
+3
+0
+1
+5
+1
+0
+0
+1
+6
+2
+93,15%
+CHR
+11
+6
+10
+4
+0
+3
+2
+1
+2
+8
+3
+6
+89,50 %
+EPB
+2
+1
+1
+0
+0
+1
+0
+0
+1
+0
+3
+0
+83,05 %
+EPN
+0
+20
+2
+1
+0
+0
+3
+1
+3
+0
+19
+0
+89,83 %
+EPO
+2
+3
+7
+0
+2
+6
+10
+0
+17
+4
+10
+0
+89,95 %
+EPR
+1
+8
+1
+2
+0
+1
+16
+1
+1
+11
+18
+2
+83,38 %
+ERB
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+98,57 %
+ERR
+14
+1
+11
+2
+0
+1
+5
+0
+2
+4
+3
+6
+83,95 %
+ERS
+2
+0
+14
+3
+0
+1
+8
+1
+4
+4
+2
+3
+85,34 %
+FRA
+0
+0
+4
+2
+0
+0
+5
+0
+0
+3
+0
+0
+87,57 %
+HEG
+777
+0
+0
+0
+0
+0
+3
+1
+0
+2
+1
+3
+92,50 %
+MEL
+1
+1814
+2
+0
+0
+0
+11
+2
+3
+2
+13
+1
+96,80 %
+ORA
+0
+0
+682
+5
+0
+0
+0
+1
+1
+0
+0
+1
+88,92 %
+OSV
+0
+1
+11
+584
+0
+2
+3
+0
+2
+5
+0
+1
+95,42 %
+PEG
+0
+0
+0
+0
+60
+0
+0
+0
+0
+1
+1
+1
+93,75 %
+PET
+4
+3
+2
+0
+0
+1010
+0
+0
+0
+4
+0
+1
+97,40 %
+PIB
+2
+4
+3
+0
+0
+0
+919
+3
+4
+5
+6
+5
+89,83 %
+PID
+0
+0
+0
+0
+0
+0
+7
+102
+11
+0
+0
+0
+82,93 %
+PIR
+0
+8
+13
+2
+0
+0
+11
+9
+540
+10
+1
+3
+90,60 %
+PRU
+4
+1
+0
+6
+0
+4
+12
+1
+4
+920
+3
+15
+93,31 %
+SAB
+7
+4
+0
+0
+0
+0
+4
+0
+0
+0
+831
+1
+90,13 %
+THO
+1
+0
+0
+1
+1
+0
+2
+0
+0
+1
+0
+694
+93,03 %
+precision 92,94% 93,70% 86,66% 88,48% 92,31% 94,75% 87,77% 77,27% 83,20% 81,49% 92,13% 98,02% Accuracy
+90,31%
+Haindl
+MI-ROZ- 11
+29/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-74" data-section="Původní přednáška" aria-label="Zobrazení 74: Results -BarkNet 2DSCAR Method"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Results -BarkNet 2DSCAR Method</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Results -BarkNet 2DSCAR Method. PDF strana 17, kvadrant 2."><title>Results -BarkNet 2DSCAR Method</title><defs><clipPath id="panel-11-66"><rect x="421.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-66)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 2</span><span class="pill">autor: 29/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Results -BarkNet 2DSCAR Method
+87,7% → θ1,θ2,θ3,θ4,θ5,θ6,θ7,θ8,θ9,θ10,θ11,θ12,θ13,θ14,θ15,θ16,
+θ17,θ18,θ19,θ20,θ21,θ22,θ23,θ24,θ25,θ26,θ27,θ28,θ29,θ30,
+θ31,θ32,θ33
+88,6% → θ1,θ2,θ3,θ4,θ5,θ6,θ7,θ8,θ9,θ10,θ11,θ12,θ13,θ14,θ15,θ16,
+θ17,θ18,θ19,θ20,θ21,θ22,θ23,θ24,θ25,θ26,θ27,θ28,θ29,θ30,
+θ31,θ32,θ33
+90,3% → θ1,θ2,θ3,θ4,θ5,θ6,θ7,θ8,θ9,θ10,θ11,θ12,θ13,θ14,θ15,θ16,
+θ17,θ18,θ19,θ20,θ21,θ22,θ23,θ24,θ25,θ26,θ27,θ28,θ29,θ30,
+θ31,θ32,θ33
+Haindl
+MI-ROZ- 11
+29/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-75" data-section="Původní přednáška" aria-label="Zobrazení 75: Results -BarkTex 3DSCAR Method"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Results -BarkTex 3DSCAR Method</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Results -BarkTex 3DSCAR Method. PDF strana 17, kvadrant 3."><title>Results -BarkTex 3DSCAR Method</title><defs><clipPath id="panel-11-67"><rect x="0.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-67)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 3</span><span class="pill">autor: 30/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Results -BarkTex 3DSCAR Method
+(BP -Betula pendula, FS -Fagus silvatica, PA -Picea abies, PS -Pinus silvestris, QR -Quercus robur, RP -
+Robinia pseudacacia)
+BP
+FS
+PA
+PS
+QR
+RP
+Sensitivity
+[%]
+Betula pendula
+64
+0
+0
+2
+2
+0
+94,1
+Fagus silvatica
+0
+68
+0
+0
+0
+0
+100,0
+Picea abies
+3
+0
+62
+0
+3
+0
+91,2
+Pinus silvestris
+0
+0
+1
+67
+0
+0
+98,5
+Quercus robur
+1
+2
+7
+9
+48
+1
+70,6
+Robinia pseudacacia
+1
+0
+0
+1
+1
+65 95,6
+Precision
+Accuracy
+[%]
+92,8 97,1 88,6 84,8 88,9 98,5 91⟦symbol⟧7
+Haindl
+MI-ROZ- 11
+30/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-76" data-section="Původní přednáška" aria-label="Zobrazení 76: 2D/3DSCAR Method"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>2D/3DSCAR Method</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.6099853515625 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: 2D/3DSCAR Method. PDF strana 17, kvadrant 4."><title>2D/3DSCAR Method</title><defs><clipPath id="panel-11-68"><rect x="421.0" y="297.6099853515625" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-68)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 4</span><span class="pill">autor: 31/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+2D/3DSCAR Method
+tree
+precision [%] sensitivity[%]
+2DSCAR
+3DSCAR
+2DSCAR
+3DSCAR
+Populus grandidentata (osika)
+92
+87
+94
+91
+Acer platanoides (javor)
+100
+96
+83
+76
+Pinus rigida (borovice tuh´
+a)
+77
+68
+83
+76
+Classification results for three bark species vhich have too limited training sets in BarkNet for the alternative
+ResNet classifier.
+Haindl
+MI-ROZ- 11
+31/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-77" data-section="Původní přednáška" aria-label="Zobrazení 77: Results"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Results</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.6099853515625" role="img" aria-label="Michal Haindl, původní snímek: Results. PDF strana 18, kvadrant 1."><title>Results</title><defs><clipPath id="panel-11-69"><rect x="0.0" y="0.0" width="421.0" height="297.6099853515625"/></clipPath></defs><image href="assets/page-18.svg" width="842.0" height="595.219970703125" clip-path="url(#panel-11-69)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 18 · kvadrant 1</span><span class="pill">autor: 32/32</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">GA GAR GS Genetic Search Genetic Feature Selection
+Results
+[ataset ]%B
+2D
+3D
+Boudra Fiel Sulc Hoang7 Palm Porebski Sandid Sandid Carpentier
+SCAR SCAR
+2017
+2011 2013
+2017
+2004
+2013
+2016
+2016b
+2018
+AFF
+89.1
+88.0
+60.5
+69.7 96.5
+-
+-
+-
+-
+-
+-
+BarTxe⟦symbol⟧
+91.7
+88.0
+84.6
+-
+-
+81.4
+84.7
+81.4
+82.1
+89.6
+-
+xrunT12
+92.9
+80.2
+62.8
+-
+-
+-
+-
+-
+-
+-
+-
+BarTNet
+90.4
+85.0
+-
+-
+-
+-
+-
+-
+-
+-
+(64)85
+Comparison with the state-of-the-art ’-’ denotes lack of results in
+the particular article on the given dataset.
+Reme⟦symbol⟧
+s, V. -Haindl, M.:Bark recognition using novel rotationally invariant multispectral textural features, Pattern
+Recognition Letters, Elsevier, 2019,vol.125, pp. 612 -617, ISSN 0167-8655.
+Haindl
+MI-ROZ- 11
+32/32</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=18">Původní PDF, strana 18</a></p></div></section></main><footer class="controls"><span class="hint">← → listování · O obsah · F celá obrazovka</span><div class="pager"><button id="previous" aria-label="Předchozí snímek">←</button><output id="counter">01 / 77</output><button id="next" aria-label="Další snímek">→</button></div><span class="credit">Michal Haindl · FIT ČVUT / ÚTIA</span><div class="progress" aria-hidden="true"><div id="progress-value"></div></div></footer><div id="announcement" class="sr-only" aria-live="polite"></div><dialog id="overview" aria-labelledby="overview-title"><div class="dialog-heading"><h2 id="overview-title">Obsah přednášky</h2><button class="close" aria-label="Zavřít obsah">×</button></div><nav><a href="#slide-1"><span>01</span><span>Genetické algoritmy</span></a><a href="#slide-2"><span>02</span><span>Co je jedinec</span></a><a href="#slide-3"><span>03</span><span>Selekce, křížení, mutace</span></a><a href="#slide-4"><span>04</span><span>Prozkoumávání a využívání</span></a><a href="#slide-5"><span>05</span><span>Jak vykazovat výsledek</span></a><a href="#slide-6"><span>06</span><span>OneMax a mutace</span></a><a href="#slide-7"><span>07</span><span>Jeden bitový mutační operátor</span></a><a href="#slide-8"><span>08</span><span>Zkuste si odpovědět</span></a><a href="#slide-9"><span>09</span><span>Pattern Recognition XI</span></a><a href="#slide-10"><span>10</span><span>Outline</span></a><a href="#slide-11"><span>11</span><span>Genetic Algorithms</span></a><a href="#slide-12"><span>12</span><span>Genetic Algorithms</span></a><a href="#slide-13"><span>13</span><span>Genetic Algorithms</span></a><a href="#slide-14"><span>14</span><span>Genetic Algorithms 2</span></a><a href="#slide-15"><span>15</span><span>Genetic Algorithms 2</span></a><a href="#slide-16"><span>16</span><span>Genetic Algorithms 2</span></a><a href="#slide-17"><span>17</span><span>Genetic Algorithms -Encoding</span></a><a href="#slide-18"><span>18</span><span>Population</span></a><a href="#slide-19"><span>19</span><span>Fitness Function</span></a><a href="#slide-20"><span>20</span><span>Fitness Function</span></a><a href="#slide-21"><span>21</span><span>Fitness Function</span></a><a href="#slide-22"><span>22</span><span>Fitness Function</span></a><a href="#slide-23"><span>23</span><span>Genetic Operators -Reproduction</span></a><a href="#slide-24"><span>24</span><span>Crossover</span></a><a href="#slide-25"><span>25</span><span>Crossover</span></a><a href="#slide-26"><span>26</span><span>Crossover</span></a><a href="#slide-27"><span>27</span><span>Crossover</span></a><a href="#slide-28"><span>28</span><span>Crossover</span></a><a href="#slide-29"><span>29</span><span>Crossover</span></a><a href="#slide-30"><span>30</span><span>Crossover</span></a><a href="#slide-31"><span>31</span><span>Crossover</span></a><a href="#slide-32"><span>32</span><span>Crossover</span></a><a href="#slide-33"><span>33</span><span>Crossover</span></a><a href="#slide-34"><span>34</span><span>Mutation</span></a><a href="#slide-35"><span>35</span><span>Mutation</span></a><a href="#slide-36"><span>36</span><span>Other Operators</span></a><a href="#slide-37"><span>37</span><span>Other Operators</span></a><a href="#slide-38"><span>38</span><span>Molecular Clock</span></a><a href="#slide-39"><span>39</span><span>Molecular Clock</span></a><a href="#slide-40"><span>40</span><span>Molecular Clock</span></a><a href="#slide-41"><span>41</span><span>Genetic Algorithm Requirements</span></a><a href="#slide-42"><span>42</span><span>Genetic Algorithm Requirements</span></a><a href="#slide-43"><span>43</span><span>Genetic Algorithm</span></a><a href="#slide-44"><span>44</span><span>Genetic Algorithm</span></a><a href="#slide-45"><span>45</span><span>Genetic Algorithm</span></a><a href="#slide-46"><span>46</span><span>Genetic Programming</span></a><a href="#slide-47"><span>47</span><span>Genetic Programming</span></a><a href="#slide-48"><span>48</span><span>Genetic Clustering</span></a><a href="#slide-49"><span>49</span><span>Genetic Clustering</span></a><a href="#slide-50"><span>50</span><span>Genetic Clustering -Example</span></a><a href="#slide-51"><span>51</span><span>Genetic Clustering -Example</span></a><a href="#slide-52"><span>52</span><span>Genetic Clustering</span></a><a href="#slide-53"><span>53</span><span>Genetic Clustering 2</span></a><a href="#slide-54"><span>54</span><span>Genetic Clustering 2</span></a><a href="#slide-55"><span>55</span><span>Genetic Segmentation</span></a><a href="#slide-56"><span>56</span><span>Genetic Segmentation</span></a><a href="#slide-57"><span>57</span><span>Genetic Segmentation</span></a><a href="#slide-58"><span>58</span><span>Genetic Segmentation 2</span></a><a href="#slide-59"><span>59</span><span>Genetic Segmentation 2</span></a><a href="#slide-60"><span>60</span><span>Genetic Segmentation 2</span></a><a href="#slide-61"><span>61</span><span>Genetic Segmentation 2</span></a><a href="#slide-62"><span>62</span><span>Genetic Segmentation 2</span></a><a href="#slide-63"><span>63</span><span>Genetic Segmentation 2</span></a><a href="#slide-64"><span>64</span><span>Genetic Segmentation 2</span></a><a href="#slide-65"><span>65</span><span>Segmentation Example</span></a><a href="#slide-66"><span>66</span><span>Segmentation Example</span></a><a href="#slide-67"><span>67</span><span>Segmentation Example</span></a><a href="#slide-68"><span>68</span><span>Segmentation Example</span></a><a href="#slide-69"><span>69</span><span>Segmentation Example</span></a><a href="#slide-70"><span>70</span><span>Genetic Feature Selection</span></a><a href="#slide-71"><span>71</span><span>Data -BarkNet 1.0</span></a><a href="#slide-72"><span>72</span><span>Results -BarkNet 2DSCAR Method</span></a><a href="#slide-73"><span>73</span><span>Results -BarkNet 2DSCAR Method</span></a><a href="#slide-74"><span>74</span><span>Results -BarkNet 2DSCAR Method</span></a><a href="#slide-75"><span>75</span><span>Results -BarkTex 3DSCAR Method</span></a><a href="#slide-76"><span>76</span><span>2D/3DSCAR Method</span></a><a href="#slide-77"><span>77</span><span>Results</span></a></nav></dialog><dialog id="image-view" aria-label="Zvětšený obrázek"><button class="close" aria-label="Zavřít obrázek">×</button><img alt=""></dialog><dialog id="zoom-view" aria-label="Zvětšený původní snímek"><div class="dialog-heading"><h2>Původní snímek</h2><button class="close" aria-label="Zavřít snímek">×</button></div><p class="muted">Zvětšený snímek lze posouvat prstem, posuvníkem nebo klávesami po zaměření obrázku.</p><div class="zoom-actions"><button type="button" data-zoom-scale="1" aria-pressed="true">Přizpůsobit</button><button type="button" data-zoom-scale="2" aria-pressed="false">2×</button><button type="button" data-zoom-scale="3" aria-pressed="false">3×</button></div><div class="zoom-body" tabindex="0" aria-label="Posouvání zvětšeného snímku"></div></dialog><dialog id="notes-panel" aria-labelledby="notes-title"><div class="dialog-heading"><h2 id="notes-title">Moje poznámky</h2><button class="close" aria-label="Zavřít poznámky">×</button></div><p id="note-context"></p><label for="note-text">Poznámka k aktuálnímu zobrazení</label><textarea id="note-text"></textarea><p id="note-status" aria-live="polite">Poznámky se ukládají pouze v tomto prohlížeči, zvlášť pro každou variantu.</p><button id="note-clear">Smazat tuto poznámku</button></dialog><noscript><p class="no-script">Bez JavaScriptu je obsah souvislý dokument; interaktivní model vyžaduje JavaScript.</p></noscript></body></html>
