@@ -1,0 +1,1484 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="ROZ · 01 · Základní pojmy rozpoznávání · S komentářem. Michal Haindl, 2023–2024. Věrný vektorový web a samostatné studijní doplňky GRAFIT."><title>ROZ · 01 · Základní pojmy rozpoznávání · S komentářem</title><script>(()=>{let s;try{s=localStorage.getItem('roz-theme')}catch{}document.documentElement.dataset.theme=['light','dark'].includes(s)?s:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')})();</script><link rel="stylesheet" href="../shared/presentation.css"><script src="../shared/presentation.js" defer></script><script src="../shared/extras.js" defer></script><script src="../shared/models.js" defer></script><style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+</head><body class="grafit-toolbar-return"><header class="toolbar">
+<a id="grafit-lecture-return" class="grafit-lecture-return" href="../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a><a class="brand" id="grafit-course-link" href="../" aria-label="Přehled přednášek ROZ" data-subject="roz">ROZ <span>/ 01</span></a><span class="edition">S komentářem</span><div class="variant-switch"><a href="./">Původní snímky</a><a href="commented.html" aria-current="page">S komentářem</a></div><nav aria-label="Nástroje prezentace"><button id="contents" aria-haspopup="dialog">Obsah</button><button id="reading" aria-pressed="false">Čtení</button><button id="notes-toggle" aria-haspopup="dialog">Poznámky</button><button id="print-button">Tisk</button><a href="original.pdf">PDF</a><a class="offline-link" href="offline.zip">Offline ZIP</a><button id="theme" aria-label="Tmavý režim" aria-pressed="false">◐</button><button id="fullscreen" aria-label="Celá obrazovka (F)">⛶</button></nav><span id="chapter"></span></header><main id="deck" aria-label="ROZ · 01 · Základní pojmy rozpoznávání · S komentářem"><section class="slide intro" id="slide-1" data-section="Doplněk GRAFIT" aria-label="Zobrazení 1: Základní pojmy rozpoznávání"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Základní pojmy rozpoznávání</h2><p class="eyebrow">NI-ROZ · 01 · Michal Haindl</p><p class="lead">Oddělit pozorování, reprezentaci objektu a rozhodnutí klasifikátoru.</p><p>Podklad <strong>2023–2024</strong> · 24 stran PDF · 96 samostatných zobrazení včetně postupných odhalení.</p><p class="source-legal">Původní snímky zachovávají vektorovou grafiku, ilustrace i vzorce. Textový výpis je pomocný strojově obnovený přepis, nikoli ručně ověřená sazba; rozhoduje původní snímek a PDF. Čísla zobrazení se mohou lišit od autorova číslování snímků.</p><p class="callout">Česká vysvětlení, příklady, otázky a model jsou <strong>doplněk GRAFIT</strong>, nikoli text ani autorizovaný nový výklad Michala Haindla. Původní anglická přednáška následuje za tímto studijním úvodem.</p><p class="actions"><a href="source-manifest.json">Mapa snímků a SHA-256</a><a href="https://courses.fit.cvut.cz/NI-ROZ/lectures/current.html">Autorský rozcestník FIT ↗</a></p><p class="muted">Historické organizační pokyny a projektové termíny z let 2023–2024 nevyjadřují aktuální zadání. Část 10 v aktuálním seznamu není; starší archiv má jiné číslování.</p></div></section><section class="slide companion" id="slide-2" data-section="Doplněk GRAFIT" aria-label="Zobrazení 2: Od objektu k rozhodnutí"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Od objektu k rozhodnutí</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Vstupem bývá obraz, signál nebo jiný popis objektu. Příznakový vektor x je zvolená reprezentace tohoto vstupu. Klasifikátor převádí x na rozhodnutí; kvalitu celé úlohy proto neurčuje jen poslední algoritmus.</p></div></section><section class="slide companion" id="slide-3" data-section="Doplněk GRAFIT" aria-label="Zobrazení 3: Třída není totéž co shluk"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Třída není totéž co shluk</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Třída vyjadřuje význam přiřazený v zadání. Shluk vzniká podle podobnosti dat a zvoleného kritéria. Jeden shluk nemusí odpovídat jedné třídě a dobré geometrické oddělení nemusí znamenat užitečné rozpoznávání.</p></div></section><section class="slide companion" id="slide-4" data-section="Doplněk GRAFIT" aria-label="Zobrazení 4: Kde vzniká chyba"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Kde vzniká chyba</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Snímač, předzpracování, příznaky i rozhodovací pravidlo mohou přidat chybu. Reprezentace, která zahodí rozlišující informaci, ji dalším učením sama neobnoví. Proto ověřujeme i vstupní data a způsob anotace.</p></div></section><section class="slide companion" id="slide-5" data-section="Doplněk GRAFIT" aria-label="Zobrazení 5: Co znamená zobecnění"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Co znamená zobecnění</h2><p class="eyebrow">Vysvětlení GRAFIT</p><p class="lead">Cílem je rozhodovat pro další vzorky z uvažované úlohy, nikoli pouze pamatovat si trénovací příklady. Oddělení trénovacích a testovacích dat musí respektovat i osoby, objekty nebo měřicí série.</p></div></section><section class="slide companion" id="slide-6" data-section="Doplněk GRAFIT" aria-label="Zobrazení 6: Stejný počet pixelů, jiná informace"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Stejný počet pixelů, jiná informace</h2><p class="eyebrow">Řešený syntetický příklad · GRAFIT</p><p class="lead">Dva obrázky mohou mít stejný průměrný jas, ale jiný tvar. Klasifikátor s jediným příznakem „průměrný jas“ je podle tohoto příznaku nerozliší. Přidání vhodného tvarového příznaku může pomoci; není však zárukou úspěchu na nových datech.</p><aside class="callout"><strong>Na co dát pozor</strong><p>Organizační pokyny, termíny a projektové odkazy v podkladu patří k sadě 2023–2024. Pro současný běh předmětu rozhoduje aktuální zadání vyučujícího.</p></aside></div></section><section class="slide companion" id="slide-7" data-section="Doplněk GRAFIT" aria-label="Zobrazení 7: Co zůstane po projekci"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Co zůstane po projekci</h2><p>Interaktivní didaktický doplněk GRAFIT · syntetické hodnoty.</p><div class="lab" data-model="projection"><div class="lab-inputs"><label for="model-angle">Směr projekce (stupně)<input id="model-angle" name="angle" type="number" min="0" max="180" step="1" value="0"></label><button type="button" data-reset-model>Obnovit hodnoty</button></div><canvas width="700" height="300" role="img" aria-label="Grafický doprovod výpočtu; stejné výsledky a omezení jsou v textu pod grafem."></canvas><output aria-live="polite"></output></div><p class="muted">Ukázka izoluje jeden princip. Není benchmarkem, měřením na skutečných datech ani plnou implementací příslušného učícího algoritmu.</p></div></section><section class="slide companion" id="slide-8" data-section="Doplněk GRAFIT" aria-label="Zobrazení 8: Zkuste si odpovědět"><div class="content"><p class="eyebrow">Doplněk GRAFIT</p><h2>Zkuste si odpovědět</h2><p class="eyebrow">Kontrolní otázka · GRAFIT</p><p class="lead">Jsou významová třída a geometrický shluk vždy totéž?</p><details class="quiz-answer"><summary>Zobrazit vysvětlení</summary><p>Ne. Třída vychází ze zadání; shluk z definice podobnosti a optimalizačního kritéria.</p></details><p><a href="#slide-9">Pokračovat původní přednáškou →</a></p></div></section><section class="slide source" id="slide-9" data-section="Původní přednáška" aria-label="Zobrazení 9: Pattern Recognition I"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition I</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition I. PDF strana 1, kvadrant 1."><title>Pattern Recognition I</title><defs><clipPath id="panel-1-1"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.0" clip-path="url(#panel-1-1)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 1</span><span class="pill">autor: 1/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">Outline
+Pattern Recognition I
+Basic PRConcepts
+Michal Haindl
+Faculty of Information Technology,KTI
+Czech Technical University in Prague
+/nstitute of/nformation Theory and Automation
+Czech Academy ofSciences
+Prague,Czechia
+http://ro.utia.cz/
+NI/MIE-ROZ 2023-2024
+M.Haindl
+MI-ROZ- 01
+1/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-10" data-section="Původní přednáška" aria-label="Zobrazení 10: Outline -PR Basic Concepts"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Outline -PR Basic Concepts</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Outline -PR Basic Concepts. PDF strana 1, kvadrant 2."><title>Outline -PR Basic Concepts</title><defs><clipPath id="panel-1-2"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.0" clip-path="url(#panel-1-2)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 2</span><span class="pill">autor: 2/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">Outline
+Outline -PR Basic Concepts
+1 Organization
+2 Content
+3 Pattern Recognition
+AI
+PR Achievements
+4 PR Applications
+Literature
+Notation
+Notions
+Representation
+Classification
+M.Haindl
+MI-ROZ- 01
+2/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-11" data-section="Původní přednáška" aria-label="Zobrazení 11: Course Organization"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Course Organization</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Course Organization. PDF strana 1, kvadrant 3."><title>Course Organization</title><defs><clipPath id="panel-1-3"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.0" clip-path="url(#panel-1-3)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 3</span><span class="pill">autor: 3/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Course Organization
+2+2
+location FIT T9-346,exam UTIA CAS 471
+seminars - consulting hours (odd / even weeks) Ing. Radek
+Richtr,Ph.D.
+exam questions
+M.Haindl
+MI-ROZ- 01
+3/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-12" data-section="Původní přednáška" aria-label="Zobrazení 12: Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html. PDF strana 1, kvadrant 4."><title>Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html</title><defs><clipPath id="panel-1-4"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-01.svg" width="842.0" height="595.0" clip-path="url(#panel-1-4)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 1 · kvadrant 4</span><span class="pill">autor: 5/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html
+Supervised melanoma classifier - FIT project
+individual implementation of parts of a classifier pipeline
+generic segmenter in Cygwin / (Linux)
+M.Haindl
+MI-ROZ- 01
+5/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=1">Původní PDF, strana 1</a></p></div></section><section class="slide source" id="slide-13" data-section="Původní přednáška" aria-label="Zobrazení 13: Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html. PDF strana 2, kvadrant 1."><title>Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html</title><defs><clipPath id="panel-1-5"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.0" clip-path="url(#panel-1-5)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 1</span><span class="pill">autor: 5/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html
+Supervised melanoma classifier - FIT project
+individual implementation of parts of a classifier pipeline
+generic segmenter in Cygwin / (Linux)
+1 image input
+2 melanoma detection
+3 textural features
+4 transformation
+5 segmenter
+6 multisegmenter
+7 postprocessing
+8 TM output
+9 verification
+M.Haindl
+MI-ROZ- 01
+5/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-14" data-section="Původní přednáška" aria-label="Zobrazení 14: Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html. PDF strana 2, kvadrant 2."><title>Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html</title><defs><clipPath id="panel-1-6"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.0" clip-path="url(#panel-1-6)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 2</span><span class="pill">autor: 5/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html
+Supervised melanoma classifier - FIT project
+individual implementation of parts of a classifier pipeline
+generic segmenter in Cygwin / (Linux)
+programme the classifier (learning &amp;classification) in C/C++
+individually improve on the selected classifier
+verify it on the PTSB server http://mosaic.utia.cas.cz
+write short report &amp;presentation
+demonstration
+M.Haindl
+MI-ROZ- 01
+5/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-15" data-section="Původní přednáška" aria-label="Zobrazení 15: Institute of Information Theory and Automation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Institute of Information Theory and Automation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Institute of Information Theory and Automation. PDF strana 2, kvadrant 3."><title>Institute of Information Theory and Automation</title><defs><clipPath id="panel-1-7"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.0" clip-path="url(#panel-1-7)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 3</span><span class="pill">autor: 7/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Institute of Information Theory and Automation
+room 474
+http://www.utia.cas.cz/
+M.Haindl
+MI-ROZ- 01
+7/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-16" data-section="Původní přednáška" aria-label="Zobrazení 16: Content"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Content</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Content. PDF strana 2, kvadrant 4."><title>Content</title><defs><clipPath id="panel-1-8"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-02.svg" width="842.0" height="595.0" clip-path="url(#panel-1-8)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 2 · kvadrant 4</span><span class="pill">autor: 8/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Content
+Elements of pattern recognition.
+Basic PR concepts.
+Bayesian decision theory.
+Learning theory.
+Parametric &amp;non-parametric classifiers.
+Context classifiers.
+Cluster analysis.
+Feature selection &amp;extraction.
+Classification quality estimation.
+Structural &amp;syntactic recognition.
+Neural networks.
+Genetic algorithms.
+Vector support machines.
+Applications.
+M.Haindl
+MI-ROZ- 01
+8/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=2">Původní PDF, strana 2</a></p></div></section><section class="slide source" id="slide-17" data-section="Původní přednáška" aria-label="Zobrazení 17: Pattern Recognition &amp;Modelling"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition &amp;Modelling</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition &amp;Modelling. PDF strana 3, kvadrant 1."><title>Pattern Recognition &amp;Modelling</title><defs><clipPath id="panel-1-9"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.0" clip-path="url(#panel-1-9)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 1</span><span class="pill">autor: 9/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition &amp;Modelling
+Pattern Recognition ⇒ object categorization
+M.Haindl
+MI-ROZ- 01
+9/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-18" data-section="Původní přednáška" aria-label="Zobrazení 18: Pattern Recognition &amp;Modelling"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition &amp;Modelling</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition &amp;Modelling. PDF strana 3, kvadrant 2."><title>Pattern Recognition &amp;Modelling</title><defs><clipPath id="panel-1-10"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.0" clip-path="url(#panel-1-10)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 2</span><span class="pill">autor: 9/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition &amp;Modelling
+Pattern Recognition ⇒ object categorization → statistical model
+M.Haindl
+MI-ROZ- 01
+9/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-19" data-section="Původní přednáška" aria-label="Zobrazení 19: Pattern Recognition &amp;Modelling"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition &amp;Modelling</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition &amp;Modelling. PDF strana 3, kvadrant 3."><title>Pattern Recognition &amp;Modelling</title><defs><clipPath id="panel-1-11"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.0" clip-path="url(#panel-1-11)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 3</span><span class="pill">autor: 9/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition &amp;Modelling
+Pattern Recognition ⇒ object categorization → statistical model
+object synthesis
+discriminative
+p(ωi |X)
+generative (descriptive)
+p(X,ωi)
+honeysuckle
+M.Haindl
+MI-ROZ- 01
+9/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-20" data-section="Původní přednáška" aria-label="Zobrazení 20: Pattern Recognition &amp;Modelling"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition &amp;Modelling</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition &amp;Modelling. PDF strana 3, kvadrant 4."><title>Pattern Recognition &amp;Modelling</title><defs><clipPath id="panel-1-12"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-03.svg" width="842.0" height="595.0" clip-path="url(#panel-1-12)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 3 · kvadrant 4</span><span class="pill">autor: 9/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition &amp;Modelling
+Pattern Recognition ⇒ object categorization → statistical model
+object synthesis
+tomato harvesting
+apple harvesting
+M.Haindl
+MI-ROZ- 01
+9/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=3">Původní PDF, strana 3</a></p></div></section><section class="slide source" id="slide-21" data-section="Původní přednáška" aria-label="Zobrazení 21: Pattern Recognition &amp;Modelling"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition &amp;Modelling</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition &amp;Modelling. PDF strana 4, kvadrant 1."><title>Pattern Recognition &amp;Modelling</title><defs><clipPath id="panel-1-13"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.0" clip-path="url(#panel-1-13)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 1</span><span class="pill">autor: 9/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition &amp;Modelling
+Pattern Recognition ⇒ object categorization → statistical model
+object synthesis
+Analysis
+⇒
+supervised recognition,
+unsupervised recognition,
+inhomogeneity (edge) detection,
+defect detection,
+(optimal PR)
+M.Haindl
+MI-ROZ- 01
+9/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-22" data-section="Původní přednáška" aria-label="Zobrazení 22: Pattern Recognition &amp;Modelling"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition &amp;Modelling</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition &amp;Modelling. PDF strana 4, kvadrant 2."><title>Pattern Recognition &amp;Modelling</title><defs><clipPath id="panel-1-14"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.0" clip-path="url(#panel-1-14)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 2</span><span class="pill">autor: 9/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition &amp;Modelling
+Pattern Recognition ⇒ object categorization → statistical model
+object synthesis
+Analysis
+Modeling (Synthesis)
+⇒
+object multiplication / enlargement,
+reconstruction / recovery / restoration of unobservable
+data,
+enhancement,
+compression,
+artificial objects generation.
+M.Haindl
+MI-ROZ- 01
+9/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-23" data-section="Původní přednáška" aria-label="Zobrazení 23: Pattern Recognition &amp;Modelling"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition &amp;Modelling</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition &amp;Modelling. PDF strana 4, kvadrant 3."><title>Pattern Recognition &amp;Modelling</title><defs><clipPath id="panel-1-15"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.0" clip-path="url(#panel-1-15)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 3</span><span class="pill">autor: 9/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition &amp;Modelling
+Pattern Recognition ⇒ object categorization → statistical model
+object synthesis
+Analysis
+Modeling (Synthesis)
+→
+not identical (pixelwise)
+indiscernible (visually,aurally,tactually ...)
+M.Haindl
+MI-ROZ- 01
+9/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-24" data-section="Původní přednáška" aria-label="Zobrazení 24: Notions &amp;Synonyms"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions &amp;Synonyms</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions &amp;Synonyms. PDF strana 4, kvadrant 4."><title>Notions &amp;Synonyms</title><defs><clipPath id="panel-1-16"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-04.svg" width="842.0" height="595.0" clip-path="url(#panel-1-16)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 4 · kvadrant 4</span><span class="pill">autor: 10/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Notions &amp;Synonyms
+Pattern Recognition - objects categorization
+Human Intelligence adaptability - power to generalize to
+never-seen-before situations.
+Artificial Intelligence - a branch of computer science that is
+concerned with the automation of intelligent behavior
+(creativity &amp;self-awarness - autonomous free will.)
+Machine Learning - mathematical models parameters estimation
+Data Mining - collecting,cleaning,processing,analyzing,and
+gaining useful insights from data
+agent based models,computer vision,robotics,gaming,automated
+reasoning,theorem proving,expert systems,natural language
+processing,machine learning,deep learning,neural nets,genetic
+algorithms,etc.
+M.Haindl
+MI-ROZ- 01
+10/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=4">Původní PDF, strana 4</a></p></div></section><section class="slide source" id="slide-25" data-section="Původní přednáška" aria-label="Zobrazení 25: Notions &amp;Synonyms"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions &amp;Synonyms</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions &amp;Synonyms. PDF strana 5, kvadrant 1."><title>Notions &amp;Synonyms</title><defs><clipPath id="panel-1-17"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.0" clip-path="url(#panel-1-17)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 1</span><span class="pill">autor: 10/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Notions &amp;Synonyms
+Pattern Recognition - objects categorization
+Human Intelligence adaptability - power to generalize to
+never-seen-before situations.
+Humans don’t start out with skills;they start
+out with a broad ability to acquire new skills.
+Humans have innate ability to quickly learn (like
+what a smile means,what happens when you
+drop something ...).
+A self-driving car cannot intuit from common
+sense what will happen if a truck spills its load.
+Artificial Intelligence - a branch of computer science that is
+concerned with the automation of intelligent behavior
+(creativity &amp;self-awarness - autonomous free will.)
+Machine Learning - mathematical models parameters estimation
+Data Mining - collecting,cleaning,processing,analyzing,and
+gaining useful insights from data
+agent based models,computer vision,robotics,gaming,automated
+M.Haindl
+MI-ROZ- 01
+10/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-26" data-section="Původní přednáška" aria-label="Zobrazení 26: Notions &amp;Synonyms"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions &amp;Synonyms</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions &amp;Synonyms. PDF strana 5, kvadrant 2."><title>Notions &amp;Synonyms</title><defs><clipPath id="panel-1-18"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.0" clip-path="url(#panel-1-18)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 2</span><span class="pill">autor: 10/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Notions &amp;Synonyms
+Pattern Recognition - objects categorization
+Human Intelligence adaptability - power to generalize to
+never-seen-before situations.
+Artificial Intelligence - a branch of computer science that is
+concerned with the automation of intelligent behavior
+(creativity &amp;self-awarness - autonomous free will.)
+I AI a repertoire of fixed algorithms
+II AI limited recall to take future actions
+based on limited past observances
+III AI possess a social understanding of its
+surrounding and reacts accordingly
+IV AI conscious,self-aware capability,
+autonomous free will
+Machine Learning - mathematical models parameters estimation
+Data Mining - collecting,cleaning,processing,analyzing,and
+gaining useful insights from data
+agent based models,computer vision,robotics,gaming,automated
+M.Haindl
+MI-ROZ- 01
+10/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-27" data-section="Původní přednáška" aria-label="Zobrazení 27: Notions &amp;Synonyms"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions &amp;Synonyms</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions &amp;Synonyms. PDF strana 5, kvadrant 3."><title>Notions &amp;Synonyms</title><defs><clipPath id="panel-1-19"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.0" clip-path="url(#panel-1-19)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 3</span><span class="pill">autor: 10/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">reasoning theorem proving expert systems natural language
+PR PR-C PR PR Applications
+AI PR Achievements
+Notions &amp;Synonyms
+Pattern Recognition - objects categorization
+Human Intelligence adaptability - power to generalize to
+never-seen-before situations.
+Artificial Intelligence - a branch of computer science that is
+concerned with the automation of intelligent behavior
+(creativity &amp;self-awarness - autonomous free will.)
+Machine Learning - mathematical models parameters estimation
+Data Mining - collecting,cleaning,processing,analyzing,and
+gaining useful insights from data
+agent based models,computer vision,robotics,gaming,automated
+reasoning,theorem proving,expert systems,natural language
+processing,machine learning,deep learning,neural nets,genetic
+algorithms,etc.
+M.Haindl
+MI-ROZ- 01
+10/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-28" data-section="Původní přednáška" aria-label="Zobrazení 28: Notions &amp;Synonyms"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions &amp;Synonyms</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions &amp;Synonyms. PDF strana 5, kvadrant 4."><title>Notions &amp;Synonyms</title><defs><clipPath id="panel-1-20"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-05.svg" width="842.0" height="595.0" clip-path="url(#panel-1-20)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 5 · kvadrant 4</span><span class="pill">autor: 10/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">reasoning theorem proving expert systems natural language
+PR PR-C PR PR Applications
+AI PR Achievements
+Notions &amp;Synonyms
+Pattern Recognition - objects categorization
+Human Intelligence adaptability - power to generalize to
+never-seen-before situations.
+Artificial Intelligence - a branch of computer science that is
+concerned with the automation of intelligent behavior
+(creativity &amp;self-awarness - autonomous free will.)
+Machine Learning - mathematical models parameters estimation
+Data Mining - collecting,cleaning,processing,analyzing,and
+gaining useful insights from data
+agent based models,computer vision,robotics,gaming,automated
+reasoning,theorem proving,expert systems,natural language
+processing,machine learning,deep learning,neural nets,genetic
+algorithms,etc.
+M.Haindl
+MI-ROZ- 01
+10/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=5">Původní PDF, strana 5</a></p></div></section><section class="slide source" id="slide-29" data-section="Původní přednáška" aria-label="Zobrazení 29: Notions &amp;Synonyms"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions &amp;Synonyms</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions &amp;Synonyms. PDF strana 6, kvadrant 1."><title>Notions &amp;Synonyms</title><defs><clipPath id="panel-1-21"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.0" clip-path="url(#panel-1-21)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 1</span><span class="pill">autor: 10/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Notions &amp;Synonyms
+Pattern Recognition - objects categorization
+Human Intelligence adaptability - power to generalize to
+never-seen-before situations.
+Artificial Intelligence - a branch of computer science that is
+concerned with the automation of intelligent behavior
+(creativity &amp;self-awarness - autonomous free will.)
+Machine Learning - mathematical models parameters estimation
+Data Mining - collecting,cleaning,processing,analyzing,and
+gaining useful insights from data
+agent based models,computer vision,robotics,gaming,automated
+reasoning,theorem proving,expert systems,natural language
+processing,machine learning,deep learning,neural nets,genetic
+algorithms,etc.
+M.Haindl
+MI-ROZ- 01
+10/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-30" data-section="Původní přednáška" aria-label="Zobrazení 30: Notions &amp;Synonyms"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions &amp;Synonyms</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions &amp;Synonyms. PDF strana 6, kvadrant 2."><title>Notions &amp;Synonyms</title><defs><clipPath id="panel-1-22"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.0" clip-path="url(#panel-1-22)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 2</span><span class="pill">autor: 10/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Notions &amp;Synonyms
+Pattern Recognition - objects categorization
+Human Intelligence adaptability - power to generalize to
+never-seen-before situations.
+Artificial Intelligence - a branch of computer science that is
+concerned with the automation of intelligent behavior
+(creativity &amp;self-awarness - autonomous free will.)
+Machine Learning - mathematical models parameters estimation
+Data Mining - collecting,cleaning,processing,analyzing,and
+gaining useful insights from data
+agent based models,computer vision,robotics,gaming,automated
+reasoning,theorem proving,expert systems,natural language
+processing,machine learning,deep learning,neural nets,genetic
+algorithms,etc.
+M.Haindl
+MI-ROZ- 01
+10/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-31" data-section="Původní přednáška" aria-label="Zobrazení 31: Pattern Recognition -Motivation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition -Motivation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition -Motivation. PDF strana 6, kvadrant 3."><title>Pattern Recognition -Motivation</title><defs><clipPath id="panel-1-23"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.0" clip-path="url(#panel-1-23)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 3</span><span class="pill">autor: 13/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition -Motivation
+PR - identification of objects on the basis of their measurement
+patterns
+human PR - sense stimuli are converted into meaningful perceptual
+experiences
+process still largely unknown
+1 pattern is perceived by sense organs
+2 the same (similar) pattern have been previously perceived →
+meaningful perceptual experience
+3 the past perception of the pattern must be remembered
+4 some correspondence (equivalence) must be somehow
+established between past and present perception
+M.Haindl
+MI-ROZ- 01
+13/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-32" data-section="Původní přednáška" aria-label="Zobrazení 32: Pattern Recognition -Motivation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition -Motivation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition -Motivation. PDF strana 6, kvadrant 4."><title>Pattern Recognition -Motivation</title><defs><clipPath id="panel-1-24"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-06.svg" width="842.0" height="595.0" clip-path="url(#panel-1-24)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 6 · kvadrant 4</span><span class="pill">autor: 13/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition -Motivation
+PR - identification of objects on the basis of their measurement
+patterns
+human PR - sense stimuli are converted into meaningful perceptual
+experiences
+process still largely unknown
+1 pattern is perceived by sense organs
+2 the same (similar) pattern have been previously perceived →
+meaningful perceptual experience
+3 the past perception of the pattern must be remembered
+4 some correspondence (equivalence) must be somehow
+established between past and present perception
+M.Haindl
+MI-ROZ- 01
+13/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=6">Původní PDF, strana 6</a></p></div></section><section class="slide source" id="slide-33" data-section="Původní přednáška" aria-label="Zobrazení 33: Pattern Recognition -Motivation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition -Motivation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition -Motivation. PDF strana 7, kvadrant 1."><title>Pattern Recognition -Motivation</title><defs><clipPath id="panel-1-25"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.0" clip-path="url(#panel-1-25)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 1</span><span class="pill">autor: 13/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition -Motivation
+PR - identification of objects on the basis of their measurement
+patterns
+human PR - sense stimuli are converted into meaningful perceptual
+experiences
+process still largely unknown
+1 pattern is perceived by sense organs
+2 the same (similar) pattern have been previously perceived →
+meaningful perceptual experience
+3 the past perception of the pattern must be remembered
+4 some correspondence (equivalence) must be somehow
+established between past and present perception
+M.Haindl
+MI-ROZ- 01
+13/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-34" data-section="Původní přednáška" aria-label="Zobrazení 34: Pattern Recognition -Motivation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition -Motivation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition -Motivation. PDF strana 7, kvadrant 2."><title>Pattern Recognition -Motivation</title><defs><clipPath id="panel-1-26"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.0" clip-path="url(#panel-1-26)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 2</span><span class="pill">autor: 13/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition -Motivation
+PR - identification of objects on the basis of their measurement
+patterns
+human PR - sense stimuli are converted into meaningful perceptual
+experiences
+process still largely unknown
+1 pattern is perceived by sense organs
+2 the same (similar) pattern have been previously perceived →
+meaningful perceptual experience
+3 the past perception of the pattern must be remembered
+4 some correspondence (equivalence) must be somehow
+established between past and present perception
+M.Haindl
+MI-ROZ- 01
+13/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-35" data-section="Původní přednáška" aria-label="Zobrazení 35: Pattern Recognition -Motivation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition -Motivation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition -Motivation. PDF strana 7, kvadrant 3."><title>Pattern Recognition -Motivation</title><defs><clipPath id="panel-1-27"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.0" clip-path="url(#panel-1-27)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 3</span><span class="pill">autor: 13/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition -Motivation
+PR - identification of objects on the basis of their measurement
+patterns
+human PR - sense stimuli are converted into meaningful perceptual
+experiences
+process still largely unknown
+1 pattern is perceived by sense organs
+2 the same (similar) pattern have been previously perceived →
+meaningful perceptual experience
+3 the past perception of the pattern must be remembered
+4 some correspondence (equivalence) must be somehow
+established between past and present perception
+M.Haindl
+MI-ROZ- 01
+13/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-36" data-section="Původní přednáška" aria-label="Zobrazení 36: Pattern Recognition -Motivation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition -Motivation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition -Motivation. PDF strana 7, kvadrant 4."><title>Pattern Recognition -Motivation</title><defs><clipPath id="panel-1-28"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-07.svg" width="842.0" height="595.0" clip-path="url(#panel-1-28)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 7 · kvadrant 4</span><span class="pill">autor: 13/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition -Motivation
+PR - identification of objects on the basis of their measurement
+patterns
+human PR - sense stimuli are converted into meaningful perceptual
+experiences
+process still largely unknown
+1 pattern is perceived by sense organs
+2 the same (similar) pattern have been previously perceived →
+meaningful perceptual experience
+3 the past perception of the pattern must be remembered
+4 some correspondence (equivalence) must be somehow
+established between past and present perception
+M.Haindl
+MI-ROZ- 01
+13/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=7">Původní PDF, strana 7</a></p></div></section><section class="slide source" id="slide-37" data-section="Původní přednáška" aria-label="Zobrazení 37: Scene Understanding"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Scene Understanding</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Scene Understanding. PDF strana 8, kvadrant 1."><title>Scene Understanding</title><defs><clipPath id="panel-1-29"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.0" clip-path="url(#panel-1-29)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 1</span><span class="pill">autor: 14/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Scene Understanding
+The computer should be able to reason about all aspects of the
+scene and provide detailed pixel-level annotations describing the
+semantics and geometry of the scene.
+robot perception (autonomous driving,drone delivery,...)
+surveillance and environmental monitoring
+content-based image search
+etc.
+M.Haindl
+MI-ROZ- 01
+14/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-38" data-section="Původní přednáška" aria-label="Zobrazení 38: Scene Understanding"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Scene Understanding</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Scene Understanding. PDF strana 8, kvadrant 2."><title>Scene Understanding</title><defs><clipPath id="panel-1-30"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.0" clip-path="url(#panel-1-30)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 2</span><span class="pill">autor: 14/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Scene Understanding
+The computer should be able to reason about all aspects of the
+scene and provide detailed pixel-level annotations describing the
+semantics and geometry of the scene.
+In the early years of computer-vision research an undergraduate
+student at MIT was asked to spend his summer getting a computer
+to describe what it saw in images obtained from a video camera.
+M.Haindl
+MI-ROZ- 01
+14/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-39" data-section="Původní přednáška" aria-label="Zobrazení 39: Scene Understanding"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Scene Understanding</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Scene Understanding. PDF strana 8, kvadrant 3."><title>Scene Understanding</title><defs><clipPath id="panel-1-31"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.0" clip-path="url(#panel-1-31)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 3</span><span class="pill">autor: 14/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Scene Understanding
+The computer should be able to reason about all aspects of the
+scene and provide detailed pixel-level annotations describing the
+semantics and geometry of the scene.
+In the early years of computer-vision research an undergraduate
+student at MIT was asked to spend his summer getting a computer
+to describe what it saw in images obtained from a video camera.
+Almost 60 years later researchers are still grappling with the same
+problem.
+M.Haindl
+MI-ROZ- 01
+14/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-40" data-section="Původní přednáška" aria-label="Zobrazení 40: Scene Understanding"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Scene Understanding</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Scene Understanding. PDF strana 8, kvadrant 4."><title>Scene Understanding</title><defs><clipPath id="panel-1-32"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-08.svg" width="842.0" height="595.0" clip-path="url(#panel-1-32)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 8 · kvadrant 4</span><span class="pill">autor: 14/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Scene Understanding
+2014 drone delivery available ”Could it be four,five years?
+I think so.” Amazon CEO Jeff Bezos
+2015 ”I almost view it (autonomous driving) as a solved
+problem,” Tesla CEO Elon Musk
+2018 Tesla’s vehicles would ”probably” be able to drive
+autonomously across the United States in ”three to
+six months.” Elon Musk
+2019 The company expected to deliver packages by drone
+”within months.” Amazon Worldwide Consumer
+CEO Jeff Wilke
+2023 Tesla has yet to release software capable of handling
+the entire driving task (assisted driving only). Drone
+delivery still hasn’t happened. The human supervision
+of robots is still necessary to prevent mistakes and
+help the robot out of confusing situations.
+M.Haindl
+MI-ROZ- 01
+14/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=8">Původní PDF, strana 8</a></p></div></section><section class="slide source" id="slide-41" data-section="Původní přednáška" aria-label="Zobrazení 41: WHO Guidelines to AI in Healthcare (2023)"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>WHO Guidelines to AI in Healthcare (2023)</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: WHO Guidelines to AI in Healthcare (2023). PDF strana 9, kvadrant 1."><title>WHO Guidelines to AI in Healthcare (2023)</title><defs><clipPath id="panel-1-33"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.0" clip-path="url(#panel-1-33)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 1</span><span class="pill">autor: 17/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+WHO Guidelines to AI in Healthcare (2023)
+Critical regulatory factors concerning the use of AI in healthcare:
+1 transparency and documentation (entire product lifecycle and
+tracking development processes),
+2 risk management (intended use,continuous learning,human
+interventions,training models,cybersecurity),
+3 validating data,clarity on the intended use of AI,
+4 data quality,
+5 privacy and data protection (GDPR - EU,HIPAA - USA),
+6 collaboration (regulatory bodies,patients,healthcare
+professionals,industry).
+AI requires an ecosystem of human skills and cannot replace
+human experience of creativity and emotion.
+M.Haindl
+MI-ROZ- 01
+17/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-42" data-section="Původní přednáška" aria-label="Zobrazení 42: Explainable AI"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Explainable AI</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Explainable AI. PDF strana 9, kvadrant 2."><title>Explainable AI</title><defs><clipPath id="panel-1-34"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.0" clip-path="url(#panel-1-34)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 2</span><span class="pill">autor: 18/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Explainable AI
+XAI:
+to correctly understand the decision making process (medical
+diagnostics,autonomous driving)
+to understand the key features that led the algorithm to make
+the respective decision and classification
+to make sure the classifier generalizes well
+M.Haindl
+MI-ROZ- 01
+18/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-43" data-section="Původní přednáška" aria-label="Zobrazení 43: Pattern Recognition Course Goal"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition Course Goal</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition Course Goal. PDF strana 9, kvadrant 3."><title>Pattern Recognition Course Goal</title><defs><clipPath id="panel-1-35"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.0" clip-path="url(#panel-1-35)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 3</span><span class="pill">autor: 19/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition Course Goal
+Understanding - pattern recognition should not be viewed as a
+series of black boxes.
+Trade-offs - no single method will perform well in all possible
+applications.
+Selection - the most widely applicable PR methods.
+M.Haindl
+MI-ROZ- 01
+19/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-44" data-section="Původní přednáška" aria-label="Zobrazení 44: Pattern Recognition Course Goal"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition Course Goal</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition Course Goal. PDF strana 9, kvadrant 4."><title>Pattern Recognition Course Goal</title><defs><clipPath id="panel-1-36"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-09.svg" width="842.0" height="595.0" clip-path="url(#panel-1-36)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 9 · kvadrant 4</span><span class="pill">autor: 19/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition Course Goal
+Understanding - pattern recognition should not be viewed as a
+series of black boxes.
+Trade-offs - no single method will perform well in all possible
+applications.
+Selection - the most widely applicable PR methods.
+M.Haindl
+MI-ROZ- 01
+19/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=9">Původní PDF, strana 9</a></p></div></section><section class="slide source" id="slide-45" data-section="Původní přednáška" aria-label="Zobrazení 45: Pattern Recognition Course Goal"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition Course Goal</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition Course Goal. PDF strana 10, kvadrant 1."><title>Pattern Recognition Course Goal</title><defs><clipPath id="panel-1-37"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.0" clip-path="url(#panel-1-37)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 1</span><span class="pill">autor: 19/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+Pattern Recognition Course Goal
+Understanding - pattern recognition should not be viewed as a
+series of black boxes.
+Trade-offs - no single method will perform well in all possible
+applications.
+Selection - the most widely applicable PR methods.
+M.Haindl
+MI-ROZ- 01
+19/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-46" data-section="Původní přednáška" aria-label="Zobrazení 46: PR -Achievements"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>PR -Achievements</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: PR -Achievements. PDF strana 10, kvadrant 2."><title>PR -Achievements</title><defs><clipPath id="panel-1-38"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.0" clip-path="url(#panel-1-38)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 2</span><span class="pill">autor: 20/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+PR -Achievements
+artificial PR - basic elements (sensors,A/D converters,memory,
+computer) are available
+achievements
+OCR - mail sorting,documents,car template recognition
+show-through removal
+Miroslav Gospel - 1186
+CodeXGigas - early 13th century
+visual inspection - woven materials,paper / steel mills,food,
+M.Haindl
+MI-ROZ- 01
+20/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-47" data-section="Původní přednáška" aria-label="Zobrazení 47: PR -Achievements"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>PR -Achievements</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: PR -Achievements. PDF strana 10, kvadrant 3."><title>PR -Achievements</title><defs><clipPath id="panel-1-39"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.0" clip-path="url(#panel-1-39)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 3</span><span class="pill">autor: 20/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+PR -Achievements
+artificial PR - basic elements (sensors,A/D converters,memory,
+computer) are available
+achievements
+OCR - mail sorting,documents,car template recognition
+Machine Translation of Cuneiform
+(Sumerian and Akkadian) Languages 3000 BC, 500,000 preserved cuneiform tablets - many untranslated
+(deciphered 1857), 40,000 British Museum - Electronic Babylonian Literature project
+visual inspection - woven materials,paper / steel mills,food,
+notes
+driving assistance - road sign recognition,approaching cars,
+M.Haindl
+MI-ROZ- 01
+20/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-48" data-section="Původní přednáška" aria-label="Zobrazení 48: PR -Achievements"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>PR -Achievements</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: PR -Achievements. PDF strana 10, kvadrant 4."><title>PR -Achievements</title><defs><clipPath id="panel-1-40"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-10.svg" width="842.0" height="595.0" clip-path="url(#panel-1-40)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 10 · kvadrant 4</span><span class="pill">autor: 20/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">notes
+PR PR-C PR PR Applications
+AI PR Achievements
+PR -Achievements
+achievements
+OCR - mail sorting,documents,car template recognition
+visual inspection - woven materials,paper / steel mills,food,
+notes
+tomato quality-based grading
+driving assistance - road sign recognition,approaching cars,
+lane detection
+M.Haindl
+MI-ROZ- 01
+20/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=10">Původní PDF, strana 10</a></p></div></section><section class="slide source" id="slide-49" data-section="Původní přednáška" aria-label="Zobrazení 49: PR -Achievements"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>PR -Achievements</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: PR -Achievements. PDF strana 11, kvadrant 1."><title>PR -Achievements</title><defs><clipPath id="panel-1-41"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.0" clip-path="url(#panel-1-41)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 1</span><span class="pill">autor: 20/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+PR -Achievements
+achievements
+OCR - mail sorting,documents,car template recognition
+visual inspection - woven materials,paper / steel mills,food,
+notes
+tomato quality-based grading
+driving assistance - road sign recognition,approaching cars,
+lane detection
+medical signal analysis - EKG,EEG,blood cells counting,
+mammography,dermatology,DNA
+speech recognition (spoken words,speaker identification,
+ChatGPT-4)
+M.Haindl
+MI-ROZ- 01
+20/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-50" data-section="Původní přednáška" aria-label="Zobrazení 50: PR -Achievements"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>PR -Achievements</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: PR -Achievements. PDF strana 11, kvadrant 2."><title>PR -Achievements</title><defs><clipPath id="panel-1-42"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.0" clip-path="url(#panel-1-42)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 2</span><span class="pill">autor: 20/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+AI PR Achievements
+PR -Achievements
+achievements
+OCR - mail sorting,documents,car template recognition
+visual inspection - woven materials,paper / steel mills,food,
+notes
+driving assistance - road sign recognition,approaching cars,
+lane detection
+medical signal analysis - EKG,EEG,blood cells counting,
+mammography,dermatology,DNA
+speech recognition (spoken words,speaker identification,
+ChatGPT-4)
+security - fingerprint,face,DNA,iris,gait recognition,vein,
+spoofing detection
+M.Haindl
+MI-ROZ- 01
+20/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-51" data-section="Původní přednáška" aria-label="Zobrazení 51: PR -Achievements"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>PR -Achievements</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: PR -Achievements. PDF strana 11, kvadrant 3."><title>PR -Achievements</title><defs><clipPath id="panel-1-43"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.0" clip-path="url(#panel-1-43)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 3</span><span class="pill">autor: 20/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">i
+fi
+i f
+DNA i i
+i
+i i
+i
+PR PR-C PR PR Applications
+AI PR Achievements
+PR -Achievements
+achievements
+OCR - mail sorting,documents,car template recognition
+visual inspection - woven materials,paper / steel mills,food,
+notes
+driving assistance - road sign recognition,approaching cars,
+lane detection
+medical signal analysis - EKG,EEG,blood cells counting,
+mammography,dermatology,DNA
+speech recognition (spoken words,speaker identification,
+ChatGPT-4)
+security - fingerprint,face,DNA,iris,gait recognition,vein,
+spoofing detection
+M.Haindl
+MI-ROZ- 01
+20/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-52" data-section="Původní přednáška" aria-label="Zobrazení 52: Face Recognition"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Face Recognition</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Face Recognition. PDF strana 11, kvadrant 4."><title>Face Recognition</title><defs><clipPath id="panel-1-44"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-11.svg" width="842.0" height="595.0" clip-path="url(#panel-1-44)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 11 · kvadrant 4</span><span class="pill">autor: 27/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Face Recognition
+photos have to be captured under controlled conditions:
+⊙ well-lit environment,normalized intensity and spectrum
+⊙ upright head holding
+⊙ looking into the camera
+⊙ no occlusions
+⊙ neutral expression
+⊙ no aging - similar age with the stored database photo
+⊙ age,race or sex variable accuracy - black females are 10 times
+more likely to be misidentified than white males (NIST)
+M.Haindl
+MI-ROZ- 01
+27/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=11">Původní PDF, strana 11</a></p></div></section><section class="slide source" id="slide-53" data-section="Původní přednáška" aria-label="Zobrazení 53: Face Recognition"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Face Recognition</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Face Recognition. PDF strana 12, kvadrant 1."><title>Face Recognition</title><defs><clipPath id="panel-1-45"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.0" clip-path="url(#panel-1-45)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 1</span><span class="pill">autor: 27/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Face Recognition
+Face recognition - unreliable after 5 years from captured images
+M.Haindl
+MI-ROZ- 01
+27/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-54" data-section="Původní přednáška" aria-label="Zobrazení 54: Face Recognition"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Face Recognition</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Face Recognition. PDF strana 12, kvadrant 2."><title>Face Recognition</title><defs><clipPath id="panel-1-46"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.0" clip-path="url(#panel-1-46)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 2</span><span class="pill">autor: 27/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Face Recognition
+Janus 2014 - 2020 funded by Intelligence Advanced
+Research Projects Agency (IARPA),unconstrained
+face recognition (in the wild)
+Horus facial recognition system (doubled accuracy),FBI &amp;
+Pentagon 640 M face photos worldwide
+M.Haindl
+MI-ROZ- 01
+27/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-55" data-section="Původní přednáška" aria-label="Zobrazení 55: History"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>History</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: History. PDF strana 12, kvadrant 3."><title>History</title><defs><clipPath id="panel-1-47"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.0" clip-path="url(#panel-1-47)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 3</span><span class="pill">autor: 33/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+History
+⟦symbol⟧ PR problem formulation
+C.K. Chow,”An optimum character recognition system using
+decision functions”,IRE Trans. Elec. Comp.,vol. 6,Dec.
+1957.
+⟦symbol⟧ discriminant analysis
+R.A. Fisher,”The use of multiple measurements in taxonomic
+problems”,Ann. Eugenics,vol. 7,1936.
+⟦symbol⟧ statistical decision theory
+A. Wald,”Statistical Decision Functions”,Wiley,1950.
+⟦symbol⟧ 1960 Frank Rosenblatt at Cornell Univ. builds a computer -
+the Perceptron - that can learn by trial and error through a
+neural network
+⟦symbol⟧ feature selection
+G. Sebestyen,”Decision Making Processes in Pattern
+Recognition”,Macmillan,1962
+M.Haindl
+MI-ROZ- 01
+33/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-56" data-section="Původní přednáška" aria-label="Zobrazení 56: History"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>History</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: History. PDF strana 12, kvadrant 4."><title>History</title><defs><clipPath id="panel-1-48"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-12.svg" width="842.0" height="595.0" clip-path="url(#panel-1-48)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 12 · kvadrant 4</span><span class="pill">autor: 34/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+History
+⟦symbol⟧ 1962 L. Roberts MIT,the first computer vision system
+⟦symbol⟧ 1970 Shakey from SRI International is the first robot to use AI
+to navigate
+⟦symbol⟧ 1975 HWIM (hear what I mean) Harpy,Hearsay - the first
+large vocabulary (1000 words) speech system
+M.Haindl
+MI-ROZ- 01
+34/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=12">Původní PDF, strana 12</a></p></div></section><section class="slide source" id="slide-57" data-section="Původní přednáška" aria-label="Zobrazení 57: Literature"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Literature</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Literature. PDF strana 13, kvadrant 1."><title>Literature</title><defs><clipPath id="panel-1-49"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.0" clip-path="url(#panel-1-49)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 1</span><span class="pill">autor: 35/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Literature
+IAPR International Association for Pattern Recognition
+http://www.iapr.org
+Books:
+Chen,C.H. Pau,L.F. Wang,P.S.P. ed. Handbook of PR &amp;
+Comp. Vision,World Scientific,93,ISBN 981-02-1136-8.
+Devijver,P.A.,Kittler,J. Pattern Recognition:A Statistical
+Approach,1982
+Duda,R.O.,Hart,P.E.,Stork,D.G. Pattern Classification,
+Wiley,2000,ISBN 978-0-471-05669-0.
+Fu,K.S.,Syntactic Methods in Pattern Recognition,
+Academic Press,1974,ISBN 0-12-269560-7.
+Fukunaga,K. Introduction to Statistical Pattern Recognition,
+Academic Press,1972
+M.Haindl
+MI-ROZ- 01
+35/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-58" data-section="Původní přednáška" aria-label="Zobrazení 58: Literature"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Literature</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Literature. PDF strana 13, kvadrant 2."><title>Literature</title><defs><clipPath id="panel-1-50"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.0" clip-path="url(#panel-1-50)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 2</span><span class="pill">autor: 36/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Literature
+Anderberg M.R. Cluster Analysis for Applications,Academic
+Press,1973.
+MacLachlan,G. J. Discriminant analysis and statistical
+pattern recognition ,Wiley 1992.
+Mitchel M. An Introduction to Genetic Algorithms,Bradford
+Book,1996.
+Muller,B. J. Reinhardt Neural Networks - An Introduction,
+Springer,1991.
+Haykin,S. Neural Networks A Comprehensive Foundation,
+Macmillan College Publishing Company,1994,ISBN
+0-02-352761-7.
+Sankar K.P. ed. Genetic Alg. for Pattern Rec. ,CRC
+Press,1996.
+Young,T. Y. Handbook of Pattern Recognition and Image
+Processing,Acade mic Press,1986,ISBN 0-12-774560-2.
+Kotek,Z.,Chalupa,V.,Br°
+uha,I.,Jel
+´
+ınek,J. Adaptivn´
+ı a uˇ
+c´
+ıc´
+ı
+se syst´
+emy. SNTL,1980.
+M.Haindl
+MI-ROZ- 01
+36/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-59" data-section="Původní přednáška" aria-label="Zobrazení 59: Pattern Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Classification. PDF strana 13, kvadrant 3."><title>Pattern Classification</title><defs><clipPath id="panel-1-51"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.0" clip-path="url(#panel-1-51)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 3</span><span class="pill">autor: 37/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Pattern Classification
+Pattern Classification,
+2nd Edition,J. Wiley
+R. O. Duda,P. E. Hart,D. G. Stork
+ISBN: 978-0-471-05669-0, 680 pages, November
+2000
+Bayesian Decision Theory.
+Maximum-Likelihood and Bayesian Parameter Estimation.
+Nonparametric Techniques.
+Linear Discriminant Functions.
+Multilayer Neural Networks.
+Stochastic Methods.
+Nonmetric Methods.
+Algorithm-Independent Machine Learning.
+Unsupervised Learning and Clustering.
+M.Haindl
+MI-ROZ- 01
+37/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-60" data-section="Původní přednáška" aria-label="Zobrazení 60: Pattern Recognition"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition. PDF strana 13, kvadrant 4."><title>Pattern Recognition</title><defs><clipPath id="panel-1-52"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-13.svg" width="842.0" height="595.0" clip-path="url(#panel-1-52)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 13 · kvadrant 4</span><span class="pill">autor: 38/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Pattern Recognition
+Pattern Recognition
+4th Edition,Academic Press
+S. Theodoridis and K. Koutroumbas
+984 pages,2009
+1 Introduction
+2 Classifiers based on Bayes Decision
+3 Linear Classifiers
+4 Nonlinear Classifiers
+5 Feature Selection
+6 Feature Generation I:Data Transformation and
+Dimensionality Reduction
+7 Feature Generation II
+8 Template Matching
+M.Haindl
+MI-ROZ- 01
+38/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=13">Původní PDF, strana 13</a></p></div></section><section class="slide source" id="slide-61" data-section="Původní přednáška" aria-label="Zobrazení 61: Pattern Recognition"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition. PDF strana 14, kvadrant 1."><title>Pattern Recognition</title><defs><clipPath id="panel-1-53"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.0" clip-path="url(#panel-1-53)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 1</span><span class="pill">autor: 39/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Pattern Recognition
+9 Context Depedant Clarification
+10 System Evaluation
+11 Clustering:Basic Concepts
+12 Clustering Algorithms:Algorithms L Sequential
+13 Clustering Algorithms II:Hierarchical
+14 Clustering Algorithms III:Based on Function Optimization
+15 Clustering Algorithms IV:Clustering
+16 Cluster Validity
+M.Haindl
+MI-ROZ- 01
+39/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-62" data-section="Původní přednáška" aria-label="Zobrazení 62: Statistical Pattern Recognition"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Pattern Recognition</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Statistical Pattern Recognition. PDF strana 14, kvadrant 2."><title>Statistical Pattern Recognition</title><defs><clipPath id="panel-1-54"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.0" clip-path="url(#panel-1-54)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 2</span><span class="pill">autor: 40/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Statistical Pattern Recognition
+Statistical Pattern Recognition
+3th Edition,J. Wiley
+A. Webb
+496 pages,2004
+1 Introduction to statistical pattern recognition
+2 Density estimation - parametric
+3 Density estimation - nonparametric
+4 Linear discriminant analysis
+5 Nonlinear discriminant analysis -kernel methods
+6 Nonlinear discriminant analysis - projection methods
+7 Tree-based methods
+8 Performance
+9 Feature selection and extraction
+10 Clustering
+11 Additional topics
+M.Haindl
+MI-ROZ- 01
+40/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-63" data-section="Původní přednáška" aria-label="Zobrazení 63: Statistical Pattern Recognition"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical Pattern Recognition</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Statistical Pattern Recognition. PDF strana 14, kvadrant 3."><title>Statistical Pattern Recognition</title><defs><clipPath id="panel-1-55"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.0" clip-path="url(#panel-1-55)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 3</span><span class="pill">autor: 41/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Statistical Pattern Recognition
+Statistical Pattern Recognition
+2nd Edition,A. Wiley
+K. Fukunaga
+496 pages,2004
+1 Introduction
+2 Random vectors and their properties
+3 Hypothesis testing
+4 Parametric classifiers
+5 Parameter estimation
+6 Nonparametric density estimation
+7 Nonparametric classification and error estimation
+8 Successive parameter estimation
+9 Feature extraction and linear mapping for signal representation
+10 Feature extraction and linear mapping for classification
+11 Clustering
+M.Haindl
+MI-ROZ- 01
+41/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-64" data-section="Původní přednáška" aria-label="Zobrazení 64: Pattern Recognition and Machine Learning"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition and Machine Learning</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition and Machine Learning. PDF strana 14, kvadrant 4."><title>Pattern Recognition and Machine Learning</title><defs><clipPath id="panel-1-56"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-14.svg" width="842.0" height="595.0" clip-path="url(#panel-1-56)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 14 · kvadrant 4</span><span class="pill">autor: 42/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Pattern Recognition and Machine Learning
+Pattern Recognition and Machine Learning
+1st Edition,Springer
+C.M. Bishop
+738 pages,2006
+1 Introduction
+2 Probability distribution
+3 Linear models for
+regression
+4 Linear models for for
+classification
+5 Neural networks
+6 Kernel methods
+7 Sparse kernel machines
+8 Graphical models
+9 Mixture models and EM
+10 Approximate inference
+11 Sampling methods
+12 Continuous latent
+variables
+13 Sequential data
+14 Combining models
+M.Haindl
+MI-ROZ- 01
+42/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=14">Původní PDF, strana 14</a></p></div></section><section class="slide source" id="slide-65" data-section="Původní přednáška" aria-label="Zobrazení 65: Pattern Recognition"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition. PDF strana 15, kvadrant 1."><title>Pattern Recognition</title><defs><clipPath id="panel-1-57"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.0" clip-path="url(#panel-1-57)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 1</span><span class="pill">autor: 43/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Pattern Recognition
+M.Haindl
+MI-ROZ- 01
+43/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-66" data-section="Původní přednáška" aria-label="Zobrazení 66: Pattern Recognition"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition. PDF strana 15, kvadrant 2."><title>Pattern Recognition</title><defs><clipPath id="panel-1-58"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.0" clip-path="url(#panel-1-58)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 2</span><span class="pill">autor: 44/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Pattern Recognition
+M.Haindl
+MI-ROZ- 01
+44/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-67" data-section="Původní přednáška" aria-label="Zobrazení 67: Literature"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Literature</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Literature. PDF strana 15, kvadrant 3."><title>Literature</title><defs><clipPath id="panel-1-59"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.0" clip-path="url(#panel-1-59)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 3</span><span class="pill">autor: 45/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Literature
+Journals:
+IEEE T. on Pattern Analysis and Machine Intelligence
+IEEE T. on Information Theory
+IEEE T. on Image Processing
+IEEE T. on Medical Imaging
+IEEE T. on Geoscience and Remote Sensing
+Pattern Recognition
+Pattern Recognition Letters
+Computer Vision,Graphics and Image Processing
+International Journal of Pattern Recognition and Artificial
+Intelligence
+M.Haindl
+MI-ROZ- 01
+45/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-68" data-section="Původní přednáška" aria-label="Zobrazení 68: Notation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notation. PDF strana 15, kvadrant 4."><title>Notation</title><defs><clipPath id="panel-1-60"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-15.svg" width="842.0" height="595.0" clip-path="url(#panel-1-60)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 15 · kvadrant 4</span><span class="pill">autor: 46/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notation
+𝒮pattern space
+X feature vector X =[x1,...,xℓ]
+l=dim{X}number of features
+χ feature space
+K number of classes
+ωi class indicator
+Ω={ω1,...,ωK}
+g(X) discriminant function
+Hdecision boundary
+ni = card{Ti}
+Ti training set for class i
+˜
+Ti test set for class i
+μi mean value
+θi p(X|ωi) parameters
+Σi covariance matrix
+M.Haindl
+MI-ROZ- 01
+46/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=15">Původní PDF, strana 15</a></p></div></section><section class="slide source" id="slide-69" data-section="Původní přednáška" aria-label="Zobrazení 69: Pattern Recognition Notions"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Pattern Recognition Notions</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Pattern Recognition Notions. PDF strana 16, kvadrant 1."><title>Pattern Recognition Notions</title><defs><clipPath id="panel-1-61"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.0" clip-path="url(#panel-1-61)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 1</span><span class="pill">autor: 47/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Pattern Recognition Notions
+♠ set of patterns S ={p1,p2,...}(pattern space)
+♠ pattern recognition
+S =∪K
+k=1Sk
+Si ∩Sj =∅
+i /
+=j
+♠ classification - the assignment of an object (pattern) to one of
+several prespecified categories Ω={ω1,...,ωK}
+Repeated observation of the same pattern should produce
+the same class.
+Two different pattern should give rise to two different
+classes.
+A slight distortion of a pattern should produce a small
+displacement of its representation.
+M.Haindl
+MI-ROZ- 01
+47/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-70" data-section="Původní přednáška" aria-label="Zobrazení 70: Notions 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 2. PDF strana 16, kvadrant 2."><title>Notions 2</title><defs><clipPath id="panel-1-62"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.0" clip-path="url(#panel-1-62)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 2</span><span class="pill">autor: 48/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 2
+♠ classifier - a set of decision rules that partion a feature space
+into disjoint subspaces (sorts patterns into categories or
+classes)
+sequential classifier - K class problem solves as K − 1
+two-class problems
+hierarchical classifier - decision rule in a tree form,each
+terminal node contains the assigned class
+parallel classifier - K class problem solves as K(K − 1)/2
+-class problems
+♠ separable classes ⇔ their class region do not overlap
+♠ decision rule - assigns one class on the basis of the unit
+features
+M.Haindl
+MI-ROZ- 01
+48/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-71" data-section="Původní přednáška" aria-label="Zobrazení 71: Notions 3"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 3</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 3. PDF strana 16, kvadrant 3."><title>Notions 3</title><defs><clipPath id="panel-1-63"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.0" clip-path="url(#panel-1-63)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 3</span><span class="pill">autor: 49/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 3
+♠ discriminant function - a scalar function g(X),whose domain
+is usually measurement space and whose range is usually real
+numbers selection of
+g(X) : ∀X ∈ωi
+gi(X) &gt;gj(X), j=1,...,K;j/
+=i
+assign X into class ωj if
+gj(X) =max
+k {gk(X)}
+M.Haindl
+MI-ROZ- 01
+49/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-72" data-section="Původní přednáška" aria-label="Zobrazení 72: Notions 3"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 3</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 3. PDF strana 16, kvadrant 4."><title>Notions 3</title><defs><clipPath id="panel-1-64"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-16.svg" width="842.0" height="595.0" clip-path="url(#panel-1-64)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 16 · kvadrant 4</span><span class="pill">autor: 49/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 3
+♠ discriminant function - a scalar function g(X),whose domain
+is usually measurement space and whose range is usually real
+numbers selection of
+g(X) : ∀X ∈ωi
+gi(X) &gt;gj(X), j=1,...,K;j/
+=i
+assign X into class ωj if
+gj(X) =max
+k {gk(X)}
+M.Haindl
+MI-ROZ- 01
+49/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=16">Původní PDF, strana 16</a></p></div></section><section class="slide source" id="slide-73" data-section="Původní přednáška" aria-label="Zobrazení 73: Discriminant Function"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Discriminant Function</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Discriminant Function. PDF strana 17, kvadrant 1."><title>Discriminant Function</title><defs><clipPath id="panel-1-65"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.0" clip-path="url(#panel-1-65)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 1</span><span class="pill">autor: 50/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Discriminant Function
+♠ discriminant function is not unique
+(multiply or add C &gt;0,replace by f(gi(X))
+f() a monotonically increasing function
+∂f(gi(X))
+∂gi(X) &gt;0
+f(gi(X)) : log(gi(X)),
+⟦symbol⟧
+gi(X), agi(X) a &gt;1,
+M.Haindl
+MI-ROZ- 01
+50/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-74" data-section="Původní přednáška" aria-label="Zobrazení 74: Discriminant Function"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Discriminant Function</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Discriminant Function. PDF strana 17, kvadrant 2."><title>Discriminant Function</title><defs><clipPath id="panel-1-66"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.0" clip-path="url(#panel-1-66)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 2</span><span class="pill">autor: 50/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Discriminant Function
+♠ discriminant function is not unique
+e.g.,identical minimum-error rate discriminant functions
+gj(X) =P(ωj|X)
+gj(X) =
+p(X|ωj)P(ωj)
+ΣK
+i=1 p(X|ωi)P(ωi)
+gj(X) =p(X|ωj)P(ωj)
+gj(X) =logp(X|ωj) +logP(ωj)
+M.Haindl
+MI-ROZ- 01
+50/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-75" data-section="Původní přednáška" aria-label="Zobrazení 75: Discriminant Function"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Discriminant Function</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Discriminant Function. PDF strana 17, kvadrant 3."><title>Discriminant Function</title><defs><clipPath id="panel-1-67"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.0" clip-path="url(#panel-1-67)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 3</span><span class="pill">autor: 50/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Discriminant Function
+♠ discriminant function is not unique
+♠ linear discriminant function
+g(X) =a0 +
+ℓ
+Σ
+j=1
+ajxj
+M.Haindl
+MI-ROZ- 01
+50/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-76" data-section="Původní přednáška" aria-label="Zobrazení 76: Notions 4"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 4</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 4. PDF strana 17, kvadrant 4."><title>Notions 4</title><defs><clipPath id="panel-1-68"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-17.svg" width="842.0" height="595.0" clip-path="url(#panel-1-68)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 17 · kvadrant 4</span><span class="pill">autor: 51/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 4
+♠ decision boundary between ωi,ωj
+H={X ∈M :gi(X) =gj(X)}
+classification is not uniquely defined
+♠ hyperplane decision boundary - decision boundary for linear
+discriminant function (linear decision rule)
+(ai,0 − aj,0) +
+ℓ
+Σ
+k=1
+(ai,k − aj,k)xk =0
+♠ non-linear decision boundary
+.
+♠ piecewise linear
+gj(X) = max
+i=1,...,nj
+igj(X)
+ig (X) =a +
+ℓ
+Σ
+a x
+M.Haindl
+MI-ROZ- 01
+51/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=17">Původní PDF, strana 17</a></p></div></section><section class="slide source" id="slide-77" data-section="Původní přednáška" aria-label="Zobrazení 77: Notions 5"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 5</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 5. PDF strana 18, kvadrant 1."><title>Notions 5</title><defs><clipPath id="panel-1-69"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-18.svg" width="842.0" height="595.0" clip-path="url(#panel-1-69)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 18 · kvadrant 1</span><span class="pill">autor: 52/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 5
+♠ quadratic discriminant function
+g(X) =a0 +
+ℓ
+Σ
+i=1
+ℓ
+Σ
+j=i
+aijxixj +
+ℓ
+Σ
+j=1
+ajxj
+♠ general discriminant function - two equivalent options
+1 non-linear discriminant function e.g.
+g(X) =a1 ln(x1) +a2x3
+2 (+linearisation)
+2 non-linear mapping Φ :Sn → Sm combined with linear
+classifier
+Φ(X) =[Φ1(X),...,Φm]
+gj(X) =
+m
+Σ
+k=1
+aj,kΦk(X)
+M.Haindl
+MI-ROZ- 01
+52/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=18">Původní PDF, strana 18</a></p></div></section><section class="slide source" id="slide-78" data-section="Původní přednáška" aria-label="Zobrazení 78: Notions 6"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 6</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 6. PDF strana 18, kvadrant 2."><title>Notions 6</title><defs><clipPath id="panel-1-70"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-18.svg" width="842.0" height="595.0" clip-path="url(#panel-1-70)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 18 · kvadrant 2</span><span class="pill">autor: 53/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 6
+♠ dichotomy decision rule - K =2
+g(X) =g1(X) − g2(X)
+♠ supervised classification - T =∪K
+k=1Tk training set partition
+known
+♠ unsupervised classification - T training set partition unknown
+number of classes K known
+number of classes K unknown
+M.Haindl
+MI-ROZ- 01
+53/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=18">Původní PDF, strana 18</a></p></div></section><section class="slide source" id="slide-79" data-section="Původní přednáška" aria-label="Zobrazení 79: Notions 7"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 7</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 7. PDF strana 18, kvadrant 3."><title>Notions 7</title><defs><clipPath id="panel-1-71"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-18.svg" width="842.0" height="595.0" clip-path="url(#panel-1-71)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 18 · kvadrant 3</span><span class="pill">autor: 54/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 7
+♠ feature vector - functions of the initial measurement variables
+of an object (pattern),or some subset of the initial
+measurement pattern variables,input for classifier
+X =[x1,...,xℓ]
+good features
+bad features
+♠ feature space {X}
+M.Haindl
+MI-ROZ- 01
+54/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=18">Původní PDF, strana 18</a></p></div></section><section class="slide source" id="slide-80" data-section="Původní přednáška" aria-label="Zobrazení 80: Notions 7"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 7</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 7. PDF strana 18, kvadrant 4."><title>Notions 7</title><defs><clipPath id="panel-1-72"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-18.svg" width="842.0" height="595.0" clip-path="url(#panel-1-72)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 18 · kvadrant 4</span><span class="pill">autor: 54/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 7
+♠ feature vector - functions of the initial measurement variables
+of an object (pattern),or some subset of the initial
+measurement pattern variables,input for classifier
+X =[x1,...,xℓ]
+♠ feature space {X}
+♠ feature selection - determination of the most discriminative
+pattern measurements (features),
+♠ feature extraction - a mapping from the original ldimensional
+measurement space into the ¨
+ldimensional feature space ¨
+l&lt;l
+M.Haindl
+MI-ROZ- 01
+54/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=18">Původní PDF, strana 18</a></p></div></section><section class="slide source" id="slide-81" data-section="Původní přednáška" aria-label="Zobrazení 81: Notions 8"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 8</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 8. PDF strana 19, kvadrant 1."><title>Notions 8</title><defs><clipPath id="panel-1-73"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-19.svg" width="842.0" height="595.0" clip-path="url(#panel-1-73)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 19 · kvadrant 1</span><span class="pill">autor: 55/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 8
+♠ ground truth - known classification of some patterns
+♠ training (supervised) set - T ={(Xj,ωj)}
+♠ test set - ˜
+T ={(Xj,ωj)}
+♠ a classifier is learning if its iterative training procedure
+increases the classification performance accuracy after each
+few iterations
+♠ parametric learning - discriminant function (conditional
+density p(X|ωi)) is assumed to be known except for some
+unknown parameters e.g. multivariate normal density
+p(X|ωi) =
+1
+(2π)
+ℓ
+2 |Σi|
+1
+2
+exp{−1
+2(X − μi)
+TΣ−1
+i (X − μi)}
+M.Haindl
+MI-ROZ- 01
+55/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=19">Původní PDF, strana 19</a></p></div></section><section class="slide source" id="slide-82" data-section="Původní přednáška" aria-label="Zobrazení 82: Notions 9"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 9</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 9. PDF strana 19, kvadrant 2."><title>Notions 9</title><defs><clipPath id="panel-1-74"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-19.svg" width="842.0" height="595.0" clip-path="url(#panel-1-74)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 19 · kvadrant 2</span><span class="pill">autor: 56/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 9
+♠ nonparametric learning - no special functional form of the
+conditional probability distribution p(X|ωi) is assumed
+(distribution-free),e.g. the nearest-neighbour rule,LS fit to
+an empirical cumulative distribution,
+♠ supervised learning - learning from labelled training set
+T ={(Xj,ωj)}
+♠ unsupervised learning (learning without a teacher) - learning
+from unlabeled training set T ={(Xj)}
+♠ semi-supervised learning T ={(Xj,ωj),(Xk)}
+♠ adaptive learning - learning in changing environment
+M.Haindl
+MI-ROZ- 01
+56/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=19">Původní PDF, strana 19</a></p></div></section><section class="slide source" id="slide-83" data-section="Původní přednáška" aria-label="Zobrazení 83: Notions 10"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Notions 10</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Notions 10. PDF strana 19, kvadrant 3."><title>Notions 10</title><defs><clipPath id="panel-1-75"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-19.svg" width="842.0" height="595.0" clip-path="url(#panel-1-75)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 19 · kvadrant 3</span><span class="pill">autor: 57/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Notions 10
+⟦symbol⟧ statistical PR - the measurement patterns have the form of a
+random vector realization,each component is a measurement
+of a particular quality,property,or characteristic of the unit
+⟦symbol⟧ syntactic PR - the measurement patterns have the form of
+sentences from the language of a phrase structure grammar
+⟦symbol⟧ structural PR - the measured unit is encoded in terms of its
+parts,their mutual relationships and their properties
+M.Haindl
+MI-ROZ- 01
+57/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=19">Původní PDF, strana 19</a></p></div></section><section class="slide source" id="slide-84" data-section="Původní přednáška" aria-label="Zobrazení 84: Representation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Representation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Representation. PDF strana 19, kvadrant 4."><title>Representation</title><defs><clipPath id="panel-1-76"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-19.svg" width="842.0" height="595.0" clip-path="url(#panel-1-76)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 19 · kvadrant 4</span><span class="pill">autor: 58/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Representation
+Environment
+♠ system - an object with inputs and outputs
+dynamic system
+u(t) → □ → y(t)
+·
+x(t) =F1(x(t),u(t))
+⟦symbol⟧⟦symbol⟧ffe⟦symbol⟧ent⟦symbol⟧⟦symbol⟧I st⟦symbol⟧te e⟦symbol⟧.
+y(t) =F2(x(t),u(t))
+⟦symbol⟧Ig.output e⟦symbol⟧.
+automaton - a system with countable number of states
+♠ pattern - an object where I/O are meaningless
+♠ identification - a mathematical model building
+♠ identifier - e.g. an adaptive / learning system
+♠ system control - appropriate input signals to guarantee
+required output
+♠ controller - (regulator)
+♠ pattern recognition pattern → □repr.X → □cℓass. → ωi
+M.Haindl
+MI-ROZ- 01
+58/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=19">Původní PDF, strana 19</a></p></div></section><section class="slide source" id="slide-85" data-section="Původní přednáška" aria-label="Zobrazení 85: Representation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Representation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Representation. PDF strana 20, kvadrant 1."><title>Representation</title><defs><clipPath id="panel-1-77"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-20.svg" width="842.0" height="595.0" clip-path="url(#panel-1-77)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 20 · kvadrant 1</span><span class="pill">autor: 59/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Representation
+object representation
+featured - numerical X =[1.2,23.34,12.108,0.231]
+syntactic (structural) - symbolic X =[⟦symbol⟧,♡,♢,♠,⟦symbol⟧,■]
+Featured Representation
+feature vector (given object measurements,an object image)
+X =[x1,...,xℓ]
+T
+X ∈⟦symbol⟧ℓ
+M.Haindl
+MI-ROZ- 01
+59/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=20">Původní PDF, strana 20</a></p></div></section><section class="slide source" id="slide-86" data-section="Původní přednáška" aria-label="Zobrazení 86: Syntactic pattern recognition system"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Syntactic pattern recognition system</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Syntactic pattern recognition system. PDF strana 20, kvadrant 2."><title>Syntactic pattern recognition system</title><defs><clipPath id="panel-1-78"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-20.svg" width="842.0" height="595.0" clip-path="url(#panel-1-78)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 20 · kvadrant 2</span><span class="pill">autor: 60/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Syntactic pattern recognition system
+Pre⟦symbol⟧processing
+Pattern
+Representation
+Syntax
+Analysis
+Grammatical
+lnference
+Recognition
+Learning
+Classification
+Sample⟦symbol⟧patterns
+lnput⟦symbol⟧
+pattern
+M.Haindl
+MI-ROZ- 01
+60/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=20">Původní PDF, strana 20</a></p></div></section><section class="slide source" id="slide-87" data-section="Původní přednáška" aria-label="Zobrazení 87: Syntactic Representation"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Syntactic Representation</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Syntactic Representation. PDF strana 20, kvadrant 3."><title>Syntactic Representation</title><defs><clipPath id="panel-1-79"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-20.svg" width="842.0" height="595.0" clip-path="url(#panel-1-79)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 20 · kvadrant 3</span><span class="pill">autor: 61/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Syntactic Representation
+primitive - an elementary subpattern,cannot be further divided
+relational graph - consists from several related hierarchical trees
+M.Haindl
+MI-ROZ- 01
+61/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=20">Původní PDF, strana 20</a></p></div></section><section class="slide source" id="slide-88" data-section="Původní přednáška" aria-label="Zobrazení 88: Syntactic Representation 2"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Syntactic Representation 2</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Syntactic Representation 2. PDF strana 20, kvadrant 4."><title>Syntactic Representation 2</title><defs><clipPath id="panel-1-80"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-20.svg" width="842.0" height="595.0" clip-path="url(#panel-1-80)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 20 · kvadrant 4</span><span class="pill">autor: 62/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Syntactic Representation 2
+tree - hierarchical pattern representation,subset of a relational
+graph
+M.Haindl
+MI-ROZ- 01
+62/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=20">Původní PDF, strana 20</a></p></div></section><section class="slide source" id="slide-89" data-section="Původní přednáška" aria-label="Zobrazení 89: Syntactic Representation 3"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Syntactic Representation 3</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Syntactic Representation 3. PDF strana 21, kvadrant 1."><title>Syntactic Representation 3</title><defs><clipPath id="panel-1-81"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-21.svg" width="842.0" height="595.0" clip-path="url(#panel-1-81)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 21 · kvadrant 1</span><span class="pill">autor: 63/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Syntactic Representation 3
+formal language - analogous representation
+terminal symbol - an elementary primitive property
+word (terminal symbol chain) - pattern representation
+formal language - set of patterns,not unique for a given
+pattern set
+substitution rules - rules how to generate words from terminal
+symbols
+grammar - substitution rules +set of terminal symbols,
+usually recursive
+ωi ←→ grammar
+syntactic analysis (pattern recognition) - the assignment of an
+object (word X) to one of several prespecified grammars
+M.Haindl
+MI-ROZ- 01
+63/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=21">Původní PDF, strana 21</a></p></div></section><section class="slide source" id="slide-90" data-section="Původní přednáška" aria-label="Zobrazení 90: Statistical PR"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical PR</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Statistical PR. PDF strana 21, kvadrant 2."><title>Statistical PR</title><defs><clipPath id="panel-1-82"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-21.svg" width="842.0" height="595.0" clip-path="url(#panel-1-82)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 21 · kvadrant 2</span><span class="pill">autor: 64/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Statistical PR
+Statistical PR
+↙
+↘
+p(X|ωi) known
+p(X|ωi) unknown
+M.Haindl
+MI-ROZ- 01
+64/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=21">Původní PDF, strana 21</a></p></div></section><section class="slide source" id="slide-91" data-section="Původní přednáška" aria-label="Zobrazení 91: Statistical PR"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical PR</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Statistical PR. PDF strana 21, kvadrant 3."><title>Statistical PR</title><defs><clipPath id="panel-1-83"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-21.svg" width="842.0" height="595.0" clip-path="url(#panel-1-83)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 21 · kvadrant 3</span><span class="pill">autor: 64/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Statistical PR
+Statistical PR
+↙
+↘
+p(X|ωi) known
+p(X|ωi) unknown
+↙
+↘
+.
+Parametric case
+Nonparametric case
+M.Haindl
+MI-ROZ- 01
+64/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=21">Původní PDF, strana 21</a></p></div></section><section class="slide source" id="slide-92" data-section="Původní přednáška" aria-label="Zobrazení 92: Statistical PR"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Statistical PR</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Statistical PR. PDF strana 21, kvadrant 4."><title>Statistical PR</title><defs><clipPath id="panel-1-84"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-21.svg" width="842.0" height="595.0" clip-path="url(#panel-1-84)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 21 · kvadrant 4</span><span class="pill">autor: 64/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Statistical PR
+Statistical PR
+↙
+↘
+p(X|ωi) known
+p(X|ωi) unknown
+↙
+↘
+.
+Parametric case
+Nonparametric case
+↙
+↘
+↙
+↘
+Labeled
+Unlabeled
+Labeled
+Unlabeled
+training
+training
+training
+training
+samples
+samples
+samples
+samples
+↘
+increase of PR difficulty
+M.Haindl
+MI-ROZ- 01
+64/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=21">Původní PDF, strana 21</a></p></div></section><section class="slide source" id="slide-93" data-section="Původní přednáška" aria-label="Zobrazení 93: Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Classification. PDF strana 22, kvadrant 1."><title>Classification</title><defs><clipPath id="panel-1-85"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-22.svg" width="842.0" height="595.0" clip-path="url(#panel-1-85)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 22 · kvadrant 1</span><span class="pill">autor: 65/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Classification
+1 data capturing
+2 preprocessing (data normalisation)
+3 training &amp;test sets selection
+4 feature selection
+5 classification
+6 postprocessing - thematic map filtering
+7 probability of error estimation
+8 interpretation
+M.Haindl
+MI-ROZ- 01
+65/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=22">Původní PDF, strana 22</a></p></div></section><section class="slide source" id="slide-94" data-section="Původní přednáška" aria-label="Zobrazení 94: Supervised Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Supervised Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Supervised Classification. PDF strana 22, kvadrant 2."><title>Supervised Classification</title><defs><clipPath id="panel-1-86"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-22.svg" width="842.0" height="595.0" clip-path="url(#panel-1-86)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 22 · kvadrant 2</span><span class="pill">autor: 66/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Supervised Classification
+statistical - based on decision theory,assumed knowledge of
+cpdf p(X|ωj)
+deterministic - no assumptions about cpdf,discrimination
+function deterministic
+steps:
+1 determination of the number of classes of interest K
+2 training set selection and its partition into single class subsets
+T =∪K
+k=1Tk
+3 determination of a classifier
+4 feature selection
+5 estimation of classifier parameters from training set data
+6 classification of new patterns
+M.Haindl
+MI-ROZ- 01
+66/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=22">Původní PDF, strana 22</a></p></div></section><section class="slide source" id="slide-95" data-section="Původní přednáška" aria-label="Zobrazení 95: Supervised Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Supervised Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Supervised Classification. PDF strana 22, kvadrant 3."><title>Supervised Classification</title><defs><clipPath id="panel-1-87"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-22.svg" width="842.0" height="595.0" clip-path="url(#panel-1-87)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 22 · kvadrant 3</span><span class="pill">autor: 66/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Supervised Classification
+statistical - based on decision theory,assumed knowledge of
+cpdf p(X|ωj)
+deterministic - no assumptions about cpdf,discrimination
+function deterministic
+steps:
+1 determination of the number of classes of interest K
+2 training set selection and its partition into single class subsets
+T =∪K
+k=1Tk
+3 determination of a classifier
+4 feature selection
+5 estimation of classifier parameters from training set data
+6 classification of new patterns
+M.Haindl
+MI-ROZ- 01
+66/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=22">Původní PDF, strana 22</a></p></div></section><section class="slide source" id="slide-96" data-section="Původní přednáška" aria-label="Zobrazení 96: Deterministic Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Deterministic Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Deterministic Classification. PDF strana 22, kvadrant 4."><title>Deterministic Classification</title><defs><clipPath id="panel-1-88"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-22.svg" width="842.0" height="595.0" clip-path="url(#panel-1-88)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 22 · kvadrant 4</span><span class="pill">autor: 67/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Deterministic Classification
+thresholding
+geometric classification
+problem - determination of decision hypersurfaces
+⊕knowledge of p(X|ωj) not required
+⊕easy implementation
+⊖determination of decision hypersurfaces,feasible solution only
+for hyperplanes
+M.Haindl
+MI-ROZ- 01
+67/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=22">Původní PDF, strana 22</a></p></div></section><section class="slide source" id="slide-97" data-section="Původní přednáška" aria-label="Zobrazení 97: Geometric Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Geometric Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Geometric Classification. PDF strana 23, kvadrant 1."><title>Geometric Classification</title><defs><clipPath id="panel-1-89"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-23.svg" width="842.0" height="595.0" clip-path="url(#panel-1-89)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 23 · kvadrant 1</span><span class="pill">autor: 68/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Geometric Classification
+linear discriminant function,w0 the threshold weight
+(−w0 &lt;WTX ⇒ S1)
+g(X) =w0 +WTX =aTy
+K =2
+g(X) &gt;0 ⇒ X ∈S1 othe⟦symbol⟧w⟦symbol⟧se X ∈S2
+g(X) =0 defines the decision surface, y =[1,x1,...,xn]
+T
+M.Haindl
+MI-ROZ- 01
+68/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=23">Původní PDF, strana 23</a></p></div></section><section class="slide source" id="slide-98" data-section="Původní přednáška" aria-label="Zobrazení 98: Geometric Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Geometric Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Geometric Classification. PDF strana 23, kvadrant 2."><title>Geometric Classification</title><defs><clipPath id="panel-1-90"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-23.svg" width="842.0" height="595.0" clip-path="url(#panel-1-90)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 23 · kvadrant 2</span><span class="pill">autor: 68/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Geometric Classification
+linear discriminant function,w0 the threshold weight
+(−w0 &lt;WTX ⇒ S1)
+g(X) =w0 +WTX =aTy
+K =2
+g(X) &gt;0 ⇒ X ∈S1 othe⟦symbol⟧w⟦symbol⟧se X ∈S2
+{1yj :
+1 yj ∈T1}, {2yj :
+2 yj ∈T2}
+learning - to find a : aTyj &gt;0 ∀1yj, 2yj (aT(−2yj) &gt;0)
+not unique solution,a margin has to be introduced to avoid
+convergence to a limit point on the boundary,i.e., aTyj &gt;b &gt;0
+M.Haindl
+MI-ROZ- 01
+68/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=23">Původní PDF, strana 23</a></p></div></section><section class="slide source" id="slide-99" data-section="Původní přednáška" aria-label="Zobrazení 99: Geometric Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Geometric Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Geometric Classification. PDF strana 23, kvadrant 3."><title>Geometric Classification</title><defs><clipPath id="panel-1-91"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-23.svg" width="842.0" height="595.0" clip-path="url(#panel-1-91)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 23 · kvadrant 3</span><span class="pill">autor: 68/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Geometric Classification
+linear discriminant function,w0 the threshold weight
+(−w0 &lt;WTX ⇒ S1)
+g(X) =w0 +WTX =aTy
+K =2
+g(X) &gt;0 ⇒ X ∈S1 othe⟦symbol⟧w⟦symbol⟧se X ∈S2
+minimization of the criterion function:
+J(a,b) =
+1
+2||Ya − b||
+Y = [
+1y1,...,−2y1,...] m ×(n +1)
+subject to the constraint b &gt;0
+M.Haindl
+MI-ROZ- 01
+68/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=23">Původní PDF, strana 23</a></p></div></section><section class="slide source" id="slide-100" data-section="Původní přednáška" aria-label="Zobrazení 100: Gradient Descent Procedure"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Gradient Descent Procedure</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Gradient Descent Procedure. PDF strana 23, kvadrant 4."><title>Gradient Descent Procedure</title><defs><clipPath id="panel-1-92"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-23.svg" width="842.0" height="595.0" clip-path="url(#panel-1-92)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 23 · kvadrant 4</span><span class="pill">autor: 69/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Gradient Descent Procedure
+∇aJ =Y T(Ya − b)
+∇bJ =−(Ya − b) fo⟦symbol⟧ ⟦symbol⟧ g⟦symbol⟧ven b a =(Y TY )
+−1Y Tb
+Ho - Kashyap Algorithm (determination of b)
+1 b(0) &gt;0 otherwise arbitrary
+2 a(i) =(Y TY )
+−1Y T b(i)
+3 b(i +1) =b(i) +ρ
+[
+e(i) +|e(i)|
+]
+e(i) =−∇bJ(i) =Ya(i) − b(i)
+0 &lt;ρ&lt;1
+⊕convergence in a finite number of steps for linearly separable
+training samples
+M.Haindl
+MI-ROZ- 01
+69/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=23">Původní PDF, strana 23</a></p></div></section><section class="slide source" id="slide-101" data-section="Původní přednáška" aria-label="Zobrazení 101: Unsupervised Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unsupervised Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Unsupervised Classification. PDF strana 24, kvadrant 1."><title>Unsupervised Classification</title><defs><clipPath id="panel-1-93"><rect x="0.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-24.svg" width="842.0" height="595.0" clip-path="url(#panel-1-93)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 24 · kvadrant 1</span><span class="pill">autor: 70/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Unsupervised Classification
+training set partition unknown
+statistical - estimation of unknown quantities in mixture
+density p(X) =ΣK
+k=1 p(ωk)p(X|ωk)
+from T some of {K,p(ωk)p(X|ωk), k=1,...,K} may
+be unknown
+⊖no general solution known
+for known {K,p(ωk) and the form of p(X|ωk)
+solution exists
+deterministic - no assumptions about pdf,
+discrimination function deterministic based on similarity
+measures
+clustering
+M.Haindl
+MI-ROZ- 01
+70/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=24">Původní PDF, strana 24</a></p></div></section><section class="slide source" id="slide-102" data-section="Původní přednáška" aria-label="Zobrazení 102: Unsupervised Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unsupervised Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 0.0 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Unsupervised Classification. PDF strana 24, kvadrant 2."><title>Unsupervised Classification</title><defs><clipPath id="panel-1-94"><rect x="421.0" y="0.0" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-24.svg" width="842.0" height="595.0" clip-path="url(#panel-1-94)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 24 · kvadrant 2</span><span class="pill">autor: 71/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Unsupervised Classification
+(determination of the number of classes of interest K )
+training set selection,its partition into single class subsets
+T =∪K
+k=1Tk unknown
+determination of a classifier
+feature selection
+estimation of classifier parameters from training set data
+classification of new patterns
+M.Haindl
+MI-ROZ- 01
+71/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=24">Původní PDF, strana 24</a></p></div></section><section class="slide source" id="slide-103" data-section="Původní přednáška" aria-label="Zobrazení 103: Unsupervised Classification"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Unsupervised Classification</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="0.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Unsupervised Classification. PDF strana 24, kvadrant 3."><title>Unsupervised Classification</title><defs><clipPath id="panel-1-95"><rect x="0.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-24.svg" width="842.0" height="595.0" clip-path="url(#panel-1-95)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 24 · kvadrant 3</span><span class="pill">autor: 71/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Unsupervised Classification
+(determination of the number of classes of interest K )
+training set selection,its partition into single class subsets
+T =∪K
+k=1Tk unknown
+determination of a classifier
+feature selection
+estimation of classifier parameters from training set data
+classification of new patterns
+M.Haindl
+MI-ROZ- 01
+71/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=24">Původní PDF, strana 24</a></p></div></section><section class="slide source" id="slide-104" data-section="Původní přednáška" aria-label="Zobrazení 104: Information"><div class="content"><p class="eyebrow">Původní přednáška</p><h2>Information</h2><svg xmlns="http://www.w3.org/2000/svg" class="source-frame" viewBox="421.0 297.5 421.0 297.5" role="img" aria-label="Michal Haindl, původní snímek: Information. PDF strana 24, kvadrant 4."><title>Information</title><defs><clipPath id="panel-1-96"><rect x="421.0" y="297.5" width="421.0" height="297.5"/></clipPath></defs><image href="assets/page-24.svg" width="842.0" height="595.0" clip-path="url(#panel-1-96)"/></svg><div class="source-tools"><button type="button" data-zoom>Zvětšit snímek</button><span class="pill">PDF 24 · kvadrant 4</span><span class="pill">autor: 72/72</span></div><details class="source-text"><summary>Pomocný textový výpis · EN</summary><p class="muted">Strojově obnovené písmo a mezery; neověřené matematické symboly jsou označené ⟦symbol⟧. Výpis nenahrazuje původní vzorce, tabulky ani obrázky.</p><pre lang="en">PR PR-C PR PR Applications
+Literature Notation Notions Representation Classification
+Information
+http://mosaic.utia.cas.cz/
+http://ro.utia.cz
+M.Haindl
+MI-ROZ- 01
+72/72</pre></details><p class="source-meta">Michal Haindl · podklad 2023–2024 · <a href="original.pdf#page=24">Původní PDF, strana 24</a></p></div></section></main><footer class="controls"><span class="hint">← → listování · O obsah · F celá obrazovka</span><div class="pager"><button id="previous" aria-label="Předchozí snímek">←</button><output id="counter">01 / 104</output><button id="next" aria-label="Další snímek">→</button></div><span class="credit">Michal Haindl · FIT ČVUT / ÚTIA</span><div class="progress" aria-hidden="true"><div id="progress-value"></div></div></footer><div id="announcement" class="sr-only" aria-live="polite"></div><dialog id="overview" aria-labelledby="overview-title"><div class="dialog-heading"><h2 id="overview-title">Obsah přednášky</h2><button class="close" aria-label="Zavřít obsah">×</button></div><nav><a href="#slide-1"><span>01</span><span>Základní pojmy rozpoznávání</span></a><a href="#slide-2"><span>02</span><span>Od objektu k rozhodnutí</span></a><a href="#slide-3"><span>03</span><span>Třída není totéž co shluk</span></a><a href="#slide-4"><span>04</span><span>Kde vzniká chyba</span></a><a href="#slide-5"><span>05</span><span>Co znamená zobecnění</span></a><a href="#slide-6"><span>06</span><span>Stejný počet pixelů, jiná informace</span></a><a href="#slide-7"><span>07</span><span>Co zůstane po projekci</span></a><a href="#slide-8"><span>08</span><span>Zkuste si odpovědět</span></a><a href="#slide-9"><span>09</span><span>Pattern Recognition I</span></a><a href="#slide-10"><span>10</span><span>Outline -PR Basic Concepts</span></a><a href="#slide-11"><span>11</span><span>Course Organization</span></a><a href="#slide-12"><span>12</span><span>Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html</span></a><a href="#slide-13"><span>13</span><span>Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html</span></a><a href="#slide-14"><span>14</span><span>Seminar workhttp://mosaic.utia.cas.cz/cvut2023Z.html</span></a><a href="#slide-15"><span>15</span><span>Institute of Information Theory and Automation</span></a><a href="#slide-16"><span>16</span><span>Content</span></a><a href="#slide-17"><span>17</span><span>Pattern Recognition &amp;Modelling</span></a><a href="#slide-18"><span>18</span><span>Pattern Recognition &amp;Modelling</span></a><a href="#slide-19"><span>19</span><span>Pattern Recognition &amp;Modelling</span></a><a href="#slide-20"><span>20</span><span>Pattern Recognition &amp;Modelling</span></a><a href="#slide-21"><span>21</span><span>Pattern Recognition &amp;Modelling</span></a><a href="#slide-22"><span>22</span><span>Pattern Recognition &amp;Modelling</span></a><a href="#slide-23"><span>23</span><span>Pattern Recognition &amp;Modelling</span></a><a href="#slide-24"><span>24</span><span>Notions &amp;Synonyms</span></a><a href="#slide-25"><span>25</span><span>Notions &amp;Synonyms</span></a><a href="#slide-26"><span>26</span><span>Notions &amp;Synonyms</span></a><a href="#slide-27"><span>27</span><span>Notions &amp;Synonyms</span></a><a href="#slide-28"><span>28</span><span>Notions &amp;Synonyms</span></a><a href="#slide-29"><span>29</span><span>Notions &amp;Synonyms</span></a><a href="#slide-30"><span>30</span><span>Notions &amp;Synonyms</span></a><a href="#slide-31"><span>31</span><span>Pattern Recognition -Motivation</span></a><a href="#slide-32"><span>32</span><span>Pattern Recognition -Motivation</span></a><a href="#slide-33"><span>33</span><span>Pattern Recognition -Motivation</span></a><a href="#slide-34"><span>34</span><span>Pattern Recognition -Motivation</span></a><a href="#slide-35"><span>35</span><span>Pattern Recognition -Motivation</span></a><a href="#slide-36"><span>36</span><span>Pattern Recognition -Motivation</span></a><a href="#slide-37"><span>37</span><span>Scene Understanding</span></a><a href="#slide-38"><span>38</span><span>Scene Understanding</span></a><a href="#slide-39"><span>39</span><span>Scene Understanding</span></a><a href="#slide-40"><span>40</span><span>Scene Understanding</span></a><a href="#slide-41"><span>41</span><span>WHO Guidelines to AI in Healthcare (2023)</span></a><a href="#slide-42"><span>42</span><span>Explainable AI</span></a><a href="#slide-43"><span>43</span><span>Pattern Recognition Course Goal</span></a><a href="#slide-44"><span>44</span><span>Pattern Recognition Course Goal</span></a><a href="#slide-45"><span>45</span><span>Pattern Recognition Course Goal</span></a><a href="#slide-46"><span>46</span><span>PR -Achievements</span></a><a href="#slide-47"><span>47</span><span>PR -Achievements</span></a><a href="#slide-48"><span>48</span><span>PR -Achievements</span></a><a href="#slide-49"><span>49</span><span>PR -Achievements</span></a><a href="#slide-50"><span>50</span><span>PR -Achievements</span></a><a href="#slide-51"><span>51</span><span>PR -Achievements</span></a><a href="#slide-52"><span>52</span><span>Face Recognition</span></a><a href="#slide-53"><span>53</span><span>Face Recognition</span></a><a href="#slide-54"><span>54</span><span>Face Recognition</span></a><a href="#slide-55"><span>55</span><span>History</span></a><a href="#slide-56"><span>56</span><span>History</span></a><a href="#slide-57"><span>57</span><span>Literature</span></a><a href="#slide-58"><span>58</span><span>Literature</span></a><a href="#slide-59"><span>59</span><span>Pattern Classification</span></a><a href="#slide-60"><span>60</span><span>Pattern Recognition</span></a><a href="#slide-61"><span>61</span><span>Pattern Recognition</span></a><a href="#slide-62"><span>62</span><span>Statistical Pattern Recognition</span></a><a href="#slide-63"><span>63</span><span>Statistical Pattern Recognition</span></a><a href="#slide-64"><span>64</span><span>Pattern Recognition and Machine Learning</span></a><a href="#slide-65"><span>65</span><span>Pattern Recognition</span></a><a href="#slide-66"><span>66</span><span>Pattern Recognition</span></a><a href="#slide-67"><span>67</span><span>Literature</span></a><a href="#slide-68"><span>68</span><span>Notation</span></a><a href="#slide-69"><span>69</span><span>Pattern Recognition Notions</span></a><a href="#slide-70"><span>70</span><span>Notions 2</span></a><a href="#slide-71"><span>71</span><span>Notions 3</span></a><a href="#slide-72"><span>72</span><span>Notions 3</span></a><a href="#slide-73"><span>73</span><span>Discriminant Function</span></a><a href="#slide-74"><span>74</span><span>Discriminant Function</span></a><a href="#slide-75"><span>75</span><span>Discriminant Function</span></a><a href="#slide-76"><span>76</span><span>Notions 4</span></a><a href="#slide-77"><span>77</span><span>Notions 5</span></a><a href="#slide-78"><span>78</span><span>Notions 6</span></a><a href="#slide-79"><span>79</span><span>Notions 7</span></a><a href="#slide-80"><span>80</span><span>Notions 7</span></a><a href="#slide-81"><span>81</span><span>Notions 8</span></a><a href="#slide-82"><span>82</span><span>Notions 9</span></a><a href="#slide-83"><span>83</span><span>Notions 10</span></a><a href="#slide-84"><span>84</span><span>Representation</span></a><a href="#slide-85"><span>85</span><span>Representation</span></a><a href="#slide-86"><span>86</span><span>Syntactic pattern recognition system</span></a><a href="#slide-87"><span>87</span><span>Syntactic Representation</span></a><a href="#slide-88"><span>88</span><span>Syntactic Representation 2</span></a><a href="#slide-89"><span>89</span><span>Syntactic Representation 3</span></a><a href="#slide-90"><span>90</span><span>Statistical PR</span></a><a href="#slide-91"><span>91</span><span>Statistical PR</span></a><a href="#slide-92"><span>92</span><span>Statistical PR</span></a><a href="#slide-93"><span>93</span><span>Classification</span></a><a href="#slide-94"><span>94</span><span>Supervised Classification</span></a><a href="#slide-95"><span>95</span><span>Supervised Classification</span></a><a href="#slide-96"><span>96</span><span>Deterministic Classification</span></a><a href="#slide-97"><span>97</span><span>Geometric Classification</span></a><a href="#slide-98"><span>98</span><span>Geometric Classification</span></a><a href="#slide-99"><span>99</span><span>Geometric Classification</span></a><a href="#slide-100"><span>100</span><span>Gradient Descent Procedure</span></a><a href="#slide-101"><span>101</span><span>Unsupervised Classification</span></a><a href="#slide-102"><span>102</span><span>Unsupervised Classification</span></a><a href="#slide-103"><span>103</span><span>Unsupervised Classification</span></a><a href="#slide-104"><span>104</span><span>Information</span></a></nav></dialog><dialog id="image-view" aria-label="Zvětšený obrázek"><button class="close" aria-label="Zavřít obrázek">×</button><img alt=""></dialog><dialog id="zoom-view" aria-label="Zvětšený původní snímek"><div class="dialog-heading"><h2>Původní snímek</h2><button class="close" aria-label="Zavřít snímek">×</button></div><p class="muted">Zvětšený snímek lze posouvat prstem, posuvníkem nebo klávesami po zaměření obrázku.</p><div class="zoom-actions"><button type="button" data-zoom-scale="1" aria-pressed="true">Přizpůsobit</button><button type="button" data-zoom-scale="2" aria-pressed="false">2×</button><button type="button" data-zoom-scale="3" aria-pressed="false">3×</button></div><div class="zoom-body" tabindex="0" aria-label="Posouvání zvětšeného snímku"></div></dialog><dialog id="notes-panel" aria-labelledby="notes-title"><div class="dialog-heading"><h2 id="notes-title">Moje poznámky</h2><button class="close" aria-label="Zavřít poznámky">×</button></div><p id="note-context"></p><label for="note-text">Poznámka k aktuálnímu zobrazení</label><textarea id="note-text"></textarea><p id="note-status" aria-live="polite">Poznámky se ukládají pouze v tomto prohlížeči, zvlášť pro každou variantu.</p><button id="note-clear">Smazat tuto poznámku</button></dialog><noscript><p class="no-script">Bez JavaScriptu je obsah souvislý dokument; interaktivní model vyžaduje JavaScript.</p></noscript></body></html>

@@ -1,0 +1,2430 @@
+Michal Haindl · 2023–2024
+Recovered text; unresolved symbols: see original vector/PDF.
+
+PDF 1 / quadrant 1 / 1/61
+Outline
+Pattern Recognition ⟦symbol⟧
+Clustering
+Michal Haindl
+Faculty of Information Technology,KTI
+Czech Technical University in Prague
+/nstitute of/nformation Theory and Automation
+Czech Academy ofSciences
+Prague,Czechia
+http://ro.utia.cz/
+MI/MIE-ROZ2023-2024
+Haindl
+MI-ROZ- 05
+1/61
+
+PDF 1 / quadrant 2 / 2/61
+Outline
+Outline
+1 Segmentation
+Preprocessing
+2 Segmentation Approaches
+Thresholding
+Clustering
+Hierarchical Clustering
+Partitional Clustering
+3 Cluster Validity
+4 Image Segmentation
+Region Growing
+Edge Detection
+DiscontinuityDetection I
+Split and Merge
+Motion Segmentation
+Haindl
+MI-ROZ- 05
+2/61
+
+PDF 1 / quadrant 3 / 3/61
+S SA C⟦symbol⟧ IS
+P
+Segmentation
+⟦symbol⟧ ={Xi,i =1,...,n}
+data space
+Xi =[xi,1,...,xi,d]
+feature vector
+Ω={ω1,...,ωK}
+class label space
+df :⟦symbol⟧ → Ω
+segmentation /classification /clustering
+/unsupervised learning /partition
+1 ⟦symbol⟧ =⟦symbol⟧K
+i=1 ⟦symbol⟧i
+2 ⟦symbol⟧i ∩⟦symbol⟧j =∅
+∀i /
+=j
+3 f(⟦symbol⟧i) =True
+∀i
+4 f(⟦symbol⟧i ∪⟦symbol⟧j) =False
+i /
+=j,⟦symbol⟧i adjacent ⟦symbol⟧j
+5 ∀Xr,Xs ∈⟦symbol⟧i ⇒ Xr,Xs ∈connected path
+mixture probabilitydensitydecomposition
+p(⟦symbol⟧) =
+K
+Σ
+i=1
+P(ωi)p(⟦symbol⟧|ωi) =
+K
+Σ
+i=1
+f(⟦symbol⟧|ωi)
+Haindl
+MI-ROZ- 05
+3/61
+
+PDF 1 / quadrant 4 / 3/61
+S SA C⟦symbol⟧ IS
+P
+Segmentation
+⟦symbol⟧ ={Xi,i =1,...,n}
+data space
+Xi =[xi,1,...,xi,d]
+feature vector
+Ω={ω1,...,ωK}
+class label space
+df :⟦symbol⟧ → Ω
+segmentation /classification /clustering
+/unsupervised learning /partition
+1 ⟦symbol⟧ =⟦symbol⟧K
+i=1 ⟦symbol⟧i
+2 ⟦symbol⟧i ∩⟦symbol⟧j =∅
+∀i /
+=j
+3 f(⟦symbol⟧i) =True
+∀i
+4 f(⟦symbol⟧i ∪⟦symbol⟧j) =False
+i /
+=j,⟦symbol⟧i adjacent ⟦symbol⟧j
+5 ∀Xr,Xs ∈⟦symbol⟧i ⇒ Xr,Xs ∈connected path
+mixture probabilitydensitydecomposition
+p(⟦symbol⟧) =
+K
+Σ
+i=1
+P(ωi)p(⟦symbol⟧|ωi) =
+K
+Σ
+i=1
+f(⟦symbol⟧|ωi)
+Haindl
+MI-ROZ- 05
+3/61
+
+PDF 2 / quadrant 1 / 3/61
+S SA C⟦symbol⟧ IS
+P
+Segmentation
+⟦symbol⟧ ={Xi,i =1,...,n}
+data space
+Xi =[xi,1,...,xi,d]
+feature vector
+Ω={ω1,...,ωK}
+class label space
+df :⟦symbol⟧ → Ω
+segmentation /classification /clustering
+/unsupervised learning /partition
+1 ⟦symbol⟧ =⟦symbol⟧K
+i=1 ⟦symbol⟧i
+2 ⟦symbol⟧i ∩⟦symbol⟧j =∅
+∀i /
+=j
+3 f(⟦symbol⟧i) =True
+∀i
+4 f(⟦symbol⟧i ∪⟦symbol⟧j) =False
+i /
+=j,⟦symbol⟧i adjacent ⟦symbol⟧j
+5 ∀Xr,Xs ∈⟦symbol⟧i ⇒ Xr,Xs ∈connected path
+mixture probabilitydensitydecomposition
+p(⟦symbol⟧) =
+K
+Σ
+i=1
+P(ωi)p(⟦symbol⟧|ωi) =
+K
+Σ
+i=1
+f(⟦symbol⟧|ωi)
+Haindl
+MI-ROZ- 05
+3/61
+
+PDF 2 / quadrant 2 / 3/61
+S SA C⟦symbol⟧ IS
+P
+Segmentation
+⟦symbol⟧ ={Xi,i =1,...,n}
+data space
+Xi =[xi,1,...,xi,d]
+feature vector
+Ω={ω1,...,ωK}
+class label space
+df :⟦symbol⟧ → Ω
+segmentation /classification /clustering
+/unsupervised learning /partition
+1 ⟦symbol⟧ =⟦symbol⟧K
+i=1 ⟦symbol⟧i
+2 ⟦symbol⟧i ∩⟦symbol⟧j =∅
+∀i /
+=j
+3 f(⟦symbol⟧i) =True
+∀i
+4 f(⟦symbol⟧i ∪⟦symbol⟧j) =False
+i /
+=j,⟦symbol⟧i adjacent ⟦symbol⟧j
+5 ∀Xr,Xs ∈⟦symbol⟧i ⇒ Xr,Xs ∈connected path
+mixture probabilitydensitydecomposition
+p(⟦symbol⟧) =
+K
+Σ
+i=1
+P(ωi)p(⟦symbol⟧|ωi) =
+K
+Σ
+i=1
+f(⟦symbol⟧|ωi)
+Haindl
+MI-ROZ- 05
+3/61
+
+PDF 2 / quadrant 3 / 3/61
+S SA C⟦symbol⟧ IS
+P
+Segmentation
+⟦symbol⟧ ={Xi,i =1,...,n}
+data space
+Xi =[xi,1,...,xi,d]
+feature vector
+Ω={ω1,...,ωK}
+class label space
+df :⟦symbol⟧ → Ω
+segmentation /classification /clustering
+/unsupervised learning /partition
+1 ⟦symbol⟧ =⟦symbol⟧K
+i=1 ⟦symbol⟧i
+2 ⟦symbol⟧i ∩⟦symbol⟧j =∅
+∀i /
+=j
+3 f(⟦symbol⟧i) =True
+∀i
+4 f(⟦symbol⟧i ∪⟦symbol⟧j) =False
+i /
+=j,⟦symbol⟧i adjacent ⟦symbol⟧j
+5 ∀Xr,Xs ∈⟦symbol⟧i ⇒ Xr,Xs ∈connected path
+mixture probabilitydensitydecomposition
+p(⟦symbol⟧) =
+K
+Σ
+i=1
+P(ωi)p(⟦symbol⟧|ωi) =
+K
+Σ
+i=1
+f(⟦symbol⟧|ωi)
+Haindl
+MI-ROZ- 05
+3/61
+
+PDF 2 / quadrant 4 / 3/61
+S SA C⟦symbol⟧ IS
+P
+Segmentation
+⟦symbol⟧ ={Xi,i =1,...,n}
+data space
+Xi =[xi,1,...,xi,d]
+feature vector
+Ω={ω1,...,ωK}
+class label space
+df :⟦symbol⟧ → Ω
+segmentation /classification /clustering
+/unsupervised learning /partition
+1 ⟦symbol⟧ =⟦symbol⟧K
+i=1 ⟦symbol⟧i
+2 ⟦symbol⟧i ∩⟦symbol⟧j =∅
+∀i /
+=j
+3 f(⟦symbol⟧i) =True
+∀i
+4 f(⟦symbol⟧i ∪⟦symbol⟧j) =False
+i /
+=j,⟦symbol⟧i adjacent ⟦symbol⟧j
+5 ∀Xr,Xs ∈⟦symbol⟧i ⇒ Xr,Xs ∈connected path
+mixture probabilitydensitydecomposition
+p(⟦symbol⟧) =
+K
+Σ
+i=1
+P(ωi)p(⟦symbol⟧|ωi) =
+K
+Σ
+i=1
+f(⟦symbol⟧|ωi)
+Haindl
+MI-ROZ- 05
+3/61
+
+PDF 3 / quadrant 1 / 3/61
+S SA C⟦symbol⟧ IS
+P
+Segmentation
+⟦symbol⟧ ={Xi,i =1,...,n}
+data space
+Xi =[xi,1,...,xi,d]
+feature vector
+Ω={ω1,...,ωK}
+class label space
+df :⟦symbol⟧ → Ω
+segmentation /classification /clustering
+/unsupervised learning /partition
+1 ⟦symbol⟧ =⟦symbol⟧K
+i=1 ⟦symbol⟧i
+2 ⟦symbol⟧i ∩⟦symbol⟧j =∅
+∀i /
+=j
+3 f(⟦symbol⟧i) =True
+∀i
+4 f(⟦symbol⟧i ∪⟦symbol⟧j) =False
+i /
+=j,⟦symbol⟧i adjacent ⟦symbol⟧j
+5 ∀Xr,Xs ∈⟦symbol⟧i ⇒ Xr,Xs ∈connected path
+mixture probabilitydensitydecomposition
+p(⟦symbol⟧) =
+K
+Σ
+i=1
+P(ωi)p(⟦symbol⟧|ωi) =
+K
+Σ
+i=1
+f(⟦symbol⟧|ωi)
+Haindl
+MI-ROZ- 05
+3/61
+
+PDF 3 / quadrant 2 / 3/61
+S SA C⟦symbol⟧ IS
+P
+Segmentation
+⟦symbol⟧ ={Xi,i =1,...,n}
+data space
+Xi =[xi,1,...,xi,d]
+feature vector
+Ω={ω1,...,ωK}
+class label space
+df :⟦symbol⟧ → Ω
+segmentation /classification /clustering
+/unsupervised learning /partition
+1 ⟦symbol⟧ =⟦symbol⟧K
+i=1 ⟦symbol⟧i
+2 ⟦symbol⟧i ∩⟦symbol⟧j =∅
+∀i /
+=j
+3 f(⟦symbol⟧i) =True
+∀i
+4 f(⟦symbol⟧i ∪⟦symbol⟧j) =False
+i /
+=j,⟦symbol⟧i adjacent ⟦symbol⟧j
+5 ∀Xr,Xs ∈⟦symbol⟧i ⇒ Xr,Xs ∈connected path
+mixture probabilitydensitydecomposition
+p(⟦symbol⟧) =
+K
+Σ
+i=1
+P(ωi)p(⟦symbol⟧|ωi) =
+K
+Σ
+i=1
+f(⟦symbol⟧|ωi)
+Haindl
+MI-ROZ- 05
+3/61
+
+PDF 3 / quadrant 3 / 4/61
+S SA C⟦symbol⟧ IS
+P
+Number ofPossible Clusterings
+Stirling number of the second kind:
+S(n,K) = 1
+K⟦symbol⟧
+K
+Σ
+i=0
+(−1)
+K−i
+⟦symbol⟧ K
+i
+⟦symbol⟧
+i
+n
+S(15,3) =2375101,S(100,5) ⟦symbol⟧1068,S(106,10) ⟦symbol⟧10106 ⇒
+evaluate all possible clustering is impossible
+Haindl
+MI-ROZ- 05
+4/61
+
+PDF 3 / quadrant 4 / 5/61
+S SA C⟦symbol⟧ IS
+P
+Connectivity
+pixels r,s are connected if
+r,s are adjacent (4-connectivity,8-connectivity)
+Xr,Xs are similar in some sense
+⟦symbol⟧
+⟦symbol⟧ r ⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧ ⟦symbol⟧ ⟦symbol⟧
+⟦symbol⟧ r ⟦symbol⟧
+⟦symbol⟧ ⟦symbol⟧ ⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+r
+⟦symbol⟧
+⟦symbol⟧
+/
+4
+r
+/
+8
+r
+/
+⟦symbol⟧
+r
+Haindl
+MI-ROZ- 05
+5/61
+
+PDF 4 / quadrant 1 / 6/61
+S SA C⟦symbol⟧ IS
+P
+Connectivity2
+r,s are 4-connected if s ∈/
+4
+r
+r,s are 8-connected if s ∈/
+8
+r
+r,s are m-connected if s ∈/
+4
+r ⟦symbol⟧s ∈/
+⟦symbol⟧
+r ⟦symbol⟧/
+4
+s ∩/
+4
+r =∅
+connected path from r
+1 to r
+n ⇔ ∀ i =1,...,n −1 r
+i,r
+i+1
+are
+connected
+0 0 1
+0 1 0
+1 1 0
+0 0 1
+0 1 0
+1 1 0
+/
+8
+r
+/
+m
+r
+Haindl
+MI-ROZ- 05
+6/61
+
+PDF 4 / quadrant 2 / 6/61
+S SA C⟦symbol⟧ IS
+P
+Connectivity2
+r,s are 4-connected if s ∈/
+4
+r
+r,s are 8-connected if s ∈/
+8
+r
+r,s are m-connected if s ∈/
+4
+r ⟦symbol⟧s ∈/
+⟦symbol⟧
+r ⟦symbol⟧/
+4
+s ∩/
+4
+r =∅
+connected path from r
+1 to r
+n ⇔ ∀ i =1,...,n −1 r
+i,r
+i+1
+are
+connected
+/
+8
+r
+/
+m
+r
+Haindl
+MI-ROZ- 05
+6/61
+
+PDF 4 / quadrant 3 / 8/61
+S SA C⟦symbol⟧ IS
+P
+Preprocessing
+1 Outlier Removal
+2 Missing Data
+3 Data Normalization
+Haindl
+MI-ROZ- 05
+8/61
+
+PDF 4 / quadrant 4 / 8/61
+S SA C⟦symbol⟧ IS
+P
+Preprocessing
+1 Outlier Removal
+2 Missing Data
+3 Data Normalization
+Outlier Removal
+X ∈𝒩 ⇒ |Xoutlier| >μ +3σ
+Haindl
+MI-ROZ- 05
+8/61
+
+PDF 5 / quadrant 1 / 8/61
+S SA C⟦symbol⟧ IS
+P
+Preprocessing
+1 Outlier Removal
+2 Missing Data
+3 Data Normalization
+Missing Data
+discard
+replace missing values with the corresponding mean /several
+kNN training samples
+predict from the underlying distribution
+proximitymeasure robust to missing data
+bi =
+⟦symbol⟧ 0, both xi,yi available;
+1, otherwise.
+δ(X,Y) =
+d
+d −Σd
+i=1 bi
+Σ
+⟦symbol⟧i:bi=0
+|xi −yi|
+Haindl
+MI-ROZ- 05
+8/61
+
+PDF 5 / quadrant 2 / 8/61
+S SA C⟦symbol⟧ IS
+P
+Preprocessing
+1 Outlier Removal
+2 Missing Data
+3 Data Normalization
+Data Normalization
+have a same scale
+have ˜
+μ =0
+have a common standard deviation ˜
+σ =1
+resolve skewness
+skewness =
+Σ(xi −μ)
+3
+(n −1)⟦symbol⟧3/2
+⟦symbol⟧ =
+Σ(xi −μ)
+2
+(n −1)
+Haindl
+MI-ROZ- 05
+8/61
+
+PDF 5 / quadrant 3 / 9/61
+S SA C⟦symbol⟧ IS
+P
+Data Normalization
+Euclidean metric requires that all variables are measured on the
+same scale (μ =0,σ =1).
+Xi =[xi,1,...,xi,l]
+⟦symbol⟧
+scaling (4 ×2 clusters)
+Haindl
+MI-ROZ- 05
+9/61
+
+PDF 5 / quadrant 4 / 9/61
+S SA C⟦symbol⟧ IS
+P
+Data Normalization
+Euclidean metric requires that all variables are measured on the
+same scale (μ =0,σ =1).
+Xi =[xi,1,...,xi,l]
+⟦symbol⟧
+centering
+˜
+xi,k = xi,k −⟦symbol⟧
+xi,.
+⟦symbol⟧
+xi,. = 1
+l
+l
+Σ
+j=1
+xi,j
+˜
+μi,k = 0
+Haindl
+MI-ROZ- 05
+9/61
+
+PDF 6 / quadrant 1 / 9/61
+S SA C⟦symbol⟧ IS
+P
+Data Normalization
+Euclidean metric requires that all variables are measured on the
+same scale (μ =0,σ =1).
+Xi =[xi,1,...,xi,l]
+⟦symbol⟧
+object normalization
+˜
+xi,k =
+xi,k −⟦symbol⟧
+xi,.
+⟦symbol⟧Σl
+j=1(xi,j −⟦symbol⟧
+xi,.)
+2
+⟦symbol⟧
+xi,. = 1
+l
+l
+Σ
+j=1
+xi,j
+˜
+μi,k = 0
+||˜
+xi,.||
+2 =
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+l
+Σ
+j=1
+˜
+x2
+i,j =1
+Haindl
+MI-ROZ- 05
+9/61
+
+PDF 6 / quadrant 2 / 9/61
+S SA C⟦symbol⟧ IS
+P
+Data Normalization
+Euclidean metric requires that all variables are measured on the
+same scale (μ =0,σ =1).
+Xi =[xi,1,...,xi,l]
+⟦symbol⟧
+variable normalization I.
+⟦symbol⟧
+xi,k =
+xi,k −⟦symbol⟧
+x.,k
+⟦symbol⟧Σn
+j=1(xj,k −⟦symbol⟧
+x.,k)
+2
+⟦symbol⟧
+x.,k = 1
+n
+n
+Σ
+j=1
+xj,k
+||⟦symbol⟧
+x.,k||
+2 = 1
+Haindl
+MI-ROZ- 05
+9/61
+
+PDF 6 / quadrant 3 / 9/61
+S SA C⟦symbol⟧ IS
+P
+Data Normalization
+Euclidean metric requires that all variables are measured on the
+same scale (μ =0,σ =1).
+Xi =[xi,1,...,xi,l]
+⟦symbol⟧
+z-score normalization
+⟦symbol⟧
+xi,k =
+xi,k −⟦symbol⟧
+x.,k
+⟦symbol⟧
+1
+n−1
+Σn
+j=1(xj,k −⟦symbol⟧
+x.,k)
+2
+Haindl
+MI-ROZ- 05
+9/61
+
+PDF 6 / quadrant 4 / 9/61
+S SA C⟦symbol⟧ IS
+P
+Data Normalization
+Euclidean metric requires that all variables are measured on the
+same scale (μ =0,σ =1).
+Xi =[xi,1,...,xi,l]
+⟦symbol⟧
+z-score normalization
+⟦symbol⟧
+xi,k =
+xi,k −⟦symbol⟧
+x.,k
+⟦symbol⟧
+1
+n−1
+Σn
+j=1(xj,k −⟦symbol⟧
+x.,k)
+2
+variable normalization II.
+⟦symbol⟧
+xi,k =f
+kxi,k f
+k >0
+Haindl
+MI-ROZ- 05
+9/61
+
+PDF 7 / quadrant 1 / 9/61
+S SA C⟦symbol⟧ IS
+P
+Data Normalization
+Euclidean metric requires that all variables are measured on the
+same scale (μ =0,σ =1).
+Xi =[xi,1,...,xi,l]
+⟦symbol⟧
+range normalization (<0,1 >)
+⟦symbol⟧
+xi,k =
+xi,k −mini{xi,k}
+maxi{xi,k}−mini{xi,k}
+Haindl
+MI-ROZ- 05
+9/61
+
+PDF 7 / quadrant 2 / 9/61
+S SA C⟦symbol⟧ IS
+P
+Data Normalization
+Euclidean metric requires that all variables are measured on the
+same scale (μ =0,σ =1).
+Xi =[xi,1,...,xi,l]
+⟦symbol⟧
+⊖appropriate scaling method not known in advance
+⊖object normalization is seldom effective
+Haindl
+MI-ROZ- 05
+9/61
+
+PDF 7 / quadrant 3 / 10/61
+S SA C⟦symbol⟧ IS
+P
+Segmentation ofMultispectral /Multisensor Images
+Xr
+r =[r
+1,r
+2,r
+3] →
+3Dh⟦symbol⟧stog⟦symbol⟧⟦symbol⟧m(⟦symbol⟧u⟦symbol⟧e)
+r
+3 ∈{R,G,B}
+multi-feature (multispectral) methods (thresholding →
+clustering)
+single-feature (monospectral /single sensor) methods
+1 X⟦symbol⟧⟦symbol⟧⟦symbol⟧⟦symbol⟧r
+3 segmentation ∀r
+3
+2 thematic maps fusion (majority,composition)
+Haindl
+MI-ROZ- 05
+10/61
+
+PDF 7 / quadrant 4 / 10/61
+S SA C⟦symbol⟧ IS
+P
+Segmentation ofMultispectral /Multisensor Images
+Xr
+r =[r
+1,r
+2,r
+3] →
+3Dh⟦symbol⟧stog⟦symbol⟧⟦symbol⟧m(⟦symbol⟧u⟦symbol⟧e)
+r
+3 ∈{R,G,B}
+multi-feature (multispectral) methods (thresholding →
+clustering)
+single-feature (monospectral /single sensor) methods
+1 X⟦symbol⟧⟦symbol⟧⟦symbol⟧⟦symbol⟧r
+3 segmentation ∀r
+3
+2 thematic maps fusion (majority,composition)
+Haindl
+MI-ROZ- 05
+10/61
+
+PDF 8 / quadrant 1 / 11/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Segmentation Approaches
+spatial clustering
+thresholding
+multidimensional measurement SC
+⟦symbol⟧i⟦symbol⟧r⟦symbol⟧r⟦symbol⟧⟦symbol⟧i⟦symbol⟧⟦symbol⟧l SC
+-⟦symbol⟧ggl⟦symbol⟧m⟦symbol⟧r⟦symbol⟧tiv⟦symbol⟧
+-⟦symbol⟧ivi⟦symbol⟧iv⟦symbol⟧
+p⟦symbol⟧rtiti⟦symbol⟧⟦symbol⟧⟦symbol⟧l SC
+SC with thematic map modelling
+region growing
+single linkage RG
+split and merge
+discontinuity(edge) detection
+derivative operators
+combined detection
+probabilistic relaxation
+linkage combination techniques
+spatial model based methods
+motion segmentation
+Haindl
+MI-ROZ- 05
+11/61
+
+PDF 8 / quadrant 2 / 12/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Thresholding
+Xr >T → ω1
+T1 <Xr ⟦symbol⟧T2 → ω1
+Xr ⟦symbol⟧T → ω2
+Xr >T2 → ω2
+Xr ⟦symbol⟧T1 → ω3 (background)
+Haindl
+MI-ROZ- 05
+12/61
+
+PDF 8 / quadrant 3 / 12/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Thresholding
+problems:
+⊖ no contextual properties considered
+⊖ multimodal histograms
+threshold
+global
+local
+band thresholding
+Xr ∈⟦symbol⟧α;⟦symbol⟧⟦symbol⟧→ ω1
+Xr /
+∈⟦symbol⟧α;⟦symbol⟧⟦symbol⟧→ ω2
+Haindl
+MI-ROZ- 05
+12/61
+
+PDF 8 / quadrant 4 / 13/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Histogram Based Methods
+advantages
+⊕ ignore spatial distribution
+stable against orientation changes
+stable against template misalignment
+stable against occlusion
+disadvantages
+⊖ inaccurate localization
+⊖ dependent on relative objects sizes
+Haindl
+MI-ROZ- 05
+13/61
+
+PDF 9 / quadrant 1 / None
+S SA C⟦symbol⟧ IS
+x C HC PC
+Optimal Thresholding
+assumptions:
+2 brightness regions
+2 values +additive Gaussian noise
+μ1 <μ2
+mixture probabilitydensity
+p(X) =P1p1(X) +P2p2(X) =
+2
+Σ
+i=1
+Pi
+⟦symbol⟧
+2πσi
+exp[−(X −μi)
+2
+2σ2
+i
+]
+P1 +P2 =1
+P(error) =P2
+⟦symbol⟧⟦symbol⟧
+−∞
+p2(X)dX +P1
+⟦symbol⟧∞
+⟦symbol⟧
+p1(X)dX
+Haindl
+MI-ROZ- 05
+15/61
+
+PDF 9 / quadrant 2 / 16/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Optimal Thresholding 2
+∂P(error)
+∂T
+=0 ⇒ P1p1(T ) =P2p2(T )
+T1,2 = −b ⟦symbol⟧
+⟦symbol⟧
+b
+2 −4ac
+2a
+a =σ2
+1 −σ2
+2
+b =2(μ1σ2
+2 −μ2σ2
+1)
+c =σ2
+1μ2
+2 −σ2
+2μ2
+1 +2σ2
+1σ2
+2 ln(σ2P1
+σ1P2
+)
+if σ2
+1 =σ2
+2 ⇒ T1 =T2 = ⟦symbol⟧1+⟦symbol⟧2
+2
++
+⟦symbol⟧2
+⟦symbol⟧1−⟦symbol⟧2 ln(⟦symbol⟧2
+⟦symbol⟧1 )
+LS parameters (μ1,μ2,σ1,σ2,P1) estimation
+e = 1
+n
+n
+Σ
+i=1
+[p(Xi) −h(Xi)]
+2
+⊖ difficult,numerical solution only
+Haindl
+MI-ROZ- 05
+16/61
+
+PDF 9 / quadrant 3 / 17/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering
+cluster - set of patterns whose inter-pattern distances are smaller
+than inter-pattern distances for patterns not in the same cluster
+a homogeneityand uniformitycriterion
+no connectivity
+feature normalization - all features in equal range
+⊕ little assumptions about data - exploratorydata analysis
+⊕ intrinsic data dimensionality
+⊖ optimal number of classes
+⊖ no optimal clustering method
+⊖ usuallyno contextual properties considered
+⊖ clustering algorithms find clusters even in entirelyrandom data
+⊖ results validation
+Haindl
+MI-ROZ- 05
+17/61
+
+PDF 9 / quadrant 4 / 17/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering
+cluster - set of patterns whose inter-pattern distances are smaller
+than inter-pattern distances for patterns not in the same cluster
+a homogeneityand uniformitycriterion
+no connectivity
+feature normalization - all features in equal range
+⊕ little assumptions about data - exploratorydata analysis
+⊕ intrinsic data dimensionality
+⊖ optimal number of classes
+⊖ no optimal clustering method
+⊖ usuallyno contextual properties considered
+⊖ clustering algorithms find clusters even in entirelyrandom data
+⊖ results validation
+Haindl
+MI-ROZ- 05
+17/61
+
+PDF 10 / quadrant 1 / 17/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering
+cluster - set of patterns whose inter-pattern distances are smaller
+than inter-pattern distances for patterns not in the same cluster
+a homogeneityand uniformitycriterion
+no connectivity
+feature normalization - all features in equal range
+⊕ little assumptions about data - exploratorydata analysis
+⊕ intrinsic data dimensionality
+⊖ optimal number of classes
+⊖ no optimal clustering method
+⊖ usuallyno contextual properties considered
+⊖ clustering algorithms find clusters even in entirelyrandom data
+⊖ results validation
+Haindl
+MI-ROZ- 05
+17/61
+
+PDF 10 / quadrant 2 / 18/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering Structures
+K =2 l =2
+compact&well-separated
+unequal size
+elongated
+concentric
+touching
+clusters within clusters
+linearlyunseparable
+non compact
+Haindl
+MI-ROZ- 05
+18/61
+
+PDF 10 / quadrant 3 / 18/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering Structures
+K =2 l =2
+compact&well-separated
+unequal size
+elongated
+concentric
+touching
+clusters within clusters
+linearlyunseparable
+non compact
+Haindl
+MI-ROZ- 05
+18/61
+
+PDF 10 / quadrant 4 / 18/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering Structures
+K =2 l =2
+compact&well-separated
+unequal size
+elongated
+concentric
+touching
+clusters within clusters
+linearlyunseparable
+non compact
+Haindl
+MI-ROZ- 05
+18/61
+
+PDF 11 / quadrant 1 / 18/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering Structures
+K =2 l =2
+compact&well-separated
+unequal size
+elongated
+concentric
+touching
+Haindl
+MI-ROZ- 05
+18/61
+
+PDF 11 / quadrant 2 / 18/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering Structures
+K =2 l =2
+compact&well-separated
+unequal size
+elongated
+concentric
+touching
+clusters within clusters
+linearlyunseparable
+non compact
+Haindl
+MI-ROZ- 05
+18/61
+
+PDF 11 / quadrant 3 / 18/61
+clusters within clusters
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering Structures
+K =2 l =2
+compact&well-separated
+unequal size
+elongated
+concentric
+touching
+clusters within clusters
+linearlyunseparable
+non compact
+Haindl
+MI-ROZ- 05
+18/61
+
+PDF 11 / quadrant 4 / 18/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering Structures
+K =2 l =2
+compact&well-separated
+unequal size
+elongated
+concentric
+touching
+clusters within clusters
+linearlyunseparable
+non compact
+Haindl
+MI-ROZ- 05
+18/61
+
+PDF 12 / quadrant 1 / 18/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering Structures
+K =2 l =2
+compact&well-separated
+unequal size
+elongated
+concentric
+touching
+clusters within clusters
+linearlyunseparable
+non compact
+Haindl
+MI-ROZ- 05
+18/61
+
+PDF 12 / quadrant 2 / 19/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+⟦symbol⟧ariables
+qualitative
+nominal -every of its possible different state can be given a
+numerical code,e.g.
+marital status (1 -single,2-married,3-divorced,4 -
+widowed)
+bi⟦symbol⟧⟦symbol⟧ry, ⟦symbol⟧⟦symbol⟧⟦symbol⟧(m⟦symbol⟧⟦symbol⟧,w⟦symbol⟧m⟦symbol⟧⟦symbol⟧⟦symbol⟧
+ordinal -the states of nominal variable represented by
+numerical values can be arranged in a meaningful order,
+(1 -very much,2-much,3-useful,4 -not very useful,5-
+unsuitable;A -excellent,B-very good,C -good,D-
+satisfactory,E -sufficient,F -failed)
+quantitative
+interval-scaled -ordinal &real values permitted &differences
+between successive values are of equal size,e.g.
+temperature in degrees centigrade
+metric -interval-scaled with natural zero
+mixed
+Haindl
+MI-ROZ- 05
+19/61
+
+PDF 12 / quadrant 3 / 20/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+⟦symbol⟧ariables - Mappings
+nominal vector −→ binaryvector
+ΣX
+Σxi ∈<1,j
+i >
+Bl =Σl
+i=1 j
+i
+ΣX −→
+BX =
+Σx1
+...
+Σxl
+(0,...,1,...,0; ...; 0,...,1,...,0)
+ΣX =(2,3,5)
+⟦symbol⟧
+BX =(0,1,0;0,0,1,0;0,0,0,0,1)
+⟦symbol⟧
+ordinal vector −→ binaryvector preserves ordering
+⟦symbol⟧X −→ BX =
+⟦symbol⟧x1
+...
+⟦symbol⟧xl
+(1,1,...,1,0,...,0; ...; 1,1,...,1,0,...,0)
+⟦symbol⟧X =(2,3,5)
+⟦symbol⟧ ∀ j
+i =5 BX =(1,1,0,0,0;1,1,1,0,0;1,1,1,1,1)
+⟦symbol⟧
+Haindl
+MI-ROZ- 05
+20/61
+
+PDF 12 / quadrant 4 / 20/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+⟦symbol⟧ariables - Mappings
+nominal vector −→ binaryvector
+ΣX
+Σxi ∈<1,j
+i >
+Bl =Σl
+i=1 j
+i
+ΣX −→
+BX =
+Σx1
+...
+Σxl
+(0,...,1,...,0; ...; 0,...,1,...,0)
+ΣX =(2,3,5)
+⟦symbol⟧
+BX =(0,1,0;0,0,1,0;0,0,0,0,1)
+⟦symbol⟧
+ordinal vector −→ binaryvector preserves ordering
+⟦symbol⟧X −→ BX =
+⟦symbol⟧x1
+...
+⟦symbol⟧xl
+(1,1,...,1,0,...,0; ...; 1,1,...,1,0,...,0)
+⟦symbol⟧X =(2,3,5)
+⟦symbol⟧ ∀ j
+i =5 BX =(1,1,0,0,0;1,1,1,0,0;1,1,1,1,1)
+⟦symbol⟧
+Haindl
+MI-ROZ- 05
+20/61
+
+PDF 13 / quadrant 1 / 21/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Metrics
+distance function - real-valued function satisfying:
+1 δ(r,s) =δ(s,r) symmetry
+2 δ(r,s) ⟦symbol⟧0 non-negativity
+3 δ(r,r) =0 (for similarityindex δ(r,r) ⟦symbol⟧maxs{δ(r,s)})
+metric - 1.,2.,3. &:
+5 If δ(r,s) =0 ⇔ Xr =Xs identity
+6 δ(r,t) ⟦symbol⟧δ(r,s) +δ(s,t) triangle inequality
+If δ is a metric so is lnδ, −ln(maxδ −δ)
+Haindl
+MI-ROZ- 05
+21/61
+
+PDF 13 / quadrant 2 / 22/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Metrics 2
+Minkowski metric
+δ(r,s) =
+⟦symbol⟧
+⟦symbol⟧
+l
+Σ
+j=1
+|xr,j −xs,j|
+m
+⟦symbol⟧
+⟦symbol⟧
+1
+m
+invariant to translations Y =X +A
+m =1 city-block (Manhattan,chessboard) distance
+m =2 Euclidean distance
+⊕invariant to orthogonal mappings (rotations) Y =QX
+QiQ =/
+m → ⟦symbol⟧ sup distance, Chebychev distance
+δ∞(r,s) =maxi |xr⟦symbol⟧i −xs⟦symbol⟧i|
+δ(r,s) =(Xr −Xs)
+iQ(Xr −Xs) quadratic distance Q a PD
+scaling matrix
+Haindl
+MI-ROZ- 05
+22/61
+
+PDF 13 / quadrant 3 / 23/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Metrics 3
+δ(r,s) =
+⟦symbol⟧
+(Xr −Xs)
+⟦symbol⟧Q−1(Xr −Xs) Mahalanobis distance
+(metric),Qcovariance matrix,
+⊕invariant to non-singular mappings,if Q=diag[ ]
+scale invariant too
+⊖numericallycomplex
+⊖Qbased on all samples not on separate clusters
+δ(r,s) =
+⟦symbol⟧
+L ifδ(r,s) >T
+0 otherwise
+nonlinear distance
+Haindl
+MI-ROZ- 05
+23/61
+
+PDF 13 / quadrant 4 / 24/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Non-Metric Distances
+sample correlation coefficient distance (2 sets of data)
+δ(r,s) =1 −ρr,s
+ρr,s =
+Σn
+i=1 Xr,iXs,i −nμrμs
+nσrσs
+=
+Σr,s
+⟦symbol⟧
+Σr,rΣs,s
+δ(r,s) =
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧ 1
+l
+l
+Σ
+j=1
+⟦symbol⟧xr,j −xs,j
+xr,j +xs,j
+⟦symbol⟧2
+δ(r,s) =
+Σl
+j=1 |xr,j −xs,j|
+Σl
+j=1 |xr,j +xs,j|
+δ(r,s) =
+l
+Σ
+j=1
+|xr,j −xs,j|
+|xr,j| +|xs,j|
+Haindl
+MI-ROZ- 05
+24/61
+
+PDF 14 / quadrant 1 / 25/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Nominal,Ordinal and Mixed Data Metrics
+assumption - all data are binaryvectors
+notation
+α1 =
+l
+Σ
+i=1
+min{xr,i,xs,i}
+⟦symbol⟧ =
+l
+Σ
+i=1
+xr,i −α1
+⟦symbol⟧ =
+l
+Σ
+i=1
+xs,i −α1
+α0 = l −(α1 +⟦symbol⟧ +⟦symbol⟧)
+similaritymeasures ⟦symbol⟧=
+⟦symbol⟧
+0
+matching 1s
+α0 0s and 1s edually weighted
+Haindl
+MI-ROZ- 05
+25/61
+
+PDF 14 / quadrant 2 / 26/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Nominal,Ordinal and Mixed Data Metrics 2
+⟦symbol⟧(r,r) =1 ⇒ δ(r,s) =1 −⟦symbol⟧(r,s)
+⟦symbol⟧1(r,s) =α1 +⟦symbol⟧
+l
+δ is metric
+⟦symbol⟧2(r,s) =
+α1 +⟦symbol⟧
+α1 +⟦symbol⟧ +⟦symbol⟧ +⟦symbol⟧
+δ is metric
+⟦symbol⟧3(r,s) =
+α1 +⟦symbol⟧
+α1 +⟦symbol⟧+2(⟦symbol⟧ +⟦symbol⟧)
+⟦symbol⟧4(r,s) =
+2(α1 +⟦symbol⟧)
+2(α1 +⟦symbol⟧) +⟦symbol⟧ +⟦symbol⟧
+⟦symbol⟧5(r,s) =1
+4( α1
+α1 +⟦symbol⟧ +
+α1
+α1 +⟦symbol⟧ +
+⟦symbol⟧
+⟦symbol⟧ +⟦symbol⟧ +
+⟦symbol⟧
+⟦symbol⟧ +⟦symbol⟧)
+Haindl
+MI-ROZ- 05
+26/61
+
+PDF 14 / quadrant 3 / 27/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Nominal,Ordinal and Mixed Data Metrics 3
+corresponds to correlation measures
+⟦symbol⟧6(r,s) =
+α1 +⟦symbol⟧
+⟦symbol⟧
+(α1 +⟦symbol⟧)(α1 +⟦symbol⟧)(⟦symbol⟧+⟦symbol⟧)(⟦symbol⟧+⟦symbol⟧)
+mixed data X =(X⟦symbol⟧
+nominal,X⟦symbol⟧
+ordinal,X⟦symbol⟧
+metric)
+δ(r,s) =c1δn(r,s;n) +c2δo(r,s;o) +c3δm(r,s;m)
+ci >0 and δ. are corresponding (metric) distance functions (δ is
+also metric)
+Haindl
+MI-ROZ- 05
+27/61
+
+PDF 14 / quadrant 4 / 28/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Nominal,Ordinal and Mixed Data Metrics - Example
+l =10 Xr =[1,0,1,1,1,0,1,1,0,0] Xs =[0,1,1,0,1,0,1,0,1,0]
+α1 =3, ⟦symbol⟧ =3, ⟦symbol⟧ =2, α0 =2, ⟦symbol⟧=2 =0
+⟦symbol⟧1(r,s) = 3+2
+10 =0.5 =0.3
+⟦symbol⟧2(r,s) =
+3+2
+3+3+2+2 =0.5 =0.38
+⟦symbol⟧3(r,s) =
+3+2
+3+2+2(3+2) =0.33 =0.23
+⟦symbol⟧4(r,s) =
+2(3+2)
+2(3+2)+3+2 =0.66 =0.55
+⟦symbol⟧5(r,s) = 1
+4(3
+6 +3
+5 +2
+4 +2
+5) =0.5 =0.28
+⟦symbol⟧6(r,s) =
+3+2
+⟦symbol⟧
+6554 =0.204 =0.22
+Haindl
+MI-ROZ- 05
+28/61
+
+PDF 15 / quadrant 1 / 29/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Hierarchical Clustering
+l
+1
+Haindl
+MI-ROZ- 05
+29/61
+
+PDF 15 / quadrant 2 / 29/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Hierarchical Clustering
+l
+1
+Haindl
+MI-ROZ- 05
+29/61
+
+PDF 15 / quadrant 3 / 29/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Hierarchical Clustering
+l
+1
+Haindl
+MI-ROZ- 05
+29/61
+
+PDF 15 / quadrant 4 / 29/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Hierarchical Clustering
+l
+1
+Haindl
+MI-ROZ- 05
+29/61
+
+PDF 16 / quadrant 1 / 29/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Hierarchical Clustering
+l
+1
+Haindl
+MI-ROZ- 05
+29/61
+
+PDF 16 / quadrant 2 / 29/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Hierarchical Clustering
+SAHN - sequential,agglomerative,hierarchical,nonoverlapping
+1 set the iteration number m =0
+2 find the cluster pair such δ[(s),(t)] =min⟦symbol⟧pairs{δ[(i),(j)]}
+3 m =m +1 merge s,t clusters,define clustering level
+4 update dissimilaritymatrix (delete entrycorresponding to s,t
+clusters,add new cluster val.)
+Haindl
+MI-ROZ- 05
+29/61
+
+PDF 16 / quadrant 3 / 29/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Hierarchical Clustering
+SAHN - sequential,agglomerative,hierarchical,nonoverlapping
+1 set the iteration number m =0
+2 find the cluster pair such δ[(s),(t)] =min⟦symbol⟧pairs{δ[(i),(j)]}
+3 m =m +1 merge s,t clusters,define clustering level
+4 update dissimilaritymatrix (delete entrycorresponding to s,t
+clusters,add new cluster val.)
+Haindl
+MI-ROZ- 05
+29/61
+
+PDF 16 / quadrant 4 / 29/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Hierarchical Clustering
+⊖difficult for large number of patterns
+⊖patterns cannot move between clusters
+⊖problem where to cut the dendrogram ⇒ number of classes
+δ[(k),(s,t)]
+⟦symbol⟧A⟦symbol⟧Σ
+= αsδ[(k),(s)] +αtδ[(k),(t)] +⟦symbol⟧δ[(s),(t)] +
+⟦symbol⟧|δ[(k),(s)] −δ[(k),(t)]|
+Haindl
+MI-ROZ- 05
+29/61
+
+PDF 17 / quadrant 1 / 30/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+SAHN Methods
+method
+αs
+αt
+⟦symbol⟧
+⟦symbol⟧
+Single-link
+1
+2
+1
+2
+0
+−1
+2
+Complete-link
+1
+2
+1
+2
+0
+1
+2
+UPGMA
+ns
+ns+nt
+ns
+ns+nt
+0
+0
+WPGMA
+1
+2
+1
+2
+0
+0
+UPGMC
+ns
+ns+nt
+ns
+ns+nt
+−
+nsnt
+(ns+nt)2
+0
+WPGMC
+1
+2
+1
+2
+−1
+4
+0
+Ward’s
+ns+nk
+ns+nt+nk
+nt+nk
+ns+nt+nk
+−
+nk
+ns+nt+nk
+0
+Flexible
+α
+α
+1 −2α
+0
+Haindl
+MI-ROZ- 05
+30/61
+
+PDF 17 / quadrant 2 / 31/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+SAHN Methods 2
+PGM - pair group method (clusters merged in pairs)
+U - unweighted method (all clusters members treated equally)
+W - weighted method (all clusters the same importance,e.g.
+smaller clusters members bigger infiuence)
+A - arithmetic average
+δ[(s),(t)] =
+1
+ntns
+nt
+Σ
+i=1
+ns
+Σ
+j=1
+δ(xt,ixs,j)
+C - centroids
+δ[(s),(t)] =||⟦symbol⟧
+x(s) −⟦symbol⟧
+x(t)||
+2
+Haindl
+MI-ROZ- 05
+31/61
+
+PDF 17 / quadrant 3 / 32/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Single (−) /Complete (⟦symbol⟧)-LinkExample
+δ[(k),(s,t)]
+⟦symbol⟧,⟦symbol⟧ = 1
+2δ[(k),(s)]+1
+2δ[(k),(t)]⟦symbol⟧1
+2|δ[(k),(s)]−δ[(k),(t)]|
+dissimilaritymatrix (-S,+C)
+/. 1
+2
+3
+4
+1 0
+2 3
+0
+3 12 6
+0
+4 8
+9 10 0
+5 7 13 5 11
+1
+2 3 5 4
+↓
+↙
+| | |
+(1,2)
+⟦symbol⟧,⟦symbol⟧
+3 5 4
+Haindl
+MI-ROZ- 05
+32/61
+
+PDF 17 / quadrant 4 / 32/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Single (−) /Complete (⟦symbol⟧)-LinkExample
+δ[(k),(s,t)] =
+1
+2δ[(k),(s)] +1
+2δ[(k),(t)] ⟦symbol⟧1
+2|δ[(k),(s)] −δ[(k),(t)]|
+δ[(3),(1,2)] =
+1
+212 +1
+26 ⟦symbol⟧1
+2|12 −6| =
+⟦symbol⟧ 6,
+12,
+δ[(4),(1,2)] =
+1
+28 +1
+29 ⟦symbol⟧1
+2|8 −9| =
+⟦symbol⟧ 8,
+9,
+δ[(5),(1,2)] =
+1
+27 +1
+213 ⟦symbol⟧1
+2|7 −13| =
+⟦symbol⟧ 7,
+13,
+//.
+(1,2) 3
+4
+(1,2)
+0
+3
+612
+0
+4
+89
+10 0
+5
+713
+5 11
+1
+2
+3
+5 4
+|
+|
+| |
+(1,2)
+3
+5 4
+|
+↓
+↙
+|
+(1,2)
+(3,5)
+⟦symbol⟧,⟦symbol⟧
+4
+Haindl
+MI-ROZ- 05
+32/61
+
+PDF 18 / quadrant 1 / 32/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Single (−) /Complete (⟦symbol⟧)-LinkExample
+///. (1,2) (3,5)
+(1,2)
+0
+(3,5) 6⟦symbol⟧ 13
+0
+4
+89⟦symbol⟧
+1011
+1
+2
+3
+5 4
+|
+|
+| |
+(1,2)
+3
+5 4
+|
+|
+|
+(1,2)
+(3,5)
+4
+↓
+↙
+|
+(1,2,3,5)
+⟦symbol⟧
+4
+(1,2,4)
+⟦symbol⟧
+(3,5) ↙
+Haindl
+MI-ROZ- 05
+32/61
+
+PDF 18 / quadrant 2 / 32/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Single (−) /Complete (⟦symbol⟧)-LinkExample
+/⟦symbol⟧.
+(1,2,3,5)
+(1,2,3,5)
+0
+4
+8
+(1,2,4)
+(1,2,4)
+0
+(3,5)
+13
+((1,2,3,5)(4))
+⟦symbol⟧
+((1,2,4)(3,5))
+⟦symbol⟧
+1
+2
+3
+5 4
+|
+|
+| |
+(1,2)
+3
+5 4
+|
+|
+|
+(1,2)
+(3,5)
+4
+|
+|
+(1,2,3,5)
+←
+←
+←
+4
+↓
+(1,2,3,5,4)
+⟦symbol⟧
+S tree /
+=C tree
+Haindl
+MI-ROZ- 05
+32/61
+
+PDF 18 / quadrant 3 / 37/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Partitional Clustering
+objective to find the optimal clustering (∀ partitions -
+computationallyunfeasible)
+K has to be known in advance
+Haindl
+MI-ROZ- 05
+37/61
+
+PDF 18 / quadrant 4 / 37/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Partitional Clustering
+objective to find the optimal clustering (∀ partitions -
+computationallyunfeasible)
+K has to be known in advance
+K-means (Isodata)
+1 Select K
+⟦symbol⟧i i =1,...,K.
+2 Compute μj−1
+i
+i =1,...,K.
+3 ∀ {Xl,i}
+δ(Xl,μi) =[(Xl −μi)
+⟦symbol⟧(Xl −μi)]
+1
+2
+4 ∀ l δ(Xl,μi) =minj{δ(Xl,μj)}⇒ Xl → ωi
+5 stopping criterion (no of iteration,changes ...)
+6 j =j +1 go to 2.
+(7.) Applyheuristic splitting /merging criteria.
+Haindl
+MI-ROZ- 05
+37/61
+
+PDF 19 / quadrant 1 / 37/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Partitional Clustering
+objective to find the optimal clustering (∀ partitions -
+computationallyunfeasible)
+K has to be known in advance
+K estimation (Elbow method)
+⟦symbol⟧(K) = 1
+n
+Σn
+i=1 ||xi −μ*
+j ||
+⟦symbol⟧⟦symbol⟧
+j assigned center for vector xi
+Haindl
+MI-ROZ- 05
+37/61
+
+PDF 19 / quadrant 2 / 37/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Partitional Clustering
+K-means (Isodata)
+1 Select K
+⟦symbol⟧i i =1,...,K.
+2 Compute μj−1
+i
+i =1,...,K.
+3 ∀ {Xl,i}
+δ(Xl,μi) =[(Xl −μi)
+⟦symbol⟧(Xl −μi)]
+1
+2
+4 ∀ l δ(Xl,μi) =minj{δ(Xl,μj)}⇒ Xl → ωi
+5 stopping criterion (no of iteration,changes ...)
+6 j =j +1 go to 2.
+(7.) Applyheuristic splitting /merging criteria.
+⊕patterns can move between clusters
+⊖suboptimal partitions resulting from used heuristics
+⊖onlymetric data
+⊖sensitive to the initial μ0
+i selection (rerun manytimes)
+⊖sensitive to outliers
+Haindl
+MI-ROZ- 05
+37/61
+
+PDF 19 / quadrant 3 / 39/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Heuristic Partitioning
+1 K =1, i =1
+2 Assign Xi into ωK.
+3 i =i +1 stop if i > card(S)
+4 Assign Xi to the first of previouslygenerated clusters (j) for
+which the first (leading) element δ(Xi,
+j X1) < threshold.
+5 If there is no such a cluster and K <Kmaxset K =K +1 go
+to 2.,otherwise leave Xi unallocated (ω0) and go to 3.
+⊕can classifyalso non-metric data
+⊕fast
+⊖partitioning depends on data ordering
+Haindl
+MI-ROZ- 05
+39/61
+
+PDF 19 / quadrant 4 / 40/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Heuristic Partitioning 2
+1 K =0
+2 K =K +1 stop if K >Kmax ⟦symbol⟧ ∀X assigned
+3 Assign Xi into ωK if is not a member of a cluster and its
+Euclidean distance from all other yet unassigned Xj is
+maximum. Xi → μK
+4 Assign Xi into ωK if not assigned in 3. and
+δ(Xi,μK) ⟦symbol⟧threshold and Xi closest to μK;otherwise go to 2.
+5 Recalculate μK,go to 4.
+Haindl
+MI-ROZ- 05
+40/61
+
+PDF 20 / quadrant 1 / 41/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering bythe AffinityPropagation
+⊕ unsupervised,
+⊕ number of clusters K unknown,
+⊕ simultaneouslyconsiders all data points as potential
+centers,
+⊖ recursive,
+⊙ magnitude of each message refiects the current
+affinitythat one data point has for choosing another
+data point as its center
+Frey,B.J. and Dueck,D.,Clustering by passing messages bet⟦symbol⟧een data points,Science,vol. 315,no. 5814,pp.
+972⟦symbol⟧976,2007
+Haindl
+MI-ROZ- 05
+41/61
+
+PDF 20 / quadrant 2 / 41/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering bythe AffinityPropagation
+Message passing:
+1 similarities (xk center for xi ?)
+s(i,k) =−||xi −xk||
+2
+2 responsibility (xi → xk to be a center,alternative centers ?)
+r(i,k) ←−s(i,k) − max
+´
+ks.t.´
+k/
+=k
+⟦symbol⟧
+a(i,´
+k) +s(i,´
+k)
+⟦symbol⟧
+3 availability (xk → xi to join a center,other points support ?)
+a(i,k) ←− min
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧0,r(k,k) +
+Σ
+´
+is.t.´
+i/
+∈{i,k}
+max{0,r(´
+i,k)}
+⟦symbol⟧
+⟦symbol⟧
+⟦symbol⟧
+a(k,k) ←−
+Σ
+´
+is.t.´
+i/
+∈{i,k}
+max{0,r(´
+i,k)}
+Haindl
+MI-ROZ- 05
+41/61
+
+PDF 20 / quadrant 3 / 41/61
+S SA C⟦symbol⟧ IS
+x C HC PC
+Clustering bythe AffinityPropagation
+Message passing termination:
+fixed number of iterations
+changes in the messages fall below a threshold
+local decisions stayconstant for some number of iterations
+Haindl
+MI-ROZ- 05
+41/61
+
+PDF 20 / quadrant 4 / 43/61
+S SA C⟦symbol⟧ IS
+Cluster ⟦symbol⟧alidity
+problems
+Are the resulting clusters ”real” or merelyan artifact of the
+clustering algorithm ?
+How manyclusters are present in data?
+How well does a hierarchyfit to data?
+problems with the definition of cluster and the meaning of validity
+Validation
+external - compares recovered structure to an a priori structure
+internal - no a priori information,tries to determine if the
+structure is intrinsicallyappropriate for the data
+relative - compares two structures and measures their relative
+merit
+Haindl
+MI-ROZ- 05
+43/61
+
+PDF 21 / quadrant 1 / 43/61
+S SA C⟦symbol⟧ IS
+Cluster ⟦symbol⟧alidity
+problems
+Are the resulting clusters ”real” or merelyan artifact of the
+clustering algorithm ?
+How manyclusters are present in data?
+How well does a hierarchyfit to data?
+problems with the definition of cluster and the meaning of validity
+Validation
+external - compares recovered structure to an a priori structure
+internal - no a priori information,tries to determine if the
+structure is intrinsicallyappropriate for the data
+relative - compares two structures and measures their relative
+merit
+Haindl
+MI-ROZ- 05
+43/61
+
+PDF 21 / quadrant 2 / 44/61
+S SA C⟦symbol⟧ IS
+Cluster ⟦symbol⟧alidity2
+ValidityParadigm
+1 Identifythe clustering structure (hierarchy,clustering,cluster)
+and the type of validation (external,internal,relative).
+2 Select an index.
+3 Select a hypothesis of ”no structure”.
+4 Obtain (bytheoryor simulation) the baseline distribution of
+the index under the ”no structure” hypothesis.
+5 Compute the index for the structure being tested.
+6 Formallytest the hypothesis of ”no structure” bydetermining
+whether the observed index is ”unusual”.
+Haindl
+MI-ROZ- 05
+44/61
+
+PDF 21 / quadrant 3 / 45/61
+S SA C⟦symbol⟧ IS
+Cluster ⟦symbol⟧alidity3
+clustering tendency- a hypothesis that the data have a
+continuous uniform distribution over some compact convex
+sampling window
+scan test - unusuallylarge count of number of patterns in the
+most populous region of the sampling window indicates a
+clustering
+Calinski Harabash index - relative test,optimal number of
+clusters (more compact and separated)
+maxK CH(K)
+CH(K) = n −K
+K −1
+⟦symbol⟧E2
+1
+E2
+K
+−1
+⟦symbol⟧
+E2
+K =ΣK
+k=1 e2
+k,e2
+k is the sum of squared Euclidean distances
+between patterns in k and μk
+Haindl
+MI-ROZ- 05
+45/61
+
+PDF 21 / quadrant 4 / 45/61
+S SA C⟦symbol⟧ IS
+Cluster ⟦symbol⟧alidity3
+clustering tendency- a hypothesis that the data have a
+continuous uniform distribution over some compact convex
+sampling window
+scan test - unusuallylarge count of number of patterns in the
+most populous region of the sampling window indicates a
+clustering
+Calinski Harabash index - relative test,optimal number of
+clusters (more compact and separated)
+maxK CH(K)
+CH(K) = n −K
+K −1
+⟦symbol⟧E2
+1
+E2
+K
+−1
+⟦symbol⟧
+E2
+K =ΣK
+k=1 e2
+k,e2
+k is the sum of squared Euclidean distances
+between patterns in k and μk
+Haindl
+MI-ROZ- 05
+45/61
+
+PDF 22 / quadrant 1 / 46/61
+S SA C⟦symbol⟧ IS
+Cluster ⟦symbol⟧alidity4
+validityof partitions
+external test,a(d) no. of pairs objects in the same (different)
+cluster for both classifications
+Rand index = a +d
+⟦symbol⟧n
+2
+⟦symbol⟧
+compactness =
+Σnk
+i=1⟦symbol⟧i⟦symbol⟧k
+nk(nk −1)
+where nk is number of points in the kcluster,⟦symbol⟧i⟦symbol⟧k is number
+of nk −1 nearest neighbours to a kcluster point belonging to k
+isolation =1 −
+Σnk
+i=1 ⟦symbol⟧
+⟦symbol⟧i⟦symbol⟧k
+(n −nk)(n −nk −1)
+where n is number of data points,⟦symbol⟧
+⟦symbol⟧i⟦symbol⟧k is number of n −nk −1
+nearest neighbours to a kcluster point not belonging to k
+ideallycompactness =isolation =1
+Haindl
+MI-ROZ- 05
+46/61
+
+PDF 22 / quadrant 2 / 46/61
+S SA C⟦symbol⟧ IS
+Cluster ⟦symbol⟧alidity4
+validityof partitions
+external test,a(d) no. of pairs objects in the same (different)
+cluster for both classifications
+Rand index = a +d
+⟦symbol⟧n
+2
+⟦symbol⟧
+compactness =
+Σnk
+i=1⟦symbol⟧i⟦symbol⟧k
+nk(nk −1)
+where nk is number of points in the kcluster,⟦symbol⟧i⟦symbol⟧k is number
+of nk −1 nearest neighbours to a kcluster point belonging to k
+isolation =1 −
+Σnk
+i=1 ⟦symbol⟧
+⟦symbol⟧i⟦symbol⟧k
+(n −nk)(n −nk −1)
+where n is number of data points,⟦symbol⟧
+⟦symbol⟧i⟦symbol⟧k is number of n −nk −1
+nearest neighbours to a kcluster point not belonging to k
+ideallycompactness =isolation =1
+Haindl
+MI-ROZ- 05
+46/61
+
+PDF 22 / quadrant 3 / 46/61
+S SA C⟦symbol⟧ IS
+Cluster ⟦symbol⟧alidity4
+validityof partitions
+external test,a(d) no. of pairs objects in the same (different)
+cluster for both classifications
+Rand index = a +d
+⟦symbol⟧n
+2
+⟦symbol⟧
+compactness =
+Σnk
+i=1⟦symbol⟧i⟦symbol⟧k
+nk(nk −1)
+where nk is number of points in the kcluster,⟦symbol⟧i⟦symbol⟧k is number
+of nk −1 nearest neighbours to a kcluster point belonging to k
+isolation =1 −
+Σnk
+i=1 ⟦symbol⟧
+⟦symbol⟧i⟦symbol⟧k
+(n −nk)(n −nk −1)
+where n is number of data points,⟦symbol⟧
+⟦symbol⟧i⟦symbol⟧k is number of n −nk −1
+nearest neighbours to a kcluster point not belonging to k
+ideallycompactness =isolation =1
+Haindl
+MI-ROZ- 05
+46/61
+
+PDF 22 / quadrant 4 / 47/61
+S SA C⟦symbol⟧ IS
+Scatter Matrix Criteria
+Scatter matrix for ith cluster
+𝒮i =
+Σ
+X∈⟦symbol⟧i
+(X −μi)(X −μi)
+⟦symbol⟧
+Within-cluster scatter matrix - measure of cluster compactness
+𝒮⟦symbol⟧ =
+K
+Σ
+i=1
+𝒮i
+Between-cluster scatter matrix
+𝒮B =
+K
+Σ
+i=1
+ni(μi −μ)(μi −μ)
+⟦symbol⟧
+Total scatter matrix - independent on data partitioning
+𝒮⟦symbol⟧
+=
+Σ
+X
+(X −μ)(X −μ)
+⟦symbol⟧
+𝒮⟦symbol⟧
+= 𝒮⟦symbol⟧ +𝒮B
+Haindl
+MI-ROZ- 05
+47/61
+
+PDF 23 / quadrant 1 / 48/61
+S SA C⟦symbol⟧ IS
+Scatter Matrix Criteria 2
+Criteria invariant to nonsingular linear transformation of data
+(λi eigenvalues of 𝒮−1
+⟦symbol⟧ 𝒮B)
+mintr(𝒮⟦symbol⟧ ) proportional to sum of the variances
+min ⟦symbol⟧⟦symbol⟧⟦symbol⟧ ⟦symbol⟧
+⟦symbol⟧⟦symbol⟧i⟦symbol⟧ =Πl
+i=1
+1
+1+⟦symbol⟧i
+maxtr{𝒮−1
+⟦symbol⟧ 𝒮B}=Σl
+i=1 λi
+equivalent to minimizing the square error under the
+Mahalanobis metric
+max
+⟦symbol⟧
+tr⟦symbol⟧i
+tr⟦symbol⟧⟦symbol⟧
+⟦symbol⟧
+max ⟦symbol⟧⟦symbol⟧B⟦symbol⟧
+⟦symbol⟧⟦symbol⟧⟦symbol⟧ ⟦symbol⟧ =Πl
+i=1 λi
+⊖often 0
+⊖invariant criteria are more likelyto possess multiple local
+extrema
+Haindl
+MI-ROZ- 05
+48/61
+
+PDF 23 / quadrant 2 / 49/61
+S SA C⟦symbol⟧ IS
+RG SM
+MS
+Image Segmentation - Region Growing
+advantages:
+⊕ considers contextual properties
+⊕ more robust in noisyimages than edge-based methods
+problems:
+⊖ inherent dependence on neighbourhood definition
+⊖ dependence on region order pixels examination
+⊖ dependence on initial seed selection
+prior information
+histogram peaks
+⊖ stop growing criterion
+Haindl
+MI-ROZ- 05
+49/61
+
+PDF 23 / quadrant 3 / 50/61
+S SA C⟦symbol⟧ IS
+RG SM
+MS
+Region Growing 2
+Merging
+1 segment image into regions (e.g.,pixels)
+2 if possible merge iterativelyall adjacent regions satisfying a
+homogeneitycriterion
+Pixel aggregation
+1 select number and location of seeds,homogeneitycriterion
+2 assign everypixel to the best seed according the criterion,
+for more equal seeds assign randomly
+Haindl
+MI-ROZ- 05
+50/61
+
+PDF 23 / quadrant 4 / 59/61
+S SA C⟦symbol⟧ IS
+RG SM
+MS
+Split and Merge
+⟦symbol⟧ subdivided into set of disjoint regions
+iterativelysplit and/or merge regions according to some
+criterion
+1 f(⟦symbol⟧i) =False ⇒ split ⟦symbol⟧i into 4 disjoint quadrants
+2 f(⟦symbol⟧j ∪⟦symbol⟧k) =True ⇒ merge ⟦symbol⟧j,⟦symbol⟧k
+3 no 1.⟦symbol⟧2.possible ⇒ stop
+f(⟦symbol⟧i) =True ⇔ Xr =ω ∀r ∈⟦symbol⟧i
+Haindl
+MI-ROZ- 05
+59/61
+
+PDF 24 / quadrant 1 / 59/61
+S SA C⟦symbol⟧ IS
+RG SM
+MS
+Split and Merge
+⟦symbol⟧ subdivided into set of disjoint regions
+iterativelysplit and/or merge regions according to some
+criterion
+1 f(⟦symbol⟧i) =False ⇒ split ⟦symbol⟧i into 4 disjoint quadrants
+2 f(⟦symbol⟧j ∪⟦symbol⟧k) =True ⇒ merge ⟦symbol⟧j,⟦symbol⟧k
+3 no 1.⟦symbol⟧2.possible ⇒ stop
+f(⟦symbol⟧i) =True ⇔ Xr =ω ∀r ∈⟦symbol⟧i
+Haindl
+MI-ROZ- 05
+59/61
+
+PDF 24 / quadrant 2 / 59/61
+S SA C⟦symbol⟧ IS
+RG SM
+MS
+Split and Merge
+⟦symbol⟧ subdivided into set of disjoint regions
+iterativelysplit and/or merge regions according to some
+criterion
+1 f(⟦symbol⟧i) =False ⇒ split ⟦symbol⟧i into 4 disjoint quadrants
+2 f(⟦symbol⟧j ∪⟦symbol⟧k) =True ⇒ merge ⟦symbol⟧j,⟦symbol⟧k
+3 no 1.⟦symbol⟧2.possible ⇒ stop
+f(⟦symbol⟧i) =True ⇔ Xr =ω ∀r ∈⟦symbol⟧i
+f(⟦symbol⟧i) =True ⇔ 0.8card(⟦symbol⟧i) ⟦symbol⟧{r :r ∈⟦symbol⟧i,|Xr −μi| ⟦symbol⟧2σi}
+Haindl
+MI-ROZ- 05
+59/61
+
+PDF 24 / quadrant 3 / 61/61
+S SA C⟦symbol⟧ IS
+RG SM
+MS
+Motion Segmentation
+spatial techniques
+registered images X.,.,r
+3,X.,.,r
+3+i
+constant illumination
+stationaryreference image (built if necessaryfrom several
+frames)
+⟦symbol⟧(r
+3,i) =
+⟦symbol⟧
+1 if |Xr
+1,r
+2,r
+3 −Xr
+1,r
+2,r
+3+i| >T
+0 otherwise
+difference image pixel =1 denotes motion
+Accumulative difference - ignores changes occuring onlybetween 2
+subsequent frames
+Frequencydomain techniques
+static background
+several moving objects
+Haindl
+MI-ROZ- 05
+61/61
