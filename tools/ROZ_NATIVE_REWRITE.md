@@ -51,4 +51,3 @@ notes/focus, model reset and numeric edge cases, dark theme, print extraction
 and visual inspection, and all 22 offline entrypoints. Validate every manifest
 SHA-256 and unchanged original PDF hash. Publish only after scoped PR review,
 successful Pages deployment and full live hashes of every changed public file.
-
