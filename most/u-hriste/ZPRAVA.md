@@ -1,22 +1,22 @@
 # U hřiště (1938 Seligerova): zpráva o 3D modelu ulice a jeho pramenech
 
-Projekt MOST, GRAFIT FIT ČVUT, 25. 10. 2026. Geometrie a stránka: Claude (Anthropic); textury doplňuje Codex. Web: https://grafitctu.github.io/most/u-hriste/
+Projekt MOST, GRAFIT FIT ČVUT, 26. 10. 2026. Geometrie a stránka: Claude (Anthropic); textury doplňuje Codex. Web: https://grafitctu.github.io/most/u-hriste/
 
-Stav: ve 3D je 30 z 30 modelovaných budov. Model ulice (GLB) je k dispozici.
+Stav: ve 3D je 36 z 36 modelovaných budov. Model ulice (GLB) je k dispozici.
 
 ## Co kde stálo
 
 Poloha všech domů pochází z GIS vrstvy projektu, která je vektorizací historického plánu města Mostu z roku 1938. Ulice v ní vede jako Seligerova (v roce 1964 U hřiště) s 36 budovami: 28 z nich mají číslo popisné (27 různých čísel, čp. 523 má dvě budovy), 8 čísla nemají (dvůr paláce SHD a areál bývalé plynárny). Kliknutím na zelený nebo oranžový dům v mapě otevřete jeho stránku.
 
-Čísla v mapě jsou podle pramenů, ne podle popisků GIS: budova 635 je 574 a budova 634 je 630 (v GIS mají popisky prohozené, viz [Rozpory](#rozpory)). Dílny 413 a a 413 b jsou hypotéza identity na budovách GIS bez čísla.
+Čísla v mapě jsou podle pramenů, ne podle popisků GIS: budova 635 je 574 a budova 634 je 630 (v GIS mají popisky prohozené, viz [Rozpory](#rozpory)). Dílny 413 a a 413 b jsou hypotéza identity na budovách GIS bez čísla. Budovy bez čísla popisného (GIS 1526–1531 v areálu plynárny a GIS 1638) jsou označené „GIS“ a modelované jako hypotézy.
 
 ### Úseky ulice
 - S1 · jižní strana VSV ramene: 626, 625, 630, 574, 772
 - S2 · severozápadní strana VSV ramene: 823, 831, 653, 659, 666, 673, 671
-- S3 · bývalá plynárna: 523 a, 523 b
+- S3 · bývalá plynárna: 523 a, GIS 1530, 523 b, GIS 1529, GIS 1531, GIS 1527, GIS 1526
 - S4 · JZ rameno od Husova náměstí: 1733, 413 a, 413 b, 1313, 410
 - S5 · rameno k nám. Dvouletky: 415, 475, 416, 439, 417
-- S6 · domy čelem k nám. Dvouletky: 586, 1230, 1186, 1188, 1178, 1192
+- S6 · domy čelem k nám. Dvouletky: 586, 1230, 1186, 1188, 1178, 1192, GIS 1638
 
 ### Databázová oblast „U hřiště“ a co modelováno není
 
@@ -97,6 +97,8 @@ Pracovní složka: F:\MOST\output\u_hriste_street_claude_2026-10-25\ (domy, kont
 
 - **410, 653 a 1733: plán a realizace.** Projekt nástavby patra u 410 (Stockwerksaufbau) nebyl proveden, fotografie z roku 1975 ukazují dvě podlaží a pět vikýřů. U 653 vysvětluje plán z roku 1932 třetí řadu oken: je v nastavené uliční stěně s pokoji v podkroví, takže průčelí (11,0 m) je vyšší než zadní okap (8,4 m). Palác 1733 má na pohlednici stejné členění jako projekt z roku 1930, ale jiné proporce; model drží osy z pohlednice a výšky podlaží z projektu.
 
+- **Plynárna bez čísel popisných: stav kolem 1938.** GIS plán 1938 zakresluje v areálu plynárny dva kruhové plynojemy a provozní budovy bez čísla popisného. Na žádost uživatele (26. 10. 2026) jsou domodelované jako výslovné hypotézy: plynojem 2150 m³ (budova GIS 1526) podle plánu firmy N. Rella & Neffe z roku 1903, plynojem 800 m³ (GIS 1527) podle nádrže z roku 1872, budovy GIS 1529 a 1531 jen jako objemy podle půdorysu. Karta KSPPOP ale uvádí, že plynárna byla za války zříceninou a potom zbořena – v 60. letech tu tyto stavby pravděpodobně už nestály, proto nesou štítek „hypotéza – stav kolem 1938“. Malá budova GIS 1530 u vjezdu je pracovně vrátnice, kterou fotografie 60. let ukazují; dvorní stavba GIS 1638 u nám. Dvouletky nemá žádný pramen.
+
 - **627 a 742: zbořené dvorní stavby.** Na skicách KSPPOP jsou vyznačené jako zbořené a v GIS nemají půdorys; nemodelují se (blocked).
 
 - **Výšky a terén.** Výšky podlaží, říms a střech jsou odhady z rektifikací a plánů. Terén je plochý (z = 0), protože historický výškopis ulice nebyl k dispozici; je to provizorní hypotéza.
@@ -107,7 +109,7 @@ Pracovní složka: F:\MOST\output\u_hriste_street_claude_2026-10-25\ (domy, kont
 
 ## Kniha nesouladů pramenů
 
-Případy, kdy si prameny odporují (plán proti fotografii, GIS proti skice, kopie místo originálu), zapisujeme do interní knihy nesouladů pramenů projektu MOST. Ta se zatím nepublikuje, proto zde uvádíme jen identifikátory případů této ulice (10):
+Případy, kdy si prameny odporují (plán proti fotografii, GIS proti skice, kopie místo originálu), zapisujeme do interní knihy nesouladů pramenů projektu MOST. Ta se zatím nepublikuje, proto zde uvádíme jen identifikátory případů této ulice (11):
 - `2026-10-25_u-hriste_1733-projekt-1930-vs-realizace` – U hřiště 1733: palác SHD – projekt 1930 má jiné proporce než realizace na pohlednici
 - `2026-10-25_u-hriste_410-nastavba-nerealizovana` – U hřiště 410: projekt nástavby patra (Stockwerksaufbau) se neuskutečnil – fotografie 1975 ukazují dvě podlaží
 - `2026-10-25_u-hriste_413-dilny-bez-gis` – U hřiště 413: dílny ve dvoře SHD mají fotografie i skicu, ale v GIS nemají budovu s tímto čp.
@@ -117,6 +119,7 @@ Případy, kdy si prameny odporují (plán proti fotografii, GIS proti skice, ko
 - `2026-10-25_u-hriste_772-dva-projekty` – U hřiště 772: dva projekty pro téhož stavebníka (1885 a 1890), realizace odpovídá žádnému z nich přesně
 - `2026-10-25_u-hriste_823-831-dvojdum` – U hřiště 823 a 831: dvě čísla popisná, jedna fasáda – hranici domů prozradí jen svod a GIS
 - `2026-10-25_u-hriste_nizke-strechy-sparka-stitu` – Metodika: u nízkých střech proklouznou šikmé paprsky 1 cm spárou mezi štítem a krytinou
+- `2026-10-25_u-hriste_plynarna-epocha-1938` – U hřiště, areál plynárny: budovy GIS bez čp. jsou stav kolem 1938 – v 60. letech už plynárna nestála
 - `2026-10-25_u-hriste_s6-jen-kopie-nizkeho-rozliseni` – U hřiště, nám. Dvouletky (1230, 1186, 1188, 1178, 1192, 417): fotografie jen jako netagované kopie 1920×1080
 
 ## Přehled domů
@@ -136,7 +139,12 @@ Případy, kdy si prameny odporují (plán proti fotografii, GIS proti skice, ko
 | 673 | S2 | patrový dům s modernizovanou fasádou | – | 2 | 10,5 × 7,3 | r1 | 8 | zatím bez textur |
 | 671 | S2 | dvoupatrový dům na konci řady | – | 3 | 17,2 × 11,8 | r2 | 25 | zatím bez textur |
 | 523 a | S3 | budova bývalé plynárny podél ulice u 772 | částečně hypotéza | 1 (okna pod okapem) | 21,6 × 5,8 | r2 | 47 | bez textur (částečně hypotéza – jen prosté materiály) |
+| GIS 1530 | S3 | malá budova u vjezdu do plynárny (pracovně vrátnice) | hypotéza podle GIS | 1 (hypotéza) | 14,8 × 3,0 | r3 | 0 | bez textur (částečně hypotéza – jen prosté materiály) |
 | 523 b | S3 | dlouhá přízemní budova bývalé plynárny | částečně hypotéza | 1 | 36,7 × 5,0 | r2 | 47 | bez textur (částečně hypotéza – jen prosté materiály) |
+| GIS 1529 | S3 | dlouhá provozní budova plynárny podél ulice | hypotéza – stav kolem 1938 | 1 (hypotéza) | 43,5 × 5,5 | r1 | 0 | bez textur (částečně hypotéza – jen prosté materiály) |
+| GIS 1531 | S3 | provozní budova ve dvoře plynárny | hypotéza – stav kolem 1938 | 1 (hypotéza) | 23,1 × 6,0 | r1 | 0 | bez textur (částečně hypotéza – jen prosté materiály) |
+| GIS 1527 | S3 | plynojem 800 m³ (1872) | hypotéza – stav kolem 1938 | – | 16,0 × 6,8 | r1 | 0 | bez textur (částečně hypotéza – jen prosté materiály) |
+| GIS 1526 | S3 | plynojem 2150 m³ (projekt 1903) | hypotéza – stav kolem 1938 | – | 17,3 × 11,3 | r1 | 0 | bez textur (částečně hypotéza – jen prosté materiály) |
 | 1733 | S4 | správní budova Brüxer Kohlen-Bergbau-Gesellschaft (palác SHD) | – | 4 + atika | 38,8 × 16,4 | r2 | 31 | zatím bez textur |
 | 413 a | S4 | dílna ve dvoře SHD (struktura 413) | hypotéza identity | 1 | 11,1 × 3,6 | r1 | 23 | bez textur (částečně hypotéza – jen prosté materiály) |
 | 413 b | S4 | dílna / garáž ve dvoře SHD (struktura 413) | hypotéza identity | 1 | 8,4 × 3,5 | r4 | 23 | bez textur (částečně hypotéza – jen prosté materiály) |
@@ -153,6 +161,7 @@ Případy, kdy si prameny odporují (plán proti fotografii, GIS proti skice, ko
 | 1188 | S6 | patrový dům se zkoseným nárožím | částečně hypotéza | 2 | 9,1 × 7,5 | r2 | 7 | bez textur (částečně hypotéza – jen prosté materiály) |
 | 1178 | S6 | patrový dům s atikovým štítem | částečně hypotéza | 2 | 10,8 × 7,7 | r2 | 6 | bez textur (částečně hypotéza – jen prosté materiály) |
 | 1192 | S6 | patrový dům s arkýřem a věžičkou | částečně hypotéza | 2 | 12,7 × 8,0 | r2 | 7 | bez textur (částečně hypotéza – jen prosté materiály) |
+| GIS 1638 | S6 | dvorní stavba bez čp. u nám. Dvouletky | hypotéza podle GIS | 1 (hypotéza) | 21,4 × 3,2 | r1 | 0 | bez textur (částečně hypotéza – jen prosté materiály) |
 
 ## Domy jednotlivě
 
@@ -553,6 +562,16 @@ Případy, kdy si prameny odporují (plán proti fotografii, GIS proti skice, ko
 | cp_523_012.jpg | plán / výkres | 2db6e61ff22b |
 | cp_523_013.jpg | plán / výkres | cf69cc83c2a8 |
 
+### Budova GIS 1530 (bez čp.): malá budova u vjezdu do plynárny (pracovně vrátnice)
+
+> **Upozornění – hypotéza podle GIS:** Malá budova bez čísla popisného u vjezdu do bývalé plynárny podle GIS plánu 1938, pracovně vrátnice. Fotografie KSPPOP ukazuje bok vrátnice, ale její přiřazení k této budově GIS ani orientace nejsou jisté. Výška a střecha jsou odhad, otvory nemodelovány.
+
+- Malá budova bez čísla popisného u ulice mezi 523 a a 523 b, jen v GIS plánu 1938. Karty KSPPOP (cp_523_007, cp_523_009) zmiňují vjezdovou vrátnici, kterou v 60.–70. letech používaly Státní statky; fotografie cp_523_009 ukazuje její bok. Přiřazení vrátnice k této budově GIS je hypotéza.
+- Prameny: GIS půdorys 1530; fotografie a karta KSPPOP cp_523_009 (bok vjezdové vrátnice ze strany plynárny)
+- Střecha: nízká sedlová střecha (vzepětí 0,9 m) podle fotografie
+- GIS budova 1530 (bez čp.); geometrie revize r3, 86 polygonů.
+- Hypotézy: přiřazení k vrátnici je hypotéza; orientace fotografie k budově není určena, otvory proto nejsou modelovány; výška 3,0 m je odhad
+
 ### Čp. 523 b: dlouhá přízemní budova bývalé plynárny
 
 > **Upozornění – částečně hypotéza:** Jen část domu je doložena fotografií; zbytek je odvozen z plánu nebo ze sousedního domu.
@@ -612,6 +631,46 @@ Případy, kdy si prameny odporují (plán proti fotografii, GIS proti skice, ko
 | cp_523_011.jpg | plán / výkres | 5a3c427f5634 |
 | cp_523_012.jpg | plán / výkres | 2db6e61ff22b |
 | cp_523_013.jpg | plán / výkres | cf69cc83c2a8 |
+
+### Budova GIS 1529 (bez čp.): dlouhá provozní budova plynárny podél ulice
+
+> **Upozornění – hypotéza – stav kolem 1938:** Budova bez čísla popisného v areálu bývalé plynárny jen podle GIS plánu 1938; fotografie ani plán k ní nebyly nalezeny. Plynárna byla po válce zbořena, v 60. letech tu budova pravděpodobně nestála. Výška a střecha jsou odhad, otvory nemodelovány.
+
+- Areál bývalé plynárny (Gasanstalt / städtisches Gaswerk, Gasgasse). Budova nemá číslo popisné, je jen v GIS plánu 1938. Podle karty KSPPOP u snímku cp_523_003 byla plynárna za války zříceninou a potom zbořena, fotografie 60.–70. let ukazují volný dvůr – jde tedy o stav kolem roku 1938, ne o 60. léta. Na Lageplanu z roku 1945 odpovídá dlouhé stupňovité budově podél ulice.
+- Prameny: GIS půdorys 1529, Lageplan 1945 (cp_523_010); typově plány provozních budov plynárny (cp_523_012 z roku 1872, cp_523_003 z roku 1892)
+- Střecha: sedlová střecha, vzepětí 2,5 m – odhad
+- GIS budova 1529 (bez čp.); geometrie revize r1, 65 polygonů.
+- Hypotézy: výška 5,5 m a střecha jsou odhad podle typu provozních budov; otvory nejsou modelovány (žádná fotografie); drobný schod půdorysu GIS je vynechán
+
+### Budova GIS 1531 (bez čp.): provozní budova ve dvoře plynárny
+
+> **Upozornění – hypotéza – stav kolem 1938:** Budova bez čísla popisného v areálu bývalé plynárny jen podle GIS plánu 1938; fotografie ani plán k ní nebyly nalezeny. Plynárna byla po válce zbořena, v 60. letech tu budova pravděpodobně nestála. Výška a střecha jsou odhad, otvory nemodelovány.
+
+- Areál bývalé plynárny (Gasanstalt / städtisches Gaswerk, Gasgasse). Budova nemá číslo popisné, je jen v GIS plánu 1938. Podle karty KSPPOP u snímku cp_523_003 byla plynárna za války zříceninou a potom zbořena, fotografie 60.–70. let ukazují volný dvůr – jde tedy o stav kolem roku 1938, ne o 60. léta.
+- Prameny: GIS půdorys 1531, Lageplan 1945 (cp_523_010)
+- Střecha: sedlová střecha, vzepětí 3,0 m – odhad
+- GIS budova 1531 (bez čp.); geometrie revize r1, 50 polygonů.
+- Hypotézy: výška 6,0 m a střecha jsou odhad; otvory nejsou modelovány (žádná fotografie)
+
+### Budova GIS 1527 (bez čp.): plynojem 800 m³ (1872)
+
+> **Upozornění – hypotéza – stav kolem 1938:** Plynojem bývalé plynárny podle GIS plánu 1938 a stavebního plánu. Podle karty KSPPOP byla plynárna za války zříceninou a potom zbořena – v 60. letech tu plynojem pravděpodobně už nestál. Poloha zvonu, výška a vodicí konstrukce jsou odhad.
+
+- Areál bývalé plynárny (Gasanstalt / städtisches Gaswerk, Gasgasse). Budova nemá číslo popisné, je jen v GIS plánu 1938. Podle karty KSPPOP u snímku cp_523_003 byla plynárna za války zříceninou a potom zbořena, fotografie 60.–70. let ukazují volný dvůr – jde tedy o stav kolem roku 1938, ne o 60. léta. Kruh GIS 1527 (průměr 16,0 m) je starší plynojem 800 m³, který plán z roku 1903 uvádí jako stávající, blíž k ulici.
+- Prameny: plán nádrže „Gaasometer Bassein“ (komise 14. 6. 1872, příloha cp_523_006): průměr 46 vídeňských stop = 14,54 m, hloubka 4,95 m; situační plán plynárny 1872 (cp_523_007); situace 1903 (cp_523_005); GIS půdorys 1527
+- Střecha: kopulovitá koruna zvonu (odhad 0,6 m)
+- GIS budova 1527 (bez čp.); geometrie revize r1, 769 polygonů.
+- Hypotézy: zvon a vodicí konstrukce (8 sloupů do 6,2 m) jsou typová hypotéza – plán zvonu z roku 1872 nebyl nalezen; v 60. letech plynojem pravděpodobně už nestál
+
+### Budova GIS 1526 (bez čp.): plynojem 2150 m³ (projekt 1903)
+
+> **Upozornění – hypotéza – stav kolem 1938:** Plynojem bývalé plynárny podle GIS plánu 1938 a stavebního plánu. Podle karty KSPPOP byla plynárna za války zříceninou a potom zbořena – v 60. letech tu plynojem pravděpodobně už nestál. Poloha zvonu, výška a vodicí konstrukce jsou odhad.
+
+- Areál bývalé plynárny (Gasanstalt / städtisches Gaswerk, Gasgasse). Budova nemá číslo popisné, je jen v GIS plánu 1938. Podle karty KSPPOP u snímku cp_523_003 byla plynárna za války zříceninou a potom zbořena, fotografie 60.–70. let ukazují volný dvůr – jde tedy o stav kolem roku 1938, ne o 60. léta. Kruh GIS 1526 (průměr 17,3 m) odpovídá projektovanému teleskopickému plynojemu 2150 m³ z roku 1903: na situaci plánu leží dál od ulice než starší plynojem.
+- Prameny: plán teleskopického plynojemu 2150 m³ pro Imperial Continental Gas Association (N. Rella & Neffe, Vídeň, 20. 2. 1903, příloha cp_523_005 u čp. 523): zvon 16,0 m, nádrž 16,92 m, koruna 0,76 m, 12 příhradových sloupů vodicí konstrukce; Lageplan plynárny z února 1945 (cp_523_010); GIS půdorys 1526
+- Střecha: kopulovitá koruna zvonu (vzepětí 0,76 m podle plánu)
+- GIS budova 1526 (bez čp.); geometrie revize r1, 841 polygonů.
+- Hypotézy: zvon je zobrazen v poloze s jednou vysunutou sekcí – skutečná poloha se měnila podle zásoby plynu; výška vodicí konstrukce (asi 10,7 m nad okrajem nádrže) je odečtena z plánu 1 : 50; příhradování sloupů a diagonály patří do textury; v 60. letech plynojem pravděpodobně už nestál
 
 ### Čp. 1733: správní budova Brüxer Kohlen-Bergbau-Gesellschaft (palác SHD)
 
@@ -1081,3 +1140,13 @@ Případy, kdy si prameny odporují (plán proti fotografii, GIS proti skice, ko
 | cp_1192_001.jpg | kopie bez tagu (1920 × 1080) | 2e41a6578c1f |
 | cp_1192_001.jpg | plán / výkres | 158b4e0c3618 |
 | cp_1192_001.jpg | kopie bez tagu (1920 × 1080) | 0bfb7ab51a87 |
+
+### Budova GIS 1638 (bez čp.): dvorní stavba bez čp. u nám. Dvouletky
+
+> **Upozornění – hypotéza podle GIS:** Dvorní stavba bez čísla popisného jen podle GIS plánu 1938; žádná fotografie ani plán nebyly nalezeny. Tvar, výška a střecha jsou odhad.
+
+- Dvorní stavba bez čísla popisného na severozápadní straně ulice za domy u nám. Dvouletky, jen v GIS plánu 1938. Fotografie ani plán k ní nebyly nalezeny.
+- Prameny: GIS půdorys 1638
+- Střecha: nízká sedlová střecha – odhad
+- GIS budova 1638 (bez čp.); geometrie revize r1, 48 polygonů.
+- Hypotézy: tvar, výška 3,2 m i střecha jsou odhad (kůlna nebo garáže); otvory nejsou modelovány
