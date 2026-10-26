@@ -3,7 +3,7 @@
 const katex=require('../vyuka/pga/richtr-web/vendor/katex-0.19.1/katex.js');
 const formulas={
  p04:{
-  'slide-3':String.raw`\begin{aligned}x&=r\sin\theta\cos\varphi,\\y&=r\sin\theta\sin\varphi,\\z&=r\cos\theta.\end{aligned}`,
+  'slide-3':String.raw`\begin{aligned}x&=r\cos\varepsilon\cos\varphi,\\y&=r\cos\varepsilon\sin\varphi,\\z&=r\sin\varepsilon.\end{aligned}`,
   'slide-6':String.raw`E=\frac{I}{r^2}\max(0,\mathbf n\cdot\boldsymbol\omega_i)`,
   'brdf-definition':[
    String.raw`\begin{aligned}f_r(x,\boldsymbol\omega_i,\boldsymbol\omega_o)&=\frac{\mathrm d L_o(x,\boldsymbol\omega_o)}{L_i(x,\boldsymbol\omega_i)\cos\theta_i\,\mathrm d\omega_i},\\[.5em][f_r]&=\mathrm{sr}^{-1}.\end{aligned}`,
@@ -21,7 +21,9 @@ const formulas={
    String.raw`\int_{\Omega^+}\frac{\rho}{\pi}\cos\theta\,\mathrm d\omega=\rho`
   ],
   'slide-11':[String.raw`\begin{aligned}L_o(x,\boldsymbol\omega_o)&=L_e(x,\boldsymbol\omega_o)\\ &\quad+\int_{\Omega^+}f_r(x,\boldsymbol\omega_i,\boldsymbol\omega_o)\\ &\qquad\cdot L_i(x,\boldsymbol\omega_i)\cos\theta_i\,\mathrm d\omega_i.\end{aligned}`],
-  'slide-14':String.raw`\begin{aligned}I&=I_a k_a+\sum_l I_l\Bigl[\,k_d\max(0,\mathbf n\cdot\mathbf l)\\ &\qquad +k_s\max(0,\mathbf r\cdot\mathbf v)^p\,\Bigr]\end{aligned}`,
+  'slide-13':String.raw`\begin{aligned}C&=k_a C_a+C_l\Bigl[\,k_d c_d\max(0,\mathbf n\cdot\mathbf l)\\&\qquad+k_s c_s\max(0,\mathbf r\cdot\mathbf v)^p\,\Bigr]\end{aligned}`,
+  'slide-14':String.raw`\begin{aligned}\mathbf r&=2(\mathbf n\cdot\mathbf l)\mathbf n-\mathbf l,\\\cos\alpha&=\mathbf r\cdot\mathbf v,\\S&=k_s\max(0,\cos\alpha)^p.\end{aligned}`,
+  'phong-lobe-3d':String.raw`S(\mathbf v)=k_s\max(0,\mathbf r\cdot\mathbf v)^p`,
   'slide-16':String.raw`\begin{gathered}\mathbf r(t)=\mathbf o+t\mathbf d,\\t\in[t_{\min},t_{\max}]\end{gathered}`,
   'slide-17':String.raw`\begin{aligned}a&=\mathbf d\cdot\mathbf d,\\b&=2\mathbf d\cdot(\mathbf o-\mathbf c),\\c_0&=\lVert\mathbf o-\mathbf c\rVert^2-R^2,\\at^2+bt+c_0&=0.\end{aligned}`,
   'slide-19':String.raw`\begin{gathered}\mathbf d_r=\mathbf d-2(\mathbf d\cdot\mathbf n)\mathbf n,\\ \eta_i\sin\theta_i=\eta_t\sin\theta_t\end{gathered}`,
@@ -38,6 +40,8 @@ function render(tex){return `<div class="equation tex-equation" data-tex="${esc(
 function prepare(slug,t){const f=formulas[slug]?.[t.id];if(t.math){const tex=typeof f==='string'?f:f?.main;if(!tex)throw Error('Missing main TeX '+slug+'/'+t.id);t.mathHtml=render(tex);}
  if(t.equations)t.equations.forEach((e,i)=>{e.tex=Array.isArray(f)?f[i]:f?.equations?.[i];if(!e.tex)throw Error('Missing equation TeX '+slug+'/'+t.id+'/'+i);e.html=render(e.tex);});return t;}
 const inlineFormulas={
+ 'k_d':String.raw`k_d`,'k_s':String.raw`k_s`,'kₐ':String.raw`k_a`,'Cₐ':String.raw`C_a`,'Cₗ':String.raw`C_l`,'c_d':String.raw`c_d`,'c_s':String.raw`c_s`,
+ 'θ=90°−ε':String.raw`\theta=90^\circ-\varepsilon`,'cos θ=sin ε':String.raw`\cos\theta=\sin\varepsilon`,
  'I = dΦ/dω':String.raw`I=\frac{\mathrm d\Phi}{\mathrm d\omega}`,
  'E = dΦ/dA':String.raw`E=\frac{\mathrm d\Phi}{\mathrm dA}`,
  'L = d²Φ/(dA⊥ dω)':String.raw`L=\frac{\mathrm d^2\Phi}{\mathrm dA_{\perp}\,\mathrm d\omega}`,
@@ -60,4 +64,5 @@ const inlineFormulas={
 };
 const inlinePattern=new RegExp(Object.keys(inlineFormulas).sort((a,b)=>b.length-a.length).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
 function text(s){s=String(s);let result='',last=0;for(const m of s.matchAll(inlinePattern)){result+=esc(s.slice(last,m.index))+katex.renderToString(inlineFormulas[m[0]],{displayMode:false,output:'htmlAndMathml',throwOnError:true,strict:'error',trust:false});last=m.index+m[0].length;}return result+esc(s.slice(last));}
-module.exports={formulas,render,prepare,text};
+function inline(source){return katex.renderToString(source,{displayMode:false,output:'htmlAndMathml',throwOnError:true,strict:'error',trust:false});}
+module.exports={formulas,render,prepare,text,inline};

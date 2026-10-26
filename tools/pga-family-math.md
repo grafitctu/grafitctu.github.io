@@ -9,7 +9,8 @@ colours (green **Barva**/definitions, incident/outgoing rays, BRDF lobes) remain
 distinct. `family.css` is a scoped, last-loaded adaptation, not a modification
 of the VHS lectures or the pinned v1 archive.
 
-All 20 displayed equations are explicitly transcribed in `pga-tex.cjs`.
+All 24 displayed equations are explicitly transcribed in `pga-tex.cjs` and
+`pga-foundations-content.cjs`; the radiometry glossary uses inline TeX definitions.
 Multi-line `aligned`/`gathered` environments keep long expressions readable;
 an equation-local horizontal scroller handles narrow screens without making
 the whole page wider. The selected inline notation in prose uses the same
@@ -34,6 +35,7 @@ node tools/build-pga-richtr-web.cjs
 node tools/test-pga-v2.cjs
 node tools/test-pga-brdf.cjs
 node tools/test-pga-tex.cjs
+node tools/test-pga-foundations.cjs
 ```
 
 Do not edit the generated HTML by hand. The builder fails when an existing
