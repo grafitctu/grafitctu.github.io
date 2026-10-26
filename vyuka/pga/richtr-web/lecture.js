@@ -1,5 +1,5 @@
 (()=>{'use strict';
-function supplement(){if(location.hash==='#radiometry-worked'&&location.pathname.endsWith('/p04/web.html')){location.replace('radiometry-worked.html');return true;}return false;}if(supplement())return;
+function supplement(){const table=document.getElementById('pga-workshop-routes'),routes=table?JSON.parse(table.textContent):{},key=location.hash.slice(1);if(routes[key]&&/\/p(?:04|05)\/web\.html$/.test(location.pathname)){location.replace(routes[key]);return true;}if(location.hash==='#radiometry-worked'&&location.pathname.endsWith('/p04/web.html')){location.replace('radiometry-worked.html');return true;}return false;}if(supplement())return;
 const slides=[...document.querySelectorAll('.slide')],$=id=>document.getElementById(id);let index=0,presenting=false;
 const fromHash=()=>Math.max(0,slides.findIndex(s=>s.id===decodeURIComponent(location.hash.slice(1))));
 function go(n,write=true){index=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>s.hidden=presenting&&i!==index);$('counter').textContent=(index+1)+' / '+slides.length;if($('progress'))$('progress').style.width=((index+1)/slides.length*100)+'%';$('previous').disabled=index===0;$('next').disabled=index===slides.length-1;if(write)history.replaceState(null,'','#'+slides[index].id);if(presenting)scrollTo(0,0);else if(write)slides[index].scrollIntoView();}

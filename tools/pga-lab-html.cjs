@@ -1,5 +1,6 @@
 const input=(name,label,min,max,step,value)=>`<label>${label}<input name="${name}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></label>`;
 module.exports=function lab(type){let controls='',canvas='';
+if(['reflection','ior','ray2d'].includes(type))return require('./pga-optics-html.cjs').lab(type);
 if(type==='triangle')return require('./pga-triangle-html.cjs')();
 if(type==='brdf-material')return require('./pga-brdf-explorer-html.cjs').objects();
 if(['irradiance-3d','phong-sphere','phong-geometry','phong-lobe'].includes(type))return require('./pga-teaching-html.cjs').lab(type);
