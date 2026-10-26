@@ -3,6 +3,8 @@
 const katex=require('../vyuka/pga/richtr-web/vendor/katex-0.19.1/katex.js');
 const formulas={
  p04:{
+  'reflection-vector':String.raw`\begin{aligned}\mathbf r&=\mathbf d-2(\mathbf d\cdot\mathbf n)\mathbf n,\\ \lVert\mathbf n\rVert&=1.\end{aligned}`,
+  'index-of-refraction':String.raw`\begin{aligned}n&=\frac c v,\\ n_i\sin\theta_i&=n_t\sin\theta_t.\end{aligned}`,
   'ray-triangle-worked':String.raw`\begin{aligned}P&=\mathbf o+t\mathbf d\\&=(1-u-v)A+uB+vC,\\u&\geq0,\ v\geq0,\ u+v\leq1,\\t_{\min}&\leq t\leq t_{\max}.\end{aligned}`,
   'whitted-recursion':[String.raw`C_d=C_{\mathrm{local}}+w_r C_{r,d+1}+w_t C_{t,d+1},\qquad d<D`],
   'slide-3':String.raw`\begin{aligned}x&=r\cos\varepsilon\cos\varphi,\\y&=r\cos\varepsilon\sin\varphi,\\z&=r\sin\varepsilon.\end{aligned}`,
@@ -28,7 +30,7 @@ const formulas={
   'phong-lobe-3d':String.raw`S(\mathbf v)=k_s\max(0,\mathbf r\cdot\mathbf v)^p`,
   'slide-16':String.raw`\begin{gathered}\mathbf r(t)=\mathbf o+t\mathbf d,\\t\in[t_{\min},t_{\max}]\end{gathered}`,
   'slide-17':String.raw`\begin{aligned}a&=\mathbf d\cdot\mathbf d,\\b&=2\mathbf d\cdot(\mathbf o-\mathbf c),\\c_0&=\lVert\mathbf o-\mathbf c\rVert^2-R^2,\\at^2+bt+c_0&=0.\end{aligned}`,
-  'slide-19':String.raw`\begin{gathered}\mathbf d_r=\mathbf d-2(\mathbf d\cdot\mathbf n)\mathbf n,\\ \eta_i\sin\theta_i=\eta_t\sin\theta_t\end{gathered}`,
+  'slide-19':String.raw`F_0=\left(\frac{n_i-n_t}{n_i+n_t}\right)^2`,
   'slide-21':String.raw`\int g(\boldsymbol\omega)\,\mathrm d\omega\approx\frac1N\sum_{k=1}^N\frac{g(\boldsymbol\omega_k)}{p(\boldsymbol\omega_k)}`
  },
  p05:{
