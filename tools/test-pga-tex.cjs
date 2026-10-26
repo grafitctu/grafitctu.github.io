@@ -8,9 +8,9 @@ for(const [slug,deck]of Object.entries(data)){
  const html=fs.readFileSync(path.join(root,'vyuka/pga',slug,'web.html'),'utf8');assert.equal((html.match(/data-tex=/g)||[]).length,deck.topics.reduce((n,t)=>n+!!t.math+(t.equations?.length||0)+(t.questions?.filter(q=>q.tex).length||0),0));
  assert(!html.includes('cdn.jsdelivr.net'));assert(!html.includes('<p class="equation"'));assert(html.includes('family.css'));assert(html.includes('katex.min.css'));assert(!html.includes('<script src="../richtr-web/vendor'));checks+=6;
 }
-assert.equal(displays,24);assert.throws(()=>tex.prepare('p04',{id:'missing',math:'x'}));assert.throws(()=>tex.render(String.raw`\notARealCommand`));
+assert.equal(displays,25);assert.throws(()=>tex.prepare('p04',{id:'missing',math:'x'}));assert.throws(()=>tex.render(String.raw`\notARealCommand`));
 assert(tex.formulas.p04['slide-10'].equations[0].includes(String.raw`\mathrm d\omega_o`));assert(tex.formulas.p04['slide-11'][0].includes(String.raw`\mathrm d\omega_i`));
 assert(tex.text('<script>ωᵢ</script>').startsWith('&lt;script&gt;'));assert(!tex.text('<script>ωᵢ</script>').includes('<script>'));checks+=7;
 const vendor=path.join(root,'vyuka/pga/richtr-web/vendor/katex-0.19.1'),receipt=JSON.parse(fs.readFileSync(path.join(vendor,'upstream.json')));
 for(const f of receipt.files){const bytes=fs.readFileSync(path.join(vendor,f.file));assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),f.sha256);checks++;}
-console.log(JSON.stringify({checks,displays,topics:[44,26],strictTeX:true,htmlAndAccessibleMathml:true,localFonts:true,upstreamIntegrity:true},null,2));
+console.log(JSON.stringify({checks,displays,topics:[45,26],strictTeX:true,htmlAndAccessibleMathml:true,localFonts:true,upstreamIntegrity:true},null,2));
