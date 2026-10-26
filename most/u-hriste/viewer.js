@@ -6,7 +6,7 @@
 import * as THREE from './vendor/three.module.js';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
-const KEY = /^CP_([0-9]+(?:_[a-z])?)_root/;
+const KEY = /^CP_(G?[0-9]+(?:_[a-z])?)_root/;   // 26.10.2026: G<id> = GIS building without cp
 const el = document.getElementById('canvas'); const mode = el.dataset.mode || 'house'; const base = el.dataset.base || './'; const houseCp = el.dataset.cp || null;
 const en = document.documentElement.lang === 'en'; const T = (cs, e) => en ? e : cs; const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
 const status = document.getElementById('status'); const info = document.getElementById('info'); const surf = document.getElementById('surface');
@@ -62,9 +62,9 @@ async function applySurface() {
 function show(cp) {
   const h = houses[cp]; if (!h || !info) return; info.hidden = false;
   const lab = T(h.label_cs, h.label_en), disc = T(h.disclosure_cs, h.disclosure_en), gn = T(h.gis_note_cs, h.gis_note_en);   // presentation label must always be shown
-  info.innerHTML = '<h3>' + T('Čp.', 'No.') + ' ' + h.label + '</h3>' + (lab ? '<p class="k-disclosure"><strong>' + cap(lab) + ':</strong> ' + disc + '</p>' : '')
+  info.innerHTML = '<h3>' + (h.label.startsWith('GIS') ? T('Budova', 'Building') : T('Čp.', 'No.')) + ' ' + h.label + (h.label.startsWith('GIS') ? T(' (bez čp.)', ' (no house number)') : '') + '</h3>' + (lab ? '<p class="k-disclosure"><strong>' + cap(lab) + ':</strong> ' + disc + '</p>' : '')
     + (gn ? '<p class="k-disclosure"><small>' + gn + '</small></p>' : '') + '<p>' + T(h.kind, h.kind_en) + '<br>' + T(h.section_cs, h.section_en) + ' · ' + T('revize', 'revision') + ' ' + h.rev
-    + '<br>' + T('Přílohy v databázi', 'Database attachments') + ': ' + h.n_atts + '<br>' + T('Textury', 'Textures') + ': ' + h.tex + '</p><p><a href="' + base + 'cp' + cp + '/">'
+    + '<br>' + T('Přílohy v databázi', 'Database attachments') + ': ' + (h.label.startsWith('GIS') ? T('žádná struktura (budova bez čp.)', 'no structure (no house number)') : h.n_atts) + '<br>' + T('Textury', 'Textures') + ': ' + h.tex + '</p><p><a href="' + base + 'cp' + cp + '/">'
     + T('Stránka domu: prameny a model →', 'House page (Czech): sources and model →') + '</a></p><button type="button" id="info-close">' + T('Zavřít', 'Close') + '</button>';
   document.getElementById('info-close').onclick = () => { info.hidden = true; };
 }
