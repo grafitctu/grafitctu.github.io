@@ -31,6 +31,8 @@ module.exports=function restore(data){
  get('brdf-definition').equations=[eq('Definiční rovnice pro danou dvojici směrů','fᵣ(x,ωᵢ,ωₒ) = dLₒ(x,ωₒ) / [Lᵢ(x,ωᵢ) cos θᵢ dωᵢ], jednotka sr⁻¹',m.fullDefinition),eq('Příspěvek příchozího svazku','dEᵢ = Lᵢ(x,ωᵢ) cos θᵢ dωᵢ',m.incident)];
  get('slide-10').equations[0].mml=m.energy;
  get('brdf-lambert').equations=[eq('Ideálně difuzní BRDF','fᵣ=ρ/π',m.lambert),eq('Integrál promítnuté polokoule','∫Ω⁺ cos θ dω = π',m.normalization),eq('Odražený podíl energie','∫Ω⁺ (ρ/π) cos θ dω = ρ',m.albedoIntegral)];
+ get('brdf-lambert').points=['Difuzní odrazivost ρ leží mezi 0 a 1. Textura může řídit ρ(x).','Faktor 1/π normalizuje integrál přes horní polokouli: odražený podíl je ρ. Albedo ρ není BRDF.','Při pevném ozáření E nezávisí radiance Lₒ = ρE/π na pohledu. Výkon do malého prostorového úhlu závisí na promítnuté ploše.'];
+ get('brdf-definition').points=['Vektory příchozího směru ωᵢ a odchozího směru ωₒ míří od povrchu. Světlo přichází proti ωᵢ.','BRDF fᵣ udává diferenciální odchozí radianci na jednotku příchozího ozáření, v sr⁻¹. Radianci a ozáření nelze zaměnit.','Pro pevné x a λ závisí obecná BRDF na čtyřech úhlech. U izotropního materiálu lze eliminovat společné otočení kolem normály.'];
  get('slide-11').math=undefined;get('slide-11').equations=[eq('Zobrazovací rovnice','Lₒ(x,ωₒ) = Lₑ(x,ωₒ) + ∫Ω⁺ fᵣ(x,ωᵢ,ωₒ) Lᵢ(x,ωᵢ) cos θᵢ dωᵢ',m.balance)];
  return data;
 };
