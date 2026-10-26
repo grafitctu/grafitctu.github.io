@@ -1,5 +1,6 @@
 const input=(name,label,min,max,step,value)=>`<label>${label}<input name="${name}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></label>`;
 module.exports=function lab(type){let controls='',canvas='';
+if(['irradiance-3d','phong-sphere','phong-geometry','phong-lobe'].includes(type))return require('./pga-teaching-html.cjs').lab(type);
 if(['hemisphere','brdf-directions','brdf-sampling','brdf-lobes'].includes(type))return require('./pga-brdf-lab-html.cjs')(type);
 if(type==='ray')controls=input('origin','Počátek paprsku oₓ [m]',0,1.4,.05,0);
 if(type==='shadow')controls=input('distance','Vzdálenost překážky [m]',0,8,.1,3);
