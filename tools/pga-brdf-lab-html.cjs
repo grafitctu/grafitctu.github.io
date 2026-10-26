@@ -1,5 +1,5 @@
 const slider=(name,label,min,max,step,value)=>`<label>${label}<input type="range" name="${name}" min="${min}" max="${max}" step="${step}" value="${value}"></label>`;
-module.exports=function(type){let controls='',body='';
+module.exports=function(type){if(type==='brdf-sampling')return require('./pga-brdf-explorer-html.cjs').sampling();let controls='',body='';
 if(type==='hemisphere')controls=slider('elevation','Elevace ε [°]',0,90,1,45)+slider('phi','Azimut φ [°]',0,360,1,30);
 if(type==='brdf-directions')controls=slider('ei','Světlo: elevace εᵢ [°]',5,90,1,45)+slider('pi','Světlo: azimut φᵢ [°]',0,360,1,180)+slider('eo','Pohled: elevace εₒ [°]',5,90,1,60)+slider('po','Pohled: azimut φₒ [°]',0,360,1,0);
 if(type==='brdf-sampling'){controls=slider('light','Index světla i',0,80,1,20)+slider('view','Index pohledu o',0,80,1,40);body='<figure class="brdf-matrix"><canvas width="81" height="81" role="img" aria-label="Syntetická matice BRDF 81 krát 81, řádky světlo, sloupce pohled"></canvas><figcaption>Řádky: osvětlení i. Sloupce: pozorování o. Světlejší buňka znamená vyšší fᵣ, barva má logaritmickou škálu. Výběr měň posuvníky nebo kliknutím na buňku. Tabulka je syntetická.</figcaption></figure>';}
