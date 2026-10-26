@@ -1,0 +1,26 @@
+/* Shared analytic BRDF sampling and direct-light ray tracing. No measured data. */
+(function(root){'use strict';const B=typeof module!=='undefined'&&module.exports?require('./brdf-models.js'):root.PGABRDF;
+const dot=B.dot,norm=v=>{const s=Math.hypot(...v);return s?v.map(x=>x/s):[0,0,0];},add=(a,b)=>a.map((x,i)=>x+b[i]),sub=(a,b)=>a.map((x,i)=>x-b[i]),mul=(a,s)=>a.map(x=>x*s),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],rad=x=>x*Math.PI/180;
+const axes={ti:{label:'Světlo: θᵢ',max:85,step:5},pi:{label:'Světlo: φᵢ',max:355,step:5},to:{label:'Pohled: θₒ',max:85,step:5},po:{label:'Pohled: φₒ',max:355,step:5}};
+const sampleDirections=B.uboDirections();
+function evaluate(q){return B.evaluate('mixed',B.direction(q.ti,q.pi),B.direction(q.to,q.po),.25,.6);}
+function nearest(theta,phi){const v=B.direction(theta,phi),dirs=sampleDirections;let best=0,score=-2;dirs.forEach((d,i)=>{const s=dot(v,d.v);if(s>score+1e-12){best=i;score=s;}});return best;}
+function indexed(i,o){const d=sampleDirections;return{ti:d[i].theta,pi:d[i].phi,to:d[o].theta,po:d[o].phi};}
+function axisValues(key){const a=axes[key];if(!a)throw Error('Unknown axis');return Array.from({length:Math.round(a.max/a.step)+1},(_,i)=>i*a.step);}
+function slice(q,x,y){if(x===y||!axes[x]||!axes[y])throw Error('Distinct axes required');const xs=axisValues(x),ys=axisValues(y),values=new Float64Array(xs.length*ys.length);ys.forEach((b,j)=>xs.forEach((a,i)=>values[j*xs.length+i]=evaluate({...q,[x]:a,[y]:b})));return{xs,ys,values};}
+function pointInSlice(q,x,y,px,py){const xs=axisValues(x),ys=axisValues(y),i=Math.max(0,Math.min(xs.length-1,Math.floor(px*xs.length))),j=Math.max(0,Math.min(ys.length-1,Math.floor(py*ys.length)));return{...q,[x]:xs[i],[y]:ys[j]};}
+const spheres=[{c:[-.85,0,.7],r:.7}],box={min:[.35,-.55,0],max:[1.45,.55,1.1]};
+function hit(origin,direction,limit=Infinity){let result=null;const keep=(t,n,id)=>{if(t>1e-5&&t<limit){limit=t;result={t,n,p:add(origin,mul(direction,t)),id};}};
+for(const s of spheres){const o=sub(origin,s.c),b=dot(o,direction),c=dot(o,o)-s.r*s.r,D=b*b-c;if(D>=0){const t=-b-Math.sqrt(D);if(t>1e-5)keep(t,norm(sub(add(origin,mul(direction,t)),s.c)),'sphere');}}
+let near=-Infinity,far=Infinity,normal=[0,0,0],valid=true;for(let k=0;k<3;k++){if(Math.abs(direction[k])<1e-12){if(origin[k]<box.min[k]||origin[k]>box.max[k])valid=false;continue;}let a=(box.min[k]-origin[k])/direction[k],b=(box.max[k]-origin[k])/direction[k],sign=-1;if(a>b){[a,b]=[b,a];sign=1;}if(a>near){near=a;normal=[0,0,0];normal[k]=sign;}far=Math.min(far,b);}if(valid&&near<=far&&near>1e-5)keep(near,normal,'cube');
+if(direction[2]<-1e-10){const t=-origin[2]/direction[2],p=add(origin,mul(direction,t));if(Math.abs(p[0])<5&&Math.abs(p[1])<5)keep(t,[0,0,1],'ground');}return result;}
+function material(n,wi,wo,{model='mixed',alpha=.25,rho=.6}={}){const tangent=norm(cross(Math.abs(n[2])>.99?[0,1,0]:[0,0,1],n)),bitangent=cross(n,tangent),local=v=>[dot(v,tangent),dot(v,bitangent),dot(v,n)],a=local(wi),b=local(wo),ggx=B.ggx(a,b,alpha,.04),diff=[rho,rho*.55,rho*.18].map(x=>x/Math.PI);if(a[2]<=0||b[2]<=0)return[0,0,0];if(model==='diffuse')return diff;if(model==='ggx')return[ggx,ggx,ggx];return diff.map(x=>.7*x+.3*ggx);}
+function camera(az=-65,elevation=25){const target=[0,0,.55],z=rad(elevation),a=rad(az),origin=add(target,[5*Math.cos(z)*Math.cos(a),5*Math.cos(z)*Math.sin(a),5*Math.sin(z)]),forward=norm(sub(target,origin)),right=norm(cross(forward,[0,0,1])),up=cross(right,forward);return{origin,forward,right,up};}
+function ray(cam,u,v,aspect){return norm(add(cam.forward,add(mul(cam.right,u*.53*aspect),mul(cam.up,v*.53))));}
+function lightPosition({lightAzimuth=295,lightElevation=55,distance=3}={}){const a=rad(lightAzimuth),e=rad(lightElevation);return[distance*Math.cos(e)*Math.cos(a),distance*Math.cos(e)*Math.sin(a),.55+distance*Math.sin(e)];}
+function shade(h,wo,settings){const light=lightPosition(settings),delta=sub(light,h.p),r=Math.hypot(...delta),wi=mul(delta,1/r),cosine=Math.max(0,dot(h.n,wi)),shadow=cosine>0&&!!hit(add(h.p,mul(h.n,1e-4)),wi,r-1e-4),E=shadow?0:(settings.intensity??36)*cosine/(r*r),fr=h.id==='ground'?[.35/Math.PI,.35/Math.PI,.35/Math.PI]:material(h.n,wi,wo,settings);return{radiance:fr.map(x=>x*E),E,fr,shadow,r,wi};}
+const srgb=x=>x<=.0031308?12.92*x:1.055*x**(1/2.4)-.055;
+function pixel(u,v,aspect,settings={}){const cam=camera(settings.cameraAzimuth,settings.cameraElevation),d=ray(cam,u,v,aspect),h=hit(cam.origin,d);if(!h)return{rgb:[.025,.035,.055],hit:null};const s=shade(h,mul(d,-1),settings);return{rgb:s.radiance,hit:h,...s};}
+function render(width,height,settings={}){const cam=camera(settings.cameraAzimuth,settings.cameraElevation),out=new Uint8ClampedArray(width*height*4);for(let y=0;y<height;y++)for(let x=0;x<width;x++){const d=ray(cam,2*(x+.5)/width-1,1-2*(y+.5)/height,width/height),h=hit(cam.origin,d),L=h?shade(h,mul(d,-1),settings).radiance:[.025,.035,.055];for(let k=0;k<3;k++)out[4*(y*width+x)+k]=Math.round(255*srgb(L[k]/(1+L[k])));out[4*(y*width+x)+3]=255;}return out;}
+const api={axes,evaluate,nearest,indexed,axisValues,slice,pointInSlice,hit,material,camera,ray,lightPosition,shade,pixel,render};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PGABRDFExplorer=api;
+})(typeof globalThis!=='undefined'?globalThis:this);

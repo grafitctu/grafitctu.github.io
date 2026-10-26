@@ -26,5 +26,6 @@ intuitive[2].title='Lesklý odraz a tvar odrazové funkce';intuitive[2].points=i
 intuitive[2].callouts.push({kind:'note',title:'Co znamená směs?',text:'Oranžová křivka je 0,7× Lambert + 0,3× GGX. Je to ilustrativní konvexní kombinace dvou odrazových funkcí. V tomto grafu má každá křivka vlastní maximum 1: porovnáváme tvar, nikoli absolutní jas nebo energii.'});
 lobe.callouts[0].title='Od parametrů vzhledu k měření';lobe.callouts[0].text='Phongův model nabízí intuitivní parametry vzhledu. Pro fyzikální popis odrazu budeme potřebovat také přesnou definici odrazové funkce, její jednotky a energetická omezení. Zdejší lalok zobrazuje relativní odezvu Phongova modelu.';
 list.splice(list.findIndex(t=>t.id==='slide-9'),0,...intuitive,a,b,lobe);
+const materialExample=get('brdf-spheres');materialExample.lab='brdf-material';materialExample.labPlacement='beforeSources';materialExample.points.push('Stejnou odrazovou funkci přiřadíme kouli i krychli. Při pohybu světla se mění příchozí směry, odlesky a stíny. Kliknutí na povrch ukáže vazbu mezi ozářením, BRDF a odchozí radiancí.');
 return data;
 };
