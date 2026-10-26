@@ -3,6 +3,7 @@
 const katex=require('../vyuka/pga/richtr-web/vendor/katex-0.19.1/katex.js');
 const formulas={
  p04:{
+  'whitted-recursion':[String.raw`C_d=C_{\mathrm{local}}+w_r C_{r,d+1}+w_t C_{t,d+1},\qquad d<D`],
   'slide-3':String.raw`\begin{aligned}x&=r\cos\varepsilon\cos\varphi,\\y&=r\cos\varepsilon\sin\varphi,\\z&=r\sin\varepsilon.\end{aligned}`,
   'slide-6':String.raw`E=\frac{I}{r^2}\max(0,\mathbf n\cdot\boldsymbol\omega_i)`,
   'brdf-definition':[
