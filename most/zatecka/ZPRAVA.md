@@ -1,6 +1,6 @@
 # Žatecká (Čs. armády): zpráva o 3D modelu ulice a jeho pramenech
 
-Dávka `zatecka_street_claude_2026-10-17`, zpracování Claude (Anthropic) pro projekt MOST, GRAFIT FIT ČVUT, 17.–18. 10. 2026. Web: https://grafitctu.github.io/most/zatecka/
+Dávka `zatecka_street_claude_2026-10-17`, zpracování Claude (Anthropic) pro projekt MOST, GRAFIT FIT ČVUT, 17.–18. 10. 2026, revize r4 23.–26. 10. 2026. Web: https://grafitctu.github.io/most/zatecka/
 
 Zpráva shrnuje výběr ulice, prameny, postup, soubory, hypotézy a kontrolu. Druhá část uvádí u každého domu identitu a všechny přílohy.
 
@@ -20,7 +20,7 @@ U každé z 25 staveb jsme načetli seznam příloh a stáhli jejich soubory, po
 
 ### Archivní karty a fotografie
 
-Fotografie a karty pocházejí z dokumentace domů před demolicí starého Mostu; karty používají název ulice Čs. armády, vznikly tedy po roce 1964 a řada z nich popisuje už zbořené sousedy. Pohlednice jsou starší, z doby před první světovou válkou až meziválečné. Karty nesou razítka „Památkové odd. KSPPOP Ústí n. L.“ a „Okresní archiv v Mostě“ a signaturu XI/D; část karet podepsal F. Čermák. Ručně psaný předmět karty říká, co snímek ukazuje, odkud byl pořízen a kdo jsou sousedé. To je hlavní doklad identity domů.
+Fotografie a karty pocházejí z dokumentace domů před demolicí starého Mostu; karty používají poválečný název ulice Čs. armády a řada z nich popisuje už zbořené sousedy. Přesně datované nejsou: snímek s vozem Škoda 1000 MB vznikl nejdříve v roce 1964 a jedna karta pivovaru nese poznámku „≈1971“. Pohlednice jsou starší, z doby před první světovou válkou až meziválečné. Karty nesou razítka „Památkové odd. KSPPOP Ústí n. L.“ a „Okresní archiv v Mostě“ a signaturu XI/D; část karet podepsal F. Čermák. Ručně psaný předmět karty říká, co snímek ukazuje, odkud byl pořízen a kdo jsou sousedé. To je hlavní doklad identity domů.
 
 ### Situační náčrty
 
@@ -50,11 +50,11 @@ Všechny cesty jsou relativní ke složce dávky `F:\MOST\output\zatecka_street_
 
 - **Geometrický plán domu.** `scripts/plans_*.py` vytvoří `houses/cpN/geometry_plan.json`: průčelí, otvory, římsy, vikýře, střecha a seznam hypotéz.
 
-- **Stavba v Blenderu 4.5.** `scripts/build_house_z.py` běží bez okna a uloží `houses/cpN/rN/cp_N_G_rN.blend`, `.glb` a `build_stats.json`.
+- **Stavba v Blenderu 4.5.** `scripts/build_house_z.py` (r4: `build_house_z4.py` s uzávěry podkroví v `z4_post.py`) běží bez okna a uloží `houses/cpN/rN/cp_N_G_rN.blend`, `.glb` a `build_stats.json`.
 
-- **Kontrola.** `scripts/render_qa2.py` vykreslí 10 povinných pohledů do `houses/cpN/rN/qa/`, `audit_models.py` hledá vady sítě. Nálezy a výsledek: `qa_review.json` a `qa/visual_qa_final.json`.
+- **Kontrola.** Brána `tools/most_qa/geometry_gate.py` měří pohled do podkroví, krytí střechou, UV, síť a počty otvorů proti fotografii s rámečkem (`frames/`). `scripts/render_qa4.py` vykreslí 19 pohledů do `houses/cpN/r4/qa/`. Nálezy a výsledek: `qa_review.json` a `qa/visual_qa_r4.json`.
 
-- **Sestava ulice.** `scripts/build_street_surfaces.py`, `assemble_street.py` a `render_street.py` vytvoří `street_r3/zatecka_street.blend`, `.glb` a rendery.
+- **Sestava ulice.** `scripts/build_street_surfaces.py`, `assemble_street.py` a `render_street.py` vytvoří `street_r4/zatecka_street.blend`, `.glb` a rendery (povrchy ulice `street_surfaces_r3`).
 
 - **Dokumentace.** `scripts/make_docs.py` píše README domů, `texture_handoff_spec.json` a `manifest.json` se SHA-256 všech výstupů. Tato stránka a `ZPRAVA.md` vznikají ze stejných dat.
 
@@ -86,13 +86,15 @@ Vily 1918, 1906/1907, 1914/1915, 1903/1904, 1899/1901, 1867 a 1872 v GIS vrstvě
 
 - **Čp. 1006 a 1019.** GIS má popisky prohozené: půdorys označený „1006“ leží na severovýchodě, „1019“ na jihozápadním nároží. Fotografie `cp_1006,1019_001` má nad domy rukou psaná čísla 1019 vlevo a 1006 vpravo a náčrt uvádí 1019/6 a 1006/7. Model sleduje archiv; GIS půdorysy jsou použity podle polohy.
 
-- **Pivovar 1041 a gymnázium 1360** jsou hmotové modely. Věž, varna, komín a čtyři valby gymnázia odpovídají pohlednicím a fotografiím jen v hrubém rozvržení.
+- **Pivovar 1041** je blokovaný hmotový model. GIS zná areál jako jediný sloučený půdorys, ruční náčrt areálu je bez měřítka a pohlednice ukazuje jiné rozložení fasád. Snímek `cp_1041_001` podle karty nezobrazuje areál, ale zbořené budovy na rohu proti Fučíkově škole. Pro skutečný model je potřeba plán s měřítkem nebo letecký snímek.
+- **Gymnázium 1360** má jednu valbovou střechu nad celým půdorysem tvaru U; rastr oken je hypotéza, doložený je vstup v ose.
 
 - **Výšky a otvory.** Výšky podlaží, rozměry oken a dveří a sklony střech jsou odhady z fotografií. Žádný údaj není historicky zaměřený.
 
 - **Zjednodušení.** Obchodní výklady (699 POTRAVINY, 1006 PROBST) jsou niky, kruhový nárožní prvek 453 z náčrtu není modelován, zadní trakty a dvorní přístavky chybějí.
 
-- **Dvojdomy.** Společnou mansardovou střechu dvojdomu nese model levé poloviny; pravá polovina samostatně střechu nemá.
+- **Dvojdomy.** Každá polovina nese svou polovinu společné střechy rozdělené na dělicí zdi. Tvar střechy, mansardová patra a vstupy ze zahrady jsou podle ručních náčrtů (bez měřítka), rozměry jsou poměry z náčrtu.
+- **Čp. 2073** má hlavní průčelí a vstup do ulice Na Střelišti; do Žatecké směřuje boční stěna. Karta ho označuje jako „novostavbu“, ale dům je na plánu 1938.
 
 - **Povrchy ulice.** Šířka vozovky, chodníků a poloha tramvajových kolejí jsou odhad podle fotografií. Na severovýchodním konci je osa vozovky posunuta o 1,3 m k severozápadu, protože GIS osa tam neleží uprostřed.
 
@@ -106,13 +108,14 @@ Každý dům prošel sadou 10 renderů: čtyři hlavní osy, čtyři šikmé poh
 
 - **Revize r2** vše opravila a přinesla kompletní kontrolní sadu pro všech 25 domů. Nové nálezy: okap vily 930 vyčníval 2 m před křídla, zadní křídlo 770 mělo plochý vršek a balkonové desky 1918 a 1867 protínaly arkýř.
 
-- **Revize r3** opravila tyto čtyři domy. Aktuální sestava ulice je 21 domů v r2, 4 v r3 a povrchy ulice v r2.
+- **Revize r3** opravila tyto čtyři domy.
+- **Revize r4 (23.–25. 10. 2026)** přestavěla všech 25 domů podle nových kontrol: brána geometrie (pohled do podkroví, krytí střechou, počty otvorů proti fotografii s rámečkem) a 19 pohledů na dům. Fotografie s rámečky změnily počet os u osmi domů, náčrty změnily střechy vil. Vizuální kontrola našla černé pásy na společných zdech a podél obrubníků, komíny pod hřebenem a štíty místo valeb u společných zdí; vše je opravené. Aktuální sestava: všech 25 domů v r4, povrchy ulice v r3.
 
-Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Kontrola se týká geometrie; textury a historická správnost tím potvrzeny nejsou. Zbývají drobnosti v ohybu osy ulice: několik hran chodníku s nekonzistentní orientací a jeden zkroucený čtyřúhelník vozovky.
+Výsledek r4: 24 z 25 domů prošlo, pivovar 1041 je blokovaný. Dřívější výsledek r3 byl 25 z 25 bez nových kontrol. Kontrola se týká geometrie; textury a historická správnost tím potvrzeny nejsou. Zbývají drobnosti v ohybu osy ulice: několik hran chodníku s nekonzistentní orientací a jeden zkroucený čtyřúhelník vozovky.
 
 ## Soubory ke stažení
 
-- [Celá ulice, GLB (2,4 MB)](models/zatecka_street.glb) a [Blender (18 MB)](models/zatecka_street.blend)
+- [Celá ulice, GLB (3,2 MB)](models/zatecka_street.glb) a [Blender (20 MB)](models/zatecka_street.blend), revize r4
 
 - GLB jednotlivých domů jsou na jejich stránkách v sekci Soubory.
 
@@ -136,7 +139,8 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 | `houses/cpN/evidence/` | Záznam stažení, kontaktní listy, montáže pramenů a texty karet |
 
-| `street_r3/`, `street_surfaces_r2/` | Sestava ulice a povrchy, rendery |
+| `street_r4/`, `street_surfaces_r3/` | Sestava ulice a povrchy, rendery (starší `street_r1`–`r3` zachovány) |
+| `frames/`, `gate/`, `REPORT_R4.md` | Rámečky domů na fotografiích, výstupy brány geometrie, zpráva revize r4 |
 
 | `qa/`, `audit/` | Vizuální kontrola všech domů, geometrické audity, logy stavby |
 
@@ -148,49 +152,64 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 | `manifest.json` | SHA-256 všech výstupů dávky |
 
+## Revize r4 (23.–25. 10. 2026)
+
+Všech 25 domů bylo znovu postaveno podle kontrol pracovního postupu platných od 19. 10. 2026: uzavřené podkroví a krytí střechou,
+okna a dveře spočítané na fotografii s červeným rámečkem po dělicích zdech a tvar střechy porovnaný s ručním náčrtem. Každý dům
+prošel automatickou bránou a 19 pohledy. Výsledek: 24 domů prošlo, pivovar 1041 je blokovaný. Podrobnosti: `REPORT_R4.md` v dávce.
+
+### Opravy pramenů a popisů
+- Čp. 1041: snímek `cp_1041_001` podle textu karty nezobrazuje areál pivovaru, ale starý snímek zbořených pivovarských budov na rohu proti Fučíkově škole (později jednotná fronta restaurace 110). Polohy věže a varny z něj nevycházejí; model je blokovaný.
+- Čp. 1918: dvě zděná podlaží a šindelové mansardové patro, ne tři podlaží; arkýř je uprostřed průčelí, vstup ze zahrady.
+- Čp. 2073: hlavní průčelí a vstup do ulice Na Střelišti, do Žatecké boční stěna se 2 osami. Označení „novostavba 1960s“ nebylo podložené (karta říká jen „novostavba“, dům je na plánu 1938).
+- Počty os podle fotografií s rámečkem: 995 pět os, 774 pět os s arkýřem, 770 čtyři osy a vyšší římsa, 699 zaměněné uliční a nárožní fasády, 437 viditelná kratší strana je levá, 110 hala s osmi osami, 453/879 společný rytmus deseti os, 1006 bok se čtyřmi osami sdružených oken.
+- Vily: valbová střecha přes celý dvojdům, mansardová patra uprostřed, vstupy se schody ze zahrady (ruční náčrty u každé poloviny).
+- Název ulice: Československé armády je doložen ve vrstvě názvů k roku 1964; rok přejmenování prameny neudávají.
+
 ## Přehled domů
 
 | Čp. | Strana | Or. č. | Typ | Podlaží | Průčelí × okap (m) | Poloha | Foto / náčrt / karty | Revize | QA |
 |---|---|---|---|---|---|---|---|---|---|
-| 110 | SZ | 1 | restaurace pivovaru (čp. 110) | 2 | 62,2 × 4,4 | GIS id 1515 | 3 / 1 / 2 | r2 | pass |
-| 437 | SZ | 2 | třípodlažní dům v areálu pivovaru | 3 | 21,0 × 11,4 | GIS id 1506 | 2 / 1 / 1 | r2 | pass |
-| 1041 | SZ | – | pivovar (areál, věž) | 3 | 88,0 × 11,0 | GIS id 1504 | 5 / 1 / 3 | r2 | pass |
-| 995 | SZ | 4 | vila (neobarokní) | 2 | 12,9 × 8,4 | GIS id 2938 | 5 / 1 / 5 | r2 | pass |
-| 930 | SZ | 5 | vila | 2 | 6,5 × 7,6 | GIS id 2939 | 5 / 1 / 5 | r3 | pass |
-| 1360 | SZ | – | reálné gymnázium / muzeum | 3 | 47,7 × 13,5 | GIS id 2937 | 8 / 1 / 1 | r2 | pass |
-| 774 | JV | 1 | třípodlažní činžovní dům | 3 | 22,4 × 12,2 | GIS id 1512 | 2 / 1 / 2 | r2 | pass |
-| 770 | JV | 2 | dvoupodlažní dům | 2 | 11,5 × 7,3 | GIS id 1513 | 4 / 1 / 4 | r3 | pass |
-| 699 | JV | 3 | nárožní dům s obchodem POTRAVINY | 2 | 12,5 × 7,5 | GIS id 1514 | 5 / 1 / 5 | r2 | pass |
-| 453 | JV | 4 | dvoupodlažní dům s mansardou (dvojice s 879) | 2 | 16,4 × 7,2 | GIS id 1519 | 2 / 1 / 1 | r2 | pass |
-| 879 | JV | 5 | dvoupodlažní dům (dvojice s 453) | 2 | 12,1 × 7,2 | GIS id 1520 | 4 / 1 / 3 | r2 | pass |
-| 1019 | JV | 6 | třípodlažní část dvojdomu (s 1006) | 3 | 13,1 × 11,6 | GIS id 1521 | 2 / 1 / 2 | r2 | pass |
-| 1006 | JV | 7 | nárožní třípodlažní dům PROBST (s 1019) | 3 | 12,9 × 11,6 | GIS id 1522 | 6 / 2 / 4 | r2 | pass |
-| 2073 | JV | – (Na střelišti) | novostavba 1960s, bytový dům | 3 | 23,4 × 9,6 | GIS id 2074 | 1 / 0 / 1 | r2 | pass |
-| 1918 | JV | 10 | vila (3 podlaží + podkroví) | 3 | 11,5 × 9,9 | odhad | 5 / 1 / 5 | r3 | pass |
-| 1906 | JV | 11 | polovina dvojdomu 1906/1907 | 2 | 10,5 × 6,6 | odhad | 3 / 1 / 3 | r2 | pass |
-| 1907 | JV | 12 | polovina dvojdomu 1906/1907 | 2 | 10,5 × 6,6 | odhad | 3 / 1 / 3 | r2 | pass |
-| 1914 | JV | 13 | polovina dvojdomu 1914/1915 | 2 | 10,5 × 6,6 | odhad | 4 / 1 / 4 | r2 | pass |
-| 1915 | JV | 14 | polovina dvojdomu 1914/1915 | 2 | 10,5 × 6,6 | odhad | 4 / 1 / 4 | r2 | pass |
-| 1903 | JV | 15 | polovina dvojdomu 1903/1904 | 2 | 10,5 × 6,6 | odhad | 4 / 1 / 4 | r2 | pass |
-| 1904 | JV | 16 | polovina dvojdomu 1903/1904 | 2 | 10,5 × 6,6 | odhad | 5 / 1 / 5 | r2 | pass |
-| 1899 | JV | 17 | polovina dvojdomu 1899/1901 | 2 | 10,0 × 6,6 | odhad | 2 / 1 / 2 | r2 | pass |
-| 1901 | JV | 18 | polovina dvojdomu 1899/1901 | 2 | 10,0 × 6,6 | odhad | 2 / 1 / 2 | r2 | pass |
-| 1867 | JV | 19 | vila (2 podlaží + mansardové podkroví) | 2 | 12,0 × 6,8 | odhad | 6 / 1 / 6 | r3 | pass |
-| 1872 | JV | 20 | vila (poslední zbořená) | 2 | 12,0 × 6,8 | odhad | 8 / 1 / 8 | r2 | pass |
+| 110 | SZ | 1 | restaurace pivovaru (čp. 110) | 2 | 62,2 × 4,4 | GIS id 1515 | 3 / 1 / 2 | r4 | pass |
+| 437 | SZ | 2 | třípodlažní dům v areálu pivovaru | 3 | 21,0 × 11,4 | GIS id 1506 | 2 / 1 / 1 | r4 | pass |
+| 1041 | SZ | – | pivovar (areál, věž) | 3 | 88,0 × 11,0 | GIS id 1504 | 5 / 1 / 3 | r4 | blocked |
+| 995 | SZ | 4 | vila (neobarokní) | 2 | 12,9 × 8,4 | GIS id 2938 | 5 / 1 / 5 | r4 | pass |
+| 930 | SZ | 5 | vila | 2 | 6,5 × 7,6 | GIS id 2939 | 5 / 1 / 5 | r4 | pass |
+| 1360 | SZ | – | reálné gymnázium / muzeum | 3 | 47,7 × 13,5 | GIS id 2937 | 8 / 1 / 1 | r4 | pass |
+| 774 | JV | 1 | třípodlažní činžovní dům | 3 | 22,4 × 12,2 | GIS id 1512 | 2 / 1 / 2 | r4 | pass |
+| 770 | JV | 2 | dvoupodlažní dům | 2 | 11,5 × 9,0 | GIS id 1513 | 4 / 1 / 4 | r4 | pass |
+| 699 | JV | 3 | nárožní dům s obchodem POTRAVINY | 2 | 12,5 × 7,5 | GIS id 1514 | 5 / 1 / 5 | r4 | pass |
+| 453 | JV | 4 | dvoupodlažní dům s mansardou (dvojice s 879) | 2 | 16,4 × 7,2 | GIS id 1519 | 2 / 1 / 1 | r4 | pass |
+| 879 | JV | 5 | dvoupodlažní dům (dvojice s 453) | 2 | 12,1 × 7,2 | GIS id 1520 | 4 / 1 / 3 | r4 | pass |
+| 1019 | JV | 6 | třípodlažní část dvojdomu (s 1006) | 3 | 13,1 × 11,6 | GIS id 1521 | 2 / 1 / 2 | r4 | pass |
+| 1006 | JV | 7 | nárožní třípodlažní dům PROBST (s 1019) | 3 | 12,9 × 11,6 | GIS id 1522 | 6 / 2 / 4 | r4 | pass |
+| 2073 | JV | – (Na střelišti) | bytový dům (průčelí a vstup do ulice Na Střelišti) | 3 | 23,4 × 9,6 | GIS id 2074 | 1 / 0 / 1 | r4 | pass |
+| 1918 | JV | 10 | vila (2 zděná podlaží + šindelové mansardové patro) | 2 + mansarda | 11,5 × 7,0 | odhad | 5 / 1 / 5 | r4 | pass |
+| 1906 | JV | 11 | polovina dvojdomu 1906/1907 | 2 | 10,5 × 6,6 | odhad | 3 / 1 / 3 | r4 | pass |
+| 1907 | JV | 12 | polovina dvojdomu 1906/1907 | 2 | 10,5 × 6,6 | odhad | 3 / 1 / 3 | r4 | pass |
+| 1914 | JV | 13 | polovina dvojdomu 1914/1915 | 2 | 10,5 × 6,6 | odhad | 4 / 1 / 4 | r4 | pass |
+| 1915 | JV | 14 | polovina dvojdomu 1914/1915 | 2 | 10,5 × 6,6 | odhad | 4 / 1 / 4 | r4 | pass |
+| 1903 | JV | 15 | polovina dvojdomu 1903/1904 | 2 | 10,5 × 6,6 | odhad | 4 / 1 / 4 | r4 | pass |
+| 1904 | JV | 16 | polovina dvojdomu 1903/1904 | 2 | 10,5 × 6,6 | odhad | 5 / 1 / 5 | r4 | pass |
+| 1899 | JV | 17 | polovina dvojdomu 1899/1901 | 2 | 10,0 × 6,6 | odhad | 2 / 1 / 2 | r4 | pass |
+| 1901 | JV | 18 | polovina dvojdomu 1899/1901 | 2 | 10,0 × 6,6 | odhad | 2 / 1 / 2 | r4 | pass |
+| 1867 | JV | 19 | vila (2 podlaží + mansardové podkroví) | 2 | 12,0 × 6,8 | odhad | 6 / 1 / 6 | r4 | pass |
+| 1872 | JV | 20 | vila (poslední zbořená) | 2 | 12,0 × 6,8 | odhad | 8 / 1 / 8 | r4 | pass |
 
 ## Domy jednotlivě
 
 ### Čp. 110: restaurace pivovaru (čp. 110)
 
-- Strana SZ, orientační číslo 1, poloha: GIS půdorys id 1515; model `houses/cp110/r2/cp_110_G_r2.glb` (421 polygonů).
+- Strana SZ, orientační číslo 1, poloha: GIS půdorys id 1515; model `houses/cp110/r4/cp_110_G_r4.glb` (530 polygonů).
 - Identita: Plochostřechý dvoupodlažní objekt restaurace pivovaru s terasou na přízemní části (nápis RESTAURACE), navazující na dlouhou halu stáčírny 1041. Plán cp_110_001: „Plochostřeché patro restaurace“, „terasa na přízemku“, „nízký přístavek“, „ploché přízemí“; nároží k Žižkově (parčík Schneebergl).
 - Použité prameny: cp_110_001 PLANE (situace 110 + 1041 + zbořené 774 naproti); cp_110_001 PHOTO (restaurace od Fučíkových sadů, pivovar s věží v pozadí); cp_110_002 PHOTO (ulice: dlouhá plochostřechá stáčírna s vysokými okny, RESTAU… vpravo); FOTO-000150 (kolorovaná pohlednice pivovaru, sdílená s 437/1041).
 - GIS: GIS id 1515 (536 m², 62 vrcholů, zaoblené rohy) – dlouhý pás podél ulice
 - Rozměry: GIS id 1515 strip 62 x 7-12.6 m (front jogs <1.6 m dropped)
 - Průčelí: photos cp_110_001/002: flat-roofed 2-storey restaurant block with tall ground-floor windows, 1-storey ends; sketch cp_110_001 (A = restaurant floor, terrace at the NE end)
 - Střecha: flat (sketch/photo)
-- Kontrola: pass (r2); plochostřechý pás 62 m s patrem restaurace (x 10–50), atiky, terasové zábradlí na SV konci, 16 vysokých oken + dveře; dle foto cp_110_002 (schematicky); r2 list znovu otevřen: beze změn proti r1 kromě uvedených oprav (1041: axis_right nyní zvenku)
-- Hypotézy: výšky podlaží odhad (přízemí 4,2 m, patro 3,8 m); rozsah patra restaurace nad půdorysem odhad podle plánu A (SV část); okna odvozena z foto, počet os odhad; restaurant upper floor extent x 10-50 m (sketch proportion); terrace railing at the NE end; window spacing 3.6 m; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Kontrola: prošla (r4); průčelí: černý pás oplechování podél celé fasády nad přízemím (oplechování patra na ploché střeše leželo i na hraně v líci fasády) – opraveno v z4_post.py, nutná přestavba; po přestavbě 25. 10.: černý pás trvá – příčinou je atika ploché střechy v rovině fasády haly a přístavku; atika se nově vyřezává pod stojícími hmotami (krok o), nutná další přestavba; po druhé přestavbě 25. 10.: černý pás zmizel (atika vyříznuta pod halou a přístavkem); průčelí odpovídá rámečku cp_110_002
+- Doklad fasád (r4): main: 15
+- Hypotézy: výšky podlaží odhad (přízemí 4,2 m, patro 3,8 m); rozsah patra restaurace nad půdorysem odhad podle plánu A (SV část); okna odvozena z foto, počet os odhad; terrace railing at the NE end; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); axis positions from a 1D projective fit of the 8 regular hall bays on cp_110_002 (bay 2.41 m), heights scaled to an assumed 8.5 m hall (model_hypothesis, provisional, locked=false); restaurant 3rd window R3 and the entrance D1 are not visible on the street photo (hypothesis)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -203,14 +222,15 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 437: třípodlažní dům v areálu pivovaru
 
-- Strana SZ, orientační číslo 2, poloha: GIS půdorys id 1506; model `houses/cp437/r2/cp_437_G_r2.glb` (465 polygonů).
+- Strana SZ, orientační číslo 2, poloha: GIS půdorys id 1506; model `houses/cp437/r4/cp_437_G_r4.glb` (570 polygonů).
 - Identita: Samostatný třípodlažní dům s valbovou střechou v nádvoří pivovaru mezi vrátnicí a přízemní částí 110 (plán cp_437_001: „bývalý průchod“ k 110). Foto cp_437_001: nárožní pohled, bosované přízemí, 5 os na delší straně, 3 osy na kratší, komín.
 - Použité prameny: cp_437_001 PLANE; cp_437_001 PHOTO; FOTO-000150 (pohlednice).
 - GIS: GIS id 1506 (266 m², obdélník 20,9 × 12,8 m)
 - Rozměry: GIS id 1506 rectangle 20.98 x 12.78 m
 - Průčelí: photo cp_437_001: 3 storeys, rusticated ground floor, 5 axes long side, 3 axes short side, hipped roof, chimney
 - Střecha: hip (photo); pitch estimate
-- Kontrola: pass (r2); 3 podlaží, 5 os + 3 osy na pravé straně, bosážní římsy, frontony v 1. patře, valba, komín – vše podle foto cp_437_001; audit: 2 konkávní čtyřúhelníky na průčelí (boolean), vizuálně bez vady; r2 list znovu otevřen: beze změn proti r1 kromě uvedených oprav (1041: axis_right nyní zvenku)
+- Kontrola: prošla (r4); osy a kordony sedí s rámečkem cp_437_001; zadní a pravá strana bez otvorů/zrcadlo = hypotéza; pod okapem uzavřeno
+- Doklad fasád (r4): main: 5 / 5 / 5; left: 2 / 2 / 2; right: hypotéza
 - Hypotézy: delší (5osá) strana přiřazena k ulici podle GIS hrany; výšky podlaží odhad; entrance not visible on the street side; no door modelled; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -222,14 +242,15 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1041: pivovar (areál, věž)
 
-- Strana SZ, orientační číslo –, poloha: GIS půdorys id 1504; model `houses/cp1041/r2/cp_1041_G_r2.glb` (1099 polygonů).
-- Identita: Areál pivovaru (Severočeské pivovary): cihlové stáčírny/varna, věž s cimbuřím a jehlancovou střechou, komín, vstupní brána s vrátnicí od ČSA. Foto cp_1041_001 (historický nadhled s věží), FOTO-000149 (kolorovaná pohlednice průčelí do ČSA), cp_1041_002/003 (ulice 1960s: kamenná ohradní zeď, brána, věž). Plán cp_1041_002 ověřuje polohu věže a halu stáčírny.
+- Strana SZ, orientační číslo –, poloha: GIS půdorys id 1504; model `houses/cp1041/r4/cp_1041_G_r4.glb` (1645 polygonů).
+- Identita: Areál pivovaru (Severočeské pivovary): cihlové stáčírny/varna, věž s cimbuřím a jehlancovou střechou, komín, vstupní brána s vrátnicí od ČSA. Foto cp_1041_001 (podle karty starý snímek zbořených pivovarských budov na rohu proti Fučíkově škole, ne pohled na areál), FOTO-000149 (kolorovaná pohlednice průčelí do ČSA), cp_1041_002/003 (ulice 1960s: kamenná ohradní zeď, brána, věž). Plán cp_1041_002 ověřuje polohu věže a halu stáčírny.
 - Použité prameny: cp_1041_002 PLANE; cp_1041_001/002/003 PHOTO; FOTO-000149/150.
 - GIS: GIS id 1504 (3942 m², 19 vrcholů) „Brauerei“
 - Rozměry: GIS id 1504 polygon 88 m street front
 - Průčelí: postcard FOTO-000149 + photos cp_1041_002/003: unified brick bottling facade with tall arched windows, tower with pyramid roof and crenellation, chimney; sketch cp_1041_002
 - Střecha: massing hypothesis
-- Kontrola: pass (r2); hmotový model pivovaru: 88 m uliční průčelí s 2 řadami obloukových oken, brána, věž s jehlanem a cimbuřím, varna, komín 45 m; skeletonová střecha nad celým půdorysem (hypotéza); pohled axis_right r1 byl zevnitř hmoty (kamera 80 m < šířka 88 m) – kamera opravena pro r2; r2 list znovu otevřen: beze změn proti r1 kromě uvedených oprav (1041: axis_right nyní zvenku)
+- Kontrola: blokováno (r4); hmotový model: uliční průčelí 88 m s 2×21 okny odporuje pohlednici FOTO-000149 (nádvoří, hala se 4 osami u věže, štítové křídlo vlevo); geometrie uzavřená, bez škvír; oprava pramene: cp_1041_001 není letecký pohled na areál, ale starý snímek zbořených budov na rohu proti Fučíkově škole (karta); polohy věže a varny v r2 z něj proto nevycházejí
+- Doklad fasád (r4): main: hypotéza + dveře 1
 - Hypotézy: hmotový model: hlavní hala + varna + věž jako hypotéza rozložení výšek; věž umístěna u uličního průčelí podle pohlednice; detaily fasád (cihlové pilastry, štíty) jen schematicky; tower/brewhouse/chimney positions inside the GIS footprint estimated from the aerial photo cp_1041_001; skeleton roof over the whole footprint is a stand-in for several hall roofs; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -246,14 +267,15 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 995: vila (neobarokní)
 
-- Strana SZ, orientační číslo 4, poloha: GIS půdorys id 2938; model `houses/cp995/r2/cp_995_G_r2.glb` (355 polygonů).
+- Strana SZ, orientační číslo 4, poloha: GIS půdorys id 2938; model `houses/cp995/r4/cp_995_G_r4.glb` (441 polygonů).
 - Identita: Dvoupodlažní neobarokní vila mezi pivovarem a parkem (plán cp_995_001: vpravo „ČS. ARMÁDY TŘ.“, vlevo „areál pivovaru, už stáčírna“). Foto cp_995_001: uliční průčelí 3 osy, v patře balkon s obloukovými dveřmi, segmentový štít s oválným oknem; cp_995_003/005 boční a zadní strana s lodžií; cp_995_002 plot.
 - Použité prameny: cp_995_001 PLANE; cp_995_001..005 PHOTO.
 - GIS: GIS id 2938 (153,5 m², obdélník 12,9 × 12,0 m)
 - Rozměry: GIS id 2938 rectangle 12.86 x 11.72 m
 - Průčelí: photo cp_995_001: 3 axes, 1st floor balcony with arched door, pediments, segmental gable with oval window; cp_995_003/005 sides
 - Střecha: low hip + gable dormer (photo)
-- Kontrola: pass (r2); 3 osy, segmentová okna přízemí, frontony, obloukové balkonové dveře s balkonem, štítový vikýř s kruhovým oknem, boční 2 osy, nízká valba, 2 komíny – odpovídá cp_995_001; r2 list znovu otevřen: beze změn proti r1 kromě uvedených oprav (1041: axis_right nyní zvenku)
+- Kontrola: prošla (r4); 5 os průčelí a rizalit s balkonem a štítem sedí s cp_995_001; boky a zadní strana hypotéza; pohled pod okap uzavřený
+- Doklad fasád (r4): main: 5 / 5; dormers: 1; left: hypotéza; right: hypotéza
 - Hypotézy: výšky odhad (přízemí 4,0, patro 3,8); zadní lodžie zjednodušena; tvar střechy (nízká valba) z foto, sklon odhad; rear loggia (photo cp_995_003) not modelled; entrance on the garden side; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -272,14 +294,15 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 930: vila
 
-- Strana SZ, orientační číslo 5, poloha: GIS půdorys id 2939; model `houses/cp930/r3/cp_930_G_r3.glb` (215 polygonů).
+- Strana SZ, orientační číslo 5, poloha: GIS půdorys id 2939; model `houses/cp930/r4/cp_930_G_r4.glb` (295 polygonů).
 - Identita: Dvoupodlažní vila s balkonem v patře a štítovým vikýřem nad vstupní osou, plot s kamennými sloupky (foto cp_930_001, cp_930_002 ulice). Plán cp_930_001: „Sady Rudé armády“ za domem, „ČS. ARMÁDY TŘ.“ vlevo, „příjezd do pivovarského pozemku“.
 - Použité prameny: cp_930_001 PLANE; cp_930_001..005 PHOTO.
 - GIS: GIS id 2939 (211 m², 8 vrcholů)
 - Rozměry: GIS id 2939 polygon: central risalit 6.5 m at y=0, wings at y=1.9, 16.2 m total
 - Průčelí: photo cp_930_001: 2 storeys, arched entrance with steps in the risalit, 1st floor balcony with door, gable above; one window per wing and floor
 - Střecha: hip + front gable (photo)
-- Kontrola: pass (r3); rizalit 6,5 m s obloukovým vstupem, balkonem a štítem, boční křídla s okny, valba, 2 komíny – odpovídá cp_930_001; schody: překrývající se kvádry → z-fighting (černé plochy v axis_front, detail_facade_left); r3: hlavní střecha začíná na líci křídel, rizalit krytý štítovým objemem (r2: okap vyčníval 2 m před křídla); schody 5 stupňů bez překryvu; zbývá malý tmavý klín pod okapem u levého křídla (podhled přesahu)
+- Kontrola: prošla (r4); rizalit s obloukovými dveřmi, schody, balkon s dveřmi a 2 okny, štít se sdruženým oknem; křídla po 1 okně; boční schody k zadním vstupům; pod okapem uzavřeno
+- Doklad fasád (r4): main: 2 / 3 + dveře 1; dormers: 1; left: 1 / 1; right: 1 / 1
 - Hypotézy: osy oken z šikmého foto; výšky odhad; vikýř/štít zjednodušen; window axes from oblique photo; ridge along the street; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); r3: main roof eave at the wing face; risalit covered by the gable volume
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -298,14 +321,15 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1360: reálné gymnázium / muzeum
 
-- Strana SZ, orientační číslo –, poloha: GIS půdorys id 2937; model `houses/cp1360/r2/cp_1360_G_r2.glb` (1735 polygonů).
+- Strana SZ, orientační číslo –, poloha: GIS půdorys id 2937; model `houses/cp1360/r4/cp_1360_G_r4.glb` (2176 polygonů).
 - Identita: Budova c.k. státního reálného gymnázia (pohlednice P-000045, P-000593 „K.K. STAATS-OBERREALGYMNASIUM“), později průmyslová škola a muzeum („budova nynějšího muzea čp. 1360“ na kartách 1918). Třípodlažní, vysoká valbová střecha s velkým štítem a řadou vikýřů, věžička. Foto cp_1360_001 (1960s).
 - Použité prameny: cp_1360_001 PLANE+PHOTO; pohlednice P-000045(_2), P-000327(_2), P-000593, P-001040, P-001453.
 - GIS: GIS id 2937 (2440 m², 22 vrcholů)
 - Rozměry: GIS id 2937 polygon (front 47.7 m, wings)
 - Průčelí: postcards P-000045/P-000593 (K.K. Staats-Oberrealgymnasium): 3 storeys, regular window grid, high hipped roofs with gable and dormers; photo cp_1360_001
 - Střecha: massing hypothesis: constant-pitch straight skeleton 40 deg
-- Kontrola: pass (r2); r2: schody bez překryvu; čtyři valby (přední blok, pravé křídlo, spojovací trakt, levé křídlo) uzavřené valbovými konci do sousedních střech; 140 oken v rastru, vstupní oblouk; hmotová hypotéza bez štítu/vikýřů z pohlednic
+- Kontrola: prošla (r4); jedna valbová střecha (straight skeleton) nad celým půdorysem U, bez střechy nad dvorem a bez nekrytého zdiva; pravidelný rastr os = hypotéza, vstup v ose doložen; pohled pod okap uzavřený
+- Doklad fasád (r4): main: hypotéza + dveře 1; left_wing_a: hypotéza; left_wing_b: hypotéza; right_side: hypotéza
 - Hypotézy: hmotový model: výšky odhad (římsa 13,5 m), štít a vikýře zjednodušeny; členění oken pravidelné, odhad; window grid regular 2.6 m from postcard impression; gable, dormers and roof lantern of the postcards not modelled; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); roof composed of four rectangular hips; junction valleys approximate; wing roof ends at junctions closed as hips (valley junction approximated)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -323,14 +347,15 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 774: třípodlažní činžovní dům
 
-- Strana JV, orientační číslo 1, poloha: GIS půdorys id 1512; model `houses/cp774/r2/cp_774_G_r2.glb` (466 polygonů).
+- Strana JV, orientační číslo 1, poloha: GIS půdorys id 1512; model `houses/cp774/r4/cp_774_G_r4.glb` (450 polygonů).
 - Identita: Třípodlažní dům na nároží ČSA/Fučíkovy sady (plán cp_774_001: „774/1“, Fučíkovy sady vlevo, dvůr čp. 774). Foto cp_774_001: neobarokní průčelí ~7 os, střední rizalit s balkonem a portálem; cp_770,774_001: dvorní strana po demolici sousedů.
 - Použité prameny: cp_774_001 PLANE; cp_774_001, cp_770,774_001 PHOTO.
 - GIS: GIS id 1512 (251 m², 7 vrcholů)
 - Rozměry: GIS id 1512 polygon (front 22.43 m, depth 12-15.6 m)
 - Průčelí: photo cp_774_001: 3 storeys, ~7 axes, central risalit with portal and 1st-floor balcony, pediments; rear cp_770,774_001
 - Střecha: low hip (skeleton over GIS polygon)
-- Kontrola: pass (r2); 3 podlaží, 7 os, portál s balkonem, frontony, kordonové římsy, skeletonová nízká valba nad nepravidelným půdorysem; r2 schody (2 stupně) bez překryvu
+- Kontrola: prošla (r4); 5 os, portál v ose 13,4 m, arkýř se 3 obloukovými okny a balkon nad ním sedí s cp_774_001; zadní strana se zalomením podle GIS; pod okapem uzavřeno
+- Doklad fasád (r4): main: 4 / 4 / 5 + dveře 1
 - Hypotézy: výšky podlaží odhad (4,2/3,6/3,6); rizalit a balkon zjednodušeny; zadní křídlo bez pramene; rear wing and courtyard annexes not modelled; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -343,15 +368,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 770: dvoupodlažní dům
 
-- Strana JV, orientační číslo 2, poloha: GIS půdorys id 1513; model `houses/cp770/r3/cp_770_G_r3.glb` (213 polygonů).
+- Strana JV, orientační číslo 2, poloha: GIS půdorys id 1513; model `houses/cp770/r4/cp_770_G_r4.glb` (262 polygonů).
 - Identita: Dvoupodlažní dům mezi 774 a 699 (plán cp_770_001: „770/2“, 774 vlevo, 699 vpravo). Foto cp_770_001: čelní průčelí 6 os v patře, v přízemí 5 oken + dveře vpravo, kordonová římsa; cp_699,770_001/002 (po demolici / nároží).
 - Použité prameny: cp_770_001 PLANE; cp_770_001, cp_699,770_001, cp_699,770_002 PHOTO.
 - GIS: GIS id 1513 (149 m², 7 vrcholů)
 - Rozměry: GIS id 1513 polygon: main block 11.47 x 13.4 m + rear wing
 - Průčelí: photo cp_770_001: 6 axes upper floor, 5 windows + door (right) ground floor, string course; sketch cp_770_001: 2 eyebrow dormers
 - Střecha: saddle between party walls (sketch), ridge along the street
-- Kontrola: pass (r3); průčelí 6 os / 5 oken + dveře, kordonová římsa, 2 volská oka, štítové zdi k 774 a 699 – odpovídá cp_770_001 a náčrtu; zadní křídlo: okap 6,6 m pod horní hranou zdiva (7,3 m) -> plochý šedý vršek s malou valbou (roof_oblique_back_left/right) – opraveno v r3 (okap křídla = 7,3 m); r3: zadní křídlo se střechou na horní hraně zdiva (r2: plochý vršek); průčelí a volská oka beze změny
-- Hypotézy: výšky odhad; volská oka podle plánu (2 ks); roof ridge along the street, gable party walls; rear wing height estimate; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); wing roof ends at junctions closed as hips (valley junction approximated); r3: rear wing eave = main eave (single masonry extrusion)
+- Kontrola: prošla (r4); 4 osy, dveře ve 4. ose, kordon, 2 komíny a 2 volská oka podle cp_770_001; štíty u obou společných zdí po linii GIS bez přesahu; zadní křídlo s valbou
+- Doklad fasád (r4): main: 3 / 4 + dveře 1
+- Hypotézy: výšky odhad; volská oka podle plánu (2 ks); roof ridge along the street, gable party walls; rear wing height estimate; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); wing roof ends at junctions closed as hips (valley junction approximated); r3: rear wing eave = main eave (single masonry extrusion); eave 9.0 m from the frontal photo cp_770_001 scaled by the GIS width 11.47 m (r2: 7.3 m); photo cp_770,774_001 suggests about 8.3 m (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -367,14 +393,15 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 699: nárožní dům s obchodem POTRAVINY
 
-- Strana JV, orientační číslo 3, poloha: GIS půdorys id 1514; model `houses/cp699/r2/cp_699_G_r2.glb` (254 polygonů).
+- Strana JV, orientační číslo 3, poloha: GIS půdorys id 1514; model `houses/cp699/r4/cp_699_G_r4.glb` (312 polygonů).
 - Identita: Nárožní dvoupodlažní dům ČSA × R. Luxemburkové (plán cp_699_001: „699/3“, 770 vlevo, R. Luxemburkové vpravo). Foto cp_699_001 (nároží, obchod POTRAVINY, 3 osy do ČSA), cp_699_002 (z Luxemburkové, 5 os), cp_699_003, cp_699,770_002.
 - Použité prameny: cp_699_001 PLANE; cp_699_001..003, cp_699,770_001/002 PHOTO.
 - GIS: GIS id 1514 (165 m², obdélník)
 - Rozměry: GIS id 1514 rectangle 12.49 x 13.21 m
 - Průčelí: photos cp_699_001 (corner, shop), cp_699_002 (Luxemburkove side 5 axes), cp_699,770_002
 - Střecha: hip to the corner, gable to 770 (sketch: ridge along CSA, eyebrow dormers)
-- Kontrola: pass (r2); nárožní dům: 3 osy + dveře obchodu do ČSA, 5 os + dveře do Luxemburkové, valba k nároží, štít k 770, 2 volská oka – odpovídá cp_699_001/002
+- Kontrola: prošla (r4); průčelí 5 os s domovními dveřmi a obchodem, nárožní strana 4 osy; štít u společné zdi s 770, valba na nároží; komín končil pod hřebenem a nebyl vidět – zvýšen na hřeben + 0,8 m, nutná přestavba; po přestavbě 25. 10.: komín nad hřebenem viditelný; ostatní pohledy beze změny
+- Doklad fasád (r4): main: 3 / 5 + dveře 2; right: 4 / 4
 - Hypotézy: výšky odhad (4,0/3,6); obchodní výklady zjednodušeny na niky; shop windows simplified to niches; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -393,14 +420,15 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 453: dvoupodlažní dům s mansardou (dvojice s 879)
 
-- Strana JV, orientační číslo 4, poloha: GIS půdorys id 1519; model `houses/cp453/r2/cp_453_G_r2.glb` (268 polygonů).
+- Strana JV, orientační číslo 4, poloha: GIS půdorys id 1519; model `houses/cp453/r4/cp_453_G_r4.glb` (367 polygonů).
 - Identita: Dům na nároží R. Luxemburkové (plán cp_453,879_001: „453/4“, kruhový nárožní prvek k Luxemburkové, „mansarda“, štítový vikýř uprostřed). Foto cp_453,879_001: dlouhé dvoupodlažní průčelí s trojúhelným štítem/vikýřem uprostřed; pohlednice P-000936 (dvůr pivovaru v pozadí).
 - Použité prameny: cp_453,879_001 PLANE+PHOTO; P-000936.
 - GIS: GIS id 1519 (133 m², 5 vrcholů)
 - Rozměry: GIS id 1519 pentagon (front 16.36 m, right depth 9.41 m, diagonal rear-left)
 - Průčelí: photo cp_453,879_001: 2 storeys, central triangular gable dormer; sketch cp_453,879_001: mansard room, round corner element (not modelled)
 - Střecha: skeleton hip 35 deg + gable dormer
-- Kontrola: pass (r2); 6 os + dveře, štítový vikýř uprostřed se 2 okny, skeletonová valba nad pětiúhelníkem (hřeben, nároží, úžlabí u šikmé zadní stěny), šikmá zadní fasáda 3 osy – odpovídá cp_453,879_001 a náčrtu (kruhový nárožní prvek vynechán)
+- Kontrola: prošla (r4); valba u společné zdi s 879 – fotografie cp_453,879_001 ukazuje střechu plynule navazující na 879; opraveno party_edges (štít na společné zdi), nutná přestavba; fasáda 6 os a štítový vikýř se 3 okny sedí; po přestavbě 25. 10.: štít na společné zdi s 879 v pořádku; pravý komín skončil pod zvýšeným hřebenem – komíny se nově zvedají 0,8 m nad krytinu (krok p), nutná další přestavba; po druhé přestavbě 25. 10.: oba komíny nad střechou, štít na společné zdi s 879
+- Doklad fasád (r4): main: 4 / 5 + dveře 1; dormers: 3; diag: hypotéza
 - Hypotézy: kruhový nárožní prvek z plánu nemodelován (nejasný tvar); osy a výšky odhad; round corner element of the sketch omitted; diagonal rear wall windows; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -412,15 +440,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 879: dvoupodlažní dům (dvojice s 453)
 
-- Strana JV, orientační číslo 5, poloha: GIS půdorys id 1520; model `houses/cp879/r2/cp_879_G_r2.glb` (125 polygonů).
+- Strana JV, orientační číslo 5, poloha: GIS půdorys id 1520; model `houses/cp879/r4/cp_879_G_r4.glb` (229 polygonů).
 - Identita: Pokračování řady za 453 (plán „879/5“). Foto cp_453,879_001 (pravá část řady), cp_879_002 (bosovaná fasáda, valbová střecha, ze zahrady), cp_879_001 (dvůr).
 - Použité prameny: cp_453,879_001 PLANE+PHOTO; cp_879_001/002 PHOTO; P-000936.
 - GIS: GIS id 1520 (146 m², 9 vrcholů)
 - Rozměry: GIS id 1520 polygon (rect 12.13 x 11.54 + rear bump)
 - Průčelí: photos cp_453,879_001 (right part of the row), cp_879_002 (rusticated plaster, hip roof)
 - Střecha: hip (photo)
-- Kontrola: pass (r2); 4 osy + dveře, štít k 453, valba vpravo, komín – odpovídá cp_453,879_001/cp_879_002; dvorní výstupek půdorysu (1,2 m) přesahuje za okap: malá plochá horní plocha (roof_oblique_back_left) – ponecháno, hypotéza přístavku
-- Hypotézy: osy a výšky odhad; dvorní přístavky nemodelovány; rear annex (bump) under the main roof overhang; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Kontrola: prošla (r4); osy 7–10 sjednoceného průčelí: dveře, velké dveře, okno, (okno za stromem = hypotéza); štít u 453 bez přesahu, zadní výstupek s valbou; komín končil pod hřebenem a nebyl vidět – zvýšen na hřeben + 0,8 m, nutná přestavba; po přestavbě 25. 10.: komín nad hřebenem viditelný; ostatní pohledy beze změny
+- Doklad fasád (r4): main: 1 / 3 + dveře 2
+- Hypotézy: osy a výšky odhad; dvorní přístavky nemodelovány; rear annex (bump) under the main roof overhang; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); rear jog of the GIS footprint (x 4.59-7.62, 1.2 m deep) covered by its own small hip roof; not visible on any photo (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -435,15 +464,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1019: třípodlažní část dvojdomu (s 1006)
 
-- Strana JV, orientační číslo 6, poloha: GIS půdorys id 1521; model `houses/cp1019/r2/cp_1019_G_r2.glb` (328 polygonů).
+- Strana JV, orientační číslo 6, poloha: GIS půdorys id 1521; model `houses/cp1019/r4/cp_1019_G_r4.glb` (428 polygonů).
 - Identita: Severovýchodní (nižší orientační číslo) část třípodlažního dvojdomu „PROBST“: foto cp_1006,1019_001 má popisky „1019“ vlevo a „1006“ vpravo nad nárožím; plán cp_1006,1019_001: 879 | 1019/6 | 1006/7. POZOR: GIS má popisky obráceně (id 1521 „1006“ je SV, id 1522 „1019“ je JZ nároží) – model sleduje archivní popisky a pořadí orientačních čísel; GIS id použit podle polohy.
 - Použité prameny: cp_1006,1019_001 PLANE+PHOTO; cp_1006,1019_002 PHOTO; cp_1006_001 PHOTO (ulice s tramvají).
 - GIS: GIS id 1521 (175 m², 8 vrcholů) – poloha SV; popisek v GIS „1006“ (rozpor)
 - Rozměry: GIS id 1521 polygon (rect 13.08 x 13.0 + rear bump); archive label 1019 (GIS label 1006 - conflict recorded)
 - Průčelí: photo cp_1006,1019_001 (left part): 3 storeys, rusticated ground floor with arched windows, pediments on the 1st floor, entrance
 - Střecha: low hip, continuous with 1006 (gable at the party wall)
-- Kontrola: pass (r2); 3 podlaží, 5 os, obloukové přízemí, frontony 1. patra, vstup se 3 stupni, valba vlevo, štít k 1006 – odpovídá levé části cp_1006,1019_001; r2 schody bez překryvu
-- Hypotézy: rozpor popisků GIS × archiv – provisional; výšky odhad (4,0/3,6/3,6); GIS/archive label conflict (see plan_search.json); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Kontrola: prošla (r4); 3 podlaží, bosované přízemí s obloukovými okny a vstupem uprostřed, frontony v 1. patře; štít u společné zdi s 1006; zadní výstupek se stříškou; osy = hypotéza (snímek silně zkrácený); komín končil pod hřebenem a nebyl vidět – zvýšen na hřeben + 0,8 m, nutná přestavba; po přestavbě 25. 10.: komín nad hřebenem viditelný; ostatní pohledy beze změny
+- Doklad fasád (r4): main: hypotéza + dveře 1
+- Hypotézy: rozpor popisků GIS × archiv – provisional; výšky odhad (4,0/3,6/3,6); GIS/archive label conflict (see plan_search.json); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); rear jog of the GIS footprint (x 4.05-9.37, 1.2 m deep, probably a staircase) covered by its own small hip roof; not visible on any photo (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -455,14 +485,15 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1006: nárožní třípodlažní dům PROBST (s 1019)
 
-- Strana JV, orientační číslo 7, poloha: GIS půdorys id 1522; model `houses/cp1006/r2/cp_1006_G_r2.glb` (690 polygonů).
+- Strana JV, orientační číslo 7, poloha: GIS půdorys id 1522; model `houses/cp1006/r4/cp_1006_G_r4.glb` (839 polygonů).
 - Identita: Nárožní část dvojdomu se zkoseným nárožím a balkonem na nároží, obchod PROBST v suterénu/přízemí nároží; boční průčelí do vedlejší ulice 4 osy. Foto cp_1006,1019_001, cp_1006_001 (ulice), cp_1006_001__2, cp_1006_002 (boční/zadní s komínem), plán cp_1006_001 (L půdorys s křídlem).
 - Použité prameny: cp_1006_001 PLANE; cp_1006,1019_001 PLANE; cp_1006_001, cp_1006_001__2, cp_1006_002, cp_1006,1019_001/002 PHOTO; P-000936.
 - GIS: GIS id 1522 (278 m², 7 vrcholů) – poloha JZ nároží; popisek v GIS „1019“ (rozpor)
 - Rozměry: GIS id 1522 polygon with chamfer 3.85 m and rear wing; archive label 1006 (GIS 1019 - conflict recorded)
 - Průčelí: photos cp_1006,1019_001 (corner with balcony, PROBST), cp_1006_002 (side/rear), cp_1006_001 street
 - Střecha: low hip, skeleton over the L-shaped polygon
-- Kontrola: pass (r2); r2 shodné s r1: skeletonová valba nad L půdorysem, zkosené nároží s balkonem a obloukovým vstupem, boční průčelí 6 os, frontony
+- Kontrola: prošla (r4); valba u společné zdi s 1019 (fotografie: plynulá nízká střecha) – opraveno party_edges; překrývající se frontony sdruženého okna U3/U4 (černý artefakt) – frontony odstraněny; nutná přestavba; nároží s balkonem a 4 osy sdružených oken na boku sedí s cp_1006,1019_001; po přestavbě 25. 10.: štít na společné zdi s 1019, střecha plynule navazuje; artefakt u sdruženého okna zmizel
+- Doklad fasád (r4): main: 3 / 4 / 4 + dveře 1; chamfer: 1 / 1 + dveře 1; side: 8 / 8 / 8
 - Hypotézy: rozpor popisků GIS × archiv – provisional; zkosené nároží v GIS není, modelováno podle foto; výšky odhad; GIS/archive label conflict; shop PROBST in the chamfer simplified to an arched door; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
@@ -480,34 +511,36 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 | cp_1006_001.jpg | archivní karta (rub) | e303fbaaa319 |
 | cp_1006_002.jpg | archivní karta (rub) | ffa560075f5c |
 
-### Čp. 2073: novostavba 1960s, bytový dům
+### Čp. 2073: bytový dům (průčelí a vstup do ulice Na Střelišti)
 
-- Strana JV, orientační číslo – (Na střelišti), poloha: GIS půdorys id 2074; model `houses/cp2073/r2/cp_2073_G_r2.glb` (622 polygonů).
+- Strana JV, orientační číslo – (Na střelišti), poloha: GIS půdorys id 2074; model `houses/cp2073/r4/cp_2073_G_r4.glb` (735 polygonů).
 - Identita: Třípodlažní bytový dům s valbovou střechou a balkony na nároží Na střelišti/Vančurova („novostavba čp. 2073“ dle karty 1906,1914,1918). Foto cp_2073_001 (ze zahrady). Bez plánu.
 - Použité prameny: cp_2073_001 PHOTO (+karta).
 - GIS: GIS id 2074 (235 m², obdélník 10,3 × 23,4 m, delší strana podél Na střelišti)
 - Rozměry: GIS id 2074 rectangle 23.43 x 10.34 m
 - Průčelí: photo cp_2073_001: 3 storeys, hipped roof, 2 chimneys, balconies on the garden side
 - Střecha: hip
-- Kontrola: pass (r2); 3 podlaží, 7 os, valba, 2 komíny, 4 balkony na zahradní straně – odpovídá cp_2073_001 (počet os odhad)
-- Hypotézy: počet os odhad; výšky odhad (3,0 m podlaží); axes count 7 estimated; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Kontrola: prošla (r4); komíny (2) končily pod hřebenem a nebyly vidět – zvýšeno na hřeben + 0,8 m, nutná přestavba; strana do Žatecké 2 osy, zadní strana s balkony ve 2 řadách; vstup ze Střeliště nemodelován (poloha neznámá); po přestavbě 25. 10.: oba komíny nad hřebenem viditelné
+- Doklad fasád (r4): main: hypotéza; back: hypotéza; right: 2 / 2
+- Hypotézy: počet os odhad; výšky odhad (3,0 m podlaží); axes count 7 estimated; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); the long main facade faces Na Strelisti (entrance there per the KSPPOP card), the right short side faces Zatecka; the main facade itself is not photographed (model_hypothesis)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
 | cp_2073_001.jpg | fotografie | 5742fc9428b7 |
 | cp_2073_001.jpg | archivní karta (rub) | 8d239c6f3d91 |
 
-### Čp. 1918: vila (3 podlaží + podkroví)
+### Čp. 1918: vila (2 zděná podlaží + šindelové mansardové patro)
 
-- Strana JV, orientační číslo 10, poloha: odhad (sekvence); model `houses/cp1918/r3/cp_1918_G_r3.glb` (260 polygonů).
+- Strana JV, orientační číslo 10, poloha: odhad (sekvence); model `houses/cp1918/r4/cp_1918_G_r4.glb` (383 polygonů).
 - Identita: První vila za pozemkem 2073 (plán cp_1918_001: vlevo „pozemek domu 2073“, vpravo „zahrada čp. 1906“). Foto cp_1918_001/002 (z ulice: 3 podlaží, dřevem obložené podkroví, arkýř s balkonem), cp_1918_003 (ze zahrady), cp_1918_004 (zadní strany vil z 2072, vzadu muzeum 1360).
 - Použité prameny: cp_1918_001 PLANE; cp_1918_001..004 PHOTO; cp_1906,1914,1918_001 PHOTO.
 - GIS: bez GIS půdorysu – poloha v řadě odvozena
 - Rozměry: HYPOTHESIS 11.5 x 11 m (no GIS)
 - Průčelí: photos cp_1918_001/002/003: 3 storeys, wood-clad attic storey under a low hip, bay with balcony on the street side
 - Střecha: low hip over the attic storey
-- Kontrola: pass (r3); 3 podlaží + dřevěné podkrovní patro pod nízkou valbou, arkýř s balkonem, vstup se 4 stupni – odpovídá cp_1918_001/002; balkonová deska protínala horní plochu arkýře -> černý pás (detail_facade_right); opraveno v r3 (deska +2 cm); r3: balkonová deska 2 cm nad arkýřem – bez z-fightingu (detail_facade_right); podkrovní dřevěné patro, nízká valba, vstup se 4 stupni
-- Hypotézy: půdorys 11,5 × 11 m odhad; poloha: sekvence za 2073 (hypotéza); výšky odhad; entrance centred on the street side (photo shows a side entrance with stairs: uncertain); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); r3: balcony slab lifted 2 cm above the bay top
+- Kontrola: prošla (r4); mansardové patro mělo vzadu a po stranách omítku místo šindelového pláště – opraveno mat_all, nutná přestavba; dvě zděná podlaží, arkýř uprostřed s balkonem, zahradní rizalit se vstupem a 4 stupni sedí s kartami; po přestavbě 25. 10.: šindelový plášť mansardy na všech stranách
+- Doklad fasád (r4): main: 2 / 2; back: 3 / 4 + dveře 1
+- Hypotézy: půdorys 11,5 × 11 m odhad; poloha: sekvence za 2073 (hypotéza); výšky odhad; entrance centred on the street side (photo shows a side entrance with stairs: uncertain); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); r3: balcony slab lifted 2 cm above the bay top; masonry eave 7.0 m and mansard storey 7.0-9.4 m scaled from the photos (2 storeys + mansard); the garden basement level and the polygonal shape of the bay are not modelled (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -525,15 +558,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1906: polovina dvojdomu 1906/1907
 
-- Strana JV, orientační číslo 11, poloha: odhad (sekvence); model `houses/cp1906/r2/cp_1906_G_r2.glb` (306 polygonů).
+- Strana JV, orientační číslo 11, poloha: odhad (sekvence); model `houses/cp1906/r4/cp_1906_G_r4.glb` (352 polygonů).
 - Identita: Levá (SV) polovina dvojdomu; plán cp_1906_001 (vlevo zahrada 1918, vpravo 1907, „mansardy“, schodiště vzadu). Foto cp_1906_001 (z ulice), cp_1906_002 (zezadu se schodišťovou věží).
 - Použité prameny: cp_1906_001 PLANE; cp_1906_001/002 PHOTO; cp_1906,1914,1918_001.
 - GIS: bez GIS
 - Rozměry: HYPOTHESIS: 10.5 x 12.0 m half of a semi-detached villa (no GIS footprint); position = archive sequence
 - Průčelí: photos cp_1906_001/002, cp_1907_001/002: 2 storeys + mansard attic, hipped top, rear stair tower
-- Střecha: mansard-type attic with vertical dormer windows (photos); one roof carried by the left half
-- Kontrola: pass (r2); levá polovina dvojdomu: dveře + 2 okna / 3 okna, mansardové podkroví se 4 svislými vikýřovými okny vpředu i vzadu, valbový vršek, komín; společná střecha nad oběma polovinami (v samostatném QA přesahuje nad prázdnou pravou polovinu – záměr)
-- Hypotézy: půdorys 10,5 × 12 m odhad; poloha sekvence; mansarda zjednodušena; semi-detached pair: the roof over both halves is carried by the left (lower orientation number) half model; the right half has no own roof; entrance at the outer end of each half (uncertain); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Střecha: cp_1906_001.jpg PLANE (3c9f7823) – ruční náčrt střechy a parcely: valby na koncích, hřeben souběžný s ulicí, uprostřed vpředu i vzadu mansardové patro (Mansarda/Mansardy), vstupy ze zahrady
+- Kontrola: prošla (r4); černý pás na společné zdi: zadní křídlo leží v rovině zdi hlavního domu (koplanární plochy stejného směru) – opraveno v z4_post (krok m), nutná přestavba; valba přes dvojdům, mansardová patra vpředu a vzadu, vstup ze zahrady sedí s náčrtem; po přestavbě 25. 10.: černý pás zmizel, společná zeď souvislá; ostatní pohledy beze změny
+- Doklad fasád (r4): main: 2 / 2; dormers: 1; back: hypotéza
+- Hypotézy: půdorys 10,5 × 12 m odhad; poloha sekvence; mansarda zjednodušena; entrance at the outer end of each half (uncertain); body depth, mansard storeys, rear block and dormer positions read on the unscaled hand sketch (ratios to the half width, averaged over both halves of the pair) – model_hypothesis, provisional, locked=false; eave 6.6 m, mansard storey 2.7 m, ridge rise 3.6 m estimated from photographs; small triangular dormers on the hipped ends and on the rear slope (sketch) are not modelled
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -547,15 +581,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1907: polovina dvojdomu 1906/1907
 
-- Strana JV, orientační číslo 12, poloha: odhad (sekvence); model `houses/cp1907/r2/cp_1907_G_r2.glb` (154 polygonů).
+- Strana JV, orientační číslo 12, poloha: odhad (sekvence); model `houses/cp1907/r4/cp_1907_G_r4.glb` (346 polygonů).
 - Identita: Pravá (JZ) polovina dvojdomu (plán cp_1907_001: vlevo 1906). Foto cp_1907_001 (z ulice), cp_1907_002 (zezadu).
 - Použité prameny: cp_1907_001 PLANE; cp_1907_001/002 PHOTO.
 - GIS: bez GIS
 - Rozměry: HYPOTHESIS: 10.5 x 12.0 m half of a semi-detached villa (no GIS footprint); position = archive sequence
 - Průčelí: photos cp_1906_001/002, cp_1907_001/002: 2 storeys + mansard attic, hipped top, rear stair tower
-- Střecha: mansard-type attic with vertical dormer windows (photos); one roof carried by the left half
-- Kontrola: pass (r2); pravá polovina (zrcadlo 1906) bez vlastní střechy – střechu nese model 1906 (ověřeno v sestavě ulice: oblique_villa_row.png); samostatný QA list proto ukazuje plochý vršek
-- Hypotézy: zrcadlo 1906; poloha sekvence; semi-detached pair: the roof over both halves is carried by the left (lower orientation number) half model; the right half has no own roof; entrance at the outer end of each half (uncertain); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Střecha: cp_1907_001.jpg PLANE (801ea125) – ruční náčrt střechy a parcely: valby na koncích, hřeben souběžný s ulicí, uprostřed vpředu i vzadu mansardové patro (Mansarda/Mansardy), vstupy ze zahrady
+- Kontrola: prošla (r4); černý pás na společné zdi (stejná příčina jako 1906) – opraveno, nutná přestavba; zrcadlo 1906 podle náčrtu cp_1907_001; po přestavbě 25. 10.: černý pás zmizel; ostatní pohledy beze změny
+- Doklad fasád (r4): main: 2 / 2; dormers: 1; back: hypotéza
+- Hypotézy: zrcadlo 1906; poloha sekvence; entrance at the outer end of each half (uncertain); body depth, mansard storeys, rear block and dormer positions read on the unscaled hand sketch (ratios to the half width, averaged over both halves of the pair) – model_hypothesis, provisional, locked=false; eave 6.6 m, mansard storey 2.7 m, ridge rise 3.6 m estimated from photographs; small triangular dormers on the hipped ends and on the rear slope (sketch) are not modelled
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -569,15 +604,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1914: polovina dvojdomu 1914/1915
 
-- Strana JV, orientační číslo 13, poloha: odhad (sekvence); model `houses/cp1914/r2/cp_1914_G_r2.glb` (306 polygonů).
+- Strana JV, orientační číslo 13, poloha: odhad (sekvence); model `houses/cp1914/r4/cp_1914_G_r4.glb` (382 polygonů).
 - Identita: Levá (SV) polovina dvojdomu (plán cp_1914_001: vlevo zahrada 1907, vpravo 1915). Foto cp_1914_001 (z ulice s autem), cp_1914,1915_001 (zezadu).
 - Použité prameny: cp_1914_001 PLANE; cp_1914_001, cp_1914,1915_001 PHOTO; cp_1906,1914,1918_001; cp_1903,1904,1907,1914,1915_001.
 - GIS: bez GIS
 - Rozměry: HYPOTHESIS: 10.5 x 12.0 m half of a semi-detached villa (no GIS footprint); position = archive sequence
 - Průčelí: photos cp_1914_001, cp_1915_001/002, cp_1914,1915_001: 2 storeys + mansard attic
-- Střecha: mansard-type attic with vertical dormer windows (photos); one roof carried by the left half
-- Kontrola: pass (r2); levá polovina dvojdomu 1914/1915, shodný typ jako 1906 (dveře + 2/3 okna, mansardové podkroví se 4+4 vikýřovými okny, společná střecha nad oběma polovinami)
-- Hypotézy: půdorys 10,5 × 12 m; poloha sekvence; semi-detached pair: the roof over both halves is carried by the left (lower orientation number) half model; the right half has no own roof; entrance at the outer end of each half (uncertain); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Střecha: cp_1914_001.jpg PLANE (bea8d1c0) – ruční náčrt střechy a parcely: valby na koncích, hřeben souběžný s ulicí, uprostřed vpředu i vzadu mansardové patro (Mansarda/Mansardy), vstupy ze zahrady
+- Kontrola: prošla (r4); černý pás na společné zdi (koplanární zadní křídlo) – opraveno, nutná přestavba; průčelí s širokým oknem u nároží a mansardovým patrem sedí s cp_1914_001; po přestavbě 25. 10.: černý pás zmizel; ostatní pohledy beze změny
+- Doklad fasád (r4): main: 2 / 2; dormers: 1; back: hypotéza
+- Hypotézy: půdorys 10,5 × 12 m; poloha sekvence; entrance at the outer end of each half (uncertain); body depth, mansard storeys, rear block and dormer positions read on the unscaled hand sketch (ratios to the half width, averaged over both halves of the pair) – model_hypothesis, provisional, locked=false; eave 6.6 m, mansard storey 2.7 m, ridge rise 3.6 m estimated from photographs; small triangular dormers on the hipped ends and on the rear slope (sketch) are not modelled
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -593,15 +629,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1915: polovina dvojdomu 1914/1915
 
-- Strana JV, orientační číslo 14, poloha: odhad (sekvence); model `houses/cp1915/r2/cp_1915_G_r2.glb` (154 polygonů).
+- Strana JV, orientační číslo 14, poloha: odhad (sekvence); model `houses/cp1915/r4/cp_1915_G_r4.glb` (406 polygonů).
 - Identita: Pravá (JZ) polovina dvojdomu; vpravo „průchod do Vančurovy ulice“ (plán cp_1915_001). Foto cp_1915_001 (z ulice), cp_1915_002 (plot).
 - Použité prameny: cp_1915_001 PLANE; cp_1915_001/002 PHOTO.
 - GIS: bez GIS
 - Rozměry: HYPOTHESIS: 10.5 x 12.0 m half of a semi-detached villa (no GIS footprint); position = archive sequence
 - Průčelí: photos cp_1914_001, cp_1915_001/002, cp_1914,1915_001: 2 storeys + mansard attic
-- Střecha: mansard-type attic with vertical dormer windows (photos); one roof carried by the left half
-- Kontrola: pass (r2); pravá polovina (zrcadlo 1914) bez vlastní střechy – střechu nese model 1914 (sestava ulice)
-- Hypotézy: zrcadlo 1914; poloha sekvence; semi-detached pair: the roof over both halves is carried by the left (lower orientation number) half model; the right half has no own roof; entrance at the outer end of each half (uncertain); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Střecha: cp_1915_001.jpg PLANE (e4d9c383) – ruční náčrt střechy a parcely: valby na koncích, hřeben souběžný s ulicí, uprostřed vpředu i vzadu mansardové patro (Mansarda/Mansardy), vstupy ze zahrady
+- Kontrola: prošla (r4); černý pás na společné zdi (koplanární zadní křídlo) – opraveno, nutná přestavba; po přestavbě 25. 10.: černý pás zmizel; ostatní pohledy beze změny
+- Doklad fasád (r4): main: 2 / 2; dormers: 1; back: hypotéza; side: 1 / 1
+- Hypotézy: zrcadlo 1914; poloha sekvence; entrance at the outer end of each half (uncertain); body depth, mansard storeys, rear block and dormer positions read on the unscaled hand sketch (ratios to the half width, averaged over both halves of the pair) – model_hypothesis, provisional, locked=false; eave 6.6 m, mansard storey 2.7 m, ridge rise 3.6 m estimated from photographs; small triangular dormers on the hipped ends and on the rear slope (sketch) are not modelled
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -617,15 +654,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1903: polovina dvojdomu 1903/1904
 
-- Strana JV, orientační číslo 15, poloha: odhad (sekvence); model `houses/cp1903/r2/cp_1903_G_r2.glb` (306 polygonů).
+- Strana JV, orientační číslo 15, poloha: odhad (sekvence); model `houses/cp1903/r4/cp_1903_G_r4.glb` (343 polygonů).
 - Identita: „Dvouvilka“ 1903/1904 – levá polovina za průchodem do Vančurovy ul. (plán cp_1903_001: vlevo průchod, vpravo 1904, schodiště vzadu). Foto cp_1903_001 (z ulice), cp_1903_002 (plot), cp_1903_003 (zezadu).
 - Použité prameny: cp_1903_001 PLANE; cp_1903_001..003 PHOTO; cp_1903,1904,1907,1914,1915_001 (zadní fronty z 2072).
 - GIS: bez GIS
 - Rozměry: HYPOTHESIS: 10.5 x 12.0 m half of a semi-detached villa (no GIS footprint); position = archive sequence
 - Průčelí: photos cp_1903_001..003, cp_1904_001..004: 2 storeys + mansard attic, side entrance 1904
-- Střecha: mansard-type attic with vertical dormer windows (photos); one roof carried by the left half
-- Kontrola: pass (r2); levá polovina dvojdomu 1903/1904, shodný typ (foto cp_1903_001: vstup a schody, mansardové podkroví)
-- Hypotézy: půdorys 10,5 × 12 m; poloha sekvence; semi-detached pair: the roof over both halves is carried by the left (lower orientation number) half model; the right half has no own roof; entrance at the outer end of each half (uncertain); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Střecha: cp_1903_001.jpg PLANE (4952657a) – ruční náčrt střechy a parcely: valby na koncích, hřeben souběžný s ulicí, uprostřed vpředu i vzadu mansardové patro (Mansarda/Mansardy), vstupy ze zahrady
+- Kontrola: prošla (r4); společný komín na dělicí zdi visel 0,4 m přes sousední polovinu – rozdělen na dvě poloviny, nutná přestavba; štít mansardy vpředu, schodišťová věž vzadu se vstupem a schody podle náčrtu; po přestavbě 25. 10.: polovina společného komínu stojí od koruny zdi, bez černé plochy na dělicí zdi; ostatní pohledy beze změny
+- Doklad fasád (r4): main: 2 / 2; dormers: 2; back: hypotéza
+- Hypotézy: půdorys 10,5 × 12 m; poloha sekvence; entrance at the outer end of each half (uncertain); body depth, mansard storeys, rear block and dormer positions read on the unscaled hand sketch (ratios to the half width, averaged over both halves of the pair) – model_hypothesis, provisional, locked=false; eave 6.6 m, mansard storey 2.7 m, ridge rise 3.6 m estimated from photographs; small triangular dormers on the hipped ends and on the rear slope (sketch) are not modelled
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -641,15 +679,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1904: polovina dvojdomu 1903/1904
 
-- Strana JV, orientační číslo 16, poloha: odhad (sekvence); model `houses/cp1904/r2/cp_1904_G_r2.glb` (154 polygonů).
+- Strana JV, orientační číslo 16, poloha: odhad (sekvence); model `houses/cp1904/r4/cp_1904_G_r4.glb` (323 polygonů).
 - Identita: Pravá polovina dvojdomu (plán cp_1904_001: vlevo 1903, vpravo zahrada 1899, garáž vzadu). Foto cp_1904_001 (z ulice), cp_1904_002/003 (zezadu, vstup z boku), cp_1904_004 (garáž).
 - Použité prameny: cp_1904_001 PLANE; cp_1904_001..004 PHOTO.
 - GIS: bez GIS
 - Rozměry: HYPOTHESIS: 10.5 x 12.0 m half of a semi-detached villa (no GIS footprint); position = archive sequence
 - Průčelí: photos cp_1903_001..003, cp_1904_001..004: 2 storeys + mansard attic, side entrance 1904
-- Střecha: mansard-type attic with vertical dormer windows (photos); one roof carried by the left half
-- Kontrola: pass (r2); pravá polovina dvojdomu 1903/1904 (zrcadlo), bez vlastní střechy – střechu nese model 1903 (sestava ulice); vstup ze strany podle cp_1904_002 nemodelován (hypotéza: vstup v průčelí)
-- Hypotézy: zrcadlo 1903; garáž nemodelována; semi-detached pair: the roof over both halves is carried by the left (lower orientation number) half model; the right half has no own roof; entrance at the outer end of each half (uncertain); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Střecha: cp_1904_001.jpg PLANE (f5c9dc80) – ruční náčrt střechy a parcely: valby na koncích, hřeben souběžný s ulicí, uprostřed vpředu i vzadu mansardové patro (Mansarda/Mansardy), vstupy ze zahrady
+- Kontrola: prošla (r4); pohledy bez vady; doplněna polovina společného komínu na dělicí zdi – nutná přestavba a nová kontrola; štít mansardy vpředu u dělicí zdi, zadní vstup se schody podle náčrtu; po přestavbě 25. 10.: polovina společného komínu stojí od koruny zdi, bez černé plochy na dělicí zdi; ostatní pohledy beze změny
+- Doklad fasád (r4): main: hypotéza; dormers: hypotéza; back: hypotéza; side: 1 / 1
+- Hypotézy: zrcadlo 1903; garáž nemodelována; entrance at the outer end of each half (uncertain); body depth, mansard storeys, rear block and dormer positions read on the unscaled hand sketch (ratios to the half width, averaged over both halves of the pair) – model_hypothesis, provisional, locked=false; eave 6.6 m, mansard storey 2.7 m, ridge rise 3.6 m estimated from photographs; small triangular dormers on the hipped ends and on the rear slope (sketch) are not modelled
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -667,15 +706,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1899: polovina dvojdomu 1899/1901
 
-- Strana JV, orientační číslo 17, poloha: odhad (sekvence); model `houses/cp1899/r2/cp_1899_G_r2.glb` (306 polygonů).
+- Strana JV, orientační číslo 17, poloha: odhad (sekvence); model `houses/cp1899/r4/cp_1899_G_r4.glb` (336 polygonů).
 - Identita: Levá polovina dvojdomu (plán cp_1899_001: vlevo zahrada 1904, vpravo 1901). Foto cp_1899_001 (z ulice), cp_1899_002 (ze zahrady).
 - Použité prameny: cp_1899_001 PLANE; cp_1899_001/002 PHOTO.
 - GIS: bez GIS
 - Rozměry: HYPOTHESIS: 10.0 x 11.0 m half of a semi-detached villa (no GIS footprint); position = archive sequence
 - Průčelí: photos cp_1899_001/002, cp_1901_001/002: 2 storeys + mansard attic
-- Střecha: mansard-type attic with vertical dormer windows (photos); one roof carried by the left half
-- Kontrola: pass (r2); levá polovina dvojdomu 1899/1901 (10 × 11 m), mansardové podkroví se 4+4 vikýřovými okny, společná střecha
-- Hypotézy: půdorys 10 × 11 m; poloha sekvence; semi-detached pair: the roof over both halves is carried by the left (lower orientation number) half model; the right half has no own roof; entrance at the outer end of each half (uncertain); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Střecha: cp_1899_001.jpg PLANE (aa7bdc05) – ruční náčrt střechy a parcely: valby na koncích, hřeben souběžný s ulicí, uprostřed vpředu i vzadu mansardové patro (Mansarda/Mansardy), vstupy ze zahrady
+- Kontrola: prošla (r4); společný komín na dělicí zdi visel přes sousední polovinu – rozdělen, nutná přestavba; mansardové patro vpředu a vzadu, vstup ze zahrady podle náčrtu; po přestavbě 25. 10.: polovina komínu v pořádku nad střechou, ale u paty černý čtverec (plocha komínu v rovině dělicí zdi pod korunou) – komín nově začíná na koruně zdi, nutná další přestavba; po přestavbě 25. 10.: polovina společného komínu stojí od koruny zdi, bez černé plochy na dělicí zdi; ostatní pohledy beze změny
+- Doklad fasád (r4): main: hypotéza; dormers: hypotéza; back: hypotéza; side: 1 / 1
+- Hypotézy: půdorys 10 × 11 m; poloha sekvence; entrance at the outer end of each half (uncertain); body depth, mansard storeys, rear block and dormer positions read on the unscaled hand sketch (ratios to the half width, averaged over both halves of the pair) – model_hypothesis, provisional, locked=false; eave 6.6 m, mansard storey 2.7 m, ridge rise 3.6 m estimated from photographs; small triangular dormers on the hipped ends and on the rear slope (sketch) are not modelled
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -687,15 +727,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1901: polovina dvojdomu 1899/1901
 
-- Strana JV, orientační číslo 18, poloha: odhad (sekvence); model `houses/cp1901/r2/cp_1901_G_r2.glb` (154 polygonů).
+- Strana JV, orientační číslo 18, poloha: odhad (sekvence); model `houses/cp1901/r4/cp_1901_G_r4.glb` (312 polygonů).
 - Identita: Pravá polovina dvojdomu (plán cp_1901_001: vlevo dvorek 1899, vpravo dvůr domu 1867). Foto cp_1901_001 (z ulice), cp_1901_002 (ze zahrady).
 - Použité prameny: cp_1901_001 PLANE; cp_1901_001/002 PHOTO.
 - GIS: bez GIS
 - Rozměry: HYPOTHESIS: 10.0 x 11.0 m half of a semi-detached villa (no GIS footprint); position = archive sequence
 - Průčelí: photos cp_1899_001/002, cp_1901_001/002: 2 storeys + mansard attic
-- Střecha: mansard-type attic with vertical dormer windows (photos); one roof carried by the left half
-- Kontrola: pass (r2); pravá polovina (zrcadlo 1899) bez vlastní střechy – střechu nese model 1899
-- Hypotézy: zrcadlo 1899; poloha sekvence; semi-detached pair: the roof over both halves is carried by the left (lower orientation number) half model; the right half has no own roof; entrance at the outer end of each half (uncertain); all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Střecha: cp_1901_001.jpg PLANE (14b2e223) – ruční náčrt střechy a parcely: valby na koncích, hřeben souběžný s ulicí, uprostřed vpředu i vzadu mansardové patro (Mansarda/Mansardy), vstupy ze zahrady
+- Kontrola: prošla (r4); doplněna polovina společného komínu – nutná přestavba a nová kontrola; po přestavbě 25. 10.: polovina společného komínu stojí od koruny zdi, bez černé plochy na dělicí zdi; ostatní pohledy beze změny
+- Doklad fasád (r4): main: hypotéza; dormers: hypotéza; back: hypotéza
+- Hypotézy: zrcadlo 1899; poloha sekvence; entrance at the outer end of each half (uncertain); body depth, mansard storeys, rear block and dormer positions read on the unscaled hand sketch (ratios to the half width, averaged over both halves of the pair) – model_hypothesis, provisional, locked=false; eave 6.6 m, mansard storey 2.7 m, ridge rise 3.6 m estimated from photographs; small triangular dormers on the hipped ends and on the rear slope (sketch) are not modelled
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -707,15 +748,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1867: vila (2 podlaží + mansardové podkroví)
 
-- Strana JV, orientační číslo 19, poloha: odhad (sekvence); model `houses/cp1867/r3/cp_1867_G_r3.glb` (258 polygonů).
+- Strana JV, orientační číslo 19, poloha: odhad (sekvence); model `houses/cp1867/r4/cp_1867_G_r4.glb` (418 polygonů).
 - Identita: Samostatná vila (plán cp_1867_001: vlevo zahrada domu 1899/1901, vpravo dvůr domu 1872; „balkon na arkýři“ k ulici, „podezd. balkon“ + schody vlevo). Foto cp_1867_001/002 (z ulice), cp_1867_003 (ze zahrady), cp_1872,1867_001..003 (zadky, pohled ulicí vzhůru).
 - Použité prameny: cp_1867_001 PLANE; cp_1867_001..003, cp_1872,1867_001..003 PHOTO.
 - GIS: bez GIS
 - Rozměry: HYPOTHESIS 12 x 10.5 m (no GIS)
 - Průčelí: photos cp_1867_001/002/003, sketch cp_1867_001: balcony on a street bay, pedestal balcony + stairs on the left side
 - Střecha: mansard-type attic (photo cp_1867_002)
-- Kontrola: pass (r3); r3: balkonová deska nad arkýřem bez průniku; mansardové podkroví 2+2 okna, boční vstup s 5 stupni, arkýř s balkonem – odpovídá cp_1867_001/002 a náčrtu
-- Hypotézy: půdorys 12 × 10,5 m; poloha sekvence; mansardové podkroví zjednodušeno; bay and balcony sizes; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); r3: balcony slab lifted 2 cm above the bay top
+- Kontrola: prošla (r4); mansarda s vikýři, štít s balkonovými dveřmi a balkon na arkýři, podezděný balkon se schody podél levé zdi a zadní vstup podle náčrtu cp_1867_001
+- Doklad fasád (r4): main: 1 / 2; dormers: hypotéza + dveře 1; left: hypotéza; back: hypotéza
+- Hypotézy: půdorys 12 × 10,5 m; poloha sekvence; mansardové podkroví zjednodušeno; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); depth 9.16 m, bay, podium balcony with stairs along the left wall and rear entrance from the unscaled sketch cp_1867_001 PLANE (70c6061c) (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
@@ -735,15 +777,16 @@ Výsledek: 25 z 25 domů bez zjevné vady geometrie v kontrolních pohledech. Ko
 
 ### Čp. 1872: vila (poslední zbořená)
 
-- Strana JV, orientační číslo 20, poloha: odhad (sekvence); model `houses/cp1872/r2/cp_1872_G_r2.glb` (182 polygonů).
+- Strana JV, orientační číslo 20, poloha: odhad (sekvence); model `houses/cp1872/r4/cp_1872_G_r4.glb` (358 polygonů).
 - Identita: Poslední zbořená vila ulice (karty: „2 poslední zbořené vilky“, za ní trojdům 2104–2106 Larcovy ul. zachován). Plán cp_1872_001: arkýř k ulici, zádveří vlevo, garáž vzadu. Foto cp_1872_001..005 (z ulice shora/zdola, bok, zadek).
 - Použité prameny: cp_1872_001 PLANE; cp_1872_001..005, cp_1872,1867_001..003 PHOTO.
 - GIS: bez GIS
 - Rozměry: HYPOTHESIS 12 x 10.5 m (no GIS)
 - Průčelí: photos cp_1872_001..005, sketch cp_1872_001: oriel to the street, porch (zadveri) on the left, hip roof with small dormers
 - Střecha: hip (photo cp_1872_002/004)
-- Kontrola: pass (r2); valba s 2 malými štítovými vikýři, dvoupodlažní arkýř s vlastní valbičkou, zádveří vlevo se dveřmi a 3 stupni, 2 komíny – odpovídá cp_1872_001..005 a náčrtu
-- Hypotézy: půdorys 12 × 10,5 m; poloha sekvence; arkýř zjednodušen na hranol; oriel modelled as a 2-storey prism with its own hip; porch size; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false)
+- Kontrola: prošla (r4); arkýř se štítovým patrem a 2 okny, levé křídlo s valbou zaústěnou do hlavní střechy, zádveří se vstupem a 3 schody podle náčrtu cp_1872_001; okna vlevo a vpravo od arkýře v obou podlažích
+- Doklad fasád (r4): main: 2 / 2; dormers: 2
+- Hypotézy: půdorys 12 × 10,5 m; poloha sekvence; arkýř zjednodušen na hranol; porch size; all storey heights, opening sizes and roof pitches are estimates from photographs (model_hypothesis, provisional, locked=false); footprint depth 9.4 m, bay, gable storey, left wing and porch from the unscaled sketch cp_1872_001.jpg PLANE (f7dfe386) – ruční náčrt (ratios to the 12 m front); triangular dormers on the rear slope and right hip (sketch) not modelled (model_hypothesis, provisional, locked=false)
 
 | Příloha | Typ | SHA-256 (12 znaků) |
 |---|---|---|
