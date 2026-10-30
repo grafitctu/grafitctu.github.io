@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Jan Matoušek · Návrhové vzory ve hrách · nativní webová přednáška.">
+  <title>VGA · 04 · Návrhové vzory ve hrách</title>
+  <script>
+    (() => {
+      let saved;
+      try { saved = localStorage.getItem('vga04-native-theme'); } catch {}
+      document.documentElement.dataset.theme = saved === 'dark' || saved === 'light'
+        ? saved : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    })();
+  </script>
+  <link rel="stylesheet" href="presentation.css?v=00bec259e97d">
+  <script src="presentation.js?v=2aa26612d7db" defer></script><script src="interactions.js?v=17f71d4bef73" defer></script>
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+</head>
+<body class="grafit-toolbar-return">
+  <header class="toolbar">
+<a id="grafit-lecture-return" class="grafit-lecture-return" href="../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+    <a class="brand" id="grafit-course-link" href="../" aria-label="Přehled přednášek VGA" data-subject="vga">VGA <span>/ 04</span></a>
+    <span id="chapter">Úvod</span>
+    <nav aria-label="Nástroje prezentace">
+      <button id="contents" aria-haspopup="dialog">Obsah</button>
+      <a class="pdf-link" href="original.pdf">PDF</a><a class="pdf-link" href="offline.zip">Offline ZIP</a><button type="button" id="print-button">Tisk</button><button type="button" id="notes-toggle" aria-expanded="false" aria-controls="notes-panel">Poznámky</button><button type="button" id="lab-toggle" aria-haspopup="dialog">Ukázka</button><button id="reading" aria-pressed="false">Čtení</button>
+      <button id="theme" aria-label="Tmavý režim" aria-pressed="false" title="Tmavý režim">◐</button>
+      <button id="fullscreen" aria-label="Celá obrazovka (F)">⛶ <span>Celá obrazovka</span></button>
+    </nav>
+  </header>
+  <main id="deck" aria-label="Návrhové vzory ve hrách">
+    <section class="slide" id="slide-1" data-section="Úvod" aria-label="1: Návrhové vzory ve hrách"><div class="content"><p class="eyebrow">Úvod</p><h2>Návrhové vzory ve hrách</h2><div class="native-layout"><div class="native-copy"><p>Jan Matoušek · FIT ČVUT · 15. 10. 2026</p><p>Komunikace, chování, vytváření objektů a služby v herní architektuře.</p><p class="source-notice">Nativní přepis všech 55 stran. Původní výkladové fragmenty C++ jsou označené; opravy a model jsou samostatný doplněk GRAFIT. PDF zůstává beze změny.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=1">Původní PDF · strana 1</a></p></div></section>
+<section class="slide" id="slide-2" data-section="Command" aria-label="2: Command"><div class="content"><p class="eyebrow">Command</p><h2>Command</h2><div class="native-layout"><div class="native-copy"><p class="section-intro">Oddělte požadavek na akci od okamžiku jejího provedení.</p><p class="source-notice">Úvodní věta je doplněk GRAFIT k oddílovému snímku.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=2">Původní PDF · strana 2</a></p></div></section>
+<section class="slide" id="slide-3" data-section="Command" aria-label="3: Kontext"><div class="content"><p class="eyebrow">Command</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>void InputHandler::handleInput() {
+    if (isPressed(BUTTON_X)) jump();
+    else if (isPressed(BUTTON_Y)) fireGun();
+    else if (isPressed(BUTTON_A)) swapWeapon();
+    else if (isPressed(BUTTON_B)) lurchIneffectively();
+}</code></pre><p>Problémy?</p><p>Chceme oddělit zpracování vstupu (handling) od reakce na vstup (update).</p><p>Někdy nechceme na vstup reagovat hned (zpoždění vyhodnocování).</p><p>Někdy chceme vstup vyhodnocovat opakovaně nebo se vracet.</p><p>Chceme příkazy vykonávat jinde (na jiném stroji, v jiné komponentě atd.).</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=3">Původní PDF · strana 3</a></p></div></section>
+<section class="slide" id="slide-4" data-section="Command" aria-label="4: Pattern"><div class="content"><p class="eyebrow">Command</p><h2>Pattern</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Command {
+public:
+    virtual ~Command() {}
+    virtual void execute() = 0;
+};</code></pre><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class JumpCommand : public Command {
+public:
+    void execute() override { jump(); }
+};</code></pre><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class FireCommand : public Command {
+public:
+    void execute() override { fireGun(); }
+};</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=4">Původní PDF · strana 4</a></p></div></section>
+<section class="slide" id="slide-5" data-section="Command" aria-label="5: Upravené zpracování vstupu"><div class="content"><p class="eyebrow">Command</p><h2>Upravené zpracování vstupu</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class InputHandler {
+public:
+    void handleInput();
+private:
+    Command* buttonX_;
+    Command* buttonY_;
+    Command* buttonA_;
+    Command* buttonB_;
+};
+void InputHandler::handleInput() {
+    if (isPressed(BUTTON_X)) buttonX_-&gt;execute();
+    else if (isPressed(BUTTON_Y)) buttonY_-&gt;execute();
+    else if (isPressed(BUTTON_A)) buttonA_-&gt;execute();
+    else if (isPressed(BUTTON_B)) buttonB_-&gt;execute();
+}</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=5">Původní PDF · strana 5</a></p></div></section>
+<section class="slide" id="slide-6" data-section="Command" aria-label="6: Lépe oddělené zpracování vstupu"><div class="content"><p class="eyebrow">Command</p><h2>Lépe oddělené zpracování vstupu</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>Command* InputHandler::handleInput() {
+    if (isPressed(BUTTON_X)) return buttonX_;
+    else if (isPressed(BUTTON_Y)) return buttonY_;
+    else if (isPressed(BUTTON_A)) return buttonA_;
+    else if (isPressed(BUTTON_B)) return buttonB_;
+    return nullptr;
+}
+void Game::loop() {
+    while (true) {
+        auto command = inputHandler.handleInput();
+        if (command) command-&gt;execute();
+        // ...
+    }
+}</code></pre><p>Problémy? Co když chci skákat a střílet zároveň?</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=6">Původní PDF · strana 6</a></p></div></section>
+<section class="slide" id="slide-7" data-section="Command" aria-label="7: Rozšíření: Fronta příkazů"><div class="content"><p class="eyebrow">Command</p><h2>Rozšíření: Fronta příkazů</h2><div class="native-layout"><div class="native-copy"><p class="source-notice">Doplněk GRAFIT: původní fragment není správné použití std::queue. Předávejte frontu referencí, používejte push()/pop() a nezávislé if pro souběžné vstupy; else-if propustí jen první příkaz. Původní fragment níže zůstává výkladovým podkladem, nikoli spustitelným příkladem.</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>void InputHandler::handleInput(std::queue&lt;Command*&gt; q) {
+    if (isPressed(BUTTON_X)) q.push_back(buttonX_);
+    else if (isPressed(BUTTON_Y)) q.push_back(buttonY_);
+    else if (isPressed(BUTTON_A)) q.push_back(buttonA_);
+    else if (isPressed(BUTTON_B)) q.push_back(buttonB_);
+}
+void Game::loop() {
+    while (true) {
+        inputHandler.handleInput(commandQueue);
+        while (!commandQueue.empty()) {
+            commandQueue.front()-&gt;execute();
+            commandQueue.pop_front();
+        }
+        // ...
+    }
+}</code></pre><button class="lab-trigger" data-open-lab>Interaktivní ukázka · doplněk GRAFIT</button></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=7">Původní PDF · strana 7</a></p></div></section>
+<section class="slide" id="slide-8" data-section="Command" aria-label="8: Další možná rozšíření"><div class="content"><p class="eyebrow">Command</p><h2>Další možná rozšíření</h2><div class="native-layout"><div class="native-copy"><p>Příkazy pro konkrétní/různé objekty:</p><p>metoda execute() může přijímat parametry,</p><p>instance třídy Command může obsahovat další parametry.</p><p>Undo (a redo):</p><p>přidání virtuální metody undo(),</p><p>zásobníky na provedené a vrácené příkazy.</p><p>Doplnění o čas / číslo snímku:</p><p>možnost pamatovat si historii s časovými údaji,</p><p>vhodné pro schopnost opětovného přehrávání vstupů a událostí.</p><p>Serializace / deserializace:</p><p>pro ukládání sekvence příkazů na disk k následné rekonstrukci stavu hry,</p><p>pro přenos příkazů po síti.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=8">Původní PDF · strana 8</a></p></div></section>
+<section class="slide" id="slide-9" data-section="Observer" aria-label="9: Observer"><div class="content"><p class="eyebrow">Observer</p><h2>Observer</h2><div class="native-layout"><div class="native-copy"><p class="section-intro">Informujte závislé objekty o události.</p><p class="source-notice">Úvodní věta je doplněk GRAFIT k oddílovému snímku.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=9">Původní PDF · strana 9</a></p></div></section>
+<section class="slide" id="slide-10" data-section="Observer" aria-label="10: Kontext"><div class="content"><p class="eyebrow">Observer</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>void Hero::update() {
+    // ...
+    if (tookCoin) {
+        score += 5;
+        gui.scoreDisplay.setScore(score);
+        if (score &gt;= 1000000) {
+            awardAchievement(A_BIG_MONEY);
+        }
+    }
+    // ...
+}</code></pre><p>Problémy?</p><p>Třída Hero obsahuje logiku jiných částí programu</p><p>Obtížná údržba kódu</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=10">Původní PDF · strana 10</a></p></div></section>
+<section class="slide" id="slide-11" data-section="Observer" aria-label="11: Pattern"><div class="content"><p class="eyebrow">Observer</p><h2>Pattern</h2><div class="native-layout"><div class="native-copy"><p class="source-notice">Doplněk GRAFIT: v úplném C++ rozhraní musí být notifyObserver přístupné volajícímu (public); fragment vynechává části deklarace a správu životnosti.</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Observer {
+    virtual void notifyObserver(EventData event) = 0;
+};</code></pre><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Subject {
+    std::vector&lt;Observer*&gt; observers;
+public:
+    void addObserver(Observer* observer); // obvious
+    void removeObserver(Observer* observer); // obvious
+protected:
+    void notifyObservers(EventData event) {
+        for (auto observer: observers) {
+            observer-&gt;notifyObserver(event);
+        }
+    }
+};</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=11">Původní PDF · strana 11</a></p></div></section>
+<section class="slide" id="slide-12" data-section="Observer" aria-label="12: Aplikace v ukázce"><div class="content"><p class="eyebrow">Observer</p><h2>Aplikace v ukázce</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class GuiScoreObserver : public Observer { ... };
+class AchievementObserver : public Observer { ... };</code></pre><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Hero : public Subject { ... };</code></pre><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>void Hero::update() {
+    // ...
+    if (tookCoin) {
+        score += 5;
+        notifyObservers(EventData{ ... });
+    }
+    // ...
+}</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=12">Původní PDF · strana 12</a></p></div></section>
+<section class="slide" id="slide-13" data-section="Observer" aria-label="13: Registrace observerů"><div class="content"><p class="eyebrow">Observer</p><h2>Registrace observerů</h2><div class="native-layout"><div class="native-copy"><p>Zodpovědnost observerů, nikoliv subjektů</p><p>ideálně ve svém konstruktoru zavolá addObserver()</p><p>ideálně ve svém destruktoru zavolá removeObserver()</p><p>pokud observer pozoruje více subjektů, musí si je pamatovat</p><p>Potenciální problém: zánik subjektu dříve než observeru</p><p>v C++ může řešit použití std::weak_ptr,</p><p>případně odložit rušení objektů do jiné části herní smyčky, viz queue_free() v Godot engine</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=13">Původní PDF · strana 13</a></p></div></section>
+<section class="slide" id="slide-14" data-section="Observer" aria-label="14: Další rozšíření"><div class="content"><p class="eyebrow">Observer</p><h2>Další rozšíření</h2><div class="native-layout"><div class="native-copy"><p>Zpracování observerů je synchronnní; pozor na rychlost!</p><p>lze odložit provádění observerů odkládáním jejich notifikací do fronty,</p><p>případně lze využít multithreading (pozor na data races).</p><p>Předávání více informací:</p><p>do notifikace lze přidat bližší informace o změně stavu,</p><p>lze přidat i odkaz na subjekt, jeden observer potom může pozorovat více subjektů.</p><p>Subjekt nemusí nutně být nejmenší část herní scény:</p><p>typicky např. fyzikální engine může vyhodnocovat kolize objektů a posílat notifikace o zjištěných kolizích objektů.</p><p>Pro každý druh notifikací lze mít vlastní hierarchii subjektů a observerů</p><p>např. pomocí šablon Observer&lt;EventData&gt; a Subject&lt;EventData&gt;,</p><p>pozor na spotřebu paměti na registraci observerů!</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=14">Původní PDF · strana 14</a></p></div></section>
+<section class="slide" id="slide-15" data-section="Publisher / Subscriber" aria-label="15: Publisher / Subscriber"><div class="content"><p class="eyebrow">Publisher / Subscriber</p><h2>Publisher / Subscriber</h2><div class="native-layout"><div class="native-copy"><p class="section-intro">Oddělte producenty zpráv od jejich odběratelů.</p><p class="source-notice">Úvodní věta je doplněk GRAFIT k oddílovému snímku.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=15">Původní PDF · strana 15</a></p></div></section>
+<section class="slide" id="slide-16" data-section="Publisher / Subscriber" aria-label="16: Kontext"><div class="content"><p class="eyebrow">Publisher / Subscriber</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p>Vzor Command:</p><p>Někudy se předá příkaz a vykoná se.</p><p>Co když potřebuji různé reakce na příkaz na různých místech?</p><p>Vzor Subject / Observer:</p><p>Observer musí vědět, koho sleduje.</p><p>Co když je množina subjektů nestálá a často se mění?</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=16">Původní PDF · strana 16</a></p></div></section>
+<section class="slide" id="slide-17" data-section="Publisher / Subscriber" aria-label="17: Zprávy a kanál"><div class="content"><p class="eyebrow">Publisher / Subscriber</p><h2>Zprávy a kanál</h2><div class="native-layout"><div class="native-copy"><p>Vytvoříme místo, kam se mohou zprávy zadávat a odkud se mohou vyzvedávat.</p><p>Kdo potřebuje informovat, pošle zprávu, kdo potřebuje reagovat, přečte zprávu.</p><p>Nejjednodušší informační kanál je fronta:</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>struct Message { ... };
+std::queue&lt;Message&gt; q;
+class Producer {
+    std::queue&lt;Message&gt; * outgoingMessages;
+};
+class Consumer {
+    std::queue&lt;Message&gt; * ingoingMessages;
+};</code></pre><p>Problémy?</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=17">Původní PDF · strana 17</a></p></div></section>
+<section class="slide" id="slide-18" data-section="Publisher / Subscriber" aria-label="18: Více čtenářů"><div class="content"><p class="eyebrow">Publisher / Subscriber</p><h2>Více čtenářů</h2><div class="native-layout"><div class="native-copy"><p class="source-notice">Doplněk GRAFIT: čtení musí vrátit hodnotu: Message&amp; read() { return msg; }. Zdrojový fragment vynechává return a část syntaktických detailů.</p><p>Zprávu si nemůže přečíst více čtenářů. – Což se někdy nehodí.</p><p>Možné řešení: sledovaný kanál.</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class ObservedChannel : public Subject {
+    Message msg; // proč nepotřebuji frontu?
+public:
+    Message &amp; read() { msg; }
+    void send(Message message) {
+        msg = message;
+        notifyObservers();
+    }
+}</code></pre><p>Problémy?</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=18">Původní PDF · strana 18</a></p></div></section>
+<section class="slide" id="slide-19" data-section="Publisher / Subscriber" aria-label="19: Více čtenářů, s vyřizováním zpráv najednou (A)"><div class="content"><p class="eyebrow">Publisher / Subscriber</p><h2>Více čtenářů, s vyřizováním zpráv najednou (A)</h2><div class="native-layout"><div class="native-copy"><p>Nechceme obtěžovat adresáty pokaždé, když dostaneme zprávu.</p><p>Řešení A: Rozdělíme frontu na vstupní a výstupní; každému čtenáři tzv. broker zkopíruje zprávu do jeho fronty.</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class ObservedChannel : public Subject {
+public:
+    void send(Message message) { notifyObservers(msg); }
+}
+class ChannelObserver : public Observer {
+    std::queue&lt;Message&gt; q;
+public:
+    void notifyObserver(Message msg) override { q.push(msg); }
+    // top, pop, empty, clear
+}</code></pre><p>Problémy?</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=19">Původní PDF · strana 19</a></p></div></section>
+<section class="slide" id="slide-20" data-section="Publisher / Subscriber" aria-label="20: Více čtenářů, s vyřizováním zpráv najednou (B)"><div class="content"><p class="eyebrow">Publisher / Subscriber</p><h2>Více čtenářů, s vyřizováním zpráv najednou (B)</h2><div class="native-layout"><div class="native-copy"><p class="source-notice">Doplněk GRAFIT: příklad je pseudokód; doplňte ukončení deklarací a sjednoťte názvy konstruktoru s deklarovanou třídou. Čtenář musí hlídat dostupnost dat a životnost kanálu.</p><p>Nechceme obtěžovat adresáty pokaždé, když dostaneme zprávu.</p><p>Řešení B: Každý adresát bude mít svůj stav čtení kanálu.</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Channel {
+    std::vector&lt;Message&gt; data;
+public:
+    void push(Message message);
+    size_t size();
+    Message&amp; at(size_t position);
+}</code></pre><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class ChannelReader {
+    Channel&amp; ch;
+    size_t cursor = 0;
+public:
+    ChannelReader(channel&amp; ch) : ch(ch);
+    bool empty() {
+        return cursor == ch.size()
+    }
+    Message&amp; get() {
+        return ch.at(cursor++);
+    }
+}</code></pre><p>Problémy?</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=20">Původní PDF · strana 20</a></p></div></section>
+<section class="slide" id="slide-21" data-section="Publisher / Subscriber" aria-label="21: Uklízení kanálu na konci snímku"><div class="content"><p class="eyebrow">Publisher / Subscriber</p><h2>Uklízení kanálu na konci snímku</h2><div class="native-layout"><div class="native-copy"><p>Někdy bychom měli kanál uklidit. Např. (včetně použití):</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>// na straně každého čtenáře
+while(!reader.empty()) {
+    auto msg = reader.get();
+    // ...
+}
+reader.reset();</code></pre><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>// jednou, na konci snímku:
+channel.reset();</code></pre><p>Teď už můžeme realizovar vzor Publisher / Subscriber, ale…</p><p>Problém? Co když je subscriber ve snímku na řadě před publisherem?</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=21">Původní PDF · strana 21</a></p></div></section>
+<section class="slide" id="slide-22" data-section="Publisher / Subscriber" aria-label="22: Rozšíření: Double buffering"><div class="content"><p class="eyebrow">Publisher / Subscriber</p><h2>Rozšíření: Double buffering</h2><div class="native-layout"><div class="native-copy"><p>Kanál bude mít ve skutečnosti dvě pole zpráv – hlavní a z předchozího snímku.</p><p>Na konci snímku se pole prohodí a přední se vyprázdní.</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Channel {
+    std::vector&lt;Message&gt; a, b;
+    bool current_is_a = false; // proč nepřehazovat pole přímo?
+};</code></pre><p>Čtenář si rozšíří cursor o informaci, zda čte z a nebo z b.</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class ChannelReader {
+    Channel&amp; ch;
+    size_t cursor = 0;
+    bool reads_a = false;
+}</code></pre><p>Využívá např. Bevy framework.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=22">Původní PDF · strana 22</a></p></div></section>
+<section class="slide" id="slide-23" data-section="State" aria-label="23: State"><div class="content"><p class="eyebrow">State</p><h2>State</h2><div class="native-layout"><div class="native-copy"><p class="section-intro">Pojmenujte stavy a povolené přechody.</p><p class="source-notice">Úvodní věta je doplněk GRAFIT k oddílovému snímku.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=23">Původní PDF · strana 23</a></p></div></section>
+<section class="slide" id="slide-24" data-section="State" aria-label="24: Kontext"><div class="content"><p class="eyebrow">State</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>void Heroine::handleInput(Input input) {
+    if (input == PRESS_B) {
+        yVelocity_ = JUMP_VELOCITY;
+        setGraphics(IMAGE_JUMP);
+    }
+}</code></pre><p>Je tam někde chyba? Skákání ve vzduchu.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=24">Původní PDF · strana 24</a></p></div></section>
+<section class="slide" id="slide-25" data-section="State" aria-label="25: Kontext"><div class="content"><p class="eyebrow">State</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>void Heroine::handleInput(Input input) {
+    if (input == PRESS_B) {
+        if (!isJumping_) {
+            isJumping_ = true;
+            // Jump...
+        }
+    }
+}</code></pre><p>Přidejme další druh pohybu…</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=25">Původní PDF · strana 25</a></p></div></section>
+<section class="slide" id="slide-26" data-section="State" aria-label="26: Kontext"><div class="content"><p class="eyebrow">State</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>void Heroine::handleInput(Input input) {
+    if (input == PRESS_B) {
+        // Jump if not jumping...
+    }
+    else if (input == PRESS_DOWN) {
+        if (!isJumping_) {
+            setGraphics(IMAGE_DUCK);
+        }
+    }
+    else if (input == RELEASE_DOWN) {
+        setGraphics(IMAGE_STAND);
+    }
+}</code></pre><p>Je tam někde chyba? Skrčím se, vyskočím, odkrčím se → nastaví se špatná grafika.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=26">Původní PDF · strana 26</a></p></div></section>
+<section class="slide" id="slide-27" data-section="State" aria-label="27: Kontext"><div class="content"><p class="eyebrow">State</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>void Heroine::handleInput(Input input) {
+    if (input == PRESS_B) {
+        if (!isJumping_ &amp;&amp; !isDucking_) { /* Jump... */ }
+    } else if (input == PRESS_DOWN) {
+        if (!isJumping_) {
+            isDucking_ = true; setGraphics(IMAGE_DUCK);
+        }
+    } else if (input == RELEASE_DOWN) {
+        if (isDucking_) {
+            isDucking_ = false; setGraphics(IMAGE_STAND);
+        }
+    }
+}</code></pre><p>A dál? S dalšími flagy bude kód stále méně přehledný.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=27">Původní PDF · strana 27</a></p></div></section>
+<section class="slide" id="slide-28" data-section="State" aria-label="28: Co potřebujeme reprezentovat?"><div class="content"><p class="eyebrow">State</p><h2>Co potřebujeme reprezentovat?</h2><div class="native-layout with-images"><div class="native-copy"><p>Ze stání přejdeme stiskem skoku do skoku a dopadem zpět do stání. Stisk dolů vede ze stání do přikrčení; uvolnění dolů vrací postavu z přikrčení do stání.</p><p>Můžeme si na stavy zavést enum a větvit kód podle jeho hodnoty.</p><p>To má smysl, dokud je různých stavů málo, nebo když se vyhýbám OOP.</p><button class="lab-trigger" data-open-lab>Interaktivní ukázka · doplněk GRAFIT</button></div><div class="native-figures"><figure><img loading="eager" src="assets/figure-28-01.png" alt="Jan Matoušek · původní ilustrace · PDF strana 28"><figcaption>Jan Matoušek · ilustrace z PDF 28</figcaption></figure></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=28">Původní PDF · strana 28</a></p></div></section>
+<section class="slide" id="slide-29" data-section="State" aria-label="29: Pattern"><div class="content"><p class="eyebrow">State</p><h2>Pattern</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class HeroineState {
+public:
+    virtual ~HeroineState() {}
+    virtual void handleInput(Heroine&amp; heroine, Input input) {}
+    virtual void update(Heroine&amp; heroine) {}
+};
+class DuckState : public HeroineState;
+class StandState : public HeroineState;
+class JumpState : public HeroineState;
+class Heroine {
+    HeroineState* currentState;
+public:
+    void handleInput(Input input) { currentState-&gt;handleInput(*this, input); }
+    void update() { currentState-&gt;update(*this); }
+};</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=29">Původní PDF · strana 29</a></p></div></section>
+<section class="slide" id="slide-30" data-section="State" aria-label="30: Kde alokovat stavy?"><div class="content"><p class="eyebrow">State</p><h2>Kde alokovat stavy?</h2><div class="native-layout"><div class="native-copy"><p class="source-notice">Doplněk GRAFIT: při ručním ukládání různých stavů do jednoho bufferu je nutné řešit zarovnání, konstrukci, destrukci a životnost objektu. Samotné přetypování pole bajtů nestačí.</p><p>Stavy se mohou měnit často, dynamická alokace nemusí být žádoucí;</p><p>statická alokace často stačí.</p><p>Někdy však stav může zahrnovat další informaci, např. snímek animace;</p><p>dynamická alokace je možnost (pozor na správu paměti),</p><p>některé stavové proměnné mohou být uložené v herním objektu vedle stavu:</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Heroine {
+    HeroineState* currentState;
+    char currentStateData[STATE_DATA_SIZE]; // each state casts it
+    // ...
+};</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=30">Původní PDF · strana 30</a></p></div></section>
+<section class="slide" id="slide-31" data-section="State" aria-label="31: Přechody mezi stavy"><div class="content"><p class="eyebrow">State</p><h2>Přechody mezi stavy</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class HeroineState { // ...
+    virtual void onEnter(Heroine&amp; heroine) {}
+    virtual void onExit(Heroine&amp; heroine) {}
+    virtual HeroineState* handleInput(Heroine&amp; heroine, Input input) {}
+};
+class Heroine { // ...
+    void handleInput(Input input) {
+        auto nextState = currentState-&gt;handleInput(*this, input);
+        if (nextState) {
+            currentState-&gt;onExit(*this);
+            currentState = nextState;
+            currentState-&gt;onEnter(*this);
+        }
+    }
+};</code></pre><button class="lab-trigger" data-open-lab>Interaktivní ukázka · doplněk GRAFIT</button></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=31">Původní PDF · strana 31</a></p></div></section>
+<section class="slide" id="slide-32" data-section="State" aria-label="32: Nedostatky"><div class="content"><p class="eyebrow">State</p><h2>Nedostatky</h2><div class="native-layout"><div class="native-copy"><p>I konečný stavový automat může být zbytečně komplexní</p><p>příklad: hráč může chodit ve stoje i v kleče, může přitom mít nasazený noktovizor, a ještě je potřeba řešit efekt zranění…</p><p>všech možných kombinací je 16 (pokud jsou z každého stavu 2 varianty), přechodů mezi nimi až 240.</p><p>některé události způsobí přechod do jednoho stavu, ať už byl předchozí stav jakýkoliv</p><p>Jaká jsou řešení?</p><p>Souběžné stavové automaty (stavy jsou vzájemně nezávislé)</p><p>ukládám vzájemně nezávislé stavy pohybu, krčení, noktovizoru, zranění…</p><p>Hierarchické stavové automaty (stavy mají zčásti společné chování)</p><p>využijeme dědičnost stavů; co neumí potomek, předá rodiči</p><p>nebo lze využít seznam souběžných stavů; co nezpracuje jeden stav, zpracuje další v seznamu</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=32">Původní PDF · strana 32</a></p></div></section>
+<section class="slide" id="slide-33" data-section="State" aria-label="33: Další rozšíření"><div class="content"><p class="eyebrow">State</p><h2>Další rozšíření</h2><div class="native-layout"><div class="native-copy"><p>Zásobník stavů</p><p>vhodné pro historii a vracení se k předchozímu stavu</p><p>příklad: rozehraná hra, pause menu, zpátky k rozehrané hře</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=33">Původní PDF · strana 33</a></p></div></section>
+<section class="slide" id="slide-34" data-section="Sequence" aria-label="34: Sequence"><div class="content"><p class="eyebrow">Sequence</p><h2>Sequence</h2><div class="native-layout"><div class="native-copy"><p class="section-intro">Rozložte činnost na postupně prováděné kroky.</p><p class="source-notice">Úvodní věta je doplněk GRAFIT k oddílovému snímku.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=34">Původní PDF · strana 34</a></p></div></section>
+<section class="slide" id="slide-35" data-section="Sequence" aria-label="35: Kontext"><div class="content"><p class="eyebrow">Sequence</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p>Chování entity je často rozloženo do více snímků hry</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Building {
+    int foundations_pct, building_pct, flag_waving;
+public:
+    void update() {
+        if (foundations_pct &lt; 100) foundations_pct++;
+        else if (building_pct &lt; 100) building_pct++;
+        else flag_waving++;
+    }
+};</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=35">Původní PDF · strana 35</a></p></div></section>
+<section class="slide" id="slide-36" data-section="Sequence" aria-label="36: Možná řešení"><div class="content"><p class="eyebrow">Sequence</p><h2>Možná řešení</h2><div class="native-layout"><div class="native-copy"><p>Vícevláknové programování – kolik vláken?</p><p>async/await – ne všude máme k dispozici</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=36">Původní PDF · strana 36</a></p></div></section>
+<section class="slide" id="slide-37" data-section="Sequence" aria-label="37: Pattern"><div class="content"><p class="eyebrow">Sequence</p><h2>Pattern</h2><div class="native-layout"><div class="native-copy"><p class="source-notice">Doplněk GRAFIT: std::queue používá pop(), nikoli pop_front(). Před front() ověřte neprázdnost, vlastnictví kroků a jejich životnost. Tento původní fragment není úplný spustitelný projekt.</p><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Step {
+public:
+    virtual bool update() = 0;
+};
+class FoundationsStep : public Step;
+class BuildingStep : public Step;
+class BuiltStep : public Step;
+class Sequence {
+    std::queue&lt;Step*&gt; steps;
+public:
+    void update() {
+        if (!steps.empty())
+            if (steps.front()-&gt;update())
+                steps.pop_front();
+    }
+};</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=37">Původní PDF · strana 37</a></p></div></section>
+<section class="slide" id="slide-38" data-section="Sequence" aria-label="38: Poznámky"><div class="content"><p class="eyebrow">Sequence</p><h2>Poznámky</h2><div class="native-layout"><div class="native-copy"><p>Velmi blízké stavům, lze implementovat podobným způsobem a kombinovat</p><p>Vhodné i pro případné skriptování chování entit</p><p>Lze upravit pro odpočítávání snímků, časů atd.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=38">Původní PDF · strana 38</a></p></div></section>
+<section class="slide" id="slide-39" data-section="Prototype" aria-label="39: Prototype"><div class="content"><p class="eyebrow">Prototype</p><h2>Prototype</h2><div class="native-layout"><div class="native-copy"><p class="section-intro">Vytvářejte objekty kopírováním prototypu.</p><p class="source-notice">Úvodní věta je doplněk GRAFIT k oddílovému snímku.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=39">Původní PDF · strana 39</a></p></div></section>
+<section class="slide" id="slide-40" data-section="Prototype" aria-label="40: Kontext"><div class="content"><p class="eyebrow">Prototype</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Monster;
+class Vampire : public Monster;
+class Skeleton : public Monster;</code></pre><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class MonsterSpawner {
+public:
+    virtual Monster* spawn() = 0;
+};
+class VampireSpawner : public MonsterSpawner;
+class SkeletonSpawner : public MonsterSpawner;</code></pre><p>Problémy?</p><p>Množství opakujícího se / boilerplate kódu</p><p>Duplikace hierarchie komplikuje údržbu</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=40">Původní PDF · strana 40</a></p></div></section>
+<section class="slide" id="slide-41" data-section="Prototype" aria-label="41: Pattern"><div class="content"><p class="eyebrow">Prototype</p><h2>Pattern</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Monster {
+public:
+    virtual Monster* clone() = 0;
+};
+class Vampire : public Monster;
+class Skeleton : public Monster;</code></pre><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class MonsterSpawner {
+    Monster* prototype;
+public:
+    MonsterSpawner(Monster* prototype) : prototype(prototype) {}
+    Monster* spawn() {
+        return prototype-&gt;clone();
+    }
+};</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=41">Původní PDF · strana 41</a></p></div></section>
+<section class="slide" id="slide-42" data-section="Prototype" aria-label="42: Výhody a další rozšíření"><div class="content"><p class="eyebrow">Prototype</p><h2>Výhody a další rozšíření</h2><div class="native-layout"><div class="native-copy"><p>Pouze jedna univerzální třída pro spawner.</p><p>Lze mít spawnery pro různě nastavené objekty stejného typu.</p><p>Přidání dodatečných parametrů do metod spawn() a clone():</p><p>vhodné např. pro (deterministickou) randomizaci vytvořených kopií,</p><p>ale není to nutné.</p><p>Možnost rozšíření spawnerů např. o počítání vytvořených instancí a limity…</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=42">Původní PDF · strana 42</a></p></div></section>
+<section class="slide" id="slide-43" data-section="Builder" aria-label="43: Builder"><div class="content"><p class="eyebrow">Builder</p><h2>Builder</h2><div class="native-layout"><div class="native-copy"><p class="section-intro">Sestavujte objekt pomocí pojmenovaných kroků.</p><p class="source-notice">Úvodní věta je doplněk GRAFIT k oddílovému snímku.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=43">Původní PDF · strana 43</a></p></div></section>
+<section class="slide" id="slide-44" data-section="Builder" aria-label="44: Kontext"><div class="content"><p class="eyebrow">Builder</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class Computer {
+public:
+    Computer(
+        std::optional&lt;RAM&gt; ram,
+        std::optional&lt;GPU&gt; gpu,
+        std::optional&lt;WiFi&gt; wifi,
+        std::optional&lt;CD&gt; cd, ...
+    );
+};
+void somewhere() {
+    Computer c1({...}, std::nullopt, std::nullopt, std::nullopt, ...);
+    Computer c2({...}, {...}, std::nullopt, std::nullopt, ...);
+    // ...
+}</code></pre><p>Problémy? Velké množství nevyužitých parametrů kostruktoru, dlouhý kód</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=44">Původní PDF · strana 44</a></p></div></section>
+<section class="slide" id="slide-45" data-section="Builder" aria-label="45: Pattern"><div class="content"><p class="eyebrow">Builder</p><h2>Pattern</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class ComputerBuilder {
+    std::optional&lt;RAM&gt; ram, std::optional&lt;GPU&gt; gpu, ...;
+public:
+    ComputerBuilder&amp; withRAM(RAM r) { ram = r; return *this; }
+    ComputerBuilder&amp; withGPU(GPU g) { gpu = g; return *this; }
+    Computer build() {
+        return Computer(ram, gpu, ...);
+    }
+};
+void somewhere() {
+    Computer c1 = ComputerBuilder().withRAM({...}).build();
+    Computer c2 = ComputerBuilder().withRAM({...}).withGPU({...}).build();
+    // ...
+}</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=45">Původní PDF · strana 45</a></p></div></section>
+<section class="slide" id="slide-46" data-section="Service Locator" aria-label="46: Service Locator"><div class="content"><p class="eyebrow">Service Locator</p><h2>Service Locator</h2><div class="native-layout"><div class="native-copy"><p class="section-intro">Zpřístupněte služby přes zaměnitelné rozhraní.</p><p class="source-notice">Úvodní věta je doplněk GRAFIT k oddílovému snímku.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=46">Původní PDF · strana 46</a></p></div></section>
+<section class="slide" id="slide-47" data-section="Service Locator" aria-label="47: Kontext"><div class="content"><p class="eyebrow">Service Locator</p><h2>Kontext</h2><div class="native-layout"><div class="native-copy"><p>Některé části programu (služby) nemusí být v různých instancích, ale existují jen jednou</p><p>např. komunikace s grafickou kartou, práce se souborovým systémem, práce se sítí, integrace se Steam atd.</p><p>chceme k nim mít přístup odevšud</p><p>Máme OOP, nechceme mít volně poházené funkce.</p><p>Někdy v budoucnu bychom chtěli jednu část programu vyměnit za jinou se stejným rozhraním.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=47">Původní PDF · strana 47</a></p></div></section>
+<section class="slide" id="slide-48" data-section="Service Locator" aria-label="48: Jiný (anti)pattern – Singleton"><div class="content"><p class="eyebrow">Service Locator</p><h2>Jiný (anti)pattern – Singleton</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class FileSystem {
+public:
+    static FileSystem&amp; instance() {
+        if (!instance_) instance_ = new FileSystem();
+        return *instance_;
+    }
+private:
+    inline static FileSystem* instance_;
+};
+// FileSystem::instance(). ...</code></pre><p>Problémy?</p><p>Globální proměnná.</p><p>Komplikované (pomalé) použití ve vícevláknovém kódu.</p><p>Nelze jednoduše dle potřeby vyměnit jednu službu za jinou.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=48">Původní PDF · strana 48</a></p></div></section>
+<section class="slide" id="slide-49" data-section="Service Locator" aria-label="49: Pattern"><div class="content"><p class="eyebrow">Service Locator</p><h2>Pattern</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class FileSystem;
+class VirtualFileSystem : public FileSystem;
+class DriveFileSystem : public FileSystem;
+class ServiceLocator {
+    inline static FileSystem* fileSystem;
+public:
+    static FileSystem* getFileSystem();
+    static void registerFileSystem(FileSystem* fileSystem);
+};
+int main() {
+    DriveFileSystem fs;
+    ServiceLocator::registerFileSystem(&amp;fs);
+    Game.run();
+}</code></pre><p>Co když nikdy nezavolám registerFileSystem, ale použiju getFileSystem?</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=49">Původní PDF · strana 49</a></p></div></section>
+<section class="slide" id="slide-50" data-section="Service Locator" aria-label="50: Pattern"><div class="content"><p class="eyebrow">Service Locator</p><h2>Pattern</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class FileSystem;
+class NullFileSystem : public FileSystem;
+class VirtualFileSystem : public FileSystem;
+class DriveFileSystem : public FileSystem;
+class ServiceLocator {
+    inline static NullFileSystem nullFileSystem;
+    inline static FileSystem* fileSystem = &amp;nullFileSystem;
+public:
+    static FileSystem* getFileSystem();
+    static void registerFileSystem(FileSystem* fileSystem);
+};
+int main() {
+    DriveFileSystem fs;
+    ServiceLocator::registerFileSystem(&amp;fs);
+    Game.run();
+}</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=50">Původní PDF · strana 50</a></p></div></section>
+<section class="slide" id="slide-51" data-section="Service Locator" aria-label="51: Možné rozšíření pro více druhů služeb (1/2)"><div class="content"><p class="eyebrow">Service Locator</p><h2>Možné rozšíření pro více druhů služeb (1/2)</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>template&lt;typename Service&gt; class SingleServiceLocator {
+    inline static typename Service::NullService nullService;
+    inline static Service* service = &amp;nullService;
+public:
+    static Service* getService();
+    static void registerService(Service* fileSystem);
+};
+class ServiceLocator : public SingleServiceLocator&lt;FileSystem&gt;, ... {
+public:
+    template&lt;typename Service&gt; static Service* getService() {
+        return SingleServiceLocator&lt;Service&gt;::getService();
+    }
+    template&lt;typename Service&gt; static void registerService(Service* s) {
+        SingleServiceLocator&lt;Service&gt;::registerService(s);
+    }
+};</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=51">Původní PDF · strana 51</a></p></div></section>
+<section class="slide" id="slide-52" data-section="Service Locator" aria-label="52: Možné rozšíření pro více druhů služeb (2/2)"><div class="content"><p class="eyebrow">Service Locator</p><h2>Možné rozšíření pro více druhů služeb (2/2)</h2><div class="native-layout"><div class="native-copy"><p class="snippet-label">Původní výkladový fragment C++</p><pre class="source-code"><code>class FileSystem {
+public:
+    virtual AssetData loadAsset(std::string_view path) = 0;
+    using NullService = class NullFileSystem;
+};
+class NullFileSystem : public FileSystem {
+    AssetData loadAsset(std::string_view path) override;
+};
+class VirtualFileSystem : public FileSystem;
+class DriveFileSystem : public FileSystem;
+int main() {
+    DriveFileSystem fs;
+    ServiceLocator::registerService&lt;FileSystem&gt;(&amp;fs);
+    Game.run();
+}</code></pre></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=52">Původní PDF · strana 52</a></p></div></section>
+<section class="slide" id="slide-53" data-section="Shrnutí" aria-label="53: Shrnutí"><div class="content"><p class="eyebrow">Shrnutí</p><h2>Shrnutí</h2><div class="native-layout"><div class="native-copy"><p class="section-intro">Vyberte vzor podle konkrétního problému.</p><p class="source-notice">Úvodní věta je doplněk GRAFIT k oddílovému snímku.</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=53">Původní PDF · strana 53</a></p></div></section>
+<section class="slide" id="slide-54" data-section="Shrnutí" aria-label="54: Obecné rady a doporučení"><div class="content"><p class="eyebrow">Shrnutí</p><h2>Obecné rady a doporučení</h2><div class="native-layout"><div class="native-copy"><p>Některé platformy mají doporučenou nebo obvyklou architekturu</p><p>Dáno např. frameworkem, nebo fungováním dané platformy</p><p>Typicky web nebo desktopové aplikace: MVC, FE/BE</p><p>Vyhněte se:</p><p>Všemocné objekty a funkce</p><p>Cyklické závislosti mezi objekty</p><p>Prolínání zodpovědností</p><p>Naopak:</p><p>Oddělte vrstvy (prezentace × simulace × operační systém)</p><p>Vyjasněte si komunikaci mezi objekty</p><p>Snažte se o data driven engine (o tom více příště)</p></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=54">Původní PDF · strana 54</a></p></div></section>
+<section class="slide" id="slide-55" data-section="Shrnutí" aria-label="55: Předvedené vzory"><div class="content"><p class="eyebrow">Shrnutí</p><h2>Předvedené vzory</h2><div class="native-layout"><div class="native-copy"><p>Komunikace – Command, Observer, Publisher / Subscriber</p><p>Chování – State, Sequence</p><p>Vytváření – Prototype, Builder, (Factory)</p><p>Služby – Singleton, Service Locator, (Dependency Injection)</p><p>Některé jsme si ukázali i bez pojmenování.</p><p>Doporučený zdroj:</p><p>Game Programming patterns, https://gameprogrammingpatterns.com/</p><div class="source-links"><h3>Odkazy z PDF</h3><a href="https://gameprogrammingpatterns.com/">https://gameprogrammingpatterns.com/</a></div></div></div><p class="source-meta">Jan Matoušek · <a href="original.pdf#page=55">Původní PDF · strana 55</a></p></div></section>
+  </main>
+  <footer class="controls">
+    <span class="hint">← → <span>listování</span> · F <span>celá obrazovka</span></span>
+    <div class="pager"><button id="previous" aria-label="Předchozí snímek">←</button><output id="counter">01 / 55</output><button id="next" aria-label="Další snímek">→</button></div>
+    <span class="credit">Jan Matoušek</span>
+    <div class="progress" aria-hidden="true"><div id="progress-value"></div></div>
+  </footer>
+  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="overview" aria-labelledby="overview-title">
+    <div class="dialog-heading"><h2 id="overview-title">Obsah přednášky</h2><button class="close" aria-label="Zavřít obsah">✕</button></div>
+    <nav aria-label="Všechny snímky"><a href="#slide-1"><span>01</span><span>Návrhové vzory ve hrách</span></a>
+<a href="#slide-2"><span>02</span><span>Command</span></a>
+<a href="#slide-3"><span>03</span><span>Kontext</span></a>
+<a href="#slide-4"><span>04</span><span>Pattern</span></a>
+<a href="#slide-5"><span>05</span><span>Upravené zpracování vstupu</span></a>
+<a href="#slide-6"><span>06</span><span>Lépe oddělené zpracování vstupu</span></a>
+<a href="#slide-7"><span>07</span><span>Rozšíření: Fronta příkazů</span></a>
+<a href="#slide-8"><span>08</span><span>Další možná rozšíření</span></a>
+<a href="#slide-9"><span>09</span><span>Observer</span></a>
+<a href="#slide-10"><span>10</span><span>Kontext</span></a>
+<a href="#slide-11"><span>11</span><span>Pattern</span></a>
+<a href="#slide-12"><span>12</span><span>Aplikace v ukázce</span></a>
+<a href="#slide-13"><span>13</span><span>Registrace observerů</span></a>
+<a href="#slide-14"><span>14</span><span>Další rozšíření</span></a>
+<a href="#slide-15"><span>15</span><span>Publisher / Subscriber</span></a>
+<a href="#slide-16"><span>16</span><span>Kontext</span></a>
+<a href="#slide-17"><span>17</span><span>Zprávy a kanál</span></a>
+<a href="#slide-18"><span>18</span><span>Více čtenářů</span></a>
+<a href="#slide-19"><span>19</span><span>Více čtenářů, s vyřizováním zpráv najednou (A)</span></a>
+<a href="#slide-20"><span>20</span><span>Více čtenářů, s vyřizováním zpráv najednou (B)</span></a>
+<a href="#slide-21"><span>21</span><span>Uklízení kanálu na konci snímku</span></a>
+<a href="#slide-22"><span>22</span><span>Rozšíření: Double buffering</span></a>
+<a href="#slide-23"><span>23</span><span>State</span></a>
+<a href="#slide-24"><span>24</span><span>Kontext</span></a>
+<a href="#slide-25"><span>25</span><span>Kontext</span></a>
+<a href="#slide-26"><span>26</span><span>Kontext</span></a>
+<a href="#slide-27"><span>27</span><span>Kontext</span></a>
+<a href="#slide-28"><span>28</span><span>Co potřebujeme reprezentovat?</span></a>
+<a href="#slide-29"><span>29</span><span>Pattern</span></a>
+<a href="#slide-30"><span>30</span><span>Kde alokovat stavy?</span></a>
+<a href="#slide-31"><span>31</span><span>Přechody mezi stavy</span></a>
+<a href="#slide-32"><span>32</span><span>Nedostatky</span></a>
+<a href="#slide-33"><span>33</span><span>Další rozšíření</span></a>
+<a href="#slide-34"><span>34</span><span>Sequence</span></a>
+<a href="#slide-35"><span>35</span><span>Kontext</span></a>
+<a href="#slide-36"><span>36</span><span>Možná řešení</span></a>
+<a href="#slide-37"><span>37</span><span>Pattern</span></a>
+<a href="#slide-38"><span>38</span><span>Poznámky</span></a>
+<a href="#slide-39"><span>39</span><span>Prototype</span></a>
+<a href="#slide-40"><span>40</span><span>Kontext</span></a>
+<a href="#slide-41"><span>41</span><span>Pattern</span></a>
+<a href="#slide-42"><span>42</span><span>Výhody a další rozšíření</span></a>
+<a href="#slide-43"><span>43</span><span>Builder</span></a>
+<a href="#slide-44"><span>44</span><span>Kontext</span></a>
+<a href="#slide-45"><span>45</span><span>Pattern</span></a>
+<a href="#slide-46"><span>46</span><span>Service Locator</span></a>
+<a href="#slide-47"><span>47</span><span>Kontext</span></a>
+<a href="#slide-48"><span>48</span><span>Jiný (anti)pattern – Singleton</span></a>
+<a href="#slide-49"><span>49</span><span>Pattern</span></a>
+<a href="#slide-50"><span>50</span><span>Pattern</span></a>
+<a href="#slide-51"><span>51</span><span>Možné rozšíření pro více druhů služeb (1/2)</span></a>
+<a href="#slide-52"><span>52</span><span>Možné rozšíření pro více druhů služeb (2/2)</span></a>
+<a href="#slide-53"><span>53</span><span>Shrnutí</span></a>
+<a href="#slide-54"><span>54</span><span>Obecné rady a doporučení</span></a>
+<a href="#slide-55"><span>55</span><span>Předvedené vzory</span></a></nav>
+  </dialog>
+  <dialog id="image-view" aria-label="Zvětšený obrázek"><button class="close" aria-label="Zavřít obrázek">✕</button><img alt=""></dialog>
+  <noscript><p class="no-script">Bez JavaScriptu je přednáška zobrazena jako souvislý dokument.</p></noscript>
+<dialog id="notes-panel" aria-labelledby="notes-title"><div class="dialog-heading"><h2 id="notes-title">Poznámky</h2><button class="close" aria-label="Zavřít poznámky">×</button></div><p id="notes-comment"></p><details><summary>Původní text PDF</summary><pre id="notes-original"></pre></details></dialog><script id="notes-data" type="application/json">{"1": {"title": "Návrhové vzory ve hrách", "comment": "Jan Matoušek · PDF strana 1. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Návrhové vzory ve hrách\nJan Matoušek\n15. 10. 2026\n"}, "2": {"title": "Command", "comment": "Jan Matoušek · PDF strana 2. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Command\n"}, "3": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 3. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Command\nKontext\nvoid InputHandler::handleInput() {\n    if (isPressed(BUTTON_X)) jump();\n    else if (isPressed(BUTTON_Y)) fireGun();\n    else if (isPressed(BUTTON_A)) swapWeapon();\n    else if (isPressed(BUTTON_B)) lurchIneffectively();\n}\nProblémy?\n• Chceme oddělit zpracování vstupu (handling) od reakce na vstup (update).\n• Někdy nechceme na vstup reagovat hned (zpoždění vyhodnocování).\n• Někdy chceme vstup vyhodnocovat opakovaně nebo se vracet.\n• Chceme příkazy vykonávat jinde (na jiném stroji, v jiné komponentě atd.).\n3 / 55\n"}, "4": {"title": "Pattern", "comment": "Jan Matoušek · PDF strana 4. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Command\nPattern\nclass Command {\npublic:\n    virtual ~Command() {}\n    virtual void execute() = 0;\n};\nclass JumpCommand : public Command {\npublic:\n    void execute() override { jump(); }\n};\nclass FireCommand : public Command {\npublic:\n    void execute() override { fireGun(); }\n};\n4 / 55\n"}, "5": {"title": "Upravené zpracování vstupu", "comment": "Jan Matoušek · PDF strana 5. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Command\nUpravené zpracování vstupu\nclass InputHandler {\npublic:\n    void handleInput();\nprivate:\n    Command* buttonX_;\n    Command* buttonY_;\n    Command* buttonA_;\n    Command* buttonB_;\n};\nvoid InputHandler::handleInput() {\n    if (isPressed(BUTTON_X)) buttonX_->execute();\n    else if (isPressed(BUTTON_Y)) buttonY_->execute();\n    else if (isPressed(BUTTON_A)) buttonA_->execute();\n    else if (isPressed(BUTTON_B)) buttonB_->execute();\n}\n5 / 55\n"}, "6": {"title": "Lépe oddělené zpracování vstupu", "comment": "Jan Matoušek · PDF strana 6. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Command\nLépe oddělené zpracování vstupu\nCommand* InputHandler::handleInput() {\n    if (isPressed(BUTTON_X)) return buttonX_;\n    else if (isPressed(BUTTON_Y)) return buttonY_;\n    else if (isPressed(BUTTON_A)) return buttonA_;\n    else if (isPressed(BUTTON_B)) return buttonB_;\n    return nullptr;\n}\nvoid Game::loop() {\n    while (true) {\n        auto command = inputHandler.handleInput();\n        if (command) command->execute();\n        // ...\n    }\n}\nProblémy? Co když chci skákat a střílet zároveň?\n6 / 55\n"}, "7": {"title": "Rozšíření: Fronta příkazů", "comment": "Jan Matoušek · PDF strana 7. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT. Doplněk GRAFIT: původní fragment není správné použití std::queue. Předávejte frontu referencí, používejte push()/pop() a nezávislé if pro souběžné vstupy; else-if propustí jen první příkaz. Původní fragment níže zůstává výkladovým podkladem, nikoli spustitelným příkladem.", "original": "Command\nRozšíření: Fronta příkazů\nvoid InputHandler::handleInput(std::queue\u003cCommand*> q) {\n    if (isPressed(BUTTON_X)) q.push_back(buttonX_);\n    else if (isPressed(BUTTON_Y)) q.push_back(buttonY_);\n    else if (isPressed(BUTTON_A)) q.push_back(buttonA_);\n    else if (isPressed(BUTTON_B)) q.push_back(buttonB_);\n}\nvoid Game::loop() {\n    while (true) {\n        inputHandler.handleInput(commandQueue);\n        while (!commandQueue.empty()) {\n            commandQueue.front()->execute();\n            commandQueue.pop_front();\n        }\n        // ...\n    }\n}\n7 / 55\n"}, "8": {"title": "Další možná rozšíření", "comment": "Jan Matoušek · PDF strana 8. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Command\nDalší možná rozšíření\n• Příkazy pro konkrétní/různé objekty:\n‣ metoda execute() může přijímat parametry,\n‣ instance třídy Command může obsahovat další parametry.\n• Undo (a redo):\n‣ přidání virtuální metody undo(),\n‣ zásobníky na provedené a vrácené příkazy.\n• Doplnění o čas / číslo snímku:\n‣ možnost pamatovat si historii s časovými údaji,\n‣ vhodné pro schopnost opětovného přehrávání vstupů a událostí.\n• Serializace / deserializace:\n‣ pro ukládání sekvence příkazů na disk k následné rekonstrukci stavu hry,\n‣ pro přenos příkazů po síti.\n8 / 55\n"}, "9": {"title": "Observer", "comment": "Jan Matoušek · PDF strana 9. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Observer\n"}, "10": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 10. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Observer\nKontext\nvoid Hero::update() {\n    // ...\n    if (tookCoin) {\n        score += 5;\n        gui.scoreDisplay.setScore(score);\n        if (score >= 1000000) {\n            awardAchievement(A_BIG_MONEY);\n        }\n    }\n    // ...\n}\nProblémy?\n• Třída Hero obsahuje logiku jiných částí programu\n• Obtížná údržba kódu\n10 / 55\n"}, "11": {"title": "Pattern", "comment": "Jan Matoušek · PDF strana 11. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT. Doplněk GRAFIT: v úplném C++ rozhraní musí být notifyObserver přístupné volajícímu (public); fragment vynechává části deklarace a správu životnosti.", "original": "Observer\nPattern\nclass Observer {\n    virtual void notifyObserver(EventData event) = 0;\n};\nclass Subject {\n    std::vector\u003cObserver*> observers;\npublic:\n    void addObserver(Observer* observer); // obvious\n    void removeObserver(Observer* observer); // obvious\nprotected:\n    void notifyObservers(EventData event) {\n        for (auto observer: observers) {\n            observer->notifyObserver(event);\n        }\n    }\n};\n11 / 55\n"}, "12": {"title": "Aplikace v ukázce", "comment": "Jan Matoušek · PDF strana 12. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Observer\nAplikace v ukázce\nclass GuiScoreObserver : public Observer { ... };\nclass AchievementObserver : public Observer { ... };\nclass Hero : public Subject { ... };\nvoid Hero::update() {\n    // ...\n    if (tookCoin) {\n        score += 5;\n        notifyObservers(EventData{ ... });\n    }\n    // ...\n}\n12 / 55\n"}, "13": {"title": "Registrace observerů", "comment": "Jan Matoušek · PDF strana 13. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Observer\nRegistrace observerů\n• Zodpovědnost observerů, nikoliv subjektů\n‣ ideálně ve svém konstruktoru zavolá addObserver()\n‣ ideálně ve svém destruktoru zavolá removeObserver()\n‣ pokud observer pozoruje více subjektů, musí si je pamatovat\n• Potenciální problém: zánik subjektu dříve než observeru\n‣ v C++ může řešit použití std::weak_ptr,\n‣ případně odložit rušení objektů do jiné části herní smyčky, viz queue_free() v Godot \nengine\n13 / 55\n"}, "14": {"title": "Další rozšíření", "comment": "Jan Matoušek · PDF strana 14. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Observer\nDalší rozšíření\n• Zpracování observerů je synchronnní; pozor na rychlost!\n‣ lze odložit provádění observerů odkládáním jejich notifikací do fronty,\n‣ případně lze využít multithreading (pozor na data races).\n• Předávání více informací:\n‣ do notifikace lze přidat bližší informace o změně stavu,\n‣ lze přidat i odkaz na subjekt, jeden observer potom může pozorovat více subjektů.\n• Subjekt nemusí nutně být nejmenší část herní scény:\n‣ typicky např. fyzikální engine může vyhodnocovat kolize objektů a posílat notifikace o \nzjištěných kolizích objektů.\n• Pro každý druh notifikací lze mít vlastní hierarchii subjektů a observerů\n‣ např. pomocí šablon Observer\u003cEventData> a Subject\u003cEventData>,\n‣ pozor na spotřebu paměti na registraci observerů!\n14 / 55\n"}, "15": {"title": "Publisher / Subscriber", "comment": "Jan Matoušek · PDF strana 15. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Publisher / Subscriber\n"}, "16": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 16. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Publisher / Subscriber\nKontext\nVzor Command:\n• Někudy se předá příkaz a vykoná se.\n• Co když potřebuji různé reakce na příkaz na různých místech?\nVzor Subject / Observer:\n• Observer musí vědět, koho sleduje.\n• Co když je množina subjektů nestálá a často se mění?\n16 / 55\n"}, "17": {"title": "Zprávy a kanál", "comment": "Jan Matoušek · PDF strana 17. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Publisher / Subscriber\nZprávy a kanál\n• Vytvoříme místo, kam se mohou zprávy zadávat a odkud se mohou vyzvedávat.\n• Kdo potřebuje informovat, pošle zprávu, kdo potřebuje reagovat, přečte zprávu.\n• Nejjednodušší informační kanál je fronta:\nstruct Message { ... };\nstd::queue\u003cMessage> q;\nclass Producer {\n    std::queue\u003cMessage> * outgoingMessages;\n};\nclass Consumer {\n    std::queue\u003cMessage> * ingoingMessages;\n};\nProblémy?\n17 / 55\n"}, "18": {"title": "Více čtenářů", "comment": "Jan Matoušek · PDF strana 18. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT. Doplněk GRAFIT: čtení musí vrátit hodnotu: Message& read() { return msg; }. Zdrojový fragment vynechává return a část syntaktických detailů.", "original": "Publisher / Subscriber\nVíce čtenářů\n• Zprávu si nemůže přečíst více čtenářů. – Což se někdy nehodí.\n• Možné řešení: sledovaný kanál.\nclass ObservedChannel : public Subject {\n    Message msg; // proč nepotřebuji frontu?\npublic:\n    Message & read() { msg; }\n    void send(Message message) {\n        msg = message;\n        notifyObservers();\n    }\n}\nProblémy?\n18 / 55\n"}, "19": {"title": "Více čtenářů, s vyřizováním zpráv najednou (A)", "comment": "Jan Matoušek · PDF strana 19. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Publisher / Subscriber\nVíce čtenářů, s vyřizováním zpráv najednou (A)\n• Nechceme obtěžovat adresáty pokaždé, když dostaneme zprávu.\n• Řešení A: Rozdělíme frontu na vstupní a výstupní; každému čtenáři tzv. broker zkopíruje \nzprávu do jeho fronty.\nclass ObservedChannel : public Subject {\npublic:\n    void send(Message message) { notifyObservers(msg); }\n}\nclass ChannelObserver : public Observer {\n    std::queue\u003cMessage> q;\npublic:\n    void notifyObserver(Message msg) override { q.push(msg); }\n    // top, pop, empty, clear\n}\nProblémy?\n19 / 55\n"}, "20": {"title": "Více čtenářů, s vyřizováním zpráv najednou (B)", "comment": "Jan Matoušek · PDF strana 20. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT. Doplněk GRAFIT: příklad je pseudokód; doplňte ukončení deklarací a sjednoťte názvy konstruktoru s deklarovanou třídou. Čtenář musí hlídat dostupnost dat a životnost kanálu.", "original": "Publisher / Subscriber\nVíce čtenářů, s vyřizováním zpráv najednou (B)\n• Nechceme obtěžovat adresáty pokaždé, když dostaneme zprávu.\n• Řešení B: Každý adresát bude mít svůj stav čtení kanálu.\nclass Channel {\n    std::vector\u003cMessage> data;\npublic:\n    void push(Message message);\n    size_t size();\n    Message& at(size_t position);\n}\nclass ChannelReader {\n    Channel& ch;\n    size_t cursor = 0;\npublic:\n    ChannelReader(channel& ch) : ch(ch);\n    bool empty() {\n        return cursor == ch.size()\n    }\n    Message& get() {\n        return ch.at(cursor++);\n    }\n}\nProblémy?\n20 / 55\n"}, "21": {"title": "Uklízení kanálu na konci snímku", "comment": "Jan Matoušek · PDF strana 21. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Publisher / Subscriber\nUklízení kanálu na konci snímku\n• Někdy bychom měli kanál uklidit. Např. (včetně použití):\n// na straně každého čtenáře\nwhile(!reader.empty()) {\n    auto msg = reader.get();\n    // ...\n}\nreader.reset();\n// jednou, na konci snímku:\nchannel.reset();\nTeď už můžeme realizovar vzor Publisher / Subscriber, ale…\nProblém? Co když je subscriber ve snímku na řadě před publisherem?\n21 / 55\n"}, "22": {"title": "Rozšíření: Double buffering", "comment": "Jan Matoušek · PDF strana 22. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Publisher / Subscriber\nRozšíření: Double buffering\n• Kanál bude mít ve skutečnosti dvě pole zpráv – hlavní a z předchozího snímku.\n• Na konci snímku se pole prohodí a přední se vyprázdní.\nclass Channel {\n    std::vector\u003cMessage> a, b;\n    bool current_is_a = false; // proč nepřehazovat pole přímo?\n};\n• Čtenář si rozšíří cursor o informaci, zda čte z a nebo z b.\nclass ChannelReader {\n    Channel& ch;\n    size_t cursor = 0;\n    bool reads_a = false;\n}\nVyužívá např. Bevy framework.\n22 / 55\n"}, "23": {"title": "State", "comment": "Jan Matoušek · PDF strana 23. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "State\n"}, "24": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 24. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "State\nKontext\nvoid Heroine::handleInput(Input input) {\n    if (input == PRESS_B) {\n        yVelocity_ = JUMP_VELOCITY;\n        setGraphics(IMAGE_JUMP);\n    }\n}\nJe tam někde chyba? Skákání ve vzduchu.\n24 / 55\n"}, "25": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 25. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "State\nKontext\nvoid Heroine::handleInput(Input input) {\n    if (input == PRESS_B) {\n        if (!isJumping_) {\n            isJumping_ = true;\n            // Jump...\n        }\n    }\n}\nPřidejme další druh pohybu…\n25 / 55\n"}, "26": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 26. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "State\nKontext\nvoid Heroine::handleInput(Input input) {\n    if (input == PRESS_B) {\n        // Jump if not jumping...\n    }\n    else if (input == PRESS_DOWN) {\n        if (!isJumping_) {\n            setGraphics(IMAGE_DUCK);\n        }\n    }\n    else if (input == RELEASE_DOWN) {\n        setGraphics(IMAGE_STAND);\n    }\n}\nJe tam někde chyba? Skrčím se, vyskočím, odkrčím se → nastaví se špatná grafika.\n26 / 55\n"}, "27": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 27. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "State\nKontext\nvoid Heroine::handleInput(Input input) {\n    if (input == PRESS_B) {\n        if (!isJumping_ && !isDucking_) { /* Jump... */ }\n    } else if (input == PRESS_DOWN) {\n        if (!isJumping_) {\n            isDucking_ = true; setGraphics(IMAGE_DUCK);\n        }\n    } else if (input == RELEASE_DOWN) {\n        if (isDucking_) {\n            isDucking_ = false; setGraphics(IMAGE_STAND);\n        }\n    }\n}\nA dál? S dalšími flagy bude kód stále méně přehledný.\n27 / 55\n"}, "28": {"title": "Co potřebujeme reprezentovat?", "comment": "Jan Matoušek · PDF strana 28. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "State\nCo potřebujeme reprezentovat?\nrelease down\npress jump\nland\npress down\nducking\nstanding\njumping\nMůžeme si na stavy zavést enum a větvit kód podle jeho hodnoty.\n• To má smysl, dokud je různých stavů málo, nebo když se vyhýbám OOP.\n28 / 55\n"}, "29": {"title": "Pattern", "comment": "Jan Matoušek · PDF strana 29. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "State\nPattern\nclass HeroineState {\npublic:\n    virtual ~HeroineState() {}\n    virtual void handleInput(Heroine& heroine, Input input) {}\n    virtual void update(Heroine& heroine) {}\n};\nclass DuckState : public HeroineState;\nclass StandState : public HeroineState;\nclass JumpState : public HeroineState;\nclass Heroine {\n    HeroineState* currentState;\npublic:\n    void handleInput(Input input) { currentState->handleInput(*this, input); }\n    void update() { currentState->update(*this); }\n};\n29 / 55\n"}, "30": {"title": "Kde alokovat stavy?", "comment": "Jan Matoušek · PDF strana 30. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT. Doplněk GRAFIT: při ručním ukládání různých stavů do jednoho bufferu je nutné řešit zarovnání, konstrukci, destrukci a životnost objektu. Samotné přetypování pole bajtů nestačí.", "original": "State\nKde alokovat stavy?\n• Stavy se mohou měnit často, dynamická alokace nemusí být žádoucí;\n‣ statická alokace často stačí.\n• Někdy však stav může zahrnovat další informaci, např. snímek animace;\n‣ dynamická alokace je možnost (pozor na správu paměti),\n‣ některé stavové proměnné mohou být uložené v herním objektu vedle stavu:\nclass Heroine {\n    HeroineState* currentState;\n    char currentStateData[STATE_DATA_SIZE]; // each state casts it\n    // ...\n};\n30 / 55\n"}, "31": {"title": "Přechody mezi stavy", "comment": "Jan Matoušek · PDF strana 31. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "State\nPřechody mezi stavy\nclass HeroineState { // ...\n    virtual void onEnter(Heroine& heroine) {}\n    virtual void onExit(Heroine& heroine) {}\n    virtual HeroineState* handleInput(Heroine& heroine, Input input) {}\n};\nclass Heroine { // ...\n    void handleInput(Input input) {\n        auto nextState = currentState->handleInput(*this, input);\n        if (nextState) {\n            currentState->onExit(*this);\n            currentState = nextState;\n            currentState->onEnter(*this);\n        }\n    }\n};\n31 / 55\n"}, "32": {"title": "Nedostatky", "comment": "Jan Matoušek · PDF strana 32. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "State\nNedostatky\n• I konečný stavový automat může být zbytečně komplexní\n‣ příklad: hráč může chodit ve stoje i v kleče, může přitom mít nasazený noktovizor, a \nještě je potřeba řešit efekt zranění…\n‣ všech možných kombinací je 16 (pokud jsou z každého stavu 2 varianty), přechodů mezi \nnimi až 240.\n‣ některé události způsobí přechod do jednoho stavu, ať už byl předchozí stav jakýkoliv\nJaká jsou řešení?\n• Souběžné stavové automaty (stavy jsou vzájemně nezávislé)\n‣ ukládám vzájemně nezávislé stavy pohybu, krčení, noktovizoru, zranění…\n• Hierarchické stavové automaty (stavy mají zčásti společné chování)\n‣ využijeme dědičnost stavů; co neumí potomek, předá rodiči\n‣ nebo lze využít seznam souběžných stavů; co nezpracuje jeden stav, zpracuje další v \nseznamu\n32 / 55\n"}, "33": {"title": "Další rozšíření", "comment": "Jan Matoušek · PDF strana 33. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "State\nDalší rozšíření\n• Zásobník stavů\n‣ vhodné pro historii a vracení se k předchozímu stavu\n‣ příklad: rozehraná hra, pause menu, zpátky k rozehrané hře\n33 / 55\n"}, "34": {"title": "Sequence", "comment": "Jan Matoušek · PDF strana 34. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Sequence\n"}, "35": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 35. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Sequence\nKontext\n• Chování entity je často rozloženo do více snímků hry\nclass Building {\n    int foundations_pct, building_pct, flag_waving;\npublic:\n    void update() {\n        if (foundations_pct \u003c 100) foundations_pct++;\n        else if (building_pct \u003c 100) building_pct++;\n        else flag_waving++;\n    }\n};\n35 / 55\n"}, "36": {"title": "Možná řešení", "comment": "Jan Matoušek · PDF strana 36. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Sequence\nMožná řešení\n• Vícevláknové programování – kolik vláken?\n• async/await – ne všude máme k dispozici\n36 / 55\n"}, "37": {"title": "Pattern", "comment": "Jan Matoušek · PDF strana 37. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT. Doplněk GRAFIT: std::queue používá pop(), nikoli pop_front(). Před front() ověřte neprázdnost, vlastnictví kroků a jejich životnost. Tento původní fragment není úplný spustitelný projekt.", "original": "Sequence\nPattern\nclass Step {\npublic:\n    virtual bool update() = 0;\n};\nclass FoundationsStep : public Step;\nclass BuildingStep : public Step;\nclass BuiltStep : public Step;\nclass Sequence {\n    std::queue\u003cStep*> steps;\npublic:\n    void update() {\n        if (!steps.empty())\n            if (steps.front()->update())\n                steps.pop_front();\n    }\n};\n37 / 55\n"}, "38": {"title": "Poznámky", "comment": "Jan Matoušek · PDF strana 38. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Sequence\nPoznámky\n• Velmi blízké stavům, lze implementovat podobným způsobem a kombinovat\n• Vhodné i pro případné skriptování chování entit\n• Lze upravit pro odpočítávání snímků, časů atd.\n38 / 55\n"}, "39": {"title": "Prototype", "comment": "Jan Matoušek · PDF strana 39. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Prototype\n"}, "40": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 40. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Prototype\nKontext\nclass Monster;\nclass Vampire : public Monster;\nclass Skeleton : public Monster;\nclass MonsterSpawner {\npublic:\n    virtual Monster* spawn() = 0;\n};\nclass VampireSpawner : public MonsterSpawner;\nclass SkeletonSpawner : public MonsterSpawner;\nProblémy?\n• Množství opakujícího se / boilerplate kódu\n• Duplikace hierarchie komplikuje údržbu\n40 / 55\n"}, "41": {"title": "Pattern", "comment": "Jan Matoušek · PDF strana 41. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Prototype\nPattern\nclass Monster {\npublic:\n    virtual Monster* clone() = 0;\n};\nclass Vampire : public Monster;\nclass Skeleton : public Monster;\nclass MonsterSpawner {\n    Monster* prototype;\npublic:\n    MonsterSpawner(Monster* prototype) : prototype(prototype) {}\n    Monster* spawn() {\n        return prototype->clone();\n    }\n};\n41 / 55\n"}, "42": {"title": "Výhody a další rozšíření", "comment": "Jan Matoušek · PDF strana 42. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Prototype\nVýhody a další rozšíření\n• Pouze jedna univerzální třída pro spawner.\n• Lze mít spawnery pro různě nastavené objekty stejného typu.\n• Přidání dodatečných parametrů do metod spawn() a clone():\n‣ vhodné např. pro (deterministickou) randomizaci vytvořených kopií,\n‣ ale není to nutné.\n• Možnost rozšíření spawnerů např. o počítání vytvořených instancí a limity…\n42 / 55\n"}, "43": {"title": "Builder", "comment": "Jan Matoušek · PDF strana 43. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Builder\n"}, "44": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 44. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Builder\nKontext\nclass Computer {\npublic:\n    Computer(\n        std::optional\u003cRAM> ram,\n        std::optional\u003cGPU> gpu,\n        std::optional\u003cWiFi> wifi,\n        std::optional\u003cCD> cd, ...\n    );\n};\nvoid somewhere() {\n    Computer c1({...}, std::nullopt, std::nullopt, std::nullopt, ...);\n    Computer c2({...}, {...}, std::nullopt, std::nullopt, ...);\n    // ...\n}\nProblémy? Velké množství nevyužitých parametrů kostruktoru, dlouhý kód\n44 / 55\n"}, "45": {"title": "Pattern", "comment": "Jan Matoušek · PDF strana 45. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Builder\nPattern\nclass ComputerBuilder {\n    std::optional\u003cRAM> ram, std::optional\u003cGPU> gpu, ...;\npublic:\n    ComputerBuilder& withRAM(RAM r) { ram = r; return *this; }\n    ComputerBuilder& withGPU(GPU g) { gpu = g; return *this; }\n    Computer build() {\n        return Computer(ram, gpu, ...);\n    }\n};\nvoid somewhere() {\n    Computer c1 = ComputerBuilder().withRAM({...}).build();\n    Computer c2 = ComputerBuilder().withRAM({...}).withGPU({...}).build();\n    // ...\n}\n45 / 55\n"}, "46": {"title": "Service Locator", "comment": "Jan Matoušek · PDF strana 46. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Service Locator\n"}, "47": {"title": "Kontext", "comment": "Jan Matoušek · PDF strana 47. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Service Locator\nKontext\n• Některé části programu (služby) nemusí být v různých instancích, ale existují jen jednou\n‣ např. komunikace s grafickou kartou, práce se souborovým systémem, práce se sítí, \nintegrace se Steam atd.\n‣ chceme k nim mít přístup odevšud\n• Máme OOP, nechceme mít volně poházené funkce.\n• Někdy v budoucnu bychom chtěli jednu část programu vyměnit za jinou se stejným \nrozhraním.\n47 / 55\n"}, "48": {"title": "Jiný (anti)pattern – Singleton", "comment": "Jan Matoušek · PDF strana 48. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Service Locator\nJiný (anti)pattern – Singleton\nclass FileSystem {\npublic:\n    static FileSystem& instance() {\n        if (!instance_) instance_ = new FileSystem();\n        return *instance_;\n    }\nprivate:\n    inline static FileSystem* instance_;\n};\n// FileSystem::instance(). ...\nProblémy?\n• Globální proměnná.\n• Komplikované (pomalé) použití ve vícevláknovém kódu.\n• Nelze jednoduše dle potřeby vyměnit jednu službu za jinou.\n48 / 55\n"}, "49": {"title": "Pattern", "comment": "Jan Matoušek · PDF strana 49. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Service Locator\nPattern\nclass FileSystem;\nclass VirtualFileSystem : public FileSystem;\nclass DriveFileSystem : public FileSystem;\nclass ServiceLocator {\n    inline static FileSystem* fileSystem;\npublic:\n    static FileSystem* getFileSystem();\n    static void registerFileSystem(FileSystem* fileSystem);\n};\nint main() {\n    DriveFileSystem fs;\n    ServiceLocator::registerFileSystem(&fs);\n    Game.run();\n}\nCo když nikdy nezavolám registerFileSystem, ale použiju getFileSystem?\n49 / 55\n"}, "50": {"title": "Pattern", "comment": "Jan Matoušek · PDF strana 50. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Service Locator\nPattern\nclass FileSystem;\nclass NullFileSystem : public FileSystem;\nclass VirtualFileSystem : public FileSystem;\nclass DriveFileSystem : public FileSystem;\nclass ServiceLocator {\n    inline static NullFileSystem nullFileSystem;\n    inline static FileSystem* fileSystem = &nullFileSystem;\npublic:\n    static FileSystem* getFileSystem();\n    static void registerFileSystem(FileSystem* fileSystem);\n};\nint main() {\n    DriveFileSystem fs;\n    ServiceLocator::registerFileSystem(&fs);\n    Game.run();\n}\n50 / 55\n"}, "51": {"title": "Možné rozšíření pro více druhů služeb (1/2)", "comment": "Jan Matoušek · PDF strana 51. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Service Locator\nMožné rozšíření pro více druhů služeb (1/2)\ntemplate\u003ctypename Service> class SingleServiceLocator {\n    inline static typename Service::NullService nullService;\n    inline static Service* service = &nullService;\npublic:\n    static Service* getService();\n    static void registerService(Service* fileSystem);\n};\nclass ServiceLocator : public SingleServiceLocator\u003cFileSystem>, ... {\npublic:\n    template\u003ctypename Service> static Service* getService() {\n        return SingleServiceLocator\u003cService>::getService();\n    }\n    template\u003ctypename Service> static void registerService(Service* s) {\n        SingleServiceLocator\u003cService>::registerService(s);\n    }\n};\n51 / 55\n"}, "52": {"title": "Možné rozšíření pro více druhů služeb (2/2)", "comment": "Jan Matoušek · PDF strana 52. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Service Locator\nMožné rozšíření pro více druhů služeb (2/2)\nclass FileSystem {\npublic:\n    virtual AssetData loadAsset(std::string_view path) = 0;\n    using NullService = class NullFileSystem;\n};\nclass NullFileSystem : public FileSystem {\n    AssetData loadAsset(std::string_view path) override;\n};\nclass VirtualFileSystem : public FileSystem;\nclass DriveFileSystem : public FileSystem;\nint main() {\n    DriveFileSystem fs;\n    ServiceLocator::registerService\u003cFileSystem>(&fs);\n    Game.run();\n}\n52 / 55\n"}, "53": {"title": "Shrnutí", "comment": "Jan Matoušek · PDF strana 53. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Shrnutí\n"}, "54": {"title": "Obecné rady a doporučení", "comment": "Jan Matoušek · PDF strana 54. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Shrnutí\nObecné rady a doporučení\n• Některé platformy mají doporučenou nebo obvyklou architekturu\n‣ Dáno např. frameworkem, nebo fungováním dané platformy\n‣ Typicky web nebo desktopové aplikace: MVC, FE/BE\n• Vyhněte se:\n‣ Všemocné objekty a funkce\n‣ Cyklické závislosti mezi objekty\n‣ Prolínání zodpovědností\n• Naopak:\n‣ Oddělte vrstvy (prezentace × simulace × operační systém)\n‣ Vyjasněte si komunikaci mezi objekty\n‣ Snažte se o data driven engine (o tom více příště)\n54 / 55\n"}, "55": {"title": "Předvedené vzory", "comment": "Jan Matoušek · PDF strana 55. Datovaný plán i titulní snímek uvádějí 15.10.2026. Původní C++ je výkladový fragment. Jasně označená upřesnění a interaktivní model jsou doplněk GRAFIT.", "original": "Shrnutí\nPředvedené vzory\n• Komunikace – Command, Observer, Publisher / Subscriber\n• Chování – State, Sequence\n• Vytváření – Prototype, Builder, (Factory)\n• Služby – Singleton, Service Locator, (Dependency Injection)\nNěkteré jsme si ukázali i bez pojmenování.\nDoporučený zdroj:\n• Game Programming patterns, https://gameprogrammingpatterns.com/\n55 / 55\n"}}</script><dialog id="lab-dialog" class="lab-dialog" aria-labelledby="lab-title"><div class="dialog-heading"><h2 id="lab-title">Fronta příkazů a stavový automat · GRAFIT</h2><button class="close" aria-label="Zavřít ukázku">×</button></div><p>Zařaďte příkazy a proveďte je postupně. Neplatný přechod ponechá stav beze změny.</p><div class="lab-actions"><button data-command="jump">Zařadit skok</button><button data-command="duck">Zařadit přikrčení</button><button data-command="release">Zařadit uvolnění dolů</button><button data-command="land">Zařadit dopad</button></div><div class="lab-actions"><button id="process">Provést další příkaz</button><button id="lab-reset">Obnovit výchozí stav</button></div><output id="lab-result" class="lab-result" aria-live="polite"></output><ol id="command-log"></ol><p class="lab-disclaimer">Didaktický doplněk GRAFIT: deterministická fronta FIFO a tři stavy. Skok i přikrčení jsou povoleny jen ze stání, dopad ze skoku a uvolnění dolů z přikrčení. Model neimplementuje fyziku, síť, herní smyčku ani správu paměti C++. Fronta má ochranný limit 30 příkazů.</p></dialog></body>
+</html>
