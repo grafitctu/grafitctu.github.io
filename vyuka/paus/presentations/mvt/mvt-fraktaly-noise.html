@@ -1,0 +1,1358 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Šum a procedurální textury — MVT</title>
+  <meta name="description"
+    content="Interaktivní přehled šumů: Perlin, Simplex, Worley, fBm, turbulence, ridged multifractal a doménový warping na HTML canvasu.">
+  <meta name="author" content="Petr Pauš">
+
+  <style>
+    :root {
+      --bg: #060d18;
+      --panel: rgba(15, 23, 42, .72);
+      --border: rgba(148, 163, 184, .16);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #22d3ee;
+      --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background:
+        radial-gradient(1200px 700px at 72% -12%, rgba(34, 211, 238, .10), transparent 60%),
+        radial-gradient(900px 620px at 6% 112%, rgba(167, 139, 250, .10), transparent 60%),
+        var(--bg);
+      overflow: hidden;
+    }
+
+    /* ---------- Záhlaví ---------- */
+
+    .app-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px 24px;
+      padding: 20px 28px 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: .64rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(34, 211, 238, .08);
+      border: 1px solid rgba(34, 211, 238, .32);
+      border-radius: 999px;
+      padding: 4px 11px;
+    }
+
+    .app-header h1 {
+      margin: 9px 0 3px;
+      font-size: clamp(1.35rem, 2.6vw, 1.95rem);
+      letter-spacing: -.02em;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 72ch;
+      font-size: .88rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .header-info {
+      max-width: 440px;
+      font-family: var(--mono);
+      font-size: .68rem;
+      line-height: 1.6;
+      color: #7dd3fc;
+      background: rgba(8, 17, 31, .7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 9px 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .header-info .dim {
+      color: var(--muted);
+    }
+
+    .header-info .note {
+      display: block;
+      margin-top: 3px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: .7rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    /* ---------- Rozvržení ---------- */
+
+    main {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 18px;
+      padding: 0 28px 24px;
+    }
+
+    .stage {
+      position: relative;
+      min-height: 320px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #08111f;
+      box-shadow:
+        0 22px 60px rgba(0, 0, 0, .45),
+        inset 0 0 0 1px rgba(255, 255, 255, .02);
+    }
+
+    #noiseCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .stage-meta {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 13px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px 14px;
+      font-family: var(--mono);
+      font-size: .66rem;
+      color: rgba(226, 232, 240, .92);
+      text-shadow: 0 1px 5px rgba(0, 0, 0, .85);
+      pointer-events: none;
+    }
+
+    .stage-meta span {
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, .16);
+      background: rgba(6, 13, 24, .55);
+      backdrop-filter: blur(6px);
+    }
+
+    /* ---------- Ovládací panel ---------- */
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+      overflow-y: auto;
+    }
+
+    .group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-family: var(--mono);
+      font-size: .66rem;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ---------- Volba šumu ---------- */
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .preset {
+      padding: 7px 10px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: rgba(148, 163, 184, .06);
+      color: #cbd5e1;
+      font: inherit;
+      font-size: .76rem;
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, color .15s ease;
+    }
+
+    .preset:hover {
+      background: rgba(148, 163, 184, .14);
+      border-color: rgba(148, 163, 184, .32);
+    }
+
+    .preset[aria-pressed="true"] {
+      color: #04141a;
+      background: linear-gradient(135deg, #67e8f9, #99f6e4);
+      border-color: transparent;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(34, 211, 238, .22);
+    }
+
+    .preset.span-2 {
+      grid-column: span 2;
+      text-align: center;
+    }
+
+    .hint {
+      margin: 0;
+      font-size: .7rem;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .hint code {
+      font-family: var(--mono);
+      font-size: .95em;
+      color: #a5f3fc;
+    }
+
+    /* ---------- Posuvníky a selecty ---------- */
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .control[hidden] {
+      display: none !important;
+    }
+
+    .control-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: .84rem;
+    }
+
+    .control-head label {
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    output {
+      font-family: var(--mono);
+      font-size: .76rem;
+      color: var(--accent);
+      background: rgba(34, 211, 238, .08);
+      border-radius: 6px;
+      padding: 1px 8px;
+      min-width: 52px;
+      text-align: center;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, .22);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      border: 3px solid #0e7490;
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, .12);
+      cursor: grab;
+      transition: box-shadow .15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      box-shadow: 0 0 0 6px rgba(34, 211, 238, .18);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      border: 3px solid #0e7490;
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, .12);
+      cursor: grab;
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, .22);
+    }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: .82rem;
+      color: #cbd5e1;
+      pointer-events: none;
+    }
+
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      padding: 8px 34px 8px 11px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: rgba(148, 163, 184, .08);
+      color: var(--text);
+      font: inherit;
+      font-size: .8rem;
+      cursor: pointer;
+    }
+
+    /* ---------- Tlačítka ---------- */
+
+    .btn-row {
+      display: flex;
+      gap: 9px;
+    }
+
+    .btn-row button {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(34, 211, 238, .32);
+      background: rgba(34, 211, 238, .1);
+      color: #a5f3fc;
+      font: inherit;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, transform .1s ease;
+    }
+
+    .btn-row button:hover {
+      background: rgba(34, 211, 238, .18);
+      border-color: rgba(34, 211, 238, .55);
+    }
+
+    .btn-row button:active {
+      transform: scale(.97);
+    }
+
+    .btn-row button.secondary {
+      border-color: var(--border);
+      background: rgba(148, 163, 184, .08);
+      color: #cbd5e1;
+    }
+
+    .btn-row button.secondary:hover {
+      background: rgba(148, 163, 184, .16);
+      border-color: rgba(148, 163, 184, .35);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ---------- Responzivita ---------- */
+
+    @media (max-width: 900px) {
+      body {
+        overflow: auto;
+      }
+
+      .app-header {
+        padding: 16px 18px 10px;
+      }
+
+      .header-info {
+        width: 100%;
+        max-width: none;
+        font-size: .64rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(380px, 56vh) auto;
+        padding: 0 18px 22px;
+      }
+
+      .panel {
+        overflow: visible;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="app-header">
+    <div>
+      <h1>Šum a procedurální textury</h1>
+      <p class="subtitle">
+        Perlin, Simplex, Worley, fBm, turbulence, ridged multifractal a doménový warping.
+      </p>
+    </div>
+    <div class="header-info" aria-live="polite" aria-label="Popis aktivního šumu">
+      <span class="dim">typ</span> <span id="noiseName">Perlin</span><br>
+      <span id="noiseFormula">n(x, y) = interpolace gradientů v mřížce</span>
+      <span class="note" id="noiseNote">Spojitý gradientní šum (Ken Perlin, 1983).</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="stage" id="stage">
+      <canvas id="noiseCanvas" aria-label="Vykreslený šum"></canvas>
+      <div class="stage-meta">
+        <span id="stageParams">Perlin &middot; frekvence 3,5</span>
+        <span id="stageSeed">seed 1337</span>
+      </div>
+    </section>
+
+    <aside class="panel" aria-label="Ovládání šumu">
+
+      <div class="group">
+        <h2>Druh šumu</h2>
+        <div class="preset-grid" role="group" aria-label="Výběr druhu šumu">
+          <button class="preset" type="button" data-noise="perlin" aria-pressed="true"
+            title="Perlinův gradientní šum (1983)">Perlin</button>
+          <button class="preset" type="button" data-noise="simplex" aria-pressed="false"
+            title="Simplexní šum (2001) — méně artefaktů">Simplex</button>
+          <button class="preset" type="button" data-noise="worley" aria-pressed="false"
+            title="Worley / cellular — vzdálenost k nejbližšímu bodu">Worley</button>
+          <button class="preset" type="button" data-noise="fbm" aria-pressed="false"
+            title="fractal Brownian motion — sčítání oktáv">fBm</button>
+          <button class="preset" type="button" data-noise="turbulence" aria-pressed="false"
+            title="Turbulence — absolutní hodnota šumu">Turbulence</button>
+          <button class="preset" type="button" data-noise="ridged" aria-pressed="false"
+            title="Ridged multifractal — hřebeny hor">Ridged</button>
+          <button class="preset span-2" type="button" data-noise="warping" aria-pressed="false"
+            title="Doménový warping — mramor a kouř">Doménový warping</button>
+        </div>
+        <p class="hint">
+          fBm, turbulence, ridged a warping skládají oktávy základního šumu &middot; odkaz
+          <code>?sum=worley</code>, <code>?sum=ridged</code>…
+        </p>
+      </div>
+
+      <div class="group">
+        <h2>Parametry</h2>
+
+        <div class="control" data-control="base" id="baseControl">
+          <div class="control-head">
+            <label for="baseNoise">Základní šum</label>
+          </div>
+          <div class="select-wrap">
+            <select id="baseNoise">
+              <option value="perlin">Perlin</option>
+              <option value="simplex">Simplex</option>
+              <option value="worley">Worley</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="control-head">
+            <label for="frequency">Frekvence</label>
+            <output id="frequencyOut" for="frequency">3,5</output>
+          </div>
+          <input id="frequency" type="range" min="0.5" max="12" step="0.1" value="3.5">
+        </div>
+
+        <div class="control" data-control="octaves" id="octavesControl">
+          <div class="control-head">
+            <label for="octaves">Oktávy</label>
+            <output id="octavesOut" for="octaves">5</output>
+          </div>
+          <input id="octaves" type="range" min="1" max="8" step="1" value="5">
+        </div>
+
+        <div class="control" data-control="persistence" id="persistenceControl">
+          <div class="control-head">
+            <label for="persistence">Persistence</label>
+            <output id="persistenceOut" for="persistence">0,50</output>
+          </div>
+          <input id="persistence" type="range" min="0.2" max="0.9" step="0.01" value="0.5">
+        </div>
+
+        <div class="control" data-control="lacunarity" id="lacunarityControl">
+          <div class="control-head">
+            <label for="lacunarity">Lakunarita</label>
+            <output id="lacunarityOut" for="lacunarity">2,00</output>
+          </div>
+          <input id="lacunarity" type="range" min="1.2" max="3" step="0.05" value="2">
+        </div>
+
+        <div class="control" data-control="warp" id="warpControl" hidden>
+          <div class="control-head">
+            <label for="warp">Síla warpu</label>
+            <output id="warpOut" for="warp">0,60</output>
+          </div>
+          <input id="warp" type="range" min="0" max="2" step="0.05" value="0.6">
+        </div>
+
+        <div class="control" data-control="jitter" id="jitterControl" hidden>
+          <div class="control-head">
+            <label for="jitter">Buňky (jitter)</label>
+            <output id="jitterOut" for="jitter">0,90</output>
+          </div>
+          <input id="jitter" type="range" min="0" max="1" step="0.01" value="0.9">
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>Vzhled</h2>
+
+        <div class="control">
+          <div class="control-head">
+            <label for="palette">Barevná mapa</label>
+          </div>
+          <div class="select-wrap">
+            <select id="palette">
+              <option value="clouds">Mraky</option>
+              <option value="grey">Šedá</option>
+              <option value="fire">Oheň</option>
+              <option value="marble">Mramor</option>
+              <option value="terrain">Terén</option>
+              <option value="neon">Neon</option>
+              <option value="ice">Led</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="control-head">
+            <label for="contrast">Kontrast</label>
+            <output id="contrastOut" for="contrast">1,15</output>
+          </div>
+          <input id="contrast" type="range" min="0.5" max="3" step="0.05" value="1.15">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button id="newSeed" type="button">Nový seed</button>
+        <button id="reset" type="button" class="secondary">Obnovit</button>
+      </div>
+
+    </aside>
+  </main>
+
+  <script>
+    (() => {
+      'use strict';
+
+      /* ============================================================
+         Definice druhů šumu
+         ============================================================ */
+
+      const NOISE_TYPES = {
+        perlin: {
+          id: 'perlin',
+          label: 'Perlin',
+          formula: 'n(x, y) = interpolace gradientů v mřížce',
+          note: 'Spojitý gradientní šum (Ken Perlin, 1983).',
+          base: 'perlin',
+          palette: 'clouds',
+          params: { frequency: 3.5, octaves: 5, persistence: 0.5, lacunarity: 2, warp: 0.6, jitter: 0.9, contrast: 1.15 }
+        },
+        simplex: {
+          id: 'simplex',
+          label: 'Simplex',
+          formula: 'n(x, y) = Σ gᵢ · (0,5 − rᵢ²)⁴',
+          note: 'Rychlejší a bez směrových artefaktů (Ken Perlin, 2001).',
+          base: 'simplex',
+          palette: 'ice',
+          params: { frequency: 3.5, octaves: 5, persistence: 0.5, lacunarity: 2, warp: 0.6, jitter: 0.9, contrast: 1.15 }
+        },
+        worley: {
+          id: 'worley',
+          label: 'Worley',
+          formula: 'n = minᵢ |p − cᵢ|',
+          note: 'Vzdálenost k nejbližšímu bodu buňky (Steven Worley, 1996).',
+          base: 'worley',
+          palette: 'neon',
+          params: { frequency: 6, octaves: 5, persistence: 0.5, lacunarity: 2, warp: 0.6, jitter: 0.9, contrast: 1.3 }
+        },
+        fbm: {
+          id: 'fbm',
+          label: 'fBm',
+          formula: 'f(p) = Σ aⁱ · n(f·2ⁱ·p)',
+          note: 'Sčítání oktáv: každá další má vyšší frekvenci a nižší amplitudu.',
+          base: 'perlin',
+          palette: 'clouds',
+          params: { frequency: 3, octaves: 6, persistence: 0.5, lacunarity: 2, warp: 0.6, jitter: 0.9, contrast: 1.15 }
+        },
+        turbulence: {
+          id: 'turbulence',
+          label: 'Turbulence',
+          formula: 'f(p) = Σ aⁱ · |n(f·2ⁱ·p)|',
+          note: 'Absolutní hodnota šumu — mraky, oheň a kouř.',
+          base: 'perlin',
+          palette: 'fire',
+          params: { frequency: 3, octaves: 6, persistence: 0.55, lacunarity: 2, warp: 0.6, jitter: 0.9, contrast: 1.15 }
+        },
+        ridged: {
+          id: 'ridged',
+          label: 'Ridged',
+          formula: 'f(p) = Σ aⁱ · (1 − |n|)²',
+          note: 'Ridged multifractal — hřebeny hor a ostré hrany.',
+          base: 'perlin',
+          palette: 'terrain',
+          params: { frequency: 2.5, octaves: 6, persistence: 0.55, lacunarity: 2.1, warp: 0.6, jitter: 0.9, contrast: 1.2 }
+        },
+        warping: {
+          id: 'warping',
+          label: 'Doménový warping',
+          formula: 'f(p) = fbm(p + w·fbm(p))',
+          note: 'Šum posouvá souřadnice druhého šumu — mramor a kouř.',
+          base: 'perlin',
+          palette: 'marble',
+          params: { frequency: 2.5, octaves: 5, persistence: 0.5, lacunarity: 2, warp: 0.8, jitter: 0.9, contrast: 1.1 }
+        }
+      };
+
+      const COMPOSITES = ['fbm', 'turbulence', 'ridged', 'warping'];
+
+      const TYPE_ALIASES = {
+        perlin: 'perlin',
+        simplex: 'simplex',
+        worley: 'worley',
+        cell: 'worley',
+        cellular: 'worley',
+        fbm: 'fbm',
+        turbulence: 'turbulence',
+        turb: 'turbulence',
+        ridged: 'ridged',
+        warping: 'warping',
+        warp: 'warping'
+      };
+
+      /* ============================================================
+         Palety
+         ============================================================ */
+
+      const PALETTES = {
+        clouds: {
+          stops: [
+            [0, [9, 17, 31]], [0.35, [51, 65, 85]], [0.62, [148, 163, 184]],
+            [0.82, [226, 232, 240]], [1, [255, 255, 255]]
+          ]
+        },
+        grey: {
+          stops: [
+            [0, [8, 14, 24]], [0.55, [100, 116, 139]], [1, [248, 250, 252]]
+          ]
+        },
+        fire: {
+          stops: [
+            [0, [6, 4, 4]], [0.3, [88, 12, 12]], [0.55, [194, 47, 12]],
+            [0.75, [245, 158, 11]], [1, [254, 243, 199]]
+          ]
+        },
+        marble: {
+          stops: [
+            [0, [12, 18, 31]], [0.35, [71, 85, 105]], [0.6, [148, 163, 184]],
+            [0.8, [226, 232, 240]], [1, [255, 255, 255]]
+          ]
+        },
+        terrain: {
+          stops: [
+            [0, [8, 20, 34]], [0.3, [13, 74, 59]], [0.5, [34, 108, 61]],
+            [0.68, [122, 120, 49]], [0.85, [146, 87, 51]], [1, [241, 245, 249]]
+          ]
+        },
+        neon: {
+          stops: [
+            [0, [5, 2, 15]], [0.3, [59, 7, 100]], [0.55, [124, 58, 237]],
+            [0.78, [6, 182, 212]], [1, [204, 251, 241]]
+          ]
+        },
+        ice: {
+          stops: [
+            [0, [4, 15, 30]], [0.4, [8, 74, 110]], [0.68, [14, 165, 233]],
+            [0.86, [165, 243, 252]], [1, [248, 250, 252]]
+          ]
+        }
+      };
+
+      const DEFAULT_SEED = 1337;
+
+      /* ============================================================
+         DOM a stav
+         ============================================================ */
+
+      const canvas = document.getElementById('noiseCanvas');
+      const ctx = canvas.getContext('2d');
+      const stage = document.getElementById('stage');
+
+      const ui = {
+        typeButtons: Array.from(document.querySelectorAll('.preset')),
+        base: document.getElementById('baseNoise'),
+        frequency: document.getElementById('frequency'),
+        octaves: document.getElementById('octaves'),
+        persistence: document.getElementById('persistence'),
+        lacunarity: document.getElementById('lacunarity'),
+        warp: document.getElementById('warp'),
+        jitter: document.getElementById('jitter'),
+        palette: document.getElementById('palette'),
+        contrast: document.getElementById('contrast'),
+        frequencyOut: document.getElementById('frequencyOut'),
+        octavesOut: document.getElementById('octavesOut'),
+        persistenceOut: document.getElementById('persistenceOut'),
+        lacunarityOut: document.getElementById('lacunarityOut'),
+        warpOut: document.getElementById('warpOut'),
+        jitterOut: document.getElementById('jitterOut'),
+        contrastOut: document.getElementById('contrastOut'),
+        noiseName: document.getElementById('noiseName'),
+        noiseFormula: document.getElementById('noiseFormula'),
+        noiseNote: document.getElementById('noiseNote'),
+        stageParams: document.getElementById('stageParams'),
+        stageSeed: document.getElementById('stageSeed'),
+        baseControl: document.getElementById('baseControl'),
+        octavesControl: document.getElementById('octavesControl'),
+        persistenceControl: document.getElementById('persistenceControl'),
+        lacunarityControl: document.getElementById('lacunarityControl'),
+        warpControl: document.getElementById('warpControl'),
+        jitterControl: document.getElementById('jitterControl'),
+        newSeed: document.getElementById('newSeed'),
+        reset: document.getElementById('reset')
+      };
+
+      let currentType = 'perlin';
+      let currentSeed = DEFAULT_SEED;
+      let cssW = 0;
+      let cssH = 0;
+      let dpr = 1;
+      let rafId = 0;
+      let finalTimer = 0;
+
+      const offscreen = document.createElement('canvas');
+      const offCtx = offscreen.getContext('2d');
+
+      /* ============================================================
+         Pomocné funkce
+         ============================================================ */
+
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6D2B79F5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function fade(t) {
+        return t * t * t * (t * (t * 6 - 15) + 10);
+      }
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      function fmt(value, digits) {
+        return value.toLocaleString('cs-CZ', {
+          minimumFractionDigits: digits,
+          maximumFractionDigits: digits
+        });
+      }
+
+      function normalize(value) {
+        return value
+          .toLowerCase()
+          .normalize('NFD')
+          .split('')
+          .filter(ch => {
+            const code = ch.charCodeAt(0);
+            return code < 0x300 || code > 0x36f;
+          })
+          .join('')
+          .trim();
+      }
+
+      /* ============================================================
+         Perlinův šum (1983)
+         ============================================================ */
+
+      let permSeed = null;
+      let perm = null;
+
+      function getPerm(seed) {
+        if (permSeed === seed && perm) {
+          return perm;
+        }
+        const p = new Uint8Array(256);
+        for (let i = 0; i < 256; i++) p[i] = i;
+        const rng = mulberry32(seed);
+        for (let i = 255; i > 0; i--) {
+          const j = Math.floor(rng() * (i + 1));
+          const tmp = p[i];
+          p[i] = p[j];
+          p[j] = tmp;
+        }
+        const table = new Uint8Array(512);
+        for (let i = 0; i < 512; i++) table[i] = p[i & 255];
+        perm = table;
+        permSeed = seed;
+        return table;
+      }
+
+      function grad2(hash, x, y) {
+        switch (hash & 7) {
+          case 0: return x + y;
+          case 1: return -x + y;
+          case 2: return x - y;
+          case 3: return -x - y;
+          case 4: return x;
+          case 5: return -x;
+          case 6: return y;
+          default: return -y;
+        }
+      }
+
+      function perlin2(table, x, y) {
+        const xi = Math.floor(x);
+        const yi = Math.floor(y);
+        const X = xi & 255;
+        const Y = yi & 255;
+        const xf = x - xi;
+        const yf = y - yi;
+        const u = fade(xf);
+        const v = fade(yf);
+
+        const A = table[X] + Y;
+        const B = table[X + 1] + Y;
+
+        const aa = table[A];
+        const ab = table[A + 1];
+        const ba = table[B];
+        const bb = table[B + 1];
+
+        const x1 = lerp(grad2(aa, xf, yf), grad2(ba, xf - 1, yf), u);
+        const x2 = lerp(grad2(ab, xf, yf - 1), grad2(bb, xf - 1, yf - 1), u);
+        return lerp(x1, x2, v);
+      }
+
+      /* ============================================================
+         Simplexní šum (2001)
+         ============================================================ */
+
+      const F2 = 0.5 * (Math.sqrt(3) - 1);
+      const G2 = (3 - Math.sqrt(3)) / 6;
+      const GRAD3 = [
+        [1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0],
+        [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1],
+        [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1]
+      ];
+
+      function grad3(hash, x, y) {
+        const g = GRAD3[hash % 12];
+        return g[0] * x + g[1] * y;
+      }
+
+      function simplex2(table, xin, yin) {
+        const s = (xin + yin) * F2;
+        const i = Math.floor(xin + s);
+        const j = Math.floor(yin + s);
+        const t = (i + j) * G2;
+
+        const x0 = xin - (i - t);
+        const y0 = yin - (j - t);
+
+        let i1, j1;
+        if (x0 > y0) {
+          i1 = 1;
+          j1 = 0;
+        } else {
+          i1 = 0;
+          j1 = 1;
+        }
+
+        const x1 = x0 - i1 + G2;
+        const y1 = y0 - j1 + G2;
+        const x2 = x0 - 1 + 2 * G2;
+        const y2 = y0 - 1 + 2 * G2;
+
+        const ii = i & 255;
+        const jj = j & 255;
+
+        let n0 = 0, n1 = 0, n2 = 0;
+
+        let t0 = 0.5 - x0 * x0 - y0 * y0;
+        if (t0 > 0) {
+          t0 *= t0;
+          n0 = t0 * t0 * grad3(table[ii + table[jj]], x0, y0);
+        }
+
+        let t1 = 0.5 - x1 * x1 - y1 * y1;
+        if (t1 > 0) {
+          t1 *= t1;
+          n1 = t1 * t1 * grad3(table[ii + i1 + table[jj + j1]], x1, y1);
+        }
+
+        let t2 = 0.5 - x2 * x2 - y2 * y2;
+        if (t2 > 0) {
+          t2 *= t2;
+          n2 = t2 * t2 * grad3(table[ii + 1 + table[jj + 1]], x2, y2);
+        }
+
+        return 70 * (n0 + n1 + n2);
+      }
+
+      /* ============================================================
+         Worley / cellular
+         ============================================================ */
+
+      function hashInt(x, y, seed) {
+        let h = Math.imul(x, 0x27d4eb2d) ^ Math.imul(y, 0x165667b1) ^ Math.imul(seed, 0x9e3779b1);
+        h = Math.imul(h ^ (h >>> 15), 0x85ebca6b);
+        h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
+        h ^= h >>> 16;
+        return (h >>> 0) / 4294967296;
+      }
+
+      function worleyF1(x, y, jitter, seed) {
+        const xi = Math.floor(x);
+        const yi = Math.floor(y);
+        const fx = x - xi;
+        const fy = y - yi;
+        let minD2 = Infinity;
+
+        for (let oy = -1; oy <= 1; oy++) {
+          for (let ox = -1; ox <= 1; ox++) {
+            const cx = xi + ox;
+            const cy = yi + oy;
+            const px = ox + 0.5 + (hashInt(cx, cy, seed) - 0.5) * jitter;
+            const py = oy + 0.5 + (hashInt(cx, cy, seed + 911) - 0.5) * jitter;
+            const dx = px - fx;
+            const dy = py - fy;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < minD2) minD2 = d2;
+          }
+        }
+
+        return Math.sqrt(minD2);
+      }
+
+      /* ============================================================
+         Skládané šumy
+         ============================================================ */
+
+      function makeBaseFn(params, table, seed) {
+        if (params.base === 'simplex') {
+          return (x, y) => simplex2(table, x, y);
+        }
+        if (params.base === 'worley') {
+          return (x, y) => Math.min(1, worleyF1(x, y, params.jitter, seed)) * 2 - 1;
+        }
+        return (x, y) => perlin2(table, x, y);
+      }
+
+      function fbmSample(base, x, y, p) {
+        let sum = 0;
+        let amp = 1;
+        let freq = 1;
+        let norm = 0;
+
+        for (let o = 0; o < p.octaves; o++) {
+          sum += base(x * freq, y * freq) * amp;
+          norm += amp;
+          amp *= p.persistence;
+          freq *= p.lacunarity;
+        }
+
+        return sum / norm;
+      }
+
+      function turbulenceSample(base, x, y, p) {
+        let sum = 0;
+        let amp = 1;
+        let freq = 1;
+        let norm = 0;
+
+        for (let o = 0; o < p.octaves; o++) {
+          sum += Math.abs(base(x * freq, y * freq)) * amp;
+          norm += amp;
+          amp *= p.persistence;
+          freq *= p.lacunarity;
+        }
+
+        return sum / norm;
+      }
+
+      function ridgedSample(base, x, y, p) {
+        let sum = 0;
+        let amp = 1;
+        let freq = 1;
+        let norm = 0;
+        let weight = 1;
+
+        for (let o = 0; o < p.octaves; o++) {
+          let n = 1 - Math.abs(base(x * freq, y * freq));
+          n *= n;
+          n *= weight;
+          weight = Math.min(1, n * 2);
+          sum += n * amp;
+          norm += amp;
+          amp *= p.persistence;
+          freq *= p.lacunarity;
+        }
+
+        return sum / norm;
+      }
+
+      function warpSample(base, x, y, p) {
+        const qx = fbmSample(base, x, y, p);
+        const qy = fbmSample(base, x + 31.4, y - 17.2, p);
+        const strength = p.warp * 2.5;
+        return fbmSample(base, x + qx * strength, y + qy * strength, p);
+      }
+
+      /* ============================================================
+         Palety a vykreslení
+         ============================================================ */
+
+      function samplePalette(stops, t) {
+        if (t <= stops[0][0]) return stops[0][1];
+        if (t >= stops[stops.length - 1][0]) return stops[stops.length - 1][1];
+
+        let i = 0;
+        while (i < stops.length - 2 && t > stops[i + 1][0]) i++;
+
+        const a = stops[i];
+        const b = stops[i + 1];
+        const span = Math.max(1e-6, b[0] - a[0]);
+        const k = Math.min(1, Math.max(0, (t - a[0]) / span));
+
+        return [
+          Math.round(lerp(a[1][0], b[1][0], k)),
+          Math.round(lerp(a[1][1], b[1][1], k)),
+          Math.round(lerp(a[1][2], b[1][2], k))
+        ];
+      }
+
+      function buildLut(palette) {
+        const lut = new Uint8ClampedArray(256 * 3);
+        for (let i = 0; i < 256; i++) {
+          const c = samplePalette(palette.stops, i / 255);
+          lut[i * 3] = c[0];
+          lut[i * 3 + 1] = c[1];
+          lut[i * 3 + 2] = c[2];
+        }
+        return lut;
+      }
+
+      function readParams() {
+        return {
+          base: ui.base.value,
+          frequency: Number(ui.frequency.value),
+          octaves: Number(ui.octaves.value),
+          persistence: Number(ui.persistence.value),
+          lacunarity: Number(ui.lacunarity.value),
+          warp: Number(ui.warp.value),
+          jitter: Number(ui.jitter.value),
+          contrast: Number(ui.contrast.value)
+        };
+      }
+
+      function render(quality) {
+        const type = NOISE_TYPES[currentType];
+        const params = readParams();
+        const composite = COMPOSITES.indexOf(currentType) !== -1;
+        const octaves = composite ? params.octaves : 1;
+        const cost = octaves * (currentType === 'warping' ? 3 : 1);
+
+        const budget = quality === 'final' ? 6000000 : 900000;
+        const cap = quality === 'final' ? 1100000 : 160000;
+        const min = quality === 'final' ? 200000 : 28000;
+        const maxPixels = Math.max(min, Math.min(cap, Math.floor(budget / cost)));
+
+        const unit = quality === 'final' ? dpr : 1;
+        let rw = Math.max(1, Math.round(cssW * unit));
+        let rh = Math.max(1, Math.round(cssH * unit));
+        if (rw * rh > maxPixels) {
+          const s = Math.sqrt(maxPixels / (rw * rh));
+          rw = Math.max(1, Math.round(rw * s));
+          rh = Math.max(1, Math.round(rh * s));
+        }
+
+        if (offscreen.width !== rw || offscreen.height !== rh) {
+          offscreen.width = rw;
+          offscreen.height = rh;
+        }
+
+        const image = offCtx.createImageData(rw, rh);
+        const data = image.data;
+
+        const table = getPerm(currentSeed);
+        const base = makeBaseFn(params, table, currentSeed);
+        const seed = currentSeed;
+        const lut = buildLut(PALETTES[ui.palette.value] || PALETTES.clouds);
+
+        let sample;
+        if (currentType === 'perlin') {
+          sample = (x, y) => perlin2(table, x, y) * 0.5 + 0.5;
+        } else if (currentType === 'simplex') {
+          sample = (x, y) => simplex2(table, x, y) * 0.5 + 0.5;
+        } else if (currentType === 'worley') {
+          sample = (x, y) => 1 - Math.min(1, worleyF1(x, y, params.jitter, seed));
+        } else if (currentType === 'fbm') {
+          sample = (x, y) => fbmSample(base, x, y, params) * 0.5 + 0.5;
+        } else if (currentType === 'turbulence') {
+          sample = (x, y) => turbulenceSample(base, x, y, params);
+        } else if (currentType === 'ridged') {
+          sample = (x, y) => ridgedSample(base, x, y, params);
+        } else {
+          sample = (x, y) => warpSample(base, x, y, params) * 0.5 + 0.5;
+        }
+
+        const freq = params.frequency;
+        const contrast = params.contrast;
+        let p = 0;
+
+        for (let y = 0; y < rh; y++) {
+          const ny = (y / rh) * freq;
+          for (let x = 0; x < rw; x++) {
+            const nx = (x / rh) * freq;
+            let t = sample(nx, ny);
+            t = (t - 0.5) * contrast + 0.5;
+            const idx = t <= 0 ? 0 : t >= 1 ? 255 : (t * 255 + 0.5) | 0;
+            data[p++] = lut[idx * 3];
+            data[p++] = lut[idx * 3 + 1];
+            data[p++] = lut[idx * 3 + 2];
+            data[p++] = 255;
+          }
+        }
+
+        offCtx.putImageData(image, 0, 0);
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.clearRect(0, 0, cssW, cssH);
+        ctx.drawImage(offscreen, 0, 0, rw, rh, 0, 0, cssW, cssH);
+
+        const octaveInfo = composite ? ` · ${params.octaves} oktáv` : '';
+        ui.stageParams.textContent =
+          `${type.label} · frekvence ${fmt(params.frequency, 1)}${octaveInfo}`;
+        ui.stageSeed.textContent = `seed ${currentSeed}`;
+      }
+
+      /* ============================================================
+          UI: výběr typu a parametry
+         ============================================================ */
+
+      function updateInfo(type) {
+        ui.noiseName.textContent = type.label;
+        ui.noiseFormula.textContent = type.formula;
+        ui.noiseNote.textContent = type.note;
+      }
+
+      function updateOutputs() {
+        ui.frequencyOut.textContent = fmt(Number(ui.frequency.value), 1);
+        ui.octavesOut.textContent = ui.octaves.value;
+        ui.persistenceOut.textContent = fmt(Number(ui.persistence.value), 2);
+        ui.lacunarityOut.textContent = fmt(Number(ui.lacunarity.value), 2);
+        ui.warpOut.textContent = fmt(Number(ui.warp.value), 2);
+        ui.jitterOut.textContent = fmt(Number(ui.jitter.value), 2);
+        ui.contrastOut.textContent = fmt(Number(ui.contrast.value), 2);
+      }
+
+      function updateVisibility() {
+        const composite = COMPOSITES.indexOf(currentType) !== -1;
+
+        ui.baseControl.hidden = !composite;
+        ui.octavesControl.hidden = !composite;
+        ui.persistenceControl.hidden = !composite;
+        ui.lacunarityControl.hidden = !composite;
+        ui.warpControl.hidden = currentType !== 'warping';
+
+        const worleyUsed = currentType === 'worley' ||
+          (composite && ui.base.value === 'worley');
+        ui.jitterControl.hidden = !worleyUsed;
+      }
+
+      function applyType(id, options = {}) {
+        const type = NOISE_TYPES[id] || NOISE_TYPES.perlin;
+        currentType = type.id;
+
+        ui.typeButtons.forEach(btn => {
+          btn.setAttribute('aria-pressed', String(btn.dataset.noise === type.id));
+        });
+
+        ui.frequency.value = String(type.params.frequency);
+        ui.octaves.value = String(type.params.octaves);
+        ui.persistence.value = String(type.params.persistence);
+        ui.lacunarity.value = String(type.params.lacunarity);
+        ui.warp.value = String(type.params.warp);
+        ui.jitter.value = String(type.params.jitter);
+        ui.contrast.value = String(type.params.contrast);
+        ui.base.value = type.base;
+        ui.palette.value = type.palette;
+
+        updateInfo(type);
+        updateVisibility();
+        updateOutputs();
+
+        if (options.updateUrl) {
+          updateUrl(type.id);
+        }
+
+        schedule();
+      }
+
+      /* ============================================================
+         Parametr v adrese
+         ============================================================ */
+
+      function typeFromUrl() {
+        const params = new URLSearchParams(location.search);
+        const raw = params.get('sum') || params.get('noise');
+        if (!raw) return null;
+        return TYPE_ALIASES[normalize(raw)] || null;
+      }
+
+      function updateUrl(id) {
+        try {
+          const url = new URL(location.href);
+          url.searchParams.set('sum', id);
+          history.replaceState(null, '', url);
+        } catch (err) {
+          /* file:// v některých prohlížečích replaceState odmítne */
+        }
+      }
+
+      /* ============================================================
+         Plánování vykreslení (náhled + plná kvalita)
+         ============================================================ */
+
+      function schedule() {
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            rafId = 0;
+            resize();
+            render('preview');
+          });
+        }
+
+        clearTimeout(finalTimer);
+        finalTimer = setTimeout(() => {
+          resize();
+          render('final');
+        }, 320);
+      }
+
+      function resize() {
+        const rect = stage.getBoundingClientRect();
+        cssW = Math.max(1, Math.round(rect.width));
+        cssH = Math.max(1, Math.round(rect.height));
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        const w = Math.round(cssW * dpr);
+        const h = Math.round(cssH * dpr);
+        if (canvas.width !== w || canvas.height !== h) {
+          canvas.width = w;
+          canvas.height = h;
+        }
+      }
+
+      /* ============================================================
+         Ovládání
+         ============================================================ */
+
+      ui.typeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          applyType(btn.dataset.noise, { updateUrl: true });
+        });
+      });
+
+      ui.base.addEventListener('change', () => {
+        updateVisibility();
+        schedule();
+      });
+
+      [ui.frequency, ui.octaves, ui.persistence, ui.lacunarity,
+      ui.warp, ui.jitter, ui.contrast].forEach(input => {
+        input.addEventListener('input', () => {
+          updateOutputs();
+          schedule();
+        });
+      });
+
+      ui.palette.addEventListener('change', schedule);
+
+      ui.newSeed.addEventListener('click', () => {
+        currentSeed = 1 + Math.floor(Math.random() * 999999);
+        schedule();
+      });
+
+      ui.reset.addEventListener('click', () => {
+        currentSeed = DEFAULT_SEED;
+        applyType(currentType);
+      });
+
+      /* ============================================================
+         Start
+         ============================================================ */
+
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(schedule).observe(stage);
+      } else {
+        window.addEventListener('resize', schedule);
+      }
+
+      applyType(typeFromUrl() || 'perlin', { updateUrl: false });
+    })();
+  </script>
+
+</body>
+
+</html>

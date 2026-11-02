@@ -1,0 +1,99 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>body{margin:8px}canvas{display:block;max-width:100%;height:auto;box-sizing:border-box}</style>
+    <title>2d Terrain Generator</title>
+</head>
+
+<body onload="drawSet();">
+    <canvas id='fractal' width='1280' height='720' style='border:1px solid black'></canvas>
+
+    <script type="text/javascript">
+
+        var image = document.getElementById("fractal");
+        var ctx = image.getContext("2d");
+
+        // nastaveni parametru generovani hor
+        var maxHeight = image.height / 4.0;   // nejvetsi mozna vyska v meritku 1
+        var minHeight = -image.height / 4.0;  // nejnizsi mozna vyska v meritku 1
+        var decreaseRatio = 1.9;            // jak rychle bude s meritkem klesat vyska noveho segmentu
+        var maxIter = 7;                    // maximalni pocet iteraci, cim vyssi cislo, tim jemnejsi hory
+
+        var layers = 5;                     // pocet vrstev hor
+
+        function setPixel(x, y, r, g, b) {
+            ctx.fillStyle = "rgba(" + r + "," + g + "," + b + ", 1 )";
+            ctx.fillRect(x, y, 1, 1);
+        }
+
+        // cara mezi (x1,y1) a (x2,y2) s barvou r,g,b a tloustkou lw 
+        function drawLine(x1, y1, x2, y2, r, g, b, lw) {
+            ctx.strokeStyle = "rgba(" + r + "," + g + "," + b + ", 1 )";
+            ctx.lineWidth = lw;
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+        // vybarveny polygon s horni hranici danou carou (x1,y1) a (x2,y2) a spodkem obrazku
+        function fillPoly(x1, y1, x2, y2, r, g, b) {
+            var x1f = Math.floor(x1);
+            var y1f = Math.floor(y1);
+            var x2f = Math.floor(x2);
+            var y2f = Math.floor(y2);
+
+            ctx.fillStyle = "rgba(" + r + "," + g + "," + b + ", 1 )";
+            ctx.beginPath();
+            ctx.moveTo(x1f, y1f);
+            ctx.lineTo(x2f, y2f);
+            ctx.lineTo(x2f, image.height);
+            ctx.lineTo(x1f, image.height);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // nahodne cislo v rozmezi min, max
+        function randomFromRange(min, max) {
+            return (min + (max - min) * Math.random());
+        }
+
+        // rekurzivni funkce na teren dany okrajovymi body (x1,y1) a (x2,y2)
+        function terrain(x1, y1, x2, y2, iteration, r, g, b) {
+            if (iteration < maxIter)     // pokud jsme jeste nedosahli posledni iterace
+            {
+                var halfx = (x1 + x2) / 2.0;    // bod ve stredu usecky (x1,y1) a (x2,y2)
+                var halfy = (y1 + y2) / 2.0;
+
+                var newHeight = randomFromRange(minHeight, maxHeight);          // vygenerujeme novou vysku
+                newHeight = newHeight / Math.pow(decreaseRatio, iteration);     // a podelime meritkem, aby doslo 
+                // k uprave vysky na nove meritko
+
+                terrain(x1, y1, halfx, halfy + newHeight, iteration + 1, r, g, b);  // zavolame teren na prvni 
+                terrain(halfx, halfy + newHeight, x2, y2, iteration + 1, r, g, b);  // a druhou polovinu usecky
+            }
+            else {
+                //        drawLine(x1, y1, x2, y2, r, g, b, 2);
+                fillPoly(x1, y1, x2, y2, r, g, b);      // pokud jsme dosahli pozadovane iterace,
+                // vykreslime cast povrchu
+            }
+        }
+
+        // hlavni fce na kresleni hor
+        function drawSet() {
+            fillPoly(0, 0, image.width, 0, 0, 0, 100);        // vybarvime modre
+            for (var i = 1; i <= layers; i++)                 // vykreslime nekolik vrstev hor s ruznymi barvami
+            {
+                var y1 = randomFromRange((i - 1) * image.height / layers, i * image.height / layers);  //pocatecni hodnoty y podle vrstvy
+                var y2 = randomFromRange((i - 1) * image.height / layers, i * image.height / layers);
+
+                terrain(0, y1, image.width, y2, 0, i * 20, i * 20, i * 10);  // zavolame prvni rekurzi s nejakymi barvami
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,2979 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>MVT: Fraktály — ČVUT</title>
+  <meta name="description" content="Přednáška Moderní vizualizační technologie: Fraktály — Petr Pauš">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/panda-light.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+
+
+  <style>
+    /* ============================================================
+       MVT: Fraktály — doplňkové styly
+       ============================================================ */
+
+    /* Titulní animované pozadí */
+    #fractalCanvas,
+    #fractalCanvas2 {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 1;
+    }
+
+    .reveal .slides section.title-slide {
+      height: 720px !important;
+
+    }
+
+
+    .title-hero {
+      position: relative;
+      z-index: 2;
+    }
+
+
+    .hero-slide {
+      text-align: left;
+      height: 720px !important;
+      box-sizing: border-box;
+    }
+
+    .hero-slide .slide-category {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(8px);
+    }
+
+
+    .reveal .hero-fig {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      object-fit: cover;
+      z-index: -2;
+      margin: 0 !important;
+      max-height: none !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .hero-veil {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(100deg,
+          rgba(248, 251, 255, .9) 0%,
+          rgba(248, 251, 255, .84) 30%,
+          rgba(248, 251, 255, .65) 40%,
+          rgba(238, 244, 251, .0) 70%);
+    }
+
+
+    /* Časová osa (historie fraktálů) */
+    .timeline {
+      list-style: none;
+      margin: 6px 0 0 0;
+      padding: 0;
+    }
+
+    .timeline li {
+      position: relative;
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 8px;
+      margin-left: 7px;
+      padding: 3px 0 3px 14px;
+      border-left: 2px solid rgba(8, 145, 178, .28);
+      font-size: .7em;
+      line-height: 1.3;
+    }
+
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 11px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(8, 145, 178, .12);
+    }
+
+    .timeline .year {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-cyan);
+      font-size: .95em;
+    }
+
+    /* Číslované kroky */
+    .steps {
+      list-style: none;
+      counter-reset: step;
+      padding: 0;
+      margin: 4px 0 0 0;
+    }
+
+    .steps li {
+      counter-increment: step;
+      list-style: none !important;
+      position: relative;
+      padding-left: 38px;
+      margin-bottom: 9px;
+      font-size: .84em;
+      line-height: 1.4;
+    }
+
+    .steps li::marker {
+      content: none;
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(8, 145, 178, .1);
+      border: 1px solid rgba(8, 145, 178, .4);
+      color: #0e7490;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: .8em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Formulové a kódové panely */
+    .formula-box {
+      font-family: var(--font-mono);
+      font-size: .8em;
+      line-height: 1.5;
+      color: #0e7490;
+      background: rgba(8, 145, 178, .07);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 0 8px 8px 0;
+      padding: 8px 14px;
+      margin: 10px 0;
+    }
+
+    .formula-box .big {
+      font-size: 1.35em;
+      color: var(--accent-purple);
+      font-weight: 700;
+    }
+
+    .code-panel {
+      font-family: var(--font-mono);
+      font-size: .66em;
+      line-height: 1.5;
+      color: #1e293b;
+      background: rgba(248, 250, 252, .92);
+      border: 1px solid rgba(100, 116, 139, .28);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin: 8px 0;
+      white-space: pre-wrap;
+      text-align: left;
+    }
+
+    .code-panel .kw {
+      color: #7c3aed;
+      font-weight: 600;
+    }
+
+    .code-panel .fn {
+      color: #0891b2;
+    }
+
+    .code-panel .num {
+      color: #b45309;
+    }
+
+    .code-panel .cm {
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .code-panel .op {
+      color: #db2777;
+    }
+
+    /* Živá ukázka Mandelbrota */
+    .demo-btn {
+      font-family: var(--font-mono);
+      font-size: .64rem;
+      font-weight: 600;
+      color: #0e7490;
+      background: rgba(8, 145, 178, .08);
+      border: 1px solid rgba(8, 145, 178, .35);
+      border-radius: 7px;
+      padding: 4px 12px;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .demo-btn:hover {
+      background: rgba(8, 145, 178, .16);
+      border-color: var(--accent-cyan);
+    }
+
+    .demo-btn:active {
+      transform: scale(.96);
+    }
+
+    .live-caption {
+      font-family: var(--font-mono);
+      font-size: .62rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding-top: 6px;
+    }
+
+    /* Galerie map */
+    .map-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .map-grid .image-showcase {
+      width: 100%;
+    }
+
+    .map-grid .image-showcase img {
+      max-height: 150px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .map-grid .wide {
+      grid-column: span 2;
+    }
+
+    .map-grid .wide img {
+      max-height: 150px;
+    }
+
+    .map-grid .image-caption {
+      font-size: .6rem;
+      padding: 3px 8px;
+    }
+
+    /* Vyšší dlaždice galerie (slide s aplikacemi v grafice) */
+    .map-grid.tall .image-showcase img {
+      height: 176px;
+      max-height: 176px;
+    }
+
+    /* Doplňkové drobnosti */
+    .lead {
+      font-size: .9em;
+      color: var(--text-muted);
+      margin: 0 0 8px 0;
+    }
+
+    .quote-line {
+      font-size: .84em;
+      font-style: italic;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 900px;
+      margin: 10px auto 0 auto;
+    }
+
+    .quote-line cite {
+      display: block;
+      font-style: normal;
+      font-family: var(--font-mono);
+      font-size: .78em;
+      color: var(--accent-purple);
+      margin-top: 4px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 14px;
+      font-size: .8em;
+      line-height: 1.4;
+    }
+
+    .kv dt {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-cyan);
+      white-space: nowrap;
+    }
+
+    .kv dd {
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    .dim-row {
+      display: grid;
+      grid-template-columns: 134px 1fr;
+      column-gap: 14px;
+      align-items: baseline;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(15, 23, 42, .09);
+      font-size: .8em;
+      line-height: 1.35;
+    }
+
+    .dim-row:last-child {
+      border-bottom: 0;
+    }
+
+    .dim-name {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .dim-row span:last-child {
+      color: var(--text-muted);
+    }
+
+    /* Galerie 3 obrázků s jednotnou výškou */
+    .gallery-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .gallery-3 .image-showcase {
+      width: 100%;
+      height: 100%;
+    }
+
+    .gallery-3 .image-showcase img {
+      height: 330px;
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .gallery-3 .image-showcase {
+      height: auto;
+    }
+
+    /* Jednotná čtvercová galerie 2x2 */
+    .grid-2x2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid-2x2 .image-showcase {
+      width: 100%;
+    }
+
+    .grid-2x2 .image-showcase img {
+      height: 170px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .tight-list li {
+      margin-bottom: 6px !important;
+    }
+
+    /* Menší horní indexy — vzorce drží řádkování */
+    .formula-box sup,
+    .custom-list sup,
+    .highlight-card sup,
+    .glass-card sup {
+      font-size: .62em;
+      line-height: 0;
+    }
+
+    .small-note {
+      font-family: var(--font-mono);
+      font-size: .64rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .live-demo {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(30, 60, 120, .12);
+      padding: 12px;
+    }
+
+    #mandelbrotLive {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      cursor: crosshair;
+      background: #ffffff;
+    }
+  </style>
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+</head>
+
+<body>
+<a id="grafit-lecture-return" class="grafit-lecture-return grafit-lecture-return--floating" href="../../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+<a id="grafit-course-link" class="grafit-course-link--floating" href="../../../mvt/" aria-label="Přehled přednášek MVT" data-subject="mvt">MVT</a>
+
+
+  <!-- Horní trvale zobrazené záhlaví -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace"></header>
+
+  <!-- Dolní trvale zobrazené zápatí -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <!-- <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div> -->
+  </footer>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- =====================================================
+           BLOK 1: TITUL A ÚVOD
+      ====================================================== -->
+
+      <!-- SLIDE 1: Titulní -->
+      <section class="center title-slide">
+        <canvas id="fractalCanvas"></canvas>
+        <div class="title-veil"></div>
+
+        <div class="title-hero">
+          <span class="vr-badge">MVT &bull; Moderní vizualizační technologie</span>
+          <h1>Fraktály</h1>
+          <p class="title-sub">Geometrie přírody, komplexních čísel a procedurální počítačové grafiky</p>
+          <div class="authors" id="targetH1">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Vítejte na přednášce o fraktálech. Ukážeme si, proč klasická euklidovská geometrie na přírodu
+          nestačí, co je to soběpodobnost a fraktální dimenze, jak se fraktály počítají a kde se s nimi
+          setkáme — od Mandelbrotovy množiny po procedurální krajiny v počítačových hrách.
+        </aside>
+      </section>
+
+      <!-- SLIDE 2: Euklidovská geometrie -->
+      <section>
+        <span class="slide-category">Úvod</span>
+        <h2>Euklidovská geometrie</h2>
+
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <h3>Svět hladkých útvarů</h3>
+            <ul class="custom-list">
+              <li>Jednoduché a hladké útvary — <strong>kruhy, elipsy, úsečky, krychle</strong>.</li>
+              <li>Spojité funkce: dokážeme je <strong>integrovat a derivovat</strong>.</li>
+              <li>Objekt popíšeme <strong>konečným počtem parametrů</strong> (střed, poloměr, délka…).</li>
+              <li>Dimenze je vždy celočíselná: 0 bod, 1 křivka, 2 plocha, 3 těleso.</li>
+              <li>Slouží pouze pro popis <strong>jednoduchých, ideálních věcí</strong>.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card" style="text-align: center;">
+            <svg viewBox="0 0 460 300" style="width: 100%; height: auto; max-height: 280px;" role="img"
+              aria-label="Kruh, elipsa, úsečka a krychle">
+              <defs>
+                <linearGradient id="shapeGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#0891b2" stop-opacity=".16" />
+                  <stop offset="1" stop-color="#7c3aed" stop-opacity=".12" />
+                </linearGradient>
+              </defs>
+              <circle cx="95" cy="82" r="54" fill="url(#shapeGrad)" stroke="#0891b2" stroke-width="3" />
+              <text x="95" y="162" text-anchor="middle" fill="#475569" font-size="14"
+                font-family="JetBrains Mono, monospace">kruh</text>
+              <ellipse cx="285" cy="82" rx="78" ry="42" fill="url(#shapeGrad)" stroke="#7c3aed" stroke-width="3" />
+              <text x="285" y="162" text-anchor="middle" fill="#475569" font-size="14"
+                font-family="JetBrains Mono, monospace">elipsa</text>
+              <line x1="60" y1="240" x2="175" y2="205" stroke="#db2777" stroke-width="3" stroke-linecap="round" />
+              <circle cx="60" cy="240" r="4" fill="#db2777" />
+              <circle cx="175" cy="205" r="4" fill="#db2777" />
+              <text x="118" y="272" text-anchor="middle" fill="#475569" font-size="14"
+                font-family="JetBrains Mono, monospace">úsečka</text>
+              <g stroke="#059669" stroke-width="3" fill="rgba(5, 150, 105, .09)">
+                <path d="M275 205 H355 V268 H275 Z" />
+                <path d="M295 185 H375 V248 H295 Z" />
+                <path d="M275 205 L295 185 M355 205 L375 185 M355 268 L375 248" />
+              </g>
+              <text x="325" y="292" text-anchor="middle" fill="#475569" font-size="14"
+                font-family="JetBrains Mono, monospace">krychle</text>
+            </svg>
+
+            <p class="quote-line">„Mraky nejsou koule, hory nejsou kužely, blesk není přímka.“
+              <cite>— Benoit B. Mandelbrot</cite>
+            </p>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 10px;">
+          <strong style="color: var(--accent-cyan);">Příroda se ale hladkými útvary popsat nedá:</strong>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;">
+            <span class="spec-badge cyan">strom</span>
+            <span class="spec-badge purple">pobřeží</span>
+            <span class="spec-badge emerald">mraky</span>
+            <span class="spec-badge amber">kapradina</span>
+            <span class="spec-badge rose">krevní řečiště</span>
+            <span class="spec-badge">hory</span>
+          </div>
+        </div>
+
+
+
+        <aside class="notes">
+          Euklidovská geometrie pracuje s ideálními, hladkými objekty. Umíme je popsat několika čísly a dobře
+          s nimi počítat. Reálné přírodní útvary ale mají detail na mnoha měřítkách — a právě proto potřebujeme
+          jiný jazyk: fraktální geometrii.
+        </aside>
+      </section>
+
+      <!-- SLIDE 3: Reálný přírodní útvar -->
+      <section class="hero-slide">
+        <img class="hero-fig" src="../bordel/images-mvt/images-fraktaly/frak_s03_f01.jpg" alt="Koruna stromu bez listí">
+        <div class="hero-veil"></div>
+
+        <span class="slide-category">Motivace</span>
+        <h2 style="text-shadow: 0 2px 18px rgba(255,255,255,.95);">Reálný přírodní útvar</h2>
+
+        <div class="glass-card" style="max-width: 560px; margin-top: 14px;">
+          <h3>Stačí se rozhlédnout</h3>
+          <ul class="custom-list tight-list">
+            <li><strong>Strom</strong> — kmen se dělí na větve, větve na menší větvičky.</li>
+            <li><strong>Kapradina</strong> — lístek opakuje tvar celého listu.</li>
+            <li><strong>Říční delta a pobřeží</strong> — zálivy a poloostrovy na všech měřítkách.</li>
+            <li><strong>Mraky, hory, krevní řečiště</strong> — struktura bez typické velikosti.</li>
+          </ul>
+        </div>
+
+        <div class="highlight-card" style="max-width: 560px;">
+          <strong style="color: var(--accent-cyan);">Jak dlouhé je pobřeží Británie?</strong>
+          <div style="font-size: .78em; color: var(--text-muted); line-height: 1.45; margin-top: 4px;">
+            Čím menší pravítko použijeme, tím delší pobřeží naměříme. Mandelbrot (1967) ukázal, že délka
+            závisí na <strong>měřítku</strong> — pobřeží nemá „skutečnou“ konečnou délku.
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tohle je klíčová motivace celé přednášky. Strom není jen „nějaký objekt“ — jeho větvení se opakuje
+          v každém měřítku. A pobřeží je klasický příklad: otázka „jak je dlouhé?“ nemá bez určení měřítka
+          jednoznačnou odpověď. To je přesně chování fraktálu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 4: Fraktál — definice a historie -->
+      <section>
+        <span class="slide-category">Definice</span>
+        <h2>Fraktál</h2>
+
+        <div class="highlight-card" style="margin-top: 2px;">
+          <strong style="color: var(--accent-cyan); font-size: .95em;">Fraktál</strong> je geometrický objekt,
+          který po rozdělení na menší části vykazuje <strong>tvarovou podobnost</strong> s těmito částmi.
+          <span style="color: var(--text-muted);">Z latinského <em>fractus</em> = zlomený, roztříštěný.</span>
+        </div>
+
+        <div class="slide-grid-2" style="margin-top: 10px; align-items: stretch;">
+          <div class="glass-card">
+            <h3>Fraktální geometrie</h3>
+            <ul class="custom-list tight-list">
+              <li>Věda o objektech se <strong>soběpodobností</strong> a strukturou na všech měřítkách.</li>
+              <li>Zakladatel: <strong>Benoit B. Mandelbrot</strong> (1924–2010).</li>
+              <li>Pojem „fraktál“ zavedl v roce <strong>1975</strong>; kniha <em>The Fractal Geometry of Nature</em>
+                (1982).</li>
+              <li>Fraktál není jen obrázek — je to <strong>matematický objekt</strong> a zároveň nástroj pro modelování
+                přírody.</li>
+            </ul>
+            <div class="formula-box" style="margin-bottom: 0;">
+              soběpodobnost + detail v každém měřítku + neceločíselná dimenze
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <h3>První pokusy — časová osa</h3>
+            <ul class="timeline">
+              <li><span class="year">1883</span><span>Georg Cantor — Cantorova množina</span></li>
+              <li><span class="year">1890</span><span>Giuseppe Peano — křivka vyplňující plochu</span></li>
+              <li><span class="year">1891</span><span>David Hilbert — Hilbertova křivka</span></li>
+              <li><span class="year">1904</span><span>Helge von Koch — Kochova sněhová vločka</span></li>
+              <li><span class="year">1915</span><span>Wacław Sierpiński — trojúhelník a koberec</span></li>
+              <li><span class="year">1918</span><span>Gaston Julia — Juliovy množiny</span></li>
+              <li><span class="year">1918</span><span>Felix Hausdorff — neceločíselná dimenze</span></li>
+              <li><span class="year">1975</span><span>Benoit Mandelbrot — pojem „fraktál“</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Definice je krátká, ale důležitá: části jsou podobné celku. Historie sahá mnohem hlouběji než
+          Mandelbrot — Cantor, Peano, Koch, Sierpiński a Julia zkoumali „podivné“ množiny už koncem
+          19. a začátkem 20. století. Mandelbrot jim dal jméno a ukázal, že nejsou jen kuriozitou,
+          ale že popisují reálný svět.
+        </aside>
+      </section>
+      <!-- SLIDE 5: Vlastnosti fraktálů -->
+      <section>
+        <span class="slide-category">Definice</span>
+        <h2>Vlastnosti fraktálů</h2>
+
+        <div class="slide-grid-2" style="align-items: stretch;">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li><strong>Detailní struktura při velkých zvětšeních</strong> — zoom nikdy „nedojde“.</li>
+              <li><strong>Příliš složité pro euklidovskou geometrii</strong> — nelze je popsat konečným počtem úseček.
+              </li>
+              <li><strong>Soběpodobnost</strong> — celek je tvořen zmenšenými kopiemi sebe sama.</li>
+              <li><strong>Jednoduchá rekurzivní definice</strong> — složitý tvar vzniká opakováním jednoduchého
+                pravidla.</li>
+              <li><strong>Fraktální dimenze</strong> se liší od topologické — bývá neceločíselná.</li>
+            </ul>
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Soběpodobnost může být <strong>přesná</strong> (matematické fraktály) nebo
+                <strong>statistická</strong> (příroda).
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center;">
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s05_f01.jpg" alt="Cantorova množina — konstrukce"
+                style="width: 100%; height: 190px; object-fit: contain;" data-preview-image>
+              <div class="image-caption">Cantorova množina — první iterace</div>
+            </div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s05_f02.jpg" alt="Cantorova množina — další iterace"
+                style="width: 100%; height: 190px; object-fit: contain;" data-preview-image>
+              <div class="image-caption">Cantorova množina — jemnější struktura</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Pět vlastností, které budeme potkávat celou přednášku. Nejde o pět nezávislých věcí — rekurzivní
+          definice je příčina, soběpodobnost a detail v každém měřítku jsou důsledek a neceločíselná dimenze
+          je nástroj, kterým takové objekty měříme.
+        </aside>
+      </section>
+
+      <!-- SLIDE 6: Čínské zelí -->
+      <section>
+        <span class="slide-category">Příroda</span>
+        <h2>Čínské zelí (romanesco)</h2>
+
+        <div class="slide-grid-2">
+          <div class="grid-2x2">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s06_f01.jpg" alt="Romanesco — detail"
+                data-preview-image>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s06_f02.jpg" alt="Romanesco — celá hlávka"
+                data-preview-image>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s06_f03.jpg" alt="Romanesco — struktura květenství"
+                data-preview-image>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s06_f04.jpg" alt="Romanesco — přiblížení"
+                data-preview-image>
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <h3>Fraktál na talíři</h3>
+            <ul class="custom-list tight-list">
+              <li>Každá růžice je <strong>zmenšenou kopií celé hlávky</strong>.</li>
+              <li>Jde o <strong>přibližnou (statistickou) soběpodobnost</strong>, ne matematickou přesnost.</li>
+              <li>Růžice se řadí do spirál podle <strong><a href="../bordel/images-mvt/romanesco.png"
+                    data-preview-image="../bordel/images-mvt/romanesco.png">Fibonacciho posloupnosti</a></strong> (8,
+                13, 21…).</li>
+              <li>Tvar vzniká <strong>růstovým pravidlem</strong>, ne nekonečným počtem iterací.</li>
+              <li>Hloubka je omezená — biologická buňka má svoji velikost.</li>
+            </ul>
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Přírodní fraktál je <strong>aproximace</strong> matematického ideálu.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Romanesco je nejznámější „učebnicový“ přírodní fraktál. Důležité je, že není dokonalý: každá úroveň
+          je jen přibližně stejná a v určité hloubce skončí. Přesto je to skvělá ukázka toho, že fraktální
+          vzory vznikají z jednoduchých růstových pravidel.
+        </aside>
+      </section>
+
+      <!-- SLIDE 7: Fraktály v přírodě a matematice -->
+      <section>
+        <span class="slide-category">Příroda vs. matematika</span>
+        <h2>Fraktály v přírodě a matematice</h2>
+
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <h3>Stejný princip, jiný jazyk</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>Příroda</strong> opakuje růstová pravidla: větve, listy, cévní řečiště, říční delty.</li>
+              <li><strong>Matematika</strong> stejný princip zapíše rekurzí, L-systémem nebo IFS.</li>
+              <li>Příroda má <strong>konečnou hloubku</strong> a náhodné odchylky.</li>
+              <li>Matematický fraktál je <strong>ideální</strong> — lze v něm pokračovat do nekonečna.</li>
+              <li>Společné je <strong>měřítko</strong>: struktura vypadá podobně při různém zoomu.</li>
+            </ul>
+            <div class="quote-line" style="margin-top: 6px;">
+              „Fraktál je matematický model, ne dokonalá kopie přírody.“
+            </div>
+          </div>
+
+          <div>
+            <div class="media-row" style="margin-top: 0;">
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-fraktaly/frak_s07_f01.jpg" alt="Kapradina — přírodní fraktál"
+                  style="max-height: 330px;" data-preview-image>
+                <div class="image-caption">Kapradina — příroda</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-fraktaly/frak_s07_f02.jpg" alt="Barnsleyho kapradina — IFS"
+                  style="max-height: 330px;" data-preview-image>
+                <div class="image-caption">Barnsleyho kapradina — IFS</div>
+              </div>
+            </div>
+            <div class="small-note" style="text-align: center; margin-top: 8px;">
+              vlevo reálná rostlina, vpravo stejný tvar vygenerovaný čtyřmi afinními transformacemi
+            </div>
+
+            <div class="video-card" style="margin-top: 12px;">
+              <a href="mvt-lsystem-lab.html?vzor=kapradina"
+                data-preview-link="mvt-lsystem-lab.html?vzor=kapradina">Vizualizace
+                kapradiny</a>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tohle je pěkná dvojice: vlevo skutečná kapradina, vpravo Barnsleyho kapradina vygenerovaná
+          iterovaným funkčním systémem. Na první pohled podobné, princip úplně jiný — jedna roste, druhá se
+          počítá. Přesto obě sdílejí soběpodobnost.
+        </aside>
+      </section>
+
+      <!-- SLIDE 8: Sněhová vločka -->
+      <section class="dense">
+        <span class="slide-category">Matematika</span>
+        <h2>Sněhová vločka</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <h3>Kochova křivka (1904)</h3>
+            <ul class="custom-list tight-list">
+              <li>Začneme <strong>rovnostranným trojúhelníkem</strong>.</li>
+              <li>Každou úsečku nahradíme <strong>čtyřmi úsečkami o třetinové délce</strong>.</li>
+              <li>Obvod roste: $P_n = 3 \cdot (4/3)^n \rightarrow \infty$.
+                <!-- <em>P</em><sub>n</sub> = 3 · (4/3)<sup>n</sup> → ∞. -->
+              </li>
+              <li>Obsah zůstává <strong>konečný</strong> — omezený opsanou kružnicí.</li>
+              <li>Fraktální dimenze $D = \frac{\log 4}{\log 3} \approx 1,2619$.
+                <!-- <em>D</em> = log 4 / log 3 ≈ 1,2619. -->
+              </li>
+            </ul>
+
+            <div class="formula-box">
+
+              <span class="big">$$D = \log N / \log s$$</span>
+              Koch: $N = 4, s = 3 \implies D = \log 4 / \log 3 \approx 1,26186$
+            </div>
+
+
+          </div>
+          <div>
+            <div class="grid-2x2">
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-fraktaly/frak_s08_f01.jpg" alt="Skutečná sněhová vločka"
+                  style="height: 165px; object-fit: contain;" data-preview-image>
+                <div class="image-caption">Skutečná vločka</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-fraktaly/frak_s08_f02.jpg" alt="Fraktální sněhová vločka"
+                  style="height: 165px; object-fit: contain;" data-preview-image>
+                <div class="image-caption">Fraktální vločka</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-fraktaly/frak_s08_f04.gif" alt="Animace vzniku Kochovy vločky"
+                  style="height: 165px; object-fit: contain;" data-preview-image>
+                <div class="image-caption">Vznik iteracemi</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-fraktaly/frak_s08_f03.jpg" alt="Iterace Kochovy křivky"
+                  style="height: 165px; object-fit: contain;" data-preview-image>
+                <div class="image-caption">Kochova křivka — iterace</div>
+              </div>
+            </div>
+            <div class="video-card" style="margin-top: 12px;">
+              <a href="mvt-lsystem-lab.html?vzor=koch" data-preview-link="mvt-lsystem-lab.html?vzor=koch">Vizualizace
+                Kochovy vločky</a>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Kochova vločka je klasický příklad „paradoxu“: obvod roste do nekonečna, ale plocha zůstává
+          konečná. To je přesně ten důvod, proč klasická délka ani obsah nestačí na popis — potřebujeme
+          dimenzi, která není celé číslo.
+        </aside>
+      </section>
+
+      <!-- SLIDE 9: Fraktály v komplexních číslech -->
+      <section>
+        <span class="slide-category">Matematika</span>
+        <h2>Fraktály v komplexních číslech</h2>
+
+        <p class="lead">Komplexní rovina je ideální prostor pro iteraci jednoduchého vzorce — a vznikají v ní
+          nejznámější fraktály.</p>
+
+        <div class="slide-grid-2" style="width: 100%;">
+          <div class="highlight-card">
+            Mandelbrotova množina:
+            $M = \{ c \in \mathbb{C} : \forall n \in \mathbb{N}, |z_n| < \infty, z_0=0, z_{n+1}=z_n^2 + c \} $ </div>
+              <div class="highlight-card">
+                Juliova množina:
+                $J_c = \{ z \in \mathbb{C} : \forall n \in \mathbb{N}, |z_n| < \infty, z_0=0, z_{n+1}=z_n^2 + c \} $
+                  </div>
+
+
+
+                  <div>
+                    <div class="glass-card">
+                      <h3 style="margin-bottom: 2px;">Mandelbrotova množina</h3>
+                      <div style="font-size: .8em; color: var(--text-muted); line-height: 1.45;">
+                        Množina všech $c \in \mathbb{C}$, pro která posloupnost
+                        $z_{n+1} = z_n^2 + c$ se startem $z_0 = 0$ zůstane omezená.
+                      </div>
+                    </div>
+                    <div class="glass-card" style="margin-top: 12px;">
+                      <h3 style="margin-bottom: 2px;">Juliova množina</h3>
+                      <div style="font-size: .8em; color: var(--text-muted); line-height: 1.45;">
+                        Pro <strong>pevně zvolené</strong> $c$ množina všech startovních $z_0$, jejichž
+                        posloupnost zůstane omezená. Mandelbrot je „mapa“
+                        všech Juliových množin.
+                      </div>
+                    </div>
+
+                    <div class="highlight-card">
+                      $|z| > 2 \Rightarrow$ bod uniká $\Rightarrow$ rozhoduje počet iterací
+                    </div>
+                  </div>
+
+
+                  <div>
+                    <div class="image-showcase" style="width: 100%;">
+                      <img src="../bordel/images-mvt/images-fraktaly/frak_s09_f02.jpg"
+                        alt="Hranice Mandelbrotovy množiny" style="max-height: 340px;" data-preview-image>
+                      <div class="image-caption">Hranice Mandelbrotovy množiny — nekonečně členitá</div>
+                    </div>
+
+                    <div class="video-card">
+                      <a href="mvt-fraktaly-mandelbrot.html" data-preview-link="mvt-fraktaly-mandelbrot.html">Průzkum
+                        Mandelbrotovy množiny</a>
+                    </div>
+                  </div>
+              </div>
+
+              <aside class="notes">
+                Mandelbrotova množina není „obrázek“, je to množina bodů v komplexní rovině. Barvy na obrázku
+                nejsou součástí množiny — znázorňují, jak rychle body mimo množinu unikají. Juliaova množina je
+                totéž pro pevné c; Mandelbrotovu množinu můžeme chápat jako katalog všech Juliových množin.
+              </aside>
+      </section>
+
+      <!-- SLIDE 10: Algoritmus pro Mandelbrota -->
+      <section>
+        <span class="slide-category">Algoritmus</span>
+        <h2>Algoritmus pro Mandelbrotovu množinu</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li>Každému pixelu přiřadíme komplexní číslo $c \in \mathbb{C}$ (re = x, im = y).</li>
+              <li>Iterujeme $z_{n+1} = z_n^2 + c$, start $z_0 = 0$.</li>
+              <li>Jakmile $|z| > 2$, bod <strong>unikl</strong> — počet iterací určí barvu.</li>
+              <li>Pokud vydrží do limitu, bod <strong>patří do množiny</strong>.</li>
+              <li>Složitost: $O(\text{šířka} \cdot \text{výška} \cdot \text{maxIter})$.</li>
+            </ul>
+
+
+
+
+
+            <div class="formula-box" style="margin-bottom: 0;">
+              Mandelbrot: $c$ se mění, $z_0 = 0$<br>
+              Julia: $c$ pevné, $z_0$ se mění
+            </div>
+          </div>
+
+          <div>
+            <pre><code class="language-c">
+bool isInMandelbrot(double cr, double ci, int maxIterations) {
+    double zr = 0.0;
+    double zi = 0.0;
+    
+    // Používáme podmínku zr^2 + zi^2 <= 4.0 (odpovídá |z| <= 2)
+    for (int i = 0; i < maxIterations; ++i) {
+        double zr2 = zr * zr;
+        double zi2 = zi * zi;
+        
+        if (zr2 + zi2 > 4.0) {
+            return false; // Bod utíká do nekonečna -> nepatří do množiny
+        }
+        
+        // Výpočet z = z^2 + c
+        // (zr + zi*i)^2 = zr^2 - zi^2 + 2*zr*zi*i
+        zi = 2.0 * zr * zi + ci;
+        zr = zr2 - zi2 + cr;
+    }
+    
+    return true; // Bod zůstal stabilní -> patří do množiny
+}</code>
+              </pre>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Algoritmus je překvapivě jednoduchý — pár řádků kódu. Vysvětlete hlavně dvě věci: proč stačí
+          sledovat, zda |z| překročí 2 (pak už bod určitě unikne), a že počet iterací do úniku je přirozená
+          „vzdálenost“ od množiny, kterou používáme k barvení.
+        </aside>
+      </section>
+
+      <!-- SLIDE 11: Soběpodobnost + živá ukázka -->
+      <section>
+        <span class="slide-category">Matematika</span>
+        <h2>Mandelbrotova množina: soběpodobnost</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li>Hranice množiny je <strong>fraktál</strong> — detail v každém zoomu.</li>
+              <li>Uvnitř najdeme <strong>miniaturní kopie</strong> celé množiny („mini-Mandelbroty“).</li>
+              <li>Kopírování není přesné — jde o <strong>kvazisoběpodobnost</strong>.</li>
+              <li>Hranice má Hausdorffovu dimenzi <strong>2</strong>, i když je to „jen křivka“.</li>
+              <li>Oblíbené oblasti: <em>Seahorse Valley</em>, <em>Elephant Valley</em>.</li>
+            </ul>
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Obrázek je interaktivní.
+              </div>
+            </div>
+          </div>
+
+          <div class="live-demo">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span class="cyan">živá ukázka</span>
+              <button class="demo-btn" id="mbReset" type="button">Reset</button>
+            </div>
+            <canvas id="mandelbrotLive" width="560" height="400"
+              aria-label="Interaktivní Mandelbrotova množina"></canvas>
+            <div class="live-caption">Klik = přiblížit &nbsp;·&nbsp; Shift+klik = oddálit</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tady je prostor pro interaktivní ukázku. Kliknutím se přiblížíme do zvoleného bodu, shift+klik
+          oddálí. Pokaždé, když se přiblížíme, zvyšuje se počet iterací — proto se objevují nové a nové
+          detaily. Je to názorná demonstrace toho, že hranice není hladká křivka.
+        </aside>
+      </section>
+
+      <!-- NOVÝ SLIDE N1: Jiné iterované fraktály -->
+      <section>
+        <span class="slide-category">Matematika</span>
+        <h2>Jiné iterované fraktály</h2>
+
+        <p class="lead">Stačí změnit jedno znaménko nebo přidat absolutní hodnotu.</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;">
+          <div style="display: flex; gap: 14px; align-items: center; text-align: left; background: #fff;
+            border: 1px solid rgba(100, 116, 139, .2); border-radius: 12px; padding: 10px 14px;
+            box-shadow: 0 10px 24px rgba(30, 60, 120, .10);">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n1_f01.png" alt="Burning Ship — fraktál"
+              style="width: 142px; height: 142px; object-fit: cover; border-radius: 10px; flex: 0 0 auto; margin: 0;"
+              data-preview-image>
+            <div style="min-width: 0;">
+              <div style="font-weight: 700; font-size: .95em; color: var(--accent-cyan);">Burning Ship</div>
+              <div class="formula-box" style="margin-bottom: 0;">
+                $z \leftarrow (|\text{Re} z| + i |\text{Im} z|)^2 + c$
+              </div>
+              <div style="font-size: .76em; color: var(--text-muted); line-height: 1.35;">
+                Absolutní hodnota „přeloží“ rovinu — hořící loď (1992).
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 14px; align-items: center; text-align: left; background: #fff;
+            border: 1px solid rgba(100, 116, 139, .2); border-radius: 12px; padding: 10px 14px;
+            box-shadow: 0 10px 24px rgba(30, 60, 120, .10);">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n1_f02.png" alt="Tricorn — fraktál"
+              style="width: 142px; height: 142px; object-fit: cover; border-radius: 10px; flex: 0 0 auto; margin: 0;"
+              data-preview-image>
+            <div style="min-width: 0;">
+              <div style="font-weight: 700; font-size: .95em; color: var(--accent-cyan);">Tricorn</div>
+              <div class="formula-box" style="margin-bottom: 0;">
+                $z \leftarrow \overline{z}^2 + c$
+              </div>
+              <div style="font-size: .76em; color: var(--text-muted); line-height: 1.35;">
+                Konjugace před umocněním dá Mandelbrotovi trojcípou symetrii.
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 14px; align-items: center; text-align: left; background: #fff;
+            border: 1px solid rgba(100, 116, 139, .2); border-radius: 12px; padding: 10px 14px;
+            box-shadow: 0 10px 24px rgba(30, 60, 120, .10);">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n1_f03.png" alt="Newtonův fraktál — pánve přitažlivosti"
+              style="width: 142px; height: 142px; object-fit: cover; border-radius: 10px; flex: 0 0 auto; margin: 0;"
+              data-preview-image>
+            <div style="min-width: 0;">
+              <div style="font-weight: 700; font-size: .95em; color: var(--accent-cyan);">Newtonův fraktál</div>
+              <div class="formula-box" style="margin-bottom: 0;">
+                $z \leftarrow z - \frac{p(z)}{p'(z)},\quad p(z) = z^3 - 1$
+              </div>
+              <div style="font-size: .76em; color: var(--text-muted); line-height: 1.35;">
+                Hranice mezi pánvemi přitažlivosti tří kořenů je fraktál.
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 14px; align-items: center; text-align: left; background: #fff;
+            border: 1px solid rgba(100, 116, 139, .2); border-radius: 12px; padding: 10px 14px;
+            box-shadow: 0 10px 24px rgba(30, 60, 120, .10);">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n1_f04.png" alt="Lyapunovův fraktál"
+              style="width: 142px; height: 142px; object-fit: cover; border-radius: 10px; flex: 0 0 auto; margin: 0;"
+              data-preview-image>
+            <div style="min-width: 0;">
+              <div style="font-weight: 700; font-size: .95em; color: var(--accent-cyan);">Lyapunovův fraktál</div>
+              <div class="formula-box" style="margin-bottom: 0;">
+                střídání parametrů $A/B$ v logistické mapě
+              </div>
+              <div style="font-size: .76em; color: var(--text-muted); line-height: 1.35;">
+                Není v komplexní rovině — barva říká, zda je systém stabilní.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 12px; padding: 10px 14px; text-align: center;">
+          <div style="font-size: .84em; color: var(--text-muted);">
+            Všechno jsou to variace jedné myšlenky: <strong>iteruj jednoduché pravidlo</strong> a dívej se,
+            co zůstane omezené.
+          </div>
+        </div>
+
+        <aside class="notes">
+          Burning Ship a Tricorn jsou doslova jednořádkové úpravy Mandelbrota: absolutní hodnota, respektive
+          konjugace. Newtonův fraktál vzniká z metody, kterou studenti znají z numerické matematiky — hranice
+          mezi pánvemi přitažlivosti tří kořenů je fraktál. Lyapunovův fraktál naopak neleží v komplexní
+          rovině: každý pixel je dvojice parametrů logistické mapy a barva říká, zda je systém stabilní.
+          Pointa: stejný princip, čtyři různé světy.
+        </aside>
+      </section>
+
+      <!-- NOVÝ SLIDE N4: Hloubkový zoom a numerická přesnost -->
+      <section>
+        <span class="slide-category">Vizualizace</span>
+        <h2>Hloubkový zoom a numerická přesnost</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li><em>double</em> má 53 bitů mantisy ≈ <strong>15–16 platných cifer</strong>.</li>
+              <li>Při zoomu $~10^{15}$ dostanou sousední pixely <strong>stejné c</strong> — obraz se
+                rozpadne na bloky.</li>
+              <li><strong>Perturbace:</strong> jedna referenční orbita ve vysoké přesnosti, každý pixel
+                počítá jen odchylku $\delta$.</li>
+              <li><strong>Series approximation:</strong> první iterace nahradí polynomem — přeskočí tisíce
+                kroků.</li>
+              <li>Výsledek: zoom 10<sup>100</sup> i více (Kalles Fraktaler, Ultra Fractal).</li>
+            </ul>
+            <div class="formula-box" style="margin-bottom: 0;">
+              $\delta_{n+1} = 2·Z_n·\delta_n + \delta_n^2 + \delta c$
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <h3>Proč to není jen detail</h3>
+            <ul class="custom-list tight-list">
+              <li>Stejný problém mají simulace, GIS i astronomie.</li>
+              <li>Přesnost je <strong>inženýrská volba</strong>, ne matematická konstanta.</li>
+              <li>Hluboko v množině potkáváme <strong>mini-Mandelbroty</strong> — kvazisoběpodobnost
+                v praxi.</li>
+            </ul>
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Bez perturbace končí zoom zhruba na $10^{15}$;<br>s ní jde dál.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-3" style="margin-top: 10px;">
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n4_f01.png" alt="Mandelbrot — základní měřítko"
+              style="height: 128px; object-fit: cover;" data-preview-image>
+            <div class="image-caption">1× — celá množina</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n4_f02.png" alt="Mandelbrot — zoom 10^4"
+              style="height: 128px; object-fit: cover;" data-preview-image>
+            <div class="image-caption">10<sup>4</sup>× — Seahorse Valley</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n4_f03.png" alt="Mandelbrot — zoom 10^7"
+              style="height: 128px; object-fit: cover;" data-preview-image>
+            <div class="image-caption">10<sup>7</sup>× — detail, který „nemá být vidět“</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          double má 53 bitů, tedy zhruba 15–16 platných cifer. Když zoom klesne pod tuto přesnost, sousední
+          pixely dostanou stejné c a obraz se rozpadne na skládané bloky. Perturbace je trik deep-zoom
+          rendererů: spočítáme jednu referenční orbitu ve vysoké přesnosti a každý pixel dopočítá jen malou
+          odchylku v double. Series approximation navíc přeskočí tisíce iterací. Tři obrázky ukazují 1×,
+          10⁴× a 10⁷× — mini-Mandelbroty jsou vidět i tady.
+        </aside>
+      </section>
+
+      <!-- SLIDE 12: Obarvovací algoritmy -->
+      <section>
+        <span class="slide-category">Vizualizace</span>
+        <h2>Obarvovací algoritmy</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li><strong>Gradient podle počtu iterací</strong> — jednoduché, ale vznikají viditelné pruhy.</li>
+              <li><strong>Spojitý gradient</strong> — plynulý přechod díky zlomkové části iterace.</li>
+              <li><strong>Únikový úhel</strong> — směr, kterým bod z množiny „vystřelil“.</li>
+              <li><strong>Vzdálenost od hranice</strong> — odhad vzdálenosti pomocí derivace iterace.</li>
+            </ul>
+
+            <div class="code-panel"><span class="cm">// spojité barvení (smooth coloring)</span>
+              logZn = <span class="fn">log</span>(zr*zr + zi*zi) / <span class="num">2</span>
+              nu = <span class="fn">log</span>(logZn / <span class="fn">ln</span>(<span class="num">2</span>)) / <span
+                class="fn">ln</span>(<span class="num">2</span>)
+              mu = n + <span class="num">1</span> - nu
+              color = <span class="fn">palette</span>(mu / maxIter)</div>
+
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Barva není součástí matematiky — je to <strong>volba vizualizace</strong>.
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2x2">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s12_f01.png" alt="Mandelbrot — modrá paleta"
+                data-preview-image>
+              <div class="image-caption">Krokový gradient</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s12_f02.png" alt="Mandelbrot — teplá paleta"
+                data-preview-image>
+              <div class="image-caption">Spojité obarvení</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s12_f03.jpg" alt="Fraktál — spirálové barvení"
+                data-preview-image>
+              <div class="image-caption">Únikový úhel</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s12_f04.jpg" alt="Fraktál — vzdálenostní barvení"
+                data-preview-image>
+              <div class="image-caption">Vzdálenostní odhad</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Studenti si často myslí, že barvy jsou dané matematikou. Nejsou. Můžeme barvit podle iterací,
+          úhlu úniku nebo vzdálenosti od hranice. Spojité barvení odstraní pruhy tím, že použije zlomkovou
+          část iterace místo celého čísla.
+        </aside>
+      </section>
+
+      <!-- NOVÝ SLIDE N3: Fraktály na GPU -->
+      <section>
+        <span class="slide-category">Vizualizace</span>
+        <h2>Fraktály na GPU</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li><strong>Embarrassingly parallel</strong> — každý pixel je nezávislý.</li>
+              <li>Na GPU je to <strong>fragment shader</strong>: jedna instance na pixel.</li>
+              <li><strong>WebGL / WebGPU</strong> — totéž v prohlížeči (Shadertoy).</li>
+              <li><strong>Progresivní vykreslování</strong> — hrubý obraz hned, detail později.</li>
+            </ul>
+
+            <!-- <div class="code-panel" style="font-size: .6em;"> -->
+            <pre><code>// fragment shader — jedna instance na pixel
+void main() {
+  vec2 c = (gl_FragCoord.xy - 0.5*u_res) / u_res.y * u_zoom + u_center;
+  vec2 z = vec2(0.0);
+  float n = 0.0;
+  for (int i = 0; i < MAX_ITER; i++) {
+    z = vec2(z.x*z.x - z.y*z.y, 2.0*z.x*z.y) + c;
+    if (dot(z, z) > 4.0) break;
+    n += 1.0;
+  }
+  gl_FragColor = palette(n);
+}</code></pre>
+          </div>
+
+          <div class="glass-card">
+            <h3>Kolik práce to je</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>Snímek:</strong> 1920 × 1080 × 500 ≈ <strong>10<sup>9</sup></strong> iterací.</li>
+              <li><strong>GPU:</strong> desítky ms — plynulý zoom v reálném čase.</li>
+              <li><strong>CPU:</strong> sekundy až desítky sekund.</li>
+              <li><strong>Zrychlení:</strong> řádově 10×–100×.</li>
+            </ul>
+
+            <div class="formula-box" style="font-size: .7em;">
+              $$q = (x - \frac{1}{4})^2 + y^2\\q(q + x - \frac{1}{4}) ≤ \frac{y^2}{4}\Rightarrow\text{ bod je uvnitř}
+              $$
+            </div>
+
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Analytické testy kardioidy a bulbu přeskočí iterace pro velkou část vnitřku — v praxi
+                <strong>10–50 % času</strong>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Escape-time je ideální úloha pro GPU: pixely spolu nekomunikují, žádná synchronizace. Fragment
+          shader je přesně jedna instance na pixel. Zmiňte, že ukázka na slidu s Mandelbrotem běží
+          v JavaScriptu na CPU (560×400, 170 iterací) — pro přednášku to stačí, ale v produkci se používá
+          GPU. Kardioida a bulbus periody 2 jsou analytické testy, které okamžitě rozhodnou, že bod leží
+          uvnitř, a ušetří 10–50 % práce. Čísla v tabulce jsou řádové odhady, ne benchmark konkrétní karty.
+        </aside>
+      </section>
+
+      <!-- SLIDE 13: Fraktální dimenze -->
+      <section>
+        <span class="slide-category">Dimenze</span>
+        <h2>Fraktální dimenze</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li><strong>Topologická dimenze</strong>: bod 0, křivka 1, plocha 2, těleso 3.</li>
+              <li><strong>Hausdorffova (fraktální) dimenze</strong> může být neceločíselná.</li>
+              <li>Pro sobě podobné objekty: $D = \log N / \log s$, kde $N$ je počet kopií a $s$ faktor zmenšení.</li>
+              <li>Kochova křivka: 4 kopie, zmenšení 3 → $D \approx 1,2619$.</li>
+              <li>Dimenze „měří“, jak rychle roste detail při zjemňování měřítka.</li>
+            </ul>
+
+            <div class="formula-box">
+              <span class="big">$D = \log N / \log s$</span><br>
+              Koch: $N = 4, s = 3 \Rightarrow D = \log 4 / \log 3 \approx 1,26186$
+            </div>
+
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Dimenze není „počet rozměrů“, ale míra toho, jak objekt zaplňuje prostor.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_s13_f01.jpg"
+              alt="Tabulka: úsečka, čtverec, krychle a Kochova křivka — počet částí a faktor zmenšení"
+              style="max-height: 400px;" data-preview-image>
+            <div class="image-caption">Od celočíselné dimenze k fraktální: Kochova křivka mezi 1 a 2</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tady je jádro přednášky. Úsečka má dimenzi 1, čtverec 2, krychle 3 — u soběpodobných útvarů to
+          plyne ze vztahu N = s^D. Kochova křivka má 4 kopie zmenšené na třetinu, takže D = log4/log3.
+          Výsledek 1,26 říká, že je „víc než křivka“, ale „míň než plocha“.
+        </aside>
+      </section>
+      <!-- SLIDE 14: Fraktální dimenze dalších množin -->
+      <section>
+        <span class="slide-category">Dimenze</span>
+        <h2>Fraktální dimenze dalších množin</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s14_f01.jpg"
+                alt="Tabulka dimenzí: Cantorova množina, Sierpińského trojúhelník a koberec"
+                style="width: 100%; max-height: 250px; object-fit: contain;" data-preview-image>
+              <div class="image-caption">Cantor, Sierpińského trojúhelník, Sierpiński koberec</div>
+            </div>
+            <div class="media-row" style="margin-top: 8px;">
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-fraktaly/frak_s14_f02.jpg" alt="Cantorova množina — iterace"
+                  style="width: 100%; height: 160px; object-fit: contain;" data-preview-image>
+                <div class="image-caption">Cantorova množina</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-fraktaly/frak_s14_f03.jpg"
+                  alt="Sierpińského trojúhelník — iterace" style="width: 100%; height: 160px; object-fit: contain;"
+                  data-preview-image>
+                <div class="image-caption">Sierpińského trojúhelník</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-fraktaly/frak_s14_f04.jpg" alt="Sierpińského koberec — iterace"
+                  style="width: 100%; height: 160px; object-fit: contain;" data-preview-image>
+                <div class="image-caption">Sierpińského koberec</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <h3>Výpočet krok za krokem</h3>
+            <div class="dim-row" style="font-size: .75em; color: var(--text-muted); line-height: 1.45;">
+              <span class="dim-name">Cantor</span>
+              <span>2 kopie, zmenšení 3 $\rightarrow$ <strong>$\frac{\log 2}{\log 3} \approx 0,6309$</strong></span>
+            </div>
+            <div class="dim-row" style="font-size: .75em; color: var(--text-muted); line-height: 1.45;">
+              <span class="dim-name">Trojúhelník</span>
+              <span>3 kopie, zmenšení 2 $\rightarrow$ <strong>$\frac{\log 3}{\log 2} \approx 1,5850$</strong></span>
+            </div>
+            <div class="dim-row" style="font-size: .75em; color: var(--text-muted); line-height: 1.45;">
+              <span class="dim-name">Koberec</span>
+              <span>8 kopií, zmenšení 3 $\rightarrow$ <strong>$\frac{\log 8}{\log 3} \approx 1,8928$</strong></span>
+            </div>
+            <div class="dim-row" style="font-size: .75em; color: var(--text-muted); line-height: 1.45;">
+              <span class="dim-name">Koch</span>
+              <span>4 kopie, zmenšení 3 $\rightarrow$ <strong>$\frac{\log 4}{\log 3} \approx 1,2619$</strong></span>
+            </div>
+
+            <p style="font-size: .8em; color: var(--text-muted); line-height: 1.45;">
+              Když hodnoty leží mezi 1 a 2 — objekty jsou „hustší než křivka“, ale nezaplňují plochu.
+            </p>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tabulka v originální přednášce nechává u Sierpińského koberce otazník. Odpověď je log 8 / log 3,
+          tedy přibližně 1,89. Je dobré ukázat, že hodnota roste s tím, jak je objekt „hustší“: Cantor 0,63,
+          trojúhelník 1,59, koberec 1,89.
+        </aside>
+      </section>
+
+      <!-- SLIDE 15: Fraktální dimenze — měření -->
+      <section>
+        <span class="slide-category">Dimenze</span>
+        <h2>Měření fraktální dimenze</h2>
+
+
+
+        <div class="slide-grid-2" style="margin-top: 8px; align-items: start;">
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-fraktaly/box1.png" alt="Graf dimenze" style="max-height: 400px;"
+              data-preview-image>
+            <div class="image-caption">Box counting dimenze.</div>
+          </div>
+
+
+          <div class="glass-card" style="padding: 14px 20px;">
+            <h3>Jak dimenzi změřit bez vzorce?</h3>
+            <ul class="custom-list tight-list" style="margin-top: 2px;">
+              <li><strong>Box counting</strong>: pokryjeme objekt mřížkou o velikosti $\varepsilon$.</li>
+              <li>Počet zaplněných čtverců roste jako $$N(\varepsilon) \approx \varepsilon^{-D}.$$</li>
+              <li>$D$ je směrnice přímky v log–log grafu.</li>
+              <li>Používá se u reálných dat: pobřeží, povrchy, cévy, mozek.</li>
+            </ul>
+            <div class="formula-box" style="margin: 4px 0 0 0; font-size: 1.4em;">
+              $D = \lim_{\varepsilon\to 0} \frac{\log N(\varepsilon)}{\log (1/\varepsilon)}$
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          U reálných objektů neznáme „počet kopií“, takže soběpodobnostní vzorec nepomůže. Nastupuje
+          box counting: překryjeme objekt mřížkou a měříme, jak rychle roste počet obsazených buněk při
+          zmenšování ε. Směrnice v log-log grafu je fraktální dimenze.
+        </aside>
+      </section>
+
+      <!-- SLIDE 16: IFS fraktály -->
+      <section>
+        <span class="slide-category">Generování</span>
+        <h2>IFS fraktály</h2>
+        <p class="lead"><em>Iterated Function Systems</em> — fraktály generované soustavou rekurzivních funkcí.</p>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li>Fraktál vzniká jako <strong>atraktor soustavy kontrakcí</strong>.</li>
+              <li>Dobře se s nimi pracuje matematicky — každý má přesnou definici.</li>
+              <li>Generování: <strong>rekurze</strong>, <strong>řetězce</strong> (L-systémy), <strong>želví
+                  grafika</strong>, chaos game.</li>
+              <li>Stačí několik málo transformací a vznikne nekonečně detailní tvar.</li>
+            </ul>
+
+            <div class="code-panel"><span class="cm">; Kochova křivka jako L-systém</span>
+              axiom = F
+              pravidlo = F <span class="op">→</span> F+F<span class="op">−−</span>F+F
+              úhel = <span class="num">60°</span>
+              F = krok vpřed, + / − = otočení o ±60°</div>
+
+            <div class="formula-box" style="margin-bottom: 0;">
+              Po 1. iteraci: F+F−−F+F &nbsp;→&nbsp; 4 úsečky<br>
+              Po 2. iteraci: 16 úseček &nbsp;→&nbsp; po n iteracích 4<sup>n</sup>
+            </div>
+          </div>
+
+          <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s08_f03.jpg" alt="Kochova křivka — iterace"
+                style="max-height: 240px;" data-preview-image>
+              <div class="image-caption">Kochova křivka: několik iterací</div>
+            </div>
+            <div class="glass-card" style="margin-top: 10px; padding: 14px 18px;">
+              <h3 style="margin-bottom: 2px;">Proč IFS?</h3>
+              <div style="font-size: .8em; color: var(--text-muted); line-height: 1.45;">
+                Komplexní tvar dokážeme popsat <strong>několika čísly</strong> — ideální pro kompresi,
+                procedurální grafiku a modelování rostlin.
+              </div>
+            </div>
+
+            <div class="video-card" style="margin-top: 12px;">
+              <a href="mvt-lsystem-lab.html?vzor=koch" data-preview-link="mvt-lsystem-lab.html?vzor=koch">Vizualizace
+                Kochovy vločky</a>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          IFS je „recept“: místo abychom ukládali miliony bodů, uložíme pár afinních transformací. Atraktor
+          je množina, která se sama na sebe zobrazuje. L-systém je pak jen zápis pomocí řetězce a želví
+          grafiky — F znamená krok, plus a minus otočení.
+        </aside>
+      </section>
+
+      <!-- SLIDE 17: Další příklady IFS fraktálů -->
+      <section>
+        <span class="slide-category">Generování</span>
+        <h2>Další příklady IFS fraktálů</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Hilbertova křivka</h3>
+            <ul class="custom-list tight-list">
+              <li>David Hilbert, <strong>1891</strong> — křivka, která <strong>zaplňuje plochu</strong>.</li>
+              <li>Ve 3D variantě zaplňuje <strong>celý prostor</strong>.</li>
+              <li>Zachovává blízkost: blízké body na křivce jsou blízko i v rovině.</li>
+              <li>Využití: <strong>cache-friendly</strong> rozvržení dat, indexování prostoru, zpracování obrazu.</li>
+            </ul>
+
+            <div class="code-panel"><span class="cm">; Hilbertova křivka — L-systém</span>
+              axiom = A
+              A <span class="op">→</span> −BF+AFA+FB−
+              B <span class="op">→</span> +AF−BFB−FA+
+              úhel = <span class="num">90°</span></div>
+
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Délka křivky roste do nekonečna, ale zůstává v omezené ploše.
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s17_f01.png" alt="Hilbertova křivka — iterace"
+                style="max-height: 300px;" data-preview-image>
+              <div class="image-caption">Hilbertova křivka — jednotlivé iterace</div>
+            </div>
+            <div class="image-showcase" style="width: 100%; margin-top: 8px;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s17_f02.gif" alt="Hilbertova křivka ve 3D — animace"
+                style="max-height: 170px;" data-preview-image>
+              <div class="image-caption">3D varianta — zaplňuje prostor</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="video-card" style="margin-top: 12px;">
+          <a href="mvt-lsystem-lab.html?vzor=hilbert" data-preview-link="mvt-lsystem-lab.html?vzor=hilbert">Vizualizace
+            Hilbertovy křivky (a
+            dalších fraktálů)</a>
+        </div>
+
+        <aside class="notes">
+          Hilbertova křivka je krásná ukázka „prostor vyplňující“ křivky. Na první pohled paradox: křivka
+          má délku nekonečno, ale vejde se do čtverce. V praxi se používá třeba pro uspořádání dat v paměti
+          tak, aby se sousední prvky načetly společně.
+        </aside>
+      </section>
+
+      <!-- SLIDE 18: Využití fraktálů -->
+      <section>
+        <span class="slide-category">Aplikace</span>
+        <h2>Využití fraktálů</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li><strong>Počítačová grafika</strong> — krajiny, stromy, květiny, oblaka, povrchy.</li>
+              <li><strong>Lékařství</strong> — rakovina kůže, růst kostí, analýza buněk a cévního řečiště.</li>
+              <li><strong>Umění</strong> — obrazy, generativní grafika, fractální vzory.</li>
+              <li><strong>Hudba</strong> — algoritmické kompozice, fraktální rytmy.</li>
+              <li><strong>Chaos a dynamické systémy</strong> — podivné atraktory, turbulence, počasí.</li>
+              <li><strong>Komprese a technologie</strong> — fraktální komprese obrazu, fraktální antény.</li>
+            </ul>
+            <div class="quote-line" style="margin-top: 4px; font-size: .78em;">
+              Fraktální geometrie se používá všude, kde je potřeba popsat <strong>nepravidelnou
+                strukturu</strong>.
+            </div>
+          </div>
+
+          <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s18_f01.jpg" alt="Juliaova množina — umělecký fraktál"
+                style="max-height: 210px;" data-preview-image>
+              <div class="image-caption">Umění a vizualizace — Juliaova množina</div>
+            </div>
+            <div class="image-showcase" style="width: 100%; margin-top: 8px;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s18_f02.jpg"
+                alt="Software pro výpočet fraktální dimenze buněk"
+                style="width: 100%; height: 190px; object-fit: contain;" data-preview-image>
+              <div class="image-caption">Medicína — fraktální dimenze buněčné struktury</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Aplikací je celá řada. V medicíně se fraktální dimenze používá k popisu nepravidelných struktur —
+          např. nádorových buněk nebo cév. V grafice je to naopak nástroj, jak vytvořit přesvědčivou
+          přírodu z několika parametrů.
+        </aside>
+      </section>
+
+      <!-- NOVÝ SLIDE N6: Fraktály v počítačové grafice a VFX -->
+      <section>
+        <span class="slide-category">Aplikace</span>
+        <h2>Fraktály v počítačové grafice a VFX</h2>
+
+        <p class="lead" style="margin-bottom: 4px;">V produkci nejde o krásné obrázky, ale o
+          <strong>parametrický obsah</strong>: jeden seed — celý svět.
+        </p>
+
+        <div class="map-grid tall">
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_s19_f01.jpg" alt="3D fraktální render — film a VFX"
+              data-preview-image>
+            <div class="image-caption">Film a VFX — procedurální světy</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_s23_f01.jpg" alt="Procedurální terén ve hrách"
+              data-preview-image>
+            <div class="image-caption">Hry — terén z fBm a eroze</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n6_f01.png" alt="Mramorová textura ze šumu"
+              data-preview-image>
+            <div class="image-caption">Textury — mramor, dřevo, rez</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_s22_f01.jpg" alt="Generovaný 3D strom"
+              data-preview-image>
+            <div class="image-caption">Vegetace — L-systémy a SpeedTree</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_s26_f04.png" alt="Planeta s fraktálním povrchem"
+              data-preview-image>
+            <div class="image-caption">Planety — No Man's Sky, Elite</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n6_f02.png" alt="Obloha generovaná šumem"
+              data-preview-image>
+            <div class="image-caption">Obloha — mraky, kouř, oheň</div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 12px; padding: 10px 14px; text-align: center;">
+          <div style="font-size: .84em; color: var(--text-muted);">
+            <strong>Star Trek II</strong> (1982, Loren Carpenter) — první velká procedurální krajina ve
+            filmu. Stejné principy dnes pohání Houdini, Blender i herní enginy.
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tohle je nejpraktičtější část: fraktály v grafice nejsou jen obrázky, ale nástroj, jak z několika
+          parametrů vyrobit svět. Star Trek II: The Wrath of Khan (1982) byl první velký procedurální povrch
+          ve filmu; dnes stejné principy najdeme v Houdinim. No Man's Sky generuje planetu z jednoho čísla
+          seed — a protože je algoritmus deterministický, všichni hráči vidí stejný vesmír. Textury kovu,
+          dřeva a mramoru vznikají stejným šumem jako hory, jen v jiném měřítku.
+        </aside>
+      </section>
+
+      <!-- NOVÝ SLIDE N5: Fraktální komprese -->
+      <section>
+        <span class="slide-category">Aplikace</span>
+        <h2>Fraktální komprese</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li>Obrázek se neukládá po pixelech, ale jako <strong>soustava kontrakcí (PIFS)</strong>,
+                jejíž atraktor obrázek aproximuje.</li>
+              <li><strong>Collage theorem</strong> (Barnsley): stačí najít kontrakce, jejichž atraktor je
+                blízko originálu — ukládají se jen koeficienty.</li>
+              <li>Kompresní poměr typicky <strong>10:1–100:1</strong> při srovnatelné kvalitě s JPEG.</li>
+            </ul>
+            <div class="formula-box" style="margin-bottom: 0;">
+              $$W = \bigcup_{i=1}^{N} w_i, \quad\text{ kde } w_i \text{ afinní kontrakce}$$
+              $$\text{obrázek} = \text{atraktor } W$$
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <h3>Proč se to neujalo</h3>
+            <ul class="custom-list tight-list">
+              <li>Kódování je <strong>výpočetně drahé</strong> — hledání podobných bloků.</li>
+              <li>Patentová ochrana a pomalé dekodéry.</li>
+              <li>JPEG, WebP a AVIF byly rychlejší a „dost dobré“.</li>
+              <li>Myšlenka self-similarity ale žije dál — dictionary coding, generativní modely.</li>
+            </ul>
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Krásná ukázka toho, že matematický objekt může být <strong>datová struktura</strong>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-3" style="margin-top: 10px;">
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n5_f01.png" alt="IFS atraktor po 120 iteracích"
+              style="height: 118px; object-fit: cover;" data-preview-image>
+            <div class="image-caption">Atraktor po 120 iteracích</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n5_f02.png" alt="IFS atraktor po 2 200 iteracích"
+              style="height: 118px; object-fit: cover;" data-preview-image>
+            <div class="image-caption">2 200 iterací — tvar se rodí</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_n5_f03.png" alt="IFS atraktor po 60 000 iteracích"
+              style="height: 118px; object-fit: cover;" data-preview-image>
+            <div class="image-caption">60 000 iterací — věrná rekonstrukce</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Fraktální komprese je krásná myšlenka: obrázek není pole pixelů, ale atraktor soustavy kontrakcí.
+          Collage theorem říká, že pokud se atraktor dostane blízko originálu, stačí uložit koeficienty
+          transformací. Poměr 10:1 až 100:1, ale kódování je drahé — hledání podobných bloků je
+          nejnáročnější část. Proto dnes vládne JPEG/WebP/AVIF. Myšlenka self-similarity ale žije dál
+          v dictionary coding. Obrázky ukazují, jak se atraktor zpřesňuje s počtem iterací: 120 → 2 200 →
+          60 000. Na slidu s IFS jsme řekli, že fraktál je atraktor soustavy kontrakcí — tady je vidět,
+          k čemu to je.
+        </aside>
+      </section>
+
+      <!-- SLIDE 19: 3D Mandelbrot -->
+      <section class="hero-slide">
+        <img class="hero-fig" src="../bordel/images-mvt/images-fraktaly/frak_s19_f01.jpg"
+          alt="3D render Mandelbrotovy množiny">
+        <div class="hero-veil"></div>
+
+        <span class="slide-category">3D</span>
+        <h2>3D Mandelbrot</h2>
+
+        <div class="glass-card" style="max-width: 540px; margin-top: 18px;">
+          <h3>Když iterace dostane třetí rozměr</h3>
+          <ul class="custom-list tight-list">
+            <li>Rozšíření iterace do 3D: <strong>kvaterniony</strong>, Mandelbulb (2009).</li>
+            <li>Výsledek nelze zobrazit jako plošný graf — používá se <strong>ray marching</strong>.</li>
+            <li>Vzdálenostní odhad umožňuje efektivně najít povrch.</li>
+            <li>Nekonečné detaily, ale vysoká výpočetní náročnost.</li>
+          </ul>
+        </div>
+
+
+        <aside class="notes">
+          Trojrozměrná varianta není jen „přidání osy z“. Klasické komplexní násobení ve 3D nefunguje,
+          proto se používají kvaterniony nebo Mandelbulb. Rendering je náročný, protože povrch nemá
+          jednoduchou síť — používá se ray marching se vzdálenostním odhadem.
+        </aside>
+      </section>
+
+      <!-- SLIDE 20: Upravený algoritmus pro 3D -->
+      <section class="hero-slide">
+        <img class="hero-fig" src="../bordel/images-mvt/images-fraktaly/frak_s20_f01.jpg" alt="3D Mandelbrot">
+        <div class="hero-veil"></div>
+        <h2>Upravený algoritmus pro Mandelbrotovu množinu ve 3D</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li>Iterace v prostoru: $z_{n+1} = z_n^2 + c$ s kvaterniony.</li>
+              <li>Mandelbulb: $z_{n+1} = z_n^8 + c$ ve sférických souřadnicích.</li>
+              <li>Vzdálenostní odhad: $d \approx |z| \cdot \ln|z| / |z'|$.</li>
+              <li>Paprsek postupuje po krocích, dokud nenarazí na povrch.</li>
+            </ul>
+
+            <pre><code class="language-pascal">// ray marching se vzdálenostním odhadem
+for each ray:
+    t = 0
+    repeat:
+        p = ray(t)
+        d = distanceEstimate(p)
+        if d < epsilon: return hit
+        t += d
+    until t > maxDistance
+            </code></pre>
+
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Stejná myšlenka jako 2D escape-time, jen místo barvy pixelu hledáme <strong>průsečík
+                  paprsku</strong> s povrchem.
+              </div>
+            </div>
+          </div>
+
+          <!-- <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s20_f01.jpg"
+                alt="3D fraktální krajina generovaná iteracemi" style="max-height: 360px;" data-preview-image>
+              <div class="image-caption">Fraktální struktura ve 3D — větvení a opakování motivů</div>
+            </div>
+
+          </div> -->
+        </div>
+
+        <aside class="notes">
+          Zde je dobré zdůraznit, že 3D verze není „stejný algoritmus s jinou barvou“. Musíme řešit
+          průsečík paprsku s implicitně zadaným povrchem. Vzdálenostní odhad nám řekne, jak daleko můžeme
+          bezpečně skočit, aniž bychom povrch přeskočili.
+        </aside>
+      </section>
+
+      <!-- SLIDE 21: Fraktální stromy ve 2D -->
+      <section>
+        <span class="slide-category">Umění</span>
+        <h2>Fraktální stromy ve 2D</h2>
+        <p class="lead">Robert Fathauer — matematik a umělec, který z fraktálních křivek staví stromy.</p>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li>Strom je <strong>soběpodobná struktura</strong>: kmen, větve, větvičky.</li>
+              <li>Fathauer kombinuje <strong>Kochovy křivky</strong> s pravidly větvení.</li>
+              <li>Vznikají <strong>teselace</strong> a obrazce, které se opakují v mnoha měřítkách.</li>
+              <li>Používá ruční kresbu i počítačové generování.</li>
+              <li>Ukázka toho, že fraktál může být <strong>umělecké dílo</strong>, ne jen matematika.</li>
+            </ul>
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Umělec volí úhel, poměr délek a hloubku — matematika dodá strukturu.
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-3">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s21_f01.jpg" alt="Fraktální strom Roberta Fathauera"
+                data-preview-image>
+              <div class="image-caption">Fathauer — strom</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s21_f02.jpg" alt="Fraktální strom — kresba"
+                data-preview-image>
+              <div class="image-caption">Větvení a teselace</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s21_f03.jpg" alt="Fraktální rostlina — kresba"
+                data-preview-image>
+              <div class="image-caption">Rostlinný motiv</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Fathauer je pěkný příklad propojení matematiky a výtvarného umění. Jeho stromy nejsou náhodné —
+          vycházejí z přesně definovaných křivek a pravidel větvení. Přesto působí organicky.
+        </aside>
+      </section>
+      <!-- SLIDE 22: Generovaný strom ve 3D -->
+      <section class="hero-slide">
+        <img class="hero-fig" src="../bordel/images-mvt/images-fraktaly/3dtree.png" alt="3D fraktální strom">
+        <div class="hero-veil"></div>
+        <span class="slide-category">3D</span>
+        <h2>Generovaný strom ve 3D</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li>Rekurzivní větvení v prostoru — každá větev má <strong>délku, úhel a stočení</strong>.</li>
+              <li><strong>Stochastické L-systémy</strong>: pravidla mají náhodné varianty.</li>
+              <li>Poměr délek a úhlů určuje „druh“ stromu (jehličnan, listnáč, keř).</li>
+              <li>Použití: hry, filmy, architektura, simulace růstu.</li>
+            </ul>
+
+            <div class="code-panel"><span class="cm">; 3D strom — zjednodušený L-systém</span>
+              F <span class="op">→</span> FF+[+F−F−F]−[−F+F+F]
+              úhel = <span class="num">30°</span>
+              zkrácení = <span class="num">0.7</span>
+              hloubka = <span class="num">8</span></div>
+
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Stejný princip jako u 2D stromů — jen s otočením kolem všech tří os.
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s22_f01.jpg" alt="3D generovaný strom"
+                style="max-height: 470px;" data-preview-image>
+              <div class="image-caption">Procedurálně generovaný strom — rekurzivní větvení</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Zde je vidět síla rekurze: pár pravidel a vznikne přesvědčivý strom. Náhodnost je důležitá —
+          čistě deterministický strom vypadá příliš pravidelně. Stochastické L-systémy přidají přirozenou
+          variabilitu.
+        </aside>
+      </section>
+
+      <!-- NOVÝ SLIDE N8: Od šumu k texturám -->
+      <section>
+        <span class="slide-category">Procedurální grafika</span>
+        <h2>Od šumu k texturám</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <ul class="custom-list tight-list">
+              <li><strong>Perlin</strong> (1983) — spojitý gradientní šum; <strong>Simplex</strong> (2001) —
+                rychlejší, méně artefaktů.</li>
+              <li><strong>Worley / cellular</strong> — vzdálenost k nejbližšímu bodu, buňky.</li>
+              <li><strong>fBm</strong> — sčítání oktáv: vyšší frekvence, nižší amplituda.</li>
+              <li><strong>Turbulence</strong> — absolutní hodnota šumu; mraky a oheň.</li>
+              <li><strong>Ridged multifractal</strong> — hřebeny hor.</li>
+              <li><strong>Doménový warping</strong> — šum posouvá souřadnice druhého šumu; mramor a kouř.</li>
+            </ul>
+
+            <div class="video-card">
+              <a href="mvt-fraktaly-noise.html" data-preview-link="mvt-fraktaly-noise.html">Interaktivní demo různých
+                typů šumu a jejich kombinací</a>
+            </div>
+          </div>
+
+          <div class="grid-2x2">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_n8_f01.png" alt="Bílý šum"
+                style="height: 196px; object-fit: cover;" data-preview-image>
+              <div class="image-caption">Bílý šum — každý pixel nezávislý</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_n8_f02.png" alt="Perlinův šum"
+                style="height: 196px; object-fit: cover;" data-preview-image>
+              <div class="image-caption">Perlin — spojitý gradientní šum</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_n8_f03.png" alt="fBm — šest oktáv"
+                style="height: 196px; object-fit: cover;" data-preview-image>
+              <div class="image-caption">fBm — 6 oktáv, fraktální struktura</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_n8_f04.png" alt="Ridged šum s doménovým warpingem"
+                style="height: 196px; object-fit: cover;" data-preview-image>
+              <div class="image-caption">Ridged + warping — hory a mramor</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 12px; padding: 10px 14px; text-align: center;">
+          <div style="font-size: .84em; color: var(--text-muted);">
+            Stejné oktávy generují <strong>hory, mraky, kůru i mramor</strong> — mění se jen měřítko
+            a způsob, jak šum skládáme.
+          </div>
+        </div>
+
+        <aside class="notes">
+          Studenti často slyší „Perlinův šum“ a nevědí, co to je. Bílý šum je nezávislý každý pixel;
+          Perlin je spojitý a hladký; fBm sčítá oktávy — každá další má dvojnásobnou frekvenci a poloviční
+          amplitudu, a přesně to vytváří „přírodní“ vzhled. Turbulence (absolutní hodnota) dělá mraky,
+          ridged hřebeny hor, doménový warping mramor. Všechny čtyři obrázky vznikly stejným základem,
+          liší se jen skládáním oktáv a mapováním.
+        </aside>
+      </section>
+
+      <!-- SLIDE 24: 2D kopce -->
+      <section>
+        <span class="slide-category">Procedurální grafika</span>
+        <h2>2D kopce</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <ul class="steps">
+              <li>Začneme s <strong>rovnou čárou</strong>.</li>
+              <li>Úsečku <strong>rozpůlíme</strong>.</li>
+              <li>V polovině náhodně vygenerujeme <strong>výšku</strong>.</li>
+              <li>Nově vzniklé segmenty <strong>opět rozpůlíme</strong>.</li>
+              <li>Výšku generujeme z <strong>polovičního intervalu</strong>.</li>
+            </ul>
+
+            <div class="formula-box" style="margin-top: 10px;">
+              výška = střed + náhodná odchylka<br>
+              odchylka<sub>n+1</sub> = odchylka<sub>n</sub> / 2
+            </div>
+
+            <div class="highlight-card" style="margin-bottom: 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Parametr <strong>drsnosti</strong> rozhoduje, zda vzniknou jemné kopce, nebo ostré hory.
+              </div>
+            </div>
+
+            <div class="video-card">
+              <a href="mvt-fraktaly-hory.html" data-preview-link="mvt-fraktaly-hory.html">Generátor kopců</a>
+            </div>
+          </div>
+
+          <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s24_f01.png" alt="Diagram půlení intervalu ve 2D"
+                style="max-height: 210px;" data-preview-image>
+              <div class="image-caption">Schéma: čtyři úrovně půlení</div>
+            </div>
+            <div class="image-showcase" style="width: 100%; margin-top: 8px;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s24_f02.jpg" alt="Stylizované hory"
+                style="max-height: 220px;" data-preview-image>
+              <div class="image-caption">Výsledný profil krajiny</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tady je algoritmus rozepsaný na pět kroků. Studenti si mohou zkusit představit, co se stane,
+          když odchylku nezmenšujeme — dostaneme neklidnou, „rozbitou“ krajinu. Naopak příliš rychlé
+          zmenšování vede k hladkým kopcům.
+        </aside>
+      </section>
+
+      <!-- SLIDE 23: Generování povrchu -->
+      <section>
+        <span class="slide-category">Procedurální grafika</span>
+        <h2>Generování povrchu</h2>
+
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card">
+            <h3>Algoritmus půlení intervalu</h3>
+            <ul class="custom-list tight-list">
+              <li>Postupně <strong>zjemňujeme</strong> mřížku a přidáváme detaily.</li>
+              <li>Náhodná změna výšky se v každé úrovni <strong>zmenšuje</strong>.</li>
+              <li>Lze generovat různé biotopy — hory, kopce, ostrovy.</li>
+              <li>Funguje i ve <strong>2D verzi</strong> (profil krajiny).</li>
+              <li>Příbuzné metody: <strong>fBm</strong>, diamond-square, Perlinův šum.</li>
+            </ul>
+
+
+
+            <a class="video-card" href="http://qiao.github.io/fractal-terrain-generator/demo/" target="_blank"
+              rel="noopener">
+              <div class="video-icon">🔗</div>
+              <div class="video-details">
+                <div class="video-title">Fractal Terrain Generator: interaktivní demo</div>
+                <div class="video-url">qiao.github.io/fractal-terrain-generator/demo</div>
+              </div>
+            </a>
+          </div>
+
+          <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s23_f01.jpg"
+                alt="3D povrch generovaný středovým posunem" style="max-height: 250px;" data-preview-image>
+              <div class="image-caption">3D povrch — výšková mapa jako síť</div>
+            </div>
+            <div class="image-showcase" style="width: 100%; margin-top: 8px;">
+              <img src="../bordel/images-mvt/images-fraktaly/frak_s23_f02.gif" alt="Animace půlení intervalu"
+                style="max-height: 180px;" data-preview-image>
+              <div class="image-caption">Animace: postupné zjemňování profilu</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Midpoint displacement je jednoduchý a přesto překvapivě účinný algoritmus. Začneme s úsečkou,
+          v polovině posuneme výšku a rekurzivně pokračujeme. Důležité je, že se rozsah posunu v každé
+          úrovni zmenšuje — jinak by vznikl bílý šum, ne krajina.
+        </aside>
+      </section>
+
+
+
+      <!-- SLIDE 25: 3D generovaný povrch -->
+      <section class="hero-slide">
+        <img class="hero-fig" src="../bordel/images-mvt/images-fraktaly/frak_s25_f01.jpg" alt="Reálná horská krajina">
+        <div class="hero-veil"></div>
+
+        <span class="slide-category">Procedurální grafika</span>
+        <h2 style="text-shadow: 0 2px 18px rgba(255,255,255,.95);">3D generovaný povrch</h2>
+
+        <div class="glass-card" style="max-width: 570px; margin-top: 14px;">
+          <h3>Od šumu k horám</h3>
+          <ul class="custom-list tight-list">
+            <li><strong>Diamond-square</strong> — rozšíření půlení do 2D mřížky.</li>
+            <li><strong>Perlinův / Simplex šum</strong> — spojitá náhodnost bez mřížkových artefaktů.</li>
+            <li><strong>Eroze a vodní tok</strong> — dodají realistické údolí a říční sítě.</li>
+            <li><strong>LOD</strong> — vzdálené části terénu stačí hrubší.</li>
+            <li>Využití: hry, filmy, simulace, plánování krajiny.</li>
+          </ul>
+        </div>
+
+        <div class="small-note"
+          style="position: absolute; right: 26px; bottom: 56px; background: rgba(255,255,255,.85); padding: 4px 10px; border-radius: 6px;">
+          Reálná krajina — předloha pro procedurální modely
+        </div>
+
+        <aside class="notes">
+          Reálné hory mají fraktální charakter: hrubý tvar je složen z menších kopců, ty z ještě menších.
+          Procedurální modely se snaží tuto strukturu napodobit. Samotný šum ale nestačí — bez eroze
+          vypadá terén „gumově“.
+        </aside>
+      </section>
+
+      <!-- SLIDE 26: Fraktální mapy -->
+      <section class="hero-slide">
+        <img src="../bordel/images-mvt/images-fraktaly/maps.png" alt="Fraktální mapa" class="hero-fig">
+        <div class="hero-veil"></div>
+
+        <h2 style="text-shadow: 0 2px 18px rgba(255,255,255,.95);">Fraktální mapy</h2>
+
+        <div class="glass-card" style="width: 50%;">
+          <p class="lead" style="margin-bottom: 4px;">Pobřeží, říční sítě a horské hřbety jsou přirozeně fraktální —
+            proto se fraktální algoritmy používají pro generování map a planet.</p>
+
+          <ul class="custom-list">
+            <li><strong>výškové mapy</strong></li>
+            <li><strong>pobřeží</strong></li>
+            <li><strong>říční sítě</strong></li>
+            <li><strong>planety</strong></li>
+            <li><strong>LOD</strong></li>
+          </ul>
+        </div>
+
+
+
+        <aside class="notes">
+          Mapy jsou hezká aplikace: stačí kombinovat výškový šum, erozi a vodní tok. Fraktální pobřeží
+          vypadá věrohodně, protože skutečné pobřeží má strukturu na všech měřítkách. Ve hrách se navíc
+          používá LOD — daleké části mapy se generují hruběji.
+        </aside>
+      </section>
+
+      <section>
+        <span class="slide-category">Aplikace</span>
+        <h2>Fraktální mapy</h2>
+
+        <div class="map-grid">
+          <div class="image-showcase wide">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_s26_f01.jpg" alt="Výšková mapa pobřeží"
+              data-preview-image style="max-height: 280px;">
+            <div class="image-caption">Pobřeží a výškové mapy — detail na mnoha měřítkách</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_s26_f02.jpg" alt="Fraktální pobřeží" data-preview-image
+              style="max-height: 280px;">
+            <div class="image-caption">Fraktální pobřeží</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_s26_f03.jpg" alt="Delta řeky" data-preview-image
+              style="max-height: 280px;">
+            <div class="image-caption">Mapa a říční síť</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_s26_f04.png" alt="Glóbus s fraktálním šumem"
+              data-preview-image style="max-height: 280px;">
+            <div class="image-caption">Planeta — šum na kouli</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-fraktaly/frak_s26_f05.png" alt="Země — fraktální povrch"
+              data-preview-image style="height: 280px;">
+            <div class="image-caption">Země jako fraktální objekt</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Mapy jsou hezká aplikace: stačí kombinovat výškový šum, erozi a vodní tok. Fraktální pobřeží
+          vypadá věrohodně, protože skutečné pobřeží má strukturu na všech měřítkách. Ve hrách se navíc
+          používá LOD — daleké části mapy se generují hruběji.
+        </aside>
+      </section>
+
+      <!-- NOVÝ SLIDE N16: Nástroje a kam dál -->
+      <section>
+        <span class="slide-category">Závěr</span>
+        <h2>Nástroje a kam dál</h2>
+
+        <p class="lead" style="margin-bottom: 4px;">Po přednášce by mělo být jasné, kde si to zkusit —
+          všechno níže je zdarma nebo ve studentské licenci.</p>
+
+        <table class="comparison-table" style="margin-top: 0; font-size: .76em;">
+          <tr>
+            <th>Nástroj</th>
+            <th>Co umí</th>
+            <th>Pro koho</th>
+          </tr>
+          <tr>
+            <td><strong>Shadertoy</strong></td>
+            <td>live GLSL v prohlížeči, Mandelbrot i Mandelbulb</td>
+            <td>rychlé pokusy</td>
+          </tr>
+          <tr>
+            <td><strong>XaoS</strong></td>
+            <td>real-time zoom, výuka</td>
+            <td>začátečníci</td>
+          </tr>
+          <tr>
+            <td><strong>Fractint</strong></td>
+            <td>klasika, palety, L-systémy</td>
+            <td>historie</td>
+          </tr>
+          <tr>
+            <td><strong>Ultra Fractal</strong></td>
+            <td>pokročilé formule, skripty</td>
+            <td>umělci</td>
+          </tr>
+          <tr>
+            <td><strong>Mandelbulber 2</strong></td>
+            <td>3D fraktály, ray marching, animace</td>
+            <td>3D</td>
+          </tr>
+          <tr>
+            <td><strong>Fragmentarium</strong></td>
+            <td>GLSL skripty, distance estimation</td>
+            <td>vývojáři</td>
+          </tr>
+          <tr>
+            <td><strong>Kalles Fraktaler</strong></td>
+            <td>extrémní zoom (perturbace)</td>
+            <td>deep zoom</td>
+          </tr>
+          <tr>
+            <td><strong>Blender / Houdini</strong></td>
+            <td>terén, rostliny, VFX</td>
+            <td>produkce</td>
+          </tr>
+        </table>
+
+        <div class="slide-grid-3" style="margin-top: 10px;">
+          <div class="glass-card" style="padding: 10px 14px;">
+            <h3 style="margin-bottom: 2px; font-size: .95em;">Mandelbrot (1982)</h3>
+            <div style="font-size: .74em; color: var(--text-muted); line-height: 1.35;">
+              <em>The Fractal Geometry of Nature</em> — historie, eseje, pobřeží.
+            </div>
+          </div>
+          <div class="glass-card" style="padding: 10px 14px;">
+            <h3 style="margin-bottom: 2px; font-size: .95em;">Falconer (2014)</h3>
+            <div style="font-size: .74em; color: var(--text-muted); line-height: 1.35;">
+              <em>Fractal Geometry</em> — učebnice, definice dimenzí, důkazy.
+            </div>
+          </div>
+          <div class="glass-card" style="padding: 10px 14px;">
+            <h3 style="margin-bottom: 2px; font-size: .95em;">Peitgen &amp; Richter (1986)</h3>
+            <div style="font-size: .74em; color: var(--text-muted); line-height: 1.35;">
+              <em>The Beauty of Fractals</em> — obrazová bible Mandelbrota a Julií.
+            </div>
+          </div>
+        </div>
+
+
+        <aside class="notes">
+          Cíl je, aby si studenti po přednášce něco zkusili. Shadertoy je nejrychlejší start — Mandelbrot
+          na pár řádcích GLSL. XaoS je ideální na hraní se zoomem, Kalles Fraktaler na deep zoom. Blender
+          a Houdini ukazují, že fraktální algoritmy jsou součástí produkce, ne jen akademická hříčka.
+          Tři knihy jsou klasiky: Mandelbrot (1982) jako historie a eseje, Falconer (2014) jako učebnice,
+          Peitgen & Richter (1986) jako obrazová bible.
+        </aside>
+      </section>
+
+      <!-- SLIDE 27: Shrnutí -->
+      <section class="title-slide">
+
+        <canvas id="fractalCanvas2" class="hero-fig" style="z-index: -1;"></canvas>
+        <div class="hero-veil"></div>
+
+        <h2>Co si odnést</h2>
+
+        <div class="slide-grid-2" style="margin-top: 10px;">
+          <div>
+            <div class="glass-card" style="margin-bottom: 12px;">
+              <h3>1. Soběpodobnost</h3>
+              <div style="font-size: .82em; color: var(--text-muted); line-height: 1.45;">
+                Fraktál je tvar, jehož části připomínají celek — a to v každém měřítku.
+              </div>
+            </div>
+            <div class="glass-card" style="margin-bottom: 12px;">
+              <h3>2. Neceločíselná dimenze</h3>
+              <div style="font-size: .82em; color: var(--text-muted); line-height: 1.45;">
+                $D = \log N / \log s$. Kochova křivka má $D \approx 1,26$ — víc než křivka, méně než plocha.
+              </div>
+            </div>
+            <div class="glass-card" style="margin-bottom: 12px;">
+              <h3>3. Příroda je aproximace</h3>
+              <div style="font-size: .82em; color: var(--text-muted); line-height: 1.45;">
+                Romanesco, kapradina ani pobřeží nejsou dokonalé fraktály — jen se jim přibližují.
+              </div>
+            </div>
+            <div class="glass-card">
+              <h3>4. Generování</h3>
+              <div style="font-size: .82em; color: var(--text-muted); line-height: 1.45;">
+                IFS a L-systémy, Mandelbrot/Julia, midpoint displacement — z mála pravidel vzniká komplexita.
+              </div>
+            </div>
+          </div>
+          <div class="highlight-card" style="margin-top: 16px; text-align: center;">
+            <strong style="color: var(--accent-cyan); font-size: 1.05em;">Fraktály spojují matematiku, přírodu
+              a počítačovou grafiku.</strong>
+
+          </div>
+        </div>
+
+
+
+
+        <aside class="notes">
+          Shrnutí: čtyři klíčové myšlenky. Soběpodobnost, neceločíselná dimenze, příroda jako aproximace
+          a algoritmy, které z mála pravidel vytvoří hodně komplexity. Na závěr prostor pro dotazy —
+          případně lze vrátit na slide s živou Mandelbrotovou množinou.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: false,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      view: "auto",
+      scrollLayout: "compact",
+      scrollActivationWidth: 600,
+      plugins: [RevealNotes, RevealSearch, RevealZoom, RevealMath.KaTeX, RevealPointer, RevealHighlight],
+      pointer: {
+        key: "q",
+        color: "red",
+        opacity: 0.8,
+        pointerSize: 25,
+        alwaysVisible: false,
+        tailLength: 10,
+      }
+    });
+  </script>
+
+  <script>
+    /* ============================================================
+       Sdílená paleta pro fraktální plátna
+       ============================================================ */
+    (function () {
+      var stops = [
+        [0.00, [219, 234, 254]],
+        [0.18, [147, 197, 253]],
+        [0.36, [56, 189, 248]],
+        [0.58, [8, 145, 178]],
+        [0.80, [124, 58, 237]],
+        [1.00, [30, 27, 75]]
+      ];
+
+      window.frakPalette = function (size) {
+        var out = new Array(size);
+        for (var i = 0; i < size; i++) {
+          var t = i / (size - 1);
+          var a = stops[0], b = stops[stops.length - 1];
+          for (var k = 0; k < stops.length - 1; k++) {
+            if (t >= stops[k][0] && t <= stops[k + 1][0]) {
+              a = stops[k];
+              b = stops[k + 1];
+              break;
+            }
+          }
+          var span = (b[0] - a[0]) || 1;
+          var f = (t - a[0]) / span;
+          out[i] = [
+            Math.round(a[1][0] + (b[1][0] - a[1][0]) * f),
+            Math.round(a[1][1] + (b[1][1] - a[1][1]) * f),
+            Math.round(a[1][2] + (b[1][2] - a[1][2]) * f)
+          ];
+        }
+        return out;
+      };
+    })();
+
+
+
+
+
+    /* ============================================================
+       Slide 11 — interaktivní Mandelbrotova množina
+       ============================================================ */
+    (function initLiveMandelbrot() {
+      var cv = document.getElementById('mandelbrotLive');
+      if (!cv) return;
+
+      var ctx = cv.getContext('2d');
+      var W = cv.width;
+      var H = cv.height;
+      var img = ctx.createImageData(W, H);
+      var palette = window.frakPalette(256);
+
+      var START = { cx: -0.6, cy: 0, span: 3.2, maxIter: 170 };
+      var state = { cx: START.cx, cy: START.cy, span: START.span, maxIter: START.maxIter };
+      var row = 0;
+      var running = false;
+      var raf = 0;
+
+      function fillBackground() {
+        var d = img.data;
+        for (var i = 0; i < d.length; i += 4) {
+          d[i] = 248;
+          d[i + 1] = 251;
+          d[i + 2] = 255;
+          d[i + 3] = 255;
+        }
+      }
+
+      function start() {
+        fillBackground();
+        row = 0;
+        running = true;
+        if (!raf) raf = requestAnimationFrame(step);
+      }
+
+      function step() {
+        if (!running) {
+          raf = 0;
+          return;
+        }
+
+        var aspect = H / W;
+        var halfW = state.span / 2;
+        var halfH = state.span * aspect / 2;
+        var chunk = 16;
+        var end = Math.min(row + chunk, H);
+        var maxIter = state.maxIter;
+
+        for (var y = row; y < end; y++) {
+          var ci = state.cy + ((y + 0.5) / H * 2 - 1) * halfH;
+
+          for (var x = 0; x < W; x++) {
+            var cr = state.cx + ((x + 0.5) / W * 2 - 1) * halfW;
+            var zr = 0, zi = 0, zr2 = 0, zi2 = 0, i = 0;
+
+            while (zr2 + zi2 <= 4 && i < maxIter) {
+              zi = 2 * zr * zi + ci;
+              zr = zr2 - zi2 + cr;
+              zr2 = zr * zr;
+              zi2 = zi * zi;
+              i++;
+            }
+
+            var idx = (y * W + x) * 4;
+
+            if (i >= maxIter) {
+              img.data[idx] = 15;
+              img.data[idx + 1] = 23;
+              img.data[idx + 2] = 42;
+              img.data[idx + 3] = 255;
+            } else {
+              var logZn = Math.log(zr2 + zi2) / 2;
+              var nu = Math.log(logZn / Math.LN2) / Math.LN2;
+              var t = (i + 1 - nu) / maxIter;
+              t = Math.max(0, Math.min(1, t));
+
+              var s = Math.pow(t, 0.5);
+              var c = palette[Math.min(255, Math.round(s * 255))];
+              img.data[idx] = c[0];
+              img.data[idx + 1] = c[1];
+              img.data[idx + 2] = c[2];
+              img.data[idx + 3] = 255;
+            }
+          }
+        }
+
+        ctx.putImageData(img, 0, 0);
+        row = end;
+
+        if (row >= H) {
+          running = false;
+          raf = 0;
+          return;
+        }
+        raf = requestAnimationFrame(step);
+      }
+
+      function zoomAt(clientX, clientY, factor) {
+        var rect = cv.getBoundingClientRect();
+        var px = (clientX - rect.left) / rect.width * W;
+        var py = (clientY - rect.top) / rect.height * H;
+        px = Math.max(0, Math.min(W - 1, px));
+        py = Math.max(0, Math.min(H - 1, py));
+
+        var halfW = state.span / 2;
+        var halfH = state.span * (H / W) / 2;
+        var cx0 = state.cx + ((px + 0.5) / W * 2 - 1) * halfW;
+        var cy0 = state.cy + ((py + 0.5) / H * 2 - 1) * halfH;
+
+        state.cx = cx0 + (state.cx - cx0) / factor;
+        state.cy = cy0 + (state.cy - cy0) / factor;
+        state.span = state.span / factor;
+
+        if (factor > 1) {
+          state.maxIter = Math.min(700, Math.round(state.maxIter * 1.18));
+        } else {
+          state.maxIter = Math.max(60, Math.round(state.maxIter / 1.18));
+        }
+
+        start();
+      }
+
+      cv.addEventListener('click', function (e) {
+        e.stopPropagation();
+        zoomAt(e.clientX, e.clientY, e.shiftKey ? 1 / 2.4 : 2.4);
+      });
+
+      cv.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+        zoomAt(e.clientX, e.clientY, 1 / 2.4);
+      });
+
+      var resetBtn = document.getElementById('mbReset');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          state.cx = START.cx;
+          state.cy = START.cy;
+          state.span = START.span;
+          state.maxIter = START.maxIter;
+          start();
+        });
+      }
+
+      start();
+    })();
+  </script>
+
+  <script>
+    /**
+     * Dynamic Color Palettes for Tree Variations
+     */
+    const PALETTES = [
+      {
+        name: 'Cherry Blossom',
+        trunk: ['#231510', '#3b2116', '#522f1f'],
+        leaf: ['#ffb7c5', '#ff9ebb', '#e05275', '#ffffff'],
+        glow: 'rgba(255, 183, 197, 0.6)'
+      },
+      {
+        name: 'Emerald Forest',
+        trunk: ['#122213', '#233d25', '#335436'],
+        leaf: ['#34d399', '#10b981', '#059669', '#a7f3d0'],
+        glow: 'rgba(52, 211, 153, 0.5)'
+      },
+      {
+        name: 'Autumn Gold',
+        trunk: ['#24140d', '#3d2013', '#572c19'],
+        leaf: ['#f59e0b', '#d97706', '#ef4444', '#fef08a'],
+        glow: 'rgba(245, 158, 11, 0.5)'
+      },
+      {
+        name: 'Neon Cyberpunk',
+        trunk: ['#090d16', '#141b2d', '#232d48'],
+        leaf: ['#38bdf8', '#818cf8', '#c084fc', '#f472b6'],
+        glow: 'rgba(56, 189, 248, 0.7)'
+      },
+      {
+        name: 'Midnight Violet',
+        trunk: ['#150b24', '#271242', '#3e1a66'],
+        leaf: ['#c084fc', '#a855f7', '#7e22ce', '#e9d5ff'],
+        glow: 'rgba(192, 132, 252, 0.6)'
+      },
+      {
+        name: 'Classic Oak',
+        trunk: ['#1c1008', '#362113', '#52341e'],
+        leaf: ['#84cc16', '#65a30d', '#4d7c0f', '#bef264'],
+        glow: 'rgba(132, 204, 22, 0.4)'
+      },
+      {
+        name: 'Silver Birch',
+        trunk: ['#2e3644', '#475569', '#94a3b8'],
+        leaf: ['#e2e8f0', '#cbd5e1', '#38bdf8', '#f8fafc'],
+        glow: 'rgba(226, 232, 240, 0.5)'
+      },
+      {
+        name: 'Crimson Maple',
+        trunk: ['#1a0808', '#331010', '#4d1717'],
+        leaf: ['#f87171', '#dc2626', '#991b1b', '#fca5a5'],
+        glow: 'rgba(248, 113, 113, 0.6)'
+      },
+      {
+        name: 'Sunset Pastel',
+        trunk: ['#1a1221', '#2e1e3b', '#472d5c'],
+        leaf: ['#f472b6', '#fb923c', '#facc15', '#a78bfa'],
+        glow: 'rgba(244, 114, 182, 0.5)'
+      },
+      {
+        name: 'Glowing Magic',
+        trunk: ['#031c24', '#083344', '#0e4e66'],
+        leaf: ['#22d3ee', '#06b6d4', '#67e8f9', '#a5f3fc'],
+        glow: 'rgba(34, 211, 238, 0.7)'
+      }
+    ];
+
+    const LEAF_STYLES = ['dots', 'glowing', 'petals', 'pine', 'stars'];
+    const MAX_TREES = 12;
+
+    // DOM Elements
+    const canvas = document.getElementById('fractalCanvas');
+    const ctx = canvas.getContext('2d');
+    //const hintToast = document.getElementById('hintToast');
+
+    // App State
+    let activeTrees = [];
+    let dpr = 1;
+    let globalTime = 0;
+    let initialClickOccurred = false;
+
+    /**
+     * Represents a single randomized Fractal Tree
+     */
+    class Tree {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+
+        // Randomize tree configuration
+        this.palette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+        this.leafStyle = LEAF_STYLES[Math.floor(Math.random() * LEAF_STYLES.length)];
+        this.maxDepth = Math.floor(Math.random() * 4) + 4; // Depth 8 to 11
+        this.branchFactor = Math.random() < 0.75 ? 2 : 3; // Mostly 2-way, occasionally 3-way
+        this.branchAngle = (Math.random() * 32 + 18) * (Math.PI / 180); // 18° to 50° in radians
+        this.shrinkRatio = Math.random() * 0.12 + 0.85; // 0.65 to 0.77 shrink ratio
+        this.growthSpeed = Math.random() * 0.008 + 0.012; // Smooth animation rate
+
+        // Shorter base length so trees fit nicely without overshooting canvas top
+        const screenMin = Math.min(window.innerWidth, window.innerHeight);
+        this.baseLength = screenMin * (Math.random() * 0.04 + 0.08); // 8% - 12% of screen min
+        this.baseThickness = Math.max(4, this.maxDepth * 1.25);
+
+        // Animation states
+        this.growthProgress = 0; // 0 to 1
+        this.opacity = 0; // Fade-in opacity
+        this.targetOpacity = 1;
+        this.isFadingOut = false;
+        this.seed = Math.random() * 1000;
+      }
+
+      update() {
+        // Growth progression
+        if (this.growthProgress < 1) {
+          this.growthProgress += this.growthSpeed;
+          if (this.growthProgress >= 1) {
+            this.growthProgress = 1;
+          }
+        }
+
+        // Opacity state transitions
+        if (this.isFadingOut) {
+          this.opacity -= 0.015;
+        } else if (this.opacity < this.targetOpacity) {
+          this.opacity += 0.03;
+          if (this.opacity > 1) this.opacity = 1;
+        }
+      }
+
+      draw(context, time) {
+        if (this.opacity <= 0) return;
+
+        context.save();
+        context.globalAlpha = this.opacity;
+        context.translate(this.x, this.y);
+
+        // Natural subtle wind sway
+        const windAngle = Math.sin(time * 0.0018 + this.seed) * 0.035;
+
+        // Initial upward stem direction (-PI / 2)
+        this.drawBranch(
+          context,
+          0,
+          0,
+          this.baseLength,
+          -Math.PI / 2 + windAngle,
+          this.baseThickness,
+          0,
+          time
+        );
+
+        context.restore();
+      }
+
+      drawBranch(context, x, y, length, angle, thickness, depth, time) {
+        const depthStep = 1 / this.maxDepth;
+        const depthThreshold = depth * depthStep;
+
+        if (this.growthProgress < depthThreshold) return;
+
+        // Tier-specific animation completion
+        const tierProgress = Math.min(1, (this.growthProgress - depthThreshold) / depthStep);
+        const currentLength = length * tierProgress;
+
+        const endX = x + Math.cos(angle) * currentLength;
+        const endY = y + Math.sin(angle) * currentLength;
+
+        // Branch line rendering
+        context.beginPath();
+        context.moveTo(x, y);
+        context.lineTo(endX, endY);
+        context.lineWidth = Math.max(1, thickness * (1 - (depth / this.maxDepth) * 0.45));
+        context.lineCap = 'round';
+
+        if (depth < 3) {
+          context.strokeStyle = this.palette.trunk[Math.min(depth, this.palette.trunk.length - 1)];
+        } else {
+          const leafIdx = depth % this.palette.leaf.length;
+          context.strokeStyle = this.palette.leaf[leafIdx];
+        }
+
+        context.stroke();
+
+        // Leaf or Canopy rendering on higher branch depths
+        if ((depth === this.maxDepth - 1 || depth >= 5) && tierProgress > 0.5 && this.leafStyle !== 'none') {
+          const leafAlpha = tierProgress;
+          context.save();
+          context.fillStyle = this.palette.leaf[depth % this.palette.leaf.length];
+          context.strokeStyle = context.fillStyle;
+
+          if (this.leafStyle === 'glowing') {
+            context.shadowColor = this.palette.glow;
+            context.shadowBlur = 10;
+          }
+
+          context.globalAlpha = leafAlpha * 0.85;
+
+          const size = Math.max(1.5, (6 - depth * 0.35));
+
+          switch (this.leafStyle) {
+            case 'glowing':
+            case 'dots':
+              context.beginPath();
+              context.arc(endX, endY, size, 0, Math.PI * 2);
+              context.fill();
+              break;
+
+            case 'petals':
+              context.beginPath();
+              context.ellipse(endX, endY, size * 1.8, size * 0.8, angle, 0, Math.PI * 2);
+              context.fill();
+              break;
+
+            case 'pine':
+              context.beginPath();
+              context.moveTo(endX, endY);
+              context.lineTo(endX + Math.cos(angle - 0.5) * size * 2.5, endY + Math.sin(angle - 0.5) * size * 2.5);
+              context.moveTo(endX, endY);
+              context.lineTo(endX + Math.cos(angle + 0.5) * size * 2.5, endY + Math.sin(angle + 0.5) * size * 2.5);
+              context.lineWidth = 1;
+              context.stroke();
+              break;
+
+            case 'stars':
+              context.beginPath();
+              context.arc(endX, endY, size * 0.8, 0, Math.PI * 2);
+              context.fill();
+              if (Math.random() > 0.6) {
+                context.fillRect(endX - size * 1.5, endY - 0.5, size * 3, 1);
+                context.fillRect(endX - 0.5, endY - size * 1.5, 1, size * 3);
+              }
+              break;
+          }
+
+          context.restore();
+        }
+
+        // Recursion check
+        if (depth >= this.maxDepth) return;
+
+        // Calculate secondary branch angles with subtle wind sway per branch tier
+        const childWind = Math.sin(time * 0.0025 + depth + this.seed) * 0.02 * (depth / 2);
+
+        if (this.branchFactor === 2) {
+          const a1 = angle - this.branchAngle / 2 + childWind;
+          const a2 = angle + this.branchAngle / 2 + childWind;
+
+          this.drawBranch(context, endX, endY, length * this.shrinkRatio, a1, thickness * 0.72, depth + 1, time);
+          this.drawBranch(context, endX, endY, length * this.shrinkRatio, a2, thickness * 0.72, depth + 1, time);
+        } else {
+          const a1 = angle - this.branchAngle + childWind;
+          const a2 = angle + childWind;
+          const a3 = angle + this.branchAngle + childWind;
+
+          this.drawBranch(context, endX, endY, length * this.shrinkRatio, a1, thickness * 0.65, depth + 1, time);
+          this.drawBranch(context, endX, endY, length * this.shrinkRatio * 0.88, a2, thickness * 0.65, depth + 1, time);
+          this.drawBranch(context, endX, endY, length * this.shrinkRatio, a3, thickness * 0.65, depth + 1, time);
+        }
+      }
+    }
+
+    /**
+     * Initialize & Adapt Canvas size to device resolution
+     */
+    function resizeCanvas() {
+      dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+
+    /**
+     * Plant a new randomized tree on click
+     */
+    function plantTree(e) {
+      if (!initialClickOccurred) {
+        initialClickOccurred = true;
+        //hintToast.classList.add('opacity-0');
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      // const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+      // const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+
+      var x = e.clientX;
+      var y = e.clientY;
+
+
+      // Automatically mark oldest tree for removal if limit exceeded
+      const activeUnfaded = activeTrees.filter(t => !t.isFadingOut);
+      if (activeUnfaded.length >= MAX_TREES) {
+        activeUnfaded[0].isFadingOut = true;
+      }
+      console.log(x, y);
+      activeTrees.push(new Tree((0.2 + 0.6 * Math.random()) * canvas.width / dpr, (0.5 + 0.4 * Math.random()) * canvas.height / dpr));
+    }
+
+    /**
+     * Main Render Frame Loop
+     */
+    function animate(timestamp) {
+      globalTime = timestamp;
+
+      // Clear frame
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      // Filter out fully faded trees
+      activeTrees = activeTrees.filter(tree => tree.opacity > 0 || !tree.isFadingOut);
+
+      // Update & Render trees
+      for (let i = 0; i < activeTrees.length; i++) {
+        activeTrees[i].update();
+        activeTrees[i].draw(ctx, globalTime);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    /**
+     * Initialize Application
+     */
+    window.onload = () => {
+      resizeCanvas();
+
+      window.addEventListener('resize', resizeCanvas);
+      canvas.addEventListener('click', plantTree);
+      canvas.addEventListener('touchstart', (e) => {
+        plantTree(e);
+      }, { passive: true });
+
+      // Plant initial default tree near center bottom
+      const initialTree = new Tree(window.innerWidth / 2, window.innerHeight * 0.85);
+      activeTrees.push(initialTree);
+
+      // Kick off render loop
+      requestAnimationFrame(animate);
+    };
+  </script>
+
+  <script type="text/javascript">
+
+    var image2 = document.getElementById("fractalCanvas2");
+    var ctx2 = image2.getContext("2d");
+
+    dpr = window.devicePixelRatio || 1;
+    image2.width = window.innerWidth * dpr;
+    image2.height = window.innerHeight * dpr;
+    ctx2.scale(dpr, dpr);
+
+    // nastaveni parametru generovani hor
+    var maxHeight = image2.height / 8.0;   // nejvetsi mozna vyska v meritku 1
+    var minHeight = -image2.height / 8.0;  // nejnizsi mozna vyska v meritku 1
+    var decreaseRatio = 2.1;            // jak rychle bude s meritkem klesat vyska noveho segmentu
+    var maxIter = 8;                    // maximalni pocet iteraci, cim vyssi cislo, tim jemnejsi hory
+
+    var layers = 7;                     // pocet vrstev hor
+
+    function setPixel(x, y, r, g, b) {
+      ctx2.fillStyle = "rgba(" + r + "," + g + "," + b + ", 1 )";
+      ctx2.fillRect(x, y, 1, 1);
+    }
+
+    // cara mezi (x1,y1) a (x2,y2) s barvou r,g,b a tloustkou lw 
+    function drawLine(x1, y1, x2, y2, r, g, b, lw) {
+      ctx2.strokeStyle = "rgba(" + r + "," + g + "," + b + ", 1 )";
+      ctx2.lineWidth = lw;
+      ctx2.moveTo(x1, y1);
+      ctx2.lineTo(x2, y2);
+      ctx2.stroke();
+    }
+
+    // vybarveny polygon s horni hranici danou carou (x1,y1) a (x2,y2) a spodkem obrazku
+    function fillPoly(x1, y1, x2, y2, r, g, b) {
+      var x1f = Math.floor(x1);
+      var y1f = Math.floor(y1);
+      var x2f = Math.floor(x2);
+      var y2f = Math.floor(y2);
+
+      ctx2.fillStyle = "rgba(" + r + "," + g + "," + b + ", 1 )";
+      ctx2.beginPath();
+      ctx2.moveTo(x1f, y1f);
+      ctx2.lineTo(x2f, y2f);
+      ctx2.lineTo(x2f, image2.height);
+      ctx2.lineTo(x1f, image2.height);
+      ctx2.closePath();
+      ctx2.fill();
+    }
+
+    // nahodne cislo v rozmezi min, max
+    function randomFromRange(min, max) {
+      return (min + (max - min) * Math.random());
+    }
+
+    // rekurzivni funkce na teren dany okrajovymi body (x1,y1) a (x2,y2)
+    function terrain(x1, y1, x2, y2, iteration, r, g, b) {
+      if (iteration < maxIter)     // pokud jsme jeste nedosahli posledni iterace
+      {
+        var halfx = (x1 + x2) / 2.0;    // bod ve stredu usecky (x1,y1) a (x2,y2)
+        var halfy = (y1 + y2) / 2.0;
+
+        var newHeight = randomFromRange(minHeight, maxHeight);          // vygenerujeme novou vysku
+        newHeight = newHeight / Math.pow(decreaseRatio, iteration);     // a podelime meritkem, aby doslo 
+        // k uprave vysky na nove meritko
+
+        terrain(x1, y1, halfx, halfy + newHeight, iteration + 1, r, g, b);  // zavolame teren na prvni 
+        terrain(halfx, halfy + newHeight, x2, y2, iteration + 1, r, g, b);  // a druhou polovinu usecky
+      }
+      else {
+        //        drawLine(x1, y1, x2, y2, r, g, b, 2);
+        fillPoly(x1, y1, x2, y2, r, g, b);      // pokud jsme dosahli pozadovane iterace,
+        // vykreslime cast povrchu
+      }
+    }
+
+    // hlavni fce na kresleni hor
+    function drawSet() {
+      fillPoly(0, 0, image2.width, 0, 100, 100, 250);        // vybarvime modre
+      for (var i = 1; i <= layers; i++)                 // vykreslime nekolik vrstev hor s ruznymi barvami
+      {
+        var y1 = randomFromRange(170 + (i - 1) * image2.height / (layers + 18), 170 + i * image2.height / (layers + 18));  //pocatecni hodnoty y podle vrstvy
+        var y2 = randomFromRange(170 + (i - 1) * image2.height / (layers + 18), 170 + i * image2.height / (layers + 18));
+
+        terrain(0, y1, image2.width, y2, 0, 100 + (i - 1) * 20, 100 + (i - 1) * 20, 100 + (i - 1) * 20);  // zavolame prvni rekurzi s nejakymi barvami
+      }
+    }
+
+    drawSet();
+    setInterval(drawSet, 2000);
+  </script>
+
+</body>
+
+</html>
