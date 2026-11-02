@@ -1,0 +1,7 @@
+/* Shaded polar surface: radius is the selected BRDF plot scale, not geometry. */
+window.drawLobeSurface=({g,value,transform,project,azimuth,yaw,pitch})=>{
+const rad=a=>a*Math.PI/180,vertices=[];for(let t=0;t<=90;t+=3){const row=[];for(let p=0;p<=360;p+=5){const a=rad(p+azimuth),b=rad(t),radius=transform(value(Math.min(85,t),p%360)),v=[radius*Math.sin(b)*Math.cos(a),radius*Math.sin(b)*Math.sin(a),radius*Math.cos(b)];row.push(v);}vertices.push(row);}
+const triangles=[],depth=v=>{const y=v[0]*Math.sin(yaw)+v[1]*Math.cos(yaw);return y*Math.cos(pitch)-v[2]*Math.sin(pitch);};
+for(let i=0;i<vertices.length-1;i++)for(let j=0;j<72;j++)for(const vs of [[vertices[i][j],vertices[i+1][j],vertices[i+1][j+1]],[vertices[i][j],vertices[i+1][j+1],vertices[i][j+1]]]){const a=vs[1].map((x,k)=>x-vs[0][k]),b=vs[2].map((x,k)=>x-vs[0][k]),n=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],length=Math.hypot(...n)||1,light=Math.abs((n[0]*.3-n[1]*.4+n[2]*.866)/length);triangles.push({vs,z:vs.reduce((s,v)=>s+depth(v),0)/3,light});}
+triangles.sort((a,b)=>b.z-a.z);g.save();g.beginPath();g.rect(0,0,430,310);g.clip();for(const {vs,light}of triangles){g.beginPath();vs.map(project).forEach((p,i)=>i?g.lineTo(...p):g.moveTo(...p));g.closePath();g.fillStyle=`rgb(${Math.round(20+65*light)},${Math.round(90+90*light)},${Math.round(95+85*light)})`;g.fill();g.strokeStyle=g.fillStyle;g.lineWidth=.4;g.stroke();}g.restore();
+};
