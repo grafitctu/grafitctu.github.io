@@ -1,0 +1,3469 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>ANI-EGG: Pravidla pro větší projekty</title>
+  <meta name="description"
+    content="Přednáška ANI-EGG: Správa verzí a organizace projektu v Unity: koncepty VCS, struktura složek, .meta soubory, Presety, Git / Perforce Helix Core / Plastic SCM, nastavení Editoru a best practices pro týmovou práci. Petr Pauš, FIT ČVUT v Praze">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/panda-light.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+
+  <!--
+    DOPLNĚK: .custom-list nastavuje list-style: none, ale číslování pro <ol> nahrazuje
+    jen selektor `ul.custom-list li::before` (šipka ▸). U <ol> proto chybí jakýkoli marker
+    a seznam se vykreslí bez čísel. Tato pravidla číslování vracejí: týkají se pouze
+    tohoto decku, ne sdílené téma.
+  -->
+  <style>
+    .reveal ol.custom-list li {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 12px;
+      line-height: 1.45;
+      font-size: 0.9em;
+    }
+
+
+    .reveal ol.custom-list li::before {
+      content: counter(list-item) ".";
+      /* position: absolute;
+      left: 0;
+      top: 0; */
+      color: var(--accent-cyan);
+      font-weight: 500;
+      font-size: 0.8em;
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+</head>
+
+<body>
+<a id="grafit-lecture-return" class="grafit-lecture-return grafit-lecture-return--floating" href="../../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+<a id="grafit-course-link" class="grafit-course-link--floating" href="../../../egg/" aria-label="Přehled přednášek EGG" data-subject="egg">EGG</a>
+
+  <!-- Top Persistent Header -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+  </header>
+
+  <!-- Bottom Persistent Footer Navigation Helper -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <!-- <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div> -->
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==========================================
+           SLIDE 1: TITULNÍ SLIDE
+           ========================================== -->
+      <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)">
+        <div class="title-hero">
+          <div class="vr-badge">ANI-EGG &bull; Přednáška #2</div>
+          <h1>Pravidla pro větší projekty</h1>
+          <p style="color: var(--text-muted); font-size: 1.15em; margin-bottom: 24px;">
+            Koncepty <strong>VCS</strong>, struktura složek, naming conventions, presety, code style a&nbsp;best
+            practices pro týmovou práci.
+          </p>
+
+          <div class="authors">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Vítejte u druhé přednášky kurzu ANI-EGG. Minule jsme si rozebrali, jak funguje herní engine uvnitř.
+          Dnes se přesuneme z roviny technické do roviny organizační: jak vůbec udržet projekt v pořádku, když na něm
+          pracuje více lidí současně. Projdeme si koncepty správy verzí od nuly, pak se podrobně podíváme na to, jak
+          uspořádat samotný Unity projekt: strukturu složek, soubory .meta, presety a konvence pojmenování.
+          Následně si představíme tři hlavní systémy, které s Unity nejlépe spolupracují: Git, Perforce Helix Core
+          a Plastic SCM: včetně toho, jak je nastavit přímo v Unity Editoru.
+          A na závěr si řekneme sadu best practices, které vycházejí z praxe týmu Unity Enterprise Support.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 2: OSNOVA PŘEDNÁŠKY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Úvod &bull; Osnova</span>
+        <h2>Obsah</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Úvod a&nbsp;koncepty</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>1. Úvod</strong>: proč jsou potřeba pravidla.</li>
+                <li><strong>2.</strong> Source control vs. <strong>version control</strong>: terminologie.</li>
+                <li><strong>3. Základní koncepty</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.02em; margin-bottom: 6px;">Organizace projektu</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>4. Best practices pro organizaci</strong>: struktura složek, prázdné složky,
+                  <code>.meta</code>, naming standardy, Presety, standardy kódu.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.02em; margin-bottom: 6px;">Nástroje a&nbsp;nastavení
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>5. Systémy správy verzí</strong>: Git, Perforce Helix Core, SVN, Plastic SCM.</li>
+                <li><strong>6. Nastavení Unity</strong>: Version Control settings, co ignorovat, velké soubory.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.02em; margin-bottom: 6px;">Praxe</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>7. Best practices pro správu verzí</strong>: commity, denní workflow, větve,
+                  pull requesty.</li>
+                <li><strong>8. Shrnutí</strong>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          První třetina je teoretická: vysvětlíme si slovník, bez kterého se u žádného nástroje neobejdete.
+          Prostřední část je nejpraktičtější pro každodenní práci: jak uspořádat složky a jak se vyhnout
+          nejčastějším problémům se soubory .meta nebo prázdnými složkami.
+          Poslední třetina je o výběru a nastavení konkrétního systému a o tom, jak správně commitovat.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 3: ÚVOD: PROČ TO VŮBEC ŘEŠIT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Úvod &bull; Motivace</span>
+        <h2>Práce ve více lidech</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card alert" style="margin-top: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 8px;">Co je třeba řešit</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Kde projekt uložit, aby k&nbsp;němu měli přístup <strong>všichni členové týmu</strong>?</li>
+                <li>Co se stane, když na <strong>stejném souboru</strong> pracuje více lidí současně?</li>
+                <li>Programátoři chápou koncepty správy kódu: ale co <strong>umělci a netechničtí členové
+                    týmu</strong>?</li>
+                <li>Jak minimalizovat potřebu podpory ze strany programátorů, aby se ostatní nemuseli obávat,
+                  že <strong>něco pokazí</strong>?</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                Správa verzí může být pro tvůrce her <strong>odrazujícím tématem</strong>, zejména bez technického
+                zázemí. Nemusí tomu tak ale být: existuje řada nástrojů, které se přímo integrují do enginu.
+              </p>
+            </div>
+
+            <div class="highlight-card" style="padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); font-weight: 600;">
+                „Většina problémů v týmovém vývoji není technických: je to o <strong>nedostatečné
+                  komunikaci</strong> a&nbsp;chybějících dohodnutých pravidlech.“
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Začněme od reality. Dokud pracujete sami na svém notebooku, můžete mít projekt uložený kdekoliv a zálohovat
+          ho třeba kopírováním složky. Ve chvíli, kdy se přidá druhý člověk, se všechno mění.
+          Typické otázky zní: kde projekt bydlí, kdo na čem pracuje, a co se stane, když dva lidé sáhnou na stejný
+          soubor.
+          Zásadní je poslední bod: umělci a designéři se správy verzí často bojí, protože mají pocit, že je to nástroj
+          pro programátory a že něco rozbijí. Dobře zvolený nástroj tuto bariéru dokáže odstranit.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4: SOURCE CONTROL VS. VERSION CONTROL
+           ========================================== -->
+      <section>
+        <span class="slide-category">Kapitola 2 &bull; Terminologie</span>
+        <h2>Source control vs. version control</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <table class="comparison-table" style="margin-top: 0; font-size: 0.76em;">
+              <thead>
+                <tr>
+                  <th style="width: 30%;">Období</th>
+                  <th>Charakteristika</th>
+                  <th style="width: 26%;">Termín</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Počátky výpočetní techniky</strong></td>
+                  <td>Veškerý vývoj byl „čistý kód“: dokonce i&nbsp;3D grafika se popisovala kódem.</td>
+                  <td><strong>Source control</strong><br><span
+                      style="font-size: 0.85em; color: var(--text-muted);">nástroje
+                      jako <abbr class="abbr-tag" title="Source Code Management">SCM</abbr></span></td>
+                </tr>
+                <tr>
+                  <td><strong>Moderní herní vývoj</strong></td>
+                  <td>Práce s&nbsp;FBX modely, texturami, materiály, audio soubory…</td>
+                  <td><strong><abbr class="abbr-tag"
+                        title="Version Control System: systém správy verzí">VCS</abbr></strong></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="highlight-card" style="margin-top: 12px; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                Termín <em>source control</em> přestal pokrývat potřeby moderního vývoje: nástroje musí zvládat
+                <strong>více než jen změny textových souborů</strong>. Proto se prosadilo označení
+                <strong>version control system</strong>.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+                <strong>Plastic SCM se v&nbsp;roce 2020 připojil k&nbsp;Unity</strong>: tyto nástroje jsou proto
+                těsně integrovány přímo do Unity Editoru.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1em; margin-bottom: 6px;">Tři systémy, které
+                fungují nejlépe</h3>
+              <ul class="custom-list">
+                <li>Plastic SCM (Unity)</li>
+                <li>Git (Unity, Godot)</li>
+                <li>Perforce Helix Core (Unity, Unreal, Godot)</li>
+              </ul>
+            </div>
+
+
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <ul style="margin: 0;" class="custom-list">
+                <li>Termíny <em>source control</em> a <em>version control</em> se stále používají zaměnitelně.</li>
+                <li>Pro game engine projekty, které pracují s&nbsp;velkými binárními assety, jsou ale výrazy
+                  <strong>version control</strong> a <strong>VCS</strong> přesnější.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tato kapitola je krátká, ale vysvětluje, proč se v praxi setkáte se dvěma názvy pro totéž.
+          Historicky byl veškerý vývoj zdrojový kód: i grafika se popisovala textem. Nástroje se proto jmenovaly
+          SCM, tedy source code management.
+          V moderním herním vývoji ale pracujeme s FBX modely, texturami, materialy a zvukem, což jsou binární
+          soubory. Pojem source code management to přestal vystihovat, a tak se prosadilo označení VCS.
+          Zapamatujte si tři jména, o kterých bude řeč ve zbytku přednášky: Plastic SCM, Git a Perforce Helix Core.
+        </aside>
+      </section>
+
+
+
+      <!-- ==========================================
+           SLIDE 8: CENTRALIZOVANÉ VERZOVÁNÍ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Koncepty &bull; Centralizované vs. distribuované</span>
+        <h2>Centralizované verzování</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 16px 20px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Charakteristika</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Kde sídlí repo:</strong> mnoho firem volí centralizovanou variantu, aby udržely servery
+                  s&nbsp;proprietárním softwarem <strong>na vlastní půdě</strong>. Nemusí to ale znamenat on-site
+                  servery: repo může být i&nbsp;v&nbsp;cloudu (i&nbsp;když méně běžně).</li>
+                <li><strong>Nasazení změn:</strong> vnímáno jako přímočařejší. Změny se načítají z&nbsp;repozitáře
+                  a&nbsp;odesílají přímo do něj: <em>updating from</em> a&nbsp;<em>committing to</em> repo.</li>
+                <li><strong>Nevýhoda:</strong> uživatelé musí být <strong>připojeni k&nbsp;serveru</strong>, aby mohli
+                  odeslat jakoukoli práci.</li>
+                <li><strong>Řešení konfliktů:</strong> soubory lze <strong>zamknout</strong> pro modifikaci
+                  (<em>checking out</em>), což zabrání ostatním commitovat, dokud není soubor <em>checked back
+                    in</em>.</li>
+              </ul>
+            </div>
+
+
+          </div>
+          <div>
+            <div class="highlight-card" style="margin-top: 12px; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                <strong>Klíčová vlastnost:</strong> uživatel má na svém workstationu vždy jen
+                <strong>nejnovější verzi</strong> projektových souborů, zatímco <strong>server drží celou
+                  historii</strong> projektu.
+              </p>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-egg/egg02_p07_centralized-workflow.jpeg"
+                alt="Schéma centralizovaného workflow: uživatelé komunikují přímo se centrálním serverem"
+                style="max-height: 400px;" data-preview-image>
+              <div class="image-caption">Centralizovaný workflow: jeden server,<br>uživatelé vždy s&nbsp;nejnovější
+                verzí
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Rozdělení na centralizované a distribuované je to nejdůležitější, co si z této kapitoly odnesete, protože
+          určuje, jak budete denně pracovat.
+          U centralizovaného systému existuje jeden server, kde žije celá historie, a na svém počítači máte vždy jen
+          nejnovější verzi souborů.
+          Praktický důsledek: nemusíte mít na disku celou historii, takže se hodí pro projekty s velkými binárními
+          soubory. Ale nemůžete pracovat offline.
+          Zamykání souborů je starý, ale stále platný způsob, jak se konfliktům vyhnout úplně: prostě soubor
+          zamknete, dokud na něm pracujete.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9: DISTRIBUOVANÉ VERZOVÁNÍ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Koncepty &bull; Centralizované vs. distribuované</span>
+        <h2>Distribuované verzování</h2>
+        <div class="slide-grid-2">
+          <div class="image-showcase">
+            <img src="../bordel/images-egg/egg02_p08_distributed-workflow.jpeg"
+              alt="Schéma distribuovaného workflow: každý uživatel má lokálně celou historii projektu"
+              style="max-height: 400px;" data-preview-image>
+            <div class="image-caption">Distribuovaný workflow: každý má lokálně<br>celou historii, sdílí se
+              push/pull</div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Charakteristika</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Kde sídlí repo:</strong> stále existuje jedno místo (obvykle cloud jako GitHub), ale
+                  uživatelé <strong>naklonují celou historii</strong> na svůj workstation.</li>
+                <li><strong>Výhody:</strong> pracujete na vlastní lokální kopii a&nbsp;commitovat můžete
+                  <strong>rychle a&nbsp;offline</strong>. Pro sdílení je potřeba změny <strong>pushnout</strong>
+                  a&nbsp;<strong>pullnout</strong>.
+                </li>
+                <li><strong>Seskupování:</strong> můžete vytvořit skupinu changesetů odpovídající větší funkci
+                  a&nbsp;teprve pak ji pushnout týmu.</li>
+                <li><strong>Zamykání:</strong> stále dostupné, ale méně běžné: merge se dá snáze řešit.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin: 0; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+                Pullnutím nejnovějších změn do lokálního projektu můžete <strong>porovnat cizí změny s&nbsp;vlastními
+                  ještě předtím</strong>, než své změny pushnete do repa.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Distribuovaný model je dnes nejrozšířenější díky Gitu. Klíčový rozdíl: vy nemáte jen nejnovější verzi, vy
+          máte celou historii projektu naklonovanou u sebe na disku.
+          To přináší obrovskou výhodu v rychlosti: přepínání větví, revertování, prohlížení historie je okamžité,
+          protože se nic nesahá na server. Můžete také pracovat v letadle bez připojení.
+          Na druhou stranu komunikace se serverem je explicitní: musíte pushnout svoje změny a pullnout cizí.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 10: NEVÝHODY DISTRIBUOVANÉHO PŘÍSTUPU
+           ========================================== -->
+      <section>
+        <span class="slide-category">Koncepty &bull; Trade-offs</span>
+        <h2>Nevýhody distribuovaného přístupu</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card accent-purple" style="margin-top: 0; padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.02em; margin-bottom: 6px;">1. Místo na disku</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Mít <strong>celou historii na lokálních strojích</strong> zabírá hodně místa: zejména pro týmy
+                  pracující s&nbsp;<strong>binárními souborovými typy</strong>.</li>
+                <li>Git má možnost <strong><abbr class="abbr-tag"
+                      title="Large File Storage: ukládá velké soubory mimo repo, v repu zůstává textový pointer">LFS</abbr></strong>,
+                  která převádí historii určitých souborů na <strong>textové pointery</strong> a&nbsp;odlehčuje
+                  repozitář.</li>
+                <li>Jiné soubory ale mají <strong>celou historii</strong>: repozitáře mohou skončit s&nbsp;hromadou
+                  starých či nepotřebných testovacích dat.</li>
+                <li>Firmy s&nbsp;menšími disky mohou narazit na velikost repa <strong>se starými verzemi</strong>
+                  a&nbsp;přetíží disky.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.02em; margin-bottom: 6px;">2. Izolace</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Vývojáři nemusí být v&nbsp;kontaktu s&nbsp;centrálním serverem → mohou skončit <strong>prací
+                    v&nbsp;izolaci na dlouhé období</strong>.</li>
+                <li>Jejich lokální verze se může <strong>značně vzdálit</strong> od hlavního repozitáře.</li>
+                <li>Když přijde čas mergovat změny zpět, může to být <strong>více práce, než očekávali</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 4px;">Workflow jednotlivých
+                systémů</h3>
+              <table class="comparison-table" style="margin: 0; font-size: 0.8em;">
+                <tbody>
+                  <tr>
+                    <td><strong>Git</strong></td>
+                    <td>distribuovaný</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Perforce</strong></td>
+                    <td>centralizovaný</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Plastic SCM</strong></td>
+                    <td><strong>oba</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Distribuovaný model není zadarmo a má dva konkrétní problémy, které musíte znát.
+          První je místo na disku. Protože má každý celou historii, u velkých binárních souborů, které prošly mnoha
+          změnami, se na disku hromadí kopie. Git LFS to řeší tak, že velké soubory drží mimo repozitář a v repu
+          nechá jen textový odkaz.
+          Druhý problém je sociální, ne technický: izolace. Když člověk tři týdny nesáhl na server, jeho větev se
+          vzdálí a merge je pak bolestivý. Tomu se věnujeme v kapitole o best practices: pullujte často.
+          Všimněte si, že Plastic SCM umí oba režimy, což je jeho hlavní výhoda.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 15: STRUKTURA SLOŽEK
+           ========================================== -->
+      <section>
+        <span class="slide-category">Organizace &bull; Struktura složek</span>
+        <h2>Struktura složek</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Obecná doporučení</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Dokumentujte</strong> své naming konvence a&nbsp;strukturu složek: styl guide nebo
+                  projektová šablona usnadní hledání.
+                </li>
+                <li>Zajistěte, aby s&nbsp;tím <strong>všichni
+                    souhlasili</strong>.</li>
+                <li><strong>Buďte konzistentní.</strong> Neodchylujte se od zvoleného stylu. Při změně pravidel
+                  proveďte přejmenování dotčených assetů <strong>najednou</strong>.</li>
+                <li><strong>Nepoužívejte mezery</strong> v&nbsp;názvech souborů a&nbsp;složek: command line nástroje
+                  mají s&nbsp;cestami obsahujícími mezery problémy.</li>
+                <li><strong>Dodržujte doporučené styly</strong> pro daný engine.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <ul class="custom-list" style="margin: 0; ">
+                <li><strong>Oddělte testovací a&nbsp;sandbox oblasti.</strong> Samostatná složka pro neprodukční scény
+                  a&nbsp;experimentování. Podsložky s&nbsp;uživatelskými jmény rozdělí pracovní oblast podle členů
+                  týmu.</li>
+                <li><strong>Vyhněte se nadbytečným složkám v&nbsp;rootu.</strong> Obsahové soubory ukládejte do
+                  <strong>Assets</strong>. Nevytvářejte další složky v&nbsp;rootu, pokud to není nezbytně nutné.
+                </li>
+                <li><strong>Udržujte interní assety oddělené</strong> od third-party assetů z&nbsp;Asset Store
+                  a&nbsp;pluginů: ty mají vlastní strukturu, kterou nelze měnit.</li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+        <div class="highlight-card alert" style="margin: 0; padding: 12px 16px;">
+          <h3 style="color: var(--accent-rose); font-size: 0.92em; margin-bottom: 4px;">Note: úprava cizích
+            assetů</h3>
+          <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.45;">
+            Pokud upravujete third-party asset nebo plugin, správa verzí vám výrazně pomůže při aktualizaci:
+            po importu nové verze projdete <strong>diff</strong> a&nbsp;najdete, kde byly vaše modifikace
+            přepsány, abyste je mohli znovu implementovat.
+          </p>
+        </div>
+        <aside class="notes">
+          Začněme u základu: kde vlastně soubory leží.
+          První bod je organizační, ne technický: napište si konvence a odsouhlaste je. Zní to banálně, ale týmy
+          padají právě na tom, že každý pojmenovává věci jinak.
+          Mezery v názvech jsou konkrétní technický problém: Unity command line nástroje, které používáte při
+          automatizovaných buildech, s nimi mají potíže. Proto CamelCase.
+          Sandbox složka je nedoceněná věc: místo, kde si každý může zkoušet věci, aniž by to ovlivnilo produkční
+          scény.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 16: PŘÍKLADY STRUKTURY SLOŽEK
+           ========================================== -->
+      <section>
+        <span class="slide-category">Organizace &bull; Struktura složek</span>
+        <h2>Dvě ukázkové struktury</h2>
+        <div class="slide-grid-2 equal" style="align-items: start;">
+          <div>
+            <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 6px;">Příklad 1: podle typu assetu
+            </h3>
+            <pre style="margin: 0; font-size: 0.75em; line-height: 1.3; width: 100%;"><code class="language-plaintext" data-trim data-noescape>Assets
+├── Art
+│   ├── Materials
+│   ├── Models
+│   └── Textures
+├── Audio
+│   ├── Music
+│   └── Sound
+├── Code
+│   ├── Scripts   # C# scripts
+│   └── Shaders   # Shader files and shader graphs
+├── Docs          # Wiki, concept art, marketing
+├── Level         # Game design v Unity
+│   ├── Prefabs
+│   ├── Scenes
+│   └── UI
+
+</code></pre>
+          </div>
+
+          <div>
+            <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 6px;">Příklad 2: plošší varianta
+            </h3>
+            <pre style="margin: 0; font-size: 0.75em; line-height: 1.3; width: 100%;"><code class="language-plaintext" data-trim data-noescape>Assets
+├── Art
+│   ├── Materials
+│   ├── Models
+│   ├── Music
+│   ├── Prefabs
+│   ├── Sound
+│   ├── Textures
+│   └── UI
+├── Levels
+└── Src
+    ├── Framework
+    └── Shaders</code></pre>
+            <div class="glass-card" style="margin-top: 10px; padding: 10px 14px;">
+              <p style="margin: 0; font-size: 0.74em; color: var(--text-muted); line-height: 1.4;">
+                Neexistuje pevně stanovená struktura. Oba příklady vycházejí z&nbsp;<strong>rozdělení podle typu
+                  assetu</strong>.
+              </p>
+            </div>
+            <div class="highlight-card accent-emerald" style="margin: 0; padding: 12px 16px; margin-top: 10px;">
+              <a href="https://unity.com/how-to/organizing-your-project" class="">Zdroj: Unity - Organizing your
+                project</a>
+            </div>
+          </div>
+
+
+        </div>
+        <aside class="notes">
+          Dvě ukázky, které najdete v oficiálním průvodci. První je hlubší a logičtější: odděluje Art, Audio, Code,
+          Docs a Level. Druhá je plošší, všechno umělecké pod Art.
+          Ani jedna není „správná": jde o to, vybrat si, zapsat to a držet se toho.
+          Dobrý trik: stáhněte si z Unity Hubu nějaký Template nebo Learn projekt a podívejte se, jak strukturu řeší
+          Unity samotné. Je to odladěná reference.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 17: PŘEHLED TYPŮ ASSETŮ
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Organizace &bull; Typy assetů</span>
+        <h2>Přehled typů assetů</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+            <table class="comparison-table" style="margin: 0; font-size: 0.9em;">
+              <tbody>
+                <tr>
+                  <td style="width: 30%;"><strong>Animations</strong></td>
+                  <td>Animované motion clips a&nbsp;jejich controller soubory, Timeline assety pro cinematics, rigging
+                    informace.</td>
+                </tr>
+                <tr>
+                  <td><strong>Audio</strong></td>
+                  <td>Audio klipy i&nbsp;mixery používané pro blendování efektů a&nbsp;hudby.</td>
+                </tr>
+                <tr>
+                  <td><strong>Editor</strong></td>
+                  <td>Skriptované nástroje pro práci s&nbsp;Unity Editorem, které se <strong>neobjeví
+                      v&nbsp;buildu</strong>.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Fonts</strong></td>
+                  <td>Fonty použité ve hře.</td>
+                </tr>
+                <tr>
+                  <td><strong>Materials</strong></td>
+                  <td>Assety popisující vlastnosti povrchového shadingu.</td>
+                </tr>
+                <tr>
+                  <td><strong>Meshes</strong></td>
+                  <td>Modely vytvořené v&nbsp;externí <abbr class="abbr-tag"
+                      title="Digital Content Creation: Maya, Blender, 3ds Max…">DCC</abbr> aplikaci.</td>
+                </tr>
+                <tr>
+                  <td><strong>Particles</strong></td>
+                  <td>Částicové simulace: Particle System nebo Visual Effect Graph.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div>
+            <table class="comparison-table" style="margin: 0; font-size: 0.9em;">
+              <tbody>
+                <tr>
+                  <td style="width: 30%;"><strong>Prefabs</strong></td>
+                  <td>Znovupoužitelné GameObjekty s&nbsp;předpřipravenými Components. Přidejte do scény a&nbsp;stavte.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Scripts</strong></td>
+                  <td>Veškerý uživatelsky vyvinutý kód pro gameplay.</td>
+                </tr>
+                <tr>
+                  <td><strong>Settings</strong></td>
+                  <td>Nastavení render pipeline: <abbr class="abbr-tag"
+                      title="High Definition Render Pipeline">HDRP</abbr>, <abbr class="abbr-tag"
+                      title="Universal Render Pipeline">URP</abbr>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Shaders</strong></td>
+                  <td>Programy běžící na <abbr class="abbr-tag"
+                      title="Graphics Processing Unit: grafický procesor">GPU</abbr> jako součást grafické pipeline.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Scenes</strong></td>
+                  <td>Malé, funkční části projektu: často odpovídají herním úrovním nebo části úrovně.</td>
+                </tr>
+                <tr>
+                  <td><strong>Textures</strong></td>
+                  <td>Textury pro materiály a&nbsp;surfacing, UI overlay prvky, lightmapy pro osvětlení.</td>
+                </tr>
+                <tr>
+                  <td><strong>ThirdParty</strong></td>
+                  <td>Assety z&nbsp;externího zdroje (Asset Store). Mohou mít <strong>pevnou strukturu</strong>, kterou
+                    nelze měnit.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <aside class="notes">
+          Tabulka typů assetů je referenční materiál: ne že byste si ji měli pamatovat, ale je to dobrý kontrolní
+          seznam, když zakládáte složky.
+          Všimněte si složky Editor. To je speciální název v Unity: cokoli je ve složce s názvem Editor, se
+          nezkompiluje do buildu. Používá se pro nástroje, které mají běžet jen v editoru.
+          A ThirdParty: tahle složka vám zachrání život při aktualizaci assetů z Asset Store. Když máte vlastní
+          i cizí assety promíchané, aktualizace je noční můra.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 17B: NAMING CONVENTIONS: UNREAL ENGINE (PRINCIP)
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Organizace &bull; Naming standardy</span>
+        <h2>Naming conventions: Unreal Engine</h2>
+        <div class="highlight-card" style="margin-top: 0; padding: 14px 18px;text-align: left;">
+          <h3 style="color: var(--accent-cyan); font-size: 1em; margin-bottom: 8px;">Doporučený formát názvu</h3>
+          <p style=" font-size: 0.9em; line-height: 1.4;">Časem ověřený formát názvů souborů z Unreal
+            Enginu je často používaný i v Unity.</p>
+          <pre
+            style="margin: 0; font-size: 0.9em; line-height: 1.5; width: 100%;"><code class="language-plaintext" data-trim data-noescape>[AssetTypePrefix]_[AssetName]_[Descriptor]_[OptionalVariantLetterOrNumber]</code></pre>
+        </div>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+
+
+            <div class="glass-card" style="margin-top: 12px; padding: 14px 18px;">
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>AssetTypePrefix</strong>: pevně daná zkratka typu assetu psaná
+                  <strong>velkými písmeny</strong>. Vždy zakončená podtržítkem.
+                </li>
+                <li><strong>AssetName</strong>: vlastní název assetu.</li>
+                <li><strong>Descriptor</strong>: dodatečný kontext, k&nbsp;<strong>čemu asset slouží</strong>.
+                  U&nbsp;textur rozliší normal mapu od opacity mapy.</li>
+                <li><strong>OptionalVariantLetterOrNumber</strong>: nepovinné. Jedno písmeno nebo číslo odliší
+                  varianty téhož assetu.</li>
+              </ul>
+              <div class="notice-pill" style="font-size: 0.72em;">
+                Unity žádný oficiální prefix standard nemá: Unreal ano
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 8px;">Jak název vypadá v&nbsp;praxi
+              </h3>
+              <table class="comparison-table" style="margin: 0; font-size: 0.8em;">
+                <tbody>
+                  <tr>
+                    <td style="width: 44%;"><code>SM_Crate</code></td>
+                    <td>Static Mesh „Crate“</td>
+                  </tr>
+                  <tr>
+                    <td><code>T_Stone_Normal</code></td>
+                    <td>Textura kamene, normal mapa</td>
+                  </tr>
+                  <tr>
+                    <td><code>SM_Chair_VariantA</code></td>
+                    <td>Variantní verze téže židle</td>
+                  </tr>
+                  <tr>
+                    <td><code>BP_Door</code></td>
+                    <td>Blueprint dveří</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="highlight-card" style="margin: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 6px;">Proč to řešit</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+                Konvence dělá <strong>Content Browser prohledatelný</strong>: všechny textury seřadíte jedním
+                prefixem <code>T_</code>. A&nbsp;brání kolizím názvů mezi týmy.
+              </p>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Odbočka do konkurenčního enginu. Epic Games má na rozdíl od Unity oficiálně vydanou stránku s doporučenými
+          konvencemi pojmenování assetů: a je to přesně ten typ dokumentu, který bychom v týmu měli mít taky.
+          Formát je jednoduchý: typ, název, deskriptor, volitelně varianta. Vše oddělené podtržítkem, bez mezer
+          a speciálních znaků.
+          Prefix je klíčová část: je fixní a psaný velkými písmeny. To má praktický důvod: když si v Content
+          Browseru napíšete do vyhledávání SM_, dostanete všechny statické meshe v projektu. Když T_, všechny textury.
+          Deskriptor pak řeší to, co v Unity často bolí: na první pohled poznáte, jestli je textura diffuse, normal
+          nebo opacity mapa. Vzpomeňte na předchozí slide o standardech pojmenování: tenhle požadavek je přesně
+          to, co Unity doporučuje jen volně, Epic má vynucené konvencí.
+          Povšimněte si, že Unity vlastní oficiální prefix standard nemá. To je docela zajímavý rozdíl: Unreal si
+          na konzistenci jmen potrpí víc, protože v něm pracují velké týmy na obřím množství assetů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 17C: NAMING CONVENTIONS: TABULKA PREFIXŮ
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Organizace &bull; Naming standardy</span>
+        <h2>Unreal Engine: prefixy podle typu assetu</h2>
+        <div class="slide-grid-4" style="gap: 12px;">
+          <div class="glass-card" style="padding: 10px 12px;">
+            <h3 style="color: var(--accent-cyan); font-size: 0.82em; margin-bottom: 5px;">Materiály a&nbsp;meshe</h3>
+            <table class="comparison-table" style="margin: 0; font-size: 0.56em;">
+              <tbody>
+                <tr>
+                  <td style="width: 40%;"><code>HDR_</code></td>
+                  <td>HDRI</td>
+                </tr>
+                <tr>
+                  <td><code>M_</code></td>
+                  <td>Material</td>
+                </tr>
+                <tr>
+                  <td><code>MI_</code></td>
+                  <td>Material Instance</td>
+                </tr>
+                <tr>
+                  <td><code>PHYS_</code></td>
+                  <td>Physics Asset</td>
+                </tr>
+                <tr>
+                  <td><code>PM_</code></td>
+                  <td>Physics Material</td>
+                </tr>
+                <tr>
+                  <td><code>PPM_</code></td>
+                  <td>Post Process Material</td>
+                </tr>
+                <tr>
+                  <td><code>SK_</code></td>
+                  <td>Skeletal Mesh</td>
+                </tr>
+                <tr>
+                  <td><code>SM_</code></td>
+                  <td>Static Mesh</td>
+                </tr>
+                <tr>
+                  <td><code>T_</code></td>
+                  <td>Texture</td>
+                </tr>
+                <tr>
+                  <td><code>OCIO_</code></td>
+                  <td>OCIO Profile</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="glass-card" style="padding: 10px 12px;">
+            <h3 style="color: var(--accent-purple); font-size: 0.82em; margin-bottom: 5px;">Blueprints a&nbsp;data</h3>
+            <table class="comparison-table" style="margin: 0; font-size: 0.56em;">
+              <tbody>
+                <tr>
+                  <td style="width: 40%;"><code>AC_</code></td>
+                  <td>Actor Component</td>
+                </tr>
+                <tr>
+                  <td><code>ABP_</code></td>
+                  <td>Animation Blueprint</td>
+                </tr>
+                <tr>
+                  <td><code>BI_</code></td>
+                  <td>Blueprint Interface</td>
+                </tr>
+                <tr>
+                  <td><code>BP_</code></td>
+                  <td>Blueprint</td>
+                </tr>
+                <tr>
+                  <td><code>CT_</code></td>
+                  <td>Curve Table</td>
+                </tr>
+                <tr>
+                  <td><code>DT_</code></td>
+                  <td>Data Table</td>
+                </tr>
+                <tr>
+                  <td><code>E_</code></td>
+                  <td>Enum</td>
+                </tr>
+                <tr>
+                  <td><code>F_</code></td>
+                  <td>Structure</td>
+                </tr>
+                <tr>
+                  <td><code>WBP_</code></td>
+                  <td>Widget Blueprint</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="glass-card" style="padding: 10px 12px;">
+            <h3 style="color: var(--accent-emerald); font-size: 0.82em; margin-bottom: 5px;">Animace a&nbsp;FX</h3>
+            <table class="comparison-table" style="margin: 0; font-size: 0.56em;">
+              <tbody>
+                <tr>
+                  <td style="width: 40%;"><code>FXE_</code></td>
+                  <td>Niagara Emitter</td>
+                </tr>
+                <tr>
+                  <td><code>FXS_</code></td>
+                  <td>Niagara System</td>
+                </tr>
+                <tr>
+                  <td><code>FXF_</code></td>
+                  <td>Niagara Function</td>
+                </tr>
+                <tr>
+                  <td><code>Rig_</code></td>
+                  <td>Rig</td>
+                </tr>
+                <tr>
+                  <td><code>SKEL_</code></td>
+                  <td>Skeleton</td>
+                </tr>
+                <tr>
+                  <td><code>AM_</code></td>
+                  <td>Montages</td>
+                </tr>
+                <tr>
+                  <td><code>AS_</code></td>
+                  <td>Animation Sequence</td>
+                </tr>
+                <tr>
+                  <td><code>BS_</code></td>
+                  <td>Blend Space</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="glass-card" style="padding: 10px 12px;">
+            <h3 style="color: var(--accent-amber); font-size: 0.82em; margin-bottom: 5px;">Sekvence a&nbsp;média</h3>
+            <table class="comparison-table" style="margin: 0; font-size: 0.56em;">
+              <tbody>
+                <tr>
+                  <td style="width: 40%;"><code>NDC_</code></td>
+                  <td>NDisplay Configuration</td>
+                </tr>
+                <tr>
+                  <td><code>LS_</code></td>
+                  <td>Level Sequence</td>
+                </tr>
+                <tr>
+                  <td><code>EDIT_</code></td>
+                  <td>Sequencer Edits</td>
+                </tr>
+                <tr>
+                  <td><code>MS_</code></td>
+                  <td>Media Source</td>
+                </tr>
+                <tr>
+                  <td><code>MO_</code></td>
+                  <td>Media Output</td>
+                </tr>
+                <tr>
+                  <td><code>MP_</code></td>
+                  <td>Media Player</td>
+                </tr>
+                <tr>
+                  <td><code>MPR_</code></td>
+                  <td>Media Profile</td>
+                </tr>
+                <tr>
+                  <td><code>SNAP_</code></td>
+                  <td>Level Snapshots</td>
+                </tr>
+                <tr>
+                  <td><code>RCP_</code></td>
+                  <td>Remote Control Preset</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je referenční tabulka: ne že byste si ji měli pamatovat celou, ale je dobrá ukázka toho, jak vypadá
+          konvence, která je opravdu dotažená do konce.
+          Epic na své stránce uvádí všechny tyto prefixy v jednom přehledu. Já jsem si je tady rozdělil do čtyř
+          skupin, aby se to dalo číst, ale princip je stejný: každý typ assetu má svou fixní zkratku.
+          Všimněte si pár věcí. Prefixy nejsou vždycky dvoupísmenné: třeba PHYS_, PPM_ nebo OCIO_ jsou delší,
+          protože by kolidovaly. A všimněte si taky, že Rig_ má jen první písmeno velké, kdežto ostatní jsou celé
+          velkými: Epic sám není úplně stoprocentně konzistentní.
+          Pro vás je hlavní takeaway jiný: vyberte si prefixy, zapište je na jedno místo a držte se jich. Přesně to
+          tady dělá Unreal a je to důvod, proč se v cizím Unreal projektu rychle zorientujete.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 18: TEMPLATES A HDRP UKÁZKA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Organizace &bull; Reference</span>
+        <h2>Výchozí bod: šablony Unity</h2>
+        <div class="slide-grid-2 equal">
+          <div class="image-showcase">
+            <img src="../bordel/images-egg/egg02_p15_unity-hub-templates.jpeg"
+              alt="Seznam šablon dostupných ke stažení v Unity Hubu" style="max-height: 340px;" data-preview-image>
+            <div class="image-caption">Šablony dostupné ke stažení v&nbsp;Unity Hubu</div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-egg/egg02_p16_hdrp-template-sample-scene.png"
+              alt="Ukázková scéna HDRP šablony obsahuje několik asset složek" style="max-height: 340px;"
+              data-preview-image>
+            <div class="image-caption">Ukázková scéna s&nbsp;HDRP šablonou obsahuje<br>několik asset složek</div>
+          </div>
+        </div>
+        <div class="glass-card accent-emerald" style="margin-top: 14px; padding: 12px 18px;">
+          <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.45;">
+            Stáhnete-li si z&nbsp;Unity Hubu některý <strong>Template</strong> nebo <strong>Starter</strong> projekt,
+            zjistíte, že má podsložky <strong>rozdělené podle typu assetu</strong>. Nejste omezeni těmito názvy, ale
+            měly by vám dát dobrý výchozí bod.
+          </p>
+        </div>
+        <aside class="notes">
+          Tady vidíte dvě obrazovky z praxe. Vlevo nabídka šablon v Unity Hubu, vpravo struktura složek, kterou
+          vytvoří HDRP šablona po importu.
+          Doporučuji si jeden takový projekt stáhnout a projít si ho. Je to nejrychlejší způsob, jak si osvojit
+          rozumnou strukturu: sledujete, jak to dělá samotné Unity.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 19: PŘESUNY SOUBORŮ A HISTORIE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Organizace &bull; Riziko</span>
+        <h2>Přesuny souborů a ztráta historie</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card alert" style="margin-top: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 6px;">Na dobré struktuře od
+                začátku
+                záleží</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Definování dobré struktury na začátku <strong>zabrání problémům se správou verzí
+                    později</strong>.</li>
+                <li>Přesunete-li assety z&nbsp;jedné složky do druhé, některé VCS to uvidí jako
+                  <strong>smazání jednoho souboru a&nbsp;přidání jiného</strong>: nikoli jako přesun.
+                </li>
+                <li>Tím se <strong>ztratí historie původního souboru</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1em; margin-bottom: 6px;">Plastic SCM</h3>
+              <ul style="margin: 0;" class="custom-list">
+                <li>zpracuje přesuny souborů v&nbsp;rámci Unity a&nbsp;<strong>zachovává historii</strong></li>
+                <li>Je ale zásadní provést přesun <strong>přímo v&nbsp;Unity Editoru</strong>
+                  aby se soubor <code>.meta</code> přesunul spolu s&nbsp;assetem.</li>
+              </ul>
+
+            </div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-egg/egg02_p17_tracking-file-movements.png"
+              alt="Ukázka sledování přesunů souborů se zachováním historie v Plastic SCM" style="max-height: 400px;"
+              data-preview-image>
+            <div class="image-caption">Sledování přesunů souborů se zachováním historie</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je důvod, proč neustále opakuji: rozhodněte strukturu na začátku projektu.
+          Když soubor přesunete, většina systémů správy verzí nemá tušení, že jde o přesun: vidí smazaný soubor
+          a nový soubor. Historie je pryč.
+          Proč to vadí? Ztratíte možnost zjistit, kdo a kdy soubor změnil, a nemůžete se vrátit k předchozí verzi.
+          U kódu to bolí, u velkých assetů, kde diff nefunguje, tím ztratíte jediný způsob, jak historii sledovat.
+          Plastic SCM je v tomhle výjimka. Ale pozor na tu druhou část věty: přesun musíte udělat v Unity Editoru,
+          ne v souborovém manažeru, aby se přesunul i soubor .meta.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 20: EDITOR SKRIPT CREATE FOLDERS I
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Organizace &bull; Automatizace</span>
+        <h2>Vytvoření struktury skriptem</h2>
+        <div class="slide" style="align-items: start; gap: 20px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+                Jakmile se rozhodnete pro strukturu, použijte <strong>Editor skript</strong> k&nbsp;opětovnému využití
+                šablony. Skript vytvoří v&nbsp;Assets root složku odpovídající proměnné <code>PROJECT_NAME</code>:
+                tím udržíte svou práci oddělenou od third-party balíčků.
+              </p>
+            </div>
+            <pre style="margin: 10px 0 0 0; font-size: 0.8em; line-height: 1.25;"><code class="language-csharp" data-trim data-noescape>using UnityEditor;
+using UnityEngine;
+using System.Collections.Generic;
+using System.IO;
+
+public class CreateFolders : EditorWindow
+{
+    private static string projectName = "PROJECT_NAME";
+
+    [MenuItem("Assets/Create Default Folders")]
+    private static void SetUpFolders()
+    {
+        CreateFolders window =
+            ScriptableObject.CreateInstance&lt;CreateFolders&gt;();
+        window.position = new Rect(
+            Screen.width / 2, Screen.height / 2, 400, 150);
+        window.ShowPopup();
+    }
+
+    private static void CreateAllFolders()
+    {
+        List&lt;string&gt; folders = new List&lt;string&gt;
+        {
+            "Animations", "Audio", "Editor",
+            "Materials", "Meshes", "Prefabs",
+            "Scripts", "Scenes", "Shaders",
+            "Textures", "UI"
+        };
+
+        foreach (string folder in folders)
+        {
+            if (!Directory.Exists("Assets/" + folder))
+            {
+                Directory.CreateDirectory(
+                    "Assets/" + projectName + "/" + folder);
+            }
+        }
+        List&lt;string&gt; uiFolders = new List&lt;string&gt;
+        {
+            "Assets", "Fonts", "Icon"
+        };
+
+        foreach (string subfolder in uiFolders)
+        {
+            if (!Directory.Exists(
+                "Assets/" + projectName + "/UI/" + subfolder))
+            {
+                Directory.CreateDirectory(
+                    "Assets/" + projectName + "/UI/" + subfolder);
+            }
+        }
+
+        AssetDatabase.Refresh();
+    }
+
+    void OnGUI()
+    {
+        EditorGUILayout.LabelField(
+            "Insert the Project name used as the root folder");
+        projectName = EditorGUILayout.TextField(
+            "Project Name: ", projectName);
+        this.Repaint();
+
+        GUILayout.Space(70);
+
+        if (GUILayout.Button("Generate!"))
+        {
+            CreateAllFolders();
+            this.Close();
+        }
+    }
+}
+</code></pre>
+          </div>
+        </div>
+        <aside class="notes">
+          Tady je konkrétní nástroj, který si můžete vzít a použít. Je to Editor skript, který přidá do menu
+          Assets novou položku „Create Default Folders".
+          Po kliknutí se objeví malé okno, kam zadáte název projektu, a skript vytvoří celou strukturu složek
+          včetně podsložek pro UI.
+          Všimněte si atributu MenuItem: tím se skript zaregistruje do menu Unity. A klíčové je, že skript leží
+          ve složce Editor, takže se nezkompiluje do buildu.
+          Tohle je ideální vzor pro to, jak si tým sjednotí strukturu napříč všemi projekty.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 21: PRÁZDNÉ SLOŽKY
+           ========================================== -->
+      <!-- <section>
+        <span class="slide-category">Organizace &bull; Úskalí</span>
+        <h2>Prázdné složky</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 16px 20px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Jak se chovají jednotlivé
+                systémy</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li><strong>Git a&nbsp;Perforce:</strong> prázdné složky jsou <strong>ve výchozím stavu
+                    ignorovány</strong>. Pokud se je někdo pokusí commitnout, nebude moci, dokud do složky něco
+                  neumístí.</li>
+                <li><strong>Workaround:</strong> umístit do prázdné složky soubor <code>.keep</code>. To stačí
+                  k&nbsp;tomu, aby složku bylo možné commitnout.</li>
+                <li><strong>Plastic SCM:</strong> umí pracovat s&nbsp;prázdnými složkami. Adresáře jsou považovány
+                  za <strong>entity s&nbsp;vlastní historií verzí</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-rose); font-size: 1em; margin-bottom: 6px;">⚠ Pozor na interakci
+                s&nbsp;<code>.meta</code></h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+                Unity generuje <code>.meta</code> soubor pro každý soubor <strong>včetně složek</strong>.
+                S&nbsp;Gitem a&nbsp;Perforcem můžete snadno commitnout <code>.meta</code> soubor prázdné složky, ale
+                <strong>složka samotná se pod správu verzí nedostane</strong>. Když si jiný uživatel stáhne změny,
+                bude mít <code>.meta</code> pro složku, která na jeho stroji neexistuje: a&nbsp;Unity ho
+                <strong>smaže</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-egg/egg02_p19_create-default-folders-menu.jpeg"
+                alt="Menu Assets s položkou Create Default Folders" style="max-height: 260px;" data-preview-image>
+              <div class="image-caption">Menu &gt; Assets &gt; Create Default Folders</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-egg/egg02_p19_create-empty-folders-result.jpeg"
+                alt="Výsledek vytvoření prázdných složek na začátku projektu" style="max-height: 150px;"
+                data-preview-image>
+              <div class="image-caption">Vytvoření prázdných složek na začátku projektu</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Prázdné složky jsou klasický zdroj zmatku, protože různé systémy se chovají různě.
+          Git ani Perforce neumí sledovat prázdný adresář: Git sleduje soubory, ne složky. Proto trik se souborem
+          .keep, který složku „udrží naživu".
+          Ale pozor na ten záludný problém s .meta soubory, který jsem zmínil. Je to přesně ten typ chyby, který se
+          projeví až u kolegy, ne u vás: vy commitnete .meta prázdné složky, kolega si to stáhne a Unity mu ten
+          .meta smaže, protože složka neexistuje. Vzniká zmatená situace.
+          Řešení je jednoduché: buď .keep soubor, nebo používat nástroj, který prázdné složky zvládá: jako
+          Plastic SCM.
+        </aside>
+      </section> -->
+
+      <!-- ==========================================
+           SLIDE 22: SOUBOR .META
+           ========================================== -->
+      <section>
+        <span class="slide-category">Organizace &bull; .meta soubory</span>
+        <h2>Soubor <code>.meta</code>: proč ho commitovat</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan);  margin-bottom: 6px;">Klíčová pravidla</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Režim <strong>Visible Meta Files</strong> by měl být <strong>zapnut</strong> ve Version Control
+                  window: pokud nepoužíváte vestavěné režimy Plastic SCM nebo Perforce.</li>
+                <li>Přestože je <code>.meta</code> soubor <strong>automaticky generován</strong>, drží
+                  <strong>velké množství informací</strong> o&nbsp;souboru, se kterým je spojen.
+                </li>
+                <li>Typické u&nbsp;assetů s&nbsp;import settings: Textures, meshes, audio clips atd.</li>
+                <li>Změníte-li import settings, změny se zapíší <strong>do <code>.meta</code> souboru, nikoli
+                    do asset souboru</strong>.</li>
+                <li>Proto <code>.meta</code> soubory <strong>commitujeme do repozitáře</strong>: aby všichni pracovali
+                  se <strong>stejnými nastaveními</strong>.</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card alert" style="margin-top: 12px; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.45;">
+                Obecně platí, že automaticky generované soubory do správy verzí nepatří.
+                <strong><code>.meta</code> je výjimka</strong>: bez něj by každý člen týmu viděl jiná import
+                nastavení.
+              </p>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-egg/egg02_p20_visible-meta-files-setting.jpeg"
+                alt="Nastavení Visible Meta Files ve Version Control window" style="max-height: 200px;"
+                data-preview-image>
+              <div class="image-caption">Zapněte Visible Meta Files při práci s&nbsp;Gitem</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-egg/egg02_p20_meta-file-import-settings-diff.jpeg"
+                alt="Diff souboru .meta po úpravě import settings" style="max-height: 240px;" data-preview-image>
+              <div class="image-caption">Změny v&nbsp;<code>.meta</code> souboru<br>při úpravě import settings</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Toto je jedno z nejdůležitějších praktických pravidel celé přednášky.
+          Meta soubor vypadá jako rušivý odpad: Unity si ho generuje samo, tak proč ho ukládat? Odpověď: obsahuje
+          všechna import nastavení daného assetu.
+          Představte si textury. Máte nastaveno, že dlaždice je komprimovaná určitým způsobem, má určitý filtr a
+          typ. To všechno žije v .meta souboru. Když ho necommitnete, kolega si stáhne texturu a Unity mu vygeneruje
+          vlastní, výchozí .meta: a najednou se projekt chová jinak a build má jinou velikost.
+          Proto platí: .meta soubory patří do repozitáře. A proto zapínáme Visible Meta Files, abychom je vůbec
+          viděli.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 23: NAMING STANDARDY
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Organizace &bull; Naming standardy</span>
+        <h2>Standardy pojmenování</h2>
+        <p style="font-size: 0.88em; color: var(--text-muted); margin: 0 0 6px 0;">
+          Shoda na standardech nekončí u&nbsp;struktury složek. Neexistuje definitivní standard pro GameObjekty:
+          zvažte ale následující:
+        </p>
+        <table class="comparison-table" style="font-size: 0.75em; margin: 0;">
+          <thead>
+            <tr>
+              <th style="width: 30%;">Standard</th>
+              <th style="width: 38%;">Příklad</th>
+              <th>Vysvětlení</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Popisné názvy, nezkracovat</strong></td>
+              <td><code>largeButton</code>, <code>LargeButton</code>, <code>leftButton</code><br>
+                <span class="notice-pill" style="margin-top: 4px; font-size: 0.9em;">NE: lButton</span>
+              </td>
+              <td>Názvy, které si pamatujete i&nbsp;za několik měsíců. Zkratky a&nbsp;pravopisné chyby vytvářejí
+                zmatek.</td>
+            </tr>
+            <tr>
+              <td><strong>camelCase / PascalCase</strong></td>
+              <td><code>OutOfMemoryException</code>, <code>dateTimeFormat</code><br>
+                <span class="notice-pill" style="margin-top: 4px; font-size: 0.9em;">NE: Outofmemoryexception</span>
+              </td>
+              <td>Vyhněte se mezerám. Zlepšuje čitelnost i&nbsp;přesnost psaní.</td>
+            </tr>
+            <tr>
+              <td><strong>Podtržítka a&nbsp;pomlčky střídmě</strong></td>
+              <td><strong>Active States:</strong> <code>EnterButton_Active</code>,
+                <code>EnterButton_Inactive</code><br>
+                <strong>Texture Maps:</strong> <code>Foliage_Diffuse</code>, <code>Foliage_Normalmap</code><br>
+                <strong>LOD:</strong> <code>Building_LOD1</code>, <code>Building_LOD0</code>
+              </td>
+              <td>Prefix s&nbsp;podtržítkem řadí abecedně na první místo. Podtržítka označují varianty objektu.</td>
+            </tr>
+            <tr>
+              <td><strong>Číselné suffixy pro sekvence</strong></td>
+              <td><code>Node0</code>, <code>Node1</code>, <code>Node2</code>…</td>
+              <td>Nepřidávejte číslo, pokud není součástí seznamu.</td>
+            </tr>
+            <tr>
+              <td><strong>Dodržujte design dokument</strong></td>
+              <td><code>HighSpellTower</code>, <code>RedDragonLair</code></td>
+              <td>Pokud design dokument lokaci pojmenovává, použijte přesně tento pravopis.</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Naming standardy jsou oblast, kde se týmy nejčastěji rozhádají, a přitom je to tak jednoduché: vyberte
+          pravidla, zapište je, držte se jich.
+          Projděme si to rychle. První bod je o zkratkách: lButton nikomu nic neřekne za tři měsíce.
+          Druhý je camelCase, který je zároveň bezpečný kvůli mezerám.
+          Třetí bod je zajímavý: podtržítka se obecně nedoporučují, ale pro varianty objektu jsou ideální.
+          EnterButton_Active a EnterButton_Inactive se vám v seznamu seřadí vedle sebe, což je přesně to, co chcete.
+          A poslední bod: konzistence s design dokumentem. Když designér napsal HighSpellTower, nepište
+          High_Spell_Tower.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 24: OPTIMALIZACE WORKFLOW: ROZDĚLTE ASSETY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Organizace &bull; Optimalizace</span>
+        <h2>Rozdělte assety</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="highlight-card alert" style="margin-top: 0;">
+              <h3 style="color: var(--accent-rose);  margin-bottom: 6px;">Velké scény se nehodí pro
+                spolupráci</h3>
+              <ul class="custom-list" style="margin: 0; ">
+                <li>Rozdělte úrovně do <strong>mnoha menších scén</strong>, aby umělci a&nbsp;designéři mohli lépe
+                  spolupracovat na jedné úrovni a&nbsp;zároveň <strong>minimalizovali riziko konfliktů</strong>.</li>
+                <li>V&nbsp;runtime může projekt načítat scény <strong>aditivně</strong>:
+                  <code>SceneManager.LoadSceneAsync</code> s&nbsp;parametrem
+                  <code>LoadSceneMode.Additive</code>.
+                </li>
+                <li>Rozdělte práci do <strong>Prefabů</strong>, kde je to možné. Změnu pak provedete v&nbsp;Prefabu,
+                  ne ve scéně: a&nbsp;vyhnete se konfliktu s&nbsp;kýmkoli, kdo pracuje na scéně.</li>
+                <li>Změny v&nbsp;Prefabech jsou navíc často <strong>čitější při diffu</strong>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.02em; margin-bottom: 6px;">Unity SmartMerge</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                Pokud přesto skončíte s&nbsp;konfliktem ve scéně, Unity má vestavěný <strong>YAML nástroj</strong>
+                speciálně pro <strong>mergování scén a&nbsp;Prefabů</strong>.
+              </p>
+            </div>
+
+            <pre style="margin: 0; font-size: 0.75em; line-height: 1.35;"><code class="language-csharp" data-trim data-noescape>// Aditivní načítání scén za běhu
+SceneManager.LoadSceneAsync(
+    "LevelPart02",
+    LoadSceneMode.Additive
+);</code></pre>
+
+            <div class="glass-card" style="padding: 10px 14px;">
+              <p style="margin: 0; font-size: 0.74em; color: var(--text-muted); line-height: 1.4;">
+                Více viz <em>Smart Merge</em> v&nbsp;dokumentaci Unity.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je pravděpodobně nejcennější technický tip celé přednášky pro týmový vývoj v Unity.
+          Základní problém: Unity scéna je jeden velký binární: vlastně YAML, ale obrovský: soubor. Když na ní
+          pracují dva lidé, máte konflikt, který se ručně řeší jen velmi těžko.
+          Řešení je architektonické: nerozdělujte projekt na jednu obrovskou scénu, ale na mnoho menších, které se
+          za běhu načítají aditivně. Každý pak pracuje na své scéně a konflikty nevznikají.
+          Druhá část řešení jsou Prefaby. Když je objekt Prefab, změnu uděláte jednou v Prefabu a všude se projeví.
+          A navíc: diff Prefabu je čitelný.
+          A jako záchranná síť je tu Unity SmartMerge, který umí scény a Prefaby mergovat chytřeji než obecný
+          nástroj, protože rozumí jejich struktuře.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 25: PRESETY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Organizace &bull; Presety</span>
+        <h2>Presety</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Co to je</h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+                Umožňuje přizpůsobit <strong>výchozí stav čehokoli v&nbsp;Inspectoru</strong>. Můžete
+                <strong>zkopírovat nastavení</strong> komponenty nebo assetu, <strong>uložit je jako asset</strong>
+                a&nbsp;později stejné nastavení použít na jiný objekt.
+              </p>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Používejte Presety k&nbsp;<strong>vynucení standardů</strong> nebo k&nbsp;aplikaci rozumných
+                  výchozích hodnot na nové assety.</li>
+                <li>Zajistíte tak <strong>konzistentní standardy napříč týmem</strong>, takže běžně přehlížená
+                  nastavení neovlivní výkon projektu.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">Postup</h3>
+              <ol class="custom-list" style="margin: 0; font-size: 0.9em;">
+                <li>Klikněte na <strong>ikonu Presetu</strong> v&nbsp;pravém horním rohu komponenty.</li>
+                <li>Klikněte na <strong>Save current to…</strong> pro uložení Presetu jako assetu.</li>
+                <li>Klikněte na jeden z&nbsp;dostupných Presetů pro načtení sady hodnot.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-egg/egg02_p22_preset-icon-highlighted.jpeg"
+                alt="Ikona Presetu zvýrazněná červeně v pravém horním rohu komponenty" style="max-height: 130px;"
+                data-preview-image>
+              <div class="image-caption">Ikona Presetu je zvýrazněna červeně</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-egg/egg02_p23_presets-2d-texture-import-settings.jpeg"
+                alt="Presety obsahující různá Import Settings pro 2D textury podle použití" style="max-height: 220px;"
+                data-preview-image>
+              <div class="image-caption">Presety s&nbsp;různými Import Settings pro 2D textury<br>(albedo, normal,
+                utility)</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Presety jsou nedoceněný nástroj, zvlášť pro týmy.
+          Představte si typickou situaci: máte texturu pro albedo, pro normálu a pro utility mapu. Každá potřebuje
+          jiná import nastavení: sRGB ano/ne, komprese, filtr. Když si to každý nastavuje ručně, dřív nebo později
+          někdo udělá chybu a projekt má zbytečně velký build nebo špatně vypadající textury.
+          S Presety si ta tři nastavení uložíte jednou a pak je jen aplikujete. Je to forma vynucení standardu.
+          A navíc je můžete přiřadit k typu v Preset Manageru, takže se aplikují automaticky při vytvoření nové
+          komponenty.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 26: PRESETY: POKROČILÉ POUŽITÍ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Organizace &bull; Presety</span>
+        <h2>Presety: další možnosti</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 4px;">Vytvoření GameObjektu
+                s&nbsp;výchozími hodnotami</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.4;">
+                Přetáhněte Preset asset do <strong>Hierarchy</strong> a&nbsp;vytvořte nový GameObject
+                s&nbsp;odpovídající
+                komponentou obsahující hodnoty z&nbsp;Presetu.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.98em; margin-bottom: 4px;">Přiřazení typu
+                v&nbsp;Preset Manageru</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.4;">
+                V&nbsp;<strong>Project Settings &gt; Preset Manager</strong> určete jeden nebo více Presetů na typ.
+                Vytvoření nové komponenty pak bude <strong>defaultně používat zadané hodnoty</strong>.
+              </p>
+              <div class="badge-group" style="margin: 8px 0 0 0;">
+                Tip:
+                Vytvořte více Presetů na typ
+                a&nbsp;spoléhejte
+                na filtr podle názvu.
+              </div>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.98em; margin-bottom: 4px;">Uložení nastavení
+                manageru</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.4;">
+                Presety fungují i&nbsp;pro okna Manager: například <strong>tags a&nbsp;layers</strong> nebo
+                <strong>physics</strong> nastavení. Zkrátí čas při rozjezdu dalšího projektu.
+              </p>
+            </div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-egg/egg02_p23_preset-manager-texture-presets.jpeg"
+              alt="Preset Manager s nastavením Presetů pro 2D textury" style="max-height: 420px;" data-preview-image>
+            <div class="image-caption">Preset Manager: nastavení Presetů pro 2D textury</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tady jsou tři další způsoby, jak Presety využít nad rámec základního ukládání hodnot.
+          První je vytahování Presetu do Hierarchy: tím vytvoříte rovnou hotový objekt.
+          Druhý je nejmocnější: Preset Manager. Tam definujete, že každá nová textura bude mít automaticky tohle
+          nastavení. Nový člen týmu pak nemusí nic vědět o import settings a přesto je udělá správně.
+          Třetí je takový bonus pro produktivitu: Presety můžete uložit i pro nastavení jako jsou tags, layers nebo
+          physics. Máte-li odladěné nastavení, které chcete přenést do dalšího projektu, nemusíte ho dělat znovu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 27: STANDARDY KÓDU: NAMESPACES
+           ========================================== -->
+      <section>
+        <span class="slide-category">Organizace &bull; Standardy kódu</span>
+        <h2>Standardy kódu a&nbsp;namespaces</h2>
+        <div class="slide-grid-2 equal" style="align-items: start;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Namespaces</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Pomáhají <strong>lépe organizovat kód</strong> a&nbsp;oddělit moduly uvnitř projektu.</li>
+                <li>Vyhnete se <strong>konfliktům s&nbsp;third-party assety</strong>, kde se názvy tříd mohou
+                  opakovat.</li>
+                <li>Při používání namespaces <strong>rozdělte strukturu složek podle namespace</strong> pro lepší
+                  organizaci.</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div>
+            <div class="glass-card accent-emerald" style="margin-bottom: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1em; margin-bottom: 6px;">Standardní hlavička</h3>
+              <ul class="custom-list" style="margin: 0; ">
+                <li>Hlavička v&nbsp;šabloně kódu dokumentuje <strong>účel třídy</strong>, <strong>datum
+                    vytvoření</strong>, <strong>autora</strong>.</li>
+                <li>Mohlo by se to ztratit v&nbsp;historii projektu <strong>snadno ztratí</strong>
+                  : i&nbsp;při použití správy verzí.</li>
+              </ul>
+            </div>
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.98em; margin-bottom: 6px;">Kde žijí šablony
+                skriptů</h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.78em; color: var(--text-main); line-height: 1.4;">
+                Unity použije šablonu z&nbsp;<code>%EDITOR_PATH%\Data\Resources\ScriptTemplates</code> při každém
+                vytvoření nového skriptu nebo shaderu:
+              </p>
+              <ul class="custom-list" style="margin: 0; font-size: 0.74em;">
+                <li><strong>Windows:</strong><br><code
+                    style="font-size: 0.92em;">C:\Program Files\Unity\Editor\Data\Resources\ScriptTemplates</code></li>
+                <li><strong>Mac:</strong><br><code
+                    style="font-size: 0.92em;">/Applications/Hub/Editor/[version]/Unity/Unity.app/Contents/Resources/ScriptTemplates</code>
+                </li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-rose); font-size: 0.92em; margin-bottom: 4px;">Projektově specifické
+                šablony</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+                Vytvořte složku <code>Assets/ScriptTemplates</code> a&nbsp;zkopírujte šablony do ní: přepíšete tím
+                výchozí hodnoty. Můžete upravit i&nbsp;globální šablony, ale <strong>před změnou si zálohujte
+                  originály</strong>. Každá verze Unity má vlastní složku šablon.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Poslední oblast organizace je kód.
+          Namespaces jsou v Unity trochu opomíjená věc, protože v malých projektech nejsou potřeba. Ale jakmile
+          přidáte assety z Asset Store, začnou vznikat konflikty názvů: dva pluginy mají oba třídu nazvanou
+          GameManager. Namespace to vyřeší.
+          Druhá věc je hlavička skriptu. Možná to vypadá jako formalita, ale za dva roky, když se budete snažit
+          zjistit, proč existuje nějaká třída a kdo ji napsal, doceníte, že to tam je.
+          A tady jsou konkrétní cesty, kde Unity šablony hledá. Všimněte si možnosti vytvořit si vlastní složku
+          Assets/ScriptTemplates: to je čistší způsob než přepisovat globální šablony, protože přežije aktualizaci
+          Unity.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 28: ŠABLONA SKRIPTU
+           ========================================== -->
+      <section>
+        <span class="slide-category">Organizace &bull; Šablony</span>
+        <h2>Výchozí šablona MonoBehaviour</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+                Soubor <code>81-C# Script-NewBehaviourScript.cs.txt</code>. Existují také šablony pro shadery,
+                další behavior skripty a&nbsp;assembly definitions.
+              </p>
+            </div>
+            <pre style="margin: 10px 0 0 0; font-size: 0.75em; line-height: 1.35;"><code class="language-csharp" data-trim data-noescape>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+#ROOTNAMESPACEBEGIN#
+public class #SCRIPTNAME# : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        #NOTRIM#
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        #NOTRIM#
+    }
+}
+#ROOTNAMESPACEEND#</code></pre>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 6px;">Dvě užitečná klíčová
+                slova</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.8em;">
+                <li><code>#SCRIPTNAME#</code>: označuje <strong>zadaný název souboru</strong> nebo výchozí název
+                  (například <code>NewBehaviourScript</code>).</li>
+                <li><code>#NOTRIM#</code>: zajišťuje, že závorky obsahují <strong>řádek bílého prostoru</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.98em; margin-bottom: 6px;">Vlastní klíčová
+                slova</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.4;">
+                Můžete použít <strong>vlastní klíčová slova</strong> a&nbsp;nahradit je Editor skriptem
+                implementujícím metodu <code>OnWillCreateAsset</code>.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.45;">
+                Jakmile se rozhodnete pro standardy kódu, <strong>držte se jich</strong>: žádná pevně daná pravidla
+                neexistují, důležitá je konzistence týmu.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je samotná šablona, kterou Unity použije, když vytvoříte nový C# skript.
+          Všimněte si těch dvou zvláštních značek. SCRIPTNAME se nahradí názvem souboru. NOTRIM zajišťuje, že uvnitř
+          složených závorek zůstane prázdný řádek a kurzor skončí na správném místě.
+          Můžete si všimnout, že šablona už obsahuje ROOTNAMESPACEBEGIN a ROOTNAMESPACEEND: to je připravené pro
+          použití namespaces, o kterých jsme mluvili.
+          A klíčová myšlenka na závěr: vlastní klíčová slova si můžete vymyslet sami. To je přesně to, co uvidíme
+          na dalším slidu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29: AUTOMATICKÁ HLAVIČKA
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Organizace &bull; Automatizace</span>
+        <h2>Automatická hlavička skriptu</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+
+          <div class="highlight-card" style="margin-top: 0; padding: 12px 16px;">
+            <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+              Použijte hlavičku ze skriptu níže uvnitř <strong>šablony skriptu</strong> a&nbsp;každý nový skript
+              bude vytvořen s&nbsp;hlavičkou zobrazující <strong>datum</strong>, <strong>autora</strong>
+              a&nbsp;<strong>projekt</strong>. Užitečné, pokud kód v&nbsp;budoucnu znovu použijete jinde.
+            </p>
+          </div>
+          <div class="glass-card accent-emerald" style="margin-top: 10px; padding: 10px 14px;">
+            <p style="margin: 0; font-size: 0.74em; color: var(--text-main); line-height: 1.4;">
+              Unity zavolá <code>OnWillCreateAsset</code> <strong>před vytvořením</strong> každého assetu: skript
+              tak může obsah souboru ještě upravit.
+            </p>
+          </div>
+        </div>
+        <pre style="margin: 10px 0 0 0; font-size: 0.75em; line-height: 1.3;"><code class="language-csharp" data-trim data-noescape>// /*-------------------------------------------
+// ---------------------------------------------
+// Creation Date: #DATETIME#
+// Author: #DEVELOPER#
+// Description: #PROJECTNAME#
+// ---------------------------------------------
+// -------------------------------------------*/
+
+using UnityEngine;
+using UnityEditor;
+
+public class KeywordReplace
+    : UnityEditor.AssetModificationProcessor
+{
+    public static void OnWillCreateAsset(string path)
+    {
+        path = path.Replace(".meta", "");
+        int index = path.LastIndexOf(".");
+        if (index &lt; 0) return;
+
+        string file = path.Substring(index);
+        if (file != ".cs" &amp;&amp; file != ".js"
+            &amp;&amp; file != ".boo") return;
+        index = Application.dataPath.LastIndexOf("Assets");
+        path = Application.dataPath.Substring(0, index)
+               + path;
+        if (!System.IO.File.Exists(path)) return;
+
+        string fileContent =
+            System.IO.File.ReadAllText(path);
+
+        fileContent = fileContent.Replace(
+            "#CREATIONDATE#",
+            System.DateTime.Today
+                .ToString("dd/MM/yy") + "");
+        fileContent = fileContent.Replace(
+            "#PROJECTNAME#",
+            PlayerSettings.productName);
+        fileContent = fileContent.Replace(
+            "#DEVELOPER#",
+            System.Environment.UserName);
+
+        System.IO.File.WriteAllText(path, fileContent);
+        AssetDatabase.Refresh();
+    }
+}
+</code></pre>
+
+
+
+        <aside class="notes">
+          Tohle je elegantní trik, který stojí za pochopení.
+          Do šablony skriptu vložíte hlavičku s vlastními značkami: DATETIME, DEVELOPER, PROJECTNAME,
+          CREATIONDATE.
+          A pak napíšete Editor skript, který implementuje AssetModificationProcessor s metodou
+          OnWillCreateAsset. Unity tuhle metodu zavolá před tím, než vytvoří jakýkoli asset.
+          Skript si soubor přečte, nahradí značky skutečnými hodnotami: dnešním datem, jménem přihlášeného
+          uživatele a názvem projektu: a soubor zapíše zpět.
+          Výsledek: každý nový skript v projektu má automaticky hlavičku s autorem a datem, aniž by kdokoli musel
+          cokoli dělat. Je to malá věc, ale v dlouhém projektu neocenitelná.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29A: IDENTIFIKÁTORY
+           ========================================== -->
+      <!-- <section>
+        <span class="slide-category">Kód &bull; Identifikátory</span>
+        <h2>Identifikátory: co to vůbec je</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0; padding: 16px 20px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 8px;">Definice</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-main); line-height: 1.5;">
+                <strong>Identifikátor</strong> je jakékoli jméno, které v&nbsp;kódu přiřadíte <strong>typu</strong>
+                (třída, rozhraní, struct, delegate, enum), <strong>členu</strong>, <strong>proměnné</strong> nebo
+                <strong>namespace</strong>.
+              </p>
+            </div>
+
+            <div class="highlight-card alert" style="margin-top: 12px; padding: 16px 20px;">
+              <h3 style="color: var(--accent-rose); font-size: 1.02em; margin-bottom: 8px;">⚠ Vyhněte se speciálním
+                znakům</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li>Zpětná lomítka, symboly a&nbsp;Unicode znaky v&nbsp;identifikátorech nepoužívejte:
+                  <strong>i&nbsp;když je C# povoluje</strong>.
+                </li>
+                <li>Mohou <strong>kolidovat s&nbsp;některými nástroji Unity pro příkazovou řádku</strong>.</li>
+                <li>Vyhněte se neobvyklým znakům kvůli <strong>kompatibilitě s&nbsp;většinou platforem</strong>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.98em; margin-bottom: 8px;">✓ Bezpečné</h3>
+              <pre style="margin: 0; font-size: 0.52em; line-height: 1.45; width: 100%;"><code class="language-csharp" data-trim data-noescape>private float _currentHealth;
+public bool IsInvincible;
+public void InflictDamage(float damage)</code></pre>
+            </div>
+
+            <div class="glass-card accent-rose" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-rose); font-size: 0.98em; margin-bottom: 8px;">✗ Rizikové</h3>
+              <pre style="margin: 0; font-size: 0.52em; line-height: 1.45; width: 100%;"><code class="language-csharp" data-trim data-noescape>float aktuálníŽivoty;   // diakritika
+float health\backup;    // zpětné lomítko
+float total$damage;     // symbol</code></pre>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.45;">
+                Diakritika je pro český tým lákavá, ale názvy bez ní se lépe hledají, přenášejí mezi nástroji
+                a&nbsp;píší na cizí klávesnici.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Začneme úplně od základu: co je to identifikátor.
+          Je to jakékoli jméno, které v kódu něčemu dáte. Třídě, proměnné, metodě, namespace. Zdá se to jako
+          trivialita, ale právě tady vzniká většina konvencí, o kterých se budeme bavit.
+          Unity má jedno konkrétní doporučení, které stojí za zdůraznění: vyhněte se speciálním znakům. C# je
+          poměrně benevolentní jazyk a dovolí vám pojmenovat proměnnou klidně s diakritikou nebo se symbolem.
+          Problém je, že vaše proměnná nežije jen v C#. Prochází build pipeline, command-line nástroji Unity,
+          verzovacím systémem, případně se dostane do názvu souboru nebo do logu.
+          Pro nás v Česku je to obzvlášť aktuální: nepoužívejte diakritiku. aktuálníŽivoty je hezké, ale
+          aktualniZivoty vám ušetří spoustu problémů.
+        </aside>
+      </section> -->
+
+      <!-- ==========================================
+           SLIDE 29B: CASING TERMINOLOGY
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Kód &bull; Casing</span>
+        <h2>Terminologie zápisu (casing)</h2>
+        <p style="font-size: 0.78em; color: var(--text-muted); margin: 0 0 8px 0;">
+          Než se pustíme do pravidel, sjednoťme si názvosloví: v&nbsp;týmu se bez něj nedomluvíte.
+        </p>
+        <table class="comparison-table" style="font-size: 0.8em; margin: 0;">
+          <thead>
+            <tr>
+              <th style="width: 22%;">Zápis</th>
+              <th style="width: 26%;">Příklad</th>
+              <th>Kde se používá</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>camelCase</strong></td>
+              <td><code>currentHealth</code></td>
+              <td>Slova oddělená jedním velkým písmenem, <strong>první písmeno malé</strong>.
+                <strong>Lokální proměnné a&nbsp;parametry metod.</strong>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>PascalCase</strong></td>
+              <td><code>CurrentHealth</code></td>
+              <td>Varianta camel case s&nbsp;<strong>velkým počátečním písmenem</strong>. V&nbsp;Unity pro
+                <strong>třídy, veřejná pole a&nbsp;názvy metod</strong>.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>snake_case</strong></td>
+              <td><code>current_health</code></td>
+              <td>Mezery mezi slovy <strong>nahrazeny podtržítkem</strong>.</td>
+            </tr>
+            <tr>
+              <td><strong>kebab-case</strong></td>
+              <td><code>current-health</code></td>
+              <td>Mezery <strong>nahrazeny pomlčkami</strong>. Běžné ve webových technologiích, zejména
+                <strong>CSS</strong>: a&nbsp;doporučuje se i&nbsp;pro <strong>UI Toolkit USS</strong>.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Hungarian notation</strong></td>
+              <td><code>fHealth</code></td>
+              <td>Název nese <strong>typ nebo záměr</strong> proměnné. Je to <strong>starší konvence</strong>
+                a&nbsp;v&nbsp;Unity vývoji <strong>není běžná</strong>.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="glass-card accent-purple" style="margin-top: 12px; padding: 12px 18px;">
+          <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.45;">
+            <strong>Kebab-case na dvou místech:</strong> v&nbsp;C# ho jako identifikátor použít nemůžete (pomlčka
+            je operátor mínus), ale v&nbsp;<strong>CSS a&nbsp;USS</strong> je standardem. Počítejte s&nbsp;tím,
+            když pojmenováváte elementy v&nbsp;UI Toolkit.
+          </p>
+        </div>
+        <aside class="notes">
+          Casing je jen způsob, jak se píšou slova bez mezer. Zní to jako detail, ale když se v týmu řekne
+          „používejte pascal case", musí všichni vědět, co to znamená.
+          camelCase má první písmeno malé a další slova velká. Používá se pro lokální proměnné a parametry.
+          PascalCase je to samé, ale s velkým začátkem: pro třídy, veřejná pole a metody.
+          snake_case a kebab-case používáme hlavně mimo C#. Podtržítko je ještě použitelné, pomlčka v C#
+          vůbec nejde, protože to je operátor mínus.
+          A Hungarian notation: to je ten starý způsob z Windows API, kde jste měli fHealth, kde f znamenalo float.
+          Unity to nedoporučuje. Moderní vývojáři dávají přednost tomu, aby typ bylo vidět z deklarace, ne z názvu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29C: POLE A PROMĚNNÉ: POJMENOVÁNÍ
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Unity &bull; Proměnné</span>
+        <h2>Unity: Proměnné</h2>
+        <div class="slide-grid-2 equal" style="align-items: start; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div class="glass-card accent-emerald" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald);  margin-bottom: 4px;">Používejte
+                podstatná jména</h3>
+              <p style="margin: 0;  color: var(--text-muted); line-height: 1.4;">
+                Názvy proměnných by měly být <strong>popisné, jasné a&nbsp;jednoznačné</strong>: reprezentují věc
+                nebo stav.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple);  margin-bottom: 4px;">Boolean začněte
+                slovesem</h3>
+              <p style="margin: 0 0 6px 0;  color: var(--text-muted); line-height: 1.4;">
+                Tyto proměnné nesou hodnotu <em>true</em>/<em>false</em>. Předpona slovesem <strong>vyjasní
+                  význam</strong>.
+              </p>
+              <code style="font-size: 0.74em;">isDead</code>,
+              <code style="font-size: 0.74em;">isWalking</code>,
+              <code style="font-size: 0.74em;">hasDamageMultiplier</code>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan);  margin-bottom: 4px;">Smysluplné názvy,
+                nezkracovat</h3>
+              <p style="margin: 0;  color: var(--text-muted); line-height: 1.4;">
+                Název má <strong>prozradit záměr</strong>, snadno se vyslovovat a&nbsp;<strong>hledat</strong>.
+                Výjimkou jsou zavedené matematické zkratky.
+              </p>
+            </div>
+
+            <div class="glass-card accent-rose" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-rose);  margin-bottom: 4px;">Žádné vtipy a&nbsp;slovní
+                hříčky</h3>
+              <p style="margin: 0;color: var(--text-muted); line-height: 1.4;">
+                <code>infiniteMonkeys</code> nebo <code>dudeWheresMyChar</code> pobaví jednou:
+                <strong>po několika desítkách čtení už ne</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div class="glass-card accent-amber" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-amber);  margin-bottom: 4px;">Vyhněte se redundantním
+                názvům</h3>
+              <p style="margin: 0;  color: var(--text-muted); line-height: 1.4;">
+                Když se vaše třída jmenuje <strong>Player</strong>, nepotřebujete členské proměnné
+                <code>PlayerScore</code> ani <code>PlayerTarget</code>.
+              </p>
+            </div>
+
+            <div class="highlight-card" style="margin: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan);  margin-bottom: 6px;">Čitelnost před
+                stručností</h3>
+
+              <div class="spec-badge emerald" style="margin-bottom: 3px; font-size: 0.8em;">CanScrollHorizontally</div>
+
+
+              <div class="spec-badge rose" style="margin-bottom: 3px;font-size: 0.8em;">ScrollableX</div>
+
+
+
+              <p style="margin: 8px 0 0 0;  color: var(--text-muted); line-height: 1.4;">
+                Příklad pochází přímo z&nbsp;dokumentace Microsoftu.
+              </p>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan);  margin-bottom: 4px;">Omezené použití
+                <code>var</code>
+              </h3>
+              <p style="margin: 0; color: var(--text-muted); line-height: 1.4;">
+                <code>var</code> jen pro implicitně typované lokální proměnné: pokud to
+                <strong>pomáhá čitelnosti</strong> a&nbsp;<strong>typ je zřejmý</strong>.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple);  margin-bottom: 4px;">Jedna deklarace
+                na řádek</h3>
+              <p style="margin: 0; color: var(--text-muted); line-height: 1.4;">
+                Je to méně kompaktní, ale <strong>výrazně to zlepšuje čitelnost</strong>: a&nbsp;hlavně diffy
+                ve správě verzí.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Teď konkrétní pravidla pro proměnné. Rozdělil jsem je na dvě skupiny: vlevo je obsah názvu, vpravo forma.
+          Podstatná jména: proměnná je věc nebo stav, takže podstatné jméno. Metody budou slovesa, k tomu se
+          dostaneme.
+          Boolean se slovesem: to je pravidlo, které má obrovský dopad na čitelnost podmínek. Když napíšete
+          if (isDead), čte se to samo. Když napíšete if (dead), musíte se zamyslet, jestli dead znamená „je mrtvý"
+          nebo „zabij ho". Unity uvádí příklady isDead, isWalking, hasDamageMultiplier.
+          Redundantní názvy jsou častá chyba. Ve třídě Player je PlayerScore zbytečné: všichni vědí, že skóre
+          patří playerovi. Prostě Score.
+          A všimněte si příkladu CanScrollHorizontally versus ScrollableX. To je z dokumentace Microsoftu a je to
+          hezká ilustrace: ScrollableX vám neřekne, jestli to znamená „dá se posouvat" nebo „je posunutá".
+          Poslední dvě věci jsou o formě. var používejte střídmě. A jedna deklarace na řádek: v Unity s Gitem to
+          není jen o čitelnosti, ale taky o tom, že diff bude čistý.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29D: POLE A PROMĚNNÉ: FORMA
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Kód &bull; Proměnné</span>
+        <h2>Unity: Deklarace proměnných</h2>
+        <table class="comparison-table" style="font-size: 0.85em; margin: 0;">
+          <thead>
+            <tr>
+              <th style="width: 34%;">Pravidlo</th>
+              <th style="width: 26%;">Příklad</th>
+              <th>Vysvětlení</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Veřejná pole PascalCase,<br>soukromé camelCase</strong></td>
+              <td><code>DamageMultiplier</code><br><code>_currentHealth</code></td>
+              <td>Veřejná pole <strong>MyPropertyName</strong>,<br>soukromé proměnné
+                <strong>myPrivateVariable</strong>.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Zvažte prefix pro soukromé členy</strong></td>
+              <td><code>_currentHealth</code></td>
+              <td>Některé příručky <strong>doporučují</strong> přidat podtržítko, aby se soukromé členy odlišily
+                od lokálních proměnných.</td>
+            </tr>
+            <tr>
+              <td><strong>Konstanty s&nbsp;prefixem <code>k_</code></strong></td>
+              <td><code>k_MaxHealth</code></td>
+              <td>Prefix <code>k_</code> a&nbsp;<strong>PascalCase</strong>.<br>Odliší konstanty od běžných proměnných
+                a&nbsp;vlastností.</td>
+            </tr>
+            <tr>
+              <td><strong>Jednotně uvádějte modifikátory přístupu</strong></td>
+              <td><code>private</code> / <code>public</code></td>
+              <td>Když modifikátor vynecháte, kompilátor předpokládá <strong>private</strong>.<br>Buďte konzistentní:
+                buď všude, nebo nikde.</td>
+            </tr>
+            <tr>
+              <td><strong>Zahazujte redundantní inicializátory</strong></td>
+              <td><code>int count;</code></td>
+              <td>Žádné <code>= 0</code> u&nbsp;číselných typů ani <code>= null</code> u&nbsp;referenčních typů.</td>
+            </tr>
+            <tr>
+              <td><strong>Jedna proměnná na řádek</strong></td>
+              <td><code>int a;</code><br><code>int b;</code></td>
+              <td>Méně kompaktní, ale <strong>čitější</strong>.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 12px 18px;">
+          <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.45;">
+            <strong>Pole se inicializují automaticky</strong> na výchozí hodnoty: obvykle <code>0</code>
+            u&nbsp;číselných typů. Explicitní <code>= 0</code> je proto jen šum.
+          </p>
+        </div>
+        <aside class="notes">
+          Formální pravidla. První je nejdůležitější a nejvíc viditelná: veřejná pole PascalCase, soukromé
+          camelCase. Podle toho na první pohled poznáte, co je součástí veřejného API třídy.
+          Podtržítko u soukromých členů: všimněte si, že Unity neříká „dělejte to", ale „některé příručky to
+          doporučují". Je to volba týmu. Já osobně ji používám, protože v dlouhé metodě okamžitě vidím, že
+          _currentHealth je člen třídy a ne lokální proměnná.
+          Konstanty mají prefix k_ a PascalCase. To je zajímavé, protože k_ pochází z Google konvencí, ale Unity
+          ho převzalo. Zdůvodnění je jednoduché: konstanta se chová jinak než proměnná, tak ať je to vidět.
+          A ještě dvě věci, které ušetří řádky: zahazujte redundantní inicializátory: pole se inicializují sama
+          na nulu nebo null, tak to nepište. A jedna deklarace na řádek, hlavně kvůli diffům.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29E: UKÁZKA: VEŘEJNÉ A SOUKROMÉ PROMĚNNÉ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Kód &bull; Ukázka</span>
+        <h2>Unity: Příklad veřejných a&nbsp;soukromých proměnných</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+            <pre style="margin: 0; font-size: 0.75em; line-height: 1.3;"><code class="language-csharp" data-trim data-noescape>// EXAMPLE: Public and private variables
+
+public float DamageMultiplier = 1.5f;
+public float MaxHealth;
+public bool IsInvincible;
+
+private bool _isDead;
+private float _currentHealth;
+
+// parameters
+public void InflictDamage(float damage, bool isSpecialDamage)
+{
+    // local variable
+    int totalDamage = damage;
+
+    // local variable versus public member variable
+    if (isSpecialDamage)
+    {
+        totalDamage *= DamageMultiplier;
+    }
+
+    // local variable versus private member variable
+    if (totalDamage &gt; _currentHealth)
+    {
+        /// ...
+    }
+}</code></pre>
+
+            <div class="glass-card accent-emerald" style="padding: 13px 16px;margin-top: 12px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 4px;">Boolean v&nbsp;praxi</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.4;">
+                <code>IsInvincible</code> a&nbsp;<code>_isDead</code> čtete jako otázku.
+                <code>if (_isDead)</code> se čte samo.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-purple" style="margin: 0; padding: 13px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.94em; margin-bottom: 6px;">Tři úrovně viditelnosti
+                v&nbsp;jednom souboru</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.9em;">
+                <li><code>DamageMultiplier</code>, <code>MaxHealth</code>, <code>IsInvincible</code>:
+                  <strong>veřejná pole</strong>, PascalCase.
+                </li>
+                <li><code>_isDead</code>, <code>_currentHealth</code>: <strong>soukromé členy</strong>, prefix
+                  podtržítkem.</li>
+                <li><code>damage</code>, <code>isSpecialDamage</code>, <code>totalDamage</code>:
+                  <strong>parametry a&nbsp;lokální proměnné</strong>, camelCase.
+                </li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin: 0; padding: 13px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 6px;">Proč to funguje</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+                Na řádku <code>totalDamage *= DamageMultiplier;</code> je na první pohled jasné, že jde o&nbsp;veřejné
+                pole. Kdyby se všechno jmenovalo stejně, museli byste skákat do deklarace.
+              </p>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je příklad přímo z dokumentace Unity a je hezký v tom, že ukazuje všechny tři úrovně pohromadě.
+          Nahoře veřejná pole: DamageMultiplier, MaxHealth, IsInvincible. Všechno PascalCase.
+          Pod nimi soukromé členy s podtržítkem: _isDead, _currentHealth.
+          A uvnitř metody parametry a lokální proměnné v camelCase: damage, isSpecialDamage, totalDamage.
+          Všimněte si řádku totalDamage *= DamageMultiplier. Na první pohled vidíte, že pracujete s lokální
+          proměnnou a s veřejným polem. Kdyby se všechno jmenovalo stejně, museli byste se vracet do deklarace
+          a hledat, co je co. Přesně o tomhle celá konvence je: zkrátit cestu k pochopení kódu.
+          A všimněte si booleanů: IsInvincible, _isDead. Čtou se jako otázky, takže podmínka if (_isDead) je
+          srozumitelná okamžitě.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29F: ENUMS
+           ========================================== -->
+      <section>
+        <span class="slide-category">Kód &bull; Enums</span>
+        <h2>Unity: Enums</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 8px;">Pravidla</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>PascalCase</strong> pro název enumu i&nbsp;jeho hodnoty.</li>
+                <li><strong>Jednotné číslo</strong> v&nbsp;názvu: enum reprezentuje <strong>jednu hodnotu</strong>
+                  z&nbsp;množiny možností.</li>
+                <li><strong>Žádný prefix ani suffix.</strong></li>
+                <li><strong>Veřejné enumy můžete umístit mimo třídu</strong>, aby byly globální.</li>
+                <li><strong>Bitové enumy</strong> s&nbsp;atributem <code>[System.Flags]</code> jsou
+                  <strong>výjimkou</strong>: ty se obvykle <strong>pluralizují</strong>, protože zastupují
+                  více než jeden typ.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+                <strong>Singular vs.&nbsp;plural</strong> není formalita. <code>WeaponType</code> zastupuje jednu
+                zbraň. <code>AttackModes</code> zastupuje <strong>kombinaci</strong> více módů najednou.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <pre style="margin: 0; font-size: 0.75em; line-height: 1.28;"><code class="language-csharp" data-trim data-noescape>// EXAMPLE: Enums use singular nouns …
+public enum WeaponType
+{
+    Knife,
+    Gun,
+    RocketLauncher,
+    BFG
+}
+
+// EXAMPLE: … but a bitwise enum is plural.
+
+[Flags]
+public enum AttackModes
+{
+   // Decimal                          // Binary
+   None = 0,                          // 000000
+   Melee = 1,                         // 000001
+   Ranged = 2,                        // 000010
+   Special = 4,                       // 000100
+
+   MeleeAndSpecial = Melee | Special  // 000101
+}</code></pre>
+          </div>
+        </div>
+        <aside class="notes">
+          Enumy mají vlastní sadu pravidel a je docela elegantní.
+          PascalCase pro název i hodnoty: to je stejné jako u tříd.
+          Klíčové je to jednotné číslo. Enum typu WeaponType zastupuje jednu zbraň. Kdybyste ho pojmenovali
+          WeaponTypes, naznačovali byste, že jich máte víc najednou, což není pravda.
+          Výjimkou jsou bitové enumy s atributem Flags. Ty se pluralizují, protože opravdu zastupují kombinaci.
+          V ukázce vidíte AttackModes: můžete mít současně Melee i Special. A všimněte si těch binárních hodnot
+          v komentáři: 1, 2, 4, 8 jsou jednotlivé bity, takže je můžete sčítat operátorem OR. MeleeAndSpecial
+          je 000101, což je Melee plus Special.
+          Tohle je klasický vzor, který se používá od dob C. V C# ho najdete u věcí jako přístupová práva
+          k souborům nebo filtry kategorií.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29G: TŘÍDY A ROZHRANÍ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Kód &bull; Třídy a rozhraní</span>
+        <h2>Unity: Třídy a&nbsp;rozhraní</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 8px;">Třídy</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>PascalCase</strong> a&nbsp;<strong>podstatná jména nebo jmenné fráze</strong>: tím se
+                  názvy typů odliší od metod, které mají slovesné fráze.</li>
+                <li>Máte-li v&nbsp;souboru <strong>MonoBehaviour</strong>, <strong>název souboru se musí
+                    shodovat</strong>. V&nbsp;souboru mohou být další interní třídy, ale
+                  <strong>jen jedna MonoBehaviour na soubor</strong>.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.98em; margin-bottom: 8px;">Rozhraní</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Prefix velkým písmenem <code>I</code></strong>.</li>
+                <li>Za ním následuje <strong>přídavné jméno</strong> popisující funkcionalitu:
+                  <code>IKillable</code>, <code>IDamageable</code>.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.45;">
+                Unity zobrazuje název skriptu v&nbsp;Inspectoru podle <strong>názvu souboru</strong>. Když se
+                rozejdou, komponentu <strong>nepřidáte</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <pre style="margin: 0; font-size: 0.75em; line-height: 1.28;"><code class="language-csharp" data-trim data-noescape>// EXAMPLE: Class formatting
+public class ExampleClass : MonoBehaviour
+{
+    public int PublicField;
+    public static int MyStaticField;
+
+    private int _packagePrivate;
+    private int _myPrivate;
+
+    private static int _myPrivate;
+
+    protected int _myProtected;
+
+    public void DoSomething()
+    {
+    }
+}
+
+// EXAMPLE: Interfaces
+public interface IKillable
+{
+    void Kill();
+}
+
+public interface IDamageable&lt;T&gt;
+{
+    void Damage(T damageTaken);
+}</code></pre>
+          </div>
+        </div>
+        <aside class="notes">
+          Třídy a rozhraní.
+          Třídy jsou podstatná jména v PascalCase. To má svůj důvod: metody jsou slovesné fráze, takže když vidíte
+          název, poznáte, jestli mluvíte o věci nebo o akci. Player je věc, UpdateHealth je akce.
+          Druhé pravidlo je specifické pro Unity a je to hard requirement, ne konvence: pokud má soubor
+          MonoBehaviour, název souboru se musí shodovat s názvem třídy. Můžete mít v souboru další interní třídy,
+          ale jen jedna MonoBehaviour na soubor. Když to porušíte, Unity vám komponentu vůbec nedovolí přidat na
+          GameObject: a chybová hláška nebývá úplně srozumitelná, takže to lidi často mate.
+          Rozhraní mají prefix I. To je stará .NET konvence a Unity se jí drží. IKillable, IDamageable. Za tím
+          písmenem následuje přídavné jméno: popisuje schopnost, ne věc.
+          A všimněte si v ukázce třídy: veřejná statická pole jsou PascalCase, soukromá statická mají podtržítko
+          stejně jako nestatická. Konzistence je důležitější než zapamatovat si všechny výjimky.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29H: METODY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Kód &bull; Metody</span>
+        <h2>Unity: Metody</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 8px;">Tři pravidla</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Začněte slovesem nebo slovesnou frází.</strong> V&nbsp;případě potřeby přidejte kontext.
+                </li>
+                <li><strong>Parametry v&nbsp;camelCase</strong>: formátujte je stejně jako lokální proměnné.</li>
+                <li><strong>Metody vracející bool pokládají otázku.</strong> Stejně jako booleovské proměnné je
+                  začněte slovesem, pokud vracejí <em>true</em>/<em>false</em>.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 13px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 6px;">Otázky místo
+                konstatování</h3>
+              <div class="side-by-side" style="grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0;">
+
+                <div class="spec-badge emerald" style="margin-bottom: 3px; font-size: 0.9em;">IsGameOver</div>
+                <div class="spec-badge emerald" style="margin-bottom: 3px; font-size: 0.9em;">HasStartedTurn</div>
+
+                <div class="spec-badge rose" style="margin-bottom: 3px; font-size: 0.9em;">GameOver</div>
+                <div class="spec-badge rose" style="margin-bottom: 3px; font-size: 0.9em;">StartedTurn</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <pre style="margin: 0; font-size: 0.75em; line-height: 1.3; width: 98%;"><code class="language-csharp" data-trim data-noescape>// EXAMPLE: Methods start with a verb.
+public void SetInitialPosition(float x, float y, float z)
+{
+    transform.position = new Vector3(x, y, z);
+}
+
+// EXAMPLE: Methods ask a question
+// when they return bool.
+public bool IsNewPosition(Vector3 currentPosition)
+{
+    return (transform.position == newPosition);
+}</code></pre>
+
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.45;">
+                Metoda <code>IsNewPosition()</code> se v&nbsp;podmínce čte jako věta:
+                <code>if (IsNewPosition(pos))</code>. Bez <code>Is</code> byste hádali, co vlastně vrací.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+        <aside class="notes">
+          Metody mají tři pravidla a všechna se točí kolem jednoho nápadu: z názvu má být poznat, co metoda dělá
+          a co vrací.
+          Začněte slovesem. SetInitialPosition: hned víte, že to něco nastavuje. Kdyby se to jmenovalo
+          InitialPosition, nevěděli byste, jestli to nastavuje, vrací, nebo jenom drží hodnotu.
+          Parametry jsou camelCase, stejně jako lokální proměnné. V ukázce x, y, z: malá písmena, protože jsou
+          to parametry.
+          A třetí pravidlo je pro mě nejzajímavější: metody, které vracejí bool, se mají ptát na otázku.
+          IsGameOver, HasStartedTurn. Všimněte si, že to má stejnou logiku jako pojmenování boolean proměnných
+          z předchozího slidu. Když pak napíšete if (IsGameOver), čte se to jako anglická věta.
+          Je to drobnost, ale když máte v kódu stovky podmínek, je to rozdíl mezi kódem, který se čte, a kódem,
+          který se dešifruje.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29I: UDÁLOSTI
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Kód &bull; Události</span>
+        <h2>Unity: Události a&nbsp;jejich obsluha</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div class="highlight-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.92em; margin-bottom: 5px;">Pojmenujte událost
+                slovesnou frází</h3>
+              <p style="margin: 0 0 6px 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.4;">
+                <strong>Přítomné příčestí</strong> = událost <em>před</em> akcí, <strong>minulé příčestí</strong> =
+                událost <em>po</em> ní.
+              </p>
+              <div class="side-by-side" style="grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0;">
+
+                <div class="spec-badge purple" style="margin-bottom: 3px; font-size: 0.9em;"><code>OpeningDoor</code>
+                </div>
+
+
+                <div class="spec-badge emerald" style="margin-bottom: 3px; font-size: 0.9em;"><code>DoorOpened</code>
+                </div>
+
+
+              </div>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.92em; margin-bottom: 5px;">Použijte
+                <code>System.Action</code>
+              </h3>
+              <ul class="custom-list" style="margin: 0; ">
+                <li>Ve většině případů zvládne <code>Action&lt;T&gt;</code> delegát všechny události potřebné pro
+                  gameplay.</li>
+                <li>Můžete předat <strong>0 až 16 vstupních parametrů</strong> různých typů, návratový typ je
+                  <code>void</code>.
+                </li>
+                <li>Použití předdefinovaného delegáta <strong>šetří kód</strong>.</li>
+                <li>Lze použít i&nbsp;<code>EventHandler</code> / <code>EventHandler&lt;TEventArgs&gt;</code>:
+                  <strong>domluvte se v&nbsp;týmu jednotně</strong>.
+                </li>
+              </ul>
+            </div>
+
+            <!-- <div class="glass-card accent-amber" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-amber); font-size: 0.92em; margin-bottom: 5px;">EventArgs jen když
+                je potřeba</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.4;">
+                Vlastní <code>EventArgs</code> tvořte <strong>pouze podle potřeby</strong>: buď dědičností
+                z&nbsp;<code>System.EventArgs</code>, nebo z&nbsp;vlastního structu.
+              </p>
+            </div> -->
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div class="highlight-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.92em; margin-bottom: 5px;">Metoda, která událost
+                vyvolává</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.45;">
+                Subjekt událost obvykle vyvolává z&nbsp;metody s&nbsp;<strong>prefixem „On"</strong>:
+                <code>OnOpeningDoor</code>, <code>OnDoorOpened</code>.
+              </p>
+            </div>
+
+            <div>
+              <pre style="margin: 0; font-size: 0.75em; line-height: 1.28; width: 98%;"><code class="language-csharp" data-trim data-noescape style="max-height: 500px;">// using System.Action delegate
+public event Action OpeningDoor;   // event before
+public event Action DoorOpened;    // event after
+
+public event Action&lt;int&gt; PointsScored;
+
+// raises the Event if you have subscribers
+public void OnDoorOpened()
+{
+    DoorOpened?.Invoke();
+}
+
+public void OnPointsScored(int points)
+{
+    PointsScored?.Invoke(points);
+}</code></pre>
+            </div>
+
+            <!-- <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.92em; margin-bottom: 5px;">Příjemce: název
+                subjektu a&nbsp;podtržítko</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.4;">
+                Má-li subjekt název <code>GameEvents</code>, pozorovatel může mít metodu
+                <code>GameEvents_OpeningDoor</code>. Říká se jí <strong>event handling method</strong>: nepleťte si
+                ji s delegátem <code>EventHandler</code>.
+              </p>
+            </div> -->
+          </div>
+        </div>
+        <aside class="notes">
+          Události jsou oblast, kde se v Unity projektech dělá největší nepořádek, protože si každý vymyslí vlastní
+          konvenci. Unity na to má docela jasný názor.
+          Pojmenujte událost slovesnou frází a použijte příčestí. OpeningDoor je událost před otevřením dveří:
+          typicky na to navěsíte zvuk. DoorOpened je po otevření: tam řešíte třeba AI. Ten rozdíl je zásadní,
+          protože jinak nevíte, jestli se má odehrát animace dřív nebo po.
+          Pro delegáty použijte System.Action. Je to předdefinovaný delegát, takže nemusíte psát vlastní: ušetří
+          to spoustu kódu. Můžete předat nula až šestnáct parametrů.
+          Metoda, která událost vyvolává, má prefix On. OnDoorOpened. A všimněte si operátoru ?. před Invoke:
+          to je bezpečné volání, které nic neudělá, když nikdo není přihlášený. Bez toho byste dostali
+          NullReferenceException.
+          A poslední věc: na straně příjemce se používá název subjektu a podtržítko. GameEvents_OpeningDoor.
+          Unity upozorňuje, ať si to nepleťete s delegátem EventHandler: jsou to dvě různé věci se skoro stejným
+          názvem.
+          Hlavní pointa ale je: domluvte se v týmu. Unity to říká explicitně.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29J: NAMESPACES A PREFIXY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Kód &bull; Namespaces</span>
+        <h2>Unity: Namespaces a&nbsp;prefixy</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 8px;">Pravidla</h3>
+              <ul class="custom-list" style="margin: 0; ">
+                <li><strong>PascalCase</strong> bez speciálních znaků a&nbsp;podtržítek.</li>
+                <li>Přidejte <code>using</code> na začátek souboru: <strong>vyhnete se opakovanému psaní
+                    prefixu</strong>.</li>
+                <li>Tvořte <strong>pod-namespace</strong> a&nbsp;oddělujte úrovně <strong>tečkou</strong>:
+                  skripty tak uspořádáte do hierarchických kategorií.</li>
+                <li>Namespace by měl <strong>odrážet strukturu složek projektu</strong>: logicky seskupuje
+                  související třídy a&nbsp;usnadňuje orientaci v&nbsp;kódu.</li>
+              </ul>
+            </div>
+
+            <!-- <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.96em; margin-bottom: 8px;">Prefixy v&nbsp;praxi</h3>
+              <p style="margin: 0 0 6px 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+                V&nbsp;kódu se třídy označují jako <code>Enemy.Controller1</code> a&nbsp;<code>Enemy.Controller2</code>.
+              </p>
+              <ul class="custom-list" style="margin: 0; font-size: 0.78em;">
+                <li>Řádek <code>using Enemy;</code> ušetří psaní prefixu.</li>
+                <li>Potřebujete-li odkázat na <strong>stejnojmenné třídy z&nbsp;různých namespace</strong>, použijte
+                  prefix k&nbsp;jejich rozlišení: <strong>jinak kompilátor ohlásí chybu</strong>.</li>
+              </ul>
+            </div> -->
+            <div class="glass-card accent-emerald" style="padding: 13px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 6px;">Namespace = složka</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.45;">
+                <code>Assets/_Project/Scripts/Enemy/</code> → <code>namespace Enemy</code>.
+                Když se struktura složek a&nbsp;namespace rozejdou, nový člen týmu hledá zbytečně dlouho.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <pre style="margin: 0; font-size: 0.75em; line-height: 1.3;"><code class="language-csharp" data-trim data-noescape>namespace Enemy
+{
+    public class Controller1 : MonoBehaviour
+    {
+        ...
+    }
+
+    public class Controller2 : MonoBehaviour
+    {
+        ...
+    }
+}</code></pre>
+
+
+
+            <div class="glass-card accent-amber" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-amber); font-size: 0.94em; margin-bottom: 5px;">Prefixy pro atributy</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.4;">
+                Někdy se používají prefixy pro soukromé atributy (<code>m_</code>),
+                konstanty (<code>k_</code>) nebo statické proměnné (<code>s_</code>).
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Poslední téma: namespaces.
+          Namespace je PascalCase bez podtržítek. Přidejte using a ušetříte psaní prefixu.
+          Ale nejdůležitější je poslední bod: namespace by měl odrážet strukturu složek. Když máte složku
+          Assets/_Project/Scripts/Enemy, měli byste mít namespace Enemy. Když se to rozejde, nový člověk v týmu
+          hledá zbytečně dlouho: vidí v kódu Enemy.Controller1 a neví, kam pro něj jít.
+          A prefixy: m_ pro soukromé členy, k_ pro konstanty, s_ pro statické proměnné. To je konvence, kterou
+          najdete v řadě firemních kódových základen. Unity ji uvádí jako možnost, ne jako povinnost:
+          stejně jako to podtržítko. Rozhodněte se v týmu a držte se toho.
+          Tím se dostáváme na konec tématu kódu. Chtěl bych, aby si odnesli jednu věc: tyhle konvence nejsou
+          byrokracie. Každá z nich zkracuje dobu, kterou strávíte čtením cizího kódu. A toho času strávíte
+          většinu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29K: GDScript STYLE GUIDE: PŘEHLED
+           ========================================== -->
+      <section>
+        <span class="slide-category">Kód &bull; Godot</span>
+        <h2>Godot: GDScript style guide</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0; padding: 16px 20px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 8px;">Psaní kódu v Godotu</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>GDScript je <strong>dynamický jazyk</strong>.</li>
+                <li>Nemá kompilátor, který by vynutil typy a&nbsp;zachytil
+                  chyby.</li>
+                <li><strong>Konvence tady nahrazuje část kontroly</strong>,
+                  kterou v&nbsp;C# nebo C++ dělá překladač.</li>
+                <li>Godot dokáže typy proměnných vynucovat (při parsování).</li>
+                <li>Lze proměnné anotovat typem (název : typ), čímž pak vznikají safe lines.</li>
+                <li>Lze nastavit, aby godot hlásil neanotovanou proměnnou jako warning, nebo dokonce jako error.</li>
+                <li>Kroky při zpracování:<br>
+                  <ul class="custom-list">
+                    <li>Tokenizace a Parsování: sestavení AST.</li>
+                    <li>Bytecode Compilation: sestavení byte-code.</li>
+                    <li>Virtual Machine Interpretation: Interpretace byte-code.</li>
+                  </ul>
+                </li>
+
+              </ul>
+            </div>
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-amber" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-amber); font-size: 0.98em; margin-bottom: 8px;">Pár zajímavostí</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Taby, ne mezery.</strong> Přesně opačně, než velí konvence C#.</li>
+                <li><strong>snake_case pro funkce a&nbsp;proměnné</strong>: ne camelCase jako v&nbsp;C#.</li>
+                <li><strong>Underscore znamená soukromé</strong>: stejná myšlenka jako v&nbsp;Unity, ale aplikovaná
+                  důsledně včetně metod.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 6px;">Ponaučení:</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+                Konvence se mezi enginy <strong>liší, ale princip je stejný</strong>: vyberte pravidla, zapište je
+                a&nbsp;držte se jich. <strong>Špatná konvence dodržovaná je lepší než pět dobrých.</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Třetí a poslední zastávka v konvencích pojmenování: Godot.
+          Proč se na to vůbec dívat, když děláte v Unity? Protože je to hezká ukázka toho, že konvence nejsou
+          univerzální pravda, ale volba jazyka a komunity. GDScript je dynamický jazyk podobný Pythonu a jeho
+          konvence jdou v mnoha věcech přesně proti C#.
+          Nejnázornější je to u odsazení: Godot říká používejte taby, C# komunita říká čtyři mezery. U pojmenování
+          funkcí: Godot snake_case, C# PascalCase.
+          A všimněte si zdůvodnění, proč je Godot style guide tak konkrétní. GDScript nemá kompilátor, který by
+          zkontroloval typy. Když uděláte chybu v názvu, dozvíte se to až za běhu. Takže konvence tam nahrazuje
+          část té statické kontroly.
+          Hlavní pointa je ale poslední věta: špatná konvence dodržovaná je lepší než pět dobrých. To platí úplně
+          všude.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29L: GDScript: NAMING CONVENTIONS
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Kód &bull; Godot</span>
+        <h2>GDScript: naming conventions</h2>
+        <table class="comparison-table" style="font-size: 0.75em; margin: 0;">
+          <thead>
+            <tr>
+              <th style="width: 23%;">Co</th>
+              <th style="width: 24%;">Zápis</th>
+              <th>Příklad a&nbsp;pravidlo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Soubory</strong></td>
+              <td><code>snake_case</code></td>
+              <td><code>class_name Weapon</code> → soubor <code>weapon.gd</code>;<br>
+                <code>class_name YAMLParser</code> → <code>yaml_parser.gd</code>.<br>
+                PascalCase názvu třídy se
+                <strong>převádí</strong> na snake_case.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Třídy a&nbsp;uzly</strong></td>
+              <td><code>PascalCase</code></td>
+              <td><code>CharacterBody3D</code>: stejně jako v&nbsp;C#.</td>
+            </tr>
+            <tr>
+              <td><strong>Funkce a&nbsp;proměnné</strong></td>
+              <td><code>snake_case</code></td>
+              <td><code>var particle_effect</code>,<br><code>func load_level():</code></td>
+            </tr>
+            <tr>
+              <td><strong>Soukromé a&nbsp;virtuální</strong></td>
+              <td><code>_snake_case</code></td>
+              <td>Podtržítko na
+                začátku:<br><code>var _counter = 0</code>,<br><code>func _recalculate_path():</code>.<br>
+                Platí i&nbsp;pro <strong>virtuální metody, které uživatel musí přepsat</strong>.</td>
+            </tr>
+            <tr>
+              <td><strong>Signály</strong></td>
+              <td><code>snake_case</code>, <strong>minulý čas</strong></td>
+              <td><code>signal door_opened</code>,<br><code>signal score_changed</code></td>
+            </tr>
+            <tr>
+              <td><strong>Konstanty</strong></td>
+              <td><code>CONSTANT_CASE</code></td>
+              <td>Vše velkými písmeny s&nbsp;podtržítkem: <code>const MAX_SPEED = 200</code></td>
+            </tr>
+            <tr>
+              <td><strong>Enumy</strong></td>
+              <td>název <code>PascalCase</code>, položky <code>CONSTANT_CASE</code></td>
+              <td>Název v&nbsp;<strong>jednotném čísle</strong> (reprezentuje typ), položky jako konstanty.</td>
+            </tr>
+            <tr>
+              <td><strong>Načtení třídy</strong></td>
+              <td><code>PascalCase</code></td>
+              <td><code>const Weapon = preload("res://weapon.gd")</code>:<br>i&nbsp;konstanta s&nbsp;třídou
+                má PascalCase, ne CONSTANT_CASE.</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Tabulka shrnuje naming conventions z Godot style guide.
+          Začněme u souborů, protože je tam zajímavý rozdíl oproti C#. V Godotu se soubor jmenuje snake_case, ale
+          název třídy je PascalCase. Takže class_name Weapon žije v souboru weapon.gd, a class_name YAMLParser
+          v souboru yaml_parser.gd. Všimněte si, že i zkratka YAML se rozpadne na yaml_parser: žádné velké
+          písmeno uprostřed.
+          Funkce a proměnné jsou snake_case. To je pro C# vývojáře největší změna: místo GetHealth() píšete
+          get_health().
+          Podtržítko na začátku znamená soukromé. A pozor, Godot ho používá i pro virtuální metody, které má
+          uživatel přepsat: _ready, _process. To je jiná logika než v Unity, kde _ready nemá.
+          Signály jsou v minulém čase: door_opened, score_changed. To je stejná myšlenka jako u Unity událostí:
+          DoorOpened. Signál oznamuje, že se něco už stalo.
+          Konstanty jsou CONSTANT_CASE, tedy MAX_SPEED. V C# jsme měli k_MaxHealth. Zase jiná konvence, stejný
+          záměr.
+          A poslední řádek je hezký detail: když načítáte třídu přes preload, použijete PascalCase, i když je to
+          konstanta. Godot to zdůvodňuje tím, že ta konstanta reprezentuje typ, ne hodnotu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29M: GDScript: FORMÁTOVÁNÍ
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Kód &bull; Godot</span>
+        <h2>GDScript: formátování 1/2</h2>
+        <div class="slide-grid-2 equal" style="align-items: start; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div class="highlight-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 5px;">Odsazení</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Taby místo mezer</strong>: výchozí nastavení editoru.</li>
+                <li>Každá úroveň odsazení je <strong>o&nbsp;jednu větší</strong> než blok, který ji obsahuje.</li>
+                <li><strong>2 úrovně</strong> odsazení odliší pokračovací řádky od běžných bloků.
+                  <strong>Výjimka:</strong> pole, slovníky a&nbsp;enumy používají <strong>jednu úroveň</strong>.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.94em; margin-bottom: 5px;">Délka řádku</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.45;">
+                <strong>Pod 100 znaků</strong> povinně. Pokud můžete, držte se <strong>pod 80</strong>.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 5px;">Jeden příkaz
+                na řádek</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Nevkládejte víc příkazů na jeden řádek, <strong>ani podmínky</strong>. Jediná výjimka je
+                <strong>ternární operátor</strong>.
+              </p>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div>
+              <div class="glass-card accent-amber" style="padding: 12px 16px; margin-bottom: 12px;">
+                <h3 style="color: var(--accent-amber); font-size: 0.94em; margin-bottom: 5px;">Trailing comma</h3>
+                <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                  Čárka na posledním řádku u&nbsp;<strong>polí, slovníků a&nbsp;enumů</strong>. U&nbsp;jednořádkových
+                  seznamů <strong>ne</strong>: tam je zbytečná.
+                </p>
+              </div>
+
+              <pre style="margin: 0; font-size: 0.75em; line-height: 1.3;"><code class="language-python" data-trim data-noescape># Trailing comma - správně
+var array = [
+    1,
+    2,
+    3,
+]
+
+# Pokračovací řádek - 2 úrovně odsazení
+if (foo and bar) \
+        or not baz:
+    print("condition is true")</code></pre>
+
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Formátování. Tohle je část, kterou většinou řeší automatický formátor, ale Godot ji má popsanou ručně.
+          Nejdůležitější je odsazení, protože GDScript je jazyk citlivý na odsazení: jako Python. Nemá složené
+          závorky, bloky se určují odsazením. Proto je tam tolik pravidel: taby, každá úroveň o jednu větší,
+          a pokračovací řádky o dvě úrovně, aby se nepletly s blokem.
+          Všimněte si výjimky pro pole a enumy: tam stačí jedna úroveň, protože koncová závorka na novém řádku
+          už sama signalizuje, že jde o pokračování.
+          Trailing comma je detail, který má praktický dopad na diffy ve správě verzí. Když máte čárku na konci
+          posledního prvku, přidání dalšího prvku vytvoří v diffu jeden řádek. Bez ní se změní dva řádky.
+          A booleovské operátory: and, or, not místo &&, ||, !. Godot argumentuje přístupností. Je to stejná
+          logika jako u nás: čitelnost před stručností.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29M: GDScript: FORMÁTOVÁNÍ
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Kód &bull; Godot</span>
+        <h2>GDScript: formátování 2/2</h2>
+        <div class="slide-grid-2 equal" style="align-items: start; gap: 16px;">
+
+
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+
+
+            <div class="glass-card accent-purple" style="padding: 11px 15px;">
+              <h3 style="color: var(--accent-purple); margin-bottom: 4px;">Booleovské
+                operátory</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Preferujte <code>and</code>, <code>or</code>, <code>not</code> před <code>&amp;&amp;</code>,
+                  <code>||</code>, <code>!</code>: jsou přístupnější.
+                </li>
+                <li>Při zalamování patří <code>and</code>/<code>or</code> na <strong>začátek</strong>
+                  pokračovacího
+                  řádku, ne na konec předchozího.</li>
+              </ul>
+
+
+            </div>
+
+
+            <pre style="margin: 0; font-size: 0.75em; line-height: 1.3;"><code class="language-python" data-trim data-noescape># Bílé znaky
+position.x = 5
+my_array = [4, 5, 6]
+my_dictionary = { key = "value" }
+print("foo")
+
+# Čísla
+var hex_number = 0xfb8c0b
+var large_number = 1_234_567_890</code></pre>
+
+
+
+          </div>
+          <div>
+            <div class="glass-card accent-purple" style="padding: 13px 16px;margin-bottom: 12px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.92em; margin-bottom: 5px;">Enumy po jednom
+                prvku na řádek</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.45;">
+                Godot to zdůvodňuje dvěma věcmi: snáz se nad každý prvek <strong>píše dokumentační komentář</strong>
+                a&nbsp;vznikají <strong>čistší diffy</strong>, když prvek přidáte nebo odeberete.
+              </p>
+            </div>
+            <div>
+
+              <pre style="margin: 0; font-size: 0.75em; line-height: 1.3;"><code class="language-python" data-trim data-noescape>enum Element {
+    EARTH,
+    WATER,
+    AIR,
+    FIRE,
+}</code></pre>
+            </div>
+
+
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;margin-top: 12px;">
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.45;">
+                Název enumu je v&nbsp;<strong>jednotném čísle</strong>: <code>Element</code> zastupuje
+                <strong>jeden</strong> prvek ze čtyř. Stejná logika jako <code>WeaponType</code> v&nbsp;Unity.
+              </p>
+            </div>
+
+            <div class="glass-card" style="padding: 11px 15px;margin-top: 12px;">
+              <p style="margin: 0; font-size: 0.75em; color: var(--text-muted); line-height: 1.45;">
+                Mezery kolem <code>=</code>, mezera po čárce, <strong>žádná mezera</strong> mezi jménem funkce
+                a&nbsp;závorkou. Dlouhá čísla oddělujte podtržítkem.
+              </p>
+            </div>
+          </div>
+
+        </div>
+        <aside class="notes">
+          Formátování. Tohle je část, kterou většinou řeší automatický formátor, ale Godot ji má popsanou ručně.
+          Nejdůležitější je odsazení, protože GDScript je jazyk citlivý na odsazení: jako Python. Nemá složené
+          závorky, bloky se určují odsazením. Proto je tam tolik pravidel: taby, každá úroveň o jednu větší,
+          a pokračovací řádky o dvě úrovně, aby se nepletly s blokem.
+          Všimněte si výjimky pro pole a enumy: tam stačí jedna úroveň, protože koncová závorka na novém řádku
+          už sama signalizuje, že jde o pokračování.
+          Trailing comma je detail, který má praktický dopad na diffy ve správě verzí. Když máte čárku na konci
+          posledního prvku, přidání dalšího prvku vytvoří v diffu jeden řádek. Bez ní se změní dva řádky.
+          A booleovské operátory: and, or, not místo &&, ||, !. Godot argumentuje přístupností. Je to stejná
+          logika jako u nás: čitelnost před stručností.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29N: GDScript: SIGNÁLY A ENUMY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Kód &bull; Godot</span>
+        <h2>GDScript: signály</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 20px;">
+          <div>
+            <pre style="margin: 0; font-size: 0.75em; line-height: 1.28; "><code class="language-python" data-trim data-noescape>class_name StateMachine
+extends Node
+## Hierarchical State machine for the player.
+
+signal state_changed(previous, new)
+
+@export var initial_state: Node
+@onready var _state = initial_state
+
+func _ready():
+    state_changed.connect(_on_state_changed)
+    _state.enter()
+
+func transition_to(target_state_path, msg={}):
+    _state.exit()
+    self._state = target_state
+    _state.enter(msg)
+    state_changed.emit()
+
+func _on_state_changed(previous, new):
+    print("state changed")</code></pre>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card" style="margin-top: 0; padding: 13px 16px;">
+              <h3 style="color: var(--accent-cyan);  margin-bottom: 6px;">Signály místo událostí</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Deklarují se klíčovým slovem <code>signal</code>,<br>název v&nbsp;<strong>minulém čase</strong>.
+                </li>
+                <li>Připojují se v&nbsp;<code>_ready()</code> voláním
+                  <code>signal_name.connect(_callback)</code>.
+                </li>
+                <li>Vyvolávají se metodou <code>.emit()</code>: obdoba <code>Invoke()</code> v&nbsp;C#.</li>
+                <li>Obslužná metoda má prefix <code>_on_</code> a&nbsp;<strong>je soukromá</strong> (podtržítko).</li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Ukázka kódu z Godot style guide, kterou jsem zkrátil, abych ukázal to podstatné.
+          Signály jsou obdoba událostí v C#. Deklarují se klíčovým slovem signal a jmenují se v minulém čase:
+          state_changed, door_opened. Stejná logika jako DoorOpened v Unity.
+          Připojují se v _ready, což je obdoba Unity Start. A všimněte si metody _on_state_changed: má prefix _on_
+          a podtržítko na začátku, protože je soukromá. V Unity jsme měli OnDoorOpened, tady je _on_state_changed.
+          Stejná myšlenka, jiný zápis.
+          Vyvolání je .emit(), v C# je to Invoke().
+          A enumy: jeden prvek na řádek. Godot to zdůvodňuje dvěma praktickými věcmi: můžete nad každý prvek
+          napsat dokumentační komentář a diffy ve verzovacím systému jsou čistší. Když přidáte prvek na konec,
+          v diffu se objeví jeden řádek.
+          Název enumu je v jednotném čísle, stejně jako v Unity. Element zastupuje jeden prvek, ne všechny.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29O: GDScript: POŘADÍ KÓDU
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Kód &bull; Godot</span>
+        <h2>GDScript: pořadí kódu v&nbsp;souboru</h2>
+        <p style="font-size: 0.9em; color: var(--text-muted); margin: 0 0 8px 0;">
+          Godot jako jediný z&nbsp;těchto tří enginů doporučuje i&nbsp;<strong>pořadí, v&nbsp;jakém mají být části
+            souboru</strong>.<br>Díky tomu vývojář ví, kam sáhnout, aniž by musel číst.</p>
+        <div class="slide-grid-3" style="gap: 12px;">
+          <div class="glass-card accent-purple" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-purple);  margin-bottom: 6px;">Hlavička a&nbsp;metadata
+              <span style="color: var(--text-dim); font-weight: 400;">(1–4)</span>
+            </h3>
+            <ol class="custom-list" style="margin: 0;;">
+              <li><code>@tool</code>, <code>@icon</code>, <code>@static_unload</code></li>
+              <li><code>class_name</code></li>
+              <li><code>extends</code></li>
+              <li><code>##</code> dokumentační komentář</li>
+            </ol>
+          </div>
+
+          <div class="glass-card accent-emerald" style="padding: 12px 14px;">
+            <h3 style="color: var(--accent-emerald);  margin-bottom: 6px;">Data a&nbsp;stav
+              <span style="color: var(--text-dim); font-weight: 400;">(5–11)</span>
+            </h3>
+            <ol class="custom-list" style="margin: 0; " start="5">
+              <li><code>signals</code></li>
+              <li><code>enums</code></li>
+              <li><code>constants</code></li>
+              <li>statické proměnné</li>
+              <li><code>@export</code> proměnné</li>
+              <li>ostatní běžné proměnné</li>
+              <li><code>@onready</code> proměnné</li>
+            </ol>
+          </div>
+
+          <div class="glass-card accent-amber" style="padding: 12px 14px;">
+            <h3 style="color: var(--accent-amber); margin-bottom: 6px;">Metody
+              <span style="color: var(--text-dim); font-weight: 400;">(12–17)</span>
+            </h3>
+            <ol class="custom-list" style="margin: 0; " start="12">
+              <li><code>_static_init()</code></li>
+              <li>ostatní statické metody</li>
+              <li>přepsané virtuální metody: <code>_init()</code>, <code>_enter_tree()</code>,
+                <code>_ready()</code>, <code>_process()</code>, <code>_physics_process()</code>…
+              </li>
+              <li>přepsané vlastní metody</li>
+              <li>ostatní metody</li>
+              <li>vnořené třídy</li>
+            </ol>
+          </div>
+        </div>
+        <div class="glass-card" style="margin-top: 12px; padding: 12px 18px;">
+          <p style="margin: 0; font-size: 0.78em; color: var(--text-main); line-height: 1.5;">
+            Navíc platí: <strong>veřejné před soukromým</strong> · <strong>vlastnosti a&nbsp;signály před
+              metodami</strong> · <strong>virtuální callbacky před rozhraním třídy</strong> ·
+            <strong>konstrukce a&nbsp;inicializace</strong> (<code>_init</code>, <code>_ready</code>) <strong>před
+              metodami, které objekt mění za běhu</strong>.
+          </p>
+        </div>
+        <aside class="notes">
+          Tohle je něco, co Unity ani Unreal nemá: Godot předepisuje pořadí, v jakém mají být části souboru.
+          Rozdělil jsem to na tři skupiny. Nahoře hlavička a metadata: atributy, class_name, extends, dokumentační
+          komentář. Pak data a stav: signály, enumy, konstanty, proměnné. A nakonec metody.
+          Všimněte si, že to není náhodné pořadí. Je to uspořádané od nejobecnějšího k nejkonkrétnějšímu,
+          od deklarací k chování. Když otevřete cizí GDScript soubor, víte, že signály najdete nahoře a metody
+          dole. Nemusíte skenovat celý soubor.
+          Ve skupině metod je ještě jedna zajímavá věc: přepsané virtuální metody jdou před ostatními. To je
+          logické: _ready a _process jsou to, co engine volá, takže je chcete vidět první.
+          A ta poslední věta to shrnuje: veřejné před soukromým, vlastnosti před metodami, inicializace před
+          runtime logikou. Tohle je konvence, kterou bych klidně převzal i do C# projektů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29P: SROVNÁNÍ UNITY vs. GODOT
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Kód &bull; Srovnání</span>
+        <h2>Unity (C#) vs.&nbsp;Godot (GDScript)</h2>
+        <table class="comparison-table" style="font-size: 0.85em; margin: 0;">
+          <thead>
+            <tr>
+              <th style="width: 20%;">Prvek</th>
+              <th style="width: 34%;">Unity: C#</th>
+              <th>Godot: GDScript</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Třída</strong></td>
+              <td><code>PascalCase</code>: <code>PlayerController</code></td>
+              <td><code>PascalCase</code>: <code>PlayerController</code></td>
+            </tr>
+            <tr>
+              <td><strong>Soubor</strong></td>
+              <td>Musí odpovídat třídě: <code>PlayerController.cs</code></td>
+              <td><code>snake_case</code>: <code>player_controller.gd</code></td>
+            </tr>
+            <tr>
+              <td><strong>Metoda</strong></td>
+              <td><code>PascalCase</code>: <code>ApplyDamage()</code></td>
+              <td><code>snake_case</code>: <code>apply_damage()</code></td>
+            </tr>
+            <tr>
+              <td><strong>Veřejná proměnná</strong></td>
+              <td><code>PascalCase</code>: <code>MaxHealth</code></td>
+              <td><code>snake_case</code>: <code>max_health</code></td>
+            </tr>
+            <tr>
+              <td><strong>Soukromá proměnná</strong></td>
+              <td><code>_camelCase</code>: <code>_currentHealth</code></td>
+              <td><code>_snake_case</code>: <code>_current_health</code></td>
+            </tr>
+            <tr>
+              <td><strong>Konstanta</strong></td>
+              <td><code>k_PascalCase</code>: <code>k_MaxHealth</code></td>
+              <td><code>CONSTANT_CASE</code>: <code>MAX_HEALTH</code></td>
+            </tr>
+            <tr>
+              <td><strong>Událost / signál</strong></td>
+              <td>Minulé příčestí: <code>DoorOpened</code></td>
+              <td>Minulý čas: <code>door_opened</code></td>
+            </tr>
+            <tr>
+              <td><strong>Enum: položky</strong></td>
+              <td><code>PascalCase</code>: <code>Melee</code></td>
+              <td><code>CONSTANT_CASE</code>: <code>EARTH</code></td>
+            </tr>
+            <tr>
+              <td><strong>Odsazení</strong></td>
+              <td>Čtyři mezery</td>
+              <td><strong>Taby</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="glass-card accent-purple" style="margin-top: 12px; padding: 12px 18px;">
+          <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.5;">
+            <strong>Co mají společné:</strong> třídy v&nbsp;PascalCase, podtržítko pro soukromé členy, události
+            v&nbsp;minulém čase, enumy v&nbsp;jednotném čísle. <strong>Kde se liší:</strong> metody a&nbsp;proměnné
+            (<code>PascalCase</code> vs.&nbsp;<code>snake_case</code>), konstanty a&nbsp;odsazení.
+          </p>
+        </div>
+        <aside class="notes">
+          Poslední slide téhle odbočky a zároveň takové shrnutí celé sekce o kódu.
+          Vlevo Unity s C#, vpravo Godot s GDScriptem. Není to o tom, kdo má pravdu: obojí funguje. Jde o to
+          vidět, které věci jsou univerzální a které jsou volba jazyka.
+          Univerzální je: třídy v PascalCase, podtržítko pro soukromé členy, události v minulém čase, enumy
+          v jednotném čísle. To jsou principy, které dávají smysl bez ohledu na jazyk.
+          Volba jazyka je: jestli metody píšete PascalCase nebo snake_case, jestli konstanty mají k_ nebo
+          CONSTANT_CASE, jestli odsazujete mezerami nebo taby.
+          A teď to nejdůležitější. Kdybyste dnes nastoupili do Godot projektu, tyhle konvence jsou jiné, ale
+          myšlenka je pořád stejná. Proto se nemusíte učit konvence: musíte pochopit, k čemu jsou. Když to
+          pochopíte, adaptujete se na jakýkoli engine za hodinu.
+          Tím končí sekce o standardech kódu. Vracíme se zpátky k projektu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 46: CO IGNOROVAT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Nastavení &bull; Co ignorovat</span>
+        <h2>Co ignorovat</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card accent-emerald" style="margin-top: 0; padding: 16px 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.02em; margin-bottom: 6px;">Pravidlo</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Pod správu verzí by měly být umístěny <strong>pouze soubory, které nelze generovat</strong>.
+                </li>
+                <li>
+                  Pro Unity to znamená commitnout <strong>pouze soubory ve složkách <code>Assets</code>
+                    a&nbsp;<code>Project Settings</code></strong>. Unity dokáže automaticky znovu vytvořit všechny
+                  ostatní složky.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style="margin-top: 12px; padding: 16px 20px;">
+              <h3 style="color: var(--accent-rose); font-size: 1.02em; margin-bottom: 6px;">Za žádných okolností
+                necommitujte složku <code>Library</code></h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+                Tato složka může být <strong>velmi velká</strong> a&nbsp;Unity ji při spuštění Editoru
+                <strong>znovu vytvoří</strong>, pokud neexistuje.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan);  margin-bottom: 8px;">Konkrétní systémy</h3>
+              <ul class="custom-list" style="margin: 0; ">
+                <li><strong>Perforce:</strong> musíte <strong>explicitně přidat</strong> složky <code>Assets</code>
+                  a&nbsp;<code>Project Settings</code> do svého depotu.</li>
+                <li><strong>Plastic SCM:</strong> <strong>automaticky vybírá</strong> vhodné složky a&nbsp;soubory.
+                  Seznam je uložen v&nbsp;souboru <code>ignore.conf</code> v&nbsp;rootu projektu.</li>
+                <li><strong>Git:</strong> vyžaduje <code>.gitignore</code>, který indikuje, které soubory nikdy
+                  nezahrnout. Šablonu lze vybrat při vytváření repozitáře nebo přes GitHub.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.92em; margin-bottom: 6px;">Dále se vyhněte
+                commitování</h3>
+              <div class="badge-group" style="margin: 0;">
+                <span class="notice-pill">.exe</span>
+                <span class="notice-pill">.apk</span>
+                <span class="notice-pill">gradle projekty</span>
+                <span class="notice-pill">xcode projekty</span>
+              </div>
+              <p style="margin: 8px 0 0 0; font-size: 0.74em; color: var(--text-muted); line-height: 1.4;">
+                Výjimka: při <strong>automatizovaných build procesech</strong> je commitněte do
+                <strong>vlastního repozitáře</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle pravidlo si zapamatujte jako mantru: commitujte jen to, co nelze vygenerovat.
+          V Unity to znamená Assets a Project Settings. Všechno ostatní si Unity umí vyrobit samo.
+          Složka Library je největší past. Obsahuje cache, importované verze assetů, databázi: může mít klidně
+          deset gigabajtů. Když ji commitnete, zabijete tím repozitář. A je to zbytečné, protože Unity ji vytvoří
+          znovu.
+          Každý systém to řeší jinak: Perforce musíte soubory explicitně přidat, Plastic SCM to udělá sám, Git
+          potřebuje .gitignore.
+          A nezapomeňte ani na buildovací výstupy: .exe, .apk, vygenerované Xcode a Gradle projekty. Ty do
+          repozitáře nepatří.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 47: PRÁCE S VELKÝMI SOUBORY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Nastavení &bull; Velké soubory</span>
+        <h2>Práce s velkými soubory</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="highlight-card alert" style="margin-top: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.02em; margin-bottom: 6px;">Binární soubory: dva
+                důsledky</h3>
+              <ul class="custom-list">
+                <li>Projekty v Unity nebo Godotu se skládají z&nbsp;mnoha netextových souborů.</li>
+                <li>Skripty mohou být často
+                  <strong>v menším počtu</strong> než jiné asset soubory: textury, modely, Prefaby, audio.
+                </li>
+              </ul>
+              <ul class="custom-list" style="margin: 0; ">
+                <li>Je <strong>obtížné je porovnávat</strong> mezi revizemi.</li>
+                <li>Diff nelze popsat, takže <strong>celý soubor je zapsán</strong>, když je změna pushnuta do repa.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.45;">
+                V&nbsp;distribuovaném prostředí máte celou historii lokálně. U&nbsp;velkých souborů s&nbsp;mnoha
+                změnami tak máte <strong>tolik kopií souboru na svém stroji</strong>: což rychle spotřebuje místo
+                na disku.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <table class="comparison-table" style="margin: 0; font-size: 0.85em;">
+              <thead>
+                <tr>
+                  <th style="width: 26%;">Systém</th>
+                  <th>Přístup k&nbsp;velkým souborům</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Perforce</strong></td>
+                  <td>Centralizovaný systém, který <strong>dobře zvládá velké soubory</strong>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Plastic SCM</strong></td>
+                  <td>Zvládá velké soubory centralizovaně, ale dává i&nbsp;možnost <strong>distribuované
+                      pipeline</strong>. Velikost souborů je tradeoff.</td>
+                </tr>
+                <tr>
+                  <td><strong>Git</strong></td>
+                  <td>Jako distribuovaný systém <strong>může mít problémy</strong>. Použijte
+                    <strong>Git LFS</strong>: nahrazuje velké soubory v&nbsp;<code>.git</code>
+                    <strong>textovými pointery</strong>, skutečný asset ukládá na server.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.98em; margin-bottom: 4px;">Plastic SCM Dynamic
+                Workspace</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.4;">
+                Spoléhá na <strong>virtuální filesystem</strong>: <strong>stahuje soubory on demand</strong>.
+                Ve workspace vidíte vše, ale ve skutečnosti není vše staženo.
+              </p>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je jádro problému, proč se herní vývoj odlišuje od běžného softwarového vývoje.
+          V běžném projektu máte textové soubory. Diff funguje, merge funguje, a když soubor změníte, uloží se jen
+          ta změna.
+          U binárního souboru je to jinak. Nemůžete říct „řádek 42 se změnil", protože soubor nemá řádky. Takže se
+          uloží celá nová kopie souboru. Když máte texturu, kterou jste upravili dvacetkrát, máte v historii dvacet
+          kopií. U velkých souborů to znamená gigabajty.
+          Proto je centralizovaný přístup pro herní vývoj lákavý: historie zůstane na serveru a vy máte jen
+          nejnovější verzi.
+          Git LFS je kompromis pro Git: velké soubory drží mimo repozitář a nahrazuje je odkazem. A Plastic SCM
+          Dynamic Workspace jde ještě dál: soubory stahuje, až když je skutečně potřebujete.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 59: SHRNUTÍ: ŠEST BODŮ
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Shrnutí</span>
+        <h2>Co si odnést</h2>
+        <div class="slide-grid-2" style="align-items: start; gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div class="glass-card" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-cyan); margin-bottom: 3px;">1. Správa verzí není
+                volitelná</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.4;">
+                I&nbsp;malý tým potřebuje historii. Bez ní přicházíte o&nbsp;možnost vrátit se a&nbsp;zjistit, co se
+                pokazilo.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 11px 15px;">
+              <h3 style="color: var(--accent-purple);  margin-bottom: 3px;">2. Centralizované
+                vs.&nbsp;distribuované</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.4;">
+                Distributed je flexibilnější a&nbsp;offline-friendly, ale <strong>sdílení změn je explicitní</strong>:
+                musíte pushnout a&nbsp;pullnout.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 11px 15px;">
+              <h3 style="color: var(--accent-emerald);  margin-bottom: 3px;">3. Struktura od prvního
+                dne</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.4;">
+                Složky, namespace a&nbsp;naming conventions se <strong>velmi špatně mění dodatečně</strong>: ztratíte
+                historii.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div class="glass-card accent-amber" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-amber); margin-bottom: 3px;">4. Unity je specifické</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.4;">
+                <code>.meta</code> soubory, YAML assety, binární velké soubory. Nastavte
+                <strong>Visible Meta Files</strong> a&nbsp;<strong>Force Text</strong>, používejte
+                <strong>Git LFS</strong>.
+              </p>
+            </div>
+
+            <div class="glass-card accent-rose" style="padding: 11px 15px;">
+              <h3 style="color: var(--accent-rose);  margin-bottom: 3px;">5. Commitujte po malých
+                kouscích</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.4;">
+                Jeden commit = jeden úkol, se smysluplnou zprávou, bez <code>commit -a</code>. Nejčastější chyba
+                začátečníků.
+              </p>
+            </div>
+
+            <div class="glass-card accent-blue" style="padding: 11px 15px;">
+              <h3 style="color: var(--accent-blue); margin-bottom: 3px;">6. Větve a&nbsp;code
+                review</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.4;">
+                U&nbsp;delších projektů opusťte jednu větev. Feature branches, task branches, streams: a&nbsp;
+                <strong>pull requesty jako kontrola kvality</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="highlight-card" style=" margin-top: 15px; text-align: left; padding: 22px 28px;">
+          <p style="font-size: 0.9em; color: var(--text-main); line-height: 1.65; margin: 0;">
+            Unity doporučuje na konci svého best-practices průvodce jednu věc nad všechny ostatní:
+            <strong>ujistěte se, že spolu váš tým jasně komunikuje o&nbsp;tom, jak bude správa verzí
+              používána</strong>.
+            Všechny nástroje a&nbsp;konvence světa nepomohou, pokud si lidé neřeknou, kdo na čem pracuje.
+          </p>
+        </div>
+        <aside class="notes">
+          Šest bodů, které si odnesete.
+          První: správa verzí není volitelná. I když jste dva, potřebujete historii.
+          Druhý: rozdíl mezi centralizovaným a distribuovaným. Distributed vypadá lákavě, ale má jednu nevýhodu:
+          musíte explicitně komunikovat. V centralizovaném systému získáte nejnovější stav při každém get latest.
+          Třetí: struktura projektu od prvního dne. Tohle je možná nejpraktičtější rada celé přednášky: změnit
+          strukturu později znamená ztratit historii souborů.
+          Čtvrtý: Unity má svá specifika. Meta soubory, YAML, velké binární soubory. Na to musíte myslet předem.
+          Pátý: commitujte po malých kouscích. Je to jednoduché pravidlo, ale řeší většinu problémů.
+          Šestý: u delších projektů pracujte s větvemi a používejte pull requesty.
+        </aside>
+      </section>
+
+
+
+
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/multimodal/multimodal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+  <script src="../bordel/js/tooltips.js"></script>
+
+  <script>
+    // Rozšíření slovníku zkratek o pojmy specifické pro správu verzí
+    Object.assign(GLOSSARY, {
+      "VCS": { title: "Version Control System", desc: "Systém správy verzí. Uchovává historii projektu a umožňuje více lidem pracovat na stejných souborech bez vzájemného přepisování." },
+      "SCM": { title: "Source Code Management", desc: "Původní označení nástrojů pro správu zdrojového kódu. V moderním vývoji s binárními assety se používá přesnější termín VCS." },
+      "LFS": { title: "Large File Storage", desc: "Rozšíření Gitu pro velké soubory. Skutečný soubor ukládá mimo repozitář na server, v repu zůstává pouze textový pointer." },
+      "DCC": { title: "Digital Content Creation", desc: "Nástroje pro tvorbu digitálního obsahu: modelovací a animační programy jako Maya, Blender, 3ds Max nebo ZBrush." },
+      "YAML": { title: "YAML Ain't Markup Language", desc: "Člověkem čitelný serializační formát. Unity v něm ukládá scény a Prefaby, což usnadňuje jejich diffování a merge." },
+      "DSCM": { title: "Distributed SCM", desc: "Distribuovaný systém správy verzí: každý uživatel má lokálně kompletní kopii historie projektu (např. Git)." },
+      "CLI": { title: "Command Line Interface", desc: "Rozhraní příkazového řádku. Git i Perforce jsou primárně CLI nástroje, GUI klienti jsou nadstavby." },
+      "IDE": { title: "Integrated Development Environment", desc: "Integrované vývojové prostředí (Visual Studio, Rider, VS Code) s vestavěnou podporou správy verzí." },
+      "SDK": { title: "Software Development Kit", desc: "Sada nástrojů a knihoven pro vývoj softwaru pro danou platformu." }
+    });
+  </script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: false,
+      touch: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      view: "auto",
+      scrollLayout: "compact",
+      scrollActivationWidth: 600,
+      plugins: [RevealNotes, RevealHighlight, RevealSearch, RevealZoom, RevealPointer, Multimodal, RevealMath.KaTeX],
+      pointer: {
+        key: "q",
+        color: "red",
+        opacity: 0.8,
+        pointerSize: 25,
+        alwaysVisible: false,
+        tailLength: 10,
+      }
+    });
+  </script>
+</body>
+
+</html>

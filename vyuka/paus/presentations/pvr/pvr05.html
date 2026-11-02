@@ -1,0 +1,2994 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>NI-PVR: Využití VR v aplikacích — ČVUT</title>
+  <meta name="description"
+    content="Přednáška NI-PVR: Využití VR v aplikacích: Návrh VR aplikace, prostorové metafory, prototyping, aplikační odvětví, případové studie a moderní trendy Spatial Computing: Petr Pauš, FIT ČVUT v Praze">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+</head>
+
+<body>
+<a id="grafit-lecture-return" class="grafit-lecture-return grafit-lecture-return--floating" href="../../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+<a id="grafit-course-link" class="grafit-course-link--floating" href="../../../pvr/" aria-label="Přehled přednášek PVR" data-subject="pvr">PVR</a>
+
+  <!-- Top Persistent Header -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+  </header>
+
+  <!-- Bottom Persistent Footer Navigation Helper -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <!-- <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div> -->
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==========================================
+           SLIDE 1: TITULNÍ SLIDE
+           ========================================== -->
+      <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)">
+        <div class="title-hero">
+          <div class="vr-badge">NI-PVR &bull; Pokročilá virtuální realita</div>
+          <h1>Využití VR v&nbsp;aplikacích</h1>
+          <p style="color: var(--text-muted); font-size: 1.2em; margin-bottom: 24px;">
+            <strong>Návrh VR a prostorových aplikací</strong>, prostorové metafory, proces prototypování,
+            klíčová odvětví a <strong>případové studie</strong> od pionýrů po moderní éru Spatial Computing.
+          </p>
+
+          <div class="authors">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Vítejte u přednášky věnované využití virtuální reality v praktických aplikacích.
+          Zatímco v minulých přednáškách jsme řešili technické základy, enginy a interakční techniky,
+          dnes se podíváme na ucelený pohled na návrh VR a prostorových aplikací a jejich uplatnění v praxi.
+          Projdeme si metodiku návrhu, význam metafor a prostorového UI, moderní proces prototypování
+          a následně detailně analyzujeme úspěšné i poučné případové studie z oblasti vzdělávání,
+          medicíny, velkoplošné zábavy, průmyslového designu a sociálního XR, včetně posunu ke smíšené realitě.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 2: NÁVRH VR APLIKACE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Návrh VR &bull; Principy UI & Ergonomie</span>
+        <h2>Návrh VR aplikace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Návrh uživatelského rozhraní
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Použít nejpodobnější princip</strong> z&nbsp;reálného světa (mentální modely uživatele).
+                </li>
+                <li><strong>Využít zaběhnutá řešení</strong>: nevymýšlet nové způsoby tam, kde už existuje intuitivní
+                  standard.</li>
+                <li><strong>Zvolit vhodnou metaforu</strong> (<abbr class="abbr-tag"
+                    title="Napodobení prvků reálného světa ve virtuálním rozhraní">skeuomorfismus</abbr>): skříň pro
+                  objekty,
+                  pero pro kreslení, batoh pro inventář.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Lidské vnímání a cílová
+                skupina</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Soulad s lidským vnímáním</strong>: stereoskopické vidění, zorné pole (<abbr
+                    class="abbr-tag" title="Field of View">FoV</abbr>), hloubka a prostorový zvuk.</li>
+                <li><strong>Cílová skupina uživatelů</strong>: začátečník vs. expert, fyzická zdatnost, výška očí,
+                  dostupnost.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">Ergonomie: Prostorové a
+                fyzické
+                vjemy</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Peripersonální prostor (zóna dosahu)</strong>: interaktivní prvky umísťovat do komfortního
+                  dosahu
+                  rukou (cca 0,5–1,2&nbsp;m).</li>
+                <li><strong><a href="../bordel/images-pvr/05_vr_appky/slide_02_vr_ergonomics.png"
+                      data-preview-image="../bordel/images-pvr/05_vr_appky/slide_02_vr_ergonomics.png"
+                      data-preview-width="100%" data-preview-height="100%">Komfortní zorné pole</a></strong>:
+                  nejdůležitější obsah umísťovat do kužele &plusmn;15&deg;
+                  vertikálně
+                  a &plusmn;30&deg; horizontálně (prevence únavy krku).</li>
+                <li><strong>Syndrom gorilí paže („Gorilla arm“)</strong>: natažené ruce v&nbsp;prostoru po
+                  způsobují únavu.</li>
+                <li><strong>Prevence kinetózy a proxemika</strong>: stabilní vizuální horizont, respektování osobního
+                  prostoru avatarů.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Doporučení pro praxi</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.45;">
+                Ve VR neexistuje jednoduchý rám monitoru. Rozhraní je součástí světa a každá nepřirozená mechanika
+                okamžitě narušuje <abbr class="abbr-tag"
+                  title="Pocit fyzické přítomnosti ve virtuálním světě">imerzi</abbr>.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Návrh VR aplikace vyžaduje zcela odlišný přístup než tvorba klasického 2D rozhraní.
+          Vycházíme z mentálních modelů reálného světa: klika slouží k otevření, batoh k uložení věcí.
+          Zásadní je ergonomie: nejdůležitější prvky musí ležet v peripersonálním prostoru (cca 0,5 až 1,2 m)
+          a v komfortním zorném kuželu 30 stupňů, aby uživatel nemusel nepřirozeně hýbat krkem.
+          Gorilla arm syndrome znamená, že člověk nevydrží ovládat virtuální tlačítka nataženýma rukama déle než pár
+          minut.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 3: VR METAFORY A TYPY PROSTOROVÉHO UI
+           ========================================== -->
+      <section>
+        <span class="slide-category">Návrh VR &bull; Metafory & Typy UI</span>
+        <h2>VR metafory a typy prostorového rozhraní</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.12em; margin-bottom: 6px;">Skeuomorfismus v prostoru
+              </h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.84em; color: var(--text-main); line-height: 1.4;">
+                Napodobení rozhraní pomocí <strong>fyzických předmětů z&nbsp;reálného světa</strong>:
+              </p>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Batoh / kapsa</strong>: inventář a odkládání předmětů za rameno.</li>
+                <li><strong>Malířská paleta</strong>: na nedominantní ruce (bimanual UI).</li>
+                <li><strong>Portál / dveře</strong>: přechod mezi úrovněmi, změna měřítka.</li>
+                <li><strong>Pracovní stůl (workbench)</strong>: manipulace s detaily modelů.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 4px;">Kategorizace prostorového UI
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Diegetické UI</strong>: součást samotného fikčního světa (hodinky na zápěstí, displej na
+                  zbrani).</li>
+                <li><strong>Non-diegetické UI</strong>: plovoucí 2D/3D panely ve vzduchu či HUD vázaný na pohled.</li>
+                <li><strong>Spatial UI</strong>: rozhraní ukotvené v&nbsp;souřadnicích scény.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_03_img_01.png"
+                alt="Ukázka VR metafory pracovního stolu a prostorových nástrojů" style="max-height: 250px;"
+                data-preview-image>
+              <div class="image-caption">Prostorová metafora pracovního stolu, nástrojů a manipulace ve VR</div>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">Metafory + „Super-powers“
+              </h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li>Metafora dává intuitivnost, ale nesmí svazovat.</li>
+                <li>Špičkové rozhraní kombinuje reálnou metaforu s&nbsp;nadpřirozenou schopností: např. laserové
+                  ukazovátko, přitahování objektů gestem na dálku či okamžité škálování světa.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Prostorové UI dělíme na diegetické (existující přímo v příběhu, jako digitální hodinky na virtuální ruce),
+          non-diegetické (plovoucí menu vznášející se ve vzduchu) a prostorové (ukotvené k objektům).
+          Metafory jako batoh nebo paleta nástrojů snižují kognitivní zátěž. Zároveň však virtuální realita umožňuje
+          super-powers: například magnetické přitahování vzdálených předmětů pouhým máchnutím zápěstí.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4a: OBVYKLÉ KROKY PŘI NÁVRHU
+           ========================================== -->
+      <section>
+        <span class="slide-category">Návrh VR &bull; Proces vývoje</span>
+        <h2>Obvyklé kroky návrhu VR aplikace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 16px 20px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 10px;">Iterativní designový proces
+              </h3>
+              <ul class="custom-list" style="margin: 0; counter-reset: custom-counter;">
+                <li><strong>1. Prvotní návrh a koncept</strong>: definice cílů, cílové skupiny, klíčových mechanik a
+                  volba metafory.</li>
+                <li><strong>2. Storyboard</strong>: komiksový náčrt chování aplikace v&nbsp;čase, prostorové schéma
+                  rozvržení scény.</li>
+                <li><strong>3. Prostorový wireframing a mockupy</strong>: skicování prostorového layoutu přímo
+                  v&nbsp;headsetu.</li>
+                <li><strong>4. Video prototyp</strong>: animovaná vizualizace průchodu scénou před samotným
+                  programováním v&nbsp;enginu.</li>
+                <li><strong>5. Interaktivní greybox</strong>: hrubý funkční prototyp v&nbsp;enginu, ověření ergonomie
+                  v&nbsp;brýlích.</li>
+                <li><strong>6. Výsledná optimalizovaná aplikace</strong>: finální 3D assety, zvukový design, haptika,
+                  stabilních 90+&nbsp;<abbr class="abbr-tag" title="Frames Per Second">FPS</abbr>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Proč je proces specifický pro
+                VR?</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Měřítko na 2D monitoru klame</strong>: vzdálenost a velikost objektů vnímaná v&nbsp;okně
+                  editoru
+                  působí v&nbsp;headsetu zcela odlišně.</li>
+                <li><strong>Časné testování v brýlích</strong>: prototypovat interakce v&nbsp;headsetu od prvního týdne
+                  je
+                  naprosto zásadní; chyby v&nbsp;ergonomii se na monitoru neprojeví.</li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Životní cyklus návrhu VR aplikace má šest typických kroků: od konceptu přes storyboard, prostorové mockupy,
+          video prototyp až po interaktivní greybox a finální produkt.
+          Největší pastí bývá spoléhání se na 2D monitor počítače. Na monitoru se může zdát tlačítko skvěle dosažitelné,
+          ale po nasazení headsetu zjistíte, že je buď obrovské, nebo mimo přirozený dosah paže.
+          Proto je zásadní co nejdříve zprovoznit greybox přímo v brýlích.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4b: OBVYKLÉ KROKY PŘI NÁVRHU
+           ========================================== -->
+      <section>
+        <span class="slide-category">Návrh VR &bull; Proces vývoje</span>
+        <h2>Obvyklé kroky návrhu VR aplikace</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+            <h3>Klíčová zásada: Greyboxing</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li><strong>Sestavení scény</strong> z&nbsp;jednoduchých geometrických těles (krychle, válce).</li>
+              <li><strong>Ověření dosahu rukou, úhlů pohledu a pohybu</strong> v&nbsp;prostředí ještě předtím, než
+                začnete investovat stovky hodin do detailního 3D modelování a textur.</li>
+            </ul>
+          </div>
+
+          <div class="highlight-card accent-purple" style="padding: 12px 16px;">
+            <h3>Hlavní účely a výhody greyboxingu</h3>
+            <ul class="custom-list" style="margin: 0;font-size: 0.86em;">
+              <li>Testování hratelnosti a tempa (Pacing & Flow)</li>
+              <li>Rychlá iterace</li>
+              <li>Měření vzdáleností a mechanik</li>
+              <li>Optimalizace týmové práce</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple" style="padding: 12px 16px;">
+            <h3>Passthrough testování</h3>
+            <ul class="custom-list" style="margin: 0; ">
+              <li><strong>Využití barevného průhledu (Passthrough)</strong> umožňuje vývojáři sledovat fyzické
+                reakce a reálný prostor testera při ověřování ergonomie přímo v&nbsp;místnosti.</li>
+            </ul>
+          </div>
+
+          <div class="highlight-card accent-cyan" style="padding: 12px 16px;">
+            <h3>Co se testuje?</h3>
+            <ul class="custom-list" style="margin: 0;font-size: 0.86em;">
+              <li>Prostorová přesnost a kotvení (Spatial Anchors & Tracking)</li>
+              <li>Hloubkové zakrývání (Depth Occlusion)</li>
+              <li>Latence a plynulost (Latency & Frame Rate)</li>
+              <li>Světlo, zkreslení a měřítko</li>
+            </ul>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Životní cyklus návrhu VR aplikace má šest typických kroků: od konceptu přes storyboard, prostorové mockupy,
+          video prototyp až po interaktivní greybox a finální produkt.
+          Největší pastí bývá spoléhání se na 2D monitor počítače. Na monitoru se může zdát tlačítko skvěle dosažitelné,
+          ale po nasazení headsetu zjistíte, že je buď obrovské, nebo mimo přirozený dosah paže.
+          Proto je zásadní co nejdříve zprovoznit greybox přímo v brýlích.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 5: SOFTWARE PRO NÁVRH A PROTOTYPOVÁNÍ: PŘEHLED
+           ========================================== -->
+      <section>
+        <span class="slide-category">Návrh VR &bull; Nástroje & Prototyping</span>
+        <h2>Software pro návrh</h2>
+        <div class="slide-grid-2">
+
+          <div class="highlight-card" style="margin-top: 0;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Třívrstvé moderní workflow
+            </h3>
+            <ul class="custom-list" style=" margin: 0;">
+              <li><strong>1. 2D koncept & designové systémy (Figma)</strong>: vektorové ikony, typografie, barvy a 2D
+                layouty obrazovek.</li>
+              <li><strong>2. Spatial prototyping (ShapesXR, Bezel, Spline)</strong>: prostorové rozvržení, ergonomie
+                v&nbsp;měřítku 1:1, storyboard a stavy scény.</li>
+              <li><strong>3. Produkční vývoj v enginu (Unity, Unreal)</strong>: herní logika, shadery, optimalizace
+                FPS a síťový kód.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Standardizace: OpenXR
+              </h3>
+              <ul class="custom-list" style="; margin: 0;">
+                <li><strong>Otevřený standard Khronos Group</strong>: eliminuje roztříštěnost vendor SDK (Oculus,
+                  OpenVR, WaveVR).</li>
+                <li><strong>Jediný kód</strong>: aplikace napsaná v&nbsp;OpenXR běží nativně napříč Meta Quest, PC VR,
+                  Pico i dalšími headsety.</li>
+              </ul>
+            </div>
+
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div class="glass-card accent-emerald" style="padding: 14px 18px;margin-top: 12px;">
+                <h3>Srovnání přístupů prototypování</h3>
+                <ul class="custom-list" style=" margin: 0;">
+                  <li><strong>In-Headset (ShapesXR)</strong>: okamžité vnímání měřítka a hloubky, týmová tvorba
+                    v&nbsp;brýlích.</li>
+                  <li><strong>Web-based 3D (Bezel, Spline)</strong>: multiplayer v&nbsp;prohlížeči, nulová instalace,
+                    WebXR náhled.</li>
+                  <li><strong>Engine XR Frameworks</strong>: Unity XR Interaction Toolkit (XRI) a Unreal OpenXR.</li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Dnešní pipeline vývoje VR rozhraní má tři jasné vrstvy: 2D základy ve Figmě, rychlý prostorový wireframing v
+          nástrojích jako ShapesXR, Bezel či Spline,
+          a následně produkční programování v Unity nebo Unreal Engine s multiplatformním standardem OpenXR.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 6 (NOVÝ): SHAPESXR
+           ========================================== -->
+      <section>
+        <span class="slide-category">Nástroje &bull; ShapesXR</span>
+        <h2>ShapesXR: Průmyslový standard prostorového prototypování</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">In-VR Spatial Prototyping
+              </h3>
+              <p style="margin: 0 0 10px 0; font-size: 0.86em; color: var(--text-main); line-height: 1.45;"><a
+                  class="xvideo-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/shapesxr.mp4" target="_blank" rel="noopener noreferrer"
+                  style="float:right;margin-top: 0;margin-bottom: 0;"
+                  data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/shapesxr.mp4">
+                  <span class="video-icon">&#9654;</span>
+                </a>
+                Vlajková aplikace pro prostorový design, wireframing a storyboarding přímo uvnitř headsetu
+                (využívána týmy v&nbsp;Meta, ByteDance/Pico, Qualcommu).
+              </p>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Prostorový storyboarding (Space Stages)</strong>: scéna se organizuje do stavů a kroků;
+                  designér prochází flow aplikace jako v&nbsp;prezentaci.</li>
+                <li><strong>Kolaborace v reálném čase</strong>: více designérů a vývojářů manipuluje s&nbsp;objekty a
+                  rozhraním v&nbsp;jedné virtuální místnosti.</li>
+                <li><strong>Passthrough MR režim</strong>: testování prostorových oken a objektů zasazených do reálného
+                  pokoje.</li>
+                <li>Oficiální web platformy: <a href="https://www.shapesxr.com/" target="_blank"
+                    rel="noopener noreferrer" style="color: var(--accent-blue);">shapesxr.com</a></li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 4px;">Integrace do produkce</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Unity plugin</strong>: přímý export rozvržení, pozic a hierarchií do Unity formou prefabů.
+                </li>
+                <li><strong>Figma import</strong>: snadný přenos 2D UI komponent z&nbsp;Figmy přímo na prostorové
+                  panely.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3>Výhody ShapesXR</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li style="margin-bottom: 4px;">Nenutí designéra psát kód ani složitě nastavovat fyzikální komponenty.
+                </li>
+                <li style="margin-bottom: 4px;">Umožňuje během 30 minut vytvořit kompletní prostorový koncept.</li>
+                <li>Otestovat ergonomii v&nbsp;měřítku 1:1 a prezentovat jej klientovi přímo v&nbsp;headsetu.</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+        <aside class="notes">
+          ShapesXR je dnes de facto standardem pro UX/UI design ve VR a MR.
+          Umožňuje pracovat ve fázích – vytvoříte si storyboard prostorových stavů aplikace a přepínáte mezi nimi jedním
+          kliknutím.
+          V brýlích může být současně designér v Praze a produktový manažer v San Franciscu.
+          Obrovskou výhodou je Passthrough, kdy vidíte svůj skutečný stůl a navrhujete prvky přímo pro reálný svět.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 7 (NOVÝ): BEZEL.IT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Nástroje &bull; Bezel (bezel.it)</span>
+        <h2>Bezel: Kolaborativní spatial design v prohlížeči</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">„Figma pro prostorové
+                rozhraní“</h3>
+              <p style="margin: 0 0 10px 0; font-size: 0.86em; color: var(--text-main); line-height: 1.45;">
+                Plnohodnotný 3D a prostorový designový nástroj, který <strong>běží kompletně ve webovém
+                  prohlížeči</strong> bez nutnosti instalace specializovaného softwaru.
+              </p>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Multiplayer kolaborace</strong>: týmy vidí kurzory svých kolegů ve 3D prostoru
+                  v&nbsp;reálném čase.</li>
+                <li><strong>Okamžitý náhled v brýlích přes WebXR</strong>: stačí otevřít vygenerovaný odkaz
+                  v&nbsp;prohlížeči headsetu (Meta Quest Browser, Safari na visionOS).</li>
+                <li><strong>Prostorové stavy a interakce</strong>: vytváření klikacích prototypů, animací a hover efektů
+                  bez psaní kódu.</li>
+                <li>Oficiální web: <a href="https://prototypr.io/toolbox/bezel-beta" target="_blank"
+                    rel="noopener noreferrer"
+                    style="color: var(--accent-blue);">https://prototypr.io/toolbox/bezel-beta</a></li>
+                <li style="color: var(--accent-rose)">Neaktivní produkt</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 4px;">Plynulý přechod z 2D webu do
+                XR</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Zatímco herní enginy vyžadují znalost C# a složité pipeline, Bezel nabízí rozhraní s&nbsp;vrstvami a
+                panely vlastností, které okamžitě chápe každý 2D webový designér.
+              </p>
+            </div>
+
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div class="glass-card accent-emerald" style="padding: 12px 16px;margin-top: 12px;">
+                <h3 style="">Klíčové přednosti pro týmy</h3>
+                <ul class="custom-list" style=" margin: 0;">
+                  <li><strong>Nulová bariéra vstupu</strong>: klient nepotřebuje PC ani headset: prototyp si projde v
+                    běžném prohlížeči.</li>
+                  <li><strong>Komentáře přímo v prostoru</strong>: připínání zpětné vazby na konkrétní 3D komponenty
+                    v&nbsp;modelu.</li>
+                  <li><strong>Export</strong>: glTF, USDZ a propojení s&nbsp;nativními vývojovými nástroji.</li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Bezel představuje revoluci pro designéry, kteří přicházejí z webu a mobilních aplikací.
+          Nemusíte se učit Unity ani Unreal Engine. Otevřete prohlížeč a skládáte prostorové rozhraní stejně jednoduše
+          jako ve Figmě.
+          Když si chcete prototyp vyzkoušet v měřítku 1:1, nasadíte si Quest nebo Apple Vision Pro a přes WebXR odkaz
+          okamžitě stojíte uvnitř svého návrhu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 8 (NOVÝ): SPLINE 3D
+           ========================================== -->
+      <section>
+        <span class="slide-category">Nástroje &bull; Spline 3D</span>
+        <h2>Spline 3D: Interaktivní 3D a UI pro web i visionOS</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Webový 3D & XR editor</h3>
+              <p style="margin: 0 0 10px 0; font-size: 0.86em; color: var(--text-main); line-height: 1.45;">
+                Populární nástroj pro tvorbu dynamického 3D obsahu, animací a prostorových widgetů
+                s&nbsp;přímým exportem pro moderní prostorové platformy.
+              </p>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Nativní podpora Apple visionOS</strong>: přímý export do formátu USDZ a prostorových oken
+                  pro Apple Vision Pro.</li>
+                <li><strong>Fyzikální engine v reálném čase</strong>: gravitace, kolize, odrazy a síly nastavitelné bez
+                  nutnosti skriptování.</li>
+                <li><strong>Události a interakce</strong>: reakce na myš, pohled oka, gesta, scroll či zvukový signál.
+                </li>
+                <li>Oficiální web: <a href="https://spline.design/" target="_blank" rel="noopener noreferrer"
+                    style="color: var(--accent-blue);">spline.design</a></li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 4px;">Snadné vložení do webových
+                aplikací</h3>
+              <ul class="custom-list">
+                <li>Podpora komponent pro React, Next.js, WebGL a WebXR.</li>
+                <li>3D scénu lze vložit do webu pomocí jediného HTML tagu <code>&lt;spline-viewer&gt;</code>.</li>
+              </ul>
+            </div>
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3>Generativní AI v nástroji Spline</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Text-to-3D a AI textury</strong>: generování výchozích 3D tvarů a materiálů
+                  z&nbsp;textových promptů.</li>
+                <li><strong>Rychlé experimentování</strong>: během minut vytvoříte funkční interaktivní 3D objekt, který
+                  reaguje na přiblížení kurzoru či ruky.</li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Spline 3D si získal obrovskou popularitu pro svou vizuální eleganci a jednoduchost.
+          Umožňuje webovým vývojářům obohatit běžné weby o interaktivní 3D prvky s reálnou fyzikou.
+          Zásadní inovací je přímá podpora Apple visionOS, kdy scény vytvořené ve Spline můžete okamžitě renderovat jako
+          prostorové objekty v brýlích od Applu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9 (NOVÝ): HISTORICKÝ IN-VR AUTHORING
+           ========================================== -->
+      <section>
+        <span class="slide-category">Nástroje &bull; Historie & Ponaučení</span>
+        <h2>Starší in-VR nástroje: Marquette & EditorVR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Původní nástroje (2016-2018)
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Microsoft Marquette (MS Garage)</strong>:
+                  <ul class="custom-list">
+                    <li>Prostorové skicování wireframů a kompozic přímo v&nbsp;headsetu pro Windows Mixed Reality a
+                      Stea mVR.</li>
+                    <li>Manipulace s&nbsp;texty, tvary a 2D panely v&nbsp;prostoru.</li>
+                  </ul>
+                </li>
+                <li><strong>EditorVR pro Unity (Unity Labs)</strong>:
+                  <ul class="custom-list">
+                    <li>Pokus přenést <em>celý editor Unity</em> (Inspector, Project Hierarchy, Console) přímo do
+                      virtuální reality.</li>
+                    <li>Uživatel mohl manipulovat s&nbsp;herními komponentami s&nbsp;headsetem na hlavě.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-rose" style="padding: 16px 20px;">
+              <h3>Proč neuspěly?</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Gorilla arm</strong>: nastavování parametrů v&nbsp;Inspectoru s&nbsp;nataženýma
+                  rukama vedlo k&nbsp;rychlému vyčerpání.</li>
+                <li><strong>Nízké rozlišení displejů</strong>: čtení drobného kódu a drobných hodnot na displejích první
+                  generace headsetů způsobovalo bolest očí.</li>
+                <li><strong>Psaní kódu naslepo</strong>: programování bez možnosti vidět fyzickou klávesnici
+                  bylo nepraktické.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card accent-rose" style="padding: 12px 16px;">
+              <h3>Výsledek:</h3>
+              <p style="margin: 0; color: var(--text-muted); line-height: 1.4;font-size: 0.8em;">
+                <strong>Plnohodnotné IDE nepatří do brýlí.</strong> V&nbsp;headsetu má probíhat pouze rychlý prostorový
+                wireframing
+                a ověření měřítka (ShapesXR). Detailní programování logiky a optimalizace zůstává na monitoru a
+                klávesnici.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Historie in-VR authoringu je plná fascinujících slepých uliček. V letech 2016 a 2017 panovala představa,
+          že vývojáři brzy zahodí monitory a budou programovat s headsetem na hlavě. Unity vytvořilo EditorVR a
+          Microsoft přišel s Marquette.
+          Oba projekty skončily: psát kód na klávesnici, kterou nevidíte, a nastavovat desetinná čísla nataženýma rukama
+          je ergonomický nesmysl.
+          Z této lekce vzešel dnešní stav: v brýlích pouze skicujeme prostorový koncept, zbytek děláme na PC.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 10: SPECIFIKA VR A MILGRAMOVO KONTINUUM
+           ========================================== -->
+      <section>
+        <span class="slide-category">Návrh VR &bull; Zásady a Kontinuum</span>
+        <h2>Specifika VR aplikací</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Zásady prostorového designu
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Preferovat vizuální a prostorový vjem</strong>: omezit dlouhé bloky textu, raději informaci
+                  zobrazit trojrozměrně.</li>
+                <li><strong>Využívat 3D prvky místo plochého 2D UI</strong>: hloubka, reálné stíny a prostorový kontext.
+                </li>
+                <li><strong>Ponoření z vlastního pohledu</strong>: využít first-person perspektivu a volnost 6 stupňů
+                  volnosti (<abbr class="abbr-tag" title="Degrees of Freedom">6DoF</abbr>).</li>
+                <li><strong>Využít 3D manipulaci a navigaci</strong>: přirozené uchopování a prostorový pohyb.</li>
+                <li><strong>Ne vše patří do VR</strong>: psaní rozsáhlých textů, tabulky a běžné administrativní úlohy
+                  jsou ve VR neefektivní.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Milgramovo a Kishinovo
+                kontinuum (1994)</h3>
+              <p style="margin: 0 0 8px 0; color: var(--text-main); line-height: 1.45;">
+                Škála přechodu mezi reálným a plně virtuálním prostředím (Reality-Virtuality Continuum):
+              </p>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Real Environment</strong>: fyzický svět bez digitálních vrstev.</li>
+                <li><strong>Augmented Reality (AR)</strong>: digitální prvky promítané do reálného světa (optické
+                  průhledové brýle).</li>
+                <li><strong>Augmented Virtuality (AV)</strong>: virtuální svět obohacený o reálné prvky (např. video
+                  stream reálných rukou).</li>
+                <li><strong>Virtual Reality (VR)</strong>: plně syntetické prostředí zcela nahrazující realitu.</li>
+              </ul>
+            </div> -->
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">Moderní plynulý přechod
+              </h3>
+              <ul class="custom-list">
+                <li>
+                  Dnešní brýle (Apple Vision Pro, Meta Quest 3) umožňují plynule přecházet
+                  z&nbsp;Passthrough režimu do plného VR pohlcení podle potřeby aplikace.</li>
+                <li>Při vývoji aplikace je třeba vzít v úvahu.</li>
+                </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Klíčová poučka: virtuální realita není vhodná pro všechno. Psaní kódu nebo vyplňování tabulek je ve VR
+          neefektivní.
+          VR exceluje tam, kde hraje roli prostor, měřítko a vizuální vjem.
+          Paul Milgram definoval kontinuum reality a virtuality už v roce 1994. Dnes se stalo realitou v moderních
+          zařízeních,
+          která umožňují digitálním ovladačem plynule regulovat míru průhledu na reálný pokoj.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 11 (NOVÝ): ZELTZEROVA AIP KOSTKA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Teorie VR &bull; AIP Model (1992)</span>
+        <h2>Zeltzerova AIP kostka a taxonomie systémů</h2>
+        <div class="slide-grid-2">
+          <div>
+
+
+            <div class="highlight-card" style="margin-top: 10px; padding: 12px 16px;">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_06_img_01.png"
+                alt="Zeltzerova AIP kostka: Autonomy, Interaction, Presence"
+                style="max-height: 220px; float:right;margin-left: 5px;" data-preview-image>
+              <h3 style="color: var(--accent-cyan); font-size: 1em; margin-bottom: 4px;">Tři osy prostoru VR systémů
+              </h3>
+              <ul class="custom-list" style="margin: 0; display: inline;">
+                <li><strong>Autonomie (A &isin; [0, 1])</strong>: schopnost prostředí reagovat na fyziku, události a
+                  chovat se samostatně (AI agenti, kolize).</li>
+                <li><strong>Interakce (I &isin; [0, 1])</strong>: schopnost uživatele ovlivňovat parametry a objekty
+                  scény v&nbsp;reálném čase.</li>
+                <li><strong>Přítomnost (P &isin; [0, 1])</strong>: míra smyslového ponoření („být tam“), počet
+                  zapojených smyslů a nízká latence.</li>
+              </ul>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-dim); line-height: 1.4;">
+                AIP model pomáhá vývojáři uvědomit si, v&nbsp;jaké dimenzi aplikace zaostává. Skvělá grafika (vysoké P)
+                nezachrání aplikaci, pokud prostředí na nic nereaguje (nízké A) nebo uživatel nemůže nic ovlivnit (nízké
+                I).
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3>Mapování aplikací v AIP prostoru</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>360° panoramatické video</strong>: [A=0, I=0, P=0.5]
+                  <ul class="custom-list">
+                    <li>Vysoká vizuální přítomnost, ale nulová možnost změnit běh scény či fyziku.</li>
+                  </ul>
+                </li>
+                <li><strong>CAD model na 2D monitoru</strong>: [A=0.2, I=0.8, P=0.1]
+                  <ul class="custom-list">
+                    <li>Vysoká interakce a editovatelnost, ale minimální smyslová přítomnost.</li>
+                  </ul>
+                </li>
+                <li><strong>Chirurgický trenažér s haptikou</strong>: [A=0.8, I=0.85, P=0.9]
+                  <ul class="custom-list">
+                    <li>Reaktivní tělo pacienta, fyzický odpor tkání a vysoká imerze.</li>
+                  </ul>
+                </li>
+                <li><strong>Ideální virtuální realita </strong>: [1, 1, 1]
+                  <ul class="custom-list">
+                    <li>plně autonomní reaktivní svět
+                      s&nbsp;přirozeným tělesným vstupem a totální smyslovou přítomností.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          David Zeltzer z MIT definoval v roce 1992 AIP model, který je kanonickou taxonomií virtuálních světů.
+          Jakýkoliv systém lze popsat trojicí souřadnic od 0 do 1 pro Autonomii, Interakci a Přítomnost.
+          Například 360stupňové video má slušnou přítomnost, ale nulovou interakci a autonomii – díváte se na pasivní
+          záznam.
+          Chirurgický simulátor naopak balancuje všechny tři osy vysoko.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 12: VYUŽITÍ V ODVĚTVÍCH
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Odvětví &bull; Přehled</span>
+        <h2>Využití VR v různých odvětvích</h2>
+        <div class="slide-grid-4" style="gap: 6px;">
+          <div class="glass-card" style="padding: 12px 16px;">
+            <div class="spec-badge cyan" style="margin-bottom: 6px;float:right; display:inline;">Zdravotnictví</div>
+            <ul class="custom-list" style="font-size: 0.84em; margin: 0;display:inline">
+              <li>Chirurgický nácvik operací bez rizika pro pacienta (Osso VR).</li>
+              <li>Terapie fobií, <abbr class="abbr-tag" title="Post-Traumatic Stress Disorder">PTSD</abbr> a úzkostí.
+              </li>
+              <li>Rehabilitace motoriky a výuka anatomie.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card" style="padding: 12px 16px;">
+            <div class="spec-badge purple" style="margin-bottom: 6px;float:right; display:inline">Zábava a kultura</div>
+            <ul class="custom-list" style="font-size: 0.84em; margin: 0;display:inline">
+              <li>Imerzivní narativní filmy a prostorové divadlo.</li>
+              <li>Virtuální koncerty a hudební festivaly.</li>
+              <li>Prostorové videohry a globální fenomén Beat Saber.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card" style="padding: 12px 16px;">
+            <div class="spec-badge emerald" style="margin-bottom: 6px;float:right; display:inline">Výrobní procesy &
+              CAD</div>
+            <ul class="custom-list" style="font-size: 0.84em; margin: 0;display:inline">
+              <li>Průmyslový a automobilový design v&nbsp;měřítku 1:1.</li>
+              <li>Prohlídka prototypů před výrobou drahých forem.</li>
+              <li>Ergonomické ověřování montážních linek.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card" style="padding: 12px 16px;">
+            <div class="spec-badge amber" style="margin-bottom: 6px;float:right; display:inline">Vzdělávání &
+              trénink</div>
+            <ul class="custom-list" style="font-size: 0.84em; margin: 0;display:inline">
+              <li>Virtuální kampusy a vědecké laboratoře (Labster).</li>
+              <li>Interaktivní prostorová matematika (Prisms VR).</li>
+              <li>Technická školení obsluhy těžkých strojů a jeřábů.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card" style="padding: 12px 16px;">
+            <div class="spec-badge cyan" style="margin-bottom: 6px;float:right; display:inline">Spolupráce &
+              Workspace</div>
+            <ul class="custom-list" style="font-size: 0.84em; margin: 0;display:inline">
+              <li>Virtuální vícemonitorové pracovní stanice (Immersed).</li>
+              <li>Prostorové týmové porady u 3D modelů.</li>
+              <li>Práce na cestách v&nbsp;soukromém virtuálním kanclu.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card" style="padding: 12px 16px;">
+            <div class="spec-badge purple" style="margin-bottom: 6px;float:right; display:inline">Sport & armáda</div>
+            <ul class="custom-list" style="font-size: 0.84em; margin: 0;display:inline">
+              <li>Taktický nácvik strategií bez fyzického opotřebení.</li>
+              <li>Letecké a vojenské simulátory misí a krizových situací.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card" style="padding: 12px 16px;">
+            <div class="spec-badge emerald" style="margin-bottom: 6px;float:right; display:inline">Cestování &
+              památky</div>
+            <ul class="custom-list" style="font-size: 0.84em; margin: 0;display:inline">
+              <li>Digitální zachování ohrožených historických památek.</li>
+              <li>Fotogrammetrické prohlídky světových přírodních divů.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card" style="padding: 12px 16px;">
+            <div class="spec-badge amber" style="margin-bottom: 6px;float:right; display:inline">Věda &
+              vizualizace</div>
+            <ul class="custom-list" style="font-size: 0.84em; margin: 0;display:inline">
+              <li>Zkoumání komplexních molekulárních struktur a DNA.</li>
+              <li>Proudění tekutin (<abbr class="abbr-tag" title="Computational Fluid Dynamics">CFD</abbr>) a
+                astrofyzika.</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Zde vidíme průřez klíčovými oblastmi, kde virtuální a smíšená realita našla své nezastupitelné místo.
+          Nejde jen o hry. Ve zdravotnictví VR zachraňuje životy při nácviku operací, v průmyslu šetří miliony
+          za fyzické modely aut a letadel a v produktivitě umožňuje nahradit pět těžkých monitorů jedním lehkým
+          headsetem na cestách.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 13: POTENCIÁL TRHU VR/AR A PREDIKCE 2027-2030
+           ========================================== -->
+      <section>
+        <span class="slide-category">Odvětví &bull; Tržní potenciál & Predikce</span>
+        <h2>Potenciál trhu VR/AR a predikce 2027–2030</h2>
+        <div class="slide-grid-2">
+          <div style="flex: 0 1 50%;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/users.png" alt="Historická prognózaStatista pro VR"
+                style="max-height: 420px;" data-preview-image>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="highlight-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 4px;">Podnikový vs. spotřebitelský
+                segment</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.4;">
+                Hry jsou sice nejviditelnější, ale <strong>podnikový (enterprise) sektor tvoří nejstabilnější zdroj
+                  příjmů</strong> (vysoká ochota platit za licence a úsporu nákladů).
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3>Predikce trhu 2027–2030 (Zdroj: IDC, GVR)</h3>
+              <ul class="custom-list" style="font-size: 0.78em; margin: 0;">
+                <li><strong>Globální velikost trhu XR</strong>: překročí <strong>120–150 miliard USD</strong> do roku
+                  2030 (složená roční míra růstu <abbr class="abbr-tag" title="Compound Annual Growth Rate">CAGR</abbr>
+                  25–28 %).</li>
+                <li><strong>Dominance B2B a zdravotnictví</strong>: průmyslový výcvik, digitální dvojčata a telemedicína
+                  rostou tempem přes 30 % ročně.</li>
+                <li><strong>Konvergence k lehkým AI brýlím</strong>: přechod od těžkých headsetů k&nbsp;lehkým
+                  prostorovým
+                  brýlím s&nbsp;AI asistenty.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">Zakoupený
+                hardware</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.4;">
+                Více než 25 milionů samostatných headsetů na trhu (Meta Quest, Pico, Apple Vision Pro): dostatečná
+                masa uživatelů, která přitahuje velké softwarové domy.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Graf od Goldman Sachs z roku 2016 ukázal fundamentální fakt: VR/AR není jen doménou hráčů.
+          Nové predikce analytických agentur IDC a Grand View Research očekávají, že trh do roku 2030 překročí hranici
+          120 miliard dolarů.
+          Hlavním tahounem v následujících letech bude konvergence mezi umělou inteligencí, prostorovými výpočty a
+          lehkými brýlemi pro každodenní práci.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 14: VYBRANÉ VR APLIKACE (ROZCESTNÍK)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Případové studie &bull; Přehled</span>
+        <h2>Vybrané VR aplikace: Případové studie</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Pět klíčových oblastí v
+                detailu</h3>
+              <p style="margin: 0 0 10px 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+                Nyní podrobně rozebereme konkrétní zástupce v&nbsp;pěti stěžejních kategoriích:
+              </p>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Vzdělávání</strong>: Google Expeditions (masová výuka ve třídě a její limity)</li>
+                <li><strong>Zdravotnictví</strong>: Virtual Patients (nácvik komunikace lékařů a transfer do praxe)</li>
+                <li><strong>Zábava ve velkém prostoru</strong>: The Void & Zero Latency (pasivní haptika a ekonomika
+                  LBE)</li>
+                <li><strong>Umění & CAD Design</strong>: Tilt Brush & Gravity Sketch (prostorová tvorba a automotive)
+                </li>
+                <li><strong>Spolupráce a komunikace</strong>: Od Facebook Spaces k Meta Horizon, VRChat a českému
+                  Resonite</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 8px;">Co budeme u každé
+                aplikace sledovat?</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Motivace a problém</strong>: proč tradiční řešení nestačilo a co přineslo VR?</li>
+                <li><strong>Hardwarový setup</strong>: senzory, headsety, sítě a volnost pohybu.</li>
+                <li><strong>Uživatelské rozhraní</strong>: jak se aplikace ovládá a jaké volí metafory?</li>
+                <li><strong>Výsledky a historická ponaučení</strong>: co ukázalo testování na lidech, proč některé
+                  projekty uspěly a jiné zanikly?</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Přecházíme k jádru přednášky: detailnímu rozboru konkrétních aplikací. U každé z nich se nepodíváme jen na to,
+          co aplikace dělá, ale rozebereme její technické pozadí, rozhraní, interakční model a reálnou odezvu uživatelů
+          včetně problémů, na které tvůrci narazili. Vybrané aplikace slouží jako archetypy celých odvětví.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 15: GOOGLE EXPEDITIONS (ÚVOD)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Vzdělávání &bull; Google Expeditions</span>
+        <h2>Google Expeditions: Výuka ve třídě</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Koncept a cíl projektu</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li>Výuková mobilní aplikace pro virtuální a rozšířenou realitu vyvinutá Googlem.</li>
+                <li><strong>Primární zacílení na běžné školní třídy</strong> a skupinovou výuku pod vedením učitele.
+                </li>
+                <li>Historický projekt (2015–2021) pro demokratizaci školních exkurzí.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Kolektivní zážitek</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Namísto izolovaného hráče doma v&nbsp;pokoji sedí 25–30 žáků v&nbsp;jedné třídě a sdílí společný
+                vizuální prostor,
+                zatímco učitel funguje jako moderátor a průvodce.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_10_img_01.png"
+                alt="Žáci ve školní třídě používající Google Cardboard" style="max-height: 210px;" data-preview-image>
+              <div class="image-caption">Žáci ve třídě s kartonovými headsety Google Cardboard</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_10_img_02.png"
+                alt="Skupinová výuka s Google Expeditions ve škole" style="max-height: 190px;" data-preview-image>
+              <div class="image-caption">Společný virtuální výlet bez opuštění lavic</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Google Expeditions byl jedním z největších vzdělávacích experimentů v historii VR.
+          Google si uvědomil, že školy nemají rozpočet na nákup třiceti drahých herních počítačů a headsetů.
+          Přišel s konceptem, jak využít to, co už lidé mají v kapsách – chytré telefony – a vytvořil jednoduchý
+          ekosystém pro synchronizovanou výuku v lavicích.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 16: GOOGLE EXPEDITIONS (MÓDY A ROZSAH)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Vzdělávání &bull; Google Expeditions</span>
+        <h2>Google Expeditions: Cíl, módy a rozsah</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Cíl: Výuka ve VR za nízkou
+                cenu</h3>
+              <p style="margin: 0 0 10px 0; font-size: 0.86em; color: var(--text-main); line-height: 1.45;">
+                Využití extrémně levného držáku <strong>Google Cardboard</strong> z&nbsp;lepenky a čoček
+                v&nbsp;kombinaci
+                s&nbsp;běžným smartphonem žáka.
+              </p>
+            </div>
+
+            <div class="glass-card" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Dva provozní režimy</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Průvodce (Guide mode)</strong>: učitel řídí celou expedici ze svého tabletu, volí scény a
+                  směřuje pozornost třídy.</li>
+                <li><strong>Průzkum (Explorer mode)</strong>: žák se samostatně rozhlíží a prochází zajímavosti dané
+                  lokality.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">Globální dopad projektu
+              </h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li>Využito <strong>několika miliony studentů</strong> po celém světě.</li>
+                <li>Knihovna obsahovala <strong>přes 1 000 výukových programů</strong>.</li>
+                <li>Pokrytí: světová muzea, historické památky, přírodní útvary, korálové útesy, lidské tělo i povrch
+                  Marsu.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 4px;">Demokratizace vzdělávání
+              </h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-dim); line-height: 1.4;">
+                Děti z&nbsp;odlehlých či sociálně slabších škol mohly „navštívit“ Louvre, Buckinghamský palác nebo Velký
+                bariérový
+                útes bez jakýchkoliv cestovních nákladů.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Klíč k úspěchu Google Expeditions spočíval ve dvou režimech a obrovské databázi obsahu.
+          V režimu Guide je učitel kapitánem: žáci vidí přesně to prostředí, které vybere, a nemohou se „ztratit“.
+          V režimu Explorer se naopak žáci učí samostatně zkoumat okolí. Tisícovka expedic pokrývala vše od biologie
+          až po astrofyziku.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 17: GOOGLE EXPEDITIONS (PRŮVODCE)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Vzdělávání &bull; Průvodce</span>
+        <h2>Režim Průvodce: Rozhraní pro učitele</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Učitel jako navigátor výuky
+              </h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Učitel vede výuku z tabletu</strong>: aplikace mu servíruje připravený didaktický scénář,
+                  otázky pro žáky a doplňující fakta.</li>
+                <li><strong>Volba scén</strong>: přepíná mezi jednotlivými zastávkami expedice jedním klepnutím.</li>
+                <li><strong>Sledování pozornosti</strong>: na displeji tabletu vidí <em>směrové kužely (avatary) všech
+                    žáků</em>
+                  – okamžitě vidí, kam se kdo dívá.</li>
+                <li><strong>Vedení pozornosti (POI)</strong>: klepnutím na bod zájmu se žákům v&nbsp;brýlích zobrazí
+                  naváděcí
+                  šipka, která je otočí ke sledovanému objektu.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_12_img_01.jpg"
+                alt="Učitelské rozhraní na tabletu s body zájmu (Points of Interest)" style="max-height: 220px;"
+                data-preview-image>
+              <div class="image-caption">Tablet učitele: scénář expedice a interaktivní navigační body (POI)</div>
+            </div>
+
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_12_img_02.jpg"
+                alt="Žáci sledující výklad učitele při expedici" style="max-height: 200px;" data-preview-image>
+              <div class="image-caption">Učitel koordinuje pohled žáků v reálném čase</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Režim Průvodce řešil zásadní problém pedagogů: jak udržet pozornost třiceti dětí, když mají všichni na hlavě
+          brýle a nevidí na tabuli. Učitel měl na tabletu mapu pohledů žáků. Pokud někdo koukal do země, učitel to
+          viděl.
+          Když chtěl upozornit na žraloka plujícího za zády, klepl na bod zájmu a všem žákům se v brýlích objevila
+          šipka navádějící jejich pohled správným směrem.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 18: GOOGLE EXPEDITIONS (UKÁZKA SETUPU)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Vzdělávání &bull; Technický setup</span>
+        <h2>Technický setup Google Expeditions</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 16px 20px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 8px;">Hardware a konektivita</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Google Cardboard</strong>: jednoduché kartonové pouzdro s&nbsp;dvěma plastovými čočkami,
+                  magnetickým tlačítkem a suchým zipem.</li>
+                <li><strong>Smartphone</strong>: displej mobilu slouží jako stereoskopická obrazovka, akcelerometr a
+                  gyroskop poskytují <abbr class="abbr-tag" title="Degrees of Freedom">3DoF</abbr> rotaci.</li>
+                <li><strong>Lokální Wi-Fi router</strong>: zařízení ve třídě komunikují přes lokální síť, expedice jsou
+                  předem staženy do tabletu (není nutné rychlé internetové připojení během hodiny).</li>
+                <li><strong>Obsah</strong>: 360° panoramatické fotografie a videa se stereoskopickou hloubkou a zvukovým
+                  doprovodem.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_13_img_01.png"
+                alt="Google Cardboard složená kartonová krabička" style="max-height: 150px;" data-preview-image>
+              <div class="image-caption">Google Cardboard: minimální náklady na hardware</div>
+            </div>
+
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_13_img_03.jpg"
+                alt="360° stereoskopická scéna Velké čínské zdi v aplikaci Google Expeditions"
+                style="max-height: 190px;" data-preview-image>
+              <div class="image-caption">Stereo 360° scéna Velké čínské zdi promítaná žákům</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Technické řešení bylo geniálně jednoduché: obsah se předem nahrál do tabletu učitele, který sloužil jako
+          lokální
+          server přes školní Wi-Fi. Tím odpadla závislost na rychlosti internetu v učebně. Telefony žáků přijímaly pouze
+          synchronizační signály. Nevýhodou bylo omezení na 3DoF – žáci se mohli rozhlížet kolem sebe, ale nemohli
+          udělat krok dopředu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 19: GOOGLE EXPEDITIONS (ZPĚTNÁ VAZBA & POSUN)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Vzdělávání &bull; Zpětná vazba & Posun</span>
+        <h2>Zpětná vazba a evoluce školního VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="image-showcase" style="margin-top: 0;">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_14_img_01.png"
+                alt="Graf výzkumu Zoe Sujon: WOW moment u studentů s Google Expeditions" style="max-height: 350px;"
+                data-preview-image>
+              <div class="image-caption">Výzkum Zoe Sujon (2018): většina studentů zažila „WOW moment“</div>
+            </div>
+
+            <div class="highlight-card alert" style="margin-top: 8px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-rose); font-size: 1.05em; margin-bottom: 4px;">53 % žáků zaznamenalo
+                problém!</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Fyzické nepohodlí</strong>: karton tlačí na nos, nutnost držet brýle rukama u očí (únava
+                  paží).</li>
+                <li><strong>Zraková námaha</strong>: absence nastavení <abbr class="abbr-tag"
+                    title="Interpupillary Distance">IPD</abbr>, nízké rozlišení mobilních displejů.</li>
+                <li><strong>Přehřívání telefonů</strong> a rychlé vybíjení baterií během vyučovací hodiny.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Klíčová pedagogická lekce
+              </h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.45;">
+                Výuka ve VR brýlích nesmí trvat celých 45 minut. Optimum je <strong>10–15 minut</strong> jako imerzivní
+                vsuvka v&nbsp;rámci klasického výkladu učitele. Google projekt Expeditions v&nbsp;roce 2021 oficiálně
+                ukončil.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <div class="spec-badge emerald" style="margin-bottom: 6px;">Kde je školní VR dnes? (Standalone 6DoF)</div>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Pevné popruhy a volné ruce</strong>: samostatné brýle (Meta Quest 3/3S for Education,
+                  ClassVR)
+                  mají přesné hardwarové nastavení IPD a 6DoF sledování.</li>
+                <li><a class="xvideo-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/labster.mp4" target="_blank"
+                    rel="noopener noreferrer" style="float:right;margin-top: 0;margin-bottom: 0;"
+                    data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/labster.mp4">
+                    <span class="video-icon">&#9654;</span>
+                  </a><strong>Labster</strong>: virtuální vědecké laboratoře pro nebezpečné chemické pokusy.</li>
+                <li><a class="xvideo-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/prismvr.mp4" target="_blank"
+                    rel="noopener noreferrer" style="float:right;margin-top: 0;margin-bottom: 0;"
+                    data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/prismvr.mp4">
+                    <span class="video-icon">&#9654;</span>
+                  </a><strong>Prisms VR</strong>: imerzivní prostorová výuka matematiky s&nbsp;prokázaným zvýšením
+                  úspěšnosti studentů.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Výzkum Zoe Sujon ukázal odvrácenou stranu levného VR. Ačkoliv 90 % dětí mělo z expedice obrovský zážitek,
+          celých 53 % zaznamenalo potíže. Držet karton u očí unavuje paže, levné čočky bez nastavení IPD namáhají zrak.
+          Google projekt Expeditions v roce 2021 uzavřel, ale otevřel cestu modernímu školnímu VR na samostatných 6DoF
+          brýlích,
+          kde dnes exceluje Labster nebo Prisms VR.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 20: VIRTUAL PATIENTS (ÚVOD)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zdravotnictví &bull; Virtual Patients</span>
+        <h2>Virtual Patients: Nácvik komunikace lékařů</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Problém v lékařském
+                vzdělávání</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li>Spousta začínajících doktorů má <strong>vážný problém s komunikací s pacientem</strong> a
+                  zjišťováním
+                  anamnézy.</li>
+                <li><strong>Málo příležitostí</strong> k&nbsp;bezpečnému nácviku během studia a atestace: skuteční
+                  pacienti
+                  jsou citliví a ve stresu.</li>
+                <li>Lidští herci („standardizovaní pacienti“) jsou <em>extrémně drazí a organizačně nároční</em>.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Řešení: Virtuální pacienti
+              </h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li>Interaktivní 3D lidské postavy, se kterými může medik přirozeně hovořit.</li>
+                <li>Nutné <strong>rozpoznání řeči v reálném čase</strong>, behaviorální modely a vyhodnocovací
+                  algoritmy.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_15_img_02.png"
+                alt="Interakce lékaře s virtuálním pacientem" style="max-height: 200px;" data-preview-image>
+              <div class="image-caption">Medik vede diagnostický rozhovor s virtuální postavou</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_15_img_01.png"
+                alt="Virtuální pacient na displeji v simulační laboratoři" style="max-height: 180px;"
+                data-preview-image>
+              <div class="image-caption">Virtuální pacient reagující mimikou na otázky lékaře</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          V medicíně se klade obrovský důraz na anatomii a farmacii, ale lékaři často selhávají v komunikaci.
+          Špatně položená otázka může vést k chybné diagnóze. Dosud se používali najatí herci, což je drahé
+          a časově neudržitelné. Projekt Virtual Patients nahradil herce virtuálními lidskými avatary s umělou
+          inteligencí a rozpoznáváním řeči.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 21: VIRTUAL PATIENTS (SETUP)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zdravotnictví &bull; Implementace</span>
+        <h2>Virtual Patients: Technická architektura</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Hardware a interakční prvky
+              </h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Životní velikost</strong>: projekce postavy v&nbsp;reálném měřítku na plátno nebo do
+                  headsetu.</li>
+                <li><strong>Rozpoznání řeči (<abbr class="abbr-tag"
+                      title="Automated Speech Recognition">ASR</abbr>)</strong>:
+                  lékař mluví přirozeným hlasem; systém analyzuje promluvy.</li>
+                <li><strong>Sledování gest a očního kontaktu</strong>: infračervené kamery (<abbr class="abbr-tag"
+                    title="Infrared">IR</abbr>) sledují, zda se lékař pacientovi dívá do očí a jakou udržuje proxemiku.
+                </li>
+              </ul>
+            </div>
+
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/vrpatients.mp4" target="_blank" rel="noopener noreferrer"
+              style="margin-top: 10px;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/vrpatients.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Virtual Patient Interaction (Univ. of Florida)</div>
+              </div>
+            </a>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_16_img_01.jpg"
+                alt="Schéma technické architektury systému Virtual Patient: kamery, řeč, skripty"
+                style="max-height: 200px;" data-preview-image>
+              <div class="image-caption">Architektura: IR tracking, ASR a dialogový rozhodovací strom</div>
+            </div>
+
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_16_img_02.jpg"
+                alt="Lékař vyšetřující virtuální postavu promítanou na stěnu" style="max-height: 190px;"
+                data-preview-image>
+              <div class="image-caption">Lékař v interakci s pacientem v životní velikosti</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Technická architektura vyvinutá na University of Florida týmem Dr. Benjamina Loka využívala projekci pacienta
+          v životní velikosti. Lékař nemusel mít na hlavě headset – vstupem byl mikrofon pro rozpoznávání řeči a IR
+          kamery
+          sledující pozici těla a oční kontakt. Systém měřil, jak často se lékař dívá pacientovi do očí a jak reaguje
+          na jeho emocionální projevy bolesti či strachu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 22: VIRTUAL PATIENTS (ZJIŠTĚNÍ & LLM)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zdravotnictví &bull; Zjištění & LLM</span>
+        <h2>Virtual Patients: Výsledky a evoluce s AI</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Klíčová zjištění výzkumu
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Virtuální postavy plnohodnotně nahrazují lidské herce</strong> při zaučování mediků a
+                  sester.</li>
+                <li><strong>Silný pocit přítomnosti (Social Presence)</strong>: studenti cítí skutečnou zodpovědnost a
+                  emoce (stud, stres).</li>
+                <li><strong>100% standardizace</strong>: virtuální pacient reaguje na stejnou chybu vždy identicky, což
+                  umožňuje objektivní srovnání ročníku.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 10px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 4px;">Transfer of Learning do
+                praxe</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+                <strong>Postupy naučené ve VR se spolehlivě přenesly do reálného světa.</strong> Studenti trénovaní
+                s&nbsp;virtuálními pacienty dosahovali v&nbsp;reálných nemocnicích prokazatelně přesnějších diagnóz a
+                lepší komunikace.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.02em; margin-bottom: 4px;">Od skriptů k dynamickému
+                rozhovoru</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Evoluce: Generativní AI & LLM</strong></li>
+                <li>Původní systém používal rigidní rozhodovací stromy.</li>
+                <li>Dnešní virtuální pacienti integrují <strong>velké
+                    jazykové modely (LLM)</strong> s&nbsp;hlasovou syntézou a neuronovou animací mimiky (Audio2Face) –
+                  medik může
+                  položit zcela libovolnou otázku.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 4px;">Moderní lídři v medicínském
+                XR</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><a class="xvideo-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/osso.mp4" target="_blank" rel="noopener noreferrer"
+                    style="float:right;margin-top: 0;margin-bottom: 0;"
+                    data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/osso.mp4">
+                    <span class="video-icon">&#9654;</span>
+                  </a><strong>Osso VR</strong>: chirurgický trénink pro ortopedii a operační sály.</li>
+                <li><strong>FundamentalVR</strong>: haptický trenažér s&nbsp;fyzickým odporem tkání a kostí.</li>
+                <li><strong>SimX</strong>: nácvik krizových zásahů v&nbsp;týmu záchranářů.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Klíčovým vědeckým zjištěním byl fenomén „transfer of learning“. Studenti trénovaní ve virtuální simulaci
+          vykazovali v reálné nemocnici vyšší míru empatie a dělali méně diagnostických chyb.
+          Původní systém Benjamina Loka stál na pevných stromech větvení. Dnes do těchto aplikací vstoupila generativní
+          AI:
+          virtuální pacient je poháněn LLM, který dokáže v reálném čase simulovat zmatenost, bolest i emoce.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 23: ZÁBAVA (THE VOID & ZERO LATENCY)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zábava &bull; Warehouse-scale VR</span>
+        <h2>Hyper-realita: The Void a Zero Latency</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Location-Based Entertainment
+                (LBE)</h3>
+
+              <ul class="custom-list" style="font-size: 0.95em; margin: 0;">
+                <li>VR multiplayer v&nbsp;obrovské hale nebo aréně</li>
+                <li>Volný pohyb celého těla bez jakýchkoliv kabelů
+                  (Warehouse-scale / Free-roam VR).</li>
+                <li><strong>The Void</strong>: hyper-realistický zážitek spojující virtuální obraz s&nbsp;reálnými
+                  fyzickými kulisami.</li>
+                <li><strong>Výbava hráče</strong>: headset s&nbsp;vysokým rozlišením, prostorová sluchátka, haptická
+                  vesta
+                  s&nbsp;22 aktuátory na těle, senzory na rukou, herní hardware.</li>
+                <li><strong>Zero Latency</strong>: bezdrátové kooperativní arény pro až 8 hráčů naráz.</li>
+                <li><a href="https://zerolatencyprague.cz/">https://zerolatencyprague.cz/</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/thevoid.mp4" target="_blank" rel="noopener noreferrer"
+              style="margin-top: 0;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/thevoid.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">The Void — Star Wars: Secrets of the Empire</div>
+              </div>
+            </a>
+
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/zerolatencyprague.mp4" target="_blank"
+              rel="noopener noreferrer" style="margin-top: 0;"
+              data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/zerolatencyprague.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Zero Latency — Free-Roam VR aréna</div>
+              </div>
+            </a>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Propojení špičkového příběhu (licence Lucasfilmu pro Star Wars) s&nbsp;fyzickým prostorem vytvořilo
+                zcela nový žánr zážitkové zábavy.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Když se řekne VR zábava, lidé si často představí hraní v obýváku. The Void a Zero Latency posunuly laťku na
+          úroveň
+          tzv. Location-Based Entertainment (LBE). Uživatel vstoupí do arény a volně kráčí virtuálním světem spolu se
+          svými přáteli.
+          Fyzické kulisy v aréně přesně kopírují to, co vidí v brýlích.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 24: OBVYKLÝ SETUP (THE VOID)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zábava &bull; Technický setup</span>
+        <h2>Warehouse-scale VR: Obvyklý setup</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Klíčové technologické prvky
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Optické sledování ve velkém prostoru</strong>: soustava <strong>120 kamer</strong> na ploše
+                  <strong>300 m²</strong> zajišťovala milimetrovou přesnost pozice hlavy a rukou.
+                </li>
+                <li><strong>Původní řešení: Backpack PC</strong>: výkonný počítač v&nbsp;batohu na zádech eliminoval
+                  kabely,
+                  ale znamenal váhu a zahřívání.</li>
+                <li><strong>Haptická odezva celého těla</strong>: vesta reaguje na zásahy, výbuchy a vibrace.</li>
+                <li><strong>Reálné fyzické objekty (Props & Pasivní haptika)</strong>:
+                  <br>&bull; Skutečné stěny a dveře s&nbsp;madly přesně slícované s&nbsp;virtuálním modelem.
+                  <br>&bull; Reálné zbraně viditelné a hmatatelné ve hře.
+                </li>
+                <li><strong>4D efekty</strong>: ventilátory pro vítr, topná tělesa pro pocit žáru lávy, generátory vůní.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_19_img_01.jpg"
+                alt="Hráči v herní hale The Void s batohy a zbraněmi" style="max-height: 180px;" data-preview-image>
+              <div class="image-caption">Hráči s haptickými zbraněmi ve fyzické aréně</div>
+            </div>
+
+            <div class="slide-grid-2 equal" style="gap: 8px; margin: 0;">
+              <div class="image-showcase">
+                <img src="../bordel/images-pvr/05_vr_appky/slide_19_img_02.jpg"
+                  alt="Reálná stěna a spínače v aréně The Void" style="max-height: 140px;" data-preview-image>
+                <div class="image-caption">Fyzické kulisy</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-pvr/05_vr_appky/slide_19_img_03.jpg"
+                  alt="Virtuální podoba arény očima hráčů ve hře" style="max-height: 140px;" data-preview-image>
+                <div class="image-caption">Virtuální zobrazení</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Trik The Void spočíval v pasivní haptice (passive haptics). Ve virtuálním světě vidíte vesmírnou loď
+          a kovovou zeď. Když natáhnete ruku, skutečně nahmatáte chladnou pevnou zeď. Vaše ruka neprojde skrz.
+          Tento soulad mezi zrakovým a hmatovým vjemem okamžitě oklame mozek a vyvolá naprosto bezprecedentní pocit
+          reality.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 25: ZÁBAVA (HLAVNÍ ZJIŠTĚNÍ & EVOLUCE)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zábava &bull; Zjištění & Evoluce</span>
+        <h2>Velkoplošná VR: Hlavní zjištění a ekonomičnost</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Co tvoří dokonalý zážitek?
+              </h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Volná chůze eliminuje kinetózu</strong>: soulad mezi pohybem vnitřního ucha a zrakovým
+                  vjemem zcela odstraňuje nevolnost.</li>
+                <li><strong>Multiplayer násobí imerzi</strong>: kooperace s&nbsp;živými spoluhráči a jejich gestikulace.
+                </li>
+                <li><strong>Pasivní haptika</strong>: hmatový dotek reálné zdi okamžitě utvrdí mozek v&nbsp;reálnosti
+                  zážitku.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-rose" style="margin-top: 10px; padding: 14px 18px;">
+              <h3>Ekonomická realita a krach The Void</h3>
+              <ul class="custom-list" style="font-size: 0.9em; margin: 0;">
+                <li>Extrémní investiční a provozní náklady (drahé nájmy hal, servis desítek kamer, personál a hygiena
+                  propocených vest)</li>
+                <li><strong>The Void v&nbsp;roce 2020 zkrachoval</strong>. Šlo o technologický triumf,
+                  ale ekonomické varování.
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">Konec Backpack PC: Wi-Fi
+                6E Standalone</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li>Technologická revoluce v arénách.</li>
+                <li>Moderní arény (Zero Latency) <strong>zcela opustily těžké počítače na zádech i soustavy stropních
+                    kamer</strong>.</li>
+                <li>Využívají lehké samostatné headsety (HTC Vive Focus 3, Pico) s&nbsp;<strong>inside-out SLAM
+                    sledováním</strong>.</li>
+                <li>Obraz je bezdrátově streamován přes dedikované sítě <strong>Wi-Fi 6E / Wi-Fi 7</strong>
+                  s&nbsp;latencí pod 10&nbsp;ms.</li>
+                <li>Pořizovací i servisní náklady arén klesly o více než 70 %.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Z velkoplošné VR plyne důležité ponaučení. Technologicky šlo o triumf – volný pohyb pěšky zcela eliminoval
+          kinetózu a pasivní haptika přinesla maximální imerzi. Ekonomicky je však model LBE extrémně náročný na fixní
+          náklady.
+          The Void bohužel během pandemie zkrachoval. Koncept však žije dál v modernější bezdrátové podobě:
+          Zero Latency dnes nepoužívá batohy ani stropní kamery, ale lehké brýle s inside-out sledováním a Wi-Fi 6E
+          streamingem.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 26: TILT BRUSH (ÚVOD)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Tvorba &bull; Tilt Brush</span>
+        <h2>Tilt Brush: Tvorba umění ve 3D prostoru</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Revoluce v malování</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Intuitivní kreslící a modelovací aplikace</strong> pro virtuální realitu.</li>
+                <li>Vývoj zahájen 2014 (Skillman & Hackett), v&nbsp;roce <strong>2015 koupeno Googlem</strong>.</li>
+                <li><strong>Cíl</strong>: přirozené kreslení a sochaření v&nbsp;trojrozměrném prostoru místo na plochém
+                  2D plátně.</li>
+                <li>Využívá <strong>dva 6DoF ovladače</strong> pro obouruční tvorbu.</li>
+                <li>V roce 2021 uvolněno jako populární open-source projekt <strong>Open Brush</strong>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">Sdílení a otevřené
+                formáty</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li>Export do otevřených formátů glTF, FBX
+                  a OBJ
+                  pro přímé použití ve hrách a pro 3D tisk.</li>
+                <li>Možnost nahrávat proces kreslení jako prostorové video s&nbsp;virtuální kamerou v&nbsp;ruce.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">Požitek z kreslení v
+                prostoru
+              </h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-dim); line-height: 1.4;">
+                <strong>Tah štětcem není pouhá stopa pixelů ve 2D</strong>: je to prostorový 3D pás polygonů generovaný
+                v&nbsp;reálném čase podél trajektorie ruky umělce.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tilt Brush ukázal světu, že VR není jen pro hraní her, ale je to nové kreativní médium.
+          Aplikaci vytvořili Drew Skillman a Patrick Hackett a Google ji bleskově odkoupil.
+          Kouzlo spočívá v tom, že umělec nemaluje na plochu, ale přímo do vzduchu. Tah štětcem zůstává viset v prostoru
+          a umělec ho může obejít ze všech stran nebo vlézt dovnitř. Dnes projekt úspěšně žije jako Open Brush.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 27: TILT BRUSH (HLAVNÍ VÝHODY & UI)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Tvorba &bull; UI inovace</span>
+        <h2>Tilt Brush: Bimanual UI a prostorové inovace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Proč Tilt Brush funguje tak
+                skvěle?</h3>
+              <ul class="custom-list" style="font-size: 1em; margin: 0;">
+                <li><strong>Přirozené mentální modely</strong>: respektuje zažité návyky výtvarníka.</li>
+                <li><strong>Bimanual interface (obouruční rozhraní)</strong>:
+                  <ul class="custom-list" style="font-size: 1em; margin: 0;">
+                    <li>Nedominantní ruka = virtuální 3D paleta nástrojů, barev a štětců.</li>
+                    <li>Dominantní ruka = samotný štětec a ukazovátko.</li>
+                  </ul>
+                </li>
+                <li><strong>Super-powers (nadpřirozené schopnosti)</strong>:
+                  <ul class="custom-list" style="font-size: 1em; margin: 0;">
+                    <li>Kreslení dynamickým světlem, ohněm, kouřem a hvězdami.</li>
+                    <li>Změna měřítka: malovat mikroskopický detail a dílo zvětšit na velikost mrakodrapu.</li>
+                    <li>Fyzická chůze skrz vlastní tahy štětcem.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/openbrush.mp4" target="_blank" rel="noopener noreferrer"
+              style="margin-top: 0;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/openbrush.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Open Brush — Tvorba ve virtuální realitě</div>
+              </div>
+            </a>
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">Open Brush dnes & moderní
+                nástroje</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Open Brush přidal podporu Passthrough (malování přímo v&nbsp;reálném pokoji) a multiplayer.
+                Příbuzné špičkové nástroje: <strong>Adobe Substance 3D Modeler</strong> (modelování hmotou) a
+                <strong>Vermillion</strong> (olejomalba na plátno).
+              </p>
+            </div>
+            <div class="slide-grid-2 equal" style="gap: 8px; margin: 0;">
+              <div class="image-showcase">
+                <img src="../bordel/images-pvr/05_vr_appky/slide_22_img_01.jpg"
+                  alt="Virtuální paleta nástrojů a štětců v Tilt Brush" style="max-height: 140px;" data-preview-image>
+                <div class="image-caption">Bimanual UI: paleta v ruce</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-pvr/05_vr_appky/slide_22_img_02.jpg" alt="Tvorba scény v ateliéru Tilt Brush"
+                  style="max-height: 140px;" data-preview-image>
+                <div class="image-caption">Malování v prostoru</div>
+              </div>
+            </div>
+
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_22_img_03.png"
+                alt="Finální 3D umělecké dílo vytvořené v aplikaci Tilt Brush" style="max-height: 180px;"
+                data-preview-image>
+              <div class="image-caption">Komplexní socha vytvořená prostorovými tahy štětce</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          UI Tilt Brush se stalo učebnicovým příkladem bimanual interaction ve VR. Na jedné ruce máte čtyřbokou otočnou
+          kostku s paletou nástrojů, druhou rukou malujete. Nikdy nemusíte rozklikávat ploché menu na zdi.
+          A hlavně: Tilt Brush využívá to, co v realitě nejde – můžete malovat plameny nebo neonovým světlem a můžete
+          svůj model chytit dvěma rukama a zmenšit ho na velikost jablka nebo zvětšit tak, že pod ním stojíte jako pod
+          stromem.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 28: GRAVITY SKETCH
+           ========================================== -->
+      <section>
+        <span class="slide-category">Tvorba &bull; Gravity Sketch</span>
+        <h2>Gravity Sketch: Průmyslový a automotive design</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Profesionální kolaborativní
+                design</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li>Specializovaná aplikace pro průmyslový, produktový a automobilový design (automobilky Ford, Nissan).
+                </li>
+                <li><strong>Pokrývá kompletní workflow</strong>:
+                  <ul class="custom-list" style=" font-size: 1em; margin: 0;">
+                    <li>Rychlé prostorové skicování konceptů pomocí <abbr class="abbr-tag"
+                        title="Non-Uniform Rational B-Splines">NURBS</abbr> křivek.</li>
+                    <li>Přesné modelování ploch a kontrola povrchových křivostí.</li>
+                    <li>Společné týmové revize v&nbsp;reálném čase.</li>
+                  </ul>
+                </li>
+                <li>Cloudová platforma <strong>LandingPad</strong>: propojení VR, tabletů (iPad) a desktopu.</li>
+              </ul>
+            </div>
+
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/gravity.mp4" target="_blank" rel="noopener noreferrer"
+              style="margin-top: 10px;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/gravity.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Gravity Sketch — Automotive Design Workflow</div>
+              </div>
+            </a>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_23_img_01.png"
+                alt="Modelování konceptu automobilu v Gravity Sketch v měřítku 1:1" style="max-height: 230px;"
+                data-preview-image>
+              <div class="image-caption">Konceptuální návrh karoserie automobilu v reálném měřítku 1:1</div>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">Zásadní úspora pro
+                automobilky</h3>
+              <ul class="custom-list" style=" font-size: 1em; margin: 0;">
+                <li>Dříve museli designéři vyřezávat drahé fyzické hliněné modely aut v&nbsp;měřítku 1:1, což trvalo
+                  měsíce.</li>
+                <li>V&nbsp;Gravity Sketch sedí designér přímo uvnitř virtuální kabiny auta už první den návrhu
+                  a může model promítnout do reálné dílny přes Mixed Reality.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Zatímco Tilt Brush byl primárně o umělecké tvorbě, Gravity Sketch je špičkový inženýrský nástroj.
+          Využívají ho přední automobilky jako Ford nebo Nissan. Designéři v něm navrhují geometrii pomocí přesných
+          NURBS křivek. Mohou se posadit na virtuální sedadlo řidiče a okamžitě zkontrolovat ergonomii a výhled z
+          kabiny.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29: FACEBOOK SPACES (HISTORICKÝ MILNÍK)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Komunikace &bull; Facebook Spaces</span>
+        <h2>Facebook Spaces: Raný milník sociálního VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Setkání u stolu pro 4 osoby
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Pionýrský milník (2017–2019)</li>
+                <li>První velký sociální VR projekt společnosti Facebook (Meta), spuštěný v&nbsp;roce 2017.</li>
+                <li>Záměrné komorní omezení na <strong>maximálně 4 osoby u jednoho stolu</strong> (udržení dynamiky
+                  hovoru).</li>
+                <li>Audio-driven lip sync (pohyb rtů dle hlasu) a automatický oční kontakt pro překonání tísnivého údolí
+                  (uncanny valley).</li>
+                <li>Propojení se sociální sítí: selfie tyč, prohlížení fotek z&nbsp;feedu, kreslení prostorových hraček.
+                </li>
+                <li>Projekt byl v&nbsp;říjnu 2019 ukončen a položil základy dnešního ekosystému.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_24_img_01.png"
+                alt="Setkání čtyř avatarů u virtuálního stolu ve Facebook Spaces a selfie" style="max-height: 250px;"
+                data-preview-image>
+              <div class="image-caption">Facebook Spaces: Komorní setkání a virtuální selfie tyč</div>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">Význam pro vývojáře</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Spaces ukázaly, že intimní prostředí u kulatého stolu funguje lépe než obrovské prázdné haly.
+                Osobní proxemika a oční kontakt jsou klíčové pro psychologickou bezpečnost komunikace.
+              </p>
+            </div>
+
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/fbspaces.mp4" target="_blank" rel="noopener noreferrer"
+              style="margin-top: 10px;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/fbspaces.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Facebook Spaces</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <aside class="notes">
+          Facebook Spaces byl první vizí sociálního VR. Záměrně omezil počet lidí na 4 u stolu, protože ve větších
+          skupinách
+          se lidé překřikují. Projekt skončil v roce 2019, ale koncept komorního posezení u stolu a prostorové selfie
+          tyče
+          převzaly všechny následující platformy.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 30 (NOVÝ): META HORIZON EKOSYSTÉM
+           ========================================== -->
+      <section>
+        <span class="slide-category">Meta Horizon Ekosystém</span>
+        <h2>Meta Horizon: Worlds, Workrooms, Horizon OS</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Horizon Worlds & Workrooms
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Meta Horizon Worlds</strong>: masivní sociální a herní platforma s&nbsp;uživatelsky
+                  tvořenými světy; expanze na mobily i web.</li>
+                <li><strong>Meta Horizon Workrooms</strong>: profesionální virtuální kancelář pro hybridní týmy:
+                  <ul class="custom-list">
+                    <li>Až 3 virtuální monitory propojené s&nbsp;fyzickým Macem/PC.</li>
+                    <li> Passthrough výřez pro skutečnou klávesnici a hrnek s&nbsp;kávou na stole.</li>
+                    <li>Nekonečná prostorová tabule (psaní obráceným ovladačem jako fixem).</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 4px;">Evoluce avatarů a expresivity
+              </h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Od vznášejících se torz k&nbsp;plným tělům s&nbsp;nohama a integraci <strong>Face & Eye
+                  Trackingu</strong>.
+                Senzory v&nbsp;brýlích přenášejí úsměv, mrknutí i směr pohledu v&nbsp;reálném čase.
+              </p>
+            </div>
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3>Otevření Horizon OS (2024+)</h3>
+              <ul class="custom-list" style="font-size: 0.8em; margin: 0;">
+                <li>Meta po vzoru Androidu <strong>licencuje svůj operační systém Meta Horizon OS třetím
+                    stranám</strong>.</li>
+                <li>Vznik specializovaných zařízení od partnerů: herní headset od <strong>Asus ROG</strong>, pracovní
+                  brýle od <strong>Lenovo</strong>.</li>
+                <li>Integrace <strong>Meta AI</strong>: prostorový multimodální asistent schopný vidět a analyzovat
+                  scénu uživatele.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-dim); line-height: 1.4;">
+                Ekosystém Meta Horizon dnes reprezentuje největší spotřebitelskou prostorovou platformu propojující
+                sociální kontakt, zábavu a práci.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Dnešní ekosystém Meta Horizon tvoří tři pilíře: herní Horizon Worlds, pracovní Horizon Workrooms pro hybridní
+          porady
+          a především otevření Meta Horizon OS partnerským výrobcům hardware jako Asus ROG nebo Lenovo.
+          Zásadním technologickým skokem je sledování výrazu obličeje a očí – avataři dnes mrkají a usmívají se přesně
+          tak, jak se tváří živý uživatel.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 31: EKOSYSTÉM SOCIÁLNÍHO VR A ČESKÁ STOPA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Komunikace &bull; Kolaborace & Ekosystém</span>
+        <h2>Ekosystém sociálního VR a česká stopa</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Dominantní platformy
+                současnosti</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>VRChat</strong>: nesporný globální fenomén s&nbsp;obrovskou komunitou, podporou full-body
+                  trackingu
+                  (<abbr class="abbr-tag" title="Full Body Tracking">FBT</abbr>) a statisíci světy tvořenými
+                  v&nbsp;Unity.</li>
+                <li><strong>Rec Room</strong>: gamifikovaný multiplatformní svět pro mladší publikum (VR, iOS, Android,
+                  konzole).</li>
+                <li><strong>Immersed</strong>: špičková produktivní platforma pro virtuální práci až s&nbsp;5 monitory
+                  v&nbsp;prostoru.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 4px;">Česká stopa: Resonite
+                (dříve NeosVR)
+              </h3>
+
+              <ul class="custom-list" style="font-size: 0.9em; margin: 0;">
+                <li>Unikátní platforma vyvíjená českým autorem <strong>Tomášem Mariančíkem (FrooxEngine)</strong>.</li>
+                <li><strong>Kompletně in-VR skriptovatelný svět</strong>: tvorba 3D logiky, import modelů a programování
+                  přes nodový systém LogiX přímo zevnitř brýlí bez nutnosti kompilace na PC.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_25_img_01.jpg"
+                alt="Virtuální přednáška a setkání avatarů v sociálním VR" style="max-height: 250px;"
+                data-preview-image>
+              <div class="image-caption">Sociální XR: Od přednášek a koncertů po inženýrskou spolupráci</div>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3>Status starších projektů</h3>
+              <ul class="custom-list" style="font-size: 0.76em; margin: 0;">
+                <li><strong>AltspaceVR</strong>: Microsoft jej v&nbsp;březnu 2023 definitivně uzavřel a integroval do
+                  <em>Microsoft Mesh pro Teams</em>.
+                </li>
+                <li><strong>High Fidelity</strong>: Philip Rosedale zrušil virtuální svět a zaměřil se pouze na
+                  prostorové Spatial Audio API.</li>
+                <li><strong>Sansar</strong>: projekt tvůrců Second Life neuspěl a byl prodán v&nbsp;roce 2020.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          V sociálním VR dnes jasně dominuje VRChat díky svobodě komunity v Unity a podpoře sledování celého těla.
+          Pro FIT ČVUT je klíčové zmínit platformu Resonite od českého tvůrce Tomáše Mariančíka. Na rozdíl od VRChat,
+          kde musíte svět nahrát přes Unity na PC, v Resonite můžete programovat a stavět složité interaktivní stroje
+          přímo s headsetem na hlavě.
+          AltspaceVR od Microsoftu byl v roce 2023 uzavřen a nahrazen službou Mesh v Teams.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 32: MILNÍKY VR TVORBY (ÚVODNÍ ROZCESTNÍK)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Milníky VR &bull; Přehled</span>
+        <h2>Milníky VR tvorby: Aplikace, které definovaly obor</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Proč studovat milníky VR?
+              </h3>
+              <p style="margin: 0 0 10px 0; font-size: 0.86em; color: var(--text-main); line-height: 1.45;">
+                Každé nové médium potřebuje tituly, které jej definují. Stejně jako film, tak i VR potřebovala
+                aplikace, které vyřešily pohyb, interakci a vyprávění.
+              </p>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+                <li><strong>Allumette</strong>: loutkové prostorové diorama.</li>
+                <li><strong>Kingspray Graffiti</strong>: fyzikální simulace materiálů.</li>
+                <li><strong>Google Earth VR & Brink</strong>: prostorová fotogrammetrie.</li>
+                <li><strong>Virtual Desktop & Immersed</strong>: prostorová produktivita.</li>
+                <li><strong>Beat Saber</strong>: dokonalý kinetický herní design.</li>
+                <li><strong>Half-Life: Alyx</strong>: referenční standard AAA VR her.</li>
+                <li><strong>Job Simulator & Superhot VR</strong>: interakce bez manuálů.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 8px;">Klíčová designová témata
+              </h3>
+              <ul class="custom-list" style="font-size: 0.82em; margin: 0;">
+                <li><strong>Jak vyřešit pohyb bez kinetózy?</strong> (Teleport vs. Plynulý posun vs. fyzické stání na
+                  místě).
+                </li>
+                <li><strong>Jak podávat informace bez 2D HUDu?</strong> (Diegetická rozhraní na těle a zbrani).</li>
+                <li><strong>Jak zajistit okamžité pochopení?</strong> (Hand-centric fyzika odpovídající očekávání
+                  mozku).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Podíváme se detailně na sedm klíčových milníků, které definovaly pravidla prostorového designu.
+          Každý z nich přinesl unikátní odpověď na fundamentální otázky: jak vyprávět příběh, jak simulovat fyziku,
+          jak pracovat v prostoru a jak navrhnout interakce tak, aby hráč nepotřeboval tutoriál.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 33 (NOVÝ): MILNÍK 1: ALLUMETTE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Milníky VR &bull; Narativní film</span>
+        <h2>Milník 1: Allumette — Imerzivní dioramata</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Loutkový příběh v oblacích
+              </h3>
+              <p style="margin: 0 0 10px 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                Průkopnický prostorový animovaný film studia <strong>Penrose Studios (2016)</strong> volně inspirovaný
+                Andersenovým <em>Děvčátkem se sirkami</em>.
+              </p>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>6DoF volnost kamery</strong>: divák nesedí v&nbsp;kině; je obřím pozorovatelem vznášejícím
+                  se nad městečkem v&nbsp;oblacích.</li>
+                <li><strong>Nahlížení do oken</strong>: divák se může fyzicky předklonit a nahlédnout do kajuty létající
+                  lodi nebo za roh budovy.</li>
+                <li><strong>Změna měřítka a empatie</strong>: postavičky mají velikost drobných loutek, což vyvolává
+                  mimořádně silnou potřebu chránit je.</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">Moderní pokračovatelé
+                žánru</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Allumette ukázala cestu dalším oceňovaným VR příběhům: <strong>Wolves in the Walls</strong> (Emmy za
+                interaktivitu),
+                <strong>Madrid Noir</strong> či <strong>Baba Yaga</strong>.
+              </p>
+            </div>
+            <a class="video-card" href="https://www.youtube.com/watch?v=NXqMNlkaUc8" target="_blank"
+              rel="noopener noreferrer" style="margin-top: 0;">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">ALLUMETTE — Penrose Studios</div>
+
+              </div>
+            </a>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3>Klíčový přínos pro prostorový storytelling</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li>Režisér ve VR nemá kontrolu nad střihem ani natočením hlavy diváka.</li>
+                <li> Allumette ukázala, jak vést
+                  pozornost
+                  pomocí <strong>prostorového zvuku (Spatial Audio)</strong>, dynamického světla a pohybu postav
+                  v&nbsp;prostoru.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Allumette byl jedním z prvních filmů, který pochopil, že VR není jen 360stupňové video.
+          V 360 videu sedíte na jednom bodě a můžete jen otáčet hlavou. V Allumette se můžete fyzicky zvednout ze židle,
+          přijít k létající lodi a strčit hlavu do okénka, abyste viděli, co dělají postavy uvnitř.
+          Zde vznikla nová filmová řeč pro virtuální realitu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 34 (NOVÝ): MILNÍK 2: KINGSPRAY GRAFFITI
+           ========================================== -->
+      <section>
+        <span class="slide-category">Milníky VR &bull; Fyzikální simulace</span>
+        <h2>Milník 2: Kingspray Graffiti</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Simulace barvy bez kompromisů
+              </h3>
+              <p style="margin: 0 0 10px 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                Simulátor pouličního graffiti, který se stal etalonem přesné fyzikální simulace aerosolových sprejů.
+              </p>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Fyzikální model trysky (Cap physics)</strong>: reálný rozptyl barvy podle zvoleného typu
+                  trysky (skinny, fat, calligraphy).</li>
+                <li><strong>Vzdálenost a tlak</strong>: analogová spoušť ovladače dávkuje tlak ventilu; vzdálenost
+                  plechovky od zdi určuje ostrost a šířku linky.</li>
+                <li><strong>Stékání a viskozita</strong>: při příliš pomalém tahu nebo přetížení barva reálně stéká po
+                  zdi.</li>
+                <li><strong>Povrchy</strong>: barva reaguje na cihly, vlnitý plech, beton i dřevo.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/spray.mp4" target="_blank" rel="noopener noreferrer"
+              style="margin-top: 0;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/spray.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Kingspray Graffiti — VR Painting Gameplay</div>
+              </div>
+            </a>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3>Proč aplikace uspěla u reálných umělců?</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Reální sprejeři ocenili, že návyky ze skutečného sprejování (rychlost švihu, úhel náklonu zápěstí)
+                  fungují ve VR
+                  naprosto identicky.</li>
+                <li>VR navíc odstranilo toxické výpary, náklady na barvy i nebezpečí zatčení.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Kingspray Graffiti je ukázkou dokonalého řemesla ve fyzikální simulaci. Tvůrci nevytvořili jednoduchý štětec,
+          ale matematický model rozstřiku částic a tekutiny. Haptická odezva ovladače jemně vibruje podle toho,
+          jak silně mačkáte spoušť, a zvuk kuličky míchající barvu v plechovce při zatřesení rukou dokresluje dokonalou
+          iluzi.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 35 (NOVÝ): MILNÍK 3: GOOGLE EARTH & BRINK
+           ========================================== -->
+      <section>
+        <span class="slide-category">Milníky VR &bull; Prostorová geodata</span>
+        <h2>Milník 3: Google Earth VR & Brink Traveler</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Google Earth VR</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Zeměkoule jako 3D model s možností cestovat kamkoliv.</li>
+                <li><strong>Plynulá změna měřítka</strong>: od létání nad kontinenty k&nbsp;lidskému
+                  měřítku 1:1.</li>
+                <li>Rekonstrukce měst z&nbsp;letecké fotogrammetrie a satelitních dat.</li>
+              </ul>
+            </div>
+
+
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 4px;">Brink Traveler</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Dnešní špička imerzivního cestování.</li>
+                <li>Přírodní památky (Horseshoe Bend, Arches, Island) naskenované
+                  s&nbsp;milimetrovou přesností</li>
+                <li>Prostorový zvuk větru a možnost zkoumat detaily hornin na dosah ruky.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/googleearth.mp4" target="_blank" rel="noopener noreferrer"
+              style="margin-top: 0;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/googleearth.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Google Earth VR</div>
+              </div>
+            </a>
+
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/brink.mp4" target="_blank" rel="noopener noreferrer"
+              style="margin-top: 0;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/brink.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Brink Traveler</div>
+              </div>
+            </a>
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3>Zvládnutí kinetózy při letu
+              </h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.9em;">
+                <li> Přelet nad horami a městy byl pro mozek náročný.</li>
+                <li>Google Earth VR představil <strong>dynamické zúžení
+                    zorného pole
+                    (Comfort Mode / FOV Vignette)</strong>: eliminuje periferní
+                  optický tok a zabraňuje nevolnosti.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 4px;">Geoprostorová data dnes</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-dim); line-height: 1.4;">
+                Google dnes poskytuje <strong>Photorealistic 3D Tiles</strong> pro Unity a <strong>Cesium for
+                  Unreal</strong>, což umožňuje
+                komukoliv
+                stavět aplikace nad fotogrammetrickou mapou celého světa.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Google Earth VR byl pro mnoho lidí nejsilnějším momentem ve virtuální realitě. Možnost létat nad Manhattanem
+          nebo podívat se na dům, kde jste vyrostli, vyvolává silné emoce. Google zde vyvinul techniku tunelového vidění
+          (vignetting), která se stala průmyslovým standardem pro prevenci kinetózy při plynulém pohybu.
+          Brink Traveler posunul laťku ještě dále díky fotogrammetrii s fotorealistickými detaily každého kamene.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 36 (NOVÝ): MILNÍK 4: VIRTUAL DESKTOP & IMMERSED
+           ========================================== -->
+      <section>
+        <span class="slide-category">Milníky VR &bull; Produktivita & Streaming</span>
+        <h2>Milník 4: Virtual Desktop & Immersed</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Virtual Desktop (Guy Godin)
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Jediný nezávislý vývojář vyřešil klíčový problém celého odvětví: <strong>bezztrátový bezdrátový
+                    přenos PC VR na headset</strong>.</li>
+                <li>Nízkolatenční Wi-Fi kodeky (AV1, HEVC) s&nbsp;latencí pod 25&nbsp;ms umožnily hrát náročné
+                  počítačové hry bez kabelu.</li>
+                <li>Možnost pracovat na obří virtuální obrazovce.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 4px;">Immersed: Virtuální kancelář
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Až <strong>5 virtuálních monitorů</strong> zavěšených v&nbsp;prostoru napojených na notebook.</li>
+                <li>Práce v&nbsp;letadle, vlaku či kavárně s&nbsp;maximálním soukromím a nekonečnou pracovní plochou.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/vrdesktop.mp4" target="_blank" rel="noopener noreferrer"
+              style="margin-top: 0;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/vrdesktop.mp4">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Virtual Desktop — Wireless PC VR Streaming</div>
+
+              </div>
+            </a>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3>Změna účelu headsetu</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Virtual Desktop a Immersed dokázaly, že headset nemusí být pouhou herní konzolí.</li>
+                <li>Stává se <strong>osobním přenosným monitorem</strong> s&nbsp;vysokým rozlišením pro profesionální
+                  práci
+                  a nahrazuje těžký hardware na cestách.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Příběh Guye Godina a Virtual Desktopu je legendou VR průmyslu. Zatímco Facebook tvrdil, že bezdrátové PC VR
+          přes Wi-Fi není technicky možné kvůli latenci, Godin to sám naprogramoval.
+          Jeho software zachránil PC VR hraní a položil základy pro aplikace jako Immersed, kde dnes lidé tráví celou
+          pracovní dobu
+          psaním kódu na pěti virtuálních obrazovkách.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 37 (NOVÝ): MILNÍK 5: BEAT SABER
+           ========================================== -->
+      <section>
+        <span class="slide-category">Milníky VR &bull; Herní fenomén & Design</span>
+        <h2>Milník 5: Beat Saber</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Nejúspěšnější VR aplikace v
+                historii</h3>
+              <p style="margin: 0 0 10px 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                Rytmická hra vytvořená v&nbsp;Praze autory <strong>Janem Ilavským, Vladimírem Hrinčárem a Jaroslavem
+                  Beckem</strong>,
+                která prodala miliony headsetů po celém světě a byla odkoupena společností Meta.
+              </p>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Beat Games (Praha)</li>
+                <li><strong>Světelné meče a kostky</strong>: sekání létajících kostek ve směru šipek v&nbsp;rytmu hudby.
+                </li>
+                <li><strong>Dokonalá haptická synchronizace</strong>: jemný vibrační impuls v&nbsp;okamžiku protnutí
+                  kostky mečem.</li>
+                <li><strong>Čistá kinetická radost</strong>: spojení tance, sportu a hudby.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Proč se stal Beat Saber
+                etalonem UX?</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Nulová kinetóza (0% Motion Sickness)</strong>: hráč stojí pevně na zemi, pohybují se pouze
+                  objekty k&nbsp;němu $\rightarrow$ nulový konflikt mezi okem a vnitřním uchem.</li>
+                <li><strong>Okamžitá srozumitelnost bez návodu</strong>: červený meč patří k&nbsp;červené kostce, šipka
+                  ukazuje směr švihu. Hru pochopí všichni.</li>
+                <li><strong>Flow State</strong>: precizní audio design a vizuální zpětná vazba dostávají mozek do stavu
+                  absolutního soustředění.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-dim); line-height: 1.4;">
+                Beat Saber je důkazem, že pro úspěch ve VR nepotřebujete fotorealistickou grafiku ani otevřený svět.
+                Rozhoduje precizní timing, odezva na setinu sekundy a ergonomická elegance.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Beat Saber je nejvýznamnější český příspěvek do světové historie virtuální reality.
+          Tato hra byla hlavním důvodem, proč si miliony lidí koupily headsety Oculus Quest.
+          Z hlediska UX jde o mistrovské dílo: hráč stojí na místě, takže nemá kinetózu.
+          Mechanika sekání kostek světelným mečem je naprosto intuitivní a haptická odezva dává pocit fyzického zásahu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 38 (NOVÝ): MILNÍK 6: HALF-LIFE ALYX
+           ========================================== -->
+      <section>
+        <span class="slide-category">Milníky VR &bull; AAA Standard</span>
+        <h2>Milník 6: Half-Life: Alyx</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Vrchol vývoje studia Valve
+                (2020)</h3>
+              <p style="margin: 0 0 10px 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                První plnohodnotná velkorozpočtová (AAA) hra vytvořená od základů výhradně pro virtuální realitu.
+              </p>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong><a href="https://youtu.be/E-B8CEI0zyE?si=Gz6RNOC-Jp8oItsU&t=43">Grabbity Gloves (gravitační
+                      rukavice)</a></strong>: geniální řešení ergonomie dosahu.
+                  Uživatel zamíří na vzdálený předmět a švihem zápěstí si ho přitáhne přímo do dlaně.
+                </li>
+                <li><strong>Diegetické rozhraní</strong>: žádný 2D HUD na obrazovce. Zdraví je zobrazeno na hřbetu
+                  rukavice,
+                  počet nábojů na samotné zbrani, nabíjení vyžaduje reálný pohyb rukou.</li>
+                <li><strong>Plná fyzika objektů</strong>: interakce s&nbsp;každou lahví, krabicí a fixem na skle.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3>Inkluzivní přístup a lokomoce</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Volba pohybu pro každého</strong>: teleport, plynulý posun i kombinovaný režim.</li>
+                <li><strong>Ovládání jednou rukou (Single Controller)</strong>: hra je plně dohratelná i pro hráče
+                  s&nbsp;motorickým postižením.</li>
+                <li><strong>Režim v sedě s automatickou výškou</strong>: možnost hrát plnohodnotně na invalidním vozíku
+                  nebo v&nbsp;křesle.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">Lekce pro vývojáře</h3>
+              <ul class="custom-list" style="margin:0">
+                <li>Grabbity rukavice odstranily nutnost neustále se ohýbat k&nbsp;zemi pro předměty.</li>
+                <li>Tato mechanika vyřešila bolavá záda hráčů a stala se standardem pro prostorovou manipulaci.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Half-Life: Alyx je etalonem toho, jak má vypadat AAA titul ve VR. Valve strávilo roky testováním ergonomie.
+          Zjistili, že neustálé ohýbání se pro náboje na podlahu způsobuje po hodině bolest zad.
+          Vymysleli gravitační rukavice Grabbity: ukážete na předmět, švihnete zápěstím a předmět vám přilétne do dlaně.
+          Zároveň odstranili jakékoliv ploché menu – zdraví a munici máte na rukavici a na těle zbraně.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 39 (NOVÝ): MILNÍK 7: JOB SIMULATOR & SUPERHOT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Milníky VR &bull; Interakční design</span>
+        <h2>Milník 7: Job Simulator & Superhot VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Job Simulator (Owlchemy Labs,
+                2016)
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Hand-centric design bez tutoriálů</strong>: žádná tlačítka pro speciální akce.
+                  Když vidíte hrnek, vezmete ho rukou; když vidíte kávovar, stisknete tlačítko prstem.
+                </li>
+                <li><strong>Hravá destrukce a experimentování</strong>: vše v&nbsp;kanceláři reaguje na dotek, házení a
+                  interakci.</li>
+                <li>Definoval základy manipulace s&nbsp;objekty v&nbsp;room-scale VR pro všechny další vývojáře.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="margin-top: 10px; margin-bottom: 10px; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-dim); line-height: 1.4;">
+                Owlchemy Labs vytvořili metodiku „přirozených rukou“, kde je každá interakce diegetická a nepotřebuje
+                nápovědný text.
+              </p>
+            </div>
+            <div class="slide-grid-2">
+              <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/job.mp4" target="_blank" rel="noopener noreferrer"
+                style="margin-top: 0;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/job.mp4">
+                <div class="video-icon">&#9654;</div>
+                <div class="video-details">
+                  <div class="video-title">Job Simulator</div>
+
+                </div>
+              </a>
+
+              <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/superhot.mp4" target="_blank" rel="noopener noreferrer"
+                style="margin-top: 0;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/superhot.mp4">
+                <div class="video-icon">&#9654;</div>
+                <div class="video-details">
+                  <div class="video-title">Superhot</div>
+
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Superhot VR: Čas jako
+                prostor</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>„Time moves only when you move“</strong>: čas plyne pouze tehdy, když se hráč fyzicky hýbe
+                  v&nbsp;prostoru.</li>
+                <li><strong>Tělo jako choreograf</strong>: hráč uhýbá letícím kulkám v&nbsp;matrixovém zpomaleném čase
+                  pouhým náklonem těla.</li>
+                <li><strong>Minimalistická grafika</strong>: bílé prostředí, červení nepřátelé, černé předměty.
+                  Nulový vizuální šum.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Oba tituly ukázaly, že nejlepší VR mechaniky jsou ty, které jsou na 2D obrazovce nepředstavitelné
+                a spoléhají na přirozenou prostorovou inteligenci lidského těla.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Job Simulator a Superhot VR jsou dvě strany téže mince: geniálního prostorového designu.
+          Job Simulator dokázal, že rozhraní nepotřebuje textový návod – pokud věci vypadají jako v realitě, lidé
+          intuitivně vědí, co s nimi.
+          Superhot VR zase využil tělesný pohyb jako časovač. Když stojíte v klidu, kulka visí ve vzduchu 10 cm od vaší
+          hlavy.
+          Můžete pomalu uhnout hlavou a sledovat, jak proletí kolem.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 40: SMÍŠENÁ REALITA A SPATIAL COMPUTING
+           ========================================== -->
+      <section>
+        <span class="slide-category">Trendy &bull; Smíšená realita & Vstup</span>
+        <h2>Smíšená realita (MR) a bezovladačový vstup</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Video See-Through Mixed
+                Reality</h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+                Headsety (Meta Quest 3, Apple Vision Pro) snímají reálný svět stereoskopickými kamerami s&nbsp;vysokým
+                rozlišením a bleskovou latencí (&lt;12&nbsp;ms).
+              </p>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Nové paradigma.</li>
+                <li><strong>Konec izolace a strachu</strong>: uživatel vidí svůj reálný obývací pokoj, stůl i lidi kolem
+                  sebe.</li>
+                <li><strong>Scene Mesh & Kolize</strong>: virtuální objekty vrhají stíny na skutečný nábytek a míček se
+                  odráží od reálné podlahy.</li>
+                <li><strong>Spatial Anchors</strong>: virtuální plátna a modely zůstávají pevně přišpendlené na skutečné
+                  zdi.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">Hand Tracking a Gaze &
+                Pinch</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Bezovladačový vstup (Input Modalities).</strong></li>
+                <li><strong>Optical Hand Tracking</strong>: sledování rukou počítačovým viděním eliminuje plastové
+                  ovladače;
+                  přirozené mačkání tlačítek a manipulace s&nbsp;virtuálními předměty prsty.</li>
+                <li><strong>Gaze and Pinch (Apple Vision Pro)</strong>:
+                  <ul class="custom-list" style="margin: 0;">
+                    <li><em>
+                        Oko funguje jako zaměřovač</em>: bleskový výběr cíle pouhým
+                      pohledem.</li>
+                    <li><em>Mikrogesto prstů v&nbsp;klíně</em>: jemné klepnutí ukazováčku o palec potvrdí volbu
+                      bez
+                      únavy paží.</li>
+                  </ul>
+
+                </li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Vstupujeme do éry smíšené reality a prostorových výpočtů (Spatial Computing). Brýle již nejsou neprůhlednou
+          krabicí.
+          Díky barevnému Passthrough vidíte svůj pokoj a virtuální objekty jsou integrovány do reálného světa – mají
+          stíny
+          a respektují stěny. Zásadním posunem je ovládání: Apple Vision Pro přinesl paradigma Gaze and Pinch,
+          kde se díváte na prvek a v klíně jen klepnete prsty. To definitivně vyřešilo problém únavy rukou.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 41 (NOVÝ): 3D GAUSSIAN SPLATTING & NERF
+           ========================================== -->
+      <section>
+        <span class="slide-category">Technologie &bull; Digitalizace reality</span>
+        <h2>3D Gaussian Splatting & NeRF</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <div style="float:right">
+                <a class="xvideo-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/gauss.mp4" target="_blank" rel="noopener noreferrer"
+                  style=";margin-top: 0;margin-bottom: 10px;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/gauss.mp4">
+                  <span class="video-icon">&#9654;</span>
+                </a>
+
+                <a class="xvideo-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/gauss2.mp4" target="_blank" rel="noopener noreferrer"
+                  style=";margin-top: 10px;padding-top:10px;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/gauss2.mp4">
+                  <span class="video-icon">&#9654;</span>
+                </a>
+              </div>
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">3D Gaussian Splatting (3DGS,
+                2023)</h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+                Revoluční metoda prostorové reprezentace scény pomocí <strong>milionů orientovaných 3D Gaussových
+                  elipsoidů</strong> namísto polygonů.
+              </p>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Každý elipsoid nese: pozici (XYZ), kovarianční matici (rotaci a měřítko), opacitu a barvu vyjádřenou
+                  sférickými harmonickými funkcemi (reálné odlesky světla dle úhlu pohledu).</li>
+                <li><strong>Dlaždicové rasterizování (Tile-based rasterizer)</strong>: umožňuje vykreslovat miliony
+                  splatů v&nbsp;reálném čase při 90+&nbsp;FPS přímo na mobilních čipsetech brýlí.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">Pipeline digitalizace v
+                praxi</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Natočení 2–3 minut videa z&nbsp;mobilu či dronu $\rightarrow$ Structure from Motion (SfM / COLMAP)
+                $\rightarrow$ optimalizace Gaussových elipsoidů (5–15 minut na GPU) $\rightarrow$ okamžitá interaktivní
+                prohlídka ve VR.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3>Srovnání tří generací 3D digitalizace</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Klasická fotogrammetrie (Mesh + Textura)</strong>: pracná topologie, artefakty na hranách,
+                  špatné zachycení tenkých objektů a lesklé povrchy.</li>
+                <li><strong>NeRF (Neural Radiance Fields, 2020)</strong>: fotorealistické odlesky, ale scéna je uložena
+                  v&nbsp;neuronové síti $\rightarrow$ extrémně pomalý render paprsků (ray marching), nevhodné pro
+                  real-time VR.</li>
+                <li><strong>3D Gaussian Splatting (3DGS)</strong>: fotorealismus NeRFu spojený s&nbsp;bleskovou
+                  rychlostí rasterizace polygonů.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 4px;">Aplikační využití</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-dim); line-height: 1.4;">
+                Virtuální prohlídky nemovitostí, přesné digitalizace archeologických vykopávek, virtuální produkce pro
+                film (VFX) a fotorealistické tréninkové polygony pro záchranáře.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          3D Gaussian Splatting publikovaný v roce 2023 znamenal absolutní otřes v počítačové grafice.
+          Dříve trvala tvorba fotorealistického 3D prostředí týdny modelování. S 3DGS stačí obejít místnost s mobilem
+          v ruce, natočit video a algoritmus zrekonstruuje miliony elipsoidů. Výsledný render je k nerozeznání od
+          reality
+          včetně odlesků a průhledností, a co je nejdůležitější – běží v reálném čase 90 FPS na mobilním čipu brýlí.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 42 (NOVÝ): VLIV VR NA KOGNICI A UČENÍ
+           ========================================== -->
+      <section>
+
+        <h2>Vliv prostorového rozhraní na kognici a efektivitu učení</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Lidský mozek funguje v 3D
+              </h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Evoluční prostorová paměť</strong>: lidský hipokampus je
+                  uzpůsoben pro orientaci v&nbsp;prostoru. Informace umístěná na konkrétní prostorové místo
+                  v&nbsp;místnosti vykazuje až <strong>2,5&times; vyšší zapamatovatelnost</strong> než bod na ploše.
+                </li>
+                <li><strong>Imerzivní zapojení těla (Embodied Cognition)</strong>: zapojení fyzických gest a
+                  prostorového pohybu při řešení úlohy zásadně zrychluje vytváření neuronových spojení.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 4px;">Infinite Canvas &
+                Produktivita</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Konec přepínání kontextů (Alt+Tab). Uživatel si může v&nbsp;prostoru uspořádat úlohy podle mentálních
+                modelů:
+                komunikaci vlevo, kód uprostřed, dokumentaci vpravo a 3D model na stole.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3>Klíčová data: Studie PwC o VR tréninku</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>4&times; rychlejší zaškolení</strong> než v&nbsp;tradiční učebně (studenti se učí za 30
+                  minut to, co ve třídě trvá 2 hodiny).</li>
+                <li><strong>275 % vyšší sebedůvěra</strong> studentů aplikovat naučené dovednosti v&nbsp;praxi (díky
+                  bezpečnému nácviku chyb ve VR).</li>
+                <li><strong>4&times; vyšší emocionální zapojení</strong> a 4&times; méně rozptylování (absence koukání
+                  do mobilu během výuky).</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 4px;">Kognitivní tunneling</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-dim); line-height: 1.4;">
+                VR eliminuje vizuální ruch okolního světa a vytváří hluboký stav soustředění (flow state), ideální pro
+                komplexní inženýrské a lékařské úlohy.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Vědecké výzkumy jednoznačně potvrzují obrovský vliv prostorového rozhraní na lidskou kognici.
+          Metoda loci – paměťový palác – funguje ve VR přirozeně, protože mozek si pamatuje prostorové souvislosti.
+          Převratná studie společnosti PwC ukázala, že lidé trénovaní ve VR se učí čtyřikrát rychleji než v učebně
+          a mají téměř třikrát vyšší sebedůvěru použít dovednosti v reálné práci, protože si krizovou situaci fyzicky
+          zažili.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 43 (NOVÝ): INKLUZIVNÍ DESIGN A PŘÍSTUPNOST
+           ========================================== -->
+      <section>
+        <span class="slide-category">Návrh VR &bull; Přístupnost & Inkluze</span>
+        <h2>Inkluzivní prostorový design (XR Accessibility)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Přístupný XR
+                design</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Režim v sedě & adaptace výšky (Seated Mode)</strong>:
+                  <ul class="custom-list" style="margin:0">
+                    <li>Uživatelé na invalidním vozíku nebo unavení lidé musí mít virtuální kompenzaci výšky očí.</li>
+                    <li>Všechny interakční prvky musí být dosažitelné bez nutnosti fyzického klekání či stoupání.</li>
+                  </ul>
+                </li>
+                <li><strong>Ovládání jednou rukou (Single Controller)</strong>:
+                  <ul class="custom-list" style="margin: 0;">
+                    <li>Možnost přemapovat všechny klíčové mechaniky na dominantní ruku pro hendikepované
+                      uživatele.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 4px;">Prevence kinetózy jako
+                podmínka přístupnosti</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Až 30 % populace je citlivých na kinetózu. Aplikace musí vždy nabízet volbu: <em>teleport</em> vs.
+                <em>plynulý posun</em>,
+                <em>trhané otáčení (snap turn)</em> po 45&deg; a volitelné zúžení zorného pole (FOV vignetting).
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3>Smyslová přístupnost
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Prostorové titulky (Spatial Captions)</strong>: titulky vázané na mluvící postavu
+                  s&nbsp;ukazatelem směru pro neslyšící.</li>
+                <li><strong>Multisenzorická zpětná vazba</strong>: každá důležitá událost musí mít současně vizuální,
+                  zvukový i haptický signál (pokud uživatel špatně slyší nebo vidí).</li>
+                <li><strong>Barevná přístupnost</strong>: režimy pro barvoslepost (deuteranopie, protanopie).</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-dim); line-height: 1.4;">
+                Přístupný design není kompromis na úkor zážitku – naopak, volitelná nastavení výšky a pohodlného dosahu
+                ocení po hodině práce v&nbsp;headsetu každý zdravý uživatel.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Přístupnost (Accessibility) je v prostorovém designu naprosto kritická. Pokud navrhnete aplikaci, kde musíte
+          pro sebrání předmětu
+          fyzicky sáhnout na podlahu, vyloučíte tím lidi na invalidním vozíku i uživatele se zraněním zad.
+          Špičková VR aplikace nabízí kalibraci výšky, ovládání jednou rukou, prostorové titulky pro neslyšící
+          a volitelné režimy pohybu pro prevenci kinetózy.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 44: DALŠÍ VYUŽITÍ A BUDOUCÍ TRENDY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Trendy &bull; Další využití</span>
+        <h2>Další praktická využití a budoucí trendy</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Šest dynamických odvětví</h3>
+              <ul class="custom-list" style=" margin: 0;">
+                <li><strong>Realitní trh & Architektura</strong>: virtuální prohlídky rozestavěných budov, okamžitá
+                  volba materiálů a osvětlení.</li>
+                <li><strong>Nácvik krizových situací</strong>: hašení požárů, zásah v&nbsp;chemické továrně, evakuace
+                  tunelu bez reálného rizika.</li>
+                <li><strong>Prostorová vizualizace dat</strong>: analýza finančních toků, genomu a vícedimenzionálních
+                  statistických korelací.</li>
+                <li><strong>Virtuální nákupy (v-Commerce)</strong>: zkoušení nábytku a automobilů v&nbsp;reálném
+                  měřítku.</li>
+                <li><strong>Průmyslový a ergonomický design</strong>: kontrola montážních úkonů před spuštěním linky.
+                </li>
+                <li><strong>Simulace procesů</strong>: proudění tekutin (<abbr class="abbr-tag"
+                    title="Computational Fluid Dynamics">CFD</abbr>), šíření tepla a aerodynamika.</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/05_vr_appky/slide_27_img_01.png"
+                alt="Fotorealistická architektonická vizualizace interiéru domu ve VR" style="max-height: 250px;"
+                data-preview-image>
+              <div class="image-caption">Fotorealistická architektonická vizualizace interiéru ve VR</div>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">Fúze: Průmysl 4.0 &
+                OpenUSD</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.4;">
+                Propojení VR s&nbsp;internetem věcí (<abbr class="abbr-tag" title="Internet of Things">IoT</abbr>),
+                platformou
+                <strong>NVIDIA Omniverse</strong> a otevřeným standardem <strong>OpenUSD</strong> umožňuje vytvářet živá
+                digitální dvojčata
+                celých továren a elektráren se senzory v&nbsp;reálném čase.
+              </p>
+            </div>
+            <a class="video-card" href="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/realestate.mp4" target="_blank" rel="noopener noreferrer"
+              style="margin-top: 10px; padding: 10px 14px;" data-preview-video="https://pages.fit.cvut.cz/pauspetr/presentations/bordel/video-pvr/realestate.mp4">
+              <div class="video-icon" style="width: 36px; height: 36px; font-size: 14px;">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">VR Real Estate — Prohlídka domů z projektu</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <aside class="notes">
+          Budoucnost VR aplikací směřuje k propojení s průmyslem 4.0. Digitální dvojčata továren v platformách jako
+          NVIDIA Omniverse
+          umožňují inženýrům sledovat telemetrii senzorů přímo v prostorovém modelu. Nácvik krizových situací šetří
+          miliony
+          za cvičné polygony a realitní trh dnes běžně prodává byty na základě imerzivní prohlídky před položením
+          prvního základního kamene.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 45: SHRNUTÍ A ZÁVĚR
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Shrnutí &bull; Rekapitulace</span>
+        <h2>Klíčové principy návrhu VR aplikací</h2>
+        <div class="slide-grid-2" style="gap: 20px;">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-top: 0;margin-bottom: 15px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 8px;">Čtyři pravidla návrhu
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>1. VR není obrazovka na hlavě</strong>: navrhujte pro prostor, tělo a hloubku, nikoli pro
+                  ploché rámy.</li>
+                <li><strong>2. Využívejte známé metafory</strong>: skeuomorfismus snižuje křivku učení, ale doplňte jej
+                  o magické schopnosti (super-powers).</li>
+                <li><strong>3. Prototypujte v headsetu od prvního dne</strong>: měřítko a ergonomie na monitoru klamou;
+                  spatial wireframing (ShapesXR) je nenahraditelný.</li>
+                <li><strong>4. Respektujte lidskou fyziologii a inkluzi</strong>: peripersonální zóna dosahu, prevence
+                  únavy paží, seated mode a eliminace kinetózy jsou důležité.</li>
+              </ul>
+            </div>
+            <div class="highlight-card" style="margin: 0; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-main); font-weight: 600;">
+                „Nejlepší VR aplikace jsou ty, které se nesnaží napodobit počítačový monitor, ale vytvářejí nový
+                smysluplný svět s&nbsp;vlastními pravidly.“
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <table class="comparison-table" style="font-size: 0.72em; margin: 0;">
+              <thead>
+                <tr>
+                  <th>Oblast</th>
+                  <th>Hardware / Standard</th>
+                  <th>Přidaná hodnota</th>
+                  <th>Klíčová výzva</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Vzdělávání</strong></td>
+                  <td>Standalone 6DoF (Quest / ClassVR)</td>
+                  <td>Masová dostupnost, 4&times; rychlejší učení</td>
+                  <td>Délka relace 10–15 min, didaktika</td>
+                </tr>
+                <tr>
+                  <td><strong>Medicína</strong></td>
+                  <td>Projekce / Headset + LLM AI</td>
+                  <td>Bezpečný trénink chyb, objektivita</td>
+                  <td>Přirozený dialog, haptika</td>
+                </tr>
+                <tr>
+                  <td><strong>LBE Zábava</strong></td>
+                  <td>Wireless Standalone + Wi-Fi 6E</td>
+                  <td>Pasivní haptika, hyper-realita</td>
+                  <td>Vysoké nájmy hal, propustnost arén</td>
+                </tr>
+                <tr>
+                  <td><strong>Design / CAD</strong></td>
+                  <td>6DoF ovladače + OpenXR / Cloud</td>
+                  <td>Měřítko 1:1, bimanual UI, NURBS</td>
+                  <td>Přesnost vstupů, export do CAD</td>
+                </tr>
+                <tr>
+                  <td><strong>Sociální XR</strong></td>
+                  <td>Face & Eye tracking + Spatial Audio</td>
+                  <td>Pocit přítomnosti, neverbální řeč</td>
+                  <td>Moderace, soukromí, toxické chování</td>
+                </tr>
+              </tbody>
+            </table>
+
+
+          </div>
+        </div>
+        <aside class="notes">
+          Dostáváme se na závěr přednášky. Když budete sami navrhovat prostorovou aplikaci, pamatujte na čtyři zlatá
+          pravidla:
+          navrhujte pro prostor, využívejte přirozené metafory doplněné o magické schopnosti, prototypujte přímo v
+          headsetu
+          a hlídejte komfort, přístupnost a fyziologii uživatele. Viděli jsme, že úspěšné aplikace v medicíně,
+          automotive i zábavě nestojí
+          na náhodě, ale na precizním respektování lidského vnímání. Děkuji za pozornost!
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/multimodal/multimodal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+  <script src="../bordel/js/tooltips.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: false,
+      touch: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      view: "auto",
+      scrollLayout: "compact",
+      scrollActivationWidth: 600,
+      plugins: [RevealNotes, RevealHighlight, RevealSearch, RevealZoom, RevealPointer, Multimodal, RevealMath.KaTeX],
+      pointer: {
+        key: "q",
+        color: "red",
+        opacity: 0.8,
+        pointerSize: 25,
+        alwaysVisible: false,
+        tailLength: 10,
+      }
+    });
+  </script>
+</body>
+
+</html>

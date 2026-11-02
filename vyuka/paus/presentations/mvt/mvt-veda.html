@@ -1,0 +1,2282 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>MVT: Vizualizace vědeckých dat — ČVUT</title>
+  <meta name="description" content="Přednáška Moderní vizualizační technologie: Vizualizace vědeckých dat — Petr Pauš">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/panda-light.css">
+  <!-- <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/multimodal/multimodal.css"> -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Vlastní posuvníky v panelu */
+    input[type=range] {
+      accent-color: #38bdf8;
+    }
+
+    /* Skrytí scrollbaru pro panely */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+</head>
+
+<body>
+<a id="grafit-lecture-return" class="grafit-lecture-return grafit-lecture-return--floating" href="../../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+<a id="grafit-course-link" class="grafit-course-link--floating" href="../../../mvt/" aria-label="Přehled přednášek MVT" data-subject="mvt">MVT</a>
+
+  <!-- Horní trvale zobrazené záhlaví -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+    <!-- <div class="logo-badge">
+      <span class="cvut-tag">ČVUT</span>
+      <span>MVT &bull; <span class="highlight">Vizualizace vědeckých dat</span></span>
+    </div>
+    <div class="logo-badge">
+      <span>Petr Pauš</span>
+    </div> -->
+  </header>
+
+  <!-- Dolní trvale zobrazené zápatí -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <!-- <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div> -->
+
+    <!-- Ovládací panel -->
+    <div class="help-keys" style="display: none;">
+      <div class="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-300">
+
+        <!-- Řízení rychlosti a proudění -->
+        <div class="flex flex-col gap-1 w-full sm:w-36">
+          <div class="flex justify-between">
+            <label for="flowSpeed">Rychlost</label>
+            <span id="flowSpeedVal" class="text-sky-400 font-mono">2.0</span>
+          </div>
+          <input type="range" id="flowSpeed" min="0" max="9" step="0.4" value="8.0"
+            class="w-full h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+        </div>
+
+        <!-- Síla překážky / Odpudivost -->
+        <div class="flex flex-col gap-1 w-full sm:w-36" style="display: none;">
+          <div class="flex justify-between">
+            <label for="repulsion">Vliv H1 (Odpudivost)</label>
+            <span id="repulsionVal" class="text-sky-400 font-mono">1.5</span>
+          </div>
+          <input type="range" id="repulsion" min="0" max="4" step="0.1" value=".5"
+            class="w-full h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+        </div>
+
+        <!-- Víření (Curl/Vorticity) -->
+        <div class="flex flex-col gap-1 w-full sm:w-36">
+          <div class="flex justify-between">
+            <label for="vorticity">Víření</label>
+            <span id="vorticityVal" class="text-sky-400 font-mono">0.8</span>
+          </div>
+          <input type="range" id="vorticity" min="-2" max="2" step="0.1" value="0.3"
+            class="w-full h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+        </div>
+
+        <!-- Hustota mřížky -->
+        <div class="flex flex-col gap-1 w-full sm:w-32">
+          <div class="flex justify-between">
+            <label for="gridSpacing">Hustota vekt.</label>
+            <span id="gridSpacingVal" class="text-sky-400 font-mono">35px</span>
+          </div>
+          <input type="range" id="gridSpacing" min="20" max="60" step="5" value="35"
+            class="w-full h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+        </div>
+
+        <!-- Průhlednost šipek (Nové) -->
+        <div class="flex flex-col gap-1 w-full sm:w-32" style="display: none;">
+          <div class="flex justify-between">
+            <label for="arrowOpacity">Průhlednost šipek</label>
+            <span id="arrowOpacityVal" class="text-sky-400 font-mono">0.30</span>
+          </div>
+          <input type="range" id="arrowOpacity" min="0.05" max="1.0" step="0.05" value="0.20"
+            class="w-full h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+        </div>
+
+        <!-- Tloušťka šipek (Nové) -->
+        <div class="flex flex-col gap-1 w-full sm:w-32" style="display: none;">
+          <div class="flex justify-between">
+            <label for="arrowWidth">Tloušťka šipek</label>
+            <span id="arrowWidthVal" class="text-sky-400 font-mono">0.8px</span>
+          </div>
+          <input type="range" id="arrowWidth" min="0.3" max="2.0" step="0.1" value="0.5"
+            class="w-full h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+        </div>
+
+        <!-- Přepínače (Toggles) a tlačítka -->
+        <div class="flex items-center gap-3 ml-auto" style="display: none;">
+          <button id="toggleStreamlines"
+            class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 transition text-slate-200 flex items-center gap-1.5 active:scale-95">
+            <span class="w-2 h-2 rounded-full bg-rose-500" id="streamlineIndicator"></span>
+            Proudnice
+          </button>
+          <button id="toggleParticles"
+            class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 transition text-slate-200 flex items-center gap-1.5 active:scale-95">
+            <span class="w-2 h-2 rounded-full bg-sky-400" id="particleIndicator"></span>
+            Částice
+          </button>
+          <button id="resetBtn"
+            class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-medium transition active:scale-95">
+            Reset
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- =====================================================
+           BLOK 1: TITUL A ÚVOD
+      ====================================================== -->
+
+      <!-- SLIDE 1: Titulní -->
+      <section class="center">
+        <canvas id="vectorCanvas" class="absolute inset-0 w-full h-full"
+          style="position: absolute;z-index: -1; min-height: 720px;"></canvas>
+
+        <div class="title-hero">
+          <span class="vr-badge">MVT &bull; Moderní vizualizační technologie</span>
+          <h1>Vizualizace vědeckých dat</h1>
+          <div class="authors" id="targetH1">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Vítejte na přednášce o vizualizaci vědeckých dat. Projdemé si, co to vizualizace je, jak k ní přistupovat,
+          a spoustu konkrétních příkladů z praxe — od medicíny přes atmosféru až po růst krystalů.
+        </aside>
+      </section>
+
+      <!-- SLIDE 2: Vědecká data / Co je vizualizace dat -->
+      <section>
+        <span class="slide-category">Úvod</span>
+        <h2>Vědecká data &amp; vizualizace</h2>
+        <p>Cílem vizualizace je <strong>zjednodušit pochopení dat</strong> a pomoci objevit vzory a trendy, které by
+          číslech zůstaly skryté.</p>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <h3>Vizualizace dat:</h3>
+            <ul class="custom-list">
+              <li>Obor zabývající se <strong>reprezentací dat vizuální formou.</strong></li>
+              <li>Převod dat na informace.</li>
+              <li>Obrázky, animace, videa, interaktivní aplikace (web, hry, …).</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3>Mohou pocházet ze</h3>
+            <ul class="custom-list">
+              <li>statistik a průzkumů,</li>
+              <li>vědeckých výpočtů a simulací,</li>
+              <li>měření,</li>
+              <li>z databází, logů a interních systémů,</li>
+              <li>senzorů.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 16px;">
+          <strong style="color: var(--accent-cyan);">Téměř všechny vědní obory:</strong>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+            <span class="spec-badge cyan spec-badge-big">Lékařství</span>
+            <span class="spec-badge purple spec-badge-big">Technická data</span>
+            <span class="spec-badge emerald spec-badge-big">Matematické vědy</span>
+            <span class="spec-badge amber spec-badge-big">Sociologie</span>
+            <span class="spec-badge spec-badge-big">…</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Cíl vizualizace -->
+      <section>
+        <span class="slide-category">Úvod</span>
+        <h2>Cíl vizualizace</h2>
+
+        <div class="glass-card" style="text-align: left;">
+          <ul class="custom-list">
+            <li><strong>Pochopit</strong> a <strong>objevovat souvislosti</strong> (explorativní analýza).</li>
+            <li>Pracovat s <strong>přesnými daty</strong> — nevydávat za přesné to, co přesné není.</li>
+            <li>Předat <strong>nějakou zprávu</strong> — co chceme pomocí dat říct.</li>
+            <li>Měli bychom zůstat <strong>korektní</strong> — nemanipulovat.</li>
+          </ul>
+
+          <h3 style="color: var(--accent-purple); text-align: center;">Postup</h3>
+          <div style="display: flex; gap: 10px; justify-content: space-around; margin-top: 10px;">
+            <span class="spec-badge cyan spec-badge-big">1. Pořízení dat</span>
+            <span class="spec-badge purple spec-badge-big">2. Analýza dat</span>
+            <span class="spec-badge emerald spec-badge-big">3. Vizualizace dat</span>
+          </div>
+        </div>
+
+        <div class="slide-grid-3" style="text-align: center; margin-top: 14px;">
+          <div class="image-showcase" style="margin: auto; width: auto;">
+            <img src="../bordel/images-mvt/wrongvis1.png" alt="Špatná vizualizace 1"
+              style="width: 200px; height: 200px; object-fit: cover; display: block; margin:auto;" data-preview-image>
+            <div class="image-caption">Špatná vizualizace 1</div>
+          </div>
+          <div class="image-showcase" style="margin: auto; width: auto;">
+            <img src="../bordel/images-mvt/wrongvis2.png" alt="Špatná vizualizace 2"
+              style="width: 200px; height: 200px; object-fit: cover; display: block; margin:auto;" data-preview-image>
+            <div class="image-caption">Špatná vizualizace 2</div>
+          </div>
+          <div class="image-showcase" style="margin: auto; width: auto;">
+            <img src="../bordel/images-mvt/wrongvis3.png" alt="Špatná vizualizace 3"
+              style="width: 200px; height: 200px; object-fit: cover; display: block; margin:auto;" data-preview-image>
+            <div class="image-caption">Špatná vizualizace 3</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Co umožňuje vizualizace -->
+      <section>
+        <span class="slide-category">Úvod</span>
+        <h2>Vizualizace dat</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Umožnit rozpoznat <strong>trendy, vzory, korelace</strong>.</li>
+              <li>Zvýraznit <strong>struktury, vzory</strong>.</li>
+              <li>Ukázat <strong>skrytější vztahy</strong>.</li>
+              <li><strong>Potvrdit</strong> nebo <strong>vyvrátit</strong> hypotézy.</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Umožnit čtenáři udělat <strong>vlastní úsudek</strong>.</li>
+              <li>Nabídnout objektivitu.</li>
+              <li>Umožnit <strong>porozumění datům v krátkém čase</strong>.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-card">
+          <strong style="color: var(--accent-cyan);">Pokud je to nutné, tak z dostupných dat vygenerovat nové
+            datasety</strong>
+          <div style="color: var(--text-muted); font-size: 0.9em; margin-top: 6px;">
+            Možné typy vizualizace: grafy, diagramy, časové osy, myšlenkové mapy, …
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <span class="slide-category">Typy vizualizace</span>
+        <h2>Typy dat k vizualizaci</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li><strong>Kvantitativní (numerická):</strong></li>
+              <li class="sub-item">Spojitá: např. teplota, výška, čas.</li>
+              <li class="sub-item">Diskrétní: např. počet zákazníků, počet chyb.</li>
+              <li><strong>Kvalitativní (kategorická):</strong></li>
+              <li class="sub-item">Nominální: např. barvy, názvy měst, pohlaví.</li>
+              <li class="sub-item">Ordinální: např. úroveň vzdělání, hodnocení spokojenosti 1–5.</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li><strong>Jednorozměrná a vícedimenzionální</strong>: klasické řádky a sloupce vlastností.</li>
+              <li><strong>Časové řady (temporal data)</strong>: posloupnost a vývoj (např. akcie, vývoj
+                počasí).</li>
+              <li><strong>Sítě a grafy (relační data)</strong>: vztahy a propojení mezi entitami (např. sociální
+                sítě, struktura
+                databází).</li>
+              <li><strong>Hierarchická data</strong>: Stromové struktury (např. souborový systém, organizační struktura
+                firmy).</li>
+              <li><strong>Vektorová a tenzorová pole</strong>: obsahují směr a velikost (např.
+                rychlost a směr proudění tekutin).</li>
+            </ul>
+          </div>
+        </div>
+
+      </section>
+
+      <section>
+        <span class="slide-category">Typy vizualizace</span>
+        <h2>Grafy</h2>
+        <p>Převádí číselná data a trendy do názorných tvarů, což umožňuje okamžitě odhalit vývojové tendence, porovnat
+          hodnoty a rychle pochopit celkový význam dat.</p>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Vhodně volit <strong>typ grafů</strong>.</li>
+              <li>Volit správně <strong>škálování os</strong>.</li>
+              <li><strong>Logaritmické</strong> škálování os.</li>
+              <li>Hlavní důraz: čtenář pochopí, co chceme vizualizací sdělit.</li>
+              <li>Zobrazovat jen <strong>to důležité</strong>.</li>
+            </ul>
+            <a class="video-card" href="https://www.sciencedirect.com/science/article/pii/S1364815210003270"
+              target="_blank" rel="noopener" style="margin-top: 14px;">
+              <div class="video-icon">🔗</div>
+              <div class="video-details">
+                <div class="video-title">ScienceDirect — odkaz na studii</div>
+                <div class="video-url">https://sciencedirect.com/</div>
+              </div>
+            </a>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s05_f01.jpeg" alt="Příklad grafu 1" data-preview-image>
+            </div>
+          </div>
+          <div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s05_f02.jpeg" alt="Příklad grafu 2" data-preview-image>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Diagramy -->
+      <section>
+        <span class="slide-category">Typy vizualizace</span>
+        <h2>Diagramy</h2>
+        <p>2D reprezentace toho, jak něco funguje.</p>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+            <ul class=" custom-list">
+              <li>Přehledná reprezentace procesů.</li>
+              <li>Zjednodušení složitých vztahů.</li>
+              <li>Standardizace a hierarchie.</li>
+            </ul>
+
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s06_f01.png" alt="Příklad diagramu 1" data-preview-image>
+            <div class="image-caption">Funkční schéma</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s06_f02.png" alt="Příklad diagramu 2" data-preview-image>
+            <div class="image-caption">Struktura / tok</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SLIDE 30: Vizualizace grafů -->
+      <section>
+        <span class="slide-category">Typologie dat</span>
+        <h2>Vizualizace grafů</h2>
+        <p>Vizualizace grafových dat (neboli vizualizace sítí) je grafické znázornění entit a jejich vzájemných vztahů.
+        </p>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+            <h3>Vhodné pro zobrazení:</h3>
+            <ul class="custom-list">
+              <li><strong>vazeb</strong>,</li>
+              <li><strong>komplexních systémů</strong>,</li>
+              <li><strong>neuronů</strong>.</li>
+            </ul>
+            <ul class="custom-list">
+              <li>
+                Skládají se z uzlů a hran.
+              </li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/graph1.png" alt="Vizualizace propojených dat" data-preview-image>
+            <div class="image-caption">Vizualizace propojených dat</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/graph2.png" alt="Vizualizace sítí" data-preview-image>
+            <div class="image-caption">Vizualizace sítí</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =====================================================
+           BLOK 1B: TYPOLOGIE VĚDECKÝCH DAT & MŘÍŽKY
+      ====================================================== -->
+
+      <!-- SLIDE 4A: Typy datových polí -->
+      <section class="fields dense">
+        <span class="slide-category">Typologie dat</span>
+        <h2>Vizualizace datových polí</h2>
+        <p style="color: var(--text-muted); font-size: 0.85em; margin-top: -4px;">
+          <strong>Datové pole</strong> přiřazuje hodnotu každému bodu (nebo buňce) domény.<br>
+          Podle toho, jaká hodnota to je, se mění způsob vizualizace.
+        </p>
+        <div class="slide-grid-3">
+          <div class="glass-card">
+            <!-- <svg viewBox="0 0 120 60" style="width: 100%; height: 56px;" aria-hidden="true">
+              <defs>
+                <linearGradient id="g-scalar" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#dbeafe" />
+                  <stop offset="45%" stop-color="#60a5fa" />
+                  <stop offset="80%" stop-color="#06b6d4" />
+                  <stop offset="100%" stop-color="#0f172a" />
+                </linearGradient>
+              </defs>
+              <rect x="2" y="2" width="116" height="56" rx="6" fill="url(#g-scalar)" />
+              <g fill="none" stroke="rgba(15,23,42,0.55)" stroke-width="1">
+                <path d="M2,44 C30,38 44,52 74,42 S104,34 118,40" />
+                <path d="M2,30 C28,24 46,36 76,27 S104,20 118,26" />
+                <path d="M2,17 C30,12 46,22 76,14 S106,9 118,13" />
+              </g>
+            </svg> -->
+            <h3 style="margin-top: 8px;">Skalární</h3>
+            <!-- <div class="badge-group">
+              <span class="spec-badge cyan"><span class="sym">T</span></span>
+              <span class="spec-badge cyan"><span class="sym">ρ</span></span>
+              <span class="spec-badge cyan"><span class="sym">p</span></span>
+            </div> -->
+            <ul class="custom-list">
+              <li>Teplota, hustota, tlak</li>
+              <li>koncentrace, výška terénu</li>
+              <li><strong>Jedno číslo</strong> v každém bodě</li>
+            </ul>
+            <div class="field-viz">
+              <strong>Jak zobrazit:</strong> barva / intenzita (heat mapa),
+              vrstevnice, řezy, objemové renderování.
+            </div>
+          </div>
+
+          <div class="glass-card accent-purple">
+            <!-- <svg viewBox="0 0 120 60" style="width: 100%; height: 56px;" aria-hidden="true">
+              <g stroke="#a855f7" stroke-width="2" fill="none" stroke-linecap="round">
+                <path d="M8,14 H40" />
+                <path d="M34,9 L42,14 L34,19" />
+                <path d="M8,30 H58" />
+                <path d="M52,25 L60,30 L52,35" />
+                <path d="M8,46 H30" />
+                <path d="M24,41 L32,46 L24,51" />
+                <path d="M70,12 H106" />
+                <path d="M100,7 L108,12 L100,17" />
+                <path d="M74,30 H112" />
+                <path d="M106,25 L114,30 L106,35" />
+                <path d="M66,46 H92" />
+                <path d="M86,41 L94,46 L86,51" />
+              </g>
+            </svg> -->
+            <h3 style="margin-top: 8px; color: var(--accent-purple);">Vektorová</h3>
+            <!-- <div class="badge-group">
+              <span class="spec-badge purple"><span class="sym">v</span>&#8407;</span>
+              <span class="spec-badge purple"><span class="sym">B</span>&#8407;</span>
+            </div> -->
+            <ul class="custom-list">
+              <li>Rychlost proudění, magnetické pole</li>
+              <li>síly, tepelný tok, gradient</li>
+              <li><strong>Směr + velikost</strong> v každém bodě</li>
+            </ul>
+            <div class="field-viz">
+              <strong>Jak zobrazit:</strong> pole šipek (glyfy),
+              <strong>proudnice</strong> (stream lines), stopa částic, LIC.
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <!-- <svg viewBox="0 0 120 60" style="width: 100%; height: 56px;" aria-hidden="true">
+              <g fill="rgba(16,185,129,0.25)" stroke="#10b981" stroke-width="1.5">
+                <ellipse cx="32" cy="30" rx="26" ry="11" transform="rotate(-25 32 30)" />
+                <ellipse cx="88" cy="30" rx="11" ry="24" transform="rotate(15 88 30)" />
+              </g>
+              <g stroke="#10b981" stroke-width="1" opacity="0.7">
+                <line x1="32" y1="30" x2="56" y2="19" />
+                <line x1="32" y1="30" x2="8" y2="41" />
+                <line x1="88" y1="30" x2="94" y2="6" />
+                <line x1="88" y1="30" x2="82" y2="54" />
+              </g>
+            </svg> -->
+            <h3 style="margin-top: 8px; color: var(--accent-emerald);">Tenzorová</h3>
+            <!-- <div class="badge-group">
+              <span class="spec-badge emerald"><span class="sym tens">σ</span></span>
+              <span class="spec-badge emerald"><span class="sym tens">D</span></span>
+            </div> -->
+            <ul class="custom-list">
+              <li>Tenzor napětí, tenzor difúze</li>
+              <li class="sub-item">např. DTI — difuze v nervových svazcích</li>
+              <li><strong>Matice</strong> v každém bodě → opisuje <strong>anizotropii</strong> (vlastnost je různá ve
+                různých směrech)</li>
+            </ul>
+            <div class="field-viz">
+              <strong>Jak zobrazit:</strong> tenzorová elipsoida / hyperelipsoida
+              rozmístěná v mřížce.
+            </div>
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 14px;">
+          <strong style="color: var(--accent-cyan);">Problém vizualizace:</strong>
+          <span style="color: var(--text-muted); font-size: 0.92em;">
+            Řád pole (skalár → vektor → tenzor) určuje, kolik čísel připadá na jeden bod. U time-dependent dat přibývá
+            ještě časová dimenze.
+          </span>
+        </div>
+      </section>
+
+      <!-- SLIDE 4B: Reprezentace domény — mřížky -->
+      <section class="grids dense">
+        <span class="slide-category">Typologie dat</span>
+        <h2>Reprezentace dat v mřížce (Grids)</h2>
+        <div class="slide-grid-3" style="gap: 16px;">
+          <div class="glass-card">
+            <svg viewBox="0 0 200 120" style="width: 100%; height: 108px;" aria-hidden="true">
+              <g fill="none" stroke="#0284c7" stroke-width="1.2" opacity="0.9">
+                <rect x="10" y="10" width="180" height="100" />
+                <line x1="40" y1="10" x2="40" y2="110" />
+                <line x1="70" y1="10" x2="70" y2="110" />
+                <line x1="100" y1="10" x2="100" y2="110" />
+                <line x1="130" y1="10" x2="130" y2="110" />
+                <line x1="160" y1="10" x2="160" y2="110" />
+                <line x1="10" y1="35" x2="190" y2="35" />
+                <line x1="10" y1="60" x2="190" y2="60" />
+                <line x1="10" y1="85" x2="190" y2="85" />
+              </g>
+              <g fill="#0891b2">
+                <circle cx="10" cy="10" r="2.6" />
+                <circle cx="100" cy="60" r="2.6" />
+                <circle cx="190" cy="110" r="2.6" />
+              </g>
+            </svg>
+            <h3 style="margin-top: 6px;">Structured — regular</h3>
+            <p class="fmt-desc" style="margin-top: 0;">
+              Stejný krok <span class="sym">h</span> ve všech směrech. Souřadnice body
+              <strong>se neukládají</strong> — stačí index <span class="sym">i, j, k</span> →
+              nejmenší nároky na uložení, nejrychlejší přístup.
+            </p>
+          </div>
+
+          <div class="glass-card">
+            <svg viewBox="0 0 200 120" style="width: 100%; height: 108px;" aria-hidden="true">
+              <g fill="none" stroke="#0284c7" stroke-width="1.2" opacity="0.9">
+                <rect x="10" y="10" width="180" height="100" />
+                <line x1="26" y1="10" x2="26" y2="110" />
+                <line x1="44" y1="10" x2="44" y2="110" />
+                <line x1="95" y1="10" x2="95" y2="110" />
+                <line x1="140" y1="10" x2="140" y2="110" />
+                <line x1="168" y1="10" x2="168" y2="110" />
+                <line x1="10" y1="20" x2="190" y2="20" />
+                <line x1="10" y1="32" x2="190" y2="32" />
+                <line x1="10" y1="68" x2="190" y2="68" />
+                <line x1="10" y1="92" x2="190" y2="92" />
+              </g>
+            </svg>
+            <h3 style="margin-top: 6px;">Structured — rectilinear</h3>
+            <p class="fmt-desc" style="margin-top: 0;">
+              Pravoúhlá, ale s <strong>nerovnoměrným krokem</strong> podél každé osy.
+              Ideální např. v <strong>mezní vrstvě</strong>, kde potřebuje hustší buňky u stěny
+              a řídké ve volném proudu.
+            </p>
+          </div>
+
+          <div class="glass-card">
+            <svg viewBox="0 0 200 120" style="width: 100%; height: 108px;" aria-hidden="true">
+              <g fill="none" stroke="#0284c7" stroke-width="1.2" opacity="0.9">
+                <rect x="10" y="10" width="180" height="100" />
+                <path d="M40,10 Q56,60 40,110" />
+                <path d="M70,10 Q86,60 70,110" />
+                <path d="M100,10 Q116,60 100,110" />
+                <path d="M130,10 Q146,60 130,110" />
+                <path d="M160,10 Q176,60 160,110" />
+                <path d="M10,35 Q100,22 190,35" />
+                <path d="M10,60 Q100,46 190,60" />
+                <path d="M10,85 Q100,70 190,85" />
+              </g>
+            </svg>
+            <h3 style="margin-top: 6px;">Structured — curvilinear</h3>
+            <p class="fmt-desc" style="margin-top: 0;">
+              Ohýbaná (body-fitted) mřížka <strong>přizpůsobená geometrii</strong> tělesa.
+              Souřadnice se musí ukládat pro každý bod, struktura <span class="sym">i, j, k</span>
+              ale zůstává.
+            </p>
+          </div>
+        </div>
+
+        <div class="slide-grid-3" style="gap: 16px; margin-top: 16px;">
+          <div class="glass-card accent-purple">
+            <svg viewBox="0 0 200 120" style="width: 100%; height: 108px;" aria-hidden="true">
+              <g fill="rgba(168,85,247,0.12)" stroke="#a855f7" stroke-width="1.2" stroke-linejoin="round">
+                <polygon points="10,10 70,14 12,60" />
+                <polygon points="70,14 12,60 75,52" />
+                <polygon points="70,14 140,8 75,52" />
+                <polygon points="140,8 75,52 135,64" />
+                <polygon points="140,8 190,16 135,64" />
+                <polygon points="190,16 135,64 188,56" />
+                <polygon points="12,60 75,52 14,110" />
+                <polygon points="75,52 14,110 68,112" />
+                <polygon points="75,52 135,64 68,112" />
+                <polygon points="135,64 68,112 142,108" />
+                <polygon points="135,64 188,56 142,108" />
+                <polygon points="188,56 142,108 190,112" />
+              </g>
+            </svg>
+            <h3 style="margin-top: 6px; color: var(--accent-purple);">Unstructured</h3>
+            <p class="fmt-desc" style="margin-top: 0;">
+              Volná síť elementů — v 2D trojúhelníky / obdélníky, ve 3D
+              <strong>tetraedry</strong> a <strong>hexaedry</strong>.
+              Výhoda: libovolně složitá geometrie a lokální zhuštění.
+              Nevýhoda: musí se ukládat <strong>konektivita</strong> → více dat, pomalejší přístup.
+            </p>
+          </div>
+
+          <div class="glass-card">
+            <svg viewBox="0 0 200 120" style="width: 100%; height: 108px;" aria-hidden="true">
+              <g fill="none" stroke="#64748b" stroke-width="1.2">
+                <rect x="10" y="10" width="180" height="100" />
+                <line x1="100" y1="10" x2="100" y2="110" />
+                <line x1="10" y1="60" x2="190" y2="60" />
+                <line x1="55" y1="10" x2="55" y2="60" />
+                <line x1="10" y1="35" x2="55" y2="35" />
+              </g>
+              <g fill="none" stroke="#0891b2" stroke-width="1.8">
+                <rect x="10" y="35" width="22.5" height="25" />
+                <rect x="32.5" y="35" width="22.5" height="25" />
+                <line x1="32.5" y1="10" x2="32.5" y2="60" />
+                <line x1="55" y1="22.5" x2="100" y2="22.5" />
+                <line x1="77.5" y1="10" x2="77.5" y2="35" />
+              </g>
+              <text x="120" y="82" fill="#475569" font-size="11" font-family="monospace">hrubá síť</text>
+            </svg>
+            <h3 style="margin-top: 6px; color: var(--accent-emerald);">AMR — Adaptive Mesh Refinement</h3>
+            <p class="fmt-desc" style="margin-top: 0;">
+              Mřížka se <strong>dynamicky zjemňuje jen tam, kde se něco děje</strong>
+              (velké gradienty, rozhraní, šokové vlny). Hierarchie hrad (quadtree / octree),
+              buňky se dělí a zase slučují <strong>za běhu výpočtu</strong> → velká úspora
+              paměti i času.
+            </p>
+          </div>
+
+          <div class="glass-card">
+            <h3>Body vs. buňky</h3>
+            <ul class="custom-list" style="font-size: 0.9em;">
+              <li><strong>Node-centered</strong> — hodnota na vrcholu</li>
+              <li><strong>Cell-centered</strong> — hodnota průměru buňky</li>
+            </ul>
+            <div class="field-viz">
+              <strong>Dimenze:</strong> 1D (křivka) → 2D (řez, mapa) → 3D (objem)
+              → 3D + čas (animace). Rozměr domény i rozměr pole se řeší zvlášť.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4C: Standardní datové formáty -->
+      <section>
+        <span class="slide-category">Typologie dat</span>
+        <h2>Standardní datové formáty pro mřížková data</h2>
+        <div class="format-grid">
+          <div class="glass-card">
+            <div class="spec-badge cyan spec-badge-big" style="font-size: 0.9em;">VTK</div>
+            <p class="fmt-desc" style="margin: 0;">
+              Rodina souborů Toolkitu <strong>VTK</strong> — geometrie sítě <em>i</em> datová pole
+              v jednom souboru. Textový i binární zápis, varianty podle typu mřížky
+              (<span style="color: var(--accent-cyan);">.vtk, .vti, .vtu, .vtp, .pvd</span>).</p>
+            <div class="field-viz"><strong>De-facto standard</strong> pro proudění a 3D data,<br> čte ho
+              ParaView i VisIt.
+            </div>
+          </div>
+          <div class="glass-card">
+            <div class="spec-badge purple spec-badge-big" style="font-size: 0.9em;">NetCDF</div>
+            <p class="fmt-desc" style="margin: 0;">
+              <strong>Dimenzionální</strong> pole na strukturovaných mřížkách
+              (<span style="color: var(--accent-purple);">.nc</span>) — pojmenované osy,
+              self-describing proměnné + atributy (jednotky, kalendář).
+            </p>
+            <div class="field-viz">Standard <strong>klimatologie, meteorologie a oceanografie</strong>
+              (modely atmosféry, reanalýzy, časové řady).
+            </div>
+          </div>
+          <div class="glass-card">
+            <div class="spec-badge emerald spec-badge-big" style="font-size: 0.9em;">HDF5</div>
+            <p class="fmt-desc" style="margin: 0;">
+              Univerzální <strong>hierarchický kontejner</strong>
+              (<span style="color: var(--accent-emerald);">.h5, .hdf5</span>) — skupiny a datasety
+              jako strom adresářů, podporuje obří data a <strong>paralelní I/O</strong>.</p>
+            <div class="field-viz">Často spodní vrstva jiných formátů
+              (včetně NetCDF-4) pro data z experimentů a superpočítačů.
+            </div>
+          </div>
+          <div class="glass-card">
+            <div class="spec-badge amber spec-badge-big" style="font-size: 0.9em;">DICOM</div>
+            <p class="fmt-desc" style="margin: 0;">
+              <strong>Digital Imaging and Communications in Medicine</strong>
+              (<span style="color: var(--accent-amber);">.dcm</span>) — snímky CT/MR + bohatá
+              metadata o pacientovi, přístroji a řezu (poloha, orientace, thickness).
+            </p>
+            <div class="field-viz">Nativní formát pro Slicer3D, OsiriX i RadiAnt,
+              sada řezů tvoří 3D objem.
+            </div>
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 18px;">
+          <strong style="color: var(--accent-cyan);">Volba formátu není detail: </strong>
+          <span style="color: var(--text-muted); font-size: 0.9em; margin-top: 4px;">
+            Formát rozhoduje o <strong>velikosti na disku</strong>, přenositelnosti mezi nástroji a zčásti i o tom,
+            <strong>co vůbec jde vizualizovat</strong> (strukturovaná data se načtou jinak než volná síť).<br>
+            V praxi se často jde cestou <em>surová data → převod do VTK → ParaView/VisIt</em>.
+          </span>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           BLOK 2: TYPY A FORMY VIZUALIZACE
+      ====================================================== -->
+
+      <!-- SLIDE 5: Grafy -->
+
+
+      <!-- SLIDE 7: Isolines -->
+      <section>
+        <span class="slide-category">Vizualizace skalárních dat</span>
+        <h2>Skalární mřížková data: Isolines (vrstevnice)</h2>
+        <p>Čáry stejných hodnot spojují na mapě či grafu body se shodnou velikostí veličiny.</p>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Křivky vyznačující <strong>konstantní hodnotu</strong>.</li>
+              <li><strong>iso</strong> = rovnost.</li>
+              <li>Spojuje body se <strong>stejnou hodnotou</strong>.</li>
+              <li>Přehledná vizualizace <strong>spojitých polí</strong>.</li>
+              <li>Algoritmus <strong>Marching squares</strong> (vrstevnice)<br> nebo <strong>Marching cubes</strong>
+                (isoplochy).</li>
+            </ul>
+            <div class="badge-group">
+              <span class="spec-badge cyan spec-badge-big">Topografie</span>
+              <span class="spec-badge purple spec-badge-big">Meteorologie</span>
+              <span class="spec-badge emerald spec-badge-big">Fyzika polí</span>
+            </div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s07_f01.png" alt="Vrstevnice / isolinie">
+            <div class="image-caption">Vrstevnice — isolinie nadmořské výšky</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8A: Marching Cubes — algoritmus -->
+      <section>
+        <span class="slide-category">Vizualizace skalárních dat</span>
+        <h2>Marching Cubes (algoritmus pro izoplochy)</h2>
+        <p>Vytváří 3D polygonální síť (trojúhelníkový model) reprezentující izoplochu z mřížky skalárních dat.</p>
+        <div class="slide-grid-2 equal">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Mřížkou voxelů se postupuje <strong>buňku po buňce</strong> — odtud název „marching“</li>
+              <li>Každých 8 rohů buňky se porovná s <strong>izohodnotou</strong> <span class="sym">c</span> →
+                8 bitů stavu <strong>vně / uvnitř</strong></li>
+              <li>Hrana s rohy <strong>v různých stavech</strong> izoplochu protíná; bod spočteme
+                lineární interpolací podél hrany</li>
+              <!-- <li class="sub-item">$t = (c - f(v_1)) / (f(v_2) - f(v_1)), p = v_1 + t \cdot (v_2 - v_1)$ -->
+              </li>
+              <li><strong>Tabulka</strong> pak řekne, které průsečíky mezi sebou spojit trojúhelníky</li>
+              <li>Výsledkem je <strong>triangulovaná síť</strong> — osvětlitelná, otáčecí, vhodná i pro animaci v čase
+              </li>
+            </ul>
+          </div>
+          <div class="glass-card" style="text-align: center">
+            <svg viewBox="0 0 240 205" style="width: 100%; height: 196px;" role="img"
+              aria-label="Krychle se čtyřmi rohy uvnitř, čtyřmi vně a řezem izoplochy o dvou trojúhelnících">
+              <!-- hrany buňky -->
+              <g fill="none" stroke="#0284c7" stroke-width="1.3" opacity="0.8">
+                <rect x="30" y="62" width="120" height="120" />
+                <rect x="80" y="17" width="120" height="120" />
+                <line x1="30" y1="182" x2="80" y2="137" />
+                <line x1="150" y1="182" x2="200" y2="137" />
+                <line x1="150" y1="62" x2="200" y2="17" />
+                <line x1="30" y1="62" x2="80" y2="17" />
+              </g>
+              <!-- řez izoplochy = dva trojúhelníky -->
+              <g stroke="#0891b2" stroke-width="1.6">
+                <polygon points="50,164 180,155 185,31" fill="rgba(8,145,178,0.18)" />
+                <polygon points="50,164 185,31 58,37" fill="rgba(124,58,237,0.15)" />
+              </g>
+              <!-- rohy uvnitř / vně -->
+              <g fill="#0891b2">
+                <circle cx="30" cy="182" r="5" />
+                <circle cx="150" cy="182" r="5" />
+                <circle cx="80" cy="137" r="5" />
+                <circle cx="200" cy="137" r="5" />
+              </g>
+              <g fill="#0f172a" stroke="#64748b" stroke-width="1.5">
+                <circle cx="150" cy="62" r="5" />
+                <circle cx="30" cy="62" r="5" />
+                <circle cx="200" cy="17" r="5" />
+                <circle cx="80" cy="17" r="5" />
+              </g>
+              <!-- průsečíky na hranách -->
+              <g fill="#f59e0b" stroke="#0b1220" stroke-width="1.2">
+                <circle cx="50" cy="164" r="4.5" />
+                <circle cx="180" cy="155" r="4.5" />
+                <circle cx="185" cy="31" r="4.5" />
+                <circle cx="58" cy="37" r="4.5" />
+              </g>
+              <g fill="#475569" font-family="JetBrains Mono, monospace" font-size="10.5">
+                <text x="16" y="155">0,40</text>
+                <text x="186" y="174">0,60</text>
+                <text x="192" y="36">0,70</text>
+                <text x="18" y="31">0,55</text>
+              </g>
+              <text x="118" y="120" fill="#0f172a" font-size="12.5" font-weight="700"
+                text-anchor="middle">izoplocha</text>
+            </svg>
+            <img src="../bordel/images-mvt/cubes.gif" style="max-width: 50%;">
+            <!-- <div class="badge-group" style="justify-content: center; margin: 2px 0 0 0;">
+              <span class="spec-badge cyan">roh uvnitř (<span class="sym">f</span> ≥ <span class="sym">c</span>)</span>
+              <span class="spec-badge amber">průsečík na hraně</span>
+              <span class="spec-badge">roh vně (<span class="sym">f</span> &lt; <span class="sym">c</span>)</span>
+            </div> -->
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <span class="slide-category">Vizualizace skalárních dat</span>
+        <h2>Marching Cubes (algoritmus izolovací plochy)</h2>
+        <div class="highlight-card" style="margin: 14px 0 0 0;">
+          <h3>Lookup table — 256 případů, 15 kanonických</h3>
+          <ul class="custom-list">
+            <li>Osm rohů dává <strong>2<sup>8</sup> = 256</strong> kombinací stavů.</li>
+            <li>
+              Rotací, zrcadlením a záměnou uvnitř ↔ vně se ale výpočetně vyplatí řešit jen <strong>15 kanonických
+                případů</strong>.
+            </li>
+            <li><strong>#0</strong> bez povrchu a <strong>14 tvarů řezu</strong>.</li>
+          </ul>
+
+
+          <svg viewBox="0 0 1080 68" style="width: 100%; height: 100px; margin-top: 8px;" role="img"
+            aria-label="Pětnact kanonických případů řezu krychle">
+            <defs>
+              <symbol id="mc-cube-glyph" viewBox="0 0 24 26">
+                <polygon points="12,1 23,7.5 23,18.5 12,25 1,18.5 1,7.5" fill="rgba(2,132,199,0.08)" stroke="#0284c7"
+                  stroke-width="1.1" />
+                <path d="M12,13 L23,7.5 M12,13 L1,7.5 M12,13 L12,25" fill="none" stroke="rgba(2,132,199,0.45)"
+                  stroke-width="0.9" />
+              </symbol>
+              <g id="mc-tri">
+                <polygon points="0,-7 7.5,5.5 -7.5,5.5" fill="rgba(8,145,178,0.8)" stroke="#0891b2" stroke-width="1" />
+              </g>
+            </defs>
+            <!-- #0 prázdný případ -->
+            <use href="#mc-cube-glyph" x="21" y="4" width="30" height="33" />
+            <!-- #1–#14 -->
+            <use href="#mc-cube-glyph" x="93" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(108,20) rotate(26)" />
+            <use href="#mc-cube-glyph" x="165" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(180,20) rotate(52)" />
+            <use href="#mc-cube-glyph" x="237" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(252,20) rotate(78)" />
+            <use href="#mc-cube-glyph" x="309" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(324,20) rotate(104)" />
+            <use href="#mc-cube-glyph" x="381" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(396,20) rotate(130)" />
+            <use href="#mc-cube-glyph" x="453" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(468,20) rotate(156)" />
+            <use href="#mc-cube-glyph" x="525" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(540,20) rotate(182)" />
+            <use href="#mc-cube-glyph" x="597" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(612,20) rotate(208)" />
+            <use href="#mc-cube-glyph" x="669" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(684,20) rotate(234)" />
+            <use href="#mc-cube-glyph" x="741" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(756,20) rotate(260)" />
+            <use href="#mc-cube-glyph" x="813" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(828,20) rotate(286)" />
+            <use href="#mc-cube-glyph" x="885" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(900,20) rotate(312)" />
+            <use href="#mc-cube-glyph" x="957" y="4" width="30" height="33" />
+            <use href="#mc-tri" transform="translate(972,20) rotate(338)" />
+            <!-- #14 vše uvnitř -->
+            <polygon points="1044,4 1059,11.5 1059,28.5 1044,36 1029,28.5 1029,11.5" fill="rgba(0,242,254,0.45)" />
+            <use href="#mc-cube-glyph" x="1029" y="4" width="38" height="33" />
+            <g fill="#64748b" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">
+              <text x="36" y="58">#0</text><text x="108" y="58">#1</text><text x="180" y="58">#2</text>
+              <text x="252" y="58">#3</text><text x="324" y="58">#4</text><text x="396" y="58">#5</text>
+              <text x="468" y="58">#6</text><text x="540" y="58">#7</text><text x="612" y="58">#8</text>
+              <text x="684" y="58">#9</text><text x="756" y="58">#10</text><text x="828" y="58">#11</text>
+              <text x="900" y="58">#12</text><text x="972" y="58">#13</text><text x="1044" y="58">#14</text>
+            </g>
+          </svg>
+        </div>
+
+      </section>
+
+      <!-- SLIDE 8: Přímé promítání 3D dat do 2D -->
+      <section>
+        <span class="slide-category">Vizualizace skalárních dat</span>
+        <h2>Přímé promítání 3D dat do 2D</h2>
+        <p>Vizualizace <strong>bez vytvoření povrchu</strong> z dat.</p>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Přímé vykreslování objemu (Direct Volume Rendering / DVR).</li>
+
+              <li>Buď <strong>přímá projekce</strong> dat do roviny obrazovky.</li>
+              <li>Nebo nejprve <strong>manipulace s daty</strong> a následné promítnutí.</li>
+              <li>Bez nutnosti nejprve vytvářet mezipovrch či polygonovou síť.</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3>Možnosti</h3>
+            <ul class="custom-list">
+              <li>Mlha s různou intenzitou</li>
+              <li>Kapalina</li>
+              <li>Řezy prostorem</li>
+            </ul>
+
+
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s08_f01.png" alt="Přímé promítání 3D dat do 2D">
+              <div class="image-caption">Příklad přímého promítání</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- SLIDE 9: Stream lines -->
+      <section>
+        <span class="slide-category">Vizualizace vektorových dat</span>
+        <h2>Vektorová data: Stream lines (proudnice)</h2>
+        <p>Proudnice je křivka, která je v každém svém bodě tečná k rychlostnímu vektoru pole.</p>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Vizualizace <strong>proudění tekutiny</strong>.</li>
+              <li>Zobrazuje <strong>směr proudění</strong>.</li>
+              <li>Kudy by se pohybovala <strong>částice vhozená do tekutiny</strong>.</li>
+              <li>Výpočet numerickou integrací (např. Runge-Kutta) počátečních bodů (seed points)</li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s09_f01.png" alt="Proudnice kolem tělesa">
+            <div class="image-caption">Proudnice obtékaného tělesa</div>
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- =====================================================
+           BLOK 3: OD JEVU K VIZUALIZACI (POSTUP)
+      ====================================================== -->
+
+      <section class="center">
+        <div class="title-hero">
+          <h1>Jak získat vědecká data</h1>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Přírodní jev -->
+      <section>
+        <span class="slide-category">Postup — od jevu k vizualizaci</span>
+        <h2>1. Přírodní jev</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <h3>Jev v přírodě nebo reálném světě:</h3>
+            <ul class="custom-list">
+              <li>Chceme zjistit, <strong>jak probíhá</strong>.</li>
+              <li>Chceme <strong>predikovat výsledek</strong> nebo simulovat jev za nestandardních podmínek.</li>
+            </ul>
+          </div>
+          <div class="media-row">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s11_f01.jpg" alt="Přírodní jev" data-preview-image>
+              <div class="image-caption">Pozorování jevu</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s11_f02.jpg" alt="Přírodní jev 2" data-preview-image>
+              <div class="image-caption">Reálná situace</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s11_f03.jpeg" alt="Přírodní jev 3" data-preview-image>
+              <div class="image-caption">Měření</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: Nutné studovat přírodní zákony -->
+      <section>
+        <span class="slide-category">Postup — od jevu k vizualizaci</span>
+        <h2>2. Nutné studovat přírodní zákony</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Nastudovat, <strong>jak jev probíhá</strong>.</li>
+              <li><strong>Získat co nejvíce informací</strong> o jevu.</li>
+              <li>Mnoho jevů je již prozkoumaných, ale <strong>nebyla dosud možnost</strong> je popsat matematicky a
+                fyzikálně.</li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s12_f01.jpg" alt="Studium přírodních zákonů" data-preview-image>
+            <div class="image-caption">Zákony a měření</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13: Fyzikální popis -->
+      <section>
+        <span class="slide-category">Postup — od jevu k vizualizaci</span>
+        <h2>3. Fyzikální popis</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Na základě výzkumu popsat jev pomocí <strong>fyziky a matematiky</strong>.</li>
+              <li>Většinou se jedná o <strong>diferenciální rovnice</strong>.</li>
+              <li>Nutná hluboká znalost fyzikálních zákonů.</li>
+              <li><strong>Není úplně nutné</strong> pro pouhou vizualizaci.</li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s13_f01.jpg" alt="Fyzikální a matematický popis">
+            <div class="image-caption">Matematický model jevu</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 14: Získat experimentální data -->
+      <section>
+        <span class="slide-category">Postup — od jevu k vizualizaci</span>
+        <h2>4. Získat experimentální data</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Nutné získat <strong>experimentální data</strong> pro jednodušší případy.</li>
+              <li>Podle nich se potom <strong>kalibruje model</strong>.</li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s14_f01.jpg" alt="Experimentální měření">
+            <div class="image-caption">Experiment a měření</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 15: Matematický model -->
+      <section>
+        <span class="slide-category">Postup — od jevu k vizualizaci</span>
+        <h2>5. Vytvořit matematický model</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Podle fyzikálního popisu vytvořit <strong>matematický model</strong>.</li>
+              <li>Model je ve většině případů <strong>zjednodušený</strong>.</li>
+              <li>Většinou nejsme schopni řešit rovnice <strong>analyticky</strong> (přesné výsledky).</li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s15_f01.jpg" alt="Matematický model">
+            <div class="image-caption">Model a zjednodušení</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 16: Numerický výpočet -->
+      <section>
+        <span class="slide-category">Postup — od jevu k vizualizaci</span>
+        <h2>6. Návrh a implementace numerického výpočtu</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Rovnice nutné převést do formy <strong>vhodné pro počítače</strong>.</li>
+              <li>Většina diferenciálních rovnic vede na <strong>velké soustavy lineárních rovnic</strong> (velké
+                matice).</li>
+            </ul>
+            <div class="highlight-card alert" style="margin-top: 10px;">
+              <strong style="color: var(--accent-rose);">Pozor na přesnost</strong>
+              <div style="font-size: 0.85em; color: var(--text-muted); margin-top: 4px;">
+                Výpočty na počítačích nejsou přesné — vznikají chyby zaokrouhlování a problémy
+                s přesností desetinných čísel.
+              </div>
+              <pre>console.log(0.1 + 0.2); 
+// Output: 0.30000000000000004</pre>
+            </div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s16_f01.jpg" alt="Numerické výpočty">
+            <div class="image-caption">Simulace na počítači</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 17: Interpretace a vizualizace -->
+      <section>
+        <span class="slide-category">Postup — od jevu k vizualizaci</span>
+        <h2>7. Interpretace a vizualizace výsledků</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Výsledná data je nutné <strong>správně interpretovat</strong>.</li>
+              <li>Špatná interpretace může vést k <strong>nesprávným závěrům</strong>.</li>
+              <li>Klademe <strong>velký důraz</strong> na vhodnou vizualizaci.</li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s17_f01.jpg" alt="Interpretace výsledků">
+            <div class="image-caption">Interpretace výsledků vizualizace</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 18: Důležitost správné vizualizace -->
+      <section>
+        <span class="slide-category">Proč vizualizovat</span>
+        <h2>Důležitost správné vizualizace</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <div class="highlight-card" style="margin: 0 0 12px 0;">
+              <strong style="color: var(--accent-cyan);">Lidský mozek je schopen v průměru pracovat se 6
+                čísly</strong>
+              <div style="font-size: 0.85em; color: var(--text-muted); margin-top: 4px;">
+                <ul class="custom-list">
+                  <li>Kapacita naší krátkodobé paměti je velmi omezená.</li>
+                  <li>Millerovo pravidlo $7 \pm 2$.</li>
+                  <li>U přesných číselných řad často spíše $4$ až $6$ prvků.</li>
+                </ul>
+              </div>
+            </div>
+            <ul class="custom-list">
+              <li>Proto se snažíme data vizualizovat.</li>
+              <li>Nutné vzít v úvahu <strong>formát dat</strong> — různá data mají různé způsoby vizualizace.</li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/steel.png" data-preview-image>
+            <div class="image-caption">Pevnost oceli - špatná vizualizace</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           BLOK 4: PŘÍKLADY VĚDECKÉ VIZUALIZACE
+      ====================================================== -->
+
+      <section class="center">
+        <div class="title-hero">
+          <h1>Příklady vědecké vizualizace na ČVUT</h1>
+        </div>
+      </section>
+
+
+      <!-- SLIDE 10: Zajímavé oblasti na ČVUT -->
+      <section>
+        <span class="slide-category">Typy vizualizace</span>
+        <h2>Výběr zajímavých oblastí na ČVUT (FIT, FJFI)</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Medicínské aplikace</li>
+              <li>Proudění v mezní vrstvě atmosféry</li>
+              <li>Proudění v porézním prostředí</li>
+              <li>Fluidní spalování v elektrárně</li>
+              <li>Vizualizace zvuku</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="color: var(--accent-purple);">Výpočty &amp; algoritmy</h3>
+            <ul class="custom-list">
+              <li>Růst krystalů při tuhnutí kovů</li>
+              <li>Výpočty na superpočítačích a GPU</li>
+              <li>Mainframe (vizualizace velkých matic)</li>
+              <li>Vizualizace grafů a algoritmů</li>
+              <li>Vizualizace sluneční aktivity</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-card" style="margin-top: 16px;">
+          <strong style="color: var(--accent-purple);">Pozn.</strong>
+          <span style="color: var(--text-muted);">Toto je pouze výběr z výzkumu na ČVUT — aplikací a vizualizací je zde
+            mnohem více.</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 19: Vizualizace pomocí animací — Data z MR -->
+      <section>
+        <span class="slide-category">Příklady — medicína</span>
+        <h2>Vizualizace pomocí animací &bull; Data z MR</h2>
+        <div class="">
+          <div class="glass-card">
+            <h3>Měření objemu ze scanu pomocí MR</h3>
+            Zobrazení objemu tkáně z magnetické rezonance:
+            Segmentace + 3D rekonstrukce
+
+          </div>
+
+          <div class="image-showcase" style="width: 80%; margin-top: 15px ;">
+            <img src="../bordel/images-mvt/veda_s19_f01.png"
+              data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/output.heart.mp4">
+            <div class="image-caption">Vizualizace pomocí animací &bull; Data z MR</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SLIDE 20: Simulace 2D proudění v aortě -->
+      <section>
+        <span class="slide-category">Příklady — medicína</span>
+        <h2>Simulace 2D proudění v aortě</h2>
+        <div class="">
+          <div class="glass-card">
+            Zobrazení <strong>rychlosti</strong> pomocí barev, <strong>směru</strong> pomocí šipek.
+            </ul>
+          </div>
+          <div class="image-showcase" style="width: 80%; margin-top: 15px ;">
+            <img src="../bordel/images-mvt/veda_s20_f01.png"
+              data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/results_obst_1024.mp4">
+            <div class="image-caption">Vizualizace pomocí animací &bull; Data z MR</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SLIDE 21: Porovnání s reálnou situací -->
+      <section>
+        <span class="slide-category">Příklady — medicína</span>
+        <h2>Porovnání vizualizace s reálnou situací pomocí MR</h2>
+        <div class="glass-card" style="text-align: left;">
+          <p>Srovnání výsledků simulace a vizualizace se <strong>skutečným scanem MR</strong> — validace modelu.</p>
+        </div>
+        <div class="slide-grid-3" style="margin-top: 15px;">
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s21_f01.jpg" alt="MR srovnání 1">
+
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s21_f02.jpg" alt="MR srovnání 2">
+
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s21_f03.jpg" alt="MR srovnání 3">
+
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- SLIDE 22: Proudění skrz chlopeň 3D -->
+      <section>
+        <span class="slide-category">Příklady — medicína</span>
+        <h2>Proudění skrz chlopeň 3D</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Simulace proudění skrz <strong>chlopeň</strong> pomocí metody <strong>LBM</strong> (Lattice-Boltzmann
+                Method).</li>
+              <li>Dva režimy: konstantní a periodický průtok.</li>
+              <li>Zelená barva: Isoplocha zvolené velikosti rychlosti proudění.</li>
+              <li>Žluté čáry: Proudnice s barevnou škálou odpovídající velikosti rychlosti.</li>
+            </ul>
+          </div>
+
+          <div class="">
+            <div class="image-showcase" style="width: 80%;">
+              <img src="../bordel/images-mvt/veda_s22_f01.png"
+                data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/anim_const_flow.mp4">
+              <div class="image-caption">Konstantní průtok</div>
+
+            </div>
+            <div class="image-showcase" style="width: 80%;">
+              <img src="../bordel/images-mvt/veda_s22_f01.png"
+                data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/anim_periodic_flow.mp4">
+              <div class="image-caption">Periodický průtok</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 27: Vizualizace mozku -->
+      <section>
+        <span class="slide-category">Příklady — medicína</span>
+        <h2>Vizualizace mozku</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list" style="margin: 0;">
+              <li>Scan pomocí <strong>MR</strong>, následné výpočtu nad daty.</li>
+              <li>Složitá vizualizace <strong>nervových svazků</strong>.</li>
+              <li>Možno vizualizovat pomocí <strong>diferenciálních rovnic</strong>.</li>
+            </ul>
+            <div class="mini-strip" style="grid-template-columns: 1fr 1fr;">
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/veda_s27_f01.png" alt="Mozek — scan">
+                <div class="image-caption">3D vizualizace</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/veda_s27_f02.png" alt="Mozek — svazky">
+                <div class="image-caption">Vizualizace nervových svazků</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/veda_s27_f03.png" alt="Mozek — 3D">
+                <div class="image-caption">Vizualizace nervových svazků</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/veda_s27_f04.png" alt="Mozek — detaily">
+                <div class="image-caption">Vizualizace nervových svazků</div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="image-showcase" style="width: 80%;">
+            <img src="../bordel/images-mvt/mozek.png"
+              data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/output.mozek.mp4">
+            <div class="image-caption">Vizualizace mozku</div>
+          </div>
+
+
+
+        </div>
+      </section>
+
+      <!-- SLIDE 23: Vizualizace proudění v atmosféře -->
+      <section>
+        <span class="slide-category">Příklady — atmosféra</span>
+        <h2>Vizualizace proudění v atmosféře</h2>
+
+        <div class="highlight-card" style="text-align: left;">
+          <ul class="custom-list" style="">
+            <li><strong>Experiment v tunelu</strong> — měření reálného proudění</li>
+            <li><strong>Simulace na počítači</strong> — numerický model</li>
+          </ul>
+
+        </div>
+        <div class="slide-grid-2">
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s23_f02.png"
+              data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/flat.mp4">
+
+            <div class="image-caption">simulace v mezní vrstvě</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/mezni.png"
+              data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/output.obtekani.mp4">
+
+            <div class="image-caption">proudění v atmosféře</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 24: Proudění kolem rostlin -->
+      <section>
+        <span class="slide-category">Příklady — biologie</span>
+        <h2>Proudění kolem rostlin</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Vzduch <strong>ovlivňuje vypařování</strong></li>
+              <li>Důležité pro <strong>sušší oblasti</strong></li>
+            </ul>
+            <div class="highlight-card" style="margin-top: 10px;">
+              <div style="font-size: 0.85em; color: var(--text-muted);">
+                Vizualizace proudění vzduchu kolem listů a rostlin — dopad na evapotranspiraci.
+              </div>
+            </div>
+          </div>
+          <div class="media-row">
+
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s24_f02.jpg" alt="Proudění kolem rostlin 2" data-preview-image>
+              <div class="image-caption">Rostlina 2</div>
+            </div>
+
+          </div>
+        </div>
+
+        <img src="../bordel/images-mvt/veda_s24_f01.jpg" alt="Proudění kolem rostlin 1" style="max-width: 30%;">
+
+
+        <img src="../bordel/images-mvt/veda_s24_f03.jpg" alt="Proudění kolem rostlin 3" style="max-width: 66%;">
+
+      </section>
+
+      <!-- SLIDE 25: Proudění v porézním prostředí -->
+      <section>
+        <span class="slide-category">Příklady — geologie</span>
+        <h2>Proudění v porézním prostředí</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Proudění kapaliny v <strong>hlíně nebo písku</strong></li>
+              <li>Aplikace: podzemní voda, filtrace, geotechnika</li>
+            </ul>
+            <div class="media-row">
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/veda_s25_f01.jpeg" alt="Porézní prostředí — experiment">
+                <div class="image-caption">Experiment</div>
+              </div>
+
+            </div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s25_f02.png"
+              data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/output.porezni.mp4">
+            <div class="image-caption">Proudění v porézní látce — simulace</div>
+
+          </div>
+
+
+        </div>
+
+
+
+      </section>
+
+      <!-- SLIDE 26: Růst krystalů -->
+      <section>
+        <span class="slide-category">Příklady — materiály</span>
+        <h2>Růst krystalů</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Růst krystalů při <strong>tuhnutí materiálu</strong></li>
+              <li>Vizualizace fázových přeměn a dendritů</li>
+            </ul>
+            <div class="media-row">
+              <div class="image-showcase">
+                <a href="../bordel/images-mvt/veda_s26_f01.jpg" data-modal-type="image"><img
+                    src="../bordel/images-mvt/veda_s26_f01.jpg" alt="Růst krystalů — mikroskopie"></a>
+
+              </div>
+              <div class="image-showcase">
+                <a href="../bordel/images-mvt/veda_s26_f02.png" data-modal-type="image"><img
+                    src="../bordel/images-mvt/veda_s26_f02.png" alt="Růst krystalů — simulace"></a>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/crystal.png"
+              data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/150core.mp4">
+            <div class="image-caption">Růst krystalů — simulace</div>
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+
+      <!-- SLIDE 28: Vizualizace hoření -->
+      <section>
+        <span class="slide-category">Příklady — energetika</span>
+        <h2>Hoření v elektrárně: vizualizace splodin</h2>
+
+        <div class="glass-card">
+
+          <strong>Složitý proces</strong> — chemie + termodynamika + mechanika.
+
+        </div>
+
+        <div class="slide-grid-2" style="text-align: center;">
+
+          <div class="media-row" style="margin-bottom: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/horeni.png"
+                data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/output.horeni1.mp4">
+              <div class="image-caption">Hoření — simulace</div>
+            </div>
+
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s28_f01.png"
+              data-preview-video="https://kmlinux.fjfi.cvut.cz/~pauspetr/mvt/video/output.horeni2.mp4">
+            <div class="image-caption">Hoření — vizualizace splodin</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SLIDE 31: Vizualizace sluneční aktivity -->
+      <section>
+        <span class="slide-category">Aplikace — výzkum</span>
+        <h2>Vizualizace sluneční aktivity</h2>
+        <div class="" style="text-align: left;">
+          <ul class="custom-list">
+            <li><strong>Vojtěch Tomas, FIT</strong></li>
+            <li>Vizualizace <strong>vektorového pole v čase</strong></li>
+          </ul>
+        </div>
+        <div class="slide-grid-2" style="margin-top: 15px;">
+
+
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s31_f01.png" alt="Sluneční aktivita 1">
+
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s31_f02.png" alt="Sluneční aktivita 2">
+
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <span class="slide-category">Aplikace — výuka</span>
+        <h2>Vizualizace fourierovy transformace ve 3D</h2>
+        <div class="" style="text-align: left;">
+          <ul class="custom-list">
+            <li><strong>Jozef Valko, FIT</strong></li>
+            <li>Vizualizace <strong>2D FT ve 3D.</strong></li>
+          </ul>
+        </div>
+        <div class="slide-grid-2" style="margin-top: 15px;">
+
+
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/fourier.png">
+
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/fourier2.png">
+
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <span class="slide-category">Aplikace — Umělecká vizualizace</span>
+        <h2>Vizualizace zvuků vyhynulých zvířat</h2>
+        <div class="" style="text-align: left;">
+          <ul class="custom-list">
+            <li><strong>Kryštof Šuk, FIT</strong></li>
+            <li>Možnost real-time namixovat několik zvuků zvářat.</li>
+            <li>Vásledek je umělecká vizualizace vlastního mixu.</li>
+          </ul>
+        </div>
+
+        <div class="image-showcase" style="max-width: 66%;">
+          <img src="../bordel/images-mvt/sound.png">
+
+        </div>
+
+
+      </section>
+
+      <!-- SLIDE 32: Vizualizace muzeálií -->
+      <section>
+        <span class="slide-category">Aplikace — kultura</span>
+        <h2>Vizualizace muzeálií</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li><strong>SageLab</strong> — digitální zpracování kulturního dědictví</li>
+              <li><strong>Fotogrammetrie</strong> — 3D rekonstrukce z fotek</li>
+              <li><strong>3D Skenování</strong></li>
+              <li>Nutné ruční doladění modelu.</li>
+              <li>Kiosky v muzeích, prezentace na webu.</li>
+              <li>Portál: <span class="spec-badge cyan spec-badge-big" style="font-size:0.75em;"><a
+                    href="https://modely.cesnet.cz" target="_blank">modely.cesnet.cz</a></span></li>
+              <li>Vizualizace Pražského orloje: <span class="spec-badge cyan spec-badge-big"
+                  style="font-size:0.75em;"><a href="https://orloj.cesnet.cz/"
+                    target="_blank">orloj.cesnet.cz</a></span></li>
+            </ul>
+          </div>
+          <div class="mini-strip" style="grid-template-columns: 1fr 1fr;">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s32_f01.jpeg" alt="Muzeálie 1" style="object-fit: cover;">
+              <div class="image-caption">Měření objektu</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s32_f02.jpeg" alt="Muzeálie 2" style="object-fit: cover;">
+              <div class="image-caption">Digitalizace</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s32_f03.jpeg" alt="Muzeálie 3" style="object-fit: cover;">
+              <div class="image-caption">Fotogrammetrie</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s32_f04.jpeg" alt="Muzeálie 4" style="object-fit: cover;">
+              <div class="image-caption">3D model</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           BLOK 5: NÁSTROJE PRO VIZUALIZACI
+      ====================================================== -->
+
+      <!-- SLIDE 29: Rozšířené programy -->
+      <section>
+        <span class="slide-category">Nástroje</span>
+        <h2>Používané programy pro vizualizaci dat</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-cyan);">Obecná data</h3>
+            <ul class="custom-list">
+              <li><strong>GNUPlot</strong> — 2D a 3D grafy</li>
+              <li>Matplotlib, chart.js, další spousta knihoven</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3 style="color: var(--accent-purple);">Medicínská data</h3>
+            <ul class="custom-list">
+              <li><strong>Slicer3D</strong>, <strong>OsiriX</strong>, <strong>RadiAnt</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="slide-grid-2" style="margin-top: 14px;">
+          <div class="glass-card">
+            <h3 style="color: var(--accent-emerald);">Proudění a 3D data</h3>
+            <ul class="custom-list">
+              <li><strong>VisIt</strong>, <strong>ParaView</strong></li>
+              <li>Často formát dat <span class="spec-badge cyan spec-badge-big" style="font-size:0.75em;">VTK</span>
+              </li>
+            </ul>
+          </div>
+          <div class="highlight-card">
+            <strong style="color: var(--accent-emerald);">Skriptování</strong>
+            <div style="color: var(--text-muted); margin-top: 4px;">
+              Všechny zmíněné nástroje umožňují automatizaci a dávkové zpracování pomocí skriptů.
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+
+      <!-- SLIDE 33: Slicer3D -->
+      <section>
+        <span class="slide-category">Nástroje — medicína</span>
+        <h2>Slicer3D (pro MRI)</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Open-source nástroj pro <strong>analýzu medicínských obrazů</strong>.</li>
+              <li>Segmentace</li>
+              <li>3D rekonstrukce</li>
+              <li>Vizualizace z MR dat</li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s33_f01.png" alt="Slicer3D" data-preview-image>
+            <div class="image-caption">Slicer3D — vizualizace MRI</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 34: ParaView -->
+      <section>
+        <span class="slide-category">Nástroje — proudění</span>
+        <h2>ParaView (3D data a proudění)</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Open-source vizualizace <strong>velkých 3D dat</strong></li>
+              <li>Proudění, vektorová pole, objemové vizualizace</li>
+              <li>Zpracování masivních dat (paralelizace, výkon)</li>
+              <li>Analytické a vizualizační algoritmy</li>
+              <li class="sub-item">Pokročilé vyhodnocovací funkce - od výřezů (clipping), generování izoploch (Marching
+                Cubes), vizualizace vektorových polí (proudnice/streamlines) až po přímé volumetrické vykreslování
+                (Direct Volume Rendering).</li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s34_f01.jpeg" alt="ParaView" data-preview-image>
+            <div class="image-caption">ParaView — proudění a 3D pole</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 35: VisIt -->
+      <section>
+        <span class="slide-category">Nástroje — proudění</span>
+        <h2>VisIt (3D data a proudění)</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li>Výkonný nástroj pro <strong>vizualizaci a analýzu</strong> velkých dat.</li>
+              <li>Podpora VTK (postaveno na VTK toolkitu jako ParaView)</li>
+              <li>Zaměřené pro superpočítače (exascale data)</li>
+              <li>Zpracování složitých mřížek</li>
+            </ul>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/veda_s35_f01.png" alt="VisIt" data-preview-image>
+            <div class="image-caption">VisIt — 3D data a proudění</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 36: GNUplot -->
+      <section>
+        <span class="slide-category">Nástroje — grafy</span>
+        <h2>GNUplot (2D a 3D data)</h2>
+        <div class="slide-grid-2">
+          <div class="glass-card">
+            <ul class="custom-list">
+              <li><strong>Skriptovací</strong> nástroj pro grafy 2D i 3D</li>
+              <li>Ideální pro automatizované generování grafů</li>
+              <li>Open-source dostupný většinu OS a architektur</li>
+              <li>Jednoduché skriptování přes command line</li>
+              <li>Výstup do bitmapových i vektorových formátů</li>
+            </ul>
+          </div>
+          <div class="media-row">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s36_f01.jpeg" alt="GNUplot 2D" data-preview-image>
+              <div class="image-caption">GNUplot — 2D</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s36_f02.jpeg" alt="GNUplot 3D" data-preview-image>
+              <div class="image-caption">GNUplot — 3D</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/veda_s36_f03.png" alt="GNUplot příklad" data-preview-image>
+              <div class="image-caption">Výstup skriptu</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <!-- <script src="../bordel/vendor/reveal/plugin/multimodal/multimodal.js"></script>
+  <script src="../bordel/js/tooltips.js"></script> -->
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: false,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      view: "auto",
+      scrollLayout: "compact",
+      scrollActivationWidth: 600,
+      plugins: [RevealNotes, RevealSearch, RevealZoom, RevealMath.KaTeX, RevealPointer],
+      pointer: {
+        key: "q", // key to enable pointer, default "q", not case-sensitive
+        color: "red", // color of a cursor, default "red" any valid CSS color
+        opacity: 0.8, // opacity of cursor, default 0.8
+        pointerSize: 25, // pointer size in px, default 12
+        alwaysVisible: false, // should pointer mode be always visible? default "false"
+        tailLength: 10, // NOT IMPLEMENTED YET!!! how long the "tail" should be? default 10
+      }
+    });
+  </script>
+
+
+
+
+
+  <script>
+    // Inicializace Canvasu a Kontextu
+    const canvas = document.getElementById('vectorCanvas');
+    const ctx = canvas.getContext('2d');
+    const targetH1 = document.getElementById('targetH1');
+
+    // Nastavení velikosti Canvasu
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Parametry simulace
+    const config = {
+      flowSpeed: 9.0,
+      repulsion: .4,
+      vorticity: 0.1,
+      gridSpacing: 45,
+      arrowOpacity: 0.20,
+      arrowWidth: 0.5,
+      showStreamlines: true,
+      showParticles: true,
+      particleCount: 650,
+      mouseForce: .9
+    };
+
+    // Ovládací prvky UI
+    const flowSpeedInput = document.getElementById('flowSpeed');
+    const flowSpeedVal = document.getElementById('flowSpeedVal');
+    const repulsionInput = document.getElementById('repulsion');
+    const repulsionVal = document.getElementById('repulsionVal');
+    const vorticityInput = document.getElementById('vorticity');
+    const vorticityVal = document.getElementById('vorticityVal');
+    const gridSpacingInput = document.getElementById('gridSpacing');
+    const gridSpacingVal = document.getElementById('gridSpacingVal');
+    const arrowOpacityInput = document.getElementById('arrowOpacity');
+    const arrowOpacityVal = document.getElementById('arrowOpacityVal');
+    const arrowWidthInput = document.getElementById('arrowWidth');
+    const arrowWidthVal = document.getElementById('arrowWidthVal');
+    const toggleStreamlinesBtn = document.getElementById('toggleStreamlines');
+    const toggleParticlesBtn = document.getElementById('toggleParticles');
+    const streamlineIndicator = document.getElementById('streamlineIndicator');
+    const particleIndicator = document.getElementById('particleIndicator');
+    const resetBtn = document.getElementById('resetBtn');
+
+    // Propojení UI s parametry
+    flowSpeedInput.addEventListener('input', (e) => {
+      config.flowSpeed = parseFloat(e.target.value);
+      flowSpeedVal.textContent = config.flowSpeed.toFixed(1);
+    });
+
+    repulsionInput.addEventListener('input', (e) => {
+      config.repulsion = parseFloat(e.target.value);
+      repulsionVal.textContent = config.repulsion.toFixed(1);
+    });
+
+    vorticityInput.addEventListener('input', (e) => {
+      config.vorticity = parseFloat(e.target.value);
+      vorticityVal.textContent = config.vorticity.toFixed(1);
+    });
+
+    gridSpacingInput.addEventListener('input', (e) => {
+      config.gridSpacing = parseInt(e.target.value);
+      gridSpacingVal.textContent = `${config.gridSpacing}px`;
+    });
+
+    arrowOpacityInput.addEventListener('input', (e) => {
+      config.arrowOpacity = parseFloat(e.target.value);
+      arrowOpacityVal.textContent = config.arrowOpacity.toFixed(2);
+    });
+
+    arrowWidthInput.addEventListener('input', (e) => {
+      config.arrowWidth = parseFloat(e.target.value);
+      arrowWidthVal.textContent = `${config.arrowWidth.toFixed(1)}px`;
+    });
+
+    toggleStreamlinesBtn.addEventListener('click', () => {
+      config.showStreamlines = !config.showStreamlines;
+      streamlineIndicator.className = `w-2 h-2 rounded-full ${config.showStreamlines ? 'bg-rose-500' : 'bg-slate-600'}`;
+    });
+
+    toggleParticlesBtn.addEventListener('click', () => {
+      config.showParticles = !config.showParticles;
+      particleIndicator.className = `w-2 h-2 rounded-full ${config.showParticles ? 'bg-sky-400' : 'bg-slate-600'}`;
+    });
+
+    resetBtn.addEventListener('click', () => {
+      config.flowSpeed = 2.0;
+      config.repulsion = 1.0;
+      config.vorticity = 0.5;
+      config.gridSpacing = 25;
+      config.arrowOpacity = 0.10;
+      config.arrowWidth = 0.5;
+      config.showStreamlines = true;
+      config.showParticles = true;
+
+      flowSpeedInput.value = 2.0; flowSpeedVal.textContent = '2.0';
+      repulsionInput.value = 1.5; repulsionVal.textContent = '1.5';
+      vorticityInput.value = 0.8; vorticityVal.textContent = '0.8';
+      gridSpacingInput.value = 35; gridSpacingVal.textContent = '35px';
+      arrowOpacityInput.value = 0.30; arrowOpacityVal.textContent = '0.30';
+      arrowWidthInput.value = 0.8; arrowWidthVal.textContent = '0.8px';
+
+      streamlineIndicator.className = 'w-2 h-2 rounded-full bg-rose-500';
+      particleIndicator.className = 'w-2 h-2 rounded-full bg-sky-400';
+
+      // Navrácení H1 do středu
+      targetH1.style.top = '50%';
+      targetH1.style.left = '50%';
+      targetH1.style.transform = 'translate(-50%, -50%)';
+      initParticles();
+    });
+
+    // Drag and Drop logika pro H1 element
+    let isDragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    function startDrag(clientX, clientY) {
+      isDragging = true;
+      const rect = targetH1.getBoundingClientRect();
+      dragOffsetX = clientX - rect.left;
+      dragOffsetY = clientY - rect.top;
+
+      // Odstranění CSS transformace pro přímé nastavení left/top
+      targetH1.style.transform = 'none';
+      targetH1.style.left = `${rect.left}px`;
+      targetH1.style.top = `${rect.top}px`;
+    }
+
+    function moveDrag(clientX, clientY) {
+      if (!isDragging) return;
+      targetH1.style.left = `${clientX - dragOffsetX}px`;
+      targetH1.style.top = `${clientY - dragOffsetY}px`;
+    }
+
+    function stopDrag() {
+      isDragging = false;
+    }
+
+    // Eventy pro myš
+    targetH1.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+    window.addEventListener('mousemove', (e) => {
+      moveDrag(e.clientX, e.clientY);
+      mousePos.x = e.clientX;
+      mousePos.y = e.clientY;
+    });
+    window.addEventListener('mouseup', stopDrag);
+
+    // Eventy pro dotyková zařízení
+    targetH1.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) {
+        startDrag(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    });
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+        mousePos.x = e.touches[0].clientX;
+        mousePos.y = e.touches[0].clientY;
+      }
+    });
+    window.addEventListener('touchend', stopDrag);
+
+    // Pozice myši pro interaktivní pole
+    const mousePos = { x: -1000, y: -1000 };
+
+    // Částice pro vizualizaci stolní simulace proudění
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = 0;
+        this.vy = 0;
+        this.life = Math.random() * 200 + 50;
+        this.maxLife = this.life;
+        this.history = [];
+      }
+
+      update(getFieldVector) {
+        const vec = getFieldVector(this.x, this.y);
+
+        // Plynulá změna rychlosti
+        this.vx = this.vx * 0.8 + vec.x * 0.2;
+        this.vy = this.vy * 0.8 + vec.y * 0.2;
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Ukládání stop pro plynulé vykreslení
+        this.history.push({ x: this.x, y: this.y });
+        if (this.history.length > 12) {
+          this.history.shift();
+        }
+
+        this.life--;
+
+        // Obnovení při opuštění obrazovky nebo konce životnosti
+        if (this.life <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset();
+          this.x = 0; // Začínat převážně vlevo pro simulaci proudění
+          this.y = Math.random() * canvas.height;
+        }
+      }
+
+      draw() {
+        if (this.history.length < 2) return;
+
+        ctx.beginPath();
+        ctx.moveTo(this.history[0].x, this.history[0].y);
+        for (let i = 1; i < this.history.length; i++) {
+          ctx.lineTo(this.history[i].x, this.history[i].y);
+        }
+
+        const alpha = (this.life / this.maxLife) * 0.5;
+        ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    }
+
+    let particles = [];
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < config.particleCount; i++) {
+        particles.push(new Particle());
+      }
+    }
+    initParticles();
+
+    // Výpočet vektorového pole v bodě (x, y)
+    function getVectorAt(x, y) {
+      // Základní laminární proudění zleva doprava
+      let vx = config.flowSpeed;
+      let vy = 0;
+
+      // Získání hranic H1 prvku
+      const h1Rect = targetH1.getBoundingClientRect();
+      const h1CenterX = h1Rect.left + h1Rect.width / 2;
+      const h1CenterY = h1Rect.top + h1Rect.height / 2;
+
+      // Efektivní poloměr překážky podle velikosti elementu
+      const radius = Math.max(h1Rect.width, h1Rect.height) * 0.6;
+
+      const dx = x - h1CenterX;
+      const dy = y - h1CenterY;
+      const distSq = dx * dx + dy * dy;
+      const dist = Math.sqrt(distSq) || 1;
+
+      // 1. Vliv H1 elementu (Proudění kolem tělesa s rotací/vortexem)
+      if (dist < radius * 3.5) {
+        const factor = Math.pow((radius * 3.5 - dist) / (radius * 3.5), 2);
+
+        // Odpuzování od středu H1 (Repulsion)
+        const pushX = (dx / dist) * config.repulsion * 8 * factor;
+        const pushY = (dy / dist) * config.repulsion * 8 * factor;
+
+        // Víření (Rotace kolem středu)
+        const vortexX = (-dy / dist) * config.vorticity * 6 * factor;
+        const vortexY = (dx / dist) * config.vorticity * 6 * factor;
+
+        vx += pushX + vortexX;
+        vy += pushY + vortexY;
+      }
+
+      // 2. Interakce s myší/dotykem
+      const mdx = x - mousePos.x;
+      const mdy = y - mousePos.y;
+      const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+      if (mdist < 150) {
+        const mFactor = (150 - mdist) / 150;
+        vx += (mdx / mdist) * config.mouseForce * 5 * mFactor;
+        vy += (mdy / mdist) * config.mouseForce * 5 * mFactor;
+      }
+
+      return { x: vx, y: vy, mag: Math.sqrt(vx * vx + vy * vy) };
+    }
+
+    // Pomocná funkce pro převod hodnoty (magnitude) na gradient barvu
+    function getVectorColor(mag) {
+      // Gradient: Modrá (#38bdf8) -> Fialová (#818cf8) -> Červená (#f43f5e)
+      const normalized = Math.min(Math.max((mag - 0.5) / 5, 0), 1);
+
+      let r, g, b;
+      if (normalized < 0.5) {
+        const t = normalized * 2;
+        r = Math.round(56 + (129 - 56) * t);
+        g = Math.round(189 + (140 - 189) * t);
+        b = Math.round(248 + (248 - 248) * t);
+      } else {
+        const t = (normalized - 0.5) * 2;
+        r = Math.round(129 + (244 - 129) * t);
+        g = Math.round(140 + (63 - 140) * t);
+        b = Math.round(248 + (94 - 248) * t);
+      }
+      return { r, g, b, stroke: `rgb(${r}, ${g}, ${b})` };
+    }
+
+    // Vykreslení šipky vektoru (Tenčí, jemnější, s nastavitelnou průhledností a tloušťkou)
+    function drawArrow(x, y, vx, vy, mag) {
+      const angle = Math.atan2(vy, vx);
+      const len = Math.min(mag * 7, config.gridSpacing * 0.9);
+      const color = getVectorColor(mag);
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+
+      ctx.strokeStyle = color.stroke;
+      ctx.fillStyle = color.stroke;
+
+      // Nastavení tenké čáry šipky (např. 0.8px)
+      ctx.lineWidth = Math.min(config.arrowWidth + mag * 0.1, config.arrowWidth * 1.5);
+
+      // Snížená neprůhlednost šipek pro jemné pozadí
+      ctx.globalAlpha = Math.min(config.arrowOpacity * (0.6 + mag * 0.2), 0.9);
+
+      // Tělo šipky (čára)
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(len, 0);
+      ctx.stroke();
+
+      // Zmenšená hlavička šipky
+      const headSize = Math.min(2 + mag * 0.4, 3.5);
+      ctx.beginPath();
+      ctx.moveTo(len, 0);
+      ctx.lineTo(len - headSize, -headSize / 2);
+      ctx.lineTo(len - headSize, headSize / 2);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // Vykreslení podkladové mřížky
+    function drawGrid() {
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.globalAlpha = 0.25;
+
+      const spacing = config.gridSpacing;
+
+      for (let x = 0; x < canvas.width; x += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+
+      for (let y = 0; y < canvas.height; y += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1.0;
+    }
+
+    // Vizualizace proudnic (Streamlines)
+    function drawStreamlines() {
+      if (!config.showStreamlines) return;
+
+      const step = config.gridSpacing * 2;
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.15;
+
+      for (let y = step / 2; y < canvas.height; y += step) {
+        let currX = 0;
+        let currY = y;
+
+        ctx.beginPath();
+        ctx.moveTo(currX, currY);
+
+        for (let i = 0; i < 80; i++) {
+          const vec = getVectorAt(currX, currY);
+          currX += vec.x * 4;
+          currY += vec.y * 4;
+
+          ctx.lineTo(currX, currY);
+
+          if (currX > canvas.width || currY < 0 || currY > canvas.height) break;
+        }
+
+        ctx.strokeStyle = '#818cf8';
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1.0;
+    }
+
+    // Hlavní smyčka simulace a kreslení
+    function animate() {
+      // Čištění plátna s jemným tmavým pozadím
+      ctx.fillStyle = '#eef4fb';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Mřížka na pozadí
+      drawGrid();
+
+      // 2. Proudnice (Streamlines)
+      drawStreamlines();
+
+      // 3. Vektorové pole (Mřížka šipek)
+      const spacing = config.gridSpacing;
+      for (let x = spacing / 2; x < canvas.width; x += spacing) {
+        for (let y = spacing / 2; y < canvas.height; y += spacing) {
+          const vec = getVectorAt(x, y);
+          drawArrow(x, y, vec.x, vec.y, vec.mag);
+        }
+      }
+
+      // 4. Animované částice proudění
+      if (config.showParticles) {
+        particles.forEach(p => {
+          p.update(getVectorAt);
+          p.draw();
+        });
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    // Spuštění po načtení okna
+    window.onload = function () {
+      animate();
+    };
+  </script>
+
+
+</body>
+
+</html>

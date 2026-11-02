@@ -1,0 +1,2849 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>NI-PVR: Vnímání virtuálního světa — ČVUT</title>
+  <meta name="description"
+    content="Přednáška NI-PVR: Vnímání virtuálního světa. Immersion a presence, smyslové vjemy, zrak, sluch, hmat, propriocepce, kinetóza a doporučení pro vývoj VR aplikací. Petr Pauš, FIT ČVUT v Praze">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+</head>
+
+<body>
+<a id="grafit-lecture-return" class="grafit-lecture-return grafit-lecture-return--floating" href="../../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+<a id="grafit-course-link" class="grafit-course-link--floating" href="../../../pvr/" aria-label="Přehled přednášek PVR" data-subject="pvr">PVR</a>
+
+  <!-- Top Persistent Header -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+  </header>
+
+  <!-- Bottom Persistent Footer Navigation Helper -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+    <!-- <div class="help-keys">
+      <span><kbd>←</kbd><kbd>→</kbd> Navigace</span>
+      <span><kbd>ESC</kbd> Přehled</span>
+      <span><kbd>F</kbd> Celá obrazovka</span>
+      <span><kbd>Q</kbd> Pointer</span>
+    </div> -->
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==========================================
+           SLIDE 1: TITULNÍ SLIDE
+           ========================================== -->
+      <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)">
+        <div class="title-hero">
+          <div class="vr-badge">NI-PVR &bull; Pokročilá virtuální realita</div>
+          <h1>Vnímání virtuálního světa</h1>
+          <p style="color: var(--text-muted); font-size: 1.15em; margin-bottom: 24px;">
+            <strong>Immersion a presence</strong>, smyslové vjemy člověka &mdash; zrak, sluch, hmat,
+            propriocepce &mdash; a <strong>kinetóza a doporučení pro vývoj VR aplikací</strong>.
+          </p>
+          <div class="authors">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze &middot; verze 2026-10</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Vítejte u přednášky věnované lidskému vnímání a jeho vztahu k virtuální realitě.
+          Dnes si odpovíme na klíčovou otázku: proč VR „funguje“ na lidský mozek?
+          Projdeme pojmy immersion a presence, rozebereme jednotlivé smysly (zrak, sluch, hmat,
+          propriocepci a vestibulární systém), ukážeme si jejich technické limity a uzavřeme
+          konkrétními doporučeními pro vývojáře VR aplikací.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 2: IMMERSION A PRESENCE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Základní pojmy &bull; Immersion vs Presence</span>
+        <h2>Immersion a presence</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">
+                Immersion (ponoření)</h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.88em; color: var(--text-main); line-height: 1.45;">
+                <strong>Objektivní technická vlastnost systému</strong> &mdash; jak moc technologie vytváří
+                skutečný dojem reality pro lidské smysly.
+              </p>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Závisí na <strong>rozlišení displejů</strong>, zorném poli (<abbr class="abbr-tag"
+                    title="Field of View">FoV</abbr>), latenci, přesnosti trackingu a haptice.</li>
+                <li>Lze ji měřit a specifikovat objektivně (Hz, ms, px, dB, stupně).</li>
+                <li>Čím vyšší immersion, tím <em>snazší</em> je dosáhnout pocitu presence.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">
+                Příklady složek immersion</h3>
+              <div class="badge-group" style="margin: 4px 0;">
+                <span class="spec-badge cyan">FoV &gt; 90&deg;</span>
+                <span class="spec-badge purple">90&ndash;120 Hz</span>
+                <span class="spec-badge emerald">6DoF tracking</span>
+                <span class="spec-badge amber">latence &lt; 20 ms</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                Presence (přítomnost)</h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.86em; color: var(--text-main); line-height: 1.45;">
+                <strong>Subjektivní psychologický pocit</strong> &mdash; jak moc je vytvořena iluze skutečné
+                přítomnosti ve virtuálním světě.
+              </p>
+              <ul class="custom-list" style="margin: 0; font-size: 0.8em;">
+                <li>Immersion <em>vytváří</em> pocit presence, ale nezaručuje ho.</li>
+                <li>Cílem VR je <strong>co nejlepší presence</strong> &mdash; aby uživatel uvěřil,
+                  že je opravdu v jiném světě.</li>
+                <li>Slater rozlišuje <strong>place illusion</strong> („jsem tady“) a
+                  <strong>plausibility illusion</strong> („děje se to skutečně“); presence
+                  v čase <strong>kolísá</strong>.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 10px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.92em; margin-bottom: 3px;">
+                Klíčová rovnice</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-dim); line-height: 1.38;">
+                <strong>Vyšší immersion &ne; zaručená presence.</strong> Rozbité, nekonzistentní nebo
+                neplynulé prostředí dokáže zničit pocit presence i při špičkové technické kvalitě.
+                Rozhoduje <em>soulad</em> smyslových vstupů a reakce světa na uživatele.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Immersion je technická věc &mdash; dá se měřit. Presence je psychologická &mdash; závisí na mozku.
+          Dokonalé brýle s vysokým rozlišením mohou vytvořit skvělou immersion, ale pokud bude docházet
+          k výpadkům sledování pohybu, presence se okamžitě vytratí. Lidský mozek je velmi citlivý na
+          nesoulad vstupů ze smyslů. Slater (2009) rozlišuje place illusion &mdash; pocit „jsem tady“ &mdash;
+          a plausibility illusion &mdash; pocit, že události ve scéně jsou skutečné a reagují na mě.
+          Presence navíc není konstanta: během zážitku kolísá podle toho, co se ve scéně děje.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 3: TŘI TYPY PŘÍTOMNOSTI
+           ========================================== -->
+      <section>
+        <span class="slide-category">Presence &bull; Typy přítomnosti</span>
+        <h2>Tři typy přítomnosti</h2>
+        <div class="slide-grid-3" style="margin-top: 18px;">
+          <div class="glass-card" style="padding: 20px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 8px;">
+              Prostorová přítomnost</h3>
+            <p style="margin: 0 0 8px 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.45;">
+              <em>spatial presence</em> &mdash; pocit, že je člověk <strong>součástí virtuálního
+                prostředí</strong>: „já jsem tady“.
+            </p>
+            <ul class="custom-list" style="margin: 0; font-size: 0.84em;">
+              <li>Vlastní tělo a avatar.</li>
+              <li>Pohyb a orientace v prostoru.</li>
+              <li>Reakce světa na mé činy.</li>
+            </ul>
+            <p style="margin: 10px 0 0 0; font-size: 0.78em; color: var(--text-dim); line-height: 1.4;">
+              <strong>Příklad:</strong> stojím v místnosti, mohu se rozhlédnout a mám ruce.
+            </p>
+          </div>
+
+          <div class="glass-card accent-purple" style="padding: 20px;">
+            <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 8px;">
+              Sociální přítomnost</h3>
+            <p style="margin: 0 0 8px 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.45;">
+              <em>social presence</em> &mdash; pocit, že <strong>ostatní bytosti jsou také součástí
+                VR</strong> a jsou skutečně přítomny.
+            </p>
+            <ul class="custom-list" style="margin: 0; font-size: 0.84em;">
+              <li>Avataři a jejich neverbální projevy.</li>
+              <li>Oční kontakt a prostorový hlas.</li>
+              <li>Společná pozornost (joint attention).</li>
+            </ul>
+            <p style="margin: 10px 0 0 0; font-size: 0.78em; color: var(--text-dim); line-height: 1.4;">
+              <strong>Příklad:</strong> druhý avatar mě poslouchá, dívá se na mě a reaguje.
+            </p>
+          </div>
+
+          <div class="glass-card accent-emerald" style="padding: 20px;">
+            <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 8px;">
+              Ko-přítomnost</h3>
+            <p style="margin: 0 0 8px 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.45;">
+              <em>co-presence</em> &mdash; pocit, že <strong>sdílíme stejný prostor</strong>
+              a vzájemně o sobě víme.
+            </p>
+            <ul class="custom-list" style="margin: 0; font-size: 0.84em;">
+              <li>Společný referenční rámec a sdílené objekty.</li>
+              <li>Vzájemné vnímání a reakce v reálném čase.</li>
+              <li>Důvěra, že druhý vidí totéž co já.</li>
+            </ul>
+            <p style="margin: 10px 0 0 0; font-size: 0.78em; color: var(--text-dim); line-height: 1.4;">
+              <strong>Příklad:</strong> podáváme si virtuální předmět a oba ho vidíme na stejném místě.
+            </p>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 18px; padding: 12px 18px;">
+          <p style="margin: 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+            <strong>Pozor na terminologii:</strong> „environmentální přítomnost“ není standardní
+            kategorie. Reakci světa na uživatele lépe vystihuje <em>plausibility illusion</em>;
+            v literatuře se proto setkáte hlavně s <em>spatial presence</em>, <em>social presence</em>
+            a <em>co-presence</em>. Všechny složky se vzájemně posilují.
+          </p>
+        </div>
+        <aside class="notes">
+          Typy přítomnosti nám pomáhají ujasnit, co vlastně v aplikaci měříme a navrhujeme.
+          Prostorová přítomnost je pocit „já jsem tady“, sociální „někdo jiný je tady se mnou“
+          a ko-přítomnost „sdílíme stejný prostor a víme o sobě“. U sociálního VR je sociální
+          přítomnost často důležitější než fotorealistická grafika. Původní označení
+          „environmentální přítomnost“ je nestandardní &mdash; jde spíše o důsledek plausibility
+          illusion, tedy toho, že svět reaguje věrohodně.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4: BENEFITY PRESENCE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Presence &bull; Proč na ní záleží</span>
+        <h2>Benefity nejlepšího pocitu přítomnosti</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">
+                Psychologické a behaviorální dopady</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Větší zapojení, vzrušení a spokojenost</strong> &mdash; přirozené prožívání.</li>
+                <li><strong>Lepší reakce na události ve VR</strong> &mdash; mozek reaguje, jako by byly reálné.</li>
+                <li><strong>Lidé se chovají víc jako v reálném světě</strong>: např. lidé, kteří se bojí výšek
+                  skutečně, se bojí i ve VR.</li>
+                <li><strong>Přirozenější komunikace</strong> &mdash; podobné reakce jako s lidmi v realitě.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 4px;">
+                Kde to má reálný dopad</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Terapie fobií, výcvik záchranářů, nácvik rizikových procedur, měkké dovednosti
+                a školení, kde je potřeba vyvolat <strong>autentickou emoční reakci</strong>.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                Jak dosáhnout vysoké presence?</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Co nejvíce vjemů</strong> &mdash; zrak, sluch, hmat, propriocepce.</li>
+                <li><strong>Sociální interakce</strong> &mdash; avataři reagují věrohodně.</li>
+                <li><strong>Prostředí musí reagovat</strong> na uživatele v reálném čase.</li>
+                <li><strong>Virtuální tělo (avatar)</strong> &mdash; pocit ztotožnění s tělem.</li>
+                <li><strong>Realističnost</strong> &mdash; fyzika, zvuk a stíny odpovídají realitě.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style="margin: 0; padding: 12px 16px;">
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+                <strong>Příklad z praxe:</strong> ve VR terapii akrofobie pacienti uvádějí strach
+                a fyziologické reakce (tep, pocení) stejně jako u skutečné výšky &mdash; právě díky
+                dostatečné presence lze bezpečně trénovat zvládání úzkosti.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Presence není jen akademický pojem. Když mozek uvěří, že je v jiném světě, začne se chovat
+          autenticky &mdash; zrychlí se tep, změní se postoj, objeví se emoce. To je základ terapie fobií
+          i efektivního výcviku. Randomizované studie Freeman et al. (2018) ukazují, že lidé
+          s akrofobií reagují na virtuální výšku podobně jako na skutečnou; Bailenson et al. na
+          Stanfordu zase dokumentují přenos sociálního chování do VR. U konkrétních tvrzení je
+          proto lepší citovat konkrétní studii než obecně „výzkumy z UCL a Stanfordu“.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 5: PŘÍKLAD — CHŮZE A JÁMA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Presence &bull; Případová studie</span>
+        <h2>Příklad: chůze a jáma</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">Experimentální setup</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Trénovací místnost a místnost s jámou</strong> &mdash; fyzicky bezpečná,
+                  virtuálně ohrožující.</li>
+                <li><strong>Pohyb normální chůzí</strong> &mdash; plná fyzická lokomoce v prostoru.</li>
+                <li><strong>Rychlé sledování pozice</strong> &mdash; vysoká frekvence aktualizace
+                  a minimální latence trackingu.</li>
+                <li><strong>Hmatová odezva</strong> &mdash; fyzické okraje jámy a zdi.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                Cíle experimentu</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Nést objekt kolem jámy bez pádu.</li>
+                <li>Házet míčky na terče na protilehlé stěně.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="media-row" style="margin-top: 0;">
+              <div class="image-showcase">
+                <img src="../bordel/images-pvr/06_vnimani/slide_05_img_01.png"
+                  alt="Schéma laboratoře: trénovací místnost a místnost s jámou" style="max-height: 185px;"
+                  data-preview-image>
+                <div class="image-caption">Místnost s&nbsp;jámou a cílovými terči</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-pvr/06_vnimani/slide_05_img_02.png"
+                  alt="Účastník s HMD a tracking systémem v laboratoři" style="max-height: 185px;" data-preview-image>
+                <div class="image-caption">Účastník s&nbsp;HMD a&nbsp;trackingem</div>
+              </div>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">
+                Klíčové zjištění</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.4;">
+                Díky <strong>přesné poloze a hmatové odezvě</strong> bylo dosaženo mnohem lepšího ponoření
+                do VR &mdash; účastníci obcházeli okraj jámy opatrněji a někteří odmítali přejít.</p>
+            </div>
+
+            <a class="video-card" href="https://www.youtube.com/watch?v=VVAO0DkoD-8" target="_blank"
+              rel="noopener noreferrer" style="margin-top: 0; padding: 10px 16px;">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Pit demo &mdash; virtuální jáma (YouTube)</div>
+                <div class="video-url">youtube.com/watch?v=VVAO0DkoD-8</div>
+              </div>
+            </a>
+            <a class="video-card" href="https://www.youtube.com/watch?v=4M92kfnpg-k" target="_blank"
+              rel="noopener noreferrer" style="margin-top: 0; padding: 10px 16px;">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Walk across the pit &mdash; průchod kolem jámy (YouTube)</div>
+                <div class="video-url">youtube.com/watch?v=4M92kfnpg-k</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <aside class="notes">
+          Experiment s jámou je klasickým demonstrátorem efektu presence. Ve VR s dostatečnou
+          immersion (přesný tracking, hmatové okraje) mozek reaguje jako na skutečné nebezpečí.
+          Všimněte si, že samotná grafika nestačí &mdash; rozhodující je přesnost sledování polohy
+          a fyzická hmatová opora. Experiment pochází z UNC Chapel Hill (Meehan, Insko, Whitton
+          &amp; Brooks, 2002); konkrétní parametry tracking systému je vhodné citovat z původní studie,
+          ne z druhotných prezentací. To má přímé implikace pro terapii i výcvik záchranářů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 6: JAK MĚŘIT PONOŘENÍ A PŘÍTOMNOST
+           ========================================== -->
+      <section>
+        <span class="slide-category">Měření &bull; Subjektivní a objektivní metody</span>
+        <h2>Jak měřit míru ponoření a přítomnosti</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Subjektivní metody</h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.4;">
+                Měření je velmi subjektivní a mezi odborníky stále není jednotný konsenzus.</p>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Následný dotazník</strong>: <strong>IPQ</strong> (iGroup Presence
+                  Questionnaire) nebo Witmer a Singer (1998) &mdash; standardizované nástroje pro měření
+                  presence.</li>
+                <li><strong>Posuvník přímo ve VR</strong> podle aktuálního pocitu &mdash; průběžné hodnocení.</li>
+                <li><strong>Rozhovory a kvalitativní analýza</strong> verbálních reakcí.</li>
+                <li><strong>SSQ</strong> (<abbr class="abbr-tag" title="Simulator Sickness Questionnaire">Simulator
+                    Sickness Questionnaire</abbr>)
+                  a <strong>VRSQ</strong> pro míru nežádoucích účinků; <strong>FMS</strong> je rychlá
+                  jednopoložková škála kinetózy.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                Objektivní metody</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Chování</strong>: reflexy, leknutí na neočekávaný podnět, odhad
+                  nebezpečí.</li>
+                <li><strong>Fyziologické ukazatele</strong>:
+                  <ul class="custom-list" style="font-size: 0.9em;">
+                    <li>tep (HR) a variabilita tepu (HRV)</li>
+                    <li>vodivost kůže (EDA / galvanic skin response)</li>
+                    <li>průměr zornice, teplota periferií, dýchání</li>
+                  </ul>
+                </li>
+                <li><strong>Behaviorální metriky</strong>: vzdálenost od okraje, rychlost
+                  a plynulost pohybu, chybovost, doba plnění úkolu.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">
+                Praktický závěr</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Neexistuje jediná „správná“ metrika. Nejlepší praxe kombinuje <strong>dotazník</strong>
+                s <strong>fyziologií</strong> a <strong>pozorováním chování</strong> &mdash; každá metoda
+                zachycuje jinou část zážitku.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Presence se měří obtížně, protože jde o vnitřní psychický stav. Dotazníky jsou snadné,
+          ale retrospektivní a zatížené subjektivitou. Fyziologická měření jsou objektivnější,
+          ale vyžadují senzory a kalibraci. V praxi se proto kombinují: dotazník po zážitku
+          (IPQ nebo Witmer &amp; Singer), průběžný posuvník ve VR, biometrie během scény
+          (HR, HRV, EDA, pupilometrie) a behaviorální metriky. Pro kinetózu se používají
+          SSQ, VRSQ nebo rychlá škála FMS.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 7: FYZIOLOGICKÁ MĚŘÍTKA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Měření &bull; Fyziologická odezva</span>
+        <h2>Fyziologická měřítka: tep jako metrika presence</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Proč právě tep?</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Podle výzkumu <strong>koreluje tep s odpověďmi z dotazníku</strong>
+                  (UNC Chapel Hill; Meehan et al., 2002) &mdash; fyziologie odpovídá tomu, co lidé
+                  uvádějí.</li>
+                <li>Tep se <strong>zvýší s lepším FPS</strong> a s <strong>hmatovou zpětnou vazbou</strong>
+                  (prkno, zdi).</li>
+                <li>Je to nenápadná, levná a kontinuální metrika &mdash; lze měřit bez přerušení zážitku.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Jak to funguje</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Autonomní nervový systém reaguje na pocit ohrožení nebo vzrušení &mdash; srdce zrychlí.
+                Čím silnější je <strong>presence</strong>, tím silnější je i fyziologická odpověď.
+                Měříme změnu tepu vůči klidové baseline, ne absolutní hodnotu.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_07_img_01.png"
+                alt="Graf změny tepové frekvence s fyzickou hranou a bez ní" style="max-height: 185px;"
+                data-preview-image>
+              <div class="image-caption">Změna tepu: bez fyzické hrany 4,9 vs. s&nbsp;fyzickou hranou 7,6 tepů/min
+                (&Delta;&nbsp;2,7; p&nbsp;&lt;&nbsp;0,05)</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_07_img_02.png"
+                alt="Graf změny tepové frekvence v závislosti na snímkové frekvenci" style="max-height: 185px;"
+                data-preview-image>
+              <div class="image-caption">Změna tepu v&nbsp;závislosti na snímkové frekvenci scény</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Graf vlevo ukazuje, že přítomnost fyzické hrany jámy zvýšila průměrnou <strong>změnu</strong>
+          tepu z 4,9 na 7,6 tepů/min, tedy o 2,7 tepů/min (p &lt; 0,05). Nejde o absolutní tepovou
+          frekvenci, ale o změnu proti klidové baseline. Experiment pochází z UNC Chapel Hill
+          (Meehan, Insko, Whitton &amp; Brooks, 2002). Graf vpravo sleduje závislost na snímkové
+          frekvenci &mdash; potvrzuje, že kvalita zobrazení ovlivňuje fyziologickou odezvu.
+          Tep je proto vhodná doplňková metrika, ideálně v kombinaci s HRV a EDA.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 8: VJEMY A VR
+           ========================================== -->
+      <section>
+        <span class="slide-category">Smysly &bull; Vjemy a VR</span>
+        <h2>Vjemy a VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Člověk vnímá svět pomocí smyslů</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Klasické smysly</strong>: hmat, zrak, sluch, čich, chuť.</li>
+                <li><strong>Další smysly</strong>: poloha těla, rovnováha, zrychlení, teplota, žízeň, hlad.</li>
+                <li>Vnímání se skládá ze <strong>dvou procesů</strong>:
+                  <ul class="custom-list" style="font-size: 0.9em;">
+                    <li><strong>vnímání okolí</strong> &mdash; získání informací smysly,</li>
+                    <li><strong>následný pocit</strong> &mdash; vyhodnocení informací mozkem.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                Příklad: Birdly (ptačí let)</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Obraz</strong> &mdash; VR pohled z&nbsp;perspektivy ptáka.</li>
+                <li><strong>Vítr</strong> &mdash; proudění vzduchu úměrné rychlosti letu.</li>
+                <li><strong>Pohyb a hmat</strong> &mdash; fyzická plošina reaguje na pohyby rukou.</li>
+                <li><strong>Zvuk</strong> &mdash; prostorový zvuk větru a terénu.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_08_img_01.jpeg"
+                alt="Instalace Birdly: člověk na pohyblivé plošině s HMD a ventilátory" style="max-height: 300px;"
+                data-preview-image>
+              <div class="image-caption">Birdly &mdash; multisenzorická simulace letu ptáka</div>
+            </div>
+
+            <a class="video-card" href="https://www.youtube.com/watch?v=JApQBIsCK6c" target="_blank"
+              rel="noopener noreferrer" style="margin-top: 0;">
+              <div class="video-icon">&#9654;</div>
+              <div class="video-details">
+                <div class="video-title">Birdly &mdash; ukázka letu (YouTube)</div>
+                <div class="video-url">youtube.com/watch?v=JApQBIsCK6c</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <aside class="notes">
+          Birdly je skvělým příkladem toho, jak stimulace více smyslů současně dramaticky zvyšuje
+          pocit presence. Pouhý vizuální obraz letu by nestačil &mdash; přidání proudícího vzduchu
+          a fyzické plošiny vytváří zcela přesvědčivou iluzi. Všimněte si, že jednotlivé vjemy
+          musí být vzájemně synchronizované.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9: LIDSKÉ VNÍMÁNÍ — DVA KROKY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Smysly &bull; Strategie pro VR</span>
+        <h2>Lidské vnímání: porozumět a stimulovat</h2>
+        <div class="slide-grid-2 equal">
+          <div class="glass-card" style="padding: 24px;">
+            <div style="font-family: var(--font-heading); font-size: 2.2em; font-weight: 800;
+              color: var(--accent-cyan); line-height: 1; margin-bottom: 8px;">1</div>
+            <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 8px;">Porozumět</h3>
+            <p style="margin: 0; font-size: 0.88em; color: var(--text-muted); line-height: 1.5;">
+              Nutné přesně zjistit, <strong>jak člověk vnímá svět pomocí svých smyslů</strong> &mdash;
+              jaké podněty registruje, jak je zpracovává a kde jsou hranice jeho vnímání
+              (rozlišení, zorné pole, latence, frekvence).</p>
+          </div>
+
+          <div class="glass-card accent-purple" style="padding: 24px;">
+            <div style="font-family: var(--font-heading); font-size: 2.2em; font-weight: 800;
+              color: var(--accent-purple); line-height: 1; margin-bottom: 8px;">2</div>
+            <h3 style="color: var(--accent-purple); font-size: 1.15em; margin-bottom: 8px;">
+              Stimulovat lidské vjemy</h3>
+            <p style="margin: 0; font-size: 0.88em; color: var(--text-muted); line-height: 1.5;">
+              Vytvořit <strong>technické řešení</strong> tak, aby co nejvíce ošálilo lidské smysly &mdash;
+              displeje, optika, prostorový zvuk, haptika a tracking musí odpovídat tomu,
+              co mozek očekává.</p>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 18px; padding: 12px 18px;">
+          <p style="margin: 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+            <strong>Dva směry zpracování:</strong> <em>bottom-up</em> (data ze smyslů) a <em>top-down</em>
+            (očekávání a zkušenosti mozku). VR funguje nejlépe, když jsou oba směry v souladu &mdash;
+            scéna musí vypadat a chovat se tak, jak mozek předpokládá.
+          </p>
+        </div>
+        <aside class="notes">
+          Vývoj VR aplikace má dvě fáze. Nejprve musíme porozumět fyziologii a psychofyzice vnímání:
+          jaké rozlišení oko rozezná, jak lokalizujeme zvuk, jaké jsou limity hmatu. Potom hledáme
+          technické řešení, které tyto smysly stimuluje co nejvěrněji. Když se obě fáze potkají,
+          vzniká přesvědčivý zážitek.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           N1: MULTISENZORICKÁ INTEGRACE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Smysly &bull; Multisenzorická integrace</span>
+        <h2>Jak mozek skládá smysly dohromady</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Bayesovské vážení podle spolehlivosti</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Mozek kombinuje smysly podle toho, který je v dané situaci <strong>přesnější</strong>
+                  &mdash; spolehlivějšímu zdroji dává větší váhu (Ernst &amp; Banks, 2002).</li>
+                <li><strong>Vizuální dominance</strong>: zrak často „přetahuje“ lokalizaci zvuku
+                  &mdash; <em>ventriloquism effect</em> (Alais &amp; Burr, 2004).</li>
+                <li><strong>McGurk efekt</strong>: pohyb rtů mění slyšenou slabiku (např. „ba“
+                  vs. „ga“).</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Časové okno integrace</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Audio-vizuální synchronie je tolerována v řádu <strong>desítek ms</strong>. Větší
+                rozptyl vede k rozpadu iluze &mdash; mozek přestane vnímat zvuk a obraz jako jednu
+                událost.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">
+                Rubber hand illusion</h3>
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.45;">
+                Synchronní vizuálně-hmatická stimulace změní pocit <strong>vlastnictví ruky</strong>
+                &mdash; mozek přijme gumovou ruku za svou (Botvinick &amp; Cohen, 1998). Stejný
+                princip funguje u avatarů a full-body trackingu.</p>
+            </div>
+
+            <div class="glass-card" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">
+                Důsledek pro VR a AR</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Nestačí stimulovat každý smysl zvlášť &mdash; vstupy musí být
+                  <strong>prostorově i časově konzistentní</strong>.
+                </li>
+                <li>Slabší smysl lze kompenzovat silnějším, ale <strong>nesoulad je nápadnější
+                    než absence smyslu</strong>.</li>
+                <li>V AR může vizuální kotevní bod „přetáhnout“ i lokalizaci zvuku a hmatu.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Prezentace probírá smysly jeden po druhém, ale mozek je nikdy nezpracovává izolovaně.
+          Podle bayesovského modelu dává větší váhu tomu smyslu, který je v dané situaci
+          spolehlivější. Zrak obvykle dominuje prostorové lokalizaci &mdash; proto při nesouladu
+          slyšíme zvuk tam, kde vidíme zdroj (ventriloquism). McGurk efekt ukazuje totéž u řeči.
+          Rubber hand illusion dokazuje, že synchronní vizuálně-hmatická stimulace mění i pocit
+          vlastnictví těla. Pro vývojáře z toho plyne jediné: konzistence mezi smysly je
+          důležitější než počet stimulovaných smyslů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 10: RELATIVNÍ DŮLEŽITOST SMYSLŮ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Smysly &bull; Neurální zastoupení</span>
+        <h2>Relativní důležitost smyslů</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Podíl na mozkové kůře</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Zrak: ~30 % mozkové kůry</strong> &mdash; dominantní smysl pro orientaci
+                  v prostoru.</li>
+                <li><strong>Hmat: ~8 %</strong> &mdash; velmi důležitý pro interakci s prostředím.</li>
+                <li><strong>Sluch: ~2 %</strong> &mdash; klíčový pro lokalizaci zvuků v prostoru.</li>
+                <li><strong>Čich: &lt; 1 %</strong> &mdash; ve VR nejhůře simulovatelný smysl.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                Další smysly (mimo klasických pět)</h3>
+              <div class="badge-group" style="margin: 4px 0;">
+                <span class="spec-badge cyan">propriocepce</span>
+                <span class="spec-badge purple">kinestézie</span>
+                <span class="spec-badge emerald">vestibulární systém</span>
+                <span class="spec-badge amber">teplota</span>
+                <span class="spec-badge">žízeň a hlad</span>
+              </div>
+              <p style="margin: 6px 0 0 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                Tyto smysly jsou pro VR často <strong>důležitější než čich a chuť</strong> &mdash;
+                určují, zda se uživatel cítí být součástí světa a zda se necítí špatně.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_10_img_01.png"
+                alt="Mapa mozku se znázorněním oblastí pro zrak, sluch, hmat, chuť a čich" style="max-height: 290px;"
+                data-preview-image>
+              <div class="image-caption">Kortikální zastoupení jednotlivých smyslů</div>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">
+                Implikace pro vývoj</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                Priorita investic do smyslové stimulace: <strong>zrak &rarr; hmat &rarr; sluch</strong>.
+                Nesoulad mezi vestibulárním systémem a zrakem však i při skvělé grafice způsobuje
+                kinetózu.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Zajímavé je, že zrak zabírá zhruba třicet procent <strong>mozkové kůry</strong> &mdash;
+          proto je vizuální kvalita pro VR tak zásadní. Hmat má osm procent, sluch pouhá dvě.
+          Nejde o podíl všech neuronů v těle (většina je v mozečku), ale o kortikální zastoupení.
+          Díky kortikální magnifikaci navíc fovea zabírá neúměrně velkou část zrakové kůry.
+          Přesto sluch hraje v prostorové orientaci obrovskou roli, protože pomáhá lokalizovat
+          události mimo zorné pole.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 11: ZRAK — ANATOMIE OKA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zrak &bull; Anatomie a fyzika</span>
+        <h2>Zrak: anatomie oka a vizuální vstup</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Jak oko funguje</h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.84em; color: var(--text-main); line-height: 1.4;">
+                Vizuální vstup je převáděn na <strong>elektrochemické signály</strong> pro mozek:</p>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Světlo prochází <strong>rohovkou</strong> a <strong>čočkou</strong> na sítnici.</li>
+                <li>Sítnice obsahuje dva typy fotoreceptorů:
+                  <ul class="custom-list" style="font-size: 0.9em;">
+                    <li><strong>Tyčinky</strong> &mdash; vnímají kontrast a fungují při nízkém osvětlení.</li>
+                    <li><strong>Čípky</strong> &mdash; barevné vidění, koncentrované v <strong>fovei</strong>.</li>
+                  </ul>
+                </li>
+                <li><strong>Slepá skvrna</strong> &mdash; místo, kde z oka vystupuje zrakový nerv.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">
+                Počty fotoreceptorů</h3>
+              <div class="badge-group" style="margin: 4px 0;">
+                <span class="spec-badge cyan">~125 M tyčinek</span>
+                <span class="spec-badge purple">~5 M čípků</span>
+              </div>
+              <p style="margin: 6px 0 0 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                Tyčinky převažují na periferii, čípky ve fovei. Tento nepoměr vysvětluje,
+                proč detaily vidíme jen v úzkém centrálním poli.</p>
+            </div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-pvr/06_vnimani/slide_11_img_01.jpg"
+              alt="Anatomický řez lidským okem s popisky: rohovka, čočka, sítnice, fovea, zrakový nerv"
+              style="max-height: 420px;" data-preview-image>
+            <div class="image-caption">Anatomie oka &mdash; cesta světla k&nbsp;sítnici</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Oko je optický systém: rohovka a čočka soustředí světlo na sítnici, kde ho fotoreceptory
+          převádějí na elektrické signály. Tyčinky jsou citlivé na jas a pohyb, čípky na barvu.
+          Ve fovei je hustota čípků nejvyšší &mdash; proto ostře vidíme jen malou část zorného pole.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 12: ZORNÉ POLE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zrak &bull; Zorné pole</span>
+        <h2>Lidské zorné pole</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Rozsah vidění</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Monokulárně</strong>: přibližně <strong>160&deg;</strong> horizontálně
+                  (temporálně ~100&deg;, nazálně ~60&deg;).</li>
+                <li><strong>Binokulárně</strong>: přibližně <strong>200&deg;</strong> horizontálně;
+                  stereoskopický překryv ~<strong>120&deg;</strong>.</li>
+                <li><strong>Vertikálně</strong>: přibližně <strong>120&ndash;135&deg;</strong> podle
+                  zdroje (nahoru ~50&ndash;60&deg;, dolů ~70&ndash;75&deg;).</li>
+                <li><strong>Periferní vidění</strong>: snížená barevná citlivost a rozlišení;
+                  periferie je citlivá především na pohyb a kontrast.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Důsledek pro HMD</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Běžné headsety nabízejí kolem <strong>100&ndash;110&deg;</strong> &mdash; zhruba polovinu
+                lidského zorného pole. Uživatel má pocit „kukátkového efektu“ a vnímá černé okraje.
+                Proto se výrobci snaží FoV zvětšovat a okraje alespoň opticky potlačit.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_12_img_02.png"
+                alt="Diagram zorného pole hlavy s úhly 50, 25, 70, 30 a 15 stupňů" style="max-height: 190px;"
+                data-preview-image>
+              <div class="image-caption">Vertikální a&nbsp;horizontální limity zorného pole</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_12_img_01.png"
+                alt="Binokulární překryv zorných polí levého a pravého oka" style="max-height: 170px;"
+                data-preview-image>
+              <div class="image-caption">Překryv obou očí &mdash; oblast stereoskopického vidění</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Lidské zorné pole je přibližně 1,5&ndash;2&times; větší než u běžných HMD. Proto se při
+          pohledu do VR objevují černé okraje. Barvy v periferii nevnímáme stejně přesně jako
+          ve fovei, ale nejsou „neviditelné“ &mdash; barevná diskriminace sahá zhruba 25&ndash;30&deg;
+          od středu. Periferie je evolučně specializovaná na detekci pohybu a kontrastu; toho
+          využívá foveated rendering i návrh výstrah. Obrázek je schematický, proto se hodnoty
+          mohou mírně lišit od textu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 13: VERGENCE A AKOMODACE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zrak &bull; Vergence a akomodace</span>
+        <h2>Pohyby očí (vergence) a akomodace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Dva mechanismy zaostření</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Akomodace</strong> &mdash; změna zakřivení čočky oka pro zaostření
+                  na různé vzdálenosti (pomocí ciliárního svalu).</li>
+                <li><strong>Vergence</strong> &mdash; sbíhavání a rozbíhání <strong>očních bulbů
+                    / zorných os</strong>: <em>konvergence</em> při pohledu na blízký předmět,
+                  <em>divergence</em> při pohledu do dálky.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 4px;">
+                V realitě jdou ruku v ruce</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Když se díváme na objekt v určité vzdálenosti, oči se <strong>současně stočí</strong>
+                (vergence) a <strong>zaostří</strong> (akomodace) na stejnou vzdálenost. Mozek tento
+                svazek používá jako silný signál hloubky.</p>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Ve VR se ale rozpojí</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Oči konvergují k virtuálnímu objektu, ale čočka zaostřuje stále na
+                <strong>pevný displej</strong>. Vzniká <em>vergence&ndash;accommodation conflict</em>.
+              </p>
+            </div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-pvr/06_vnimani/slide_13_img_01.jpg"
+              alt="Srovnání vergence a akomodace: stereopsis, binocular disparity, retinal blur"
+              style="max-height: 400px;" data-preview-image>
+            <div class="image-caption">Vergence (okulomotorické) vs.&nbsp;akomodace (fyziologické) zaostření</div>
+          </div>
+        </div>
+        <aside class="notes">
+          V přirozeném světě jsou vergence a akomodace vždy synchronizované. V headsetu je displej
+          v pevné vzdálenosti, takže oko zaostřuje pořád stejně, i když virtuální objekt je
+          „blízko“. Tento rozpor je jedním z hlavních zdrojů únavy očí ve VR.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 14: VAC KONFLIKT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zrak &bull; Vergence-Accommodation Conflict</span>
+        <h2>Nesoulad vergence a akomodace (VAC)</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card alert" style="margin-top: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.1em; margin-bottom: 6px;">
+                Co se děje v HMD</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>V <strong>realitě</strong> vergence i akomodace odpovídají stejné vzdálenosti.</li>
+                <li>Ve <strong>VR</strong> se mohou lišit: zaostříme na displej, ale chceme vidět
+                  objekt „za displejem“.</li>
+                <li>Výsledkem je <strong>rozmazanost jinde, než mozek očekává</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Možné důsledky</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                Vizuální diskomfort, únava očí, nevolnost, dvojité vidění, bolesti hlavy
+                a u dětí i riziko ovlivnění vývoje zrakového systému při dlouhém používání.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_14_img_01.jpg"
+                alt="Schéma rozdílu mezi vergencí a akomodací v reálném světě a na 3D displeji"
+                style="max-height: 250px;" data-preview-image>
+              <div class="image-caption">Reálný svět vs.&nbsp;3D displej (Marty Banks, UC Berkeley)</div>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">
+                Moderní řešení</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li><strong>Varifokální displeje</strong> &mdash; ohnisko se mění podle pohledu.</li>
+                <li><strong>Light-field displeje</strong> &mdash; správné světelné pole pro každý bod.</li>
+                <li><strong>Eye tracking + foveated rendering</strong> (Apple Vision Pro) zlepšuje
+                  ostrost a výkon, ale <strong>VAC neodstraňuje</strong> &mdash; běžné HMD mají pevnou
+                  ohniskovou rovinu.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          VAC je jedním z největších nevyřešených problémů VR displejů. Oko dostává dva konfliktní
+          signály: vergence říká „objekt je blízko“, akomodace říká „displej je daleko“. Mozek
+          to kompenzuje, ale za cenu únavy. Varifokální a light-field displeje se snaží tento
+          konflikt odstranit fyzicky. Eye tracking sám o sobě VAC neřeší &mdash; Vision Pro má
+          pevnou ohniskovou rovinu a eye tracking používá hlavně pro foveated rendering
+          a sledování pohledu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 15: ROZLIŠOVACÍ SCHOPNOST OKA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zrak &bull; Rozlišovací schopnost</span>
+        <h2>Rozlišovací schopnost oka</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Kolik detailů oko rozezná</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Běžná rozlišovací schopnost</strong>: asi <strong>1 úhlová minuta</strong>
+                  (1/60 stupně).</li>
+                <li><strong>Maximum</strong>: přibližně <strong>0,5 úhlové minuty</strong> za ideálních
+                  podmínek.</li>
+                <li>Ovlivňuje schopnost vidět detaily, oddělit blízké objekty a rozpoznat tvar.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Co to znamená pro VR</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Ostrost displeje se udává v <strong>PPD</strong> (pixelech na stupeň).
+                Pro „nerozlišitelné“ pixely potřebujeme zhruba <strong>60 PPD</strong>. Podle
+                třídy zařízení dnes: Quest 3 ~25 PPD, Vision Pro ~34&ndash;40 PPD,
+                Varjo XR-4 a Pimax Crystal ~40&ndash;50+ PPD.</p>
+            </div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-pvr/06_vnimani/slide_15_img_01.png"
+              alt="Snellenova optotypová tabulka s řádky 20/200 až 20/20" style="max-height: 420px;" data-preview-image>
+            <div class="image-caption">Snellenova tabulka &mdash; standardní test zrakové ostrosti</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Snellenova tabulka je klasický způsob měření ostrosti. Řádek 20/20 odpovídá tomu, co
+          průměrný člověk přečte na dvacet stop. Ve VR se ostrost nepřevádí na metry, ale na
+          pixely na úhlový stupeň. Cílem je dostat se na úroveň, kdy jedinec nerozezná jednotlivé
+          pixely.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 16: INTENZITA SVĚTLA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zrak &bull; Intenzita světla</span>
+        <h2>Intenzita světla a dynamický rozsah</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Oko zvládne obrovský rozsah</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Tyčinky</strong> v oku vnímají intenzitu světla a jsou aktivní
+                  i při velmi slabém osvětlení.</li>
+                <li>Lidské oko má <strong>celkový adaptační rozsah</strong> přibližně
+                  <strong>10<sup>9</sup> : 1</strong> (~30 EV) &mdash; od hvězdné oblohy po slunečné
+                  poledne.
+                </li>
+                <li><strong>Simultánní dynamický rozsah</strong> jedné scény je však jen
+                  ~<strong>10<sup>4</sup>&ndash;10<sup>5</sup> : 1</strong> (~14&ndash;17 EV).</li>
+                <li>Přizpůsobení (adaptace) trvá od zlomku sekundy po desítky minut.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Limit displejů</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                LCD panely dosahují kontrastu řádově <strong>1 000 : 1</strong>, OLED výrazně více,
+                ale stále mnohem méně než oko. Scény s prudkým přechodem světla a stínu proto
+                ve VR působí plošně &mdash; pomáhá HDR, tone mapping a pečlivé nasvícení scény.
+                U HMD je navíc klíčový absolutní jas v cd/m&sup2;.</p>
+            </div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-pvr/06_vnimani/slide_16_img_01.png"
+              alt="Tabulka luminance různých zdrojů světla a počtu fotonů na receptor" style="max-height: 300px;"
+              data-preview-image>
+            <div class="image-caption">Luminance běžných scén &mdash; od papíru při hvězdném svitu po papír
+              v&nbsp;přímém slunci</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tabulka ukazuje, jak extrémní je rozsah, který oko zvládá: od 0,0003 cd/m&sup2; (papír
+          při hvězdném svitu) po 40 000 cd/m&sup2; (papír v přímém slunci); přímé slunce je řádově
+          jasnější. Displeje v headsetu mají mnohem menší dynamický rozsah, proto je třeba scénu
+          navrhovat s ohledem na zobrazovač. U LCD se kontrast pohybuje kolem 1 000:1, OLED má
+          vyšší kontrast, ale ani tak nestačí na plný rozsah lidského vidění.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 17: STEREOSKOPICKÉ VIDĚNÍ A IPD
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zrak &bull; Stereoskopie a IPD</span>
+        <h2>Stereoskopické vidění a IPD</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                <abbr class="abbr-tag" title="Inter-Pupillary Distance — vzdálenost mezi zornicemi">IPD</abbr>
+                a binokulární paralaxa
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>IPD</strong> &mdash; vzdálenost mezi zornicemi: <strong>5 až 7,5 cm</strong>
+                  (průměr kolem 6,3 cm); rozsah se individuálně liší (děti, ženy).</li>
+                <li><strong>HMD musí mít nastavitelné IPD</strong> &mdash; například Quest 3
+                  v rozsahu <strong>58&ndash;71 mm</strong>.</li>
+                <li>Každé oko vidí <strong>mírně jiný obraz</strong> &mdash; horizontální posun
+                  odpovídá IPD.</li>
+                <li>Mozek spojuje dva obrazy do <strong>jednoho 3D vjemu</strong> s hloubkou
+                  (stereopsis).</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                IPD v HMD &mdash; proč záleží</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>IPD musí odpovídat realitě uživatele</strong>: nesprávné IPD způsobuje
+                  dvojité vidění, únavu a dezorientaci.</li>
+                <li><strong>Nastavitelné IPD</strong> (fyzicky nebo softwarově) je kritickým
+                  požadavkem pro dlouhodobé používání.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-pvr/06_vnimani/slide_17_img_01.jpg"
+              alt="Schéma IPD, konvergenčního úhlu a paralaxy mezi levým a pravým obrazem" style="max-height: 380px;"
+              data-preview-image>
+            <div class="image-caption">IPD, konvergenční úhel a&nbsp;obrazová paralaxa</div>
+          </div>
+        </div>
+        <aside class="notes">
+          IPD je pro každý headset kritická hodnota. Meta Quest 3 má nastavitelné IPD v rozsahu
+          58 až 71 milimetrů. Pokud IPD nesedí, mozek dostává nesprávnou stereobázi a uživatel
+          vidí dvojitě nebo se rychle unaví. Proto je kalibrace IPD prvním krokem při nasazení.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 18: VNÍMÁNÍ HLOUBKY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Zrak &bull; Hloubkové vjemy</span>
+        <h2>Vnímání hloubky</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Několik nezávislých vodítek</h3>
+              <p style="margin: 0 0 8px 0; font-size: 0.84em; color: var(--text-muted); line-height: 1.4;">
+                Člověk využívá několik způsobů, jak zjistit hloubku &mdash; mozek je kombinuje:</p>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Stereoskopický (binokulární)</strong> &mdash; rozdíl mezi obrazy obou očí
+                  (horizontální posun).</li>
+                <li><strong>Monokulární</strong>:
+                  <ul class="custom-list" style="font-size: 0.9em;">
+                    <li>zaostření (akomodace),</li>
+                    <li>relativní velikost,</li>
+                    <li>stíny a perspektiva,</li>
+                    <li>překrývání objektů (okluze),</li>
+                    <li>pohybová paralaxa (motion parallax).</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 8px; padding: 10px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.98em; margin-bottom: 3px;">
+                Stereoskopie je nejdůležitější</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.38;">
+                V blízkém prostoru je stereopsis nejpřesnější; nad ~10 m přebírají monokulární
+                vodítka. Špatná stereobáze vede k chybám v odhadu vzdáleností &mdash; ve VR častý
+                problém.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_17_img_02.png"
+                alt="Diagram monokulárního, stereoskopického vidění a disparity mapy" style="max-height: 300px;"
+                data-preview-image>
+              <div class="image-caption">Levý a&nbsp;pravý obraz &rarr; disparitní mapa &rarr; hloubka</div>
+            </div>
+
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 4px;">
+                Pozor na konflikt vodítek</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                Ve VR se mohou binokulární a monokulární vodítka rozcházet &mdash; například
+                velikost objektu neodpovídá jeho vzdálenosti. Mozek pak „přepne“ na jiné
+                vodítko a vjem hloubky se rozpadne.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Hloubku nevnímáme jen stereoskopicky. Velkou roli hrají perspektiva, stíny, překrývání
+          a známá velikost objektů. Ve VR je proto důležité, aby všechna vodítka souhlasila.
+          Když se rozcházejí, vzniká nejistota a někdy i nevolnost.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 19: VLASTNOSTI ZRAKU A SROVNÁNÍ S HMD
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Zrak &bull; Parametry vs. HMD</span>
+        <h2>Vlastnosti zraku a srovnání s HMD</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0; padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">
+                Parametry lidského oka</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.78em;">
+                <li><strong>Rozlišení v prostoru</strong>: ~1 úhlová minuta (20/20);
+                  maximum ~0,5&prime;.</li>
+                <li><strong>Zorné pole</strong>: ~160&deg; monokulárně, ~200&deg; binokulárně,
+                  ~120&deg; stereoskopický překryv.</li>
+                <li><strong>Rozlišení oka</strong>: ~576 MP je popularizační odhad, nikoli měřená
+                  hodnota.</li>
+                <li><strong>Časové rozlišení</strong>: ~50&ndash;90 Hz podle jasu, kontrastu
+                  a excentricity (flicker fusion).</li>
+                <li><strong>Barvy</strong>: CIE xyY; gamut displeje je menší než gamut oka.</li>
+                <li><strong>Zaostření</strong>: ~10 cm až &infin; u mladých; s věkem se blízký bod
+                  zvětšuje (presbyopie).</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 8px; padding: 10px 14px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.9em; margin-bottom: 3px;">
+                Moderní headsety (rok uvedení)</h3>
+              <p style="margin: 0; font-size: 0.7em; color: var(--text-muted); line-height: 1.32;">
+                <strong>Quest 3</strong> (2023): 2064&times;2208/oko, ~110&deg;, 90&ndash;120 Hz,
+                ~25 PPD.<br>
+                <strong>Vision Pro</strong> (2024): ~3660&times;3200/oko (odhad; Apple uvádí
+                23 MP celkem), ~100&deg;+, 90/96/100 Hz, ~34&ndash;40 PPD.<br>
+                <strong>PSVR 2</strong> (2023): 2000&times;2040/oko, ~110&deg;, 90&ndash;120 Hz.<br>
+                <strong>Varjo XR-4</strong> (2023): 3840&times;3744/oko, ~120&deg;&times;105&deg;,
+                90 Hz, ~51 PPD.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_19_img_02.png"
+                alt="Tabulka srovnání lidského oka a HTC Vive: FoV, stereo překryv, rozlišení, pixely, obnovovací frekvence"
+                style="max-height: 130px;" data-preview-image>
+              <div class="image-caption">Lidské oko vs.&nbsp;HTC Vive (2016) &mdash; historické srovnání</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_19_img_01.png"
+                alt="CIE xyY chromatický diagram s vlnovými délkami 460 až 620 nm" style="max-height: 170px;"
+                data-preview-image>
+              <div class="image-caption">CIE xyY &mdash; gamut barev, které oko rozezná</div>
+            </div>
+            <div class="glass-card accent-emerald" style="padding: 10px 14px;">
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.4;">
+                Rozlišení se každou generací zlepšuje, ale plná retinální ostrost (~60 PPD)
+                zatím není dosažena. FoV zůstává hlavním omezením.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tabulka lidské oko vs. HTC Vive je historická (2016) a dnes působí zavádějícím dojmem.
+          Moderní HMD se jí blíží, ale stále platí, že VR je kompromis: FoV je zhruba poloviční,
+          PPD hluboko pod retinální ostrostí a dynamický rozsah menší. U každého parametru je proto
+          vhodné uvést rok a zdroj. Číslo 576 MP je popularizační odhad, ne měřená konstanta.
+          CIE diagram připomíná, jak široký gamut barev oko vnímá &mdash; a že displej HMD je
+          vždy užší.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 20: SLUCH
+           ========================================== -->
+      <section>
+        <span class="slide-category">Sluch &bull; Frekvence a lokalizace</span>
+        <h2>Sluch: slyšitelné frekvence a lokalizace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Základní parametry</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Slyšitelné frekvence</strong>: ~20 Hz&ndash;20 kHz (u mladých až
+                  ~22 kHz); horní hranice s věkem klesá.</li>
+                <li><strong>Běžná konverzace</strong>: ~60 dB SPL; městský provoz ~70&ndash;85 dB;
+                  80&ndash;90 dB je již hlasité prostředí.</li>
+                <li><strong>Lokalizace zdroje</strong>: dvě uši dokážou zaměřit zvuk v prostoru
+                  díky ITD a ILD.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                Tři souřadnice lokalizace</h3>
+              <div class="badge-group" style="margin: 4px 0;">
+                <span class="spec-badge cyan">azimut (vlevo&ndash;vpravo)</span>
+                <span class="spec-badge purple">vzdálenost</span>
+                <span class="spec-badge emerald">výška (nahoru&ndash;dolů)</span>
+              </div>
+              <p style="margin: 6px 0 0 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                Lokalizace funguje díky <strong>rozdílu času</strong> a <strong>intenzity</strong>
+                zvuku v každém z uší.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_20_img_01.png"
+                alt="Audiogram: prahy slyšitelnosti, křivky stejné hlasitosti a oblast řeči" style="max-height: 210px;"
+                data-preview-image>
+              <div class="image-caption">Audiogram &mdash; práh slyšení, řeč a&nbsp;křivky stejné hlasitosti</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_20_img_02.jpg"
+                alt="Hlava s vyznačením azimutu, vzdálenosti a výšky zdroje zvuku" style="max-height: 210px;"
+                data-preview-image>
+              <div class="image-caption">Souřadnice zdroje zvuku: azimut, vzdálenost, výška</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Sluch je pro VR často podceňovaný, přestože prostorový zvuk výrazně zvyšuje presence.
+          Nejcitlivější jsme na frekvence kolem 2&ndash;4 kHz, kde leží i důležité složky řeči.
+          Audiogram používá dB SPL (klinicky často dB HL) a křivky stejné hlasitosti; u zvukových
+          tvrzení je proto nutné vždy uvést referenci. S věkem dochází k presbyakuzii &mdash; ztrátě
+          vysokých frekvencí &mdash; což je třeba brát v potaz při návrhu zvukových výstrah a při
+          testování uživatelů. Lokalizace zdroje stojí na dvou mechanismech: rozdílu času příchodu
+          a rozdílu intenzity.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 21: ODHAD AZIMUTU
+           ========================================== -->
+      <section>
+        <span class="slide-category">Sluch &bull; Azimut a ITD/ILD</span>
+        <h2>Odhad azimutu</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Dva hlavní mechanismy</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>ITD</strong> (<abbr class="abbr-tag"
+                    title="Interaural Time Difference — rozdíl doby příchodu zvuku">rozdíl času příchodu</abbr>)
+                  &mdash; zvuk dorazí k bližšímu uchu dříve. Dominuje pro <strong>nízké
+                    frekvence</strong>; mozek z rozdílu vypočítá azimut.</li>
+                <li><strong>ILD</strong> (<abbr class="abbr-tag"
+                    title="Interaural Level Difference — rozdíl intenzity zvuku">rozdíl intenzity</abbr>)
+                  &mdash; hlava tvoří akustický stín, takže zvuk z jedné strany je v bližším uchu
+                  hlasitější. Dominuje pro <strong>vysoké frekvence</strong>.</li>
+                <li>Maximální časový rozdíl je kolem <strong>0,6&ndash;0,7 ms</strong> &mdash; velmi
+                  jemná informace.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Kde to selhává</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Pro zvuky přesně vpředu a vzadu vzniká <strong>cone of confusion</strong> &mdash;
+                stejný čas i intenzita. Mozek je rozliší podle drobných spektrálních změn
+                způsobených tvarem ucha.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_21_img_01.jpeg"
+                alt="Schéma šíření zvukové vlny k hlavě: zvuk dorazí k jednomu uchu dříve a hlasitěji"
+                style="max-height: 230px;" data-preview-image>
+              <div class="image-caption">Zvuk dorazí k&nbsp;bližšímu uchu dříve a&nbsp;hlasitěji</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_21_img_02.png"
+                alt="Geometrické schéma hlavy s úhlem theta a dráhovým rozdílem a sin theta" style="max-height: 170px;"
+                data-preview-image>
+              <div class="image-caption">Dráhový rozdíl <em>a&nbsp;sin&nbsp;&theta;</em> mezi ušima</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Pro azimut je rozhodující mikroskopický rozdíl v čase příchodu zvuku. Mozek ho zvládne
+          vyhodnotit v řádu desítek mikrosekund. Ve VR je proto klíčové, aby zvukový engine
+          počítal ITD a ILD správně &mdash; a ideálně používal HRTF místo prostého panoramování.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 22: HRTF A ODHAD VÝŠKY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Sluch &bull; HRTF</span>
+        <h2>Odhad výšky zdroje: HRTF</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                <abbr class="abbr-tag"
+                  title="Head-Related Transfer Function — přenosová funkce hlavy a ušního boltce">HRTF</abbr>
+                &mdash; head-related transfer function
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Tvar vnějšího ucha a hlavy</strong> ovlivňuje, které frekvence
+                  se k bubínku dostanou.</li>
+                <li>S <strong>výškou zdroje</strong> se mění zastoupení frekvencí &mdash;
+                  mozek z toho určí, zda zvuk přichází shora, nebo zdola.</li>
+                <li>HRTF je <strong>individuální</strong> &mdash; tvar uší se mezi lidmi liší.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">
+                Praxe ve VR</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Personalizované HRTF</strong> &mdash; naskenování uší uživatele
+                  zlepšuje přesnost lokalizace.</li>
+                <li><strong>Ambisonics</strong> &mdash; prostorový zvuk pro scénu, HRTF
+                  pro render do sluchátek.</li>
+                <li><strong>Reverberace</strong> &mdash; odrazy od prostředí dodávají informaci
+                  o vzdálenosti a velikosti místnosti.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-pvr/06_vnimani/slide_22_img_01.jpg"
+              alt="Grafy HRTF: rozdíl úrovně v závislosti na frekvenci pro zdroj 40 stupňů nad uchem, v rovině ucha a 40 stupňů pod uchem"
+              style="max-height: 330px;" data-preview-image>
+            <div class="image-caption">HRTF: spektrální změny podle výšky zdroje</div>
+          </div>
+        </div>
+        <aside class="notes">
+          HRTF vysvětluje, proč rozeznáme zvuk přicházející shora od zvuku zdola, i když k oběma
+          uším dorazí ve stejný čas. Boltce a hlava fungují jako filtr, který mění spektrum
+          v závislosti na úhlu. Personalizované HRTF výrazně zlepšuje prostorový vjem.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 23: PŘESNOST LOKALIZACE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Sluch &bull; Přesnost lokalizace</span>
+        <h2>Přesnost lokalizace zvuku</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Kde jsme přesní a kde ne</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Azimutově nejpřesnější zepředu</strong>: chyba ~<strong>1&ndash;3&deg;</strong>.</li>
+                <li><strong>Největší chyby</strong>: v předozadní ose a ve výšce
+                  (<em>front-back confusion</em>), zejména bez individuální HRTF.</li>
+                <li><strong>Front-back záměny</strong>: v literatuře se liší; často
+                  <strong>10&ndash;30 %</strong>, u neindividuálních HRTF vyšší.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 6px;">
+                Jak lokalizaci zlepšit</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.84em;">
+                <li>Použít <strong>personalizované HRTF</strong> místo prostého stereo panoramatu.</li>
+                <li>Respektovat <strong>pohyb hlavy</strong> &mdash; zvuk se musí přepočítávat v reálném čase.</li>
+                <li>Přidat <strong>reverberaci a odrazy</strong> &mdash; dodají informaci o vzdálenosti.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                Proč je to pro VR důležité</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Zvukové navigační pokyny musí být <strong>dlouhé a směrově výrazné</strong>
+                  &mdash; krátký „píp“ zezadu nemusí být lokalizován správně.</li>
+                <li>Záměna vpředu/vzadu se projeví hlavně ve sluchátkách bez HRTF.</li>
+                <li>Pomáhá <strong>pohyb hlavy</strong> &mdash; mozek lokalizaci upřesňuje
+                  drobným otáčením.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">
+                Praktické doporučení</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                Pro kritické zvuky (výstrahy, dialog) použijte <strong>prostorový zvuk + vizuální
+                  potvrzení</strong>. Nikdy nespoléhejte pouze na sluch, pokud jde o bezpečnost
+                nebo orientaci.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Sluchová lokalizace stojí na ITD (nízké frekvence) a ILD (vysoké frekvence). Azimutově
+          jsme nejpřesnější zepředu, kde je chyba řádově 1&ndash;3 stupně. V předozadní ose vzniká
+          „cone of confusion“, kde jsou ITD i ILD podobné; mozek je rozlišuje podle spektrálních
+          změn způsobených boltcem. Proto jsou front-back záměny časté hlavně u sluchátek bez
+          individuální HRTF. Pohyb hlavy tuto nejistotu výrazně snižuje.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 24: HMAT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Hmat &bull; Kůže a haptika</span>
+        <h2>Hmat: kůže jako senzorický orgán</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Kůže &mdash; největší a nejtěžší orgán</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Plocha kůže: až <strong>1,7 m<sup>2</sup></strong>.</li>
+                <li><strong>Nervy nejsou rovnoměrně rozmístěny</strong> &mdash; hustota se dramaticky
+                  liší podle místa na těle.</li>
+                <li><strong>Prostorové rozlišení hmatu</strong>:
+                  <ul class="custom-list" style="font-size: 0.9em;">
+                    <li>bříška prstu: ~2&ndash;3 mm (velmi přesné),</li>
+                    <li>předloktí: ~35 mm, záda: ~39 mm, lýtko: ~45 mm.</li>
+                  </ul>
+                </li>
+                <li><strong>Test dvou bodů</strong>: minimální vzdálenost dvou dotyků, které
+                  rozeznáme jako samostatné; je to psychofyzikální metoda, ne přímá míra
+                  prostorového rozlišení.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.9em; margin-bottom: 3px;">
+                Haptika ve VR</h3>
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.35;">
+                Vibrace v ovladačích, vesty, rukavice a <strong>pasivní haptika</strong>.
+                Receptory: <strong>Merkel</strong> (tlak), <strong>Meissner</strong> (klouzání),
+                <strong>Ruffini</strong> (protažení), <strong>Pacinian</strong> (vibrace
+                ~200&ndash;300 Hz).
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_24_img_01.png"
+                alt="Tabulka prahové vzdálenosti dvou bodů pro jednotlivé části těla" style="max-height: 320px;"
+                data-preview-image>
+              <div class="image-caption">Práh rozlišení dvou bodů podle části těla</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_24_img_02.jpeg"
+                alt="Test dvou bodů na dlani pomocí dvou hrotů" style="max-height: 150px;" data-preview-image>
+              <div class="image-caption">Test dvou bodů &mdash; rozlišíme jeden dotyk, nebo dva?</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Kůže má na různých místech velmi odlišnou hustotu receptorů. Na prstech rozeznáme dva
+          body vzdálené dva milimetry, na zádech až čtyři centimetry. Haptické rozhraní proto
+          musí respektovat, kde má zpětná vazba smysl &mdash; jemné vibrace na prstech fungují,
+          na trupu potřebujeme výraznější podněty.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 25: PROPRIOCEPCE A KINESTÉZIE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Smysly &bull; Propriocepce a kinestézie</span>
+        <h2>Propriocepce a kinestézie</h2>
+        <div class="slide-grid-2 equal">
+          <div class="glass-card" style="padding: 14px 18px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 5px;">Propriocepce</h3>
+            <p style="margin: 0 0 6px 0; font-size: 0.8em; color: var(--text-main); line-height: 1.4;">
+              Smysl pro <strong>polohu kloubů a částí těla</strong> bez vizuální kontroly.</p>
+            <ul class="custom-list" style="margin: 0; font-size: 0.8em;">
+              <li>Například se dokážeme dotknout nosu se <strong>zavřenýma očima</strong>.</li>
+              <li>Přesnost je vyšší v <strong>distálních</strong> kloubech (prsty, zápěstí) než
+                v <strong>proximálních</strong> (rameno, kyčel).</li>
+              <li>Cílení je přesné řádově na centimetry; <strong>&plusmn;8 cm</strong> závisí
+                na metodě a populaci.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple" style="padding: 14px 18px;">
+            <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 5px;">Kinestézie</h3>
+            <p style="margin: 0 0 6px 0; font-size: 0.8em; color: var(--text-main); line-height: 1.4;">
+              Smysl pro <strong>pohyb kloubů</strong> a svalové napětí.</p>
+            <ul class="custom-list" style="margin: 0; font-size: 0.8em;">
+              <li>Cit pro <strong>stahující se a natahující se svaly</strong>.</li>
+              <li>Pomáhá s <strong>odhadem síly</strong> a jejím dávkováním.</li>
+              <li>Klíčová pro věrohodné uchopování a manipulaci s objekty.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="slide-grid-2 equal" style="margin-top: 8px;">
+          <div class="glass-card accent-emerald" style="padding: 10px 16px;">
+            <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 3px;">
+              Význam pro VR</h3>
+            <ul class="custom-list" style="margin: 0; font-size: 0.78em;">
+              <li><strong>Synchronizace avatara</strong> s reálným pohybem.</li>
+              <li><strong>Full Body Tracking</strong> pro přesnější tělesné schéma.</li>
+              <li><strong>Ownership, agency a self-location</strong> &mdash; tři složky embodimentu.</li>
+              <li><strong>Rubber Hand Illusion</strong> &mdash; mozek přijme virtuální ruku za vlastní.</li>
+            </ul>
+          </div>
+          <div class="glass-card" style="padding: 10px 16px;">
+            <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 3px;">
+              Vestibulární systém</h3>
+            <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.38;">
+              Vnitřní ucho snímá lineární a rotační zrychlení. Právě nesoulad vestibulárního
+              a vizuálního vstupu způsobuje <strong>kinetózu</strong> &mdash; viz následující
+              slide.</p>
+          </div>
+        </div>
+        <aside class="notes">
+          Propriocepce a kinestézie jsou pro VR často opomíjené, ale zásadní. Když virtuální ruce
+          neodpovídají skutečnému pohybu, mozek ztrácí důvěru v tělo a presence klesá. Full body
+          tracking a věrná synchronizace avatara proto nejsou jen kosmetika.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           N2: EMBODIMENT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Smysly &bull; Embodiment</span>
+        <h2>Tělesné vlastnictví a embodiment</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Tři složky embodimentu (Kilteni et al., 2012)</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Ownership</strong> &mdash; „toto tělo / tato ruka je moje“.</li>
+                <li><strong>Agency</strong> &mdash; „já jsem příčinou toho, co se děje“.</li>
+                <li><strong>Self-location</strong> &mdash; „jsem tady“, moje tělo je v tomto
+                  prostoru.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 4px;">
+                Co embodiment posiluje</h3>
+              <p style="margin: 0; font-size: 0.82em; color: var(--text-muted); line-height: 1.45;">
+                <strong>Bottom-up vodítka</strong>: visuomotorická a visuotaktilní synchronie,
+                first-person perspektiva a kontinuita těla. <strong>Top-down vlivy</strong>:
+                body schema, vzhled avatara, očekávání a kulturní normy.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                Co ho oslabuje</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Zpoždění avatara</strong> a nesoulad pohybu.</li>
+                <li><strong>Nesoulad proporcí</strong> a chybějící části těla.</li>
+                <li><strong>Přepnutí perspektivy</strong> nebo teleport bez vizuální návaznosti.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">
+                Demonstrace a důsledky</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Rubber hand illusion</strong>, full-body illusion (Lenggenhager et al.,
+                  2007), virtuální zrcadlo.</li>
+                <li><strong>Proteus Effect</strong> (Yee &amp; Bailenson, 2007): vzhled avatara
+                  mění chování uživatele.</li>
+                <li>Věrná synchronizace zvyšuje presence; nedůvěra v tělo ji snižuje.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Embodiment není totéž co presence. Skládá se ze tří složek: ownership (tělo je moje),
+          agency (pohyb způsobuji já) a self-location (jsem v tomto prostoru). Podporují ho
+          synchronní vizuomotorické a visuotaktilní podněty, first-person perspektiva a kontinuita
+          těla. Naopak zpoždění avatara, nesoulad proporcí nebo chybějící tělo pocit vlastnictví
+          oslabují. Rubber hand illusion a full-body illusion ukazují, jak snadno lze tělesné
+          schéma přepsat. Proteus Effect pak ukazuje, že vzhled avatara není jen estetika &mdash;
+          mění chování uživatele.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 26: UPLATNĚNÍ VE VR
+           ========================================== -->
+      <section>
+        <span class="slide-category">VR Technologie &bull; Stimulace smyslů</span>
+        <h2>Stimulace smyslů technologií</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Jak technologie stimuluje smysly</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Simulovat výstup</strong> &mdash; vytvořit virtuální 3D scénu.</li>
+                <li><strong>Zobrazit pomocí HMD</strong> &mdash; HMD stimuluje zrak; propriocepci
+                  stimuluje až tracking a synchronizace avatara.</li>
+                <li><strong>Prostorový zvuk</strong> &mdash; sluchátka s HRTF stimulují sluch.</li>
+                <li><strong>Haptická zpětná vazba</strong> &mdash; ovladače, vesty a rukavice
+                  stimulují hmat.</li>
+                <li><strong>Fyzický pohyb</strong> &mdash; chůze a pohyblivé platformy stimulují
+                  vestibulární systém a propriocepci.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_26_img_01.png"
+                alt="Schéma řetězce: vizuální simulace, 3D grafika, HMD, zrakový systém, mozek"
+                style="max-height: 150px;" data-preview-image>
+              <div class="image-caption">Řetězec: simulace &rarr; grafika &rarr; HMD &rarr; oko &rarr; mozek</div>
+            </div>
+
+            <table class="comparison-table" style="font-size: 0.72em; margin: 0;">
+              <thead>
+                <tr>
+                  <th>Smysl</th>
+                  <th>Technologie</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Zrak</strong></td>
+                  <td>HMD, foveated rendering, eye tracking</td>
+                </tr>
+                <tr>
+                  <td><strong>Sluch</strong></td>
+                  <td>Spatial audio, HRTF, ambisonics, Doppler</td>
+                </tr>
+                <tr>
+                  <td><strong>Hmat</strong></td>
+                  <td>Vibrace, vesty, rukavice, pasivní haptika</td>
+                </tr>
+                <tr>
+                  <td><strong>Propriocepce</strong></td>
+                  <td>6DoF tracking, full body tracking</td>
+                </tr>
+                <tr>
+                  <td><strong>Vestibulární</strong></td>
+                  <td>Fyzická lokomoce, pohyblivé platformy</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">
+                Smysly mimo mainstream</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                <strong>Čich</strong> &mdash; experimentální čichové displeje.<br>
+                <strong>Chuť</strong> &mdash; galvanická stimulace jazyka.<br>
+                <strong>Teplota</strong> &mdash; termoelektrické moduly v pokročilých rukavicích.<br>
+                <strong>AR</strong> &mdash; mapování reálného prostoru (SLAM) doplňuje tracking.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Schéma ukazuje celý řetězec od simulace po mozek. Každý článek musí být včasný
+          a konzistentní. Zajímavé je, že zatím neumíme dobře stimulovat čich a chuť &mdash;
+          existují experimentální čichové displeje a galvanická stimulace jazyka, ale do praxe
+          se zatím nedostaly.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 27: KDYŽ SMYSLY NEPASUJÍ — KINETÓZA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Kinetóza &bull; Senzorický konflikt</span>
+        <h2>Co když smysly nepasují k sobě?</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card alert" style="margin-top: 0;">
+              <h3 style="color: var(--accent-rose); font-size: 1.1em; margin-bottom: 6px;">
+                Nemoc z pohybu (kinetóza)</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Prevalence</strong> se v literatuře liší řádově <strong>20&ndash;80 %</strong>
+                  podle obsahu, délky, populace a zkušenosti; 20&ndash;30 % je spíše dolní odhad.</li>
+                <li><strong>Smysly neodpovídají situaci</strong>:
+                  <ul class="custom-list" style="font-size: 0.9em;">
+                    <li>podle zraku se hýbeme,</li>
+                    <li>podle vestibulárního aparátu stojíme na místě.</li>
+                  </ul>
+                </li>
+                <li>Podle <strong>sensory-conflict / poison teorie</strong> mozek konflikt vyhodnocuje
+                  jako možnou otravu. Jde o jednu z teorií; alternativy jsou <strong>posturální
+                    nestabilita</strong> (Riccio &amp; Stoffregen, 1991) a <strong>rest frame</strong>
+                  (Keshavarz &amp; Hecht, 2011).</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Typické projevy</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                Nevolnost, studený pot, závrať, bolesti hlavy, ospalost. Obvykle nastupují
+                po několika minutách a mohou přetrvávat i po sundání headsetu.</p>
+            </div>
+          </div>
+
+          <div class="image-showcase">
+            <img src="../bordel/images-pvr/06_vnimani/slide_27_img_01.jpeg"
+              alt="Schéma: mozek porovnává vestibulární a vizuální vstup; shoda vede k habituaci, neshoda ke kinetóze"
+              style="max-height: 370px;" data-preview-image>
+            <div class="image-caption">Mozek porovnává vstupy; nesoulad &rarr; kinetóza</div>
+          </div>
+        </div>
+        <aside class="notes">
+          Kinetóza není slabost uživatele. Podle sensory-conflict teorie mozek očekává, že se
+          vizuální pohyb a pohyb těla shodují; když se rozcházejí, vyhodnotí to jako možnou otravu
+          a spustí obranné reakce. Alternativní vysvětlení jsou posturální nestabilita (Riccio
+          &amp; Stoffregen, 1991) a rest frame (Keshavarz &amp; Hecht, 2011). Prevalence se proto
+          v studiích liší &mdash; záleží na obsahu, délce relace, populaci a zkušenosti uživatele.
+          Prevence je návrhový problém, ne jen otázka zvyku.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 28: JAK OMEZIT KINETÓZU
+           ========================================== -->
+      <section>
+        <span class="slide-category">Kinetóza &bull; Prevence</span>
+        <h2>Jak omezit kinetózu</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Návrhová a technická opatření</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Lepší návrh VR systému</strong> &mdash; přirozenější pohyb ve scéně.</li>
+                <li><strong>Lepší výkon</strong> &mdash; menší latence trackingu, vyšší FPS.</li>
+                <li><strong>Rest frame</strong> &mdash; kokpit letadla, okno auta, podlaha, horizont.</li>
+                <li><strong>Diskrétní virtuální nos</strong> &mdash; stabilní referencia v centru
+                  pohledu.</li>
+                <li><strong>Komfortní režimy</strong> &mdash; teleport, snap turn, FOV vignette
+                  (zúžení periferního pole během pohybu).</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 8px; padding: 10px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">
+                Jak testovat komfort</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.8em;">
+                <li>Zařadit do testování i <strong>citlivé uživatele</strong> &mdash; nejen zkušené hráče.</li>
+                <li>Měřit <strong>SSQ před a po</strong> relaci, nabídnout krátké přestávky.</li>
+                <li>Nabídnout <strong>volbu režimu pohybu</strong> a možnost kdykoliv skončit.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_28_img_01.jpeg"
+                alt="Stereoskopický pohled na horskou dráhu s virtuálním nosem ve spodní části obrazu"
+                style="max-height: 230px;" data-preview-image>
+              <div class="image-caption">Virtuální nos jako stabilní záchytný bod</div>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">
+                Výzkum Purdue University</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                <strong>Diskrétní virtuální nos</strong> ve středu zorného pole snížil kinetózu
+                přibližně o <strong>13,5 %</strong> (Whittinghill et al., Purdue). Funguje jako
+                stabilní <em>rest frame</em>.
+              </p>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">
+                Pro citlivé uživatele</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                Nabídněte <strong>teleport</strong> místo plynulého pohybu, <strong>snap turn</strong>
+                po 30&ndash;45&deg; a možnost vypnout vertikální pohyb kamery.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Beat Saber kinetózu řeší elegantně: hráč stojí pevně a objekty přicházejí k němu.
+          Google Earth VR zavedlo FOV vignette &mdash; při letu se zorné pole zúží, čímž se potlačí
+          periferní optický tok. Diskrétní virtuální nos je překvapivě účinný trik: mozek ho
+          registruje jako stabilní rest frame a lépe snáší pohyb scény. Studie z Purdue
+          (Whittinghill et al.) uvádí snížení kinetózy přibližně o 13,5 %.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29: PĚT ZÁSAD DOBRÉHO PONOŘENÍ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Technické požadavky &bull; Pět zásad</span>
+        <h2>Pět zásad dobrého ponoření do VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 10px;">
+                Technické minimum</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.94em;">
+                <li><strong>1. Rychlost zobrazení</strong>: <strong>90 Hz</strong> je doporučené
+                  minimum (ideálně 120 Hz); 72 Hz může být přijatelné, ale u citlivých uživatelů
+                  zvyšuje riziko.</li>
+                <li><strong>2. Optika</strong>: zorné pole <strong>&gt; 90&deg;</strong>, dobrá
+                  kalibrace a zaostření HMD.</li>
+                <li><strong>3. Sledování pohybu</strong>: <strong>6DoF</strong>, 360&deg; rozsah,
+                  přesnost řádově sub-cm (high-end Lighthouse pod 1 mm), žádné rušení signálu.</li>
+                <li><strong>4. Rozlišení</strong>: dnes min. <strong>~2000&times;2000 px/oko</strong>
+                  (Quest 3 2064&times;2208; Vision Pro ~3660&times;3200).</li>
+                <li><strong>5. Latence</strong>: cíl <strong>&lt; 20 ms</strong> motion-to-photon;
+                  práh je individuální a závisí na obsahu.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 8px;">
+                Klíčové hodnoty</h3>
+              <div class="badge-group" style="margin: 4px 0;">
+                <span class="spec-badge cyan spec-badge-big">90 Hz</span>
+                <span class="spec-badge purple spec-badge-big">&lt; 20 ms</span>
+                <span class="spec-badge emerald spec-badge-big">6DoF</span>
+              </div>
+              <p style="margin: 8px 0 0 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.4;">
+                <strong>Motion-to-photon</strong> je doba od pohybu hlavy po zobrazení nového
+                snímku. 20 ms je návrhový cíl; nad touto mezí roste riziko nevolnosti, ale práh
+                je individuální. Pomáhá reprojection/timewarp a late latching.
+              </p>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 4px;">
+                Pozor na kompromisy</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.45;">
+                Stabilních 90 FPS je vždy lepší než efektní scéna, která občas spadne na 50 FPS.
+                <strong>Konzistence</strong> je důležitější než maximální detail.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 10px; padding: 9px 18px;">
+          <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.38;">
+            <strong>Rozpočet latence:</strong> 90 Hz = 11,1 ms na snímek, 120 Hz = 8,3 ms.
+            Tracking, render, kompozice i zobrazení se musí vejít do 20 ms &mdash; šetřete výkon
+            foveated renderingem a instanced stereo.
+          </p>
+        </div>
+        <aside class="notes">
+          Těchto pět čísel je užitečné mít na paměti při každém návrhu. Latence pod dvacet
+          milisekund, obnovovací frekvence alespoň devadesát hertzů, šest stupňů volnosti,
+          dostatečné rozlišení a zorné pole nad devadesát stupňů. Když některá hodnota chybí,
+          uživatel to pozná &mdash; často jako nevolnost nebo únavu. Stabilních 90 FPS je vždy
+          lepší než efektní scéna, která občas spadne na 50 FPS; pro snížení vnímané latence
+          se používají reprojection/timewarp a late latching.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 30: ÚPRAVA HW PRO OČI
+           ========================================== -->
+      <section>
+        <span class="slide-category">Optika &bull; Úprava HW pro oči</span>
+        <h2>Úprava HW pro oči</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Problémy, které musí optika řešit</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Zkreslení obrazu</strong> &mdash; čočka zvětšuje a zakřivuje obraz,
+                  software ho musí předzkreslit (barrel/pincushion).</li>
+                <li><strong>Chromatická aberace</strong> &mdash; různé vlnové délky se lámou různě,
+                  okraje duhově zabarvují.</li>
+                <li><strong>Fresnelova čočka</strong> &mdash; tenká a lehká, ale vytváří
+                  „god rays“ a snižuje ostrost na okrajích.</li>
+                <li><strong>Pancake čočky</strong> &mdash; tenčí a ostřejší, ale méně světelné.</li>
+                <li><strong>Další artefakty</strong> &mdash; eye relief, pupil swim, mura,
+                  screendoor efekt (SDE) a glare; řešením jsou dioptrické vložky a kalibrace.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 8px; padding: 10px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 3px;">
+                Kalibrace je součást produktu</h3>
+              <p style="margin: 0; font-size: 0.76em; color: var(--text-muted); line-height: 1.38;">
+                Správné IPD, zaostření a poloha headsetu ovlivňují ostrost i komfort. Aplikace
+                by měla uživatele provést kalibrací a upozornit na nesprávné nasazení.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_30_img_02.png"
+                alt="Řez Fresnelovou čočkou a klasickou spojnou čočkou" style="max-height: 210px;" data-preview-image>
+              <div class="image-caption">Fresnelova čočka (1) vs.&nbsp;klasická čočka (2)</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-pvr/06_vnimani/slide_30_img_01.jpeg"
+                alt="Mřížka pro kalibraci optického zkreslení v HMD" style="max-height: 210px;" data-preview-image>
+              <div class="image-caption">Kalibrační mřížka &mdash; zkreslení a&nbsp;geometrie optiky</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Optika headsetu je kompromis. Fresnelovy čočky jsou lehké a umožňují velké zorné pole,
+          ale trpí artefakty. Pancake čočky jsou opticky lepší, ale náročnější na jas displeje.
+          Softwarová předkompenzace zkreslení je nedílnou součástí renderovacího řetězce.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           N3: VNÍMÁNÍ V AR
+           ========================================== -->
+      <section>
+        <span class="slide-category">AR &bull; Optika, registrace a okluze</span>
+        <h2>Vnímání v AR: co se mění proti VR</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">
+                Optika a zobrazení</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.84em;">
+                <li><strong>OST</strong> (optical see-through) &mdash; reálný svět vidíme přímo
+                  přes průhledový displej.</li>
+                <li><strong>VST</strong> (video see-through) &mdash; kamery snímají realitu
+                  a displej ji zobrazuje; snazší okluze, ale vyšší latence.</li>
+                <li><strong>Černá není černá</strong> &mdash; u OST je průhledná; jas a kontrast
+                  závisí na okolním světle.</li>
+                <li><strong>Okluze</strong> &mdash; bez ní virtuální objekt „plave“ před realitou
+                  a ztrácí hloubku.</li>
+                <li><strong>FoV a eye box</strong>, <strong>VAC</strong> s pevnou ohniskovou
+                  rovinou, <strong>eye glow</strong> z IR osvětlení.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">
+                Kalibrace</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Camera-to-display alignment, distorze, chromatická aberace a rozdíly mezi
+                jednotlivými kusy hardware.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">
+                Prostor a registrace</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li><strong>SLAM a anchoring</strong> &mdash; plane detection, feature points,
+                  anchors; při dlouhém používání vzniká drift.</li>
+                <li><strong>Registrace</strong> &mdash; chyba v řádu mm až cm se projeví
+                  „swimmingem“ virtuálních objektů.</li>
+                <li><strong>Hloubková vodítka</strong> &mdash; stereo, motion parallax, okluze,
+                  stíny a perspektiva musí souhlasit.</li>
+                <li><strong>Osvětlení</strong> &mdash; odhad prostředí, konzistence stínů
+                  a odrazů.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">
+                Design a bezpečnost</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li>Chůze s AR, překážky a <strong>inattentional blindness</strong>.</li>
+                <li>Kontrast, velikost textu, barvy a titulky &mdash; přístupnost je součást
+                  návrhu.</li>
+                <li>Prostorový zvuk musí odpovídat vizuální poloze; venku ho maskuje hluk.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          AR není jen VR bez headsetu. Reálné pozadí přináší specifické problémy: průhledová
+          optika, proměnlivé osvětlení, registraci a okluzi. U optical see-through je černá
+          průhledná a bílá se sčítá s pozadím, takže kontrast závisí na tom, co je za displejem.
+          Bez správné okluze virtuální objekt „plave“ a mozek ztrácí hloubku. SLAM a anchoring
+          drží objekty na místě, ale při dlouhém používání vzniká drift. Bezpečnost a přístupnost
+          nejsou doplňky &mdash; uživatel při chůzi nevnímá překážky a kritické informace
+          potřebuje i bez barevného rozlišení.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 31: DOPORUČENÍ — VIRTUÁLNÍ SVĚT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Doporučení pro vývoj &bull; Virtuální svět</span>
+        <h2>Doporučení pro vývoj: virtuální svět</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Měřítko a geometrie</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Rozměrové jednotky musí odpovídat realitě</strong> &mdash; dveře
+                  2,1 m, stůl 0,75 m.</li>
+                <li><strong>Objekty by neměly mít chybějící části</strong> &mdash; otevřená
+                  geometrie narušuje presence.</li>
+                <li><strong>Hubené objekty</strong> (listy, dráty) mohou dělat problémy kvůli
+                  různým úhlům pohledu.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Pohyb a výkon</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Implementovat pohyb dobře</strong> &mdash; výtah je lepší než schody.</li>
+                <li><strong>Snížit komplexitu scény</strong>, aby neklesalo FPS.</li>
+                <li><strong>Zabránit pohybu mnoha objektů</strong> &mdash; jinak vzniká pocit,
+                  že se hýbe sám uživatel.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">
+                Prostor a ergonomie</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Interaktivní prvky do <strong>peripersonálního prostoru</strong> &mdash;
+                  heuristicky ~0,5&ndash;1,2 m, tedy přibližně na dosah ruky.</li>
+                <li>Důležitý obsah v kuželu <strong>&plusmn;15&deg; vertikálně</strong>
+                  a <strong>&plusmn;30&deg; horizontálně</strong>.</li>
+                <li>Vyvarovat se <strong>Gorilla arm</strong> &mdash; natažené ruce se rychle unaví.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 4px;">
+                Větší realističnost není vždy výhodou</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.45;">
+                <strong>Uncanny Valley</strong> platí i ve VR. Příliš realistický, ale nedokonalý
+                avatar vyvolává odpor &mdash; stylizovaný avatar je často bezpečnější volbou
+                pro sociální VR.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Měřítko je nejčastější chyba začátečníků. Scéna navržená na monitoru působí
+          v headsetu úplně jinak &mdash; dveře jsou obrovské, stůl je v pase. Proto je nutné
+          testovat přímo v brýlích a vycházet z reálných rozměrů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 32: DOPORUČENÍ — RENDEROVÁNÍ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Doporučení pro vývoj &bull; Renderování</span>
+        <h2>Doporučení pro vývoj: renderování</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Stereo renderování</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Rozdíl pro jednotlivé oči je jen úhel pohledu</strong> &mdash; nikoli
+                  vlastnosti objektů (textury, barvy, materiály).</li>
+                <li><strong>Zorné pole renderu</strong> musí odpovídat parametrům HMD a být
+                  správně předzkresleno; lidského FoV nelze dosáhnout.</li>
+                <li>Dát pozor na <strong>správné mapování textur</strong> při stereoskopickém
+                  pohledu.</li>
+                <li><strong>Instanced stereo rendering</strong> &mdash; obě oči v jednom průchodu.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 4px;">
+                Antialiasing</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.45;">
+                <strong>MSAA</strong> je pro VR vhodnější než post-process FXAA, které rozmazává
+                obraz. Zubaté hrany jsou na blízkém displeji výrazně viditelné &mdash; antialiasing
+                je důležitý, ale výpočetně náročný.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-emerald" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.05em; margin-bottom: 6px;">
+                Optické požadavky</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Objekty blíž než ~0,3&ndash;0,5 m</strong> jsou kvůli VAC nepohodlné;
+                  blízký bod akomodace se s věkem zvětšuje (presbyopie).</li>
+                <li><strong>IPD musí odpovídat realitě</strong> &mdash; jinak vzniká dvojité
+                  vidění a únava.</li>
+                <li><strong>Menší světlost a kontrast</strong> než běžná 3D scéna &mdash; displej
+                  v HMD má jiný gamut.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 4px;">
+                Foveated rendering</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.45;">
+                Renderovat ve vysokém rozlišení jen oblast, kam se oko dívá, a periferii
+                s nižším rozlišením. V závislosti na scéně a agresivitě periferního shadingu
+                se uvádí řádově <strong>20&ndash;60 %</strong> úspory GPU; 40&ndash;60 % je
+                optimistický případ.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Stereo renderování je drahé &mdash; scéna se kreslí dvakrát. Instanced stereo a multiview
+          snižují režii. Foveated rendering jde ještě dál a využívá to, že periferie nepotřebuje
+          plné rozlišení. Apple Vision Pro a Meta Quest Pro už eye-tracked foveated rendering
+          používají.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 33: DOPORUČENÍ — TRACKOVÁNÍ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Doporučení pro vývoj &bull; Trackování</span>
+        <h2>Doporučení pro vývoj: trackování</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Spolehlivost sledování</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Nesmí být zaseklé nebo zpožděné</strong> &mdash; i krátký výpadek
+                  okamžitě ničí presence.</li>
+                <li><strong>Varovný systém při vykročení z herní zóny</strong> &mdash; ztmavit
+                  obraz, zobrazit hranice (Guardian).</li>
+                <li><strong>Eliminovat nežádoucí pohyb</strong> v reálném světě &mdash; kabel,
+                  okolní předměty, ostatní lidé.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 6px;">
+                Typy sledování</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.8em;">
+                <li><strong>Lighthouse</strong> (základnové stanice) &mdash; často označovaný jako
+                  outside-in, technicky však inside-out: senzory na HMD snímají majáky. Velmi
+                  přesné; vyžaduje instalaci.</li>
+                <li><strong>Inside-out</strong> (kamery v headsetu) &mdash; bez instalace, citlivé
+                  na osvětlení a texturu povrchů.</li>
+                <li><strong>Fúze s IMU</strong> &mdash; rychlá odezva, ale bez korekce driftuje.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="glass-card accent-purple" style="padding: 16px 20px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.05em; margin-bottom: 6px;">
+                Co hlídat při testování</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Latence trackingu</strong> a její rozptyl (jitter).</li>
+                <li><strong>Ztráta sledování</strong> při rychlém pohybu nebo zakrytí ovladače.</li>
+                <li><strong>Přesnost v celém prostoru</strong> &mdash; ne jen ve středu herní zóny.</li>
+                <li><strong>Chování při nízkém osvětlení</strong> u inside-out trackingu.</li>
+                <li><strong>Přesnost</strong> &mdash; high-end Lighthouse/OptiTrack sub-mm;
+                  consumer inside-out řádově sub-cm.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 10px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.9em; margin-bottom: 3px;">
+                Bezpečnost</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.38;">
+                Uživatel nevidí okolí &mdash; aplikace musí aktivně bránit kolizi s nábytkem
+                a dalším osobám. Passthrough a hranice herní zóny nejsou volitelné doplňky.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tracking je základ, na kterém stojí celý zážitek. Když se hlava nebo ruce opozdí,
+          mozek to okamžitě pozná. Proto je lepší snížit grafickou kvalitu než připustit
+          nestabilní tracking. Bezpečnostní hranice a passthrough by měly být samozřejmostí.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 34: DOPORUČENÍ — UI, AUDIO, AVATAR
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Doporučení &bull; UI, audio, avatar</span>
+        <h2>Doporučení pro vývoj: UI, audio a avatar</h2>
+        <div class="slide-grid-3" style="margin-top: 10px;">
+          <div class="glass-card" style="padding: 16px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1em; margin-bottom: 6px;">UI</h3>
+            <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+              <li><strong>2D objekty</strong> (menu, prohlížeč) alespoň <strong>2 m daleko</strong>.</li>
+              <li>Umístit <strong>uprostřed</strong> a do menšího zorného pole.</li>
+              <li>Preferujte <strong>diegetické UI</strong> (součást 3D světa); overlay použijte
+                pro kritické, bezpečnostní a přístupnostní informace.</li>
+              <li>Vyhnout se drobnému textu a dlouhým odstavcům.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple" style="padding: 16px;">
+            <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 6px;">Audio</h3>
+            <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+              <li>Zvuk musí <strong>souhlasit se situací</strong> v 3D scéně (kroky na dřevu
+                vs. betonu).</li>
+              <li><strong>Dopplerův efekt</strong> je vhodný &mdash; posiluje pocit pohybu.</li>
+              <li>Prostorový zvuk (HRTF / ambisonics) pro přesnou lokalizaci.</li>
+              <li>Zvuk nepoužívat jako jediný nositel kritické informace.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-emerald" style="padding: 16px;">
+            <h3 style="color: var(--accent-emerald); font-size: 1em; margin-bottom: 6px;">Avatar</h3>
+            <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+              <li><strong>Pocit přítomnosti ve scéně</strong> &mdash; jednoduché ruce lepší
+                než žádné.</li>
+              <li>Vyvarovat se <strong>rozdílů mezi virtuálním a skutečným tělem</strong>.</li>
+              <li>Vzhled avataru ovlivňuje sociální interakci &mdash; <strong>Proteus
+                  Effect</strong>.</li>
+              <li>Respektovat kulturní a profesní kontext.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 16px; padding: 12px 18px;">
+          <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+            <strong>Proteus Effect</strong> (Yee &amp; Bailenson, 2007): lidé se chovají v souladu
+            s&nbsp;tím, jak vypadá jejich avatar. Uživatelé s atraktivnějším avatarem vystupují
+            sebejistěji &mdash; design avataru je proto nástroj, ne jen estetika.
+          </p>
+        </div>
+        <aside class="notes">
+          UI ve VR nemá rám monitoru &mdash; je součástí prostoru. Menu umístěné příliš blízko
+          nutí oči konvergovat a unavuje. Audio musí odpovídat materiálům a prostoru, jinak
+          mozek pozná nesoulad. Avatar je silný nástroj sociální presence, ale i zdroj
+          uncanny valley a nechtěných stereotypů.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           ZDROJE A DALŠÍ ČTENÍ
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Zdroje &bull; Další čtení</span>
+        <h2>Zdroje a další čtení</h2>
+        <div class="slide-grid-2" style="gap: 18px; margin-top: 6px;">
+          <div>
+            <div class="glass-card" style="padding: 12px 16px; margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 4px;">
+                Presence, embodiment, vnímání</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.62em; line-height: 1.32;">
+                <li>Witmer &amp; Singer (1998). Measuring presence. <em>Presence</em> 7(3).</li>
+                <li>Slater (2009). Place illusion and plausibility. <em>Phil. Trans. R. Soc. B</em> 364.</li>
+                <li>Kilteni, Groten &amp; Slater (2012). Sense of embodiment. <em>Presence</em> 21(4).</li>
+                <li>Botvinick &amp; Cohen (1998). Rubber hands. <em>Nature</em> 391.</li>
+                <li>Yee &amp; Bailenson (2007). Proteus effect. <em>Hum. Comm. Res.</em> 33(3).</li>
+                <li>Ernst &amp; Banks (2002). Visual-haptic integration. <em>Nature</em> 415.</li>
+                <li>Alais &amp; Burr (2004). Ventriloquist effect. <em>Curr. Biol.</em> 14(3).</li>
+                <li>Hoffman et al. (2008). VAC and visual fatigue. <em>J. Vision</em> 8(3):33.</li>
+                <li>Kramida (2016). Resolving VAC in HMDs. <em>IEEE TVCG</em> 22(7).</li>
+                <li>Banks et al. (2016). 3D displays. <em>Annu. Rev. Vis. Sci.</em> 2.</li>
+                <li>Campbell &amp; Robson (1968). Visibility of gratings. <em>J. Physiol.</em> 197(3).</li>
+                <li>Blauert (1997). <em>Spatial Hearing</em>. MIT Press.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card accent-purple" style="padding: 12px 16px; margin-top: 0;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 4px;">
+                Hmat, kinetóza, AR, měření</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.62em; line-height: 1.32;">
+                <li>Johnson (2001). Cutaneous mechanoreceptors. <em>Curr. Opin. Neurobiol.</em> 11(4).</li>
+                <li>Jones &amp; Sarter (2008). Tactile displays. <em>Human Factors</em> 50(1).</li>
+                <li>Meehan et al. (2002). Physiological measures of presence. <em>ACM TOG</em> 21(3).</li>
+                <li>Kennedy et al. (1993). Simulator Sickness Questionnaire. <em>Int. J. Aviat. Psychol.</em> 3(3).</li>
+                <li>Kim et al. (2018). Virtual Reality Sickness Questionnaire. <em>Appl. Ergon.</em> 69.</li>
+                <li>Riccio &amp; Stoffregen (1991). Ecological critique of sensory conflict. <em>Ecol. Psychol.</em>
+                  3(3).</li>
+                <li>Keshavarz &amp; Hecht (2011). Motion sickness scale. <em>Human Factors</em> 53(4).</li>
+                <li>Stanney, Kennedy &amp; Drexler (1997). Cybersickness is not simulator sickness. <em>HFES</em> 41(2).
+                </li>
+                <li>Azuma et al. (2001). Recent advances in AR. <em>IEEE CG&amp;A</em> 21(6).</li>
+                <li>Kruijff, Swan &amp; Feiner (2010). Perceptual issues in AR. <em>ISMAR</em>.</li>
+                <li>W3C (2021). <em>XR Accessibility User Requirements</em>.</li>
+                <li>Madary &amp; Metzinger (2016). Ethical implications of VR. <em>Front. Robot. AI</em> 3.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <p style="margin: 8px 0 0 0; font-size: 0.62em; color: var(--text-dim);">
+          Technické parametry HMD ověřujte u výrobců (Apple, Meta, Sony, Varjo, Valve); údaje se
+          mění každou generaci. Kompletní bibliografie je v doprovodném souboru <code>pvr09.md</code>.
+        </p>
+        <aside class="notes">
+          Tento seznam je záměrně stručný a slouží k dalšímu studiu. Kompletní bibliografie
+          s plnými citacemi je v doprovodném souboru pvr09.md. U technických parametrů HMD
+          vždy uveďte rok a zdroj &mdash; hodnoty rychle stárnou.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 35: SHRNUTÍ
+           ========================================== -->
+      <section class="dense">
+        <span class="slide-category">Shrnutí &bull; Klíčové principy</span>
+        <h2>Shrnutí: vnímání jako základ VR</h2>
+        <div class="slide-grid-2" style="gap: 20px;">
+          <div>
+            <div class="glass-card" style="padding: 16px 20px; margin-top: 0; margin-bottom: 14px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 8px;">
+                Smysly a jejich priority</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.84em;">
+                <li><strong>Zrak (~30 % mozkové kůry)</strong>: rozlišení, FoV, refresh rate,
+                  latence.</li>
+                <li><strong>Hmat (8 %)</strong>: haptická zpětná vazba zvyšuje presence.</li>
+                <li><strong>Sluch (2 %)</strong>: prostorový zvuk a HRTF pro lokalizaci.</li>
+                <li><strong>Propriocepce</strong>: synchronizace avatara a tělesné schéma.</li>
+                <li><strong>Vestibulár</strong>: nesoulad se zrakem = kinetóza.</li>
+                <li><strong>AR</strong>: registrace, okluze a osvětlení rozhodují o tom, zda
+                  virtuální objekt „sedí“ v realitě.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1em; margin-bottom: 6px;">
+                Technické minimum</h3>
+              <div class="badge-group" style="margin: 0;">
+                <span class="spec-badge cyan">&ge; 90 Hz</span>
+                <span class="spec-badge purple">&lt; 20 ms</span>
+                <span class="spec-badge emerald">6DoF sub-cm</span>
+                <span class="spec-badge amber">FoV &gt; 90&deg;</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card accent-emerald" style="padding: 14px 18px; margin-top: 0;
+              margin-bottom: 14px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1em; margin-bottom: 6px;">
+                Designová pravidla</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.84em;">
+                <li><strong>Rozměry odpovídají realitě</strong> &mdash; testovat v headsetu.</li>
+                <li><strong>Diegetické UI</strong> &mdash; preferujte informace jako součást světa;
+                  overlay pro bezpečnost a přístupnost.</li>
+                <li><strong>2D panely min. 2 m</strong> od uživatele.</li>
+                <li><strong>Teleport / snap turn</strong> pro citlivé uživatele.</li>
+                <li><strong>Virtuální nos a záchytný bod</strong> proti kinetóze.</li>
+                <li><strong>Presence &gt; grafika</strong>: stabilní FPS především.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="padding: 14px 18px; margin: 0;">
+              <p style="margin: 0; font-size: 0.84em; color: var(--text-main); line-height: 1.45;">
+                <strong>Zlaté pravidlo:</strong> VR funguje, protože mozek si rekonstruuje realitu
+                ze senzorických vstupů. Vaším úkolem je poskytnout co nejkonzistentnější
+                a nejbohatší vstup &mdash; zbytek udělá mozek sám.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p style="text-align: center; margin-top: 18px; font-family: var(--font-heading);
+          font-size: 1.1em; font-weight: 700; color: var(--accent-cyan);">
+          Děkuji za pozornost &mdash; Petr Pauš
+        </p>
+        <aside class="notes">
+          Shrňme si hlavní myšlenku: VR neklame uživatele, ale jeho mozek. Když jsou smyslové
+          vstupy konzistentní &mdash; zrak, sluch, hmat, propriocepce a vestibulární systém &mdash;
+          vzniká presence. Když se rozcházejí, vzniká kinetóza a iluze se hroutí.
+          Děkuji za pozornost.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           APPENDIX: VOLITELNÁ ROZŠÍŘENÍ
+           ========================================== -->
+      <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)">
+        <span class="slide-category">Volitelná rozšíření</span>
+        <h2>Další témata o vnímání</h2>
+        <p style="color: var(--text-muted); font-size: 1.0em; max-width: 900px; margin: 18px auto 0 auto;
+          text-align: center; line-height: 1.5;">
+          Následující slidy jsou připravené jako <strong>volitelné rozšíření</strong>.
+        </p>
+        <div class="badge-group" style="justify-content: center; margin-top: 24px;">
+          <span class="spec-badge cyan">vection a kinetóza</span>
+          <span class="spec-badge purple">pozornost</span>
+          <span class="spec-badge emerald">barvy a kontrast</span>
+          <span class="spec-badge amber">haptika</span>
+          <span class="spec-badge">přístupnost a etika</span>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           N4: VECTION A TEORIE KINETÓZY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Volitelné &bull; Vection a kinetóza</span>
+        <h2>Vection a tři teorie kinetózy</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Vection &mdash; iluze vlastního pohybu</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Optický tok vyvolá pocit, že se <strong>hýbe tělo</strong>, i když stojí.</li>
+                <li><strong>Lineární</strong> (např. vlak) a <strong>rotační</strong> (otáčení
+                  místnosti).</li>
+                <li><strong>Periferní zorné pole</strong> má na vection silný vliv &mdash; proto
+                  FOV vignette funguje.</li>
+                <li>Vection je klíčový mechanismus vzniku kinetózy.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.0em; margin-bottom: 4px;">
+                Co s tím ve vývoji</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.45;">
+                Kokpit, horizont, podlaha a stabilní rest frame; teleport a snap turn místo
+                plynulé rotace; vyhýbat se akceleraci a rotaci kamery bez vizuální opory.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.95em; margin-bottom: 3px;">
+                1. Sensory conflict</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Vizuální pohyb neodpovídá vestibulárnímu klidu; mozek konflikt vyhodnotí jako
+                možnou otravu.</p>
+            </div>
+            <div class="glass-card accent-purple" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.95em; margin-bottom: 3px;">
+                2. Posturální nestabilita</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Kinetóza vzniká, když se tělo nedokáže stabilizovat (Riccio &amp; Stoffregen,
+                1991).</p>
+            </div>
+            <div class="glass-card accent-emerald" style="padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 3px;">
+                3. Rest frame</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Mozek potřebuje stabilní referenční rámec; jeho absence zvyšuje nevolnost
+                (Keshavarz &amp; Hecht, 2011).</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Vection je iluze vlastního pohybu vyvolaná optickým tokem. Čím větší část zorného pole
+          se hýbe &mdash; zejména periferie &mdash; tím silnější vection a tím větší riziko kinetózy.
+          Sensory-conflict teorie je nejznámější, ale není jediná. Posturální teorie říká, že
+          nevolnost vzniká při nedostatečné kontrole postoje; rest-frame teorie zdůrazňuje potřebu
+          stabilního referenčního rámce. Pro vývoj z toho plynou stejná opatření: stabilní horizont,
+          kokpit, FOV vignette, teleport a snap turn.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           N5: POZORNOST A KOGNITIVNÍ ZÁTĚŽ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Volitelné &bull; Pozornost</span>
+        <h2>Pozornost a kognitivní zátěž</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.1em; margin-bottom: 6px;">
+                Vnímání je výběr, ne jen příjem</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Inattentional blindness</strong> &mdash; nespatříme objekt, na který
+                  nejsme zaměřeni (Simons &amp; Chabris, 1999).</li>
+                <li><strong>Change blindness</strong> &mdash; nevšimneme si změny ve scéně.</li>
+                <li><strong>Attentional tunneling</strong> &mdash; stres a úkol zužují zorné pole.</li>
+                <li><strong>Omezená kapacita</strong> &mdash; příliš objektů, textu a notifikací
+                  snižuje výkon i presence.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 12px; padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.0em; margin-bottom: 4px;">
+                Multimodální výstrahy</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.45;">
+                Kritickou informaci nedávejte jen do jednoho smyslu. Kombinujte zvuk, vibraci
+                a vizuální cue &mdash; redundance zvyšuje šanci, že ji uživatel zachytí.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.0em; margin-bottom: 4px;">
+                AR specificky</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li>Rozptýlení při chůzi a neviditelné překážky.</li>
+                <li>Souběh reálného a virtuálního světa &mdash; pozornost se dělí.</li>
+                <li>Kritické informace musí být čitelné i periferně.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.0em; margin-bottom: 4px;">
+                Design</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li>Hierarchie informací a <strong>progressive disclosure</strong>.</li>
+                <li>Klidné pozadí, konzistentní umístění, žádné zbytečné animace.</li>
+                <li>Testovat s uživateli &mdash; co je zřejmé návrháři, nemusí být zřejmé
+                  uživateli.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Pozornost je omezený zdroj. Inattentional blindness a change blindness nejsou okrajové
+          jevy &mdash; v dynamické VR scéně jsou pravidlem. Stres a složitý úkol navíc zužují
+          zorné pole (attentional tunneling). Proto kritické výstrahy nikdy nestavte na jediném
+          smyslu nebo na jediném místě ve scéně. V AR se k tomu přidává dělení pozornosti mezi
+          realitu a virtuální obsah.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           N6: BARVY, KONTRAST A ADAPTACE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Volitelné &bull; Barvy a kontrast</span>
+        <h2>Barvy, kontrast a adaptace</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">
+                Barevné vidění</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.84em;">
+                <li><strong>Trichromatické vidění</strong>: S, M, L čípky; oponentní zpracování;
+                  metamerismus.</li>
+                <li><strong>Barevná slepota</strong>: ~8 % mužů, ~0,5 % žen; nejčastěji
+                  červená/zelená.</li>
+                <li>Design nesmí spoléhat jen na barvu &mdash; používejte tvar, texturu a polohu.</li>
+                <li><strong>Gamut a white point</strong>: displej HMD má menší gamut než oko.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.0em; margin-bottom: 4px;">
+                Kontrast a adaptace</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li><strong>Kontrastní citlivost</strong> vrcholí kolem 2&ndash;5 cyklů/&deg;
+                  a klesá na vysokých i nízkých frekvencích (Campbell &amp; Robson, 1968).</li>
+                <li><strong>Adaptace</strong> &mdash; přechod ze tmy do světla a naopak; oslnění.</li>
+                <li><strong>Flicker fusion</strong> ~50&ndash;90 Hz podle podmínek.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.0em; margin-bottom: 4px;">
+                AR: aditivní displej</h3>
+              <p style="margin: 0; font-size: 0.8em; color: var(--text-muted); line-height: 1.45;">
+                Černá je průhledná, bílá se sčítá s pozadím. Kontrast závisí na okolním světle
+                &mdash; venku je potřeba řádově vyšší jas.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Barevné vidění je trichromatické, ale displej nikdy nezobrazí celý gamut oka. Pro
+          čitelnost je důležitější kontrast než počet barev; kontrastní citlivost má maximum
+          kolem 2&ndash;5 cyklů na stupeň. Adaptace a oslnění ovlivňují, jak scénu vnímáme
+          v čase. V AR je situace složitější: průhledový displej přidává světlo k realitě, takže
+          černá není černá a bílá nemůže být jasnější než pozadí.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           N7: HAPTIKA — RECEPTORY A TECHNOLOGIE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Volitelné &bull; Haptika</span>
+        <h2>Haptika: receptory a technologie</h2>
+        <div class="slide-grid-2">
+          <div>
+            <table class="comparison-table" style="font-size: 0.7em; margin: 0;">
+              <thead>
+                <tr>
+                  <th>Receptor</th>
+                  <th>Typ</th>
+                  <th>Vnímá</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Merkel</strong></td>
+                  <td>SA-I</td>
+                  <td>tlak, tvar, jemné detaily</td>
+                </tr>
+                <tr>
+                  <td><strong>Meissner</strong></td>
+                  <td>RA-I</td>
+                  <td>dotyk, klouzání, nízké frekvence</td>
+                </tr>
+                <tr>
+                  <td><strong>Ruffini</strong></td>
+                  <td>SA-II</td>
+                  <td>protažení, tlak</td>
+                </tr>
+                <tr>
+                  <td><strong>Pacinian</strong></td>
+                  <td>RA-II</td>
+                  <td>vibrace, ~200&ndash;300 Hz</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="glass-card accent-emerald" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.95em; margin-bottom: 3px;">
+                Prostorové rozlišení</h3>
+              <p style="margin: 0; font-size: 0.78em; color: var(--text-muted); line-height: 1.4;">
+                Prsty ~2&ndash;3 mm; dlaň ~10 mm; předloktí ~35 mm; záda ~40 mm. Hustota receptorů
+                se výrazně liší podle místa na těle.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.0em; margin-bottom: 4px;">
+                Technologie</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li>Vibrotaktilní motory, force feedback, exoskelety, rukavice.</li>
+                <li>Ultrazvuková mid-air haptika, elektrotaktilní stimulace.</li>
+                <li>Termoelektrické moduly pro teplo a chlad.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.0em; margin-bottom: 4px;">
+                Design</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li>Haptika musí být <strong>časově a prostorově synchronní</strong> s vizuální
+                  událostí.</li>
+                <li>Respektujte rozdíly mezi částmi těla &mdash; jemné vibrace na prstech,
+                  výraznější na trupu.</li>
+                <li>Počítejte s latencí, hmotností, spotřebou a hygienou.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Hmat není jeden smysl. Čtyři hlavní mechanoreceptory reagují na různé podněty: Merkel
+          na tlak a tvar, Meissner na klouzání, Ruffini na protažení a Pacinian na vibrace kolem
+          200&ndash;300 Hz. Prostorové rozlišení se liší řádově &mdash; na prstech milimetry,
+          na zádech centimetry. Haptické rozhraní proto musí respektovat, kde a jak silný podnět
+          má smysl. Synchronizace s vizuální událostí je stejně důležitá jako u zvuku.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           N8: INDIVIDUÁLNÍ ROZDÍLY, PŘÍSTUPNOST, ETIKA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Volitelné &bull; Individuální rozdíly</span>
+        <h2>Individuální rozdíly, přístupnost a etika</h2>
+        <div class="slide-grid-2">
+          <div>
+            <div class="highlight-card" style="margin-top: 0;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">
+                „Průměrný uživatel“ neexistuje</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li><strong>Věk</strong>: presbyopie, presbyakuzie, kontrastní citlivost, reakční
+                  čas.</li>
+                <li><strong>Pohlaví a tělo</strong>: IPD, barevná slepota, výška a dosah.</li>
+                <li><strong>Refrakční vady</strong>: myopie, hypermetropie, astigmatismus &mdash;
+                  dioptrické vložky nebo nastavitelná optika.</li>
+                <li><strong>Vestibulární citlivost</strong>: comfort režimy, seated mode, přestávky.</li>
+                <li><strong>Neurodiverzita</strong>: autismus, ADHD, sensory processing &mdash;
+                  možnost snížit intenzitu podnětů.</li>
+                <li><strong>Zkušenost</strong>: noví uživatelé jsou citlivější; tutorial a krátké
+                  relace.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="glass-card accent-emerald" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.0em; margin-bottom: 4px;">
+                Přístupnost</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li>Redundantní kódování: barva + tvar + text + poloha.</li>
+                <li>Titulky, mono režim, vizuální výstrahy, kostní vedení.</li>
+                <li>Testování v grayscale a s asistivními technologiemi.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="padding: 14px 18px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.0em; margin-bottom: 4px;">
+                Etika a soukromí</h3>
+              <ul class="custom-list" style="margin: 0; font-size: 0.82em;">
+                <li>Eye tracking a fyziologie vypovídají o pozornosti, arousal i zdraví.</li>
+                <li>Minimalizace dat, informovaný souhlas, transparentnost.</li>
+                <li>Děti: časové limity, vývoj zraku, obsah a rodičovská kontrola.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Návrh pro „průměrného uživatele“ je nebezpečný. Věk, pohlaví, refrakční vady, sluch,
+          vestibulární citlivost, neurodiverzita i zkušenost mění to, co uživatel zvládne a co
+          mu vadí. Přístupnost není jen altruismus &mdash; je to kvalita produktu. Eye tracking
+          a fyziologická data navíc vytvářejí citlivý datový tok: sbírejte jen to, co potřebujete,
+          a vysvětlete proč.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/multimodal/multimodal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+  <script src="../bordel/js/tooltips.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: false,
+      touch: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      view: "auto",
+      scrollLayout: "compact",
+      scrollActivationWidth: 600,
+      plugins: [RevealNotes, RevealHighlight, RevealSearch, RevealZoom, RevealPointer, Multimodal, RevealMath.KaTeX],
+      pointer: {
+        key: "q",
+        color: "red",
+        opacity: 0.8,
+        pointerSize: 25,
+        alwaysVisible: false,
+        tailLength: 10,
+      }
+    });
+  </script>
+</body>
+
+</html>

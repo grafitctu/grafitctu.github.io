@@ -1,0 +1,1309 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Mandelbrotova a Juliovy množiny — MVT</title>
+  <meta name="description"
+    content="Interaktivní průzkum Mandelbrotovy množiny: kliknutím doleva zvolíte konstantu c a vpravo se vykreslí odpovídající Juliova množina.">
+  <meta name="author" content="Petr Pauš">
+
+  <style>
+    :root {
+      --bg: #060d18;
+      --panel: rgba(15, 23, 42, .72);
+      --border: rgba(148, 163, 184, .16);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #22d3ee;
+      --accent-2: #a78bfa;
+      --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background:
+        radial-gradient(1200px 700px at 72% -12%, rgba(34, 211, 238, .10), transparent 60%),
+        radial-gradient(900px 620px at 6% 112%, rgba(167, 139, 250, .10), transparent 60%),
+        var(--bg);
+      overflow: hidden;
+    }
+
+    /* ---------- Záhlaví ---------- */
+
+    .app-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px 24px;
+      padding: 20px 28px 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: .64rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(34, 211, 238, .08);
+      border: 1px solid rgba(34, 211, 238, .32);
+      border-radius: 999px;
+      padding: 4px 11px;
+    }
+
+    .app-header h1 {
+      margin: 9px 0 3px;
+      font-size: clamp(1.35rem, 2.6vw, 1.95rem);
+      letter-spacing: -.02em;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 74ch;
+      font-size: .88rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .header-info {
+      max-width: 460px;
+      font-family: var(--mono);
+      font-size: .68rem;
+      line-height: 1.6;
+      color: #7dd3fc;
+      background: rgba(8, 17, 31, .7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 9px 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .header-info .dim {
+      color: var(--muted);
+    }
+
+    .header-info .status {
+      color: #a5f3fc;
+    }
+
+    .header-info .status.outside {
+      color: #fbbf24;
+    }
+
+    .header-info .note {
+      display: block;
+      margin-top: 3px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: .7rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    /* ---------- Rozvržení ---------- */
+
+    main {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 14px;
+      padding: 0 28px 24px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 24px;
+      min-width: 0;
+      padding: 11px 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+    }
+
+    .tool {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .tool-label {
+      font-family: var(--mono);
+      font-size: .64rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .tool input[type="range"] {
+      width: 148px;
+      flex: 0 0 148px;
+    }
+
+    .tool .select-wrap {
+      width: 148px;
+    }
+
+    .tool select {
+      padding: 6px 30px 6px 10px;
+      font-size: .78rem;
+    }
+
+    .toolbar .btn-row {
+      margin-left: auto;
+    }
+
+    .toolbar .btn-row button {
+      flex: 0 0 auto;
+      padding: 7px 14px;
+      font-size: .78rem;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 18px;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .stage {
+      position: relative;
+      min-width: 0;
+      min-height: 320px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #08111f;
+      box-shadow:
+        0 22px 60px rgba(0, 0, 0, .45),
+        inset 0 0 0 1px rgba(255, 255, 255, .02);
+    }
+
+    .stage.julia {
+      border-color: rgba(167, 139, 250, .22);
+    }
+
+    #mandelCanvas,
+    #juliaCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    #mandelCanvas {
+      cursor: crosshair;
+    }
+
+    #juliaCanvas {
+      cursor: grab;
+    }
+
+    #mandelCanvas.dragging,
+    #juliaCanvas.dragging {
+      cursor: grabbing;
+    }
+
+    .stage-tag {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      font-family: var(--mono);
+      font-size: .62rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: #a5f3fc;
+      background: rgba(6, 13, 24, .62);
+      border: 1px solid rgba(34, 211, 238, .35);
+      border-radius: 999px;
+      padding: 4px 10px;
+      backdrop-filter: blur(6px);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .stage-tag.julia-tag {
+      color: #ddd6fe;
+      border-color: rgba(167, 139, 250, .42);
+    }
+
+    .stage-hint {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-family: var(--mono);
+      font-size: .6rem;
+      letter-spacing: .04em;
+      color: rgba(148, 163, 184, .9);
+      background: rgba(6, 13, 24, .55);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 9px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .stage-meta {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 13px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px 14px;
+      font-family: var(--mono);
+      font-size: .66rem;
+      color: rgba(226, 232, 240, .92);
+      text-shadow: 0 1px 5px rgba(0, 0, 0, .85);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .stage-meta span {
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, .16);
+      background: rgba(6, 13, 24, .55);
+      backdrop-filter: blur(6px);
+    }
+
+    /* ---------- Vyznačení zvoleného c ---------- */
+
+    .marker {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .marker[hidden] {
+      display: none;
+    }
+
+    .marker::before,
+    .marker::after {
+      content: '';
+      position: absolute;
+      background: rgba(34, 211, 238, .8);
+      box-shadow: 0 0 7px rgba(34, 211, 238, .8);
+    }
+
+    .marker::before {
+      left: -15px;
+      top: -.5px;
+      width: 30px;
+      height: 1px;
+    }
+
+    .marker::after {
+      top: -15px;
+      left: -.5px;
+      height: 30px;
+      width: 1px;
+    }
+
+    .marker-ring {
+      position: absolute;
+      left: -11px;
+      top: -11px;
+      width: 22px;
+      height: 22px;
+      border: 1.5px solid #67e8f9;
+      border-radius: 50%;
+      box-shadow:
+        0 0 12px rgba(34, 211, 238, .65),
+        inset 0 0 8px rgba(34, 211, 238, .35);
+    }
+
+    .marker-dot {
+      position: absolute;
+      left: -2.5px;
+      top: -2.5px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #f8fafc;
+      box-shadow: 0 0 8px #67e8f9;
+    }
+
+    /* ---------- Posuvníky a selecty ---------- */
+
+    output {
+      font-family: var(--mono);
+      font-size: .76rem;
+      color: var(--accent);
+      background: rgba(34, 211, 238, .08);
+      border-radius: 6px;
+      padding: 1px 8px;
+      min-width: 52px;
+      text-align: center;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, .22);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      border: 3px solid #0e7490;
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, .12);
+      cursor: grab;
+      transition: box-shadow .15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      box-shadow: 0 0 0 6px rgba(34, 211, 238, .18);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      border: 3px solid #0e7490;
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, .12);
+      cursor: grab;
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, .22);
+    }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: .82rem;
+      color: #cbd5e1;
+      pointer-events: none;
+    }
+
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      padding: 8px 34px 8px 11px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: rgba(148, 163, 184, .08);
+      color: var(--text);
+      font: inherit;
+      font-size: .8rem;
+      cursor: pointer;
+    }
+
+    /* ---------- Tlačítka ---------- */
+
+    .btn-row {
+      display: flex;
+      gap: 9px;
+    }
+
+    .btn-row button {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(34, 211, 238, .32);
+      background: rgba(34, 211, 238, .1);
+      color: #a5f3fc;
+      font: inherit;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, transform .1s ease;
+    }
+
+    .btn-row button:hover {
+      background: rgba(34, 211, 238, .18);
+      border-color: rgba(34, 211, 238, .55);
+    }
+
+    .btn-row button:active {
+      transform: scale(.97);
+    }
+
+    .btn-row button.secondary {
+      border-color: var(--border);
+      background: rgba(148, 163, 184, .08);
+      color: #cbd5e1;
+    }
+
+    .btn-row button.secondary:hover {
+      background: rgba(148, 163, 184, .16);
+      border-color: rgba(148, 163, 184, .35);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ---------- Responzivita ---------- */
+
+    @media (max-width: 1000px) {
+      body {
+        overflow: auto;
+      }
+
+      .app-header {
+        padding: 16px 18px 10px;
+      }
+
+      .header-info {
+        width: 100%;
+        max-width: none;
+        font-size: .64rem;
+      }
+
+      main {
+        padding: 0 18px 22px;
+      }
+
+      .toolbar {
+        padding: 10px 14px;
+        gap: 10px 18px;
+      }
+
+      .toolbar .btn-row {
+        margin-left: 0;
+      }
+
+      .board {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(340px, 52vh) minmax(340px, 52vh);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .tool {
+        flex: 1 1 100%;
+      }
+
+      .tool input[type="range"] {
+        flex: 1 1 auto;
+        width: auto;
+      }
+
+      .tool .select-wrap {
+        flex: 1 1 auto;
+        width: auto;
+        min-width: 0;
+      }
+
+      .toolbar .btn-row {
+        width: 100%;
+      }
+
+      .stage-hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Mandelbrotova množina</h1>
+      <p class="subtitle">
+        Vlevo Mandelbrotova množina, vpravo Juliova množina pro zvolený bod <em>c</em>. Kolečko zoomuje, tažení posouvá.
+      </p>
+    </div>
+    <div class="header-info" aria-live="polite" aria-label="Zvolený bod c">
+      <span class="dim">c</span> <span id="cValue">−0,122561 + 0,744862i</span><br>
+      <span class="dim">stav</span> <span class="status" id="cStatus">počítám…</span>
+      <span class="note" id="cNote">Juliova množina je množina bodů z₀, jejichž iterace z ↦ z² + c neutíká.</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="toolbar" aria-label="Ovládání vykreslování">
+      <div class="tool">
+        <label class="tool-label" for="iterations">Iterace</label>
+        <input id="iterations" type="range" min="64" max="1200" step="16" value="320">
+        <output id="iterationsOut" for="iterations">320</output>
+      </div>
+
+      <div class="tool">
+        <label class="tool-label" for="palette">Paleta</label>
+        <div class="select-wrap">
+          <select id="palette">
+            <option value="neon">Neon</option>
+            <option value="fire">Oheň</option>
+            <option value="ice">Led</option>
+            <option value="spectrum">Duha</option>
+            <option value="clouds">Mraky</option>
+            <option value="grey">Šedá</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button id="randomC" type="button" title="Náhodný bod blízko hranice množiny">Náhodné c</button>
+        <button id="reset" type="button" class="secondary">Obnovit</button>
+      </div>
+    </div>
+
+    <div class="board">
+      <section class="stage" id="mandelStage" aria-label="Mandelbrotova množina">
+        <canvas id="mandelCanvas" aria-label="Mandelbrotova množina, kliknutím zvolíte c"></canvas>
+        <span class="stage-tag">Mandelbrot</span>
+        <span class="stage-hint">klik = volba c</span>
+        <div class="marker" id="marker" hidden>
+          <span class="marker-ring"></span>
+          <span class="marker-dot"></span>
+        </div>
+        <div class="stage-meta">
+          <span id="mandelMeta">střed −0,650 + 0,000i</span>
+          <span id="mandelZoom">zoom ×1,00</span>
+        </div>
+      </section>
+
+      <section class="stage julia" id="juliaStage" aria-label="Juliova množina">
+        <canvas id="juliaCanvas" aria-label="Juliova množina pro zvolené c"></canvas>
+        <span class="stage-tag julia-tag">Julia</span>
+        <span class="stage-hint">kolečko = zoom</span>
+        <div class="stage-meta">
+          <span id="juliaMeta">c = −0,122561 + 0,744862i</span>
+          <span id="juliaZoom">zoom ×1,00</span>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      'use strict';
+
+      /* ============================================================
+         Palety (cyklické — barva se po 1024 krocích opakuje)
+         ============================================================ */
+
+      const PALETTES = {
+        neon: {
+          stops: [
+            [0, [4, 6, 20]], [0.14, [30, 20, 90]], [0.32, [124, 58, 237]],
+            [0.5, [6, 182, 212]], [0.68, [204, 251, 241]], [0.82, [59, 7, 100]],
+            [1, [4, 6, 20]]
+          ]
+        },
+        fire: {
+          stops: [
+            [0, [4, 3, 6]], [0.2, [88, 12, 12]], [0.4, [194, 47, 12]],
+            [0.6, [245, 158, 11]], [0.78, [254, 243, 199]], [0.9, [120, 20, 10]],
+            [1, [4, 3, 6]]
+          ]
+        },
+        ice: {
+          stops: [
+            [0, [3, 10, 24]], [0.24, [8, 74, 110]], [0.48, [14, 165, 233]],
+            [0.68, [165, 243, 252]], [0.84, [248, 250, 252]], [0.94, [8, 47, 73]],
+            [1, [3, 10, 24]]
+          ]
+        },
+        spectrum: {
+          stops: [
+            [0, [255, 0, 80]], [0.17, [255, 170, 0]], [0.33, [190, 255, 0]],
+            [0.5, [0, 255, 160]], [0.67, [0, 200, 255]], [0.83, [140, 80, 255]],
+            [1, [255, 0, 80]]
+          ]
+        },
+        clouds: {
+          stops: [
+            [0, [9, 17, 31]], [0.28, [51, 65, 85]], [0.5, [148, 163, 184]],
+            [0.68, [226, 232, 240]], [0.82, [255, 255, 255]], [0.92, [148, 163, 184]],
+            [1, [9, 17, 31]]
+          ]
+        },
+        grey: {
+          stops: [
+            [0, [6, 10, 18]], [0.45, [100, 116, 139]], [0.66, [203, 213, 225]],
+            [0.8, [248, 250, 252]], [0.9, [100, 116, 139]], [1, [6, 10, 18]]
+          ]
+        }
+      };
+
+      const LUT_SIZE = 1024;
+      const INTERIOR = [5, 8, 16];
+
+      /* ============================================================
+         Pomocné funkce
+         ============================================================ */
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      function clamp(value, min, max) {
+        return value < min ? min : value > max ? max : value;
+      }
+
+      function fmt(value, digits) {
+        return value.toLocaleString('cs-CZ', {
+          minimumFractionDigits: digits,
+          maximumFractionDigits: digits
+        });
+      }
+
+      function fmtCoord(value) {
+        if (!isFinite(value)) return '—';
+        const abs = Math.abs(value);
+        if (abs !== 0 && (abs < 1e-5 || abs >= 1e5)) {
+          return value.toExponential(3).replace('.', ',').replace('-', '−');
+        }
+        return value
+          .toLocaleString('cs-CZ', {
+            minimumFractionDigits: 3,
+            maximumFractionDigits: 6
+          })
+          .replace('-', '−');
+      }
+
+      function fmtComplex(re, im) {
+        const sign = im < 0 ? '−' : '+';
+        return `${fmtCoord(re)} ${sign} ${fmtCoord(Math.abs(im))}i`;
+      }
+
+      function fmtZoom(zoom) {
+        const digits = zoom < 10 ? 2 : zoom < 1000 ? 1 : 0;
+        return zoom.toLocaleString('cs-CZ', {
+          minimumFractionDigits: digits,
+          maximumFractionDigits: digits
+        });
+      }
+
+      /* ============================================================
+         Barevné LUT
+         ============================================================ */
+
+      function sampleStops(stops, t) {
+        if (t <= stops[0][0]) return stops[0][1];
+        const last = stops[stops.length - 1];
+        if (t >= last[0]) return last[1];
+
+        let i = 0;
+        while (i < stops.length - 2 && t > stops[i + 1][0]) i++;
+
+        const a = stops[i];
+        const b = stops[i + 1];
+        const span = Math.max(1e-6, b[0] - a[0]);
+        const k = clamp((t - a[0]) / span, 0, 1);
+
+        return [
+          Math.round(lerp(a[1][0], b[1][0], k)),
+          Math.round(lerp(a[1][1], b[1][1], k)),
+          Math.round(lerp(a[1][2], b[1][2], k))
+        ];
+      }
+
+      const lutCache = new Map();
+
+      function getLut(id) {
+        if (lutCache.has(id)) return lutCache.get(id);
+        const palette = PALETTES[id] || PALETTES.neon;
+        const lut = new Uint8ClampedArray(LUT_SIZE * 3);
+
+        for (let i = 0; i < LUT_SIZE; i++) {
+          const color = sampleStops(palette.stops, i / LUT_SIZE);
+          lut[i * 3] = color[0];
+          lut[i * 3 + 1] = color[1];
+          lut[i * 3 + 2] = color[2];
+        }
+
+        lutCache.set(id, lut);
+        return lut;
+      }
+
+      /* ============================================================
+         DOM a stav
+         ============================================================ */
+
+      const ui = {
+        iterations: document.getElementById('iterations'),
+        iterationsOut: document.getElementById('iterationsOut'),
+        palette: document.getElementById('palette'),
+        randomC: document.getElementById('randomC'),
+        reset: document.getElementById('reset'),
+        cValue: document.getElementById('cValue'),
+        cStatus: document.getElementById('cStatus'),
+        cNote: document.getElementById('cNote'),
+        marker: document.getElementById('marker'),
+        mandelMeta: document.getElementById('mandelMeta'),
+        mandelZoom: document.getElementById('mandelZoom'),
+        juliaMeta: document.getElementById('juliaMeta'),
+        juliaZoom: document.getElementById('juliaZoom')
+      };
+
+      const DEFAULT_C = { x: -0.122561166876654, y: 0.744861766619744 };
+
+      const INITIAL_VIEW = {
+        mandel: { cx: -0.65, cy: 0, span: 3.4 },
+        julia: { cx: 0, cy: 0, span: 3.4 }
+      };
+
+      const MIN_SPAN = 1e-12;
+      const MAX_SPAN = 8;
+
+      const c = { x: DEFAULT_C.x, y: DEFAULT_C.y };
+
+      const stages = {
+        mandel: {
+          canvas: document.getElementById('mandelCanvas'),
+          stage: document.getElementById('mandelStage'),
+          view: Object.assign({}, INITIAL_VIEW.mandel),
+          cssW: 1, cssH: 1, dpr: 1,
+          raf: 0, timer: 0
+        },
+        julia: {
+          canvas: document.getElementById('juliaCanvas'),
+          stage: document.getElementById('juliaStage'),
+          view: Object.assign({}, INITIAL_VIEW.julia),
+          cssW: 1, cssH: 1, dpr: 1,
+          raf: 0, timer: 0
+        }
+      };
+
+      stages.mandel.ctx = stages.mandel.canvas.getContext('2d');
+      stages.julia.ctx = stages.julia.canvas.getContext('2d');
+
+      const offscreen = document.createElement('canvas');
+      const offCtx = offscreen.getContext('2d');
+
+      /* ============================================================
+         Souřadnice
+         ============================================================ */
+
+      function screenToComplex(view, px, py, w, h) {
+        const span = view.span;
+        return {
+          x: view.cx + (px / w - 0.5) * span,
+          y: view.cy - (py / h - 0.5) * (span * h / w)
+        };
+      }
+
+      function complexToScreen(view, x, y, w, h) {
+        const span = view.span;
+        return {
+          x: ((x - view.cx) / span + 0.5) * w,
+          y: (0.5 - (y - view.cy) / (span * h / w)) * h
+        };
+      }
+
+      function escapeInfo(cx, cy, maxIter) {
+        let zx = 0;
+        let zy = 0;
+        let zx2 = 0;
+        let zy2 = 0;
+        let i = 0;
+
+        while (i < maxIter && zx2 + zy2 <= 4) {
+          zy = 2 * zx * zy + cy;
+          zx = zx2 - zy2 + cx;
+          zx2 = zx * zx;
+          zy2 = zy * zy;
+          i++;
+        }
+
+        return { inside: i >= maxIter, iter: i };
+      }
+
+      /* ============================================================
+         Vykreslení
+         ============================================================ */
+
+      function render(kind, quality) {
+        const st = stages[kind];
+        const rect = st.canvas.getBoundingClientRect();
+        const cssW = Math.max(1, Math.round(rect.width));
+        const cssH = Math.max(1, Math.round(rect.height));
+        st.cssW = cssW;
+        st.cssH = cssH;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        st.dpr = dpr;
+
+        const final = quality === 'final';
+        const maxIter = Number(ui.iterations.value);
+
+        const budget = final ? 400e6 : 80e6;
+        const cap = final ? 2000000 : 280000;
+        const floorPx = final ? 150000 : 30000;
+        const maxPixels = Math.max(floorPx, Math.min(cap, Math.floor(budget / maxIter)));
+
+        const unit = final ? dpr : 1;
+        let rw = Math.max(1, Math.round(cssW * unit));
+        let rh = Math.max(1, Math.round(cssH * unit));
+        if (rw * rh > maxPixels) {
+          const scaleDown = Math.sqrt(maxPixels / (rw * rh));
+          rw = Math.max(1, Math.round(rw * scaleDown));
+          rh = Math.max(1, Math.round(rh * scaleDown));
+        }
+
+        const bw = Math.round(cssW * dpr);
+        const bh = Math.round(cssH * dpr);
+        if (st.canvas.width !== bw || st.canvas.height !== bh) {
+          st.canvas.width = bw;
+          st.canvas.height = bh;
+        }
+
+        if (offscreen.width !== rw || offscreen.height !== rh) {
+          offscreen.width = rw;
+          offscreen.height = rh;
+        }
+
+        const image = offCtx.createImageData(rw, rh);
+        const data = image.data;
+
+        const lut = getLut(ui.palette.value);
+        const view = st.view;
+        const stepX = view.span / rw;
+        const stepY = (view.span * cssH / cssW) / rh;
+        const x0 = view.cx - view.span / 2;
+        const y0 = view.cy + (view.span * cssH / cssW) / 2;
+
+        let p = 0;
+
+        for (let py = 0; py < rh; py++) {
+          const y = y0 - (py + 0.5) * stepY;
+
+          for (let px = 0; px < rw; px++) {
+            const x = x0 + (px + 0.5) * stepX;
+
+            let zx, zy, zx2, zy2, i;
+
+            if (kind === 'mandel') {
+              zx = 0;
+              zy = 0;
+              zx2 = 0;
+              zy2 = 0;
+              i = 0;
+              while (i < maxIter && zx2 + zy2 <= 4) {
+                zy = 2 * zx * zy + y;
+                zx = zx2 - zy2 + x;
+                zx2 = zx * zx;
+                zy2 = zy * zy;
+                i++;
+              }
+            } else {
+              zx = x;
+              zy = y;
+              zx2 = x * x;
+              zy2 = y * y;
+              i = 0;
+              while (i < maxIter && zx2 + zy2 <= 4) {
+                zy = 2 * zx * zy + c.y;
+                zx = zx2 - zy2 + c.x;
+                zx2 = zx * zx;
+                zy2 = zy * zy;
+                i++;
+              }
+            }
+
+            if (i >= maxIter) {
+              data[p++] = INTERIOR[0];
+              data[p++] = INTERIOR[1];
+              data[p++] = INTERIOR[2];
+            } else {
+              const mag = zx2 + zy2;
+              const nu = Math.max(0, i + 1 - Math.log(0.5 * Math.log(mag)) / Math.LN2);
+              const idx = ((Math.sqrt(nu) * 120) | 0) & (LUT_SIZE - 1);
+              data[p++] = lut[idx * 3];
+              data[p++] = lut[idx * 3 + 1];
+              data[p++] = lut[idx * 3 + 2];
+            }
+
+            data[p++] = 255;
+          }
+        }
+
+        offCtx.putImageData(image, 0, 0);
+
+        const ctx = st.ctx;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.clearRect(0, 0, cssW, cssH);
+        ctx.drawImage(offscreen, 0, 0, rw, rh, 0, 0, cssW, cssH);
+
+        updateMeta();
+        if (kind === 'mandel') updateMarker();
+      }
+
+      /* ============================================================
+         Popisky a značka c
+         ============================================================ */
+
+      function updateMarker() {
+        const st = stages.mandel;
+        const point = complexToScreen(st.view, c.x, c.y, st.cssW, st.cssH);
+        const visible =
+          point.x >= -24 && point.x <= st.cssW + 24 &&
+          point.y >= -24 && point.y <= st.cssH + 24;
+
+        if (!visible || st.cssW < 4) {
+          ui.marker.hidden = true;
+          return;
+        }
+
+        ui.marker.hidden = false;
+        ui.marker.style.left = (st.canvas.offsetLeft + point.x) + 'px';
+        ui.marker.style.top = (st.canvas.offsetTop + point.y) + 'px';
+      }
+
+      function updateMeta() {
+        const m = stages.mandel.view;
+        const j = stages.julia.view;
+
+        ui.mandelMeta.textContent = `střed ${fmtComplex(m.cx, m.cy)}`;
+        ui.mandelZoom.textContent =
+          `zoom ×${fmtZoom(INITIAL_VIEW.mandel.span / m.span)}`;
+
+        ui.juliaMeta.textContent = `c = ${fmtComplex(c.x, c.y)}`;
+        ui.juliaZoom.textContent =
+          `zoom ×${fmtZoom(INITIAL_VIEW.julia.span / j.span)}`;
+      }
+
+      function updateCInfo() {
+        ui.cValue.textContent = fmtComplex(c.x, c.y);
+
+        const info = escapeInfo(c.x, c.y, Math.max(4000, Number(ui.iterations.value)));
+
+        if (info.inside) {
+          ui.cStatus.textContent = 'uvnitř množiny';
+          ui.cStatus.classList.remove('outside');
+          ui.cNote.textContent =
+            'Bod c leží v Mandelbrotově množině — Juliova množina je souvislá.';
+        } else {
+          ui.cStatus.textContent = `vně · |z| > 2 po ${info.iter} iteracích`;
+          ui.cStatus.classList.add('outside');
+          ui.cNote.textContent =
+            'Bod c leží vně — Juliova množina je nesouvislý prach.';
+        }
+      }
+
+      /* ============================================================
+         Plánování vykreslení (náhled + plná kvalita)
+         ============================================================ */
+
+      function schedule(kind) {
+        const st = stages[kind];
+
+        if (!st.raf) {
+          st.raf = requestAnimationFrame(() => {
+            st.raf = 0;
+            render(kind, 'preview');
+          });
+        }
+
+        clearTimeout(st.timer);
+        st.timer = setTimeout(() => {
+          render(kind, 'final');
+        }, 300);
+      }
+
+      /* ============================================================
+         Volba c
+         ============================================================ */
+
+      function setC(x, y, options = {}) {
+        c.x = x;
+        c.y = y;
+
+        if (options.resetJulia !== false) {
+          Object.assign(stages.julia.view, INITIAL_VIEW.julia);
+        }
+
+        updateCInfo();
+        updateMeta();
+        updateMarker();
+        schedule('julia');
+        if (options.updateUrl) updateUrl();
+      }
+
+      function pickRandomC() {
+        for (let attempt = 0; attempt < 60; attempt++) {
+          const x = -2 + Math.random() * 2.8;
+          const y = -1.3 + Math.random() * 2.6;
+          const info = escapeInfo(x, y, 500);
+          if (info.inside || (info.iter > 12 && info.iter < 460)) {
+            return { x, y };
+          }
+        }
+        return { x: -0.8, y: 0.156 };
+      }
+
+      /* ============================================================
+         Interakce: klik, tažení, zoom
+         ============================================================ */
+
+      function attachInteractions(kind) {
+        const st = stages[kind];
+        const canvas = st.canvas;
+        let drag = null;
+
+        function localPoint(event) {
+          const rect = canvas.getBoundingClientRect();
+          return {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
+          };
+        }
+
+        function zoomAt(px, py, factor) {
+          const view = st.view;
+          const before = screenToComplex(view, px, py, st.cssW, st.cssH);
+          const nextSpan = clamp(view.span * factor, MIN_SPAN, MAX_SPAN);
+
+          if (nextSpan === view.span) return;
+
+          view.span = nextSpan;
+          const after = screenToComplex(view, px, py, st.cssW, st.cssH);
+          view.cx += before.x - after.x;
+          view.cy += before.y - after.y;
+
+          schedule(kind);
+          updateMeta();
+          if (kind === 'mandel') updateMarker();
+        }
+
+        canvas.addEventListener('pointerdown', event => {
+          if (event.button !== 0) return;
+
+          canvas.setPointerCapture(event.pointerId);
+          canvas.classList.add('dragging');
+          drag = {
+            startX: event.clientX,
+            startY: event.clientY,
+            cx: st.view.cx,
+            cy: st.view.cy,
+            moved: false
+          };
+        });
+
+        canvas.addEventListener('pointermove', event => {
+          if (!drag) return;
+
+          const dx = event.clientX - drag.startX;
+          const dy = event.clientY - drag.startY;
+
+          if (!drag.moved && Math.hypot(dx, dy) < 4) return;
+          drag.moved = true;
+
+          const scale = st.view.span / st.cssW;
+          st.view.cx = drag.cx - dx * scale;
+          st.view.cy = drag.cy + dy * scale;
+
+          schedule(kind);
+          updateMeta();
+          if (kind === 'mandel') updateMarker();
+        });
+
+        function endDrag(event) {
+          if (!drag) return;
+
+          const wasMoved = drag.moved;
+          drag = null;
+          canvas.classList.remove('dragging');
+
+          if (canvas.hasPointerCapture && canvas.hasPointerCapture(event.pointerId)) {
+            canvas.releasePointerCapture(event.pointerId);
+          }
+
+          if (event.type === 'pointerup' && !wasMoved && kind === 'mandel') {
+            const point = localPoint(event);
+            const target = screenToComplex(st.view, point.x, point.y, st.cssW, st.cssH);
+            setC(target.x, target.y, { updateUrl: true });
+          }
+        }
+
+        canvas.addEventListener('pointerup', endDrag);
+        canvas.addEventListener('pointercancel', endDrag);
+
+        canvas.addEventListener('wheel', event => {
+          event.preventDefault();
+          const point = localPoint(event);
+          const delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+          zoomAt(point.x, point.y, Math.exp(delta * 0.0015));
+        }, { passive: false });
+      }
+
+      /* ============================================================
+         Adresa stránky
+         ============================================================ */
+
+      function updateUrl() {
+        try {
+          const url = new URL(location.href);
+          url.searchParams.set('c', `${c.x},${c.y}`);
+          url.searchParams.set('it', ui.iterations.value);
+          url.searchParams.set('pal', ui.palette.value);
+          history.replaceState(null, '', url);
+        } catch (err) {
+          /* file:// v některých prohlížečích replaceState odmítne */
+        }
+      }
+
+      function readUrl() {
+        try {
+          const params = new URLSearchParams(location.search);
+
+          const rawC = params.get('c');
+          if (rawC) {
+            const parts = rawC.split(',');
+            const x = Number(parts[0]);
+            const y = Number(parts[1]);
+            if (isFinite(x) && isFinite(y) && Math.abs(x) < 10 && Math.abs(y) < 10) {
+              c.x = x;
+              c.y = y;
+            }
+          }
+
+          const pal = params.get('pal');
+          if (pal && PALETTES[pal]) {
+            ui.palette.value = pal;
+          }
+
+          const rawIt = params.get('it');
+          if (rawIt !== null) {
+            const it = Number(rawIt);
+            if (isFinite(it)) {
+              ui.iterations.value = String(clamp(Math.round(it), 64, 1200));
+            }
+          }
+        } catch (err) {
+          /* neplatné parametry ignorujeme */
+        }
+      }
+
+      /* ============================================================
+         Ovládání
+         ============================================================ */
+
+      function resetAll() {
+        c.x = DEFAULT_C.x;
+        c.y = DEFAULT_C.y;
+
+        Object.assign(stages.mandel.view, INITIAL_VIEW.mandel);
+        Object.assign(stages.julia.view, INITIAL_VIEW.julia);
+
+        ui.iterations.value = '320';
+        ui.iterationsOut.textContent = '320';
+        ui.palette.value = 'neon';
+
+        updateCInfo();
+        updateMeta();
+        updateMarker();
+        schedule('mandel');
+        schedule('julia');
+        updateUrl();
+      }
+
+      ui.iterations.addEventListener('input', () => {
+        ui.iterationsOut.textContent = String(ui.iterations.value);
+        updateCInfo();
+        schedule('mandel');
+        schedule('julia');
+      });
+
+      ui.iterations.addEventListener('change', updateUrl);
+
+      ui.palette.addEventListener('change', () => {
+        schedule('mandel');
+        schedule('julia');
+        updateUrl();
+      });
+
+      ui.randomC.addEventListener('click', () => {
+        const point = pickRandomC();
+        Object.assign(stages.mandel.view, INITIAL_VIEW.mandel);
+        setC(point.x, point.y, { updateUrl: true });
+        schedule('mandel');
+      });
+
+      ui.reset.addEventListener('click', resetAll);
+
+      /* ============================================================
+         Start
+         ============================================================ */
+
+      readUrl();
+      ui.iterationsOut.textContent = String(ui.iterations.value);
+      updateCInfo();
+      updateMeta();
+      updateMarker();
+
+      attachInteractions('mandel');
+      attachInteractions('julia');
+
+      if ('ResizeObserver' in window) {
+        const observer = new ResizeObserver(() => {
+          schedule('mandel');
+          schedule('julia');
+          updateMarker();
+        });
+        observer.observe(stages.mandel.stage);
+        observer.observe(stages.julia.stage);
+      } else {
+        window.addEventListener('resize', () => {
+          schedule('mandel');
+          schedule('julia');
+          updateMarker();
+        });
+      }
+
+      schedule('mandel');
+      schedule('julia');
+    })();
+  </script>
+</body>
+
+</html>
