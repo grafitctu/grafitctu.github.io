@@ -1,0 +1,1 @@
+PG205 · Jiří Filip ·40 nativních stran. Úplný původní text v poznámkách; původní ilustrace a nezměněné PDF, mapování, čtení, tisk a výpočetní rozpočet snímání GRAFIT. Datum hodiny nedoloženo; export4.11.2026, šablona2018. Zdrojové hodnoty historických měření nejsou novým experimentem. Otevřete index.html. Offline funguje navigace, poznámky, čtení a model.
