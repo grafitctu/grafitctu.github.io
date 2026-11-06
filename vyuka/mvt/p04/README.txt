@@ -1,0 +1,1 @@
+Původní PowerPoint: Programování VR a AR · Jiří Chludil a Petr Pauš ·45 snímků. Podklad je označen ZS2024; aktuální plán ho přiřazuje k19.10.2026. Historické pokyny proto nepovažujte za aktuální pravidla. Webový přepis zatím není k dispozici.
