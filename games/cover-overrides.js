@@ -1,4 +1,7 @@
 window.GRAFIT_GAME_COVERS = Object.freeze({
+  "https://simonstrikesback.itch.io/drinking-with-the-devil": "/assets/games/drinking-with-the-devil-cover.png",
+  "https://trampod.itch.io/rota-est-alea": "/assets/games/rota-est-alea-cover.png",
+  "https://cozy-games-studio.itch.io/spirate": "/assets/games/spirate-cover.png",
   "https://artwizzard.itch.io/psychotropic-tale": "https://img.itch.zone/aW1nLzI2NTIyODIyLnBuZw==/original/LRmcc3.png",
   "https://pasekvi1.itch.io/voracious-of-spores-and-sin": "https://img.itch.zone/aW1nLzI2NTQ5MDI1LnBuZw==/original/PfW2re.png",
   "https://aliciel.itch.io/they-requested-the-egg": "https://img.itch.zone/aW1nLzI2NTIzNzU4LnBuZw==/original/%2B%2BhZin.png",

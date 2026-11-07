@@ -134,12 +134,6 @@
       "A game-jam journey towards the Moon, combining the winter theme of light with the urge to climb ever higher."
     ],
     [
-      "ZATRACENÝ MAJÁK", { cs: "Vánoční GameJam FIT 2024", en: "Christmas GameJam FIT 2024" }, { cs: "Fyzická hra", en: "Physical game" }, "https://vojguard.itch.io/bloody-lighthouse",
-      "", 0,
-      "Zjistěte, kdo má součásti potřebné ke stavbě majáku, a postavte mu ho. Fyzická hra z vánočního GameJamu FIT.",
-      "Find out who holds the parts needed to build a lighthouse, then build it for them. A physical game from the Christmas FIT GameJam."
-    ],
-    [
       "Ouroblobos", "GameJam FIT 2024", "Windows", "https://itskita.itch.io/ouroblobos",
       "https://img.itch.zone/aW1nLzE1NTkwMDE1LnBuZw==/300x240%23c/sIBej6.png", 0,
       "Top-down hlavolam o útěku roztomilé kapky z podzemní laboratoře. Na cestu má 69 sekund, experimentální zbraň a další testovací subjekty.",
@@ -283,5 +277,12 @@
     orderedGames.unshift(orderedGames.splice(escapeFromBrnoIndex, 1)[0]);
   }
 
+  orderedGames.splice(3, 0, [
+    "Vivid Dreams", { cs: "Závěrečná práce 2026", en: "Thesis 2026", ja: "卒業研究 2026 (Thesis)" }, "Unity",
+    "https://dspace.cvut.cz/entities/publication/7de0ac56-3955-4b13-a48d-497bb2eddfda",
+    "/assets/games/vivid-dreams-cover.png", 0,
+    "Závěrečná práce o přepracování a dokončení 2D RPG v Unity s procedurálně generovanými úrovněmi.",
+    "A thesis on reworking and completing a 2D RPG in Unity with procedurally generated levels."
+  ]);
   window.GRAFIT_GAMES = orderedGames;
 })();

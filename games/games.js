@@ -130,7 +130,7 @@
         ? (japaneseDescription || tuple[7] || tuple[6] || "")
         : lang === "en" ? (tuple[7] || tuple[6] || "") : (tuple[6] || tuple[7] || "")
     };
-    game.category = classify(game);
+    game.category = tuple[8] || classify(game);
     game.accent = game.category === "gamejam" ? "purple" : game.category === "thesis" ? "blue" : game.category === "physical" ? "orange" : "yellow";
     return game;
   }
@@ -169,7 +169,8 @@
     return deck;
   }
 
-  const deck = buildDeck();
+  const baseDeck = buildDeck();
+  const deck = window.GRAFIT_DOD_MIX ? window.GRAFIT_DOD_MIX(baseDeck) : baseDeck;
 
   document.querySelectorAll("[data-game-count]").forEach((node) => { node.textContent = String(games.length); });
   document.querySelectorAll("[data-slide-count]").forEach((node) => { node.textContent = String(deck.length); });
@@ -395,7 +396,8 @@
     slideImage.src = imageUrl;
     slideImage.alt = item.title;
     slideImage.onerror = () => { slideImage.onerror = null; slideImage.src = placeholder; };
-    slideEyebrow.textContent = item.kind === "story" ? item.eyebrow : copy.selectedGame;
+    slideEyebrow.textContent = item.kind === "story" ? item.eyebrow
+      : ["graphics","event","course","research"].includes(item.category) ? item.type : copy.selectedGame;
     renderTitle(slideTitle, item);
     slideMeta.textContent = item.kind === "story"
       ? copy.programmeCard
