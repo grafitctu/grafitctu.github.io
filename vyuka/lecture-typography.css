@@ -1,0 +1,30 @@
+/* Keep words intact in lecture slides. Imported author styles may allow anywhere. */
+@media screen {
+  :is(.slide, .reveal .slides section),
+  :is(.slide, .reveal .slides section) :not(svg, svg *, canvas, math, math *) {
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+  .grafit-integrity-hash { display: block; max-width: 100%; overflow-x: auto; white-space: nowrap; font: inherit; }
+  :is(.slide, .reveal .slides section) pre,
+  :is(.slide, .reveal .slides section) .equation {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* Older native decks need their toolbar to wrap before its min-content width
+   can force the slide canvas wider than a narrow phone. */
+@media screen and (max-width: 760px) {
+  body.presenting:not(.grafit-toolbar-return):has(> .toolbar + #deck) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) 64px;
+  }
+  body.presenting:not(.grafit-toolbar-return) > .toolbar:has(+ #deck) {
+    height: auto; min-height: 65px; flex-wrap: wrap; padding-block: 10px;
+  }
+  body.presenting:not(.grafit-toolbar-return) > .toolbar:has(+ #deck) nav {
+    flex-wrap: wrap; min-width: 0; max-width: 100%; margin-left: 0;
+  }
+}
