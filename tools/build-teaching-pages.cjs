@@ -38,4 +38,5 @@ ${require('./build-subject-overviews.cjs').nav(catalog,lang,prefix)}<section ari
  const localizedHtml=html.replace(/(<th scope="col" class="([^"]+)"[\s\S]*?<span class="course-caption">)([^<]*)(<\/span>)/g,(all,start,id,caption,end)=>{const language=catalog.courses.find(course=>course.id===id)?.language?.[lang];return language?start+escape(language)+end:all;});
  const destination=path.join(base,lang==='cs'?'':'en');fs.mkdirSync(destination,{recursive:true});fs.writeFileSync(path.join(destination,'index.html'),localizedHtml);
 }
+require('./apply-teaching-typography.cjs')(base);
 console.log('Built Czech and English teaching indexes.');
