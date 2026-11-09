@@ -141,7 +141,13 @@
     return ordered;
   }
 
-  window.prepareArchetypeCharactersForValidation = prepareCharactersForValidation;
+  window.prepareArchetypeCharactersForValidation = function(data) {
+    const ordered = prepareCharactersForValidation(data);
+    // VIP appends these only after its pre-existing companion records.
+    return (window.ARCHETYPE_CONFIG || {}).VALIDATOR_VARIANT === 'vip'
+      ? ordered
+      : window.appendArchetypeAdditionalCharacters(ordered);
+  };
 })();
 
 (() => {
