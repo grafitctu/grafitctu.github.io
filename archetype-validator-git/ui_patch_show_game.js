@@ -43,7 +43,7 @@
     panel=document.createElement('div'); panel.id='gameCharacterPanel';
     const header=document.querySelector('header') || document.querySelector('h1')?.parentElement || document.body;
     if(header && header.parentElement){
-      header.parentElement.insertBefore(panel, header.nextSibling);
+      header.insertBefore(panel, header.querySelector('.progress'));
     } else document.body.insertBefore(panel, document.body.firstChild);
     return panel;
   }
