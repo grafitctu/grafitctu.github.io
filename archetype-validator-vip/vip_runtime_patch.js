@@ -109,7 +109,9 @@
     configurable: true,
     set(fn) {
       const wrapped = function(data) {
-        return appendVipExtras(typeof fn === 'function' ? fn(data) : data);
+        return window.appendArchetypeAdditionalCharacters(
+          appendVipExtras(typeof fn === 'function' ? fn(data) : data)
+        );
       };
       Object.defineProperty(window, 'prepareArchetypeCharactersForValidation', {
         configurable: true,
