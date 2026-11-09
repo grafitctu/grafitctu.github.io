@@ -873,6 +873,47 @@
     }
   ];
 
+
+  // This display priority keeps the existing character IDs and response records.
+  const priorityAfterGordon = [
+    'manual_20261109_logan_wolverine',
+    'manual_20261109_dylan_faden',
+    'steam_870780_jesse_faden',
+    'manual_20261109_enzo_favara',
+    'manual_20261109_v',
+    'manual_20261109_alan_wake'
+  ];
+
+  function prioritizeAfterGordon(list) {
+    const byId = new Map(list.map(item => [item.id, item]));
+    const priority = priorityAfterGordon.map(id => byId.get(id)).filter(Boolean);
+    const remaining = list.filter(item => !priorityAfterGordon.includes(item.id));
+    const anchor = remaining.findIndex(item => item.id === 'steam__gordon-freeman');
+    if (anchor < 0) return list;
+    const ordered = remaining.slice(0, anchor + 1).concat(priority, remaining.slice(anchor + 1))
+      .map((item, index) => Object.assign({}, item, { order: index + 1 }));
+
+    // Restore the same in-progress character once when upgrading from the old order.
+    // VIP's existing Storage wrapper maps its index key to the VIP namespace.
+    try {
+      const storage = window.localStorage;
+      const variant = (window.ARCHETYPE_CONFIG || {}).VALIDATOR_VARIANT;
+      const versionKey = (variant === 'vip' ? 'vip_' : '') + 'archetype_order_20261110';
+      if (storage && storage.getItem(versionKey) !== '1') {
+        const stored = storage.getItem('archetype_current_index');
+        if (stored !== null && /^\d+$/.test(stored) && list.length) {
+          const previous = list[Number(stored) % list.length];
+          const nextIndex = ordered.findIndex(item => item.id === previous.id);
+          if (nextIndex >= 0) storage.setItem('archetype_current_index', String(nextIndex));
+        }
+        storage.setItem(versionKey, '1');
+      }
+    } catch (error) {
+      // The list remains usable when browser storage is unavailable.
+    }
+    return ordered;
+  }
+
   window.appendArchetypeAdditionalCharacters = function(list) {
     if (!Array.isArray(list)) return list;
     const out = list.slice();
@@ -883,6 +924,6 @@
         seen.add(item.id);
       }
     });
-    return out;
+    return prioritizeAfterGordon(out);
   };
 })();
