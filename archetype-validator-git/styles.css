@@ -440,3 +440,91 @@ font-size:13px;
 .selection-note { font-size:18px; min-height:26px; }
 .btn { font-size:20px; padding:15px 28px; }
 }
+
+
+/* Keep the item, instructions and progress in one desktop header. */
+.header {
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto;
+  align-items:start;
+}
+.header > :first-child { min-width:0; }
+.header > .progress { grid-column:2; grid-row:1; justify-self:end; }
+.header #gameCharacterPanel {
+  grid-column:1 / -1;
+  width:100%;
+  min-width:0;
+  margin:0;
+  padding:8px 12px;
+  overflow-wrap:anywhere;
+}
+body { overflow:auto; }
+@media (max-width:759px) {
+  .app { height:auto; }
+}
+
+@media (min-width:760px) {
+  .app#app {
+    max-width:none;
+    margin:0;
+    height:100dvh;
+    min-height:620px;
+    padding:12px 24px 12px;
+    gap:6px;
+  }
+  .header {
+    grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr);
+    gap:16px;
+  }
+  .header > .progress { grid-column:3; }
+  .header #gameCharacterPanel {
+    grid-column:2;
+    grid-row:1;
+    max-width:640px;
+    justify-self:center;
+    padding:8px 16px;
+  }
+  h1 { font-size:clamp(24px,2.1vw,34px); }
+  .subtitle { font-size:15px; max-width:440px; }
+  .stage {
+    flex:1 1 auto;
+    min-height:280px;
+    margin:0;
+    container-type:size;
+  }
+  .wheel {
+    --wheel-size:min(590px, calc(100cqh - 16px), calc(100cqw - 110px));
+    --outer-radius:calc(var(--wheel-size) * .44068);
+    --motive-radius:calc(var(--wheel-size) * .29153);
+  }
+  .arch {
+    width:calc(var(--wheel-size) * .21356);
+    height:calc(var(--wheel-size) * .09831);
+    font-size:clamp(9px,calc(var(--wheel-size) * .02542),15px);
+    border-radius:clamp(10px,calc(var(--wheel-size) * .03051),18px);
+  }
+  .label { font-size:clamp(10px,calc(var(--wheel-size) * .02373),14px); }
+  .name { font-size:clamp(18px,calc(var(--wheel-size) * .05424),32px); }
+  .game { font-size:clamp(11px,calc(var(--wheel-size) * .0339),20px); }
+  .motive {
+    width:calc(var(--wheel-size) * .18305);
+    font-size:clamp(8px,calc(var(--wheel-size) * .02034),12px);
+  }
+  .quad {
+    width:calc(var(--wheel-size) * .22034);
+    height:calc(var(--wheel-size) * .07458);
+    margin-left:calc(var(--wheel-size) * -.11017);
+    margin-top:calc(var(--wheel-size) * -.03729);
+    font-size:clamp(8px,calc(var(--wheel-size) * .02203),13px);
+  }
+  .q0 { transform:translate(calc(var(--wheel-size) * -.12881),calc(var(--wheel-size) * -.15763)); }
+  .q1 { transform:translate(calc(var(--wheel-size) * .12881),calc(var(--wheel-size) * -.15763)); }
+  .q2 { transform:translate(calc(var(--wheel-size) * -.12881),calc(var(--wheel-size) * .15763)); }
+  .q3 { transform:translate(calc(var(--wheel-size) * .12881),calc(var(--wheel-size) * .15763)); }
+  .selection-note { font-size:16px; min-height:18px; }
+  .btn { font-size:18px; padding:11px 24px; }
+}
+@media (min-width:760px) and (hover:hover) and (pointer:fine) {
+  .app#app { padding-bottom:116px; }
+  body .bottom-character-nav { bottom:24px; }
+}
