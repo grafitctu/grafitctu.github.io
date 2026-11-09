@@ -104,5 +104,10 @@ function ensureHeader_(sheet) {
   if (isEmpty) {
     sheet.getRange(1, 1, 1, header.length).setValues([header]);
     sheet.setFrozenRows(1);
+    return;
+  }
+
+  if (current.some((value, index) => value !== header[index])) {
+    throw new Error('Response columns do not match the 17-field schema. Back up and migrate legacy rows before accepting new responses.');
   }
 }
