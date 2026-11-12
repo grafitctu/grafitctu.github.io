@@ -1,10 +1,32 @@
-# Konoha / Trénink v11
+# Konoha / Trénink v12 — stínový klon
 
 Publikovaný runtime je přímo v této složce, bez bundleru, serveru či povinné databáze.
 Otevři `index.html`, nebo servíruj celou složku `konoha` libovolným statickým hostingem.
 Zdroj navazuje na okomentovaný AI handoff v10.1. Původní verze jsou zachované.
 
 ## Změny a rozhraní
+
+- **v12 / `ghost.js`:** klon nejrychlejšího zaznamenaného dokončeného běhu. Pohyb,
+  chodidla a vrstvy animace se vzorkují nejvýše 30× za sekundu. Přehrávání interpoluje
+  pozice i pózy; respawn je explicitní střih. Používá stejný `resultTime` jako medaile:
+  při penalizaci referenčního běhu drží starou pózu 5 s, potom přejde na checkpoint;
+  penalizace současného běhu posune referenční přehrávání dopředu. Pauza zastaví oba.
+- Znaménko tempa porovnává první dosažení stejné maximální X souřadnice. Zastavení
+  i návrat zpět tedy zvyšují ztrátu; různé větve se porovnávají podle postupu tratí.
+  V cíli se použije přesný rozdíl výsledných časů. Klon nemá žádné kolize ani odměny.
+- Soupeř (`shadow.reference`) zůstává stejný celý pokus. Rychlejší vítězství mění
+  `shadow.best` teprve pro další start; smrt, pomalejší pokus ani restart rekord nemažou.
+- Klíč `konoha-shadow-clone-v1` obsahuje formát 1, rules/map, čas a kompaktní pole vzorků.
+  Ukládá se jen nejlepší dokončený záznam, nikoli každý snímek zvlášť. Kontrolujeme
+  velikost, časy, souřadnice, indexy atlasu, váhy i kompatibilitu. Při plné či zakázané
+  localStorage zůstane nový klon v paměti do zavření stránky; HUD to oznámí.
+  Dlouhé běhy se postupně převzorkují, s ochranou okolí respawnů, místo useknutí konce.
+- Záznam staršího rekordu nelze rekonstruovat. Původní osobní čas zůstává zachovaný,
+  klon vznikne z prvního nově dokončeného běhu a nese vlastní viditelný referenční čas.
+  Fyzika/mapa v12 se nemění, proto `rulesVersion` zůstává `konoha-v11` a původní rekordy
+  jsou kompatibilní. Vypnutí zaškrtávátka skrývá klona a jeho značku, nikoli nahrávání.
+
+Předchozí změny v11:
 
 - `engine.js`: `trick()` už jen eviduje vstupy a emituje animační události.
   `award(id, base, kind, flow)` je jediná cesta pro jednorázové bonusy.
@@ -38,6 +60,12 @@ penalty, resultTime, medal, hp, scroll.taken, stats a unikátní runId.
 ruční manipulaci; soutěžní server musí vstupy/výsledky ověřovat. Žádný tajný klíč do JS.
 
 ## Ověření
+
+`node konoha/tests/test-shadow-clone.cjs` kontroluje výběr nejlepšího dokončeného běhu,
+změnu reference až při dalším startu, reload, kvótu/chyby storage, neplatný formát/mapu,
+interpolaci, střihy při respawnu, penalizace, pauzu, first-passage tempo, dlouhé záznamy,
+skutečné UI volání start/render/end a nezměněný výsledek celého běhu při nahrávání.
+Testovací reálný průchod 48.7167 s má 1300 vzorků a přibližně 69 kB JSON.
 
 `node konoha/tests/test-training-v11.cjs` testuje farmení, opakovaný průchod překážkou/respawn,
 obě fyzické větve včetně svitku, limity medailí, penalizaci a pauzu, windup,
