@@ -1,0 +1,157 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Plán, úkoly a pseudokódy · NI-ROZ / ANI-ROZ</title><meta name="description" content="Dvě česko-anglická interaktivní cvičení z rozpoznávání."><link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/matvec.css"><link rel="stylesheet" href="assets/geometry.css"><link rel="stylesheet" href="assets/tutorials.css"><script src="assets/navigation.js" defer></script></head><body data-lang="cs" data-view="read"><a class="skip" href="#main"><span lang="cs">Přeskočit na obsah</span><span lang="en">Skip to content</span></a><header class="toolbar"><a class="brand" href="index.html" data-keep-language>NI-ROZ / ANI-ROZ</a><nav class="tutorial-links"><a href="index.html" data-keep-language><span lang="cs">Cvičení</span><span lang="en">Tutorials</span></a><a href="notes.html" data-keep-language><span lang="cs">Úkoly a pseudokódy</span><span lang="en">Tasks and pseudocode</span></a><a data-course-home href="../">ROZ · GRAFIT</a></nav><div class="tools"><button type="button" data-lang-button="cs">Česky</button><button type="button" data-lang-button="en">English</button></div></header><main class="page notes" id="main"><h1><span lang="cs">Plán výuky a samostatná práce</span><span lang="en">Teaching plan and independent work</span></h1><p><span lang="cs">Doporučený rozsah jsou dvě cvičení po 90 minutách. Podrobný ruční výpočet PC1 a rozšířené volby klikátek lze dokončit samostatně.</span><span lang="en">The recommended format is two 90-minute tutorials. The detailed manual PC1 calculation and extra interactive options can also be completed independently.</span></p><section id="plan1"><h2><span lang="cs">Cvičení</span><span lang="en">Tutorial</span> 1: <span lang="cs">Příznaky a PCA</span><span lang="en">Features and PCA</span></h2><table class="schedule"><thead><tr><th><span lang="cs">Čas</span><span lang="en">Time</span></th><th><span lang="cs">Téma a práce studentů</span><span lang="en">Topic and student activity</span></th></tr></thead><tbody><tr><td>0–15 min</td><td><span lang="cs">Příznaky a otáčení osy: předpovědět, kdy bude variance největší.</span><span lang="en">Features and axis rotation: predict the largest variance.</span></td></tr><tr><td>15–35 min</td><td><span lang="cs">Zadat A a v; spočítat průměr, rozptyl a kovarianci čtyř bodů.</span><span lang="en">Enter A and v; calculate the mean, variance and covariance of four points.</span></td></tr><tr><td>35–60 min</td><td><span lang="cs">Vlastní směry a výpočet PC1; porovnat výsledek s projekcí.</span><span lang="en">Eigenvectors and PC1 calculation; compare with the projection.</span></td></tr><tr><td>60–78 min</td><td><span lang="cs">PCA obrázků, graf vlastních čísel a volba k.</span><span lang="en">Image PCA, the eigenvalue spectrum and choosing k.</span></td></tr><tr><td>78–90 min</td><td><span lang="cs">Samostatný pokus a krátké vysvětlení výsledku.</span><span lang="en">Your experiment and a brief explanation.</span></td></tr></tbody></table></section><section id="plan2"><h2><span lang="cs">Cvičení</span><span lang="en">Tutorial</span> 2: <span lang="cs">Shlukování a klasifikace</span><span lang="en">Clustering and classification</span></h2><table class="schedule"><thead><tr><th><span lang="cs">Čas</span><span lang="en">Time</span></th><th><span lang="cs">Téma a práce studentů</span><span lang="en">Topic and student activity</span></th></tr></thead><tbody><tr><td>0–25 min</td><td><span lang="cs">DBSCAN: okolí a růst shluku; změnit ε a min_samples.</span><span lang="en">DBSCAN: neighbourhoods and cluster expansion; change ε and min_samples.</span></td></tr><tr><td>25–40 min</td><td><span lang="cs">K-means a 1-NN; oddělit shluky od známých tříd.</span><span lang="en">K-means and 1-NN; distinguish clusters from known classes.</span></td></tr><tr><td>40–65 min</td><td><span lang="cs">SVM, změna příznaků, margin a vliv C a γ.</span><span lang="en">SVM, feature transforms, margins and the effects of C and γ.</span></td></tr><tr><td>65–78 min</td><td><span lang="cs">PCA versus LDA a postup trénink–validace–test.</span><span lang="en">PCA versus LDA and the train–validation–test workflow.</span></td></tr><tr><td>78–90 min</td><td><span lang="cs">Matice záměn a vlastní kontrolovaný pokus.</span><span lang="en">A confusion matrix and your controlled experiment.</span></td></tr></tbody></table></section><section id="worksheet"><h2><span lang="cs">Záznam pokusu</span><span lang="en">Experiment record</span></h2><ul><li><span lang="cs">Uveďte data, reprezentaci a přesně měněný parametr.</span><span lang="en">State the data, representation and the single parameter being changed.</span></li><li><span lang="cs">Před spuštěním napište předpověď, potom pozorovaný výsledek a vysvětlení.</span><span lang="en">Write your prediction before running, then the observed result and an explanation.</span></li><li><span lang="cs">Transformace včetně průměru, škálování a PCA fitujte jen na tréninku. Volby porovnávejte na validaci; test použijte pro závěrečné hodnocení.</span><span lang="en">Fit transforms, including the mean, scaling and PCA, only on training data. Compare choices on validation; use the test set for final evaluation.</span></li></ul></section><div class="geometry-content"><div class="eyebrow">NI-ROZ / ANI-ROZ</div><h1><span lang="cs">Pseudokódy ukázek</span><span lang="en">Example pseudocode</span></h1><p class="lead"><span lang="cs">Postupy odpovídající jednotlivým klikátkům. Proměnné i jednotlivé kroky jsou popsané česky a anglicky.</span><span lang="en">Procedures matching the interactive examples. Variables and steps are explained in Czech and English.</span></p><nav><ol><li><a href="#pca-fit"><span lang="cs">PCA: učení modelu</span><span lang="en">PCA: fitting the model</span></a></li><li><a href="#pca-reconstruct"><span lang="cs">PCA: počet složek a rekonstrukce</span><span lang="en">PCA: component count and reconstruction</span></a></li><li><a href="#projection"><span lang="cs">Projekce a variance při otáčení osy</span><span lang="en">Projection and variance while rotating an axis</span></a></li><li><a href="#dbscan"><span lang="cs">DBSCAN: okolí a růst shluků</span><span lang="en">DBSCAN: neighbourhoods and cluster expansion</span></a></li><li><a href="#feature-map"><span lang="cs">Nový příznak a ručně nastavená hranice</span><span lang="en">A new feature and a manually chosen boundary</span></a></li><li><a href="#kmeans"><span lang="cs">K-means: přiřazení a nové středy</span><span lang="en">K-means: assignment and updated centres</span></a></li><li><a href="#svm-fitting"><span lang="cs">SVM: učení a použití modelu</span><span lang="en">SVM: fitting and applying a model</span></a></li><li><a href="#lda"><span lang="cs">LDA pro dvě třídy</span><span lang="en">LDA for two classes</span></a></li></ol></nav><section id="pca-fit" data-algorithm-section><h2><span lang="cs">PCA: učení modelu</span><span lang="en">PCA: fitting the model</span></h2><p class=""><span lang="cs">Vstupem je pouze trénovací matice X s n řádky (objekty) a d sloupci (příznaky), n > 1. Model uloží průměr, hlavní směry a jejich rozptyly.</span><span lang="en">Input is the training matrix X only, with n rows (objects) and d columns (features), n > 1. The model stores the mean, principal directions and their variances.</span></p><div lang="cs"><pre><code>μ ← průměr řádků X
+A ← od každého řádku X odečti μ
+C ← Aᵀ A / (n − 1)
+(λⱼ, uⱼ) ← vlastní dvojice symetrické matice C
+Seřaď dvojice podle λ₁ ≥ λ₂ ≥ … ≥ λ_d
+Každý uⱼ má délku 1, různé směry jsou kolmé
+U ← matice se sloupci u₁, …, u_d
+Pokud součet λ &gt; 0:
+  rⱼ ← λⱼ / součet všech λ
+Jinak: podíly rozptylu nejsou definované
+Vrať model (μ, U, λ, r)</code></pre></div><div lang="en"><pre><code>μ ← mean of the rows of X
+A ← subtract μ from each row of X
+C ← Aᵀ A / (n − 1)
+(λⱼ, uⱼ) ← eigenpairs of symmetric matrix C
+Sort pairs so that λ₁ ≥ λ₂ ≥ … ≥ λ_d
+Each uⱼ has length 1; different directions are orthogonal
+U ← matrix with columns u₁, …, u_d
+If the sum of λ is positive:
+  rⱼ ← λⱼ / sum of all λ
+Otherwise: variance fractions are undefined
+Return model (μ, U, λ, r)</code></pre></div><p class="algorithm-notes"><span lang="cs">Toto je výklad přes kovarianci. U číslic jsme ekvivalentní model spočítali pomocí SVD centrované trénovací matice: pravé singulární vektory dávají směry a λⱼ = sⱼ² / (n − 1). Prohlížeč už tento model načítá hotový. Posuvník ho znovu neučí.</span><span lang="en">This explanation uses covariance. For digits, we computed the equivalent model using the SVD of the centred training matrix: right singular vectors give the directions and λⱼ = sⱼ² / (n − 1). The browser loads that precomputed model. The slider does not fit it again.</span></p><p class="small"><a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">scikit-learn</a></p><div class="algorithm-links"><a href="lesson1.html#eigen-calculation" data-keep-language><span lang="cs">Otevřít ukázku</span><span lang="en">Open the example</span></a><a href="lesson1.html#digits" data-keep-language><span lang="cs">Otevřít ukázku</span><span lang="en">Open the example</span></a><a href="lesson2.html#python" data-keep-language><span lang="cs">Otevřít ukázku</span><span lang="en">Open the example</span></a></div></section><section id="pca-reconstruct" data-algorithm-section><h2><span lang="cs">PCA: počet složek a rekonstrukce</span><span lang="en">PCA: component count and reconstruction</span></h2><p class=""><span lang="cs">Vstupem je naučený model, jeden odložený obrázek x s d = 64 pixely a počet k od 0 do 64. Symbol zⱼ označuje souřadnici obrázku v j-tém naučeném směru.</span><span lang="en">Input is a fitted model, one held-out image x with d = 64 pixels, and k from 0 to 64. Symbol zⱼ denotes the image coordinate along learned direction j.</span></p><div lang="cs"><pre><code>Při změně posuvníku nebo obrázku:
+  x̂ ← μ
+  Pro j od 1 do k:
+    zⱼ ← uⱼᵀ (x − μ)
+    x̂ ← x̂ + zⱼ uⱼ
+  zachovaný_podíl ← součet r₁, …, r_k
+  MSE ← součet (x_pixel − x̂_pixel)² / d
+  V horním grafu zvýrazni prvních k sloupců
+  V dolním grafu označ (k, zachovaný_podíl)
+  Zobraz x̂ jako mřížku 8 × 8
+  Pouze pro zobrazení omez hodnoty na 0 až 16</code></pre></div><div lang="en"><pre><code>When the slider or selected image changes:
+  x̂ ← μ
+  For j from 1 to k:
+    zⱼ ← uⱼᵀ (x − μ)
+    x̂ ← x̂ + zⱼ uⱼ
+  retained_fraction ← sum of r₁, …, r_k
+  MSE ← sum of (x_pixel − x̂_pixel)² / d
+  Highlight the first k bars in the upper plot
+  Mark (k, retained_fraction) in the lower plot
+  Display x̂ as an 8 × 8 grid
+  Limit values to 0 through 16 for display only</code></pre></div><p class="algorithm-notes"><span lang="cs">Při k = 0 je součet prázdný a rekonstrukce se rovná průměru. Tlačítka 90 %, 95 % a 99 % hledají nejmenší k, jehož kumulativní podíl dosáhne alespoň daného prahu. MSE se počítá před ořezáním zobrazení. Rozptyl patří trénovací sadě, MSE právě vybranému obrázku.</span><span lang="en">At k = 0, the sum is empty and reconstruction equals the mean. The 90%, 95% and 99% buttons find the smallest k whose cumulative fraction reaches at least the requested threshold. MSE is computed before display clipping. Variance describes the training set; MSE describes the selected image.</span></p><p class="small"><a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">scikit-learn</a></p><div class="algorithm-links"><a href="lesson1.html#component-count" data-keep-language><span lang="cs">Otevřít ukázku</span><span lang="en">Open the example</span></a></div></section><section id="projection" data-algorithm-section><h2><span lang="cs">Projekce a variance při otáčení osy</span><span lang="en">Projection and variance while rotating an axis</span></h2><p class=""><span lang="cs">Vstupem je n bodů v rovině, n > 1, a úhel θ. V této ukázce každý bod dostane jedinou souřadnici zᵢ.</span><span lang="en">Input is n points in a plane, n > 1, and angle θ. This example assigns one coordinate zᵢ to each point.</span></p><div lang="cs"><pre><code>μ ← průměr bodů
+u ← (cos θ, sin θ)
+Pro každý bod xᵢ:
+  zᵢ ← uᵀ (xᵢ − μ)
+  x̂ᵢ ← μ + zᵢ u
+Variance ← součet zᵢ² / (n − 1)
+Celkový_rozptyl ← rozptyl příznaku 1 + rozptyl příznaku 2
+Pokud Celkový_rozptyl &gt; 0:
+  Zachováno ← Variance / Celkový_rozptyl
+Jinak: zachovaný podíl není definovaný
+Nakresli původní body, projekce a souřadnice zᵢ</code></pre></div><div lang="en"><pre><code>μ ← mean of the points
+u ← (cos θ, sin θ)
+For each point xᵢ:
+  zᵢ ← uᵀ (xᵢ − μ)
+  x̂ᵢ ← μ + zᵢ u
+Variance ← sum of zᵢ² / (n − 1)
+Total_variance ← variance of feature 1 + variance of feature 2
+If Total_variance &gt; 0:
+  Retained ← Variance / Total_variance
+Otherwise: the retained fraction is undefined
+Draw original points, projections and coordinates zᵢ</code></pre></div><p class="algorithm-notes"><span lang="cs">Dvojice (cos θ, sin θ) má jednotkovou délku. Při ručním otáčení porovnáváme skutečné směry, ne různě dlouhé vektory. Při výpočtu používáme všechny body, i když pro čitelnost nekreslíme všechny spojnice.</span><span lang="en">The pair (cos θ, sin θ) has unit length. Manual rotation compares directions, rather than vectors of different lengths. Every point enters the calculation, even when we omit some projection lines for readability.</span></p><p class="small"><a href="https://scikit-learn.org/stable/modules/decomposition.html#pca">scikit-learn</a></p><div class="algorithm-links"><a href="lesson1.html#projection" data-keep-language><span lang="cs">Otevřít ukázku</span><span lang="en">Open the example</span></a></div></section><section id="dbscan" data-algorithm-section><h2><span lang="cs">DBSCAN: okolí a růst shluků</span><span lang="en">DBSCAN: neighbourhoods and cluster expansion</span></h2><p class=""><span lang="cs">Vstupem jsou body, poloměr ε > 0 a kladné celé min_samples. Okolí zahrnuje všechny body ve vzdálenosti nejvýše ε, včetně bodu samotného.</span><span lang="en">Input is the point set, radius ε > 0 and positive integer min_samples. A neighbourhood includes all points at distance at most ε, including the point itself.</span></p><div lang="cs"><pre><code>Pro každý bod i:
+  Nᵢ ← jeho ε-okolí včetně něj samotného
+  jádro[i] ← počet bodů v Nᵢ ≥ min_samples
+Všechny štítky ← NEPROZKOUMÁNO
+Pro každý bod i v daném pořadí:
+  Pokud už má štítek, přeskoč ho
+  Pokud není jádro: štítek[i] ← ŠUM; pokračuj
+  Založ nový shluk c a přiřaď do něj i
+  fronta ← [i]
+  Dokud fronta není prázdná:
+    p ← odeber první bod z fronty
+    Pro každý bod q v Nₚ:
+      Pokud štítek[q] = NEPROZKOUMÁNO:
+        štítek[q] ← c
+        Pokud jádro[q]: přidej q do fronty
+      Jinak pokud štítek[q] = ŠUM:
+        štítek[q] ← c
+Vrať štítky, jádrové body a počty</code></pre></div><div lang="en"><pre><code>For each point i:
+  Nᵢ ← its ε-neighbourhood, including itself
+  core[i] ← number of points in Nᵢ ≥ min_samples
+All labels ← UNVISITED
+For each point i in the given order:
+  If it already has a label, skip it
+  If not core: label[i] ← NOISE; continue
+  Start a new cluster c and assign i to it
+  queue ← [i]
+  While the queue is not empty:
+    p ← remove the first point from the queue
+    For each point q in Nₚ:
+      If label[q] = UNVISITED:
+        label[q] ← c
+        If core[q]: append q to the queue
+      Else if label[q] = NOISE:
+        label[q] ← c
+Return labels, core points and counts</code></pre></div><p class="algorithm-notes"><span lang="cs">Do fronty se dostávají pouze jádrové body. Dříve označený šum se může stát okrajovým bodem shluku. Sporné okrajové body může pořadí průchodu přiřadit různě. Šedé body během animace prvního shluku ještě nepředstavují konečný šum.</span><span lang="en">Only core points enter the queue. A point previously labelled noise can become a cluster border point. Traversal order can change the assignment of ambiguous border points. Grey points during the first cluster’s animation are not final noise labels.</span></p><p class="small"><a href="https://scikit-learn.org/stable/modules/clustering.html#dbscan">scikit-learn</a></p><div class="algorithm-links"><a href="lesson2.html#dbscan" data-keep-language><span lang="cs">Otevřít ukázku</span><span lang="en">Open the example</span></a></div></section><section id="feature-map" data-algorithm-section><h2><span lang="cs">Nový příznak a ručně nastavená hranice</span><span lang="en">A new feature and a manually chosen boundary</span></h2><p class=""><span lang="cs">Vstupem jsou body (x, y), zvolený střed (cₓ, cᵧ) a výška roviny h > 0. Skutečné třídní štítky používáme jen k vyhodnocení chyb.</span><span lang="en">Input is the points (x, y), chosen centre (cₓ, cᵧ), and plane height h > 0. True class labels are used only to count errors.</span></p><div lang="cs"><pre><code>Pro každý bod (x, y):
+  z ← (x − cₓ)² + (y − cᵧ)²
+  Nový_bod ← (x, y, z)
+  Pokud z &lt; h: predikce ← vnitřní třída
+  Jinak: predikce ← vnější třída
+Počet_chyb ← počet predikcí odlišných od skutečné třídy
+Ve 2D nakresli kružnici s poloměrem √h
+Ve 3D nakresli stejné body a rovinu z = h
+Při otáčení kamery změň pouze zobrazení</code></pre></div><div lang="en"><pre><code>For each point (x, y):
+  z ← (x − cₓ)² + (y − cᵧ)²
+  New_point ← (x, y, z)
+  If z &lt; h: prediction ← inner class
+  Otherwise: prediction ← outer class
+Error_count ← predictions different from the true class
+In 2D, draw a circle with radius √h
+In 3D, draw the same points and plane z = h
+When rotating the camera, change only the view</code></pre></div><p class="algorithm-notes"><span lang="cs">Tento postup odpovídá našemu klikátku. Hranici nastavujeme ručně, neoptimalizujeme margin a netrénujeme SVM. Explicitně počítaný příznak z není obecný RBF kernel.</span><span lang="en">This procedure matches our interactive example. We set the boundary manually, without optimizing a margin or fitting an SVM. The explicitly computed feature z is not a general RBF kernel.</span></p><p class="small"><a href="https://scikit-learn.org/stable/modules/svm.html#kernel-functions">scikit-learn</a></p><div class="algorithm-links"><a href="lesson2.html#svm" data-keep-language><span lang="cs">Otevřít ukázku</span><span lang="en">Open the example</span></a></div></section><section id="kmeans" data-algorithm-section><h2><span lang="cs">K-means: přiřazení a nové středy</span><span lang="en">K-means: assignment and updated centres</span></h2><p class=""><span lang="cs">Vstupem jsou body a počet k. Počáteční středy vybíráme z k různých bodů pomocí uloženého seedu.</span><span lang="en">Input is the points and cluster count k. A saved seed selects k different points as initial centres.</span></p><div lang="cs"><pre><code>Zvol k různých počátečních středů
+Opakuj:
+  Přiřaď každý bod k nejbližšímu středu
+  Pokud se přiřazení nezměnilo: skonči
+  Každý střed přesuň do průměru své skupiny
+  Pro prázdnou skupinu ponech původní střed
+Vrať přiřazení a středy</code></pre></div><div lang="en"><pre><code>Choose k distinct initial centres
+Repeat:
+  Assign each point to its nearest centre
+  If assignments did not change: stop
+  Move each centre to its group mean
+  For an empty group, keep its previous centre
+Return assignments and centres</code></pre></div><p class="algorithm-notes"><span lang="cs">Klikátko uchovává snímek po přiřazení i po přesunu středů. Vzdálenost je eukleidovská; přiřazení porovnává její čtverec. Omezujeme výpočet na 60 iterací. Změna počátečních středů může vést k jinému lokálnímu řešení.</span><span lang="en">The example records a frame after assignment and after updating centres. Distance is Euclidean; assignment compares squared distances. We cap computation at 60 iterations. Changing initial centres can lead to a different local solution.</span></p><p class="small"><a href="https://scikit-learn.org/stable/modules/clustering.html#k-means">scikit-learn</a></p><div class="algorithm-links"><a href="lesson2.html#clustering-compare" data-keep-language><span lang="cs">Otevřít ukázku</span><span lang="en">Open the example</span></a></div></section><section id="svm-fitting" data-algorithm-section><h2><span lang="cs">SVM: učení a použití modelu</span><span lang="en">SVM: fitting and applying a model</span></h2><p class=""><span lang="cs">Tento postup učí skutečné SVM. Výběr parametrů oddělujeme od závěrečného testování.</span><span lang="en">This procedure fits an actual SVM. Parameter selection is separate from final testing.</span></p><div lang="cs"><pre><code>Odděl trénovací, validační a závěrečnou testovací část
+Pro zvolený kernel a kandidáty C, případně γ:
+  Nauč SVC pouze na trénovací části
+  Parametry posuzuj na validační části
+Po volbě parametrů uchovej naučený model
+Pro nový bod x:
+  f ← rozhodovací funkce naučeného modelu
+  Pokud f(x) &gt; 0: předpověz třídu 1
+  Jinak: předpověz třídu 0
+Závěrečný test použij až pro konečné vyhodnocení</code></pre></div><div lang="en"><pre><code>Separate training, validation and final test data
+For the chosen kernel and candidate C, optionally γ:
+  Fit SVC on the training part only
+  Assess parameters on the validation part
+After selecting parameters, keep the fitted model
+For a new point x:
+  f ← decision function of the fitted model
+  If f(x) &gt; 0: predict class 1
+  Otherwise: predict class 0
+Use the final test only for final evaluation</code></pre></div><p class="algorithm-notes"><span lang="cs">U naší ukázky jsou jednotlivé modely předpočítané v Pythonu a přepínače vybírají jeden z nich. Odložené body jsou ilustrační kontrola; tento přehled nemá další nedotčený závěrečný test. Podpůrné vektory a chyby pocházejí ze skutečného SVC.</span><span lang="en">Our example precomputes each model in Python and its controls select one. Held-out points provide an illustrative check; this demonstration has no further untouched final test. Support vectors and errors come from the actual SVC.</span></p><p class="small"><a href="https://scikit-learn.org/stable/modules/svm.html">scikit-learn</a></p><div class="algorithm-links"><a href="lesson2.html#svm-margin" data-keep-language><span lang="cs">Otevřít ukázku</span><span lang="en">Open the example</span></a></div></section><section id="lda" data-algorithm-section><h2><span lang="cs">LDA pro dvě třídy</span><span lang="en">LDA for two classes</span></h2><p class=""><span lang="cs">Vstupem jsou body se známými štítky 0 a 1. Pro tuto ukázku je vnitrotřídní kovarianční matice invertibilní.</span><span lang="en">Input is points with known labels 0 and 1. The within-class covariance matrix is invertible in this example.</span></p><div lang="cs"><pre><code>μ₀, μ₁ ← průměry obou tříd
+S_w ← nulová matice 2 × 2
+Pro každý bod xᵢ se štítkem yᵢ:
+  odchylka ← xᵢ − μ_yᵢ
+  S_w ← S_w + odchylka × odchylkaᵀ
+S_w ← S_w / (n − 2)
+Vyřeš S_w w = μ₁ − μ₀
+u ← w / ‖w‖
+Promítni body do směru u</code></pre></div><div lang="en"><pre><code>μ₀, μ₁ ← means of the two classes
+S_w ← zero 2 × 2 matrix
+For each point xᵢ with label yᵢ:
+  deviation ← xᵢ − μ_yᵢ
+  S_w ← S_w + deviation × deviationᵀ
+S_w ← S_w / (n − 2)
+Solve S_w w = μ₁ − μ₀
+u ← w / ‖w‖
+Project the points onto direction u</code></pre></div><p class="algorithm-notes"><span lang="cs">PCA by místo odchylek od třídních průměrů použilo odchylky od společného průměru a štítky by nepotřebovalo. Pro singulární matici S_w bychom potřebovali vhodnou regularizaci nebo jiný numerický postup.</span><span lang="en">PCA would use deviations from the overall mean rather than class means, without needing labels. A singular S_w would require suitable regularization or another numerical procedure.</span></p><p class="small"><a href="https://scikit-learn.org/stable/modules/lda_qda.html">scikit-learn</a></p><div class="algorithm-links"><a href="lesson2.html#pca-lda" data-keep-language><span lang="cs">Otevřít ukázku</span><span lang="en">Open the example</span></a></div></section></div></main></body></html>
