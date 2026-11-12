@@ -308,7 +308,7 @@
     document.documentElement.lang = lang; document.body.dataset.lang = lang;
     document.querySelectorAll('[data-cs][data-en]').forEach(el => el.textContent = el.dataset[lang]);
     document.querySelectorAll('[data-lang-button]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.langButton === lang)));
-    document.querySelectorAll('a[data-keep-language]').forEach(a => { const target = new URL(a.getAttribute('href'), location.href); target.searchParams.set('lang', lang); a.href = target.href; }); document.querySelectorAll('[data-course-home]').forEach(a => a.href = lang === 'en' ? '../en/' : '../');
+    document.querySelectorAll('a[data-keep-language]').forEach(a => { const target = new URL(a.getAttribute('href'), location.href); target.searchParams.set('lang', lang); a.href = target.href; }); document.querySelectorAll('[data-course-home]').forEach(a => a.href = 'https://grafitctu.github.io/vyuka/roz/' + (lang === 'en' ? 'en/' : ''));
     if ($('feature-table')) renderFeature(); if ($('center-toggle')) renderCenter(); if ($('variance-feature')) renderVariance(); if ($('cov-preset')) renderCov(); if ($('cov-matrix')) renderMatrix(); if ($('matvec-plot')) renderMatvec(); if ($('eigen-plot')) renderEigen(); if ($('hand-plot')) renderHand(); if ($('projection-plot')) renderProjection(); if ($('reconstruction-plot')) renderReconstruction(); if ($('scale-eight')) renderScaling(); if ($('distance-plot')) renderDistance(); if ($('prediction-majority')) renderEvaluation(); if ($('glossary')) renderQuiz(); updateNav();
   }
   function currentIndex() { let id; try { id = decodeURIComponent(location.hash.slice(1)); } catch { id = 'intro'; } const i = slides.findIndex(s => s.id === id); return i >= 0 ? i : 0; }
