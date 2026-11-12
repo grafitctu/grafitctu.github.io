@@ -23,6 +23,9 @@
     viewer.sourceLink.href = choice === 'cpp' ? 'examples/cpp/lesson_snippets.cpp' : 'examples/lesson_snippets.py';
     viewer.sourceLink.replaceChildren(choice === 'cpp' ? bi('Úplný C++ soubor','Full C++ source') : bi('Úplný Python soubor','Full Python source'));
     viewer.sourceLink.hidden = choice === 'pseudocode';
+    for(const [key,link] of viewer.zipLinks)link.dataset.selected=String(key===choice);
+    viewer.projectLink.href=choice==='python'?'examples/README-Python.md':'examples/cpp/README.md';
+    viewer.projectLink.replaceChildren(choice==='python'?bi('Spuštění Pythonu','Running Python'):bi('Kompilace C++','Build the C++ project'));
   }
   function choose(viewer, choice) {
     if (choice === 'pseudocode') { show(viewer,choice);return; }
@@ -53,7 +56,9 @@
     }
     box.querySelectorAll('pre').forEach(pre=>pre.tabIndex=0);
     const links=document.createElement('div');links.className='code-downloads';viewer.sourceLink=document.createElement('a');links.append(viewer.sourceLink);
-    const project=document.createElement('a');project.href='examples/cpp/README.md';project.append(bi('Kompilace C++','Build the C++ project'));links.append(project);box.append(links);
+    viewer.zipLinks=new Map();
+    for(const key of ['cpp','python']){const link=document.createElement('a'),label=key==='cpp'?'C++':'Python';link.href=examples[id].downloads[key];link.download='roz-'+id+'-'+key+'.zip';link.dataset.codeDownload=key;link.append(bi('Stáhnout '+label+' ZIP','Download '+label+' ZIP'));links.append(link);viewer.zipLinks.set(key,link);}
+    viewer.projectLink=document.createElement('a');links.append(viewer.projectLink);box.append(links);
     viewers.push(viewer);show(viewer,language);
   }
   const experiment=document.querySelector('#python > pre');if(experiment)attach(experiment.parentElement,'pca-experiment',experiment);
