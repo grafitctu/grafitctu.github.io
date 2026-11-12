@@ -1,7 +1,8 @@
 const {NinjaGame}=require('../engine.js');const assert=require('node:assert/strict');
-function traverse({shots=true,startZone=0}={}){
+function traverse({shots=true,startZone=0,onStart=()=>{},onStep=()=>{}}={}){
  const g=new NinjaGame();g.state='playing';if(startZone){g.checkpoint=g.checkpoints[startZone].x;g.checkpointY=g.checkpoints[startZone].y;g.respawn();g.bestX=g.p.x;}
  let lastJump=-1,lastDash=-1,trace=[],lastZone=-1,stuck=0,lastX=0;
+ onStart(g);
  for(let i=0;i<120*180&&g.state==='playing';i++){
   const p=g.p,feet=p.y+p.h;
   const tunnel=g.solids.find(s=>s.type==='beam'&&p.x+p.w>s.x-150&&p.x<s.x+s.w+5);
@@ -20,6 +21,7 @@ function traverse({shots=true,startZone=0}={}){
   if(!shots)g.shots=[];
   const brake=tunnel&&!inGap&&!p.ground&&feet<tunnel.y+tunnel.h+35&&p.x<tunnel.x-24;
   g.update(1/120,{right:!brake,slide});
+  onStep(g);
   if(g.zoneIndex!==lastZone){trace.push({zone:g.zoneIndex,x:Math.round(g.p.x),time:+g.time.toFixed(2),hp:g.hp});lastZone=g.zoneIndex;}
   if(i%120===0){if(Math.abs(g.p.x-lastX)<5)stuck++;else stuck=0;lastX=g.p.x;}
   if(stuck>5)break;

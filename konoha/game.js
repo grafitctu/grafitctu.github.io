@@ -41,6 +41,9 @@ let W = 960,
 // Rekordy v11 se nesměšují s dřívějším farmitelným skóre. Síť není potřeba.
 let records={score:0,time:null},tutorialEnabled=true,tutorialStep=-1;
 const recordKey='konoha-records-v11';
+let cloneEnabled=true,cloneStorage=null;
+try { cloneStorage=localStorage;cloneEnabled=localStorage.getItem('konoha-clone-visible')!=='off'; } catch {}
+const shadow=typeof ShadowClone==='undefined'?null:new ShadowClone(cloneStorage,g.rulesVersion,g.mapVersion);
 try {
   const saved=JSON.parse(localStorage.getItem(recordKey)||'null');
   if(saved&&Number.isFinite(saved.score)&&saved.score>=0) records.score=saved.score;
@@ -53,6 +56,7 @@ function formatTime(seconds) {
 }
 const medalNames={gold:'ZLATÁ MEDAILE',silver:'STŘÍBRNÁ MEDAILE',bronze:'BRONZOVÁ MEDAILE',finish:'TRÉNINK DOKONČEN'};
 function saveResult() {
+  shadow?.finish(g,animator?.pose());
   records.score=Math.max(records.score,g.score);
   if(g.state==='won') records.time=records.time===null?g.resultTime:Math.min(records.time,g.resultTime);
   try { localStorage.setItem(recordKey,JSON.stringify(records)); } catch {}
@@ -239,6 +243,7 @@ function events() {
 function start() {
   g.reset();
   animator?.reset();
+  shadow?.begin(g,animator?.pose());
   particles = [];
   ghosts = [];
   texts = [];
@@ -1024,6 +1029,7 @@ function render(dt) {
     h.life -= dt;
   }
   ghosts = ghosts.filter(h => h.life > 0);
+  drawShadowClone(oy);
   let p = g.p;
   const feet = p.y + p.h;
   let clearance = Infinity;
@@ -1033,6 +1039,7 @@ function render(dt) {
       bottom - 2);
   }
   animator?.update(dt, p, g.state, clearance);
+  shadow?.sample(g,animator?.pose());
   ghostClock -= dt;
   if ((p.dash > 0 || Math.abs(p.vx) > 380) && g.state === 'playing' && ghostClock <= 0) {
     ghostClock = .022;
@@ -1127,6 +1134,7 @@ function render(dt) {
 }
 // HUD čte stav, ale nepřidává body. Rekord v patičce je historická vzdálenost lokálního prohlížeče.
 function updateHud() {
+  updateCloneHud();
   $('score').textContent=g.score.toLocaleString('cs-CZ');
   $('timer').textContent=formatTime(g.resultTime);
   $('timePenalty').textContent=g.penalty?'včetně +'+g.penalty+' s':'';
@@ -1227,6 +1235,44 @@ function updateTutorial() {
 }
 $('tutorialSkip').onclick=endTutorial;
 $('tutorialReplay').onclick=()=>{tutorialEnabled=true;start();};
+// A replay is cosmetic. Never add it to g.solids, shots, or any collision/score query.
+function drawShadowClone(oy) {
+  if(!cloneEnabled||!shadow?.reference||g.state==='ready')return;
+  const clone=shadow.reference.at(g.resultTime),x=clone.x-cam+11,feet=clone.feet+oy;
+  if(x<24||x>W-24||feet<24||feet>H-30){
+    const direction=x<24?'←':x>W-24?'→':feet<24?'↑':'↓';
+    const edge=x<W/2?14:W-14;
+    text('KLON '+direction+(clone.finished?' V CÍLI':''),edge,24,10,'#b5ffff',x<W/2?'left':'right');
+    return;
+  }
+  ctx.save();
+  // Cool translucent silhouette remains distinguishable from the solid orange player.
+  ctx.filter='saturate(0) sepia(1) hue-rotate(125deg) saturate(3)';
+  if(!animator?.draw(ctx,x,feet,clone.face,.48,clone.pose))
+    ninja(x-11,feet-40,g.resultTime,Math.floor(clone.pose.frame/4)===7,
+      Math.floor(clone.pose.frame/4)===6,clone.face,.42);
+  ctx.restore();
+  ctx.save();ctx.strokeStyle='#a0f5ef';ctx.globalAlpha=.65;ctx.lineWidth=1;
+  ctx.setLineDash([3,3]);ctx.beginPath();ctx.ellipse(x,feet+2,17,4,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+  text('STÍNOVÝ KLON',x,feet-clone.pose.height-12,8,'#baffff','center');
+}
+function updateCloneHud() {
+  const ref=shadow?.reference, bestClone=shadow?.best;
+  $('cloneToggle').checked=cloneEnabled;
+  $('cloneProgress').hidden=!cloneEnabled||!ref||g.state==='ready';
+  if(ref)$('cloneProgress').style.left=Math.min(99.5,ref.at(g.resultTime).x/g.finish*100)+'%';
+  $('cloneStatus').textContent=ref?'KLON '+formatTime(ref.replay.time):bestClone?
+    (shadow.persisted?'KLON PŘIPRAVEN · ':'KLON PRO TUTO RELACI · ')+formatTime(bestClone.replay.time):
+    'Dokonči běh pro první záznam';
+  const delta=shadow?.delta(g);
+  $('cloneDelta').dataset.pace=delta==null?'none':Math.abs(delta)<.05?'even':delta<0?'ahead':'behind';
+  $('cloneDelta').textContent=delta==null?(bestClone?'Při příštím startu poběží s tebou':'Nejlepší zaznamenaný běh'):
+    Math.abs(delta)<.05?'STEJNÉ TEMPO':(delta<0?'NÁSKOK −':'ZTRÁTA +')+Math.abs(delta).toFixed(1)+' s';
+}
+$('cloneToggle').onchange=()=>{
+  cloneEnabled=$('cloneToggle').checked;
+  try {cloneStorage?.setItem('konoha-clone-visible',cloneEnabled?'on':'off');}catch{}
+};
 /** requestAnimationFrame čas je v ms. Převod na sekundy + accumulator řídí update(1/120).
  * Dlouhý render krok se omezí na 0.05 s; hitstop freeze záměrně zastavuje i simulaci.
  * API volání nesmí blokovat tuto funkci; g.time je čas SIMULACE, ne čas serveru. */
