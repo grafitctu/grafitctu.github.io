@@ -86,5 +86,17 @@ window.RozCodeExamples = {
       "cpp": "packages/pipeline-cpp.zip",
       "python": "packages/pipeline-python.zip"
     }
+  },
+  "covariance-3d": {
+    "cpp": "Matrix sample_covariance(const Matrix& X) {\n    const std::size_t d = dimensions(X, 2); // rows = samples, columns = features\n    const Vector mu = mean(X);\n    Matrix C(d, Vector(d, 0.0));\n    for (const auto& x : X)\n        for (std::size_t i = 0; i < d; ++i)\n            for (std::size_t j = 0; j < d; ++j)\n                C[i][j] += (x[i] - mu[i]) * (x[j] - mu[j]);\n    for (auto& row : C)\n        for (double& value : row) value /= double(X.size() - 1);\n    return C; // d features give a d by d sample covariance matrix\n}",
+    "python": "def sample_covariance(X):\n    X = np.asarray(X, dtype=float)  # rows = samples, columns = features\n    if X.ndim != 2 or len(X) < 2 or not np.isfinite(X).all():\n        raise ValueError(\"Use at least two finite samples.\")\n    centered = X - X.mean(axis=0)\n    return centered.T @ centered / (len(X) - 1)",
+    "sourceFiles": {
+      "cpp": "examples/cpp/covariance_3d.cpp",
+      "python": "examples/covariance_3d.py"
+    },
+    "downloads": {
+      "cpp": "packages/covariance-3d-cpp.zip",
+      "python": "packages/covariance-3d-python.zip"
+    }
   }
 };
