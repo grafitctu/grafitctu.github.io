@@ -12,8 +12,13 @@ The slides and controls are bilingual, with no installation or internet required
 Internet is needed only for external sources and the earlier online archive.
 
 notes.html: plán výuky, pokusy a pseudokódy / plan, experiments and pseudocode.
-Python examples are optional; they require the dependencies listed with them.
+Python / C++ examples are optional. Python uses the listed packages; C++ needs a C++17 compiler and CMake.
 The SVM parameter explorer uses the existing precomputed model bank; it does not retrain in the browser.
 
 Sources: roz-foundations-lab-v1 (including Av), published geometry tutorial.
 Duplicate explanations have been consolidated; the original decks remain intact.
+
+Python / C++: use the tabs beside the code; C++ is selected by default.
+C++ project and CSV data: cpp-project.zip, or examples/cpp and examples/data.
+Build instructions: examples/cpp/README.md. No Python is needed for C++.
+Pseudocode remains available separately; the numerical examples use the same saved data.

@@ -335,7 +335,7 @@
   $('previous')?.addEventListener('click', () => move(-1)); $('next')?.addEventListener('click', () => move(1));
   $('reading')?.addEventListener('click', () => { const read = document.body.dataset.view !== 'read'; document.body.dataset.view = read ? 'read' : 'slides'; $('reading').setAttribute('aria-pressed', String(read)); if (read) $(slides[currentIndex()].id).scrollIntoView(); else window.scrollTo({ top: 0 }); });
   $('print')?.addEventListener('click', () => window.print());
-  document.addEventListener('keydown', e => { if (document.body.dataset.view !== 'slides' || e.target.closest('input,select,textarea,button,svg,canvas')) return; if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); move(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); move(-1); } });
+  document.addEventListener('keydown', e => { if (document.body.dataset.view !== 'slides' || e.target.closest('input,select,textarea,button,svg,canvas,.code-viewer')) return; if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); move(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); move(-1); } });
   window.addEventListener('hashchange', updateNav);
   window.addEventListener('hashchange', () => { if (slides[currentIndex()].id !== 'matvec') stopMatvecAnimation(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden) stopMatvecAnimation(); });
