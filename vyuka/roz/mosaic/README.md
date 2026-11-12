@@ -1,23 +1,49 @@
-# Mosaic segmentation teaching demo
+# Segmentace mozaiky / Mosaic segmentation (C++17)
 
-Open index.html. Use CZ/EN, arrow keys, reading mode or Print / PDF.
+Otevřete index.html. Ukázky, segmenter i naměřené výsledky používají C++17.
+Open index.html. All code examples, segmentation outputs and measurements use C++17.
 
-Install `python -m pip install -r requirements.txt` and run:
+## Build and run
 
-    python segment.py input.png seg.png --k 6 --method 04_Lab_std
+Linux / macOS:
 
-K must match the assignment metadata for your image. Output stores class IDs.
-The presentation compares 10 fixed variants on 80 CVUT2016_zimni course mosaics.
-Development groups: 1, 6, 11, 16 (16 images), remaining groups: 64 images.
-The split does not guarantee unseen textures. GT is never a segmenter input.
-Image colours are aligned to GT for visualisation only, not for generating labels.
-The primary example is tm18_2_2 (selected illustration, not a representative sample).
-The failure example tm2_2_2 shows the largest CS drop for method 04 vs 05.
-Source dataset: CVUT2016_zimni, distributed for the CTU ROZ assignment.
-Original course: https://courses.fit.cvut.cz/NI-ROZ/
-This is a new teaching implementation, not an original lecture by Michal Haindl.
+    g++ -O2 -std=c++17 segment.cpp -o segment
+    ./segment input.png seg.png 6 4
 
-Measured versions: NumPy 2.5.1, SciPy 1.18.0, scikit-learn 1.9.0, scikit-image 0.26.0.
-See experiment-summary.json for parameters and evaluation provenance.
-Only the presentation, illustrative images and segmenter source are published here.
-The complete result packages and per-image private reports remain local.
+Windows: install Visual Studio C++ Build Tools, run build-msvc.cmd, then:
+
+    .\segment.exe input.png seg.png 6 4
+
+Or use CMake:
+
+    cmake -S . -B build
+    cmake --build build --config Release
+
+Arguments: input image, output PNG, known K, method number 0..9, optional seed.
+Default seed: 20261112. Method numbers match the slides and CSV.
+Image is an interleaved float array: (y,x,channel). Input channels are RGB, 0..1.
+Gaussian blur uses separate spatial passes, reflect padding and radius round(3*sigma).
+Lab uses sRGB linearisation and D65, all three coordinates divided by 100.
+K-means++ uses 5 attempts, at most 100 Lloyd iterations, 8192 sampled pixels.
+std::mt19937 and standard-library shuffle are deterministic within the tested build;
+other standard libraries or floating-point implementations can change results.
+This is a new native implementation, not a bitwise port of the original Segmenter 18
+or the previous Python demonstration. Scores and pictures were recomputed, not reused.
+
+## Experiment
+
+80 CVUT2016_zimni course mosaics; 10 variants; 800 independently evaluated SEG files.
+Development groups 1,6,11,16 (16 images); remaining groups (64 images) held out.
+The group split does not guarantee unseen textures. RGB and known K are the only inputs.
+GT is used only by the evaluator and to align display colours.
+The primary mosaic is an illustration, not a representative sample.
+The failure slide selects the largest CS decrease from method 04 to 05.
+All full result packages remain local; this publication contains selected illustrations
+and aggregate measurements. See experiment-summary.json for provenance.
+
+## Third-party code
+
+stb_image.h (v2.30) and stb_image_write.h (v1.16): Sean Barrett and contributors.
+Bundled from the existing portable course segmenter. Original licence notices remain
+in each header (MIT or public-domain alternative): https://github.com/nothings/stb
+No Python, OpenCV or proprietary VR library is required to compile or run the segmenter.
