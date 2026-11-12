@@ -26,6 +26,7 @@ Linux / macOS (typický generátor s jednou konfigurací / usual single-config g
 
 ```sh
 ./build/check_pca
+./build/covariance_3d ../data/toy-3d.csv
 ./build/pca_dbscan --data ../data --angle 35
 ./build/pca_dbscan --data ../data --y-scale 8 --standardize
 ./build/classification_pipeline ../data/blobs_train.csv ../data/blobs_test.csv rbf 1 1
@@ -36,6 +37,7 @@ Windows, PowerShell (Visual Studio generator):
 
 ```powershell
 .\build\Release\check_pca.exe
+.\build\Release\covariance_3d.exe ..\data\toy-3d.csv
 .\build\Release\pca_dbscan.exe --data ..\data --angle 35
 .\build\Release\classification_pipeline.exe ..\data\blobs_train.csv ..\data\blobs_test.csv rbf 1 1
 .\build\Release\lesson_snippets.exe
@@ -46,6 +48,10 @@ Windows, PowerShell (Visual Studio generator):
 - `lesson_snippets.cpp`: přesné C++ ukázky ze slidů / the exact slide examples.
 - `check_pca.cpp`: čtyři body, vlastní čísla a chyba rekonstrukce pro každé k /
   the four-point example, eigenvalues and reconstruction error for each k.
+- `covariance_3d.cpp`: tři příznaky, kovarianční matice 3 × 3 a její vlastní dvojice /
+  three features, a 3 by 3 covariance matrix and its eigenpairs.
+  `toy-3d.csv` má tři příznakové sloupce; všechny patří do výpočtu kovariance. /
+  All three columns of `toy-3d.csv` are features and enter the covariance calculation.
 - `pca_dbscan.cpp`: stejná data i argumenty jako Python; `--data` volí adresář CSV /
   same saved points and options as Python; `--data` selects the CSV directory.
 - `classification_pipeline.cpp`: fit scaler/PCA/SVM jen na tréninku /

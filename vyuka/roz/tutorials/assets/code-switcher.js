@@ -20,7 +20,7 @@
     viewer.choice = choice;
     for (const [key,panel] of viewer.panels) panel.hidden = key !== choice;
     for (const [key,button] of viewer.buttons) { button.setAttribute('aria-selected',String(key===choice));button.tabIndex=key===choice?0:-1; }
-    viewer.sourceLink.href = choice === 'cpp' ? 'examples/cpp/lesson_snippets.cpp' : 'examples/lesson_snippets.py';
+    viewer.sourceLink.href = examples[viewer.box.dataset.codeExample].sourceFiles?.[choice] || (choice === 'cpp' ? 'examples/cpp/lesson_snippets.cpp' : 'examples/lesson_snippets.py');
     viewer.sourceLink.replaceChildren(choice === 'cpp' ? bi('Úplný C++ soubor','Full C++ source') : bi('Úplný Python soubor','Full Python source'));
     viewer.sourceLink.hidden = choice === 'pseudocode';
     for(const [key,link] of viewer.zipLinks)link.dataset.selected=String(key===choice);
