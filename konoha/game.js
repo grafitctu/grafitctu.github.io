@@ -2,7 +2,7 @@
  * PROHLÍŽEČOVÁ VRSTVA: vstup, pevná herní smyčka, Canvas, zvuk, HUD, lokální rekord.
  * Script není ES module: funguje i přes file://; engine/atlas/animation se načítají před ním.
  * Žádný backend není připojen. Místa AI_HANDOFF_SCORE_* níže jsou integrační orientační body.
- * Viz ../SCORE_API.md a nepřipojený ../integration/score-client.example.js.
+ * Viz README.md na GRAFIT; původní balík v10.1 obsahuje i SCORE_API.md a ukázkový klient.
  * DŮLEŽITÉ: g.score = body; best/g.bestX = vzdálenost. Nezaměnit je v databázi.
  */
 /* Original environment canvas art and audio; generated Naruto atlas animation. */
@@ -16,6 +16,8 @@ const $ = id => document.getElementById(id),
 let W = 960,
   H = 480,
   cam = 0,
+  camY = 0,
+  lookAhead = 0,
   last = 0,
   acc = 0,
   visual = 0,
@@ -36,6 +38,25 @@ let W = 960,
   stretch = 0,
   warning = 0,
   ghostClock = 0;
+// Rekordy v11 se nesměšují s dřívějším farmitelným skóre. Síť není potřeba.
+let records={score:0,time:null},tutorialEnabled=true,tutorialStep=-1;
+const recordKey='konoha-records-v11';
+try {
+  const saved=JSON.parse(localStorage.getItem(recordKey)||'null');
+  if(saved&&Number.isFinite(saved.score)&&saved.score>=0) records.score=saved.score;
+  if(saved&&Number.isFinite(saved.time)&&saved.time>0) records.time=saved.time;
+  tutorialEnabled=localStorage.getItem('konoha-tutorial-v11')!=='done';
+} catch {} // Zakázané či poškozené localStorage nesmí zabránit hraní.
+function formatTime(seconds) {
+  const tenths=Math.floor(Math.max(0,seconds)*10+1e-7);
+  return Math.floor(tenths/600)+':'+String(Math.floor(tenths/10)%60).padStart(2,'0')+'.'+tenths%10;
+}
+const medalNames={gold:'ZLATÁ MEDAILE',silver:'STŘÍBRNÁ MEDAILE',bronze:'BRONZOVÁ MEDAILE',finish:'TRÉNINK DOKONČEN'};
+function saveResult() {
+  records.score=Math.max(records.score,g.score);
+  if(g.state==='won') records.time=records.time===null?g.resultTime:Math.min(records.time,g.resultTime);
+  try { localStorage.setItem(recordKey,JSON.stringify(records)); } catch {}
+}
 // Lokální klíč konoha-best ukládá nejlepší VZDÁLENOST V METRECH, nikoli body ani identitu hráče.
 try {
   best = Number(localStorage.getItem('konoha-best') || 0);
@@ -151,7 +172,7 @@ function events() {
         stretch = .16;
         ring(e.x, e.y + 20, e.type === 'double' ? '#89efff' : '#ffcb85', e.type === 'double' ? 38 : 25);
       }
-      $('combo').textContent = names[e.type] + ' / ' + g.combo + '× FLOW';
+      $('combo').textContent = names[e.type];
     }
     if (e.type === 'prepare') {
       burst(e.x, e.y, '#ffd19a', 5, 35);
@@ -174,7 +195,7 @@ function events() {
       tone(900, .07, 'sine', .025, 1400);
     }
     if (e.type === 'near') {
-      label('TĚSNĚ! +50', e.x, e.y - 35, '#ffc985');
+      label('TĚSNĚ!', e.x, e.y - 35, '#ffc985');
       tone(650, .09, 'triangle', .02, 1000);
     }
     if (e.type === 'deflect') {
@@ -186,7 +207,7 @@ function events() {
       tone(1400, .18, 'triangle', .04, 280);
     }
     if (e.type === 'warning') {
-      warning = .7;
+      // Indikátor je trvale odvozený od skutečné střely; zde pouze zvuk.
       tone(280, .06, 'triangle', .015, 420);
     }
     if (e.type === 'hit') {
@@ -195,12 +216,16 @@ function events() {
       freeze = .09;
       flash = fx ? .25 : 0;
       tone(130, .3, 'sawtooth', .045, 35);
-      label('ZÁSAH', e.x, e.y - 40, '#ff886b');
+      label('ZÁSAH / +5 s', e.x, e.y - 40, '#ff886b');
+      resetCamera();
     }
     if (e.type === 'checkpoint') {
       label('CHECKPOINT ✓', e.x, e.y - 55);
       tone(600, .2, 'sine', .035, 1200);
     }
+    if(e.type==='score') label('+'+e.points,e.x,e.y-52,'#ffe5a0');
+    if(e.type==='scroll') { ring(e.x,e.y,'#ffd486',65); tone(1000,.25,'sine',.03,1600); }
+    if(e.type==='won'||e.type==='dead') saveResult();
     if (e.type === 'won') {
       burst(e.x, e.y, '#ffca77', 70, 300);
       tone(520, .5, 'triangle', .05, 1040);
@@ -219,7 +244,10 @@ function start() {
   texts = [];
   rings = [];
   squash = stretch = warning = ghostClock = lastStep = 0;
-  cam = 0;
+  resetCamera();
+  acc = 0;
+  tutorialStep = -1;
+  lastState = 'playing';
   freeze = 0;
   held.clear();
   clearInput();
@@ -228,6 +256,7 @@ function start() {
   canvas.focus();
   tone(400, .18, 'triangle', .04, 800);
   updateHud();
+  syncOverlay();
 }
 // Ztráta fokusu nesmí nechat aktivní pohyb ani vyvolat skok na následném keyup.
 function clearInput() {
@@ -262,14 +291,16 @@ function syncOverlay() {
   const won = g.state === 'won',
     paused = g.state === 'paused';
   $('overlay').hidden = false;
-  $('badge').textContent = paused ? 'ODDECH NA STŘEŠE' : won ? 'TRÉNINK SPLNĚN / DATTEBAYO!' :
+  $('badge').textContent = paused ? 'ODDECH NA STŘEŠE' : won ? medalNames[g.medal()] :
     'KAŽDÝ HOKAGE NĚKDY SPADL';
+  $('badge').dataset.medal=won?g.medal():'';
   $('overlayTitle').innerHTML = paused ? 'CHVÍLE NA<br><em>RAMEN.</em>' : won ?
     'TRÉNINK<br><em>SPLNĚN!</em>' : 'JEŠTĚ JEDEN<br><em>POKUS.</em>';
   $('overlayText').textContent = paused ? 'Nadechni se. Tvůj běh tu počká.' :
-    `${Math.floor(g.bestX/10)} m · ${g.score} bodů · ${g.stats.deflect} odražených shurikenů`;
+    `${g.score} bodů · čas ${formatTime(g.resultTime)} (penalizace +${g.penalty} s) · svitek ${g.scroll.taken?'1/1':'0/1'}`;
   $('overlayHint').textContent = paused ? 'P nebo Escape pro pokračování' : won ?
-    'Zkus to znovu s méně zásahy a více stylem.' : 'Tip: dash odrazí shuriken a obnoví vzdušný skok.';
+    `${medalNames[g.medal()]} · osobní čas ${formatTime(records.time??g.resultTime)}` : 'Tip: dash odrazí shuriken a obnoví vzdušný skok.';
+  $('overlayHint').dataset.medal=won?g.medal():'';
   $('start').innerHTML = paused ? 'POKRAČOVAT <span>↗</span>' : 'ZNOVU VYBĚHNOUT <span>↗</span>';
   $('status').textContent = paused ? 'PAUZA' : won ? 'TRÉNINK SPLNĚN' : 'KONEC POKUSU';
   $('pause').textContent = '▶';
@@ -750,7 +781,7 @@ function background() {
 
 function roof(s) {
   let x = s.x - cam,
-    y = s.y + H - 480;
+    y = s.y + (H - 480 + camY);
   if (x + s.w < 0 || x > W) return;
   if (s.type === 'roof') {
     rect(x, y + 12, s.w, s.h, '#b39469');
@@ -898,11 +929,11 @@ function ninja(x, y, phase, slide = false, dash = false, face = 1, alpha = 1, bo
 function shuriken(s) {
   for (let i = 1; i <= 4; i++) {
     ctx.globalAlpha = (1 - i / 5) * .4;
-    rect(s.x - cam + 8 + i * 9, s.y + H - 480 + 6, 12 - i * 2, 3, '#acd9df');
+    rect(s.x - cam + 8 + i * 9, s.y + (H - 480 + camY) + 6, 12 - i * 2, 3, '#acd9df');
   }
   ctx.globalAlpha = 1;
   ctx.save();
-  ctx.translate(s.x - cam + 8, s.y + H - 480 + 8);
+  ctx.translate(s.x - cam + 8, s.y + (H - 480 + camY) + 8);
   ctx.rotate(s.spin);
   poly([
     [0, -13],
@@ -935,7 +966,7 @@ function render(dt) {
   background();
   ctx.save();
   if (shake > 0 && fx) ctx.translate((Math.random() - .5) * shake, (Math.random() - .5) * shake);
-  const oy = H - 480;
+  const oy = (H - 480 + camY);
   for (const s of g.solids) roof(s);
   // Checkpoint flags.
   for (const c of g.checkpoints.slice(1)) {
@@ -970,6 +1001,13 @@ function render(dt) {
     ctx.fillStyle = '#493e32b8';
     ctx.fillRect(Math.round(s.x - cam - 4), Math.round(s.y + oy - 11), s.text.length * 5.5 + 8, 16);
     text(s.text, s.x - cam, s.y + oy, 9, '#fff0cd');
+  }
+  // Bonusový svitek leží pouze na horní větvi; sebrání má vlastní jednorázové ID.
+  if(!g.scroll.taken) {
+    const sx=g.scroll.x-cam, sy=g.scroll.y+oy;
+    rect(sx-10,sy-10,20,20,'#fff0bd');
+    rect(sx-14,sy-13,7,26,'#dc7448'); rect(sx+7,sy-13,7,26,'#dc7448');
+    text('忍',sx,sy+5,13,'#6c4931','center');
   }
   // Finish torii gate.
   let gate = g.finish - cam;
@@ -1047,7 +1085,7 @@ function render(dt) {
     text('STŘECHA →', W - 14, landing.y + oy - 30, 10, '#fff0cd', 'right');
     rect(W - 42, landing.y + oy - 20, 28, 3, '#ffb76b');
   }
-  for (const s of g.shots) shuriken(s);
+  for (const s of g.shots) if(!(s.windup>0)) shuriken(s);
   for (const p of particles) {
     p.life -= dt;
     p.x += p.vx * dt;
@@ -1081,10 +1119,7 @@ function render(dt) {
     rect(0, 0, W, H, '#ffc3a0');
     ctx.globalAlpha = 1;
   }
-  if (warning > 0) {
-    text('◀ SHURIKEN', W - 18, Math.max(24, H - 145), 11, '#ffbc7d', 'right');
-  }
-  warning = Math.max(0, warning - dt);
+  drawWarnings();
   squash = Math.max(0, squash - dt);
   stretch = Math.max(0, stretch - dt);
   shake = Math.max(0, shake - dt * 25);
@@ -1092,6 +1127,14 @@ function render(dt) {
 }
 // HUD čte stav, ale nepřidává body. Rekord v patičce je historická vzdálenost lokálního prohlížeče.
 function updateHud() {
+  $('score').textContent=g.score.toLocaleString('cs-CZ');
+  $('timer').textContent=formatTime(g.resultTime);
+  $('timePenalty').textContent=g.penalty?'včetně +'+g.penalty+' s':'';
+  $('recordTime').textContent=records.time===null?'—':formatTime(records.time);
+  $('recordScore').textContent=records.score.toLocaleString('cs-CZ');
+  $('medalTarget').textContent=g.resultTime<=70?'CÍL: ZLATO ≤ 1:10':g.resultTime<=100?'CÍL: STŘÍBRO ≤ 1:40':g.resultTime<=150?'CÍL: BRONZ ≤ 2:30':'CÍL: DOKONČIT TRÉNINK';
+  if(g.combo>0) $('combo').textContent=g.combo+'× FLOW · '+Math.ceil(g.comboTimer)+' s';
+  updateTutorial();
   $('distance').innerHTML = String(Math.floor(g.bestX / 10)).padStart(4, '0') + ' <small>m</small>';
   $('charge').style.width = (1 - Math.min(1, g.p.cool / .85)) * 100 + '%';
   $('dashLabel').textContent = g.p.cool > 0 ? 'DOBÍJENÍ' : 'PŘIPRAVEN';
@@ -1101,6 +1144,89 @@ function updateHud() {
   $('zone').textContent = g.zones[g.zoneIndex].name;
   if (g.combo === 0) $('combo').textContent = g.zones[g.zoneIndex].hint;
 }
+/** Kamera používá rychlost, nikoli směr sprite: při otočení nehází obrazem.
+ * Lookahead se tlumí samostatně; hard clamp drží hráče v bezpečné části viewportu
+ * i při dashi. Svislá mrtvá zóna zpřístupňuje horní větev také v landscape.
+ * Kamera NIKDY nemění simulaci, spawn ani zásahové boxy. */
+function resetCamera() {
+  lookAhead=0;
+  cam=Math.max(0,g.p.x-W*.35);
+  camY=0;
+  updateCamera(1);
+}
+function updateCamera(dt) {
+  const p=g.p;
+  const target=Math.max(-W*.22,Math.min(W*.25,p.vx*.24));
+  lookAhead+=(target-lookAhead)*(1-Math.exp(-dt*5));
+  const desired=Math.max(0,p.x+11-W*.42+lookAhead);
+  cam+=(desired-cam)*(1-Math.exp(-dt*12));
+  cam=Math.max(0,Math.min(p.x-W*.14,Math.max(p.x-W*.78,cam)));
+  const screenY=p.y+p.h/2+H-480+camY;
+  const low=H*.32, high=H*.73;
+  const correction=screenY<low?low-screenY:screenY>high?high-screenY:0;
+  camY+=correction*(1-Math.exp(-dt*9));
+  // Pojistka při respawnu/změně rozměrů; pozvolné běžné sledování zůstává výše.
+  camY=Math.max(32-(p.y+H-480),Math.min(H-38-(p.y+p.h+H-480),camY));
+}
+/** Výška indikátoru odpovídá dráze střely. Při ořezu se přidá ↑/↓.
+ * Windup a offscreen varování trvají podle existence střely, ne pevného UI timeru.
+ * Čas do kontaktu bere v úvahu běh/dash hráče; slouží pouze pro barvu varování. */
+function shotIndicator(s) {
+  if(s.dead) return null;
+  const dx=s.x-g.p.x;
+  if(dx<-25||dx>950) return null;
+  const x=s.x-cam+8, rawY=s.y+H-480+camY+8;
+  const ahead=x>W-22||x<22;
+  const clipped=rawY<32||rawY>H-38;
+  if(!s.windup&&!ahead&&!clipped) return null;
+  const closing=Math.max(1,g.p.vx-s.vx);
+  return {x:Math.max(22,Math.min(W-22,x)),y:Math.max(32,Math.min(H-38,rawY)),
+    edge:x>W-22?'right':x<22?'left':'inside',vertical:rawY<32?'↑':rawY>H-38?'↓':'',
+    urgent:!s.windup&&dx/closing<.7,preparing:s.windup>0};
+}
+function drawWarnings() {
+  if(g.state!=='playing'&&g.state!=='paused') return;
+  for(const s of g.shots) {
+    const i=shotIndicator(s); if(!i) continue;
+    const right=i.edge==='right',left=i.edge==='left';
+    const label=(i.preparing?'PŘÍPRAVA':'SHURIKEN')+' '+i.vertical;
+    const x=right?W-12:left?12:Math.max(72,Math.min(W-72,i.x));
+    const color=i.urgent?'#ff8872':'#ffe0a4';
+    rect(right?x-112:left?x-4:x-60,i.y-14,116,26,'#302c29ee');
+    text((right?'◀ ':left?'▶ ':'! ')+label,x,i.y+3,10,color,right?'right':left?'left':'center');
+    // Krátká linka v přesné výšce neplete výstrahu s dekorací pozadí.
+    rect(right?W-45:left?0:i.x-16,i.y+10,right||left?45:32,2,color);
+  }
+}
+const lessons=[
+  {done:()=>g.bestX>135,title:'1/6 · ROZBĚH',text:'Drž D / → (nebo pravé dotykové tlačítko). Pohyb řídíš ty.'},
+  {done:()=>g.stats.jump>0,title:'2/6 · PRVNÍ SKOK',text:'Stiskni SPACE / SKOK: přikrčení. PUSŤ: odraz přes bednu.'},
+  {done:()=>g.solids.some(s=>s.type==='beam'&&s.x<600&&g.awarded.has(s.id)),title:'3/6 · POD TRÁMEM',text:'Drž S / ↓ / SKLUZ a projeď nízkým průchodem. Dash si do skluzu podrží rychlost.'},
+  {done:()=>g.stats.double>0,title:'4/6 · DRUHÝ SKOK',text:'Ve vzduchu znovu STISKNI SPACE / SKOK. Dvojskok reaguje hned, bez čekání na puštění.'},
+  {done:()=>g.stats.dash>0,title:'5/6 · CHAKRA DASH',text:'Stiskni SHIFT / X / DASH. Ve vzduchu pak můžeš ještě jednou skočit.'},
+  {done:()=>g.stats.wall>0,title:'6/6 · ODRAZ OD STĚNY',text:'U zdi drž ↑ / SPACE / SKOK: na sekundu zpomalíš pád. PUSŤ pro odraz.'}
+];
+function endTutorial() {
+  tutorialEnabled=false;
+  try {localStorage.setItem('konoha-tutorial-v11','done');} catch {}
+  $('tutorial').hidden=true;
+}
+function updateTutorial() {
+  $('tutorial').hidden=!tutorialEnabled||g.state!=='playing';
+  if(!tutorialEnabled||g.state!=='playing') return;
+  const index=lessons.findIndex(l=>!l.done());
+  if(index<0) {endTutorial();label('TRÉNINK ZÁKLADŮ ✓',g.p.x,g.p.y-60);return;}
+  // Minutý trám nesmí zablokovat zbytek tutorialu: zobraz nejbližší další dovednost.
+  const next=index===2&&g.bestX>700?lessons.findIndex((l,i)=>i>2&&!l.done()):index;
+  if(next<0||g.bestX>1700) {endTutorial();return;}
+  if(next!==tutorialStep) {
+    tutorialStep=next;
+    $('tutorialTitle').textContent=lessons[next].title;
+    $('tutorialText').textContent=lessons[next].text;
+  }
+}
+$('tutorialSkip').onclick=endTutorial;
+$('tutorialReplay').onclick=()=>{tutorialEnabled=true;start();};
 /** requestAnimationFrame čas je v ms. Převod na sekundy + accumulator řídí update(1/120).
  * Dlouhý render krok se omezí na 0.05 s; hitstop freeze záměrně zastavuje i simulaci.
  * API volání nesmí blokovat tuto funkci; g.time je čas SIMULACE, ne čas serveru. */
@@ -1117,9 +1243,8 @@ function frame(t) {
     }
     events();
   }
-  let desired = Math.max(0, g.p.x - W * .25);
-  cam += (desired - cam) * Math.min(1, dt * 9);
-  if (g.state === 'ready') cam = 0;
+  if(g.state==='playing') updateCamera(dt);
+  if(g.state==='ready') resetCamera();
   if (g.state === 'playing' && g.p.ground && Math.abs(g.p.vx) > 30 && g.time - lastStep > (g.p.skid > 0 ?
       .035 : g.p.slide ? .055 : .13)) {
     lastStep = g.time;

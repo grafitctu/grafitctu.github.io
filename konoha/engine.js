@@ -22,6 +22,16 @@
      * ready se nastavuje až po resetu v konstruktoru; tlačítko START volá reset() znovu. */
     reset() {
       this.time = 0;
+      // v11: pravidla/mapa patří do každého budoucího API výsledku.
+      this.rulesVersion = 'konoha-v11';
+      this.mapVersion = 'rooftops-branch-v1';
+      this.awarded = new Set(); // Přetrvá respawn, vymaže až nový pokus.
+      this.flowKinds = [];
+      this.progressStep = 0;
+      this.penalty = 0;
+      this.gaps = [];
+      this.gapAttempts = new Set();
+      this.beamAttempts = new Set();
       this.bestX = 80;
       this.score = 0;
       this.combo = 0;
@@ -81,14 +91,13 @@
           [570, 460, 340],
           [1130, 370, 400]
         ],
-        walls: [
-          [800, 170]
-        ],
+        walls: [], // Stěna je nyní na volitelné horní větvi (viz níže).
         crates: [
           [210, 50]
         ],
         tunnels: [
-          [1210, 160]
+          [1210, 160],
+          [715, 190] // Spodní větev: průchod skluzem po souvislé střeše.
         ]
       }, {
         name: '03 — ŠKOLA ODRAZŮ',
@@ -235,6 +244,26 @@
           text: z.name
         });
       }
+      // Obě větve jsou skutečné solidní plochy, bez teleportu či přepínače.
+      // Dole se dá bezpečně projet skluzem, nahoře získat svitek za přesnější skoky.
+      this.branch = { start: 2070, end: 2530 };
+      this.solids.push(
+        {x:2085,y:255,w:90,h:16,type:'ledge'},
+        {x:2155,y:165,w:32,h:90,type:'wall'},
+        {x:2420,y:140,w:95,h:16,type:'ledge'}
+      );
+      this.scroll = {x:2460,y:112,taken:false};
+      this.signs.push(
+        {x:1980,y:195,text:'ROZCESTÍ: ↑ SVITEK / ↓ SKLUZ'},
+        {x:2420,y:87,text:'SVITEK +500'},
+        {x:2515,y:285,text:'→ SPOJENÍ CEST'}
+      );
+      this.solids.forEach((solid,i)=>solid.id='solid:'+i);
+      for(const z of this.zones) for(let i=0;i<z.roofs.length-1;i++) {
+        const a=z.roofs[i], b=z.roofs[i+1];
+        this.gaps.push({id:'gap:'+z.start+':'+i,fromStart:z.start+a[0],left:z.start+a[0]+a[1],
+          right:z.start+b[0],end:z.start+b[0]+b[1],fromY:a[2],toY:b[2]});
+      }
       this.finish = 9000;
       this.solids.push({
         x: this.finish,
@@ -282,6 +311,8 @@
         skidding: false
       };
       this.shots = [];
+      this.gapAttempts.clear();
+      this.beamAttempts.clear();
     }
     // Jednosměrná fronta efektů; game.js ji po zpracování vyprázdní. Není to persistentní event log.
     event(type, x = this.p.x + 11, y = this.p.y + 20) {
@@ -291,14 +322,70 @@
         y
       });
     }
-    /** Bodování: každý trick přidá 25×aktuální combo, zvýší stats a obnoví comboTimer.
-     * Pozor: triky lze opakovat na místě. Toto bodování není navrženo proti farmení. */
+    /** Vstupní akce živí animaci/statistiku, NIKOLI skóre. Skákání na místě je zdarma.
+     * Body vydává pouze award() s jedinečným ID dokončené překážky/předmětu.
+     * Set awarded se nemění při smrti, takže zpáteční cesta ani respawn nic nefarmí. */
     trick(type) {
       this.stats[type]++;
-      this.combo++;
-      this.comboTimer = 2.4;
-      this.score += 25 * this.combo;
       this.event(type);
+    }
+    award(id,base,kind,flow=true) {
+      if(this.awarded.has(id)) return 0;
+      this.awarded.add(id);
+      if(flow) {
+        if(this.comboTimer<=0) this.flowKinds=[];
+        this.flowKinds=this.flowKinds.filter(k=>k!==kind).concat(kind).slice(-3);
+        this.combo=this.flowKinds.length; // Rozmanitost úspěchů, nejvýše 3×.
+        this.comboTimer=4;
+      }
+      const points=base*(flow?this.combo:1);
+      this.score+=points;
+      this.events.push({type:'score',x:this.p.x+11,y:this.p.y,points,kind});
+      return points;
+    }
+    // Jedna odměna za střely na každých 300 px tratě, bez ohledu na počet respawnů.
+    hazardAward(base,kind) {
+      return this.award('hazard:'+Math.floor(this.p.x/300),base,kind);
+    }
+    get resultTime() { return this.time+this.penalty; }
+    medal() {
+      if(this.state!=='won') return null;
+      const t=this.resultTime;
+      return t<=70?'gold':t<=100?'silver':t<=150?'bronze':'finish';
+    }
+    /** Dokončení překážky se odvozuje z kolizní geometrie, ne ze stisku tlačítka.
+     * Beam se musí skutečně projet uvnitř; mezera vyžaduje odchod z levé střechy
+     * a dopad na pravou. Rozpracované průchody se při respawnu zahodí. */
+    scoreMovement(before) {
+      const p=this.p, feet=p.y+p.h;
+      const progress=Math.max(0,Math.floor((this.bestX-80)/100));
+      if(progress>this.progressStep) {
+        this.score+=(progress-this.progressStep)*10;
+        this.progressStep=progress;
+      }
+      for(const s of this.solids) {
+        if(s.type==='beam') {
+          if(p.slide&&p.x+p.w>s.x&&p.x<s.x+s.w&&p.y>=s.y+s.h-1&&feet<=s.y+s.h+30)
+            this.beamAttempts.add(s.id);
+          if(this.beamAttempts.has(s.id)&&before.x<s.x+s.w&&p.x>=s.x+s.w) {
+            this.award(s.id,150,'slide'); this.beamAttempts.delete(s.id);
+          }
+        } else if((s.type==='wall'||s.type==='crate')&&before.x<s.x+s.w&&p.x>=s.x+s.w&&feet<=s.y+8) {
+          this.award(s.id,150,s.type==='wall'?'wall':'jump');
+        }
+      }
+      for(const gap of this.gaps) {
+        // Remember the departure roof even when taking off early from a wall on it.
+        if(before.ground&&before.x>=gap.fromStart&&before.x<gap.left&&before.feet<=gap.fromY+6)
+          this.gapAttempts.add(gap.id);
+        if(this.gapAttempts.has(gap.id)&&p.ground&&p.x+p.w>gap.right&&p.x<gap.end&&feet<=gap.toY+6) {
+          this.award(gap.id,200,'gap'); this.gapAttempts.delete(gap.id);
+        }
+      }
+      const scroll=this.scroll;
+      if(!scroll.taken&&Math.abs(p.x+11-scroll.x)<24&&Math.abs(p.y+p.h/2-scroll.y)<30) {
+        scroll.taken=true; this.award('scroll',500,'scroll',false); this.event('scroll');
+      }
     }
     // Nízká úroveň pro testy/buffer. Skutečný vstup má volat pressJump()/releaseJump(), nikoli jump().
     jump(air = true) {
@@ -367,6 +454,9 @@
     damage() {
       if (this.p.inv > 0 || this.state !== 'playing') return;
       this.hp--;
+      this.penalty+=5;
+      this.flowKinds=[];
+      this.comboTimer=0;
       this.event('hit');
       this.combo = 0;
       if (this.hp <= 0) {
@@ -419,7 +509,8 @@
      * Nepřidávat await, fetch, DOM ani proměnný requestAnimationFrame dt. */
     update(dt, input = {}) {
       if (this.state !== 'playing') return;
-      this.time += dt;
+      this.time += dt; // Aktivní simulační čas: pauza ani kosmetický hitstop se nepočítají.
+      const before={x:this.p.x,feet:this.p.y+this.p.h,ground:this.p.ground};
       let p = this.p;
       p.wallGrip = false;
       this.bestX = Math.max(this.bestX, p.x);
@@ -562,6 +653,8 @@
       }
       this.tryJump(false); // Buffered landing/wall release fires on this contact frame.
 
+      this.bestX=Math.max(this.bestX,p.x);
+      this.scoreMovement(before);
       // Obtížnost závisí na dosažené vzdálenosti, ne na čase čekání hráče.
       this.zoneIndex = Math.min(5, Math.floor(this.bestX / 1500));
       for (const c of this.checkpoints) {
@@ -588,29 +681,36 @@
           h: 17,
           vx: -230 - stage * 22,
           spin: 0,
-          near: false
+          near: false,
+          windup: .65 // Viditelná příprava; během ní střela stojí a nemůže zasáhnout.
+
         });
         this.event('warning', p.x + 570, shotY);
       }
       for (const s of this.shots) {
+        if(s.windup>0) { s.windup=Math.max(0,s.windup-dt); continue; }
         s.x += s.vx * dt;
         s.spin += dt * 14;
         if (overlap(p, s)) {
           if (p.dash > 0) {
             s.dead = true;
             this.trick('deflect');
+            this.hazardAward(150,'deflect');
           } else {
             this.damage();
             break;
           }
         } else if (!s.near && Math.abs(s.x - p.x) < 28 && Math.abs(s.y - p.y) < 90) {
           s.near = true;
-          this.score += 50;
+          this.hazardAward(50,'near');
           this.event('near');
         }
       }
       this.shots = this.shots.filter(s => !s.dead && s.x > p.x - 500);
-      // Každý orb jen jednou za celý pokus: +100 bodů. Near miss výše přidává +50.
+      // damage() může nahradit hráče respawnem nebo ukončit pokus. Starý p nesmí
+      // v tomtéž ticku sebrat předměty či přepsat smrt na vítězství za cílovou čárou.
+      if(this.p!==p||this.state!=='playing') return;
+      // Každý orb jen jednou za celý pokus: +100 bodů. Hazard bonus je omezen úsekem.
       for (const o of this.orbs) {
         if (!o.taken && Math.abs(p.x + 11 - o.x) < 22 && Math.abs(p.y + p.h / 2 - o.y) < 30) {
           o.taken = true;
@@ -621,7 +721,7 @@
       // Cíl: bonus +500 za zbývající život. Event won se emituje až PO připsání bonusu.
       if (p.x >= this.finish) {
         this.state = 'won';
-        this.score += this.hp * 500;
+        this.award('finish',this.hp*500,'finish',false);
         this.event('won');
       }
     }
