@@ -37,6 +37,9 @@ module.exports=function addLectureReturn(base,catalog){
   }
  }
  const entries=[],courseByPage=new Map();for(const row of catalog.rows)for(const course of catalog.courses)for(const item of [].concat(row[course.id]||[]))for(const value of [item.primary,item.alternative,...(item.resources||[]).map(r=>r.href)])if(value&&(value.endsWith('/')||/\.html$/.test(value))){const file=value.endsWith('/')?value+'index.html':value;if(courseByPage.has(file)&&courseByPage.get(file).id!==course.id)throw Error('Ambiguous course: '+file);entries.push(file);courseByPage.set(file,course);}
+ // The current PGA lecture redirect lands in an implicit-body native export.
+ // Include its actual lecture and workshop, not only the redirect entrypoint.
+ for(const file of ['pga/p05/2026/index.html','pga/p05/2026/workshop.html'])if(fs.existsSync(path.join(base,file))){entries.push(file);courseByPage.set(file,catalog.courses.find(c=>c.id==='pga'));}
  const pages=[...new Set(entries)];let changed=0;
  // Validate every input before changing any copy. Older PGA viewers were generated,
  // rather than copied, and did not yet have provenance entries.
@@ -45,6 +48,16 @@ module.exports=function addLectureReturn(base,catalog){
   const target=path.join(base,file),before=fs.readFileSync(target),record=manifest.files.find(f=>f.copy===file);
   if(!record||record.sha256!==sha(before))throw Error('Unverified lecture copy: '+file);
   let html=before.toString('utf8');
+  // This author export omits explicit head/body tags. Keep navigation in its
+  // existing header rather than injecting a floating control over the lecture.
+  if(file.startsWith('pga/p05/2026/')&&!html.includes('id="grafit-lecture-return"')){
+   const subject=path.relative(path.dirname(target),path.join(base,'pga')).split(path.sep).join('/')+'/';
+   const overview=path.relative(path.dirname(target),base).split(path.sep).join('/')+'/';
+   const nativeStyle=`<style id="grafit-native-return-style">header{height:auto;min-height:66px;flex-wrap:wrap}header #grafit-lecture-return,header #grafit-course-link{display:inline-flex;align-items:center;min-height:44px;padding:8px 10px;box-sizing:border-box;border-radius:5px;white-space:nowrap}header #grafit-lecture-return{border:1px solid var(--line);font-weight:600}header #grafit-course-link{color:${colors.pga[0]}}body.dark header #grafit-course-link{color:${colors.pga[1]}}header #grafit-lecture-return:focus-visible,header #grafit-course-link:focus-visible{outline:3px solid currentColor;outline-offset:3px}@media print{#grafit-lecture-return,#grafit-course-link{display:none!important}}</style>`;
+   if(!html.includes('name="robots"'))html=html.replace('<meta charset="utf-8">','<meta charset="utf-8"><meta name="robots" content="noindex">');
+   html=html.replace('<header><a href="index.html">GRAFIT / BI-PGA</a>',nativeStyle+`<header><a id="grafit-lecture-return" href="${overview}" aria-label="Zpět na přehled přednášek GRAFIT">← Všechny předměty</a><a id="grafit-course-link" href="${subject}" aria-label="Přehled přednášek PGA">PGA</a>`);
+   record.preNavigationSha256??=sha(before);record.adaptations=[...new Set([...(record.adaptations||[]),'In-flow all-subjects return and course brand in native implicit-body author header.'])];
+  }
   // Published worksheets already have an in-flow toolbar and a subject link.
   // Reuse it so the global return cannot cover the worksheet controls.
   if(file.startsWith('vhs/p04/cviceni/')){
