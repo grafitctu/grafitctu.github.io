@@ -1,0 +1,1 @@
+VGA06 · Jan Matoušek · 56 native HTML pages. Original unchanged PDF, full text in notes, individual source illustrations and page map. GRAFIT numeric model is synthetic, not measured. Open index.html; navigation, reading, notes, print and model work offline. External citations require network.
