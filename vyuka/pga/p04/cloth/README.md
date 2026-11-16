@@ -1,0 +1,7 @@
+# Measured cloth comparison
+
+- Sari: Dupuy & Jakob, RGL/EPFL, [RGB acquisition](https://d38rqfq1h7iukm.cloudfront.net/media/materials/aniso_sari_silk_2color/aniso_sari_silk_2color_rgb.bsdf), SHA-256 9340fa1d6dcd2fa281b62f4882f739634c50c097a27ba6eef4332e051301b192. [Database terms](https://rgl.epfl.ch/pages/lab/material-database).
+- MERL: Matusik et al., dark-specular-fabric.binary, SHA-256 220be5b0516d8945b4cd7888912d85832df5d2a2b389e34254a3b6510e0d89fd. The educational/research/non-profit license notice is included in data.js.
+- Build tools/sample-pga-sari.cpp with the headers from rgl-epfl/brdf-loader at c9ea6f9f8a5fae7135cd359d29c50302a8a3b9ab. Run it on the RGB file to generate sari.f32; then run tools/pack-pga-cloth.py as documented in its usage string. No network requests are required at presentation time.
+- Each hemisphere has 16 zenith angles (0 to 89.5 degrees) and 36 periodic azimuths. The table is a reduced angular sampling, not a replacement for the full acquisition. Directions nearer the horizon use the final zenith sample. The RGL evaluator includes the outgoing cosine, which is removed before tabulation. Decode the log-quantized samples before multilinear interpolation. In the MERL table use relative azimuth; spinning the tangent frame is exactly invariant.
+- Graph radius: linear luminance of RGB BRDF, normalized to the displayed maximum for the current slice. Spheres use orthographic projection, a directional light, one incident cosine, fixed exposure, Reinhard and sRGB; no texture, ambient term or synthetic second highlight.
