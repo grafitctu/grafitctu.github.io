@@ -7,6 +7,21 @@ Pracovní podklad pro interní diskuzi vedení FIT ČVUT.
 - Datum přípravy webové verze: 9. 7. 2026
 - Účel souboru: záložní textová verze webové stránky pro sdílení, připomínky a přípravu jednání
 
+## Nově doložené hry a instalace
+
+Pět her přibylo do pracovního přehledu 17. listopadu 2026. Rok u názvu označuje vznik hry. První čtyři tituly uvádí GRAFIT v programu Noci vědy z 25. září 2026. Odkazy vedou na díla a autorské kredity. Před podáním do RUV zbývá ověřit autorské podíly a první veřejné uvedení.
+
+| Dílo | Rok vzniku | Autoři podle stránky díla | Autorský přínos | Doklady |
+| --- | --- | --- | --- | --- |
+| Spory | 2026 | Cozy Games Studio a spoluautoři | Dva hráči na jednom zařízení soupeří o území houbových kolonií. Tým vytvořil grafiku, hudbu i kód během Velikonočního GameJamu FIT. | [Stránka autorů](https://cozy-games-studio.itch.io/spory) · [Noc vědy](https://grafitctu.github.io/events/noc-vedy-2026/) |
+| Shroombellion: Mushrooms against humanity | 2026 | LukyDrum | Ručně kreslená hra z Velikonočního GameJamu FIT. Hráči v roli hub chytají lidi a soupeří na rozdělené obrazovce. | [Stránka autorů](https://lukydrum.itch.io/shroombellion-mushrooms-against-humanity) · [Noc vědy](https://grafitctu.github.io/events/noc-vedy-2026/) |
+| Harmonopolis | 2025 | kurilluk | Stolní hra o přestavbě létajícího města podle přání obyvatel. Autor zveřejnil pravidla i grafické předlohy pro tisk. | [Stránka autorů](https://kurilluk.itch.io/harmopolis) · [Noc vědy](https://grafitctu.github.io/events/noc-vedy-2026/) |
+| Spirate | 2022 | Cozy Games Studio a spoluautoři | Kooperativní hra pro dva. Jeden hráč chrání druhého, zatímco společně přesouvají runový kámen. Autoři zveřejnili lokální i síťovou verzi. | [Stránka autorů](https://cozy-games-studio.itch.io/spirate) · [Noc vědy](https://grafitctu.github.io/events/noc-vedy-2026/) |
+| Útěk z Brna / Escape from Brno | 2022 | Trampod, SharpFoxDev, benjaminhejl, leia12321 a VAHAnima | Satirická hra z podzimního GameJamu FIT. Při návštěvě ggLabu si ji vyzkoušeli studenti z Kanazawy. | [Stránka autorů](https://trampod.itch.io/escape-from-brno) · [Návštěva z Kanazawy](https://grafitctu.github.io/events/kanazawa/) |
+
+- **Matějská.** Předběžný program GEXPO z 13. února 2026 uvádí ukázku pro interaktivní dotykovou zeď. Pro posouzení samostatného díla zbývá doplnit autory, popis interakce a doklad uskutečněné prezentace. [Program GEXPO](https://grafitctu.github.io/events/gexpo/2026/)
+- **Factory Reset a After The Rain.** K oběma již evidovaným hrám přibyl doklad o uvedení mimo školu. Návštěvníci si je mohli zahrát na stánku FIT na Game Access v Brně 29.–30. května 2026. [Zpráva FIT z Game Access](https://fit.cvut.cz/cs/zivot-na-fit/aktualne/zpravy/25498-fit-cvut-se-predstavila-na-konferenci-game-access-2026)
+
 ## Proč to řešit
 
 Na FIT, zejména kolem skupiny GRAFIT, vznikají výstupy na pomezí game designu, interaktivních instalací, UX/UI, digitálního designu a creative coding. Některé z nich už nejsou pouze školní prototypy: jsou veřejně hratelné, prezentované na GDS/Game Access, oceněné v soutěžích, doložené v DSpace nebo provozované v licenci i externím partnerem.
