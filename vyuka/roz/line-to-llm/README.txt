@@ -10,7 +10,4 @@ Python: install NumPy using requirements.txt.
 
 The text example uses hand-authored teaching weights, one attention head, 3-dimensional vectors, up to 8 input tokens and 5 output candidates. GPT-2's architecture is described separately with primary sources.
 
-Reference animation: Deepak Jose / @datasciencebrain
-https://www.instagram.com/reel/Dfw0nW9PyLV/
-
 Data credit and licence: DATA-SOURCE.md.

@@ -28,8 +28,7 @@ Záložka Přímka ve 2D: otáčení a posun přímky, živý počet chyb.
 Nový příznak ve 3D: výška roviny, střed kružnice a otáčení 3D pohledu.
 Kružnici posunete kliknutím či tažením vlevo, kameru tažením vpravo.
 Po zaměření grafu fungují také šipky na klávesnici. Vzorce jsou sbalené.
-Původní video je pouze v citaci pod slidem. Jde o ruční geometrii,
-ne trénink SVM. Třetí záložka s přehrávačem byla odstraněna.
+Hranici tříd v této ukázce nastavujete ručně.
 
 Slide 2: index.html#dbscan-video
 Tři kroky: okolí bodu, růst prvního shluku a celý výsledek DBSCAN.
@@ -74,17 +73,12 @@ teacher.html: metodika, číselná vodítka, omezení a zdroje.
 examples/pca_dbscan.py: volitelný výpočet stejných dat v Pythonu.
 requirements.txt: knihovny pro Python, nejsou nutné pro webovou část.
 
-Všechny ukázky jsou vlastní a fungují bez internetu. Původní videa
-jsou pouze jako odkazy a citace dole. Balík neobsahuje jejich kopie
-ani snímky převzaté z videí. Pro místní webový server lze použít:
+Ukázky fungují i bez internetu. Místní server spustíte příkazem
   python -m http.server 8789 --bind 127.0.0.1
 a otevřete http://127.0.0.1:8789/.
 Obsazený port lze změnit, například na 8790.
 
-assets/sources.json uvádí původní odkazy a autorství: Andrew Tang,
-@ml.swe. Zdrojová videa se otevírají až po kliknutí na odkaz.
-Nová verze ZIP neobsahuje media/, assets/stills/ ani staré komentáře
-k videím. Dřívější distribuční balíky zůstávají beze změny.
+V assets/sources.json najdete odkazy na dokumentaci DBSCAN, PCA a SVM.
 
 archive/ml-basics-20261018 zachovává předchozí cvičení jako doplněk.
 Starší původní balík se tímto vydáním nepřepisuje.
@@ -117,8 +111,7 @@ Line in 2D: rotate and move a line, with a live error count.
 New feature in 3D: change plane height and circle centre, rotate the view.
 Click or drag on the left to move the circle. Drag on the right to rotate
 the camera. Focus a plot and use arrow keys for keyboard controls.
-Equations start collapsed. The original video is linked in the citation
-below the slide. This is manually controlled geometry, not SVM fitting.
+Equations start collapsed. In this example you set the class boundary by hand.
 
 Slide 2: index.html#dbscan-video
 Inspect neighbourhoods, step through the first cluster's core-point
@@ -163,16 +156,11 @@ teacher.html: teaching guidance, numerical checks, caveats and sources.
 examples/pca_dbscan.py: optional Python calculations on the same data.
 requirements.txt: Python dependencies, not required by the web part.
 
-All examples are original and work offline. Source videos appear only
-as links and citations below the related slides. No copied videos or
-source frames are included in this ZIP. Optionally use the local HTTP
-server command above and open http://127.0.0.1:8789/.
+The examples work offline. To use a local server, run the command above
+and open http://127.0.0.1:8789/.
 Change 8789 if the port is already in use.
 
-assets/sources.json records source URLs and attribution: Andrew Tang,
-@ml.swe. Videos open only when their external links are followed.
-The new ZIP omits media/, assets/stills/ and old descriptive captions.
-Previous distribution packages remain unchanged.
+See assets/sources.json for documentation on DBSCAN, PCA and SVM.
 
 archive/ml-basics-20261018 keeps the previous lab as optional material.
 This release does not overwrite the original earlier package.

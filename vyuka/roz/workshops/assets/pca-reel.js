@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   'use strict';
   const {$, t, num} = RozUI;
-  const root = $('pca-reel');
+  const root = $('pca-steps') || $('pca-reel');
   const canvas = $('seq-plot'), g = canvas.getContext('2d');
   const width = canvas.width, height = canvas.height;
   const data = $('seq-data');
@@ -241,8 +241,10 @@ document.addEventListener('DOMContentLoaded', () => {
     $('seq-prev').disabled=stage===1;
     $('seq-next').hidden=stage===draws.length; $('seq-restart').hidden=stage!==draws.length;
     $('seq-reading').setAttribute('aria-live',stage===2 && $('seq-alignment')?'off':'polite');
-    if (remember) {
-      const url=new URL(location.href);url.searchParams.set('reel',String(stage));
+    const url=new URL(location.href);
+    if (remember || url.searchParams.has('reel') || url.hash==='#pca-reel') {
+      url.searchParams.delete('reel');url.searchParams.set('step',String(stage));
+      if (url.hash==='#pca-reel' && root.id==='pca-steps') url.hash='pca-steps';
       try { history.replaceState(null,'',url); } catch {}
     }
     draw();
@@ -264,5 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
   for (const button of root.querySelectorAll('[data-sigma]'))
     button.onclick=()=>{cell=button.dataset.sigma.split('').map(Number);draw();};
   document.addEventListener('roz-language',draw);
-  setStage(Number(new URL(location.href).searchParams.get('reel')),false);
+  const params=new URL(location.href).searchParams;
+  setStage(Number(params.get('step') ?? params.get('reel')),false);
 },{once:true});
