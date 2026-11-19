@@ -12,4 +12,4 @@ Selection: retain the 392 rows with known horsepower. Select 50 with Python rand
 
 Columns: row_id,horsepower,mpg,split,car_name. Higher mpg means more miles travelled per gallon. Only horsepower enters the regression models.
 
-The selection and split are authored for this class. They do not reproduce the source video's unknown selection of 50 cars.
+The selection and split are authored for this class.
