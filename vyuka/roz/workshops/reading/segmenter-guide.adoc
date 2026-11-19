@@ -1,0 +1,539 @@
+= Segmenter guide
+
+This guide is for English-speaking students of *NI-ROZ / ANI-ROZ*. It explains the complete workflow: download the images, run Segmenter, improve the features, and send the results to the Mosaic benchmark.
+
+You can use *Windows or Linux*. You do not have to use Linux.
+
+Back to link:index.html[Tutorial 02 — Mosaic and segmentation].
+
+== Before you start
+
+You need *two separate downloads*:
+
+. link:segmenter18-cpp-data.zip[Segmenter 18: source code, configurations and sample images] from this course website.
+. The *full test dataset* from the https://mosaic.utia.cas.cz/cvut2016_zimni.html[blue Mosaic instructions page], under *Evaluation → test data*.
+
+The small set of images in the Segmenter ZIP is enough to check that the program runs. It is *not* enough for a complete benchmark submission.
+
+[IMPORTANT]
+====
+The blue Mosaic page contains historical software installation instructions. For *Segmenter 18 from this course*, do *not* download a system-specific precompiled VR library, and do not copy a file to `vr/libvr.a`. That library has been replaced by source code included in our package. Start with our Segmenter 18 ZIP, not the old Segmenter 1.4 download.
+
+The blue page is still the place to get the full test data and the links for benchmark registration and evaluation.
+====
+
+Follow these sections in order the first time. Later, use these shortcuts:
+
+* <<xml,Which XML file do I use?>>
+* <<configuration,What is inside the Segmenter configuration XML?>>
+* <<build,How do I build and start the program?>>
+* <<full-data,How do I install the full dataset?>>
+* <<outputs,Why are my SEG images almost black?>>
+* <<submission,What exactly goes into the submission ZIP?>>
+* <<upload,How do I upload it to Mosaic?>>
+* <<problems,Common problems>>
+
+[[download]]
+== 1. Download and extract the software
+
+. Download link:segmenter18-cpp-data.zip[segmenter18-cpp-data.zip].
+. Extract the *whole ZIP*. Do not open or compile files while they are still inside the archive.
+. Keep the directory structure. In particular, keep `.vscode`, `vr`, `third_party`, `data`, and the XML files.
+. Open `README.md` if you need the shorter instructions included with the package.
+
+The extracted project directory is called `segmenter18-cpp-data`. It contains `main.cpp`, `Segmenter.cpp`, `PortableVR.cpp`, a `makefile`, and several XML files.
+
+The ZIP contains source code, not a ready-to-run executable. *Building* or *compiling* means using a compiler to create the executable from this code. You need to do this once before running the program, and again after changing the code.
+
+[[xml]]
+== 2. Understand the two kinds of XML
+
+An XML file is a text file that stores structured information. You can open it in VS Code. In this exercise, *two different kinds of XML have different jobs*.
+
+[cols="1,2,2",options="header"]
+|===
+|File |What it does |Where you use it
+
+|`colour_large.xml`
+|Tells the pass:[C++] Segmenter which images to process, where to save results, and which algorithm parameters to use.
+|Select it when running the full Mosaic dataset. It comes with the Segmenter source package.
+
+|`data.xml`
+|Describes the downloaded benchmark dataset, including the expected segmentation filenames.
+|Keep the original file from the test-data download. Put it into the submission ZIP with your resulting segmentation PNG files.
+|===
+
+[WARNING]
+====
+*Do not select the benchmark's `data.xml` as the pass:[C++] Segmenter configuration.* Select `colour_large.xml` instead. Both files end in `.xml`, but they have different jobs. The startup menu may list both; this does not mean that both are valid Segmenter configurations.
+====
+
+The source package also provides these configurations:
+
+[cols="1,2,2",options="header"]
+|===
+|Configuration |Images processed |Purpose
+|`segmenter-smoke.xml` |One included mosaic |A quick check that building, loading and saving work.
+|`segmenter.xml` |Five included mosaics |Small local experiments. Not the full benchmark.
+|`bsds.xml` |16 included BSDS photographs |Experiments on photographs. Not this Mosaic test dataset.
+|`colour_large.xml` |80 mosaics from `CVUT2016_zimni` |The complete Mosaic run described in this guide. Download these images separately.
+|===
+
+For another dataset, you need a matching *Segmenter configuration*, not just any XML file from that dataset. Check image names, dimensions, output names and parameters. Do not assume that `colour_large.xml` describes an unrelated dataset.
+
+[[configuration]]
+=== Inside the Segmenter configuration XML
+
+*The pass:[C++] Segmenter does not generate its run configuration from the benchmark's `data.xml`.* The software ZIP already contains the separate configuration `colour_large.xml`. Open that file in a text editor to see the input paths, output paths and algorithm settings for the 80-image run.
+
+The configuration uses `<var name="..."> value </var>` for a parameter and `<section name="..."> ... </section>` for a group of parameters. Parameter names are case-sensitive: use `ImgFile`, not `imgfile`.
+
+At the top of the full configuration, these values select 80 image-processing runs, starting at run 1:
+
+[source,xml]
+----
+<var name="nrun"> 80 </var>
+<var name="from"> 1 </var>
+<var name="prefix"> run </var>
+----
+
+The program then uses sections named `run_!1`, `run_!2`, and so on, up to `run_!80`. In the supplied full configuration, `run_!0` holds shared defaults; it is a template, not an additional input image. A later section can inherit its parameters and replace only the values that differ:
+
+[source,xml]
+----
+<section name="run_!1">
+  <include> "run_!0" </include>
+  <var name="ImgFile"> "data/tm1_1_1" </var>
+  <var name="clusters"> 3 </var>
+  <var name="OutFile"> "results/seg1_1_1" </var>
+  <var name="FeatFile"> "results/feat1_1_1" </var>
+</section>
+----
+
+This is an excerpt from the full configuration, not a complete file on its own. The `!1` is part of the section name; keep that naming pattern.
+
+[cols="1,3",options="header"]
+|===
+|Parameter |Meaning in the supplied program
+|`nrun`, `from`, `prefix` |How many image-processing runs to perform, where to start, and how the run sections are named. Changing `nrun` alone does not create missing image entries.
+|`nr`, `nc` |Number of rows and columns. Both are `512` for this Mosaic dataset. They must match the actual image size.
+|`ImgFile` |Input image path, relative to the configuration directory. Do not point it to a ground-truth or mask image.
+|`planes` |Number of input channels: `3` for the RGB mosaics. This is not the number of features. You may compute one brightness feature while keeping the RGB input as three planes.
+|`ImgType`, `OutType` |File-format codes. The supplied PNG configuration uses `301` for reading and `302` for writing. Keep these for the PNG workflow.
+|`OutFile` |Output path for the raw segmentation map. Its final filename must match the corresponding `SegmFile` in the benchmark's `data.xml`.
+|`clusters` |Number of K-means clusters for this image. The supplied values use the known number of regions; declare this assumption when uploading.
+|`iterations` |Maximum number of K-means iterations. The full configuration uses `500`; the smoke test uses only `3` for speed.
+|`norm`, `neigh`, `kl_trans` |Optional feature normalization, spatial-coordinate weighting, and PCA/KL reduction. All are `0` in the original full-run configuration.
+|`features` section |Settings used by the original feature function: `sigma` controls Gaussian smoothing, `win` is its radius, and `rgb2lab` enables RGB-to-Lab conversion when set to `1`.
+|`thematic` section |Settings for smoothing class-probability maps before choosing final labels. This is a separate stage from smoothing the input features.
+|`postprocessing` section |Small-region cleanup. With `min_area = 0.01`, the size threshold is 1% of the image area. The supplied `single = 0` keeps class labels rather than assigning a separate label to each connected region.
+|`FeatFile`, `IwBFile`, `EdgeFile` |Optional paths for feature images, border overlays and border images. These are for local inspection, not the benchmark submission.
+|===
+
+In the supplied Gaussian function, `win` is a *radius*, even though the old XML comment calls it a window size. Away from image borders, `win = 9` gives a `19 × 19` neighbourhood: `2 * 9 + 1` pixels in each direction.
+
+The feature settings only have an effect if your active feature function reads and uses them. For example, if you replace RGB smoothing with `(R + G + B) / 3` without blur, the old feature `sigma`, `win` and `rgb2lab` values do not automatically affect that new function. The separate thematic-map smoothing may still be active.
+
+[[configuration-example]]
+=== A complete configuration for one image
+
+The following is a complete small example. Save it as `my-first-run.xml` *next to* the supplied XML files in the project directory. It uses the included `data/tm1_1_1.png` image and writes into a separate `example/` directory, so it does not replace your full-run results.
+
+[source,xml]
+----
+<main>
+  <var name="nrun"> 1 </var>
+  <var name="from"> 1 </var>
+  <var name="prefix"> run </var>
+
+  <section name="run_!1">
+    <var name="nr"> 512 </var>
+    <var name="nc"> 512 </var>
+    <var name="ImgFile"> "data/tm1_1_1.png" </var>
+    <var name="ImgType"> 301 </var>
+    <var name="planes"> 3 </var>
+    <var name="clusters"> 3 </var>
+    <var name="iterations"> 500 </var>
+    <var name="norm"> 0 </var>
+    <var name="neigh"> 0 </var>
+    <var name="kl_trans"> 0 </var>
+    <var name="OutFile"> "example/seg1_1_1.png" </var>
+    <var name="OutType"> 302 </var>
+    <var name="FeatFile"> "example/features.png" </var>
+    <var name="IwBFile"> "example/overlay.png" </var>
+    <var name="EdgeFile"> "example/edges.png" </var>
+
+    <section name="features">
+      <var name="sigma"> 5 </var>
+      <var name="win"> 9 </var>
+      <var name="rgb2lab"> 0 </var>
+    </section>
+    <section name="thematic">
+      <var name="sigma"> 8 </var>
+      <var name="win"> 12 </var>
+    </section>
+    <section name="postprocessing">
+      <var name="min_area"> 0.01 </var>
+      <var name="single"> 0 </var>
+    </section>
+  </section>
+</main>
+----
+
+After building the program as described in Section 3, run:
+
+[source,powershell]
+----
+.\segmenter.exe my-first-run.xml
+----
+
+On Linux, use `./segmenter my-first-run.xml`. You should get one raw segmentation map at `example/seg1_1_1.png` and a preview at `example/overlay.png`.
+
+*This example processes one image, not the full benchmark.* For the actual 80-image submission, use `colour_large.xml` with the complete dataset. Do not upload `my-first-run.xml` or `colour_large.xml` instead of the benchmark's original `data.xml`.
+
+[[build]]
+== 3. Build and start Segmenter
+
+=== Windows: Visual Studio Code and MSVC
+
+. Install *Visual Studio Code* if you do not already have it.
+. In VS Code, install Microsoft's *pass:[C/C++]* extension.
+. Install *Visual Studio 2022* or *Build Tools* with the *Desktop development with pass:[C++]* workload. This installs the pass:[C++] compiler and the required Windows tools. *VS Code and its extension alone are not a compiler.*
+. In VS Code, use *File → Open Folder* and select the extracted `segmenter18-cpp-data` project directory. Do not open only `main.cpp`, and do not select the outer Downloads directory.
+. Open *Run and Debug*. Select *Run pass:[C++] segmenter (choose XML)*.
+. Press *F5*. The prepared task builds the program and then starts it.
+. Open the *Terminal* panel. At the `XML>` prompt, type `segmenter-smoke.xml` and press *Enter*.
+
+Type your answer into *Terminal*, not *Debug Console*. The program is a command-line application; it does not open a separate graphical interface.
+
+You can also build and run from PowerShell in the project directory:
+
+[source,powershell]
+----
+.\.vscode\build-msvc.cmd
+.\segmenter.exe segmenter-smoke.xml
+----
+
+Run the second command only after the build has succeeded. If the build fails, inspect the errors; do not choose *Debug Anyway*, because this may run an older executable.
+
+=== Linux
+
+You need `make` and a compiler with pass:[C++]17 support, such as `g++`. In a terminal, change to the extracted project directory and run:
+
+[source,shell]
+----
+make
+./segmenter segmenter-smoke.xml
+----
+
+Run the program only if `make` finishes successfully. Run `make` again after editing the pass:[C++] code. No separate VR binary library is required.
+
+=== Choosing a configuration interactively
+
+Start the program without an XML argument:
+
+[source,powershell]
+----
+.\segmenter.exe
+----
+
+On Linux, use `./segmenter` instead. At `XML>`, enter a listed menu number, an XML filename, or a path to a configuration. Then press *Enter*. Enter `q` to cancel. Pressing Enter without an answer does not start segmentation.
+
+For example, type `bsds.xml` to process the included photographs. Type `colour_large.xml` only after installing the full Mosaic data as explained below. Passing the XML directly on the command line skips this question.
+
+[[first-test]]
+== 4. Check one image first
+
+Use `segmenter-smoke.xml` for your first run. It processes only one mosaic with short test settings.
+
+The terminal should report the selected configuration, the loaded image, processing stages, and saved files. A successful run ends with a message starting with:
+
+[source,text]
+----
+SUCCESS: processed and saved 1 image(s)
+----
+
+The full message also includes processing time. Open `smoke/overlay.png` to see the input image with segmentation borders. The raw result is `smoke/seg.png`; it may look almost black.
+
+The same progress messages are saved in `segmenter-run.log` in the directory where you started the program. A new run replaces this log, so copy it elsewhere if you want to keep it.
+
+*SUCCESS means that loading, processing and saving finished.* It does not mean that the segmentation is accurate. Also, this one-image smoke test is not a benchmark result.
+
+[[full-data]]
+== 5. Download and install the full Mosaic dataset
+
+. Open the https://mosaic.utia.cas.cz/cvut2016_zimni.html[blue Mosaic instructions page].
+. Find the *Evaluation* section and click *test data*. The linked archive is https://mosaic.utia.cas.cz/cvut/CVUT2016_zimni.zip[CVUT2016_zimni.zip]. This is a separate download from the Segmenter code.
+. Extract the dataset into a separate directory. Keep this original download unchanged.
+. Find its `data.xml` and the input mosaics named `tm*.png`.
+. Copy *all 80 input mosaics* named `tm*.png` into the `data` directory of your extracted Segmenter project. The images must be directly inside `data`, not inside an extra nested `CVUT2016_zimni` directory.
+. Copy the dataset's original `data.xml` into the project directory, next to `colour_large.xml`. This copy will be used when preparing your submission; the pass:[C++] program does not read it as its run configuration.
+
+The downloaded data also include reference information such as ground-truth maps and masks. These are not input images for this segmentation run. Do not copy reference labels into your algorithm's input or use them to construct its predictions. The provided configuration supplies the number of clusters; this is a separate, explicitly declared assumption.
+
+Your working directory should now look like this. The image names below are examples, not a complete list:
+
+[source,text]
+----
+segmenter18-cpp-data/
+  main.cpp
+  Segmenter.cpp
+  PortableVR.cpp
+  colour_large.xml       <- configuration read by Segmenter
+  data.xml               <- original description sent to Mosaic later
+  data/
+    tm1_1_1.png
+    tm1_1_2.png
+    ...                  <- all 80 input mosaics
+  results/               <- segmentation output is written here
+----
+
+The existing five sample mosaics are not a substitute for copying the full set. If your file manager asks about an existing sample filename, make sure that the replacement comes from this exact `CVUT2016_zimni` dataset. Do not mix datasets with similar names.
+
+=== How the paths work
+
+In `colour_large.xml`, `ImgFile` values refer to paths such as `data/tm1_1_1`, and `OutFile` values refer to paths such as `results/seg1_1_1`. The image reader/writer supplies the `.png` extension for these entries.
+
+Paths are relative to the *directory containing the selected configuration*. If you move the XML elsewhere, its relative `data/` and `results/` paths move with it. Keeping the configuration in the project directory is the simplest arrangement.
+
+The supplied XML uses a shared `run_!0` template and further run sections that include it. Some parameters are therefore written once and inherited, rather than repeated for every image. Keep an unchanged copy before editing the configuration.
+
+[[full-run]]
+== 6. Run all 80 mosaics
+
+Before your first full run, keep the original code and `colour_large.xml` unchanged. This gives you a reference result to compare with your later modifications.
+
+Run this in PowerShell from the project directory:
+
+[source,powershell]
+----
+.\segmenter.exe colour_large.xml
+----
+
+On Linux:
+
+[source,shell]
+----
+./segmenter colour_large.xml
+----
+
+The terminal should report *80 configured runs* and show progress through them. The full dataset takes longer than the smoke test. Wait for the final `SUCCESS` message confirming *80* processed and saved images.
+
+If processing stops with an error, read the reported input or output path. Some files may already have been saved, but a partial run is not a complete submission. Fix the problem and run again before packaging results.
+
+Results are written to `results/`. A later run with the same configuration overwrites files with the same output names. Before another experiment, copy the current results and log to a clearly named experiment directory, or use a separate project copy.
+
+[[outputs]]
+== 7. Understand the output files
+
+The most important files are the *segmentation maps*, named `seg*.png`, for example `seg1_1_1.png`. We sometimes call these *SEG files*. Here, SEG means a segmentation result; *the filename extension is still `.png`, not `.seg`*.
+
+A segmentation map stores a *class number for each pixel*. In the supplied program, the normal class labels are `1`, `2`, `3`, and so on. Pixels in the same class have the same value.
+
+An ordinary image viewer interprets these numbers as brightness values from 0 to 255. Values such as 1, 2 and 3 are very close to black. *An almost-black SEG image is therefore expected and does not, by itself, indicate failure.* Check the log and overlays as well.
+
+[WARNING]
+====
+Do not brighten, normalize, recolour, resize, or convert the submitted `seg*.png` files to JPEG. Do not save an edited preview over the original result. The benchmark needs the raw class-label PNG files, at the original image resolution.
+====
+
+Use these other files for inspection, not as substitutes for SEG maps:
+
+[cols="1,2",options="header"]
+|===
+|File |Purpose
+|`results/seg*.png` |Raw segmentation maps. These are the result images to submit.
+|`results/feat*.png` |Feature images, useful when checking your feature computation. Do not submit them instead of segmentations.
+|`results/emb*.png` |Input images with segmentation borders, when enabled by the XML. Useful for visual inspection.
+|`results/edge*.png` |Border images, when enabled. Borders alone are not the requested class-label maps.
+|`segmenter-run.log` |Progress and error messages. Keep it with your local experiment notes.
+|===
+
+The XML controls which optional images are saved. Some output settings are inherited from the common template, so do not assume that there is a separate overlay for every mosaic. The smoke test's overlay is `smoke/overlay.png`.
+
+[[features]]
+== 8. Improve the features and repeat the experiment
+
+The main place to work is `Segmenter::features()` in `Segmenter.cpp`. The supplied feature computation is deliberately simple. Your task is to make the image description more useful for texture segmentation.
+
+A *feature* is a number describing a pixel or its neighbourhood. The program stores features in `feat[feature][row][column]`; `nfeat` is the number of features per pixel. Clustering uses these numbers to assign class labels.
+
+You have two ways to implement your changes:
+
+* Edit `Segmenter::features()` directly.
+* Or implement `MySegmenter::features()` in `main.cpp`. In that case, uncomment both its declaration in `class MySegmenter` and the function body, and replace the placeholder code with a complete implementation. An empty placeholder does not compute features.
+
+Start with one small change, not several unrelated changes at once:
+
+. Save your original code, configuration, results and benchmark scores.
+. Change the feature computation. If you remove an operation such as Gaussian blur, still fill every value of `feat`; allocating the array is not enough.
+. Build the program again. A source edit does not change an executable that was built earlier.
+. Run the smoke test or a small local set to catch errors.
+. When the code works, run the *whole* Mosaic dataset with one consistent method and parameter-setting rule.
+. Create a *new* submission ZIP and record the new scores.
+. Compare the result with your saved reference. An attempted improvement may also make the result worse; report what you actually observe.
+
+Record the feature definition, neighbourhood size, preprocessing, clustering settings, post-processing, and any use of the supplied number of regions. Do not quietly use reference masks, manually correct test outputs, or choose a separate best setting for each test image.
+
+If you train a model or select parameters using labelled data, keep training and validation data separate from the final test data. Repeatedly choosing changes because they score better on the same benchmark makes that benchmark part of development; do not describe it as an untouched independent test.
+
+[[submission]]
+== 9. Prepare the submission ZIP
+
+The pass:[C++] program saves result images. *It does not automatically create your Mosaic submission ZIP.* You prepare that archive after the complete run has finished.
+
+For this dataset, the ZIP must contain:
+
+* The *original `data.xml`* from the `CVUT2016_zimni` test-data download.
+* All *80 segmentation PNG files* named exactly as the `SegmFile` entries in that XML.
+
+For example, an entry containing `seg1_1_1.png` requires your prediction with that exact filename. Do not rename the results arbitrarily. On case-sensitive systems, upper- and lower-case letters are different.
+
+*All files must be directly in the ZIP root.* Do not put them inside a `results/`, `submission/`, or project directory in the archive:
+
+[source,text]
+----
+mosaic-results-v01.zip
+  data.xml
+  seg1_1_1.png
+  seg1_1_2.png
+  ...                    <- all 80 segmentation maps
+----
+
+For the complete dataset, this means *81 files*: one XML and 80 PNGs. The maps are *512 × 512 pixels*. The correct file count alone is not enough: names, dimensions, dataset and contents must also match.
+
+Do *not* include the input `tm*.png` images, reference `gt*.png` maps, masks, `colour_large.xml`, source code, executable, features, overlays, border images, or logs. Keep those locally. `colour_large.xml` is useful for reproducing your experiment, but it does not replace `data.xml` in this ZIP.
+
+=== Option A: use your file manager
+
+. Make an empty staging directory, for example `submission-v01`.
+. Copy the original dataset `data.xml` into it.
+. Copy the 80 `seg*.png` results into it, without their `results` parent directory.
+. Open the staging directory and check that it contains exactly the required files.
+. Select the *files inside* the staging directory and compress them into a ZIP. Do not compress the parent directory as an extra directory level.
+. Open the ZIP and check its contents. You should immediately see `data.xml` and the segmentation PNGs, not another directory that must be opened first.
+
+=== Option B: use PowerShell
+
+The following commands are for the directory layout in this guide: original `data.xml` in the project directory, predictions in `results/`. Run them from the project directory after the full run.
+
+This example reads the required output filenames from `data.xml`, checks that there are 80 distinct entries, and stops if a required file is missing. Choose a new ZIP name for each experiment.
+
+[source,powershell]
+----
+$zipName = '.\mosaic-results-v01.zip'
+if (Test-Path -LiteralPath $zipName) {
+  throw 'This ZIP already exists. Choose a new version name.'
+}
+
+[xml]$description = Get-Content -LiteralPath '.\data.xml' -Raw
+$expected = @($description.SelectNodes('//var[@name="SegmFile"]') |
+  ForEach-Object { $_.InnerText.Trim().Trim('"') })
+if ($expected.Count -ne 80 -or
+    @($expected | Sort-Object -Unique).Count -ne 80) {
+  throw 'Expected the complete 80-image CVUT2016_zimni description.'
+}
+
+$files = @('.\data.xml')
+foreach ($name in $expected) {
+  $path = Join-Path '.\results' $name
+  if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+    throw "Missing segmentation: $path"
+  }
+  $files += $path
+}
+Compress-Archive -LiteralPath $files -DestinationPath $zipName
+----
+
+These checks do not measure segmentation quality or validate image dimensions. Open the finished ZIP and check the file layout before uploading it. A source-code ZIP or the original dataset ZIP is not a result submission.
+
+[[upload]]
+== 10. Upload your results to Mosaic
+
+. Return to the https://mosaic.utia.cas.cz/cvut2016_zimni.html[blue Mosaic page]. Use its *Registration* link if you do not have an account, then log in with *your own account*.
+. Choose *new algorithm*. Give your method a clear label, version, authors and a short description. Explain the features and the main processing steps. Use your own algorithm entry, not another person's entry.
+. Describe the information your method uses honestly. The supplied `colour_large.xml` gives the number of clusters for each image, so a run using those values has a *known number of regions*. Mark the corresponding `f3` option. Ordinary K-means clustering without labelled training is not supervised classification; do not mark `f1` only because it produces class labels. If you change the method, set the options to match what you actually do.
+. Choose *upload result*. Select your algorithm and enter a version identifying this exact experiment, for example `v01-original-features`.
+. Select the *result ZIP* you prepared in Section 9. It must contain `data.xml` and the raw SEG PNGs. Do not upload the code download or the input dataset archive here.
+. Add a short note about the settings or the change you tested.
+. Submit the archive and wait for evaluation. Processing is not necessarily immediate. If the browser appears to stop responding, check your algorithm's results before submitting the same ZIP again; the first request may already have succeeded.
+. Open the resulting record. Confirm that Mosaic recognized the intended `CVUT2016_zimni` / Colour [large] dataset and evaluated all *80 images*.
+. Save the result link, version, scores, code and configuration in your experiment notes.
+
+The upload form can display results on the page or offer a download of evaluated results. *This choice is not a privacy setting.* Uploaded results may be listed on the website. If you need a result hidden from the listing, use the result's *HIDE* control under *edit algorithm* after evaluation. Do not assume that *hide old algorithm results* hides your new submission, or that hiding a listing makes the result confidential.
+
+If the interface or data requirements change, follow the current benchmark instructions and ask the teacher about any conflict with this guide. Do not change the dataset description simply to make an invalid upload pass.
+
+[[comparison]]
+== 11. Read and compare the scores
+
+The benchmark evaluates your class-label maps against its reference segmentations. Inspect both the summary and individual image results. A pleasant-looking overlay is not a substitute for this evaluation.
+
+The course's unmodified Segmenter 18 pass:[C++] run produced *CS = 15.81%* and *CA = 44.30%* on the complete `CVUT2016_zimni` dataset using `colour_large.xml` and the supplied number of clusters. This is a reference for the original version, not a required score for every implementation. See the link:index.html#baseline[baseline note on Tutorial 02].
+
+These values do not apply to the five-image sample, the smoke test, BSDS photographs, or a modified feature function. Small numerical differences between builds are possible. A large difference is a reason to check the dataset, settings, code version and upload contents before drawing conclusions.
+
+For every experiment, record at least:
+
+* A version name and a precise description of what changed.
+* The dataset and configuration used, including the known-number-of-regions assumption.
+* The CS and CA values shown by Mosaic, plus any other measures you discuss.
+* The result URL and a few examples that help explain success or failure.
+
+Compare the *same dataset* and the *same information assumptions*. Do not copy the original baseline numbers into your report as if they were your own measured result. Report your actual scores, including negative results.
+
+[[problems]]
+== 12. Common problems
+
+[cols="2,3",options="header"]
+|===
+|Problem |What to check
+
+|F5 reports that the build task failed.
+|Read the Terminal build errors. Check the pass:[C++] workload, Microsoft's extension and that you opened the complete project directory. Do not use Debug Anyway to bypass a failed build.
+
+|The program is waiting and nothing is being segmented.
+|Look for `XML>` in Terminal. Enter a configuration filename and press Enter. The Debug Console is not the input terminal.
+
+|I selected `data.xml`, and required parameters are missing.
+|For this pass:[C++] program, select `colour_large.xml`. The benchmark's `data.xml` is a description for the submission, not an executable run configuration.
+
+|An input mosaic cannot be opened.
+|Read the printed path. Check that the full dataset was extracted and that its `tm*.png` files are directly in the expected `data/` directory. Paths are relative to the selected XML.
+
+|Only one or five images were processed.
+|You probably selected the smoke or sample configuration. The full submission uses `colour_large.xml` and all 80 matching mosaics.
+
+|The SEG images look black.
+|Small class numbers look dark. Check the label counts in the log and inspect an overlay. Keep the raw PNG values unchanged for submission.
+
+|The result did not change after I edited pass:[C++] code.
+|Save the file and rebuild. Check that the build succeeded, that the intended feature function is active, and that you are inspecting this run's outputs rather than an older copy.
+
+|Mosaic rejects the ZIP or reports missing images.
+|Open the ZIP. Check the original `data.xml`, every expected `SegmFile` name, all 80 PNGs, original dimensions, and that there is no enclosing directory. Check that you did not include only previews or borders.
+
+|I no longer have my previous result or log.
+|Repeated runs reuse output paths and replace the runtime log. Preserve a separate directory and a new ZIP name for each experiment.
+|===
+
+If you ask for help, include your operating system, the XML filename, the exact error, and the relevant part of `segmenter-run.log`. A screenshot of a dark SEG image alone does not show whether the run succeeded.
+
+[[checklist]]
+== 13. Final checklist
+
+Before you upload, check each item:
+
+* I used the complete matching dataset from the blue Mosaic page, not only the included samples.
+* My pass:[C++] program used `colour_large.xml`; I kept the original dataset `data.xml` for submission.
+* My latest build succeeded and the full run completed all 80 images.
+* My predictions come from my algorithm, not from reference masks or ground-truth maps.
+* My ZIP contains only the original `data.xml` and the 80 required raw SEG PNGs, directly in its root.
+* I preserved filenames, 512 × 512 resolution and class-label values.
+* I selected my own algorithm and the correct version, and declared the use of the supplied region counts.
+* After evaluation, I checked the dataset and image count and saved the actual scores and result link.
+
+[[own-software]]
+== 14. You may use your own software
+
+Segmenter is *recommended software, not compulsory software*. It is a starting point that handles image files, parameters, clustering and output, so that you can concentrate on features. You may write the entire solution yourself, in pass:[C++], Python, or another suitable language, or use a different implementation. You must still follow the exercise requirements and Mosaic's submission format: process the matching dataset, produce valid class-label PNG maps with the required names and dimensions, and submit them with the original `data.xml`. Explain your own method and the information it uses, and make the experiment reproducible.
