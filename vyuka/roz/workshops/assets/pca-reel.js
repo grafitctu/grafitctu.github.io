@@ -4,12 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const root = $('pca-reel');
   const canvas = $('seq-plot'), g = canvas.getContext('2d');
   const width = canvas.width, height = canvas.height;
-  const raw = JSON.parse($('seq-data').textContent);
+  const data = $('seq-data');
+  const raw = JSON.parse(data.textContent);
   const stats = FeatureMath.covariance(raw.map(([h, w]) => [h / 5, w / 4]));
   const points = stats.centered, [pc1, pc2] = stats.eigen.axes;
   const scores = points.map(p => FeatureMath.dot(p, pc1));
   const radius = Math.max(...points.flat().map(Math.abs)) * 1.18;
-  const A = [[1.25, 0.75], [0.75, 1.25]];
+  const A = data.dataset.matrix ? JSON.parse(data.dataset.matrix) : stats.matrix;
   const blue = '#24648a', rust = '#af4723', gold = '#a26b0e', teal = '#08796b', ink = '#203a42';
   const captions = [...root.querySelectorAll('[data-seq-panel]')];
   const stagePicker = $('seq-stage');
@@ -78,8 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
     label('v',before[0]+8,before[1]+15,blue);
     label(f===1?'Av':t('v průběhu','in motion'),current[0]+8,current[1]-9,rust);
     rangeLabel('seq-transform',' %');
-    reading(t('První řádek','First row')+'   '+n(1.25)+' × 2 + '+n(.75)+' × ('+n(-.5,1)+') = '+n(av[0],3),
-            t('Druhý řádek','Second row')+'   '+n(.75)+' × 2 + '+n(1.25)+' × ('+n(-.5,1)+') = '+n(av[1],3),
+    reading(t('První řádek','First row')+'   '+n(A[0][0])+' × 2 + '+n(A[0][1])+' × ('+n(-.5,1)+') = '+n(av[0],3),
+            t('Druhý řádek','Second row')+'   '+n(A[1][0])+' × 2 + '+n(A[1][1])+' × ('+n(-.5,1)+') = '+n(av[1],3),
             t('Poloha šipky při zvoleném posunu','Arrow at the selected position')+'   '+pair(blend(v,av,f),3));
   }
   function drawDirections() {
@@ -96,10 +97,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const [x,y]=at(u), [xx,yy]=at(au);
     label('u',x+6,y+17,blue); label('Au',xx+6,yy-7,rust);
     rangeLabel('seq-direction','°');
-    const error=Math.abs(u[0]*au[1]-u[1]*au[0]);
-    reading('u = '+pair(u)+'     Au = '+pair(au),
-            error<1e-8?t('Obě šipky leží na stejné přímce. Našli jste vlastní směr.','Both arrows lie on the same line. You found an eigendirection.'):
-                         t('Šipky svírají úhel. Zkuste najít polohu, ve které budou na jedné přímce.','The arrows make an angle. Find a position where they share a line.'));
+    const cross=u[0]*au[1]-u[1]*au[0], along=FeatureMath.dot(u,au);
+    let verdict;
+    if (Math.abs(cross)<1e-8) {
+      // u has unit length, so u·Au is the signed multiplier on an eigenline.
+      const factor=along.toLocaleString(t('cs-CZ','en-GB'),{maximumFractionDigits:2});
+      verdict=t('Obě šipky leží na stejné přímce. Našli jste vlastní vektor.',
+                'Both arrows lie on the same line. You found an eigenvector.')+' Au = '+factor+'u.';
+    } else {
+      const heading=n(Math.atan2(au[1],au[0])*180/Math.PI);
+      const gap=n(Math.atan2(Math.abs(cross),along)*180/Math.PI);
+      verdict=t(`Oranžová šipka míří pod úhlem ${heading}°. S modrou šipkou svírá úhel ${gap}°.`,
+                `The orange arrow points at ${heading}°. The angle between the two arrows is ${gap}°.`);
+    }
+    const rowProducts=A.map((row,i)=>
+      n(row[0])+' × ('+n(u[0],3)+') + '+n(row[1])+' × ('+n(u[1],3)+') ≈ '+n(au[i],3));
+    reading('u ≈ '+pair(u,3)+'     Au ≈ '+pair(au,3),
+            t('První řádek','First row')+'   '+rowProducts[0],
+            t('Druhý řádek','Second row')+'   '+rowProducts[1]);
+    if ($('seq-alignment')) $('seq-alignment').textContent=verdict;
+    else $('seq-reading').append('\n'+verdict);
   }
   function drawStretch() {
     const selected=value('seq-eigen'), left=72, per=(width-125)/2.2;
@@ -202,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     root.querySelectorAll('[data-seq-code]').forEach(el=>{el.hidden=Number(el.dataset.seqCode)!==stage;});
     $('seq-prev').disabled=stage===1;
     $('seq-next').hidden=stage===draws.length; $('seq-restart').hidden=stage!==draws.length;
+    $('seq-reading').setAttribute('aria-live',stage===2 && $('seq-alignment')?'off':'polite');
     if (remember) {
       const url=new URL(location.href);url.searchParams.set('reel',String(stage));
       try { history.replaceState(null,'',url); } catch {}
@@ -216,9 +234,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   for (const input of root.querySelectorAll('input[type="range"]')) input.addEventListener('input',draw);
   $('seq-eigen').onchange=draw;
-  for (const [id,input,angle] of [['seq-diagonal','seq-direction',45],['seq-other','seq-direction',135],
+  for (const [id,input,angle] of [['seq-near','seq-direction',44],['seq-diagonal','seq-direction',45],['seq-other','seq-direction',135],
                                   ['seq-pc1','seq-axis',45],['seq-pc2','seq-axis',135]])
-    $(id).onclick=()=>{$(input).value=angle;draw();};
+    $(id)?.addEventListener('click',()=>{$(input).value=angle;draw();});
   for (const button of root.querySelectorAll('[data-sigma]'))
     button.onclick=()=>{cell=button.dataset.sigma.split('').map(Number);draw();};
   document.addEventListener('roz-language',draw);
