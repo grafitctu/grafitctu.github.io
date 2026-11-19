@@ -14,12 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const blue = '#24648a', rust = '#af4723', gold = '#a26b0e', teal = '#08796b', ink = '#203a42';
   const captions = [...root.querySelectorAll('[data-seq-panel]')];
   const stagePicker = $('seq-stage');
+  const stretchPicker = $('seq-stretch-matrix');
+  const stretchCases = [...root.querySelectorAll('[data-stretch-case]')];
   let stage = 1, cell = [0, 1];
 
   const value = id => Number($(id).value);
   const n = (x, digits=2) => num(Math.abs(x) < 0.5 * 10 ** -digits ? 0 : x, digits);
   const pair = (p, digits=2) => '(' + p.map(x => n(x, digits)).join(t('; ', ', ')) + ')';
-  const transform = p => A.map(row => FeatureMath.dot(row, p));
+  const transform = (p, matrix=A) => matrix.map(row => FeatureMath.dot(row, p));
   const scaled = (p, s) => p.map(v => s * v);
   const blend = (p, q, f) => p.map((v, i) => v + f * (q[i] - v));
   const unit = degrees => {
@@ -119,21 +121,40 @@ document.addEventListener('DOMContentLoaded', () => {
     else $('seq-reading').append('\n'+verdict);
   }
   function drawStretch() {
-    const selected=value('seq-eigen'), left=72, per=(width-125)/2.2;
-    const along=x=>left+per*x;
-    const axes=[[Math.SQRT1_2,Math.SQRT1_2],[-Math.SQRT1_2,Math.SQRT1_2]];
-    const scales=axes.map(u=>Math.hypot(...transform(u)));
+    const selected=value('seq-eigen'), name=stretchPicker?.value || 'A';
+    let matrix=A;
+    for (const panel of stretchCases) {
+      panel.hidden=panel.dataset.stretchCase!==name;
+      if (!panel.hidden) matrix=JSON.parse(panel.dataset.entries);
+    }
+    // These examples share both eigenlines. Integer vectors make the row products exact.
+    const vectors=[[1,1],[-1,1]];
+    const images=vectors.map(v=>transform(v,matrix));
+    const factors=images.map((mv,i)=>FeatureMath.dot(vectors[i],mv)/FeatureMath.dot(vectors[i],vectors[i]));
+    const fmt=x=>x.toLocaleString(t('cs-CZ','en-GB'),{maximumFractionDigits:3});
+    const coords=p=>'('+p.map(fmt).join(t('; ', ', '))+')';
+    const left=67, along=x=>left+(width-left-35)*x/3.2;
     line([along(1),60],[along(1),262],'#94aaa5',1.4,[4,4]);
     label(t('původní délka 1','original length 1'),along(1),44,ink,'center');
-    scales.forEach((s,i)=>{
+    factors.forEach((factor,i)=>{
+      const length=Math.abs(factor);
       const y=110+102*i, colour=i===0?gold:teal;
-      label(i===0?'u₁':'u₂',26,y+5,colour);
-      line([left,y+13],[along(2.15),y+13],'#cbd9d3');
-      arrow([left,y],[along(s),y],colour,selected===i?5:2.5);
-      label('× '+n(s,1),along(s),y-15,colour,'center');
+      label(i===0?'45°':'135°',18,y+5,colour);
+      line([left,y+13],[along(3.1),y+13],'#cbd9d3');
+      arrow([left,y],[along(length),y],colour,selected===i?5:2.5);
+      label('× '+fmt(length),along(length),y-15,colour,'center');
     });
-    for (const q of [0,.5,1,1.5,2]) label(n(q,1),along(q),287,'#4d6663','center');
-    reading((selected===0?'λ₁':'λ₂')+' = ‖Au‖ / ‖u‖ = '+n(scales[selected],1)+' / 1 = '+n(scales[selected],1));
+    for (const q of [0,.5,1,1.5,2,2.5,3]) label(fmt(q),along(q),287,'#4d6663','center');
+    const symbol=name==='3I'?'(3I)':name, factor=fmt(factors[selected]);
+    const lambda=selected===0?'λ₁':'λ₂', angle=selected===0?'45°':'135°';
+    // For (1,1) use the first row. For (−1,1) use the second row, whose input coordinate is +1.
+    const diagonal=matrix[selected][selected], offDiagonal=matrix[selected][1-selected];
+    const equation=angle+' · '+lambda+' = '+fmt(diagonal)+(selected===0?' + ':' − ')+fmt(offDiagonal)+' = '+factor;
+    const factorLabel=$('seq-stretch-factor');
+    if (factorLabel) factorLabel.textContent=equation;
+    const v=coords(vectors[selected]), mv=coords(images[selected]);
+    reading(t('Na této přímce zvolíme','On this line choose')+' v = '+v+'.   '+symbol+'v = '+mv+' = '+factor+' · '+v+'.',
+            t('Pro jednotkovou šipku','For the unit arrow')+' u = v/√2   ⇒   '+symbol+'u = '+factor+'u.   '+lambda+' = '+factor+'.');
   }
   function drawCovariance() {
     const [i,j]=cell, names=['h','w'], at=plane(radius,names[i],names[j]);
@@ -230,10 +251,13 @@ document.addEventListener('DOMContentLoaded', () => {
   $('seq-prev').onclick=()=>setStage(stage-1); $('seq-next').onclick=()=>setStage(stage+1);
   $('seq-restart').onclick=()=>{
     for (const input of root.querySelectorAll('input[type="range"]')) input.value=input.defaultValue;
-    $('seq-eigen').selectedIndex=0; cell=[0,1]; setStage(1);
+    $('seq-eigen').selectedIndex=0;
+    if (stretchPicker) stretchPicker.selectedIndex=0;
+    cell=[0,1]; setStage(1);
   };
   for (const input of root.querySelectorAll('input[type="range"]')) input.addEventListener('input',draw);
   $('seq-eigen').onchange=draw;
+  stretchPicker?.addEventListener('change',draw);
   for (const [id,input,angle] of [['seq-near','seq-direction',44],['seq-diagonal','seq-direction',45],['seq-other','seq-direction',135],
                                   ['seq-pc1','seq-axis',45],['seq-pc2','seq-axis',135]])
     $(id)?.addEventListener('click',()=>{$(input).value=angle;draw();});
