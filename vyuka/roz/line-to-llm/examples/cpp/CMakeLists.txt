@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.16)
+project(roz_lab LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_executable(${PROJECT_NAME} main.cpp)
+if(MSVC)
+ target_compile_options(${PROJECT_NAME} PRIVATE /W4 /utf-8)
+endif()

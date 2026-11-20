@@ -2,7 +2,10 @@
 const fs=require('node:fs'),path=require('node:path');
 const base=path.resolve(__dirname,'../vyuka');
 const catalog=JSON.parse(fs.readFileSync(path.join(base,'catalog.json'),'utf8'));
-require('./add-lecture-return.cjs')(base,catalog);
+// Imported copies can already have verified returns and typography.
+// This explicit mode regenerates indexes without mutating unrelated lecture copies.
+const overviewsOnly=process.argv.includes('--overviews-only');
+if(!overviewsOnly) require('./add-lecture-return.cjs')(base,catalog);
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const colors=require('./course-colors.cjs');
 const colorCss=Object.entries(colors).map(([id,[light,dark]])=>`[data-subject="${id}"],.catalog .${id}{--subject-color:${dark}}`).join('\n')+'\n.subject-nav a,.subject-nav a[aria-current],.subject-hero h1,.subject-hero h1 span,.catalog .course-code,.catalog .course-title,.catalog tbody td::before{color:var(--subject-color,var(--ink))}\n@media print{[data-subject]{color:#333!important}}\n';
@@ -38,5 +41,5 @@ ${require('./build-subject-overviews.cjs').nav(catalog,lang,prefix)}<section ari
  const localizedHtml=html.replace(/(<th scope="col" class="([^"]+)"[\s\S]*?<span class="course-caption">)([^<]*)(<\/span>)/g,(all,start,id,caption,end)=>{const language=catalog.courses.find(course=>course.id===id)?.language?.[lang];return language?start+escape(language)+end:all;});
  const destination=path.join(base,lang==='cs'?'':'en');fs.mkdirSync(destination,{recursive:true});fs.writeFileSync(path.join(destination,'index.html'),localizedHtml);
 }
-require('./apply-teaching-typography.cjs')(base);
+if(!overviewsOnly) require('./apply-teaching-typography.cjs')(base);
 console.log('Built Czech and English teaching indexes.');
