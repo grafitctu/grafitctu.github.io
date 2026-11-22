@@ -57,22 +57,24 @@ function graph(A,E,R){
  document.querySelector('#scale').textContent='Poloměr ∝ jas BRDF · maximum tohoto řezu: '+max.toLocaleString('cs',{maximumFractionDigits:3})+' sr⁻¹';
 }
 const $=id=>document.getElementById(id),atlas=$('atlas'),mat=$('material'),mask=$('mask'),colors=tables.map(t=>Uint8Array.from(t,display));
-let px=0,py=0;
+const layout=$('layout');let square=true,px=0,py=0;
 function coords(m,x,y){
+ if(square){const i=Math.floor(y/36),b=y%36,j=Math.floor(x/36),d=m?(x%36-b+36)%36:x%36;return {i,b,j,d,q:((i*(m?1:36)+(m?0:b))*16+j)*36+d}}
  const a=Math.floor(x/36),i=m?Math.floor(y/16)*4+a:Math.floor(y/16),b=m?0:a,j=y%16,d=x%36;
  return {i,b,j,d,q:((i*(m?1:36)+b)*16+j)*36+d};
 }
 function inspect(){const m=mat.selectedIndex,{i,b,j,d,q}=coords(m,px,py),f=tables[m],theta=t=>(89.5*t/15).toLocaleString('cs',{maximumFractionDigits:1})+'°';
- $('probe').textContent='Vzorek: θᵢ = '+theta(i)+(m?'':', φᵢ = '+10*b+'°')+', θₒ = '+theta(j)+', '+(m?'φₒ − φᵢ':'φₒ')+' = '+10*d+'°. RGB = ('+Array.from(f.subarray(3*q,3*q+3),v=>v.toLocaleString('cs',{maximumFractionDigits:4})).join('; ')+') sr⁻¹ · '+(used[m][q]?'použit na kouli':'na kouli nepoužit')+'.';
+ $('probe').textContent='Vzorek: θᵢ = '+theta(i)+(m&&!square?'':', φᵢ = '+10*b+'°')+', θₒ = '+theta(j)+', '+(m&&square?'φₒ = '+(px%36)*10+'°, φₒ − φᵢ':m?'φₒ − φᵢ':'φₒ')+' = '+10*d+'°. RGB = ('+Array.from(f.subarray(3*q,3*q+3),v=>v.toLocaleString('cs',{maximumFractionDigits:4})).join('; ')+') sr⁻¹ · '+(used[m][q]?'použit na kouli':'na kouli nepoužit')+'.';
 }
-function paintAtlas(){const m=mat.selectedIndex,mode=mask.selectedIndex,W=m?144:1296,H=m?64:256;
- if(atlas.width!==W||atlas.height!==H){atlas.width=W;atlas.height=H;px=py=0}
- const ctx=atlas.getContext('2d'),img=ctx.createImageData(W,H),C=colors[m],U=used[m];let count=0;
- for(let y=0;y<H;y++)for(let x=0;x<W;x++){let {q}=coords(m,x,y),on=U[q];count+=on;let off=mode===1?!on:mode===2&&on,k=(y*W+x)*4;
+function paintAtlas(){const m=mat.selectedIndex,mode=mask.selectedIndex,W=square?576:m?144:1296,H=square?576:m?64:256;
+ if(atlas.width!==W||atlas.height!==H){atlas.width=W;atlas.height=H;px=Math.min(px,W-1);py=Math.min(py,H-1)}
+ const ctx=atlas.getContext('2d'),img=ctx.createImageData(W,H),C=colors[m],U=used[m];const count=U.reduce((n,v)=>n+(v?1:0),0);atlas.style.maxWidth=square?'min(100%, 70vh)':'';
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){let {q}=coords(m,x,y),on=U[q];let off=mode===1?!on:mode===2&&on,k=(y*W+x)*4;
  for(let h=0;h<3;h++)img.data[k+h]=off?175:C[3*q+h];img.data[k+3]=255;}
  ctx.putImageData(img,0,0);$('coverage').textContent='Koule využívá '+count.toLocaleString('cs')+' z '+U.length.toLocaleString('cs')+' RGB vzorků ('+(100*count/U.length).toLocaleString('cs',{maximumFractionDigits:2})+' %).';
- $('axes').textContent=(m?'16 dlaždic ve čtyřech řádcích: úhel dopadu θᵢ roste po řádcích zleva doprava. Uvnitř: vodorovně rozdíl azimutů φₒ − φᵢ, svisle θₒ.':'Každá dlaždice má pevný směr světla: φᵢ roste doprava, θᵢ dolů. Uvnitř dlaždice je celý pohledový řez: φₒ roste doprava, θₒ dolů.')+' Úhly θ měříme od normály. Najeď na mapu pro konkrétní hodnotu.';inspect();
+ $('axes').textContent=square?'Matice 576 × 576. Řádek = směr světla (dolů), sloupec = směr pohledu (doprava). V každé skupině 36 směrů je θ pevné a φ roste po 10°. '+(m?'U izotropní látky záleží jen na rozdílu azimutů. Opakované buňky proto představují stejný vzorek; procento počítá unikátní vzorky. ':'')+'Šipkami procházej jednotlivé vzorky.':(m?'16 dlaždic ve čtyřech řádcích: úhel dopadu θᵢ roste po řádcích zleva doprava. Uvnitř: vodorovně rozdíl azimutů φₒ − φᵢ, svisle θₒ.':'Každá dlaždice má pevný směr světla: φᵢ roste doprava, θᵢ dolů. Uvnitř dlaždice je celý pohledový řez: φₒ roste doprava, θₒ dolů.')+' Úhly θ měříme od normály. Najeď na mapu pro konkrétní hodnotu.';inspect();
 }
+layout.onchange=()=>{const m=mat.selectedIndex,{i,b,j,d}=coords(m,px,py);square=layout.value==='matrix';px=square?36*j+(m?d:(d%36)):36*(m?i%4:b)+d;py=square?36*i+(m?0:b):16*(m?Math.floor(i/4):i)+j;paintAtlas()};
 atlas.onpointermove=e=>{const r=atlas.getBoundingClientRect();px=Math.min(atlas.width-1,Math.max(0,Math.floor((e.clientX-r.left)/r.width*atlas.width)));py=Math.min(atlas.height-1,Math.max(0,Math.floor((e.clientY-r.top)/r.height*atlas.height)));inspect()};
 atlas.onkeydown=e=>{const d={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];if(!d)return;e.preventDefault();px=Math.min(atlas.width-1,Math.max(0,px+d[0]));py=Math.min(atlas.height-1,Math.max(0,py+d[1]));inspect()};mat.onchange=mask.onchange=paintAtlas;
 let frame;
