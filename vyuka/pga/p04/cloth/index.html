@@ -8,11 +8,12 @@
 <p>Na koulích vidíš jas povrchu při přímém osvětlení. V grafu je každý směr naopak možným směrem pohledu z jediného bodu: čím dál povrch grafu sahá, tím více světla látka tím směrem odráží. Barva pochází z měřených RGB hodnot. Oranžová úsečka míří ke světlu.</p>
 <h2>Kterou část BRDF vidíš na kouli?</h2>
 <p>Při pevném světle a kameře určuje bod na kouli oba směry současně. Nemůžeš tedy pro každý směr světla nezávisle vyzkoušet všechny směry pohledu.</p>
-<fieldset><legend>Atlas řezů</legend>
+<fieldset><legend>Směrové vzorky BRDF</legend>
+<label>Uspořádání <select id="layout"><option value="matrix">Matice světlo × pohled</option><option value="atlas">Atlas řezů</option></select></label>
 <label>Látka <select id="material"><option>Hedvábné sárí</option><option>Tmavá lesklá látka (MERL)</option></select></label>
 <label>Zobrazení <select id="mask"><option>Celá tabulka v RGB</option><option>Jen hodnoty použité na kouli</option><option>Jen nepoužité hodnoty</option></select></label></fieldset>
 <strong id="coverage"></strong><p id="axes"></p>
-<canvas id="atlas" tabindex="0" style="image-rendering:pixelated;border:1px solid #abb;cursor:crosshair" aria-label="Atlas všech směrových řezů; šipkami lze procházet vzorky"></canvas>
-<p id="probe"></p><small>Jeden pixel atlasu = jedna RGB trojice v redukované tabulce dema. V obou maskách jsou skryté vzorky šedé. Počítáme každý vzorek s nenulovou interpolační vahou na osvětlené části koule právě jednou; vzorky použité pouze pro 3D graf nepočítáme.</small>
+<canvas id="atlas" tabindex="0" style="image-rendering:pixelated;border:1px solid #abb;cursor:crosshair" aria-label="Mapa směrových vzorků; šipkami lze procházet vzorky"></canvas>
+<p id="probe"></p><small>Barva pixelu odpovídá jedné RGB trojici v redukované tabulce dema. V obou maskách jsou skryté vzorky šedé. Počítáme každý vzorek s nenulovou interpolační vahou na osvětlené části koule právě jednou; vzorky použité pouze pro 3D graf nepočítáme.</small>
 <p><small>Interpolovaná měření: <a href="https://rgl.epfl.ch/materials" target="_blank" rel="noopener">Dupuy a Jakob, EPFL · aniso_sari_silk_2color</a> a <a href="https://www.merl.com/research/downloads/BRDF/" target="_blank" rel="noopener">Matusik a kol., MERL · dark-specular-fabric</a>. Obě koule mají stejnou expozici. Izotropie je vlastnost tabulky MERL; není to tvrzení o všech tmavých látkách.</small></p></main>
 <script src="data.js"></script><script src="cloth.js"></script></html>
