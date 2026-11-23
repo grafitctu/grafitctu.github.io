@@ -1,0 +1,2611 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>ANI-EGG: Architektura Unity3D</title>
+  <meta name="description"
+    content="Přednáška ANI-EGG: Architektura herního enginu Unity3D. Vrstvy enginu, .NET runtime, Mono a IL2CPP, serializace, render pipelines v Unity 6.6 (Built-in deprecated, URP, HDRP) a SRP. Petr Pauš, FIT ČVUT v Praze">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/panda-light.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+
+  <style>
+    /* ---------- Architektonické diagramy (lokální pro tento deck) ---------- */
+
+    .arch-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .arch-layer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 9px 14px;
+    }
+
+    .arch-layer.l1 {
+      border-left: 5px solid var(--accent-purple);
+    }
+
+    .arch-layer.l2 {
+      border-left: 5px solid var(--accent-cyan);
+    }
+
+    .arch-layer.l3 {
+      border-left: 5px solid var(--accent-amber);
+    }
+
+    .arch-idx {
+      font-family: var(--font-mono);
+      font-size: 0.62em;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
+
+    .arch-name {
+      font-weight: 700;
+      font-size: 0.86em;
+      line-height: 1.2;
+    }
+
+    .arch-desc {
+      font-size: 0.64em;
+      color: var(--text-muted);
+      line-height: 1.25;
+    }
+
+    .arch-arrow-v {
+      text-align: center;
+      font-size: 0.62em;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      line-height: 1;
+    }
+
+    /* Toky a pipeline diagramy */
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flow-box {
+      flex: 1 1 0;
+      min-width: 0;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid var(--border-card);
+      border-radius: 9px;
+      padding: 8px 7px;
+      text-align: center;
+      font-size: 0.66em;
+      line-height: 1.28;
+      color: var(--text-muted);
+    }
+
+    .flow-box strong {
+      display: block;
+      color: var(--accent-cyan);
+      font-size: 1.02em;
+      margin-bottom: 2px;
+    }
+
+    .flow-arrow {
+      color: var(--accent-cyan);
+      font-weight: 700;
+      font-size: 0.95em;
+      flex: 0 0 auto;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--border-card);
+      border-radius: 9px;
+      padding: 7px 12px;
+      font-size: 0.72em;
+      line-height: 1.3;
+    }
+
+    .flow-step .step-num {
+      flex: 0 0 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(8, 145, 178, 0.12);
+      color: #0e7490;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.85em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flow-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    /* Časová osa player loopu */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tl-item {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .tl-name {
+      font-family: var(--font-mono);
+      font-size: 0.62em;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-align: right;
+    }
+
+    .tl-body {
+      font-size: 0.68em;
+      line-height: 1.3;
+      background: rgba(255, 255, 255, 0.5);
+      border-left: 3px solid rgba(8, 145, 178, 0.5);
+      border-radius: 0 8px 8px 0;
+      padding: 4px 10px;
+      color: var(--text-muted);
+    }
+
+    /* Strom scény */
+    .tree {
+      font-family: var(--font-mono);
+      font-size: 0.68em;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .tree .root {
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .tree .go {
+      color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    .tree .native {
+      color: var(--text-dim);
+    }
+
+    .tree .managed {
+      color: var(--accent-purple);
+    }
+
+    /* Diagram referencí */
+    .ref-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-size: 0.7em;
+    }
+
+    .ref-col {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ref-box {
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      text-align: center;
+    }
+
+    .ref-box.asset {
+      border-color: rgba(124, 58, 237, 0.4);
+      background: rgba(237, 233, 254, 0.6);
+      color: #6d28d9;
+      font-weight: 700;
+      padding: 14px 16px;
+    }
+
+    .ref-arrow {
+      color: var(--accent-purple);
+      font-size: 1.4em;
+      font-weight: 700;
+    }
+
+    /* Zvýrazněná čísla / statistiky */
+    .stat-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .stat-box {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    .stat-box .stat-val {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.15em;
+      color: var(--accent-cyan);
+      line-height: 1.1;
+    }
+
+    .stat-box .stat-lbl {
+      font-size: 0.6em;
+      color: var(--text-muted);
+      line-height: 1.2;
+    }
+
+    /* Odkazy ve zdrojích */
+    .reveal ul.source-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 0.56em;
+      line-height: 1.5;
+    }
+
+    .reveal ul.source-list li {
+      padding: 3px 0 3px 14px;
+      border-left: 2px solid rgba(8, 145, 178, 0.35);
+      margin-bottom: 3px;
+      word-break: break-all;
+    }
+
+    .source-list a {
+      color: var(--accent-blue);
+    }
+
+    .reveal .dense-table {
+      font-size: 0.7em;
+    }
+
+    .reveal .dense-table th,
+    .reveal .dense-table td {
+      padding: 4px 8px;
+      line-height: 1.25;
+    }
+
+    /* Deprecation upozornění pro Built-in pipeline */
+    .deprecation-banner {
+      background: linear-gradient(135deg, rgba(254, 226, 232, 0.92), rgba(254, 243, 199, 0.92));
+      border: 1px solid rgba(225, 29, 72, 0.38);
+      border-left: 5px solid var(--accent-rose);
+      border-radius: 12px;
+      padding: 9px 16px;
+      font-size: 0.72em;
+      line-height: 1.4;
+      color: var(--text-main);
+    }
+
+    .deprecation-banner strong {
+      color: var(--accent-rose);
+    }
+
+    .status-pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.52em;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      vertical-align: middle;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+    }
+
+    .status-pill.deprecated {
+      color: #be123c;
+      background: rgba(225, 29, 72, 0.12);
+      border: 1px solid rgba(225, 29, 72, 0.4);
+    }
+  </style>
+<meta name="robots" content="noindex">
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+<!-- GRAFIT whole-word typography -->
+<link rel="stylesheet" href="../../../lecture-typography.css?v=ee50533c322e">
+<script defer src="../../../lecture-typography.js?v=2e5d8b798ef4"></script>
+<!-- /GRAFIT whole-word typography -->
+</head>
+
+<body>
+<a id="grafit-lecture-return" class="grafit-lecture-return grafit-lecture-return--floating" href="../../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+<a id="grafit-course-link" class="grafit-course-link--floating" href="../../../egg/" aria-label="Přehled přednášek EGG" data-subject="egg">EGG</a>
+
+  <!-- Top Persistent Header -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace">
+  </header>
+
+  <!-- Bottom Persistent Footer Navigation Helper -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání">
+  </footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==========================================
+           SLIDE 1: TITULNÍ SLIDE
+           ========================================== -->
+      <section data-background-gradient="radial-gradient(circle at center, #f0f4fa 0%, #dee9f6 80%)">
+        <div class="title-hero">
+          <div class="vr-badge">ANI-EGG &bull; Přednáška #3</div>
+          <h1>Architektura Unity3D</h1>
+          <p style="color: var(--text-muted); font-size: 1.15em; margin-bottom: 10px;">
+            Managed runtime, skriptovací backendy, serializace a&nbsp;render pipelines:<br>
+            jak Unity funguje pod povrchem.
+          </p>
+
+          <div class="badge-group" style="justify-content: center; margin-bottom: 14px;">
+            <span class="spec-badge cyan">Render pipelines: Unity 6.6 (6000.6)</span>
+            <span class="spec-badge">.NET a&nbsp;serializace: Unity 2022.3 LTS</span>
+          </div>
+
+          <div class="authors">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Dnes navážeme na první přednášku, kde jsme si řekli, co je herní engine obecně. Tentokrát půjdeme dovnitř
+          Unity: ukážeme si tři vrstvy enginu, jak se C# kód dostane do buildu, jak Unity serializuje data a jak
+          fungují render pipelines.
+          Cílem není naučit vás psát skripty, ale pochopit rozhodnutí, která jako vývojáři děláte: volba backendu,
+          podoba serializovaných polí a volba render pipeline.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 2: OSNOVA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Úvod &bull; Osnova</span>
+        <h2>Obsah</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="highlight-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 6px;">Vrstvy a&nbsp;runtime</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>1.</strong> Architektura Unity: native jádro, managed vrstva, Editor.</li>
+                <li><strong>2.</strong> GameObject–Component model a dualita objektů.</li>
+                <li><strong>3.</strong> Player loop a pořadí životního cyklu.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 1.02em; margin-bottom: 6px;">.NET a&nbsp;skriptování
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>4.</strong> Cesta C# kódu: Roslyn, assembly, backend.</li>
+                <li><strong>5.</strong> Mono vs. IL2CPP, JIT vs. AOT.</li>
+                <li><strong>6.</strong> Stripping, API compatibility, GC, reflexe a&nbsp;vlákna.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card accent-emerald" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 1.02em; margin-bottom: 6px;">Serializace</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>7.</strong> Co serializace je a&nbsp;kdy běží.</li>
+                <li><strong>8.</strong> Pravidla pro pole, podporované typy, vlastní třídy.</li>
+                <li><strong>9.</strong> <code>ISerializationCallbackReceiver</code>, reference a&nbsp;best practices.
+                </li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-amber" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-amber); font-size: 1.02em; margin-bottom: 6px;">Render pipelines</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>10.</strong> Fáze render pipeline.</li>
+                <li><strong>11.</strong> Built-in, URP, HDRP: principy a&nbsp;srovnání.</li>
+                <li><strong>12.</strong> SRP architektura, vlastní pipeline a&nbsp;volba pipeline.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          První část je architektonická: kde vůbec Unity začíná a končí.
+          Druhá část je nejtechničtější: kompilace a runtime.
+          Třetí část vysvětluje, proč se hodnoty v Inspectoru chovají tak, jak se chovají.
+          Čtvrtá část uzavírá téma grafiky: tři pipeline a společný SRP základ.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 3: TŘI VRSTVY UNITY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Architektura &bull; Vrstvy</span>
+        <h2>Tři vrstvy Unity</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card" style="margin-top: 0; padding: 14px 16px;">
+            <div class="arch-stack">
+              <div class="arch-layer l1">
+                <span class="arch-idx">01</span>
+                <div>
+                  <div class="arch-name">Editor a&nbsp;nástroje</div>
+                  <div class="arch-desc">Editor UI, Inspector, Asset Database, build pipeline. Běží pouze
+                    v&nbsp;Editoru.</div>
+                </div>
+              </div>
+              <div class="arch-arrow-v">&darr; ovládá</div>
+              <div class="arch-layer l2">
+                <span class="arch-idx">02</span>
+                <div>
+                  <div class="arch-name">Managed vrstva (C#)</div>
+                  <div class="arch-desc"><code>MonoBehaviour</code>, <code>ScriptableObject</code>, UnityEngine API, váš
+                    herní kód. Řídí nativní systémy.</div>
+                </div>
+              </div>
+              <div class="arch-arrow-v">&darr; volá nativní API</div>
+              <div class="arch-layer l3">
+                <span class="arch-idx">03</span>
+                <div>
+                  <div class="arch-name">Nativní jádro (C/C++)</div>
+                  <div class="arch-desc">Renderer, fyzika, animace, audio, scéna, platformová vrstva.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 4px;">Fungování</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Unity je <strong>native engine s&nbsp;C# wrapperem</strong>. API <code>UnityEngine.*</code> je tenká
+                  managed fasáda nad nativními objekty.</li>
+                <li>Většina práce: transformace, kolize, vykreslování: probíhá v&nbsp;<strong>C++</strong>.</li>
+                <li>C# řídí <strong>logiku a&nbsp;orchestraci</strong>, ne vnitřní smyčky enginu.</li>
+                <li><strong>Interop:</strong> režie na hranici světů</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin-top: 10px; padding: 10px 14px;">
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.4;">
+                <strong>Důsledek:</strong> každé volání API může znamenat přechod managed &rarr; native. Nativní objekty
+                mají vlastní životní cyklus, který managed GC neřídí. Odtud pramení většina „divných“ chování Unity.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je základní mentální model celé přednášky. Unity není čistě C# engine: C# je řídící vrstva nad C++
+          jádrem.
+          Když voláte transform.position, neděje se to v C#, ale v nativním objektu.
+          To vysvětluje, proč existují dvě úrovně života objektů, proč je serializace potřeba a proč je volba
+          backendu důležitá.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4: GAMEOBJECT–COMPONENT MODEL
+           ========================================== -->
+      <section>
+        <span class="slide-category">Architektura &bull; Objektový model</span>
+        <h2>GameObject–Component model</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card" style="margin-top: 0; padding: 14px 18px;">
+            <div class="tree">
+              <div class="root">Scene</div>
+              <div style="padding-left: 14px;">
+                <div class="go">├─ GameObject „Player“</div>
+                <div style="padding-left: 28px;">
+                  <div class="native">├─ Transform</div>
+                  <div class="native">├─ Rigidbody</div>
+                  <div class="managed">└─ PlayerController (MonoBehaviour)</div>
+                </div>
+                <div class="go" style="margin-top: 6px;">└─ GameObject „Main Camera“</div>
+                <div style="padding-left: 28px;">
+                  <div class="native">├─ Transform</div>
+                  <div class="native">└─ Camera</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 4px;">Skládání místo dědičnosti
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>GameObject je <strong>kontejner</strong>; chování dodávají komponenty.</li>
+                <li><code>MonoBehaviour</code> je managed komponenta; <code>Transform</code>, <code>Rigidbody</code>
+                  a&nbsp;<code>Camera</code> jsou nativní komponenty.</li>
+                <li>Skripty dostávají vlastní <code>Update</code> / <code>FixedUpdate</code> callbacky.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.98em; margin-bottom: 4px;">Dvojí identita objektu
+              </h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Každý <code>UnityEngine.Object</code> má <strong>nativní protějšek</strong> a&nbsp;managed wrapper.
+                </li>
+                <li><code>Object.Destroy</code> zničí nativní objekt; wrapper žije dál &rarr; nastav <code>null</code>.
+                </li>
+                <li>Proto Unity přepisuje <code>==</code> a&nbsp;<code>!=</code>: zničený objekt se porovná jako
+                  <code>null</code>.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          GameObject–Component je známý koncept, ale tady ho potřebujeme kvůli dualitě.
+          Když v Inspectoru přetáhnete komponentu, pracujete s nativním objektem. Když na něj v C# držíte referenci,
+          držíte managed wrapper. Tenhle rozdíl se vrátí u serializace i u GC.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 5: PLAYER LOOP
+           ========================================== -->
+      <section>
+        <span class="slide-category">Architektura &bull; Herní smyčka</span>
+        <h2>Player loop a&nbsp;životní cyklus</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="timeline" style="margin-top: 2px;">
+            <div class="tl-item">
+              <span class="tl-name">Init</span>
+              <span class="tl-body"><code>Awake</code> &rarr; <code>OnEnable</code> &rarr; <code>Start</code> (Start jen
+                před prvním Update)</span>
+            </div>
+            <div class="tl-item">
+              <span class="tl-name">Physics</span>
+              <span class="tl-body"><code>FixedUpdate</code> v&nbsp;pevném intervalu <code>Time.fixedDeltaTime</code>,
+                poté kolizní a&nbsp;trigger callbacky</span>
+            </div>
+            <div class="tl-item">
+              <span class="tl-name">Update</span>
+              <span class="tl-body">Input a&nbsp;herní logika: jednou za snímek</span>
+            </div>
+            <div class="tl-item">
+              <span class="tl-name">Coroutines</span>
+              <span class="tl-body">Pokračování po dokončení <code>Update</code>; <code>WaitForFixedUpdate</code> po
+                fyzice</span>
+            </div>
+            <div class="tl-item">
+              <span class="tl-name">LateUpdate</span>
+              <span class="tl-body">Dokončení logiky: typicky pohyb kamery</span>
+            </div>
+            <div class="tl-item">
+              <span class="tl-name">Rendering</span>
+              <span class="tl-body">Culling &rarr; draw &rarr; post-processing</span>
+            </div>
+            <div class="tl-item">
+              <span class="tl-name">Teardown</span>
+              <span class="tl-body"><code>OnDisable</code> &rarr; <code>OnDestroy</code> &rarr;
+                <code>OnApplicationQuit</code></span>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 4px;">Co z&nbsp;toho plyne</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><code>FixedUpdate</code> nezávisí na FPS: fyzika má vlastní čas.</li>
+                <li><strong>Update:</strong> <code>Time.deltaTime</code></li>
+                <li>Pořadí mezi objekty není deterministické; lze vynutit <strong>Script Execution Order</strong>.</li>
+                <li>Rendering callbacky typu <code>OnPreCull</code> patří built-in pipeline; URP a&nbsp;HDRP používají
+                  <code>RenderPipeline</code> hooky.
+                </li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style="margin-top: 10px; padding: 10px 14px;">
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.4;">
+                <strong>Pozor:</strong> <code>Awake</code> a&nbsp;<code>OnEnable</code> jsou garantované v&nbsp;rámci
+                jednoho objektu. Mezi objekty pořadí garantované není.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Studenti často řeší, proč se jim něco volá dřív než něco jiného. Odpověď je player loop.
+          Zdůrazněte dvě věci: fyzika běží ve fixním kroku, a pořadí mezi různými objekty není garantované.
+          Zároveň upozorněte, že část render callbacků je legacy: v URP a HDRP se používá jiný mechanismus.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 6: CESTA C# KÓDU
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; Kompilace</span>
+        <h2>Cesta C# kódu do buildu</h2>
+        <div class="flow-row" style="margin: 18px 0 16px 0;">
+          <div class="flow-box"><strong>C# zdroj</strong>skripty, asmdef</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box"><strong>Roslyn</strong>C# kompilátor</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box"><strong>Assembly (.dll)</strong>CIL / MSIL mezikód</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box"><strong>Backend</strong>Mono / IL2CPP</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box"><strong>Runtime</strong>JIT nebo nativní binárka</div>
+        </div>
+
+        <div class="slide-grid-2 equal" style="align-items: stretch;">
+          <div class="glass-card" style="margin-top: 0; padding: 12px 16px;">
+            <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 4px;">Roslyn a&nbsp;assembly</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li><strong>Roslyn</strong> přeloží skripty do <strong>managed assemblies</strong> (<code>.dll</code>)
+                obsahujících <strong>CIL/MSIL</strong>: platformově nezávislý mezikód.</li>
+              <li>Assembly je kompilační jednotka; v&nbsp;Unity ji řídí <strong>Assembly Definitions</strong>.</li>
+              <li><strong>Assembly Definition:</strong> izolovaná rekompilace</li>
+              <li>Unity kompiluje i&nbsp;balíčky a&nbsp;pluginy; pořadí určují závislosti asmdef.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple" style="margin-top: 0; padding: 12px 16px;">
+            <h3 style="color: var(--accent-purple); font-size: 0.98em; margin-bottom: 4px;">Backend rozhoduje, co bude
+              dál</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li><strong>Mono:</strong> assembly se načtou do runtime a&nbsp;zkompilují <strong>JIT</strong> za běhu.
+              </li>
+              <li><strong>IL2CPP:</strong> assembly se převedou do C++ a&nbsp;zkompilují <strong>AOT</strong> při
+                buildu.</li>
+              <li>Stejný C# kód, dva velmi odlišné výsledky.</li>
+              <li><strong>Výstup:</strong> JIT runtime / nativní binárka</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="notes">
+          Tady se láme celá druhá kapitola. C# není v buildu přímo: vždy existuje mezikód.
+          Backend určuje, jestli se mezikód zpracuje za běhu, nebo předem.
+          To ovlivní rychlost, velikost, platformy i to, jestli funguje dynamické generování kódu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 7: DVA BACKENDY
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; Skriptovací backendy</span>
+        <h2>Dva skriptovací backendy</h2>
+        <div class="slide-grid-2 equal" style="align-items: stretch; margin-top: 4px;">
+          <div class="glass-card" style="margin-top: 0; padding: 14px 18px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.15em; margin-bottom: 6px;">Mono</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Historický backend Unity.</li>
+              <li><strong>JIT</strong>: kompiluje kód na vyžádání za běhu.</li>
+              <li><strong>Runtime:</strong> součást buildu</li>
+              <li>Používá se v&nbsp;Editoru; dostupný na desktopu a&nbsp;části mobilních platforem.</li>
+              <li>Umožňuje dynamické generování kódu a&nbsp;rychlejší iteraci.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple" style="margin-top: 0; padding: 14px 18px;">
+            <h3 style="color: var(--accent-purple); font-size: 1.15em; margin-bottom: 6px;">IL2CPP</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Unity vlastní backend.</li>
+              <li><strong>AOT</strong>: celá aplikace se kompiluje před spuštěním.</li>
+              <li><strong>Výsledek:</strong> nativní binárka</li>
+              <li>Vyžadován tam, kde není povolen JIT: iOS, konzole, WebGL.</li>
+              <li><strong>Bez JIT:</strong> žádný dynamický kód</li>
+              <li>Převádí CIL do C++ a&nbsp;používá nativní kompilátor platformy.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card blue" style="margin-top: 14px; padding: 10px 16px;">
+          <p style="margin: 0; font-size: 0.76em; color: var(--text-main); line-height: 1.4;">
+            <strong>Kde to přepnout:</strong> <code>Edit &gt; Project Settings &gt; Player &gt; Other Settings &gt;
+              Scripting Backend</code>. Nastavení je <strong>per-platform</strong>.
+          </p>
+        </div>
+        <aside class="notes">
+          Backend není lepší nebo horší: je to volba podle platformy a potřeb.
+          Editor vždy běží na Mono, takže vývoj je rychlý. Do buildu se ale dostane to, co zvolíte.
+          Pro iOS nebo konzole nemáte na výběr.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 8: MONO A JIT
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; Mono</span>
+        <h2>Mono a&nbsp;JIT kompilace</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card" style="margin-top: 0; padding: 14px 18px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Princip</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Managed assembly se načte do <strong>Mono runtime</strong>.</li>
+              <li>Metody se kompilují <strong>just-in-time</strong> při prvním volání.</li>
+              <li><strong>První volání:</strong> pomalejší</li>
+              <li>Strojový kód specifický pro platformu vzniká až na cílovém zařízení.</li>
+              <li>Editor používá Mono vždy: díky tomu funguje rychlý <strong>Enter Play Mode</strong> a&nbsp;hot reload.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="glass-card accent-emerald" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.98em; margin-bottom: 4px;">Plusy</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Rychlý build, menší binárka, rychlá iterace.</li>
+                <li>Dynamické generování kódu a&nbsp;plná reflexe.</li>
+                <li>Snadné ladění v&nbsp;Editoru.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-rose" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-rose); font-size: 0.98em; margin-bottom: 4px;">Mínusy</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>JIT není povolen na iOS, konzolích a&nbsp;WebGL.</li>
+                <li>Pomalejší start a&nbsp;méně předvídatelný výkon.</li>
+                <li>Runtime musí být součástí buildu.</li>
+                <li><strong>Release:</strong> vhodnější IL2CPP</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          JIT znamená „až za běhu“. Výhodou je flexibilita a rychlý vývoj, nevýhodou závislost na runtime a horší
+          predikovatelnost výkonu.
+          Pro prototypy a desktop je Mono pohodlná volba.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9: IL2CPP A AOT
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; IL2CPP</span>
+        <h2>IL2CPP a&nbsp;AOT pipeline</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="flow-vertical" style="margin-top: 2px;">
+            <div class="flow-step">
+              <span class="step-num">1</span>
+              <div><strong>Roslyn</strong> zkompiluje C# do managed assemblies (<code>.dll</code>).</div>
+            </div>
+            <div class="flow-step">
+              <span class="step-num">2</span>
+              <div>Unity aplikuje <strong>managed bytecode stripping</strong>.</div>
+            </div>
+            <div class="flow-step">
+              <span class="step-num">3</span>
+              <div><strong>IL2CPP</strong> převede všechny managed assemblies do standardního <strong>C++</strong>.
+              </div>
+            </div>
+            <div class="flow-step">
+              <span class="step-num">4</span>
+              <div><strong>Nativní C++ kompilátor</strong> platformy zkompiluje vygenerovaný kód.</div>
+            </div>
+            <div class="flow-step">
+              <span class="step-num">5</span>
+              <div>Unity vytvoří <strong>spustitelný soubor nebo DLL</strong> podle cílové platformy.</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 4px;">Co z&nbsp;toho plyne</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Běh je nativní: žádný JIT, žádné dynamické generování kódu.</li>
+                <li><strong>Runtime:</strong> žádný .NET/JIT</li>
+                <li>Širší podpora platforem: iOS, konzole, WebGL.</li>
+                <li>Vyšší výkon a&nbsp;obtížnější reverzní inženýrství.</li>
+                <li>Delší build, větší binárka; generika mohou build dál nafouknout.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin-top: 10px; padding: 10px 14px;">
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.4;">
+                IL2CPP je <strong>kompilátor</strong>, ne interpret. Výsledkem je běžný C++ kód zkompilovaný
+                nativním toolchainem.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          IL2CPP je kompilátor, ne interpret. Klíčové je, že výsledkem je běžný C++ kód zkompilovaný nativním
+          toolchainem.
+          To přináší výkon a podporu platforem, ale bere dynamické funkce .NET.
+          Když používáte knihovnu, která generuje kód za běhu, v IL2CPP nepojede.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 10: JIT VS AOT
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; Srovnání</span>
+        <h2>JIT vs. AOT</h2>
+        <table class="comparison-table dense-table" style="margin-top: 0;">
+          <thead>
+            <tr>
+              <th style="width: 30%;">Kritérium</th>
+              <th style="width: 35%;">Mono (JIT)</th>
+              <th style="width: 35%;">IL2CPP (AOT)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Kdy se kompiluje</td>
+              <td>za běhu, při prvním volání</td>
+              <td>při buildu</td>
+            </tr>
+            <tr>
+              <td>Rychlost iterace</td>
+              <td>vysoká</td>
+              <td>nižší, delší build</td>
+            </tr>
+            <tr>
+              <td>Start aplikace</td>
+              <td>pomalejší</td>
+              <td>rychlý</td>
+            </tr>
+            <tr>
+              <td>Runtime výkon</td>
+              <td>dobrý, méně předvídatelný</td>
+              <td>vysoký a&nbsp;stabilní</td>
+            </tr>
+            <tr>
+              <td>Velikost binárky</td>
+              <td>menší</td>
+              <td>větší</td>
+            </tr>
+            <tr>
+              <td>Dynamické generování kódu</td>
+              <td>ano</td>
+              <td>ne</td>
+            </tr>
+            <tr>
+              <td>Reflexe</td>
+              <td>plná</td>
+              <td>omezená, nutná anotace</td>
+            </tr>
+            <tr>
+              <td>Podpora platforem</td>
+              <td>desktop, část mobilu</td>
+              <td>iOS, konzole, WebGL, vše</td>
+            </tr>
+            <tr>
+              <td>Ladění</td>
+              <td>snadné v&nbsp;Editoru</td>
+              <td>složitější, native debugging</td>
+            </tr>
+            <tr>
+              <td>Vhodné pro</td>
+              <td>vývoj, desktop</td>
+              <td>release, iOS/konzole/WebGL</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="highlight-card" style="margin-top: 8px; padding: 8px 14px;">
+          <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.35;">
+            Volba není ideologická: vyplývá z&nbsp;platformy a&nbsp;z&nbsp;toho, jestli potřebujete generovat kód za
+            běhu.
+          </p>
+        </div>
+        <aside class="notes">
+          Tabulka je shrnutím předchozích dvou slidů. Nechte studenty, ať si zapamatují hlavně tři řádky:
+          kdy se kompiluje, jestli funguje dynamický kód a jaké platformy to podporuje.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 11: VÝBĚR BACKENDU PODLE PLATFORMY
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; Platformy</span>
+        <h2>Výběr backendu podle platformy</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <table class="comparison-table dense-table" style="margin-top: 0;">
+            <thead>
+              <tr>
+                <th style="width: 42%;">Platforma</th>
+                <th>Dostupný backend</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Editor</strong></td>
+                <td>vždy Mono (JIT)</td>
+              </tr>
+              <tr>
+                <td>Windows / macOS / Linux</td>
+                <td>Mono i&nbsp;IL2CPP</td>
+              </tr>
+              <tr>
+                <td>Android</td>
+                <td>Mono i&nbsp;IL2CPP; pro release IL2CPP</td>
+              </tr>
+              <tr>
+                <td>iOS</td>
+                <td>pouze IL2CPP</td>
+              </tr>
+              <tr>
+                <td>Konzole (PS, Xbox, Switch)</td>
+                <td>pouze IL2CPP</td>
+              </tr>
+              <tr>
+                <td>WebGL</td>
+                <td>pouze IL2CPP</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 4px;">Praktické důsledky</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Kód musí být <strong>AOT-safe</strong>, pokud cílíte na iOS, konzole nebo WebGL.</li>
+                <li>Vyhněte se <code>System.Reflection.Emit</code>, dynamickým proxy a&nbsp;generikům vytvářeným za
+                  běhu.</li>
+                <li>Testujte build na cílové platformě, ne jen v&nbsp;Editoru.</li>
+                <li><strong>Editor:</strong> neodhalí AOT problémy</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style="margin-top: 10px; padding: 10px 14px;">
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.4;">
+                <strong>Nejčastější chyba:</strong> něco funguje v&nbsp;Editoru a&nbsp;spadne na iOS. Důvodem je Mono
+                vs. IL2CPP. Editor vás na AOT problémy neupozorní.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tady je nejčastější produkční chyba: něco funguje v Editoru a spadne to na iOS. Důvodem je Mono vs. IL2CPP.
+          Zdůrazněte, že nastavení je per-platform a že Editor nikdy neběží na IL2CPP, takže vás na AOT problémy
+          neupozorní.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 12: MANAGED CODE STRIPPING
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; Stripping</span>
+        <h2>Managed code stripping</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="glass-card" style="margin-top: 0; padding: 14px 18px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">Princip</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Unity prochází assemblies a&nbsp;<strong>odstraňuje nepoužitý kód</strong>.</li>
+              <li><strong>Analýza:</strong> statické skenování assemblies</li>
+              <li>Cíl: menší build a&nbsp;méně kódu k&nbsp;načtení.</li>
+              <li>U&nbsp;<strong>Mono</strong> je stripping ve výchozím stavu <strong>vypnutý</strong>.</li>
+              <li>U&nbsp;<strong>IL2CPP</strong> ho <strong>nelze vypnout</strong>.</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="glass-card accent-amber" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-amber); font-size: 0.98em; margin-bottom: 4px;">Úrovně a&nbsp;rizika</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Řízeno přes <strong>Managed Stripping Level</strong>: <code>Player &gt; Other Settings</code>.</li>
+                <li>Vyšší úroveň = agresivnější odstranění = menší build.</li>
+                <li>Riziko: odstranění kódu volaného pouze přes <strong>reflexi</strong> nebo generování za běhu.</li>
+                <li>Řešení: anotace <code>[Preserve]</code>, <code>link.xml</code>, správné asmdef závislosti.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin-top: 10px; padding: 9px 14px;">
+              <p style="margin: 0; font-size: 0.7em; color: var(--text-main); line-height: 1.35;">
+                Stripping je optimalizace <strong>velikosti</strong>, ne výkonu. Neplatíte za ni za běhu, ale při
+                buildu.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Stripping je typický zdroj „works in Editor, fails in build“. Editor má Mono stripping obvykle vypnutý,
+          IL2CPP ho má vždy.
+          Pokud používáte serializaci přes reflexi nebo DI framework, musíte kód označit jako preservovaný.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 13: API COMPATIBILITY LEVEL
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; Profily</span>
+        <h2>API Compatibility Level</h2>
+        <div class="slide-grid-2 equal" style="align-items: stretch;">
+          <div class="glass-card" style="margin-top: 0; padding: 14px 18px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.05em; margin-bottom: 6px;">.NET Standard</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Výchozí a&nbsp;doporučená volba pro nové projekty.</li>
+              <li>Menší API surface &rarr; menší build.</li>
+              <li>Lepší cross-platform kompatibilita.</li>
+              <li>Všechny .NET runtimes implementují .NET Standard.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-amber" style="margin-top: 0; padding: 14px 18px;">
+            <h3 style="color: var(--accent-amber); font-size: 1.05em; margin-bottom: 6px;">.NET Framework</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Širší API, ale platformově vázanější.</li>
+              <li>Vhodné pro legacy kód a&nbsp;knihovny, které standard nepodporují.</li>
+              <li>Větší binárka a&nbsp;větší riziko nekompatibility.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 12px; padding: 10px 16px;">
+          <p style="margin: 0; font-size: 0.74em; color: var(--text-main); line-height: 1.45;">
+            <strong>Nastavení:</strong> <code>Project Settings &gt; Player &gt; Other Settings &gt; Api Compatibility
+              Level</code>.
+            Ne všechny systémové knihovny jsou podporované (např. <code>System.Drawing</code>); výkon a&nbsp;alokace se
+            mezi verzemi Unity mohou měnit.
+          </p>
+        </div>
+        <aside class="notes">
+          Studenti často přepnou na .NET Framework, protože jim chybí nějaká třída. To je někdy nutné, ale vždy za cenu
+          přenositelnosti a velikosti.
+          Pro nový projekt zůstaňte na .NET Standard, dokud vás něco konkrétního donutí jinak.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 14: GARBAGE COLLECTOR
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; Paměť</span>
+        <h2>Garbage collector</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 4px;">Boehm GC</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Unity používá <strong>Boehm GC</strong> pro Mono i&nbsp;IL2CPP.</li>
+                <li>Spravuje managed haldu: třídy, stringy, pole, boxované hodnoty.</li>
+                <li>Nativní objekty (<code>UnityEngine.Object</code>) GC neřídí.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.98em; margin-bottom: 4px;">Incremental vs.
+                stop-the-world</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Výchozí je <strong>incremental GC</strong>: práce rozložená do více snímků.</li>
+                <li>Lze přepnout na <strong>stop-the-world</strong>: kratší, ale citelné záseky.</li>
+                <li>Nastavení: <code>Player &gt; Other Settings &gt; Use incremental GC</code>.</li>
+                <li><code>Scripting.GarbageCollector</code> umí GC úplně vypnout: jen velmi opatrně.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="glass-card accent-emerald" style="margin-top: 0; padding: 12px 16px;">
+            <h3 style="color: var(--accent-emerald); font-size: 0.98em; margin-bottom: 4px;">Praxe</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Měřte alokace v&nbsp;<strong>Profileru</strong>.</li>
+              <li>Vyhněte se alokacím ve <code>Update</code>: stringy, LINQ, <code>foreach</code> přes nové kolekce.
+              </li>
+              <li>Cíl: žádné alokace ve frame loopu.</li>
+              <li><strong>Nástroje:</strong> pooling, <code>StringBuilder</code>, <code>for</code></li>
+              <li>Nativní paměť se uvolňuje přes <code>Destroy</code>, ne GC.</li>
+            </ul>
+            <div class="highlight-card alert" style="margin: 8px 0 0 0; padding: 8px 12px;">
+              <p style="margin: 0; font-size: 0.68em; color: var(--text-main); line-height: 1.35;">
+                Vypnutí GC není optimalizace. Je to poslední záchranná brzda.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          GC je nejčastější příčina mikrozáseků. Incremental GC je kompromis: nerozloží práci do jednoho framu, ale
+          může běžet častěji.
+          Vysvětlete, že optimalizace začíná měřením, ne vypnutím GC.
+          Zároveň připomeňte, že nativní objekty se uvolňují přes Destroy, ne garbage collectorem.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 15: UNITYENGINE.OBJECT
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; Nativní objekty</span>
+        <h2>UnityEngine.Object: dva životy objektu</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="flow-vertical" style="margin-top: 2px;">
+            <div class="flow-step">
+              <span class="step-num">1</span>
+              <div><strong>C# wrapper</strong> drží referenci na <strong>nativní objekt</strong> v&nbsp;C++.</div>
+            </div>
+            <div class="flow-step">
+              <span class="step-num">2</span>
+              <div><code>Object.Destroy()</code> zničí <strong>nativní objekt</strong>. Managed wrapper zůstává.</div>
+            </div>
+            <div class="flow-step">
+              <span class="step-num">3</span>
+              <div>GC uvolní wrapper až po ztrátě <strong>poslední reference</strong>.</div>
+            </div>
+            <div class="flow-step" style="border-left: 3px solid var(--accent-rose);">
+              <span class="step-num">!</span>
+              <div>Zničený <code>MonoBehaviour</code> nebo <code>ScriptableObject</code> se <strong>nikdy automaticky
+                  neobnoví</strong>.</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.98em; margin-bottom: 4px;">Přepsané operátory</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><code>==</code> a&nbsp;<code>!=</code> neporovnávají jen managed reference. Ptají se i&nbsp;na
+                  <strong>nativní objekt</strong>.
+                </li>
+                <li>Zničený objekt se proto rovná <code>null</code>, i&nbsp;když wrapper existuje.</li>
+                <li><code>WeakReference</code> nad <code>UnityEngine.Object</code> <strong>není podporován</strong>.
+                </li>
+                <li><code>DestroyImmediate</code> slouží pro Editor; v&nbsp;runtime se nepoužívá.</li>
+                <li><strong>Po Destroy:</strong> reference = <code>null</code></li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style="margin-top: 10px; padding: 9px 14px;">
+              <p style="margin: 0; font-size: 0.7em; color: var(--text-main); line-height: 1.35;">
+                Nikdy nekontrolujte <code>obj == null</code> přes <code>ReferenceEquals</code>: v&nbsp;Unity to není
+                totéž.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je klasika, na kterou narazí každý. Vysvětlete, že == null v Unity není jen porovnání referencí, ale
+          dotaz na nativní objekt.
+          Proto může být objekt nenullový z pohledu C# a přesto se chovat jako null. A proto nelze použít
+          WeakReference.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 16: REFLEXE, VLÁKNA, ASYNC
+           ========================================== -->
+      <section>
+        <span class="slide-category">.NET &bull; Omezení runtimu</span>
+        <h2>Reflexe, vlákna a&nbsp;async/await</h2>
+        <div class="slide-grid-3" style="align-items: stretch; margin-top: 4px;">
+          <div class="glass-card" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 4px;">Reflexe</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Unity cachuje <code>System.Reflection</code> objekty a&nbsp;<strong>neuvolňuje je</strong> GC.</li>
+              <li>Časté skenování (<code>Assembly.GetTypes</code>, <code>Type.GetMethods</code>) vytváří GC overhead.
+              </li>
+              <li>Řešení: předpočítat v&nbsp;Editoru, serializovat nebo generovat kód.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-rose" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-rose); font-size: 0.94em; margin-bottom: 4px;">Vlákna</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Unity API <strong>není thread-safe</strong>.</li>
+              <li>Většina volání musí běžet na <strong>hlavním vlákně</strong>.</li>
+              <li>V&nbsp;development buildu Unity vyhodí výjimku při volání API z&nbsp;jiného vlákna.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-purple); font-size: 0.94em; margin-bottom: 4px;">async/await</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Unity přepisuje <code>SynchronizationContext</code> na <code>UnitySynchronizationContext</code>.</li>
+              <li><code>await</code> se vrací na hlavní vlákno; <code>Task.Run</code> běží na pozadí.</li>
+              <li><strong>Task.Run:</strong> mimo Unity API</li>
+              <li>Tasky nejsou zastaveny po ukončení Play mode: odhlaste se přes
+                <code>EditorApplication.playModeStateChanged</code>.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card blue" style="margin-top: 12px; padding: 9px 16px;">
+          <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.4;">
+            <strong>Doporučení:</strong> pro paralelní práci s&nbsp;daty používejte <strong>Job System</strong>
+            a&nbsp;Burst, ne ruční vlákna.
+          </p>
+        </div>
+        <aside class="notes">
+          async/await je užitečný, ale v Unity platí tři pravidla: hlavní vlákno, hlavní vlákno, hlavní vlákno.
+          Job System je bezpečnější cesta pro výpočty nad daty.
+          U reflexe zdůrazněte, že cache není GC: takže i „jen čtení“ může dlouhodobě růst.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 17: SERIALIZACE: KONCEPT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Serializace &bull; Koncept</span>
+        <h2>Serializace: co to je a&nbsp;proč existuje</h2>
+        <div class="highlight-card blue" style="margin-top: 0; padding: 12px 18px;">
+          <p style="margin: 0; font-size: 0.82em; color: var(--text-main); line-height: 1.45;">
+            <strong>Serializace</strong> je automatický proces převodu datových struktur nebo stavu GameObjectu do
+            formátu, který Unity umí uložit a&nbsp;později rekonstruovat.
+          </p>
+        </div>
+
+        <div class="slide-grid-3" style="align-items: stretch; margin-top: 10px;">
+          <div class="glass-card" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 4px;">Scény a&nbsp;prefaby</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Uložený stav komponent a&nbsp;hierarchie.</li>
+              <li>Reference mezi objekty.</li>
+              <li>Prefab je serializovaná šablona; instance přebírá uložené hodnoty.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-emerald" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 4px;">Assety a&nbsp;Inspector
+            </h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li><code>ScriptableObject</code>, materiály, animace, importní nastavení.</li>
+              <li>Změna v&nbsp;Inspectoru se zapíše do serializovaných polí.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-purple); font-size: 0.94em; margin-bottom: 4px;">Editor a&nbsp;build</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Undo/Redo, domain reload po rekompilaci, přechod do Play mode.</li>
+              <li><strong>Domain reload:</strong> managed stav se ztrácí</li>
+              <li>Build ukládá serializovaná data do assetů a&nbsp;scén.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 10px; padding: 9px 16px;">
+          <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.4;">
+            Serializace je most mezi managed světem a&nbsp;trvalým úložištěm. Vše, co má přežít reload, musí být
+            serializované.
+          </p>
+        </div>
+        <aside class="notes">
+          Studenti berou Inspector jako samozřejmost. Tady je potřeba ukázat, že za ním stojí serializace.
+          Když položíte do třídy pole, Unity ho musí umět uložit: jinak se hodnota ztratí při každém reloadu.
+          To je důvod, proč existují pravidla na dalším slidu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 18: PRAVIDLA SERIALIZACE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Serializace &bull; Pravidla</span>
+        <h2>Která pole se serializují</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <table class="comparison-table" style="margin-top: 0; font-size: 0.72em;">
+              <thead>
+                <tr>
+                  <th style="width: 40%;">Pole musí splnit</th>
+                  <th>Příklad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Je <strong>public</strong>, nebo má <code>[SerializeField]</code></td>
+                  <td><code>public int health;</code></td>
+                </tr>
+                <tr>
+                  <td>Není <code>static</code>, <code>const</code> ani <code>readonly</code></td>
+                  <td><code>readonly float speed;</code> &times;</td>
+                </tr>
+                <tr>
+                  <td>Typ je <strong>serializovatelný</strong></td>
+                  <td><code>Vector3</code>, <code>List&lt;T&gt;</code>, <code>[Serializable]</code> třída</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="highlight-card alert" style="margin-top: 10px; padding: 9px 14px;">
+              <p style="margin: 0; font-size: 0.7em; color: var(--text-main); line-height: 1.4;">
+                Properties se standardně <strong>neserializují</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="code-panel">
+              <div class="code-label">Projde</div>
+              <pre style="font-size: 0.58em; line-height: 1.32;"><code class="language-csharp" data-trim data-noescape>public class Enemy : MonoBehaviour
+{
+    public int health;                  // public
+    [SerializeField] private int armor; // private + atribut
+    [SerializeField] private Weapon weapon;
+}</code></pre>
+            </div>
+            <div class="code-panel">
+              <div class="code-label">Neprojde</div>
+              <pre style="font-size: 0.58em; line-height: 1.32;"><code class="language-csharp" data-trim data-noescape>public static int score;        // static
+private const int MaxHp = 100;  // const
+private readonly float speed;   // readonly
+private int secret;             // private bez atributu</code></pre>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je nejpraktičtější slide celé kapitoly. Řekněte studentům, ať si zapamatují tři podmínky.
+          Čtvrtá věc: properties: je častý omyl. public int Health { get; set; } se v Inspectoru neobjeví.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 19: PODPOROVANÉ TYPY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Serializace &bull; Typy</span>
+        <h2>Podporované typy</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <table class="comparison-table dense-table" style="margin-top: 0;">
+            <thead>
+              <tr>
+                <th style="width: 38%;">Kategorie</th>
+                <th>Příklady</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Primitiva</td>
+                <td><code>int</code>, <code>float</code>, <code>bool</code>, <code>string</code></td>
+              </tr>
+              <tr>
+                <td>Enumy</td>
+                <td>do 32 bitů</td>
+              </tr>
+              <tr>
+                <td>Unity structy</td>
+                <td><code>Vector2</code>, <code>Vector3</code>, <code>Rect</code>, <code>Color</code>,
+                  <code>AnimationCurve</code>
+                </td>
+              </tr>
+              <tr>
+                <td>Vlastní typy</td>
+                <td><code>struct</code> / <code>class</code> s&nbsp;<code>[Serializable]</code></td>
+              </tr>
+              <tr>
+                <td>Reference na objekty</td>
+                <td><code>GameObject</code>, <code>Material</code>, <code>ScriptableObject</code></td>
+              </tr>
+              <tr>
+                <td>Kolekce</td>
+                <td><code>T[]</code>, <code>List&lt;T&gt;</code> podporovaných typů</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div>
+            <div class="glass-card accent-rose" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-rose); font-size: 0.96em; margin-bottom: 4px;">Nepodporované</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Vícerozměrná pole a&nbsp;jagged arrays.</li>
+                <li><code>Dictionary&lt;K,V&gt;</code> a&nbsp;jiné nested container typy.</li>
+                <li>Typy, které Unity neumí rozložit.</li>
+                <li><strong>Hloubka:</strong> omezená</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin-top: 10px; padding: 9px 14px;">
+              <p style="margin: 0; font-size: 0.7em; color: var(--text-main); line-height: 1.4;">
+                <strong>Řešení:</strong> obalit do serializovatelné třídy, nebo implementovat
+                <code>ISerializationCallbackReceiver</code>. Podpora je omezená i&nbsp;hloubkou zanoření.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Zde se láme představa „C# objekt = serializovaný objekt“. Unity podporuje jen omezenou množinu.
+          Slovník je nejčastější případ: studenti ho chtějí použít a diví se, že ho Inspector neukáže.
+          Řešení přijde na dalším slidu.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 20: VLASTNÍ TŘÍDY
+           ========================================== -->
+      <section>
+        <span class="slide-category">Serializace &bull; Vlastní typy</span>
+        <h2>Vlastní třídy: inline vs. SerializeReference</h2>
+        <table class="comparison-table dense-table" style="margin-top: 0;">
+          <thead>
+            <tr>
+              <th style="width: 30%;">Vlastnost</th>
+              <th style="width: 35%;">Inline (výchozí)</th>
+              <th style="width: 35%;"><code>[SerializeReference]</code></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Uložení</td>
+              <td>kopie hodnoty do vlastníka</td>
+              <td>managed reference</td>
+            </tr>
+            <tr>
+              <td>Sdílení instance</td>
+              <td>ne: vznikne duplikát</td>
+              <td>ano</td>
+            </tr>
+            <tr>
+              <td><code>null</code> hodnota</td>
+              <td>ne</td>
+              <td>ano</td>
+            </tr>
+            <tr>
+              <td>Cyklické grafy</td>
+              <td>ne</td>
+              <td>ano</td>
+            </tr>
+            <tr>
+              <td>Polymorfismus</td>
+              <td>ne</td>
+              <td>ano</td>
+            </tr>
+            <tr>
+              <td>Režie</td>
+              <td>nižší</td>
+              <td>vyšší</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="slide-grid-2 equal" style="margin-top: 10px; align-items: start;">
+          <div class="code-panel" style="margin-top: 0;">
+            <div class="code-label">Dvě podoby pole</div>
+            <pre style="font-size: 0.6em; line-height: 1.32;"><code class="language-csharp" data-trim data-noescape>[Serializable]
+public class Weapon { public int damage; }
+
+public class Enemy : MonoBehaviour
+{
+    // inline kopie
+    [SerializeField] private Weapon weapon;
+    // polymorfní reference
+    [SerializeReference] private AIState state;
+}</code></pre>
+          </div>
+
+          <div class="highlight-card" style="margin: 0; padding: 10px 15px;">
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.45;">
+              Třída musí mít <code>[Serializable]</code> a&nbsp;nesmí být statická. Pro běžná data preferujte
+              <strong>inline</strong>; <code>[SerializeReference]</code> používejte jen když potřebujete null, sdílení,
+              cykly nebo polymorfismus.
+            </p>
+          </div>
+        </div>
+        <aside class="notes">
+          Tady je důležité pochopit rozdíl. Inline znamená, že když stejný objekt přiřadíte do dvou polí, Unity uloží
+          dvě kopie.
+          SerializeReference udrží jednu instanci a referenci. Za to platíte režií a složitějším chováním v Inspectoru.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 21: ISERIALIZATIONCALLBACKRECEIVER
+           ========================================== -->
+      <section>
+        <span class="slide-category">Serializace &bull; Slovníky</span>
+        <h2>ISerializationCallbackReceiver</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="highlight-card alert" style="margin-top: 0; padding: 10px 14px;">
+              <p style="margin: 0; font-size: 0.74em; color: var(--text-main); line-height: 1.4;">
+                <strong>Problém:</strong> <code>Dictionary&lt;K,V&gt;</code> Unity neserializuje.
+              </p>
+            </div>
+
+            <div class="glass-card" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.96em; margin-bottom: 4px;">Řešení: dva callbacky</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><code>OnBeforeSerialize()</code>: převést runtime strukturu na Unity-friendly data
+                  (paralelní pole).</li>
+                <li><code>OnAfterDeserialize()</code>: znovu sestavit slovník.</li>
+                <li><strong>Dictionary:</strong> 2 paralelní pole</li>
+                <li>Callback běží při ukládání i&nbsp;načítání: neprovádějte v&nbsp;něm drahé operace.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin-top: 10px; padding: 9px 14px;">
+              <p style="margin: 0; font-size: 0.7em; color: var(--text-main); line-height: 1.4;">
+                Stejný vzor funguje pro jakoukoli strukturu, kterou Unity neumí uložit: převést na pole a&nbsp;zpět.
+              </p>
+            </div>
+          </div>
+
+          <div class="code-panel" style="margin-top: 0;">
+            <div class="code-label">ItemDatabase.cs</div>
+            <pre style="font-size: 0.47em; line-height: 1.28; max-height: 520px;"><code class="language-csharp" data-trim data-noescape>[Serializable]
+public class ItemDatabase : ISerializationCallbackReceiver
+{
+    private Dictionary&lt;string, Item&gt; _items = new();
+
+    [SerializeField] private List&lt;string&gt; _keys = new();
+    [SerializeField] private List&lt;Item&gt; _values = new();
+
+    public void OnBeforeSerialize()
+    {
+        _keys.Clear();
+        _values.Clear();
+        foreach (var pair in _items)
+        {
+            _keys.Add(pair.Key);
+            _values.Add(pair.Value);
+        }
+    }
+
+    public void OnAfterDeserialize()
+    {
+        _items.Clear();
+        for (int i = 0; i &lt; _keys.Count; i++)
+            _items[_keys[i]] = _values[i];
+    }
+}</code></pre>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je vzor, který studenti ocení v praxi. Ukázka je záměrně krátká: dvě paralelní pole a dvě metody.
+          Zdůrazněte, že slovník zůstává privátní a Inspector vidí jen pole.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 22: REFERENCE A SCRIPTABLEOBJECT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Serializace &bull; Reference</span>
+        <h2>Reference, assety a&nbsp;ScriptableObject</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 12px 16px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.96em; margin-bottom: 4px;">Reference na
+                UnityEngine.Object</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Pole (field) typu <code>UnityEngine.Object</code> (včetně <code>ScriptableObject</code>) se ukládá
+                  jako
+                  <strong>reference</strong>, ne jako kopie.
+                </li>
+                <li>Asset je uložen zvlášť; více polí (fields) může ukazovat na stejný asset bez duplikace.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.96em; margin-bottom: 4px;">Ostatní objekty</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Běžné C# objekty se ukládají <strong>inline</strong> (kopií), pokud nepoužijete
+                  <code>[SerializeReference]</code>.
+                </li>
+                <li><code>ScriptableObject</code> je ideální pro sdílená konfigurační data: jeden asset, mnoho
+                  referencí.</li>
+                <li>Smazání assetu rozbije reference: Unity zobrazí „Missing“.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="glass-card" style="margin-top: 0; padding: 18px 16px;">
+            <div class="ref-diagram">
+              <div class="ref-col">
+                <div class="ref-box">Prefab A</div>
+                <div class="ref-box">Prefab B</div>
+                <div class="ref-box">Prefab C</div>
+              </div>
+              <div class="ref-arrow">&rarr;</div>
+              <div class="ref-box asset">Material<br>asset</div>
+            </div>
+            <p
+              style="margin: 12px 0 0 0; font-size: 0.7em; color: var(--text-muted); text-align: center; line-height: 1.4;">
+              Tři prefaby, jedna instance assetu.<br>Data nejsou zkopírovaná, jen odkazovaná.
+            </p>
+          </div>
+        </div>
+        <aside class="notes">
+          Tady se vysvětluje, proč je ScriptableObject tak užitečný. Není to jen „asset pro data“, je to způsob, jak
+          sdílet jednu instanci mezi scénami a prefaby.
+          Naopak běžná třída se vždy zkopíruje.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 23: BEST PRACTICES SERIALIZACE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Serializace &bull; Praxe</span>
+        <h2>Best practices serializace</h2>
+        <div class="slide-grid-4" style="align-items: stretch; margin-top: 4px;">
+          <div class="glass-card" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 3px;">1. Jen nutné minimum</h3>
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+              Méně dat znamená menší build a&nbsp;méně chyb. Serializujte jen to, co má přežít reload.
+            </p>
+          </div>
+
+          <div class="glass-card accent-emerald" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 3px;">2. Žádná duplicitní data
+            </h3>
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+              Neukládejte cached ani odvozené hodnoty. Přepočítejte je při načtení.
+            </p>
+          </div>
+
+          <div class="glass-card accent-amber" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-amber); font-size: 0.94em; margin-bottom: 3px;">3. Pozor na rekurzi</h3>
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+              Vyhněte se rekurzivním strukturám, pokud nejsou potomky <code>UnityEngine.Object</code> nebo
+              nepoužívají <code>[SerializeReference]</code>.
+            </p>
+          </div>
+
+          <div class="glass-card accent-purple" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-purple); font-size: 0.94em; margin-bottom: 3px;">4. Inline jako default</h3>
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+              <code>[SerializeReference]</code> jen pro null, sdílení, cykly nebo polymorfismus.
+            </p>
+          </div>
+        </div>
+
+        <div class="highlight-card alert" style="margin-top: 16px; padding: 14px 22px;">
+          <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.5;">
+            Serializace je <strong>kontrakt s&nbsp;Editorem</strong>. Když ho porušíte, hodnoty se tiše ztratí:
+            žádná výjimka, jen prázdné pole.
+          </p>
+        </div>
+        <aside class="notes">
+          Pravidla jsou krátká, ale řeší většinu problémů. Zdůrazněte poslední větu: serializace selhává tiše.
+          Proto je dobré mít vlastní validaci a testy, které po reloadu ověří, že data zůstala.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 24: RENDER PIPELINE KONCEPT
+           ========================================== -->
+      <section>
+        <span class="slide-category">Render pipelines &bull; Koncept</span>
+        <h2>Co je render pipeline</h2>
+        <div class="highlight-card blue" style="margin-top: 0; padding: 10px 18px;">
+          <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.4;">
+            <strong>Render pipeline</strong> přebírá objekty ve scéně a&nbsp;zobrazuje je na obrazovce.
+            Opakuje se při každém snímku, který Unity vygeneruje.
+          </p>
+        </div>
+
+        <div class="flow-row" style="margin: 16px 0;">
+          <div class="flow-box" style="padding: 12px 8px;"><strong>1. Culling</strong>odstraní objekty mimo kameru
+            a&nbsp;zakryté objekty</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box" style="padding: 12px 8px;"><strong>2. Rendering</strong>vykreslí objekty se správným
+            osvětlením do bufferů</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-box" style="padding: 12px 8px;"><strong>3. Post-processing</strong>upraví buffery do
+            finálního obrazu</div>
+        </div>
+
+        <div class="slide-grid-2 equal" style="align-items: stretch; margin-top: 4px;">
+          <div class="glass-card" style="margin-top: 0; padding: 11px 15px;">
+            <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 3px;">Rendering path</h3>
+            <p style="margin: 0 0 4px 0; font-size: 0.7em; color: var(--text-muted); line-height: 1.35;">
+              Série operací, které kreslí a&nbsp;osvětlují objekty, jež kamera vidí.
+            </p>
+            <ul class="custom-list" style="margin: 0;">
+              <li><strong>Forward:</strong> per-object</li>
+              <li><strong>Deferred:</strong> G-buffer</li>
+              <li><strong>Forward+:</strong> per-tile (URP)</li>
+            </ul>
+          </div>
+          <div class="glass-card accent-purple" style="margin-top: 0; padding: 11px 15px;">
+            <h3 style="color: var(--accent-purple); font-size: 0.94em; margin-bottom: 3px;">Kdo pipeline řídí</h3>
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.45;">
+              Built-in je pevná pipeline ovlivnitelná command buffery. URP a&nbsp;HDRP jsou postavené na
+              <strong>SRP</strong>: culling, rendering i&nbsp;post-processing jsou C# kód.
+            </p>
+          </div>
+        </div>
+        <aside class="notes">
+          Začněte jednoduchou definicí. Culling, rendering, post-processing: tyto tři kroky platí pro všechny pipeline
+          v Unity 6.6.
+          Nově zdůrazněte, že pipeline není totéž co rendering path: pipeline je celý systém, rendering path je
+          způsob, jakým se v něm kreslí a osvětluje geometrie.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 25: TŘI PIPELINE PŘEHLED (UNITY 6.6)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Render pipelines &bull; Přehled</span>
+        <h2>Tři render pipelines v&nbsp;Unity 6.6</h2>
+
+        <div class="deprecation-banner">
+          <strong>Unity 6.6: Built-In Render Pipeline je deprecated.</strong>
+          Bude obsolete v&nbsp;budoucím vydání; bug-fixy a&nbsp;údržba potrvají po celý
+          <strong>Unity 6.7 LTS</strong> lifecycle. Nové projekty startujte na URP nebo HDRP.
+        </div>
+
+        <div class="slide-grid-3" style="align-items: stretch; margin-top: 10px;">
+          <div class="glass-card" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-cyan); font-size: 1.02em; margin-bottom: 4px;">URP</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Předpřipravená <strong>SRP</strong> od Unity.</li>
+              <li>Škálovatelná grafika na všech Unity platformách: mobil až high-end konzole a&nbsp;PC.</li>
+              <li>Shader Graph, VFX Graph, SRP Batcher.</li>
+              <li><strong>Rozumný default pro nové projekty.</strong></li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-purple" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-purple); font-size: 1.02em; margin-bottom: 4px;">HDRP</h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Předpřipravená <strong>SRP</strong> pro high-end platformy.</li>
+              <li>Fyzikálně založené osvětlení a&nbsp;materiály, forward i&nbsp;deferred.</li>
+              <li>AAA hry, automotive, architektura.</li>
+              <li>3D projekty; náročné na hardware.</li>
+              <li><strong>Platformy:</strong> PC, konzole, Switch 2</li>
+            </ul>
+          </div>
+
+          <div class="glass-card accent-rose" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-rose); font-size: 1.02em; margin-bottom: 4px;">Built-in <span
+                class="status-pill deprecated">deprecated</span></h3>
+            <ul class="custom-list" style="margin: 0;">
+              <li>Obecná pipeline s&nbsp;omezeným přizpůsobením.</li>
+              <li><strong>Není</strong> postavená na SRP.</li>
+              <li>Jen pro legacy projekty, které se dosud nepodařilo migrovat.</li>
+              <li>Podpora končí s&nbsp;Unity 6.7 LTS.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card alert" style="margin-top: 12px; padding: 8px 14px;">
+          <p style="margin: 0; font-size: 0.7em; color: var(--text-main); line-height: 1.35;">
+            <strong>URP a&nbsp;HDRP nelze v&nbsp;jednom projektu používat současně.</strong> Oba jsou SRP, ale mají
+            odlišné render paths a&nbsp;light modely.
+          </p>
+        </div>
+        <aside class="notes">
+          Tady je hlavní změna oproti starší verzi přednášky: Built-in už není rovnocenná třetí volba.
+          Pro nový projekt je rozumný default URP; HDRP je specialista na high-end.
+          Deprecation banner čtěte doslova: podpora končí s Unity 6.7 LTS, ne dřív, ale nový projekt na Built-in
+          nezačínejte.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 26: BUILT-IN (DEPRECATED)
+           ========================================== -->
+      <section>
+        <span class="slide-category">Render pipelines &bull; Built-in</span>
+        <h2>Built-In Render Pipeline (deprecated)</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card accent-rose" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-rose); font-size: 0.94em; margin-bottom: 3px;">Status</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Deprecated</strong> v&nbsp;Unity 6.6.</li>
+                <li>Bude <strong>obsolete</strong> v&nbsp;budoucím vydání.</li>
+                <li>Bug-fixy a&nbsp;údržba po celý <strong>Unity 6.7 LTS</strong> lifecycle.</li>
+                <li>Pro nové projekty se nedoporučuje.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="margin-top: 10px; padding: 11px 15px;">
+              <h3 style="color: var(--accent-amber); font-size: 0.94em; margin-bottom: 3px;">Charakteristika</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Starší pipeline Unity; <strong>není založená na SRP</strong>.</li>
+                <li>Rendering paths: <strong>Forward</strong>, <strong>Deferred</strong>,
+                  <strong>Legacy Vertex Lit</strong>.
+                </li>
+                <li>Přizpůsobení přes <strong>command buffers</strong> a&nbsp;callbacky.</li>
+                <li>Většina kódu je <strong>C++ a privátní</strong>; přístup je nutné zakoupit.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card accent-emerald" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 3px;">Migrace</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Built-in &rarr; URP:</strong> URP Render Pipeline Converter; převod materiálů
+                  a&nbsp;shaderů.</li>
+                <li><strong>Built-in &rarr; HDRP:</strong> HDRP Pipeline Wizard; náročnější, často ruční přetvoření
+                  materiálů.</li>
+                <li>Manuální úpravy custom shaderů a&nbsp;render callbacků.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card alert" style="margin-top: 10px; padding: 9px 14px;">
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.42;">
+                <strong>Kdy ho použít:</strong> pouze existující legacy projekt, který zatím nelze migrovat.
+                Migraci naplánujte <strong>před koncem Unity 6.7 LTS</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Built-in není špatný, je jen na konci životního cyklu. Zdůrazněte, že podpora nekončí okamžitě:
+          Unity 6.7 LTS je poslední LTS, které ho ponese.
+          Pro studenty to znamená jediné: nový projekt v Unity 6.6 startujte na URP nebo HDRP, ne na Built-in.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 27: URP
+           ========================================== -->
+      <section>
+        <span class="slide-category">Render pipelines &bull; URP</span>
+        <h2>Universal Render Pipeline</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 3px;">Co to je</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Předpřipravená <strong>SRP</strong> vytvořená Unity.</li>
+                <li>Škálovatelná grafika na <strong>všech Unity platformách</strong>: mobil, desktop, konzole, VR,
+                  WebGL.</li>
+                <li>Optimalizace pro <strong>TBDR</strong> a&nbsp;untethered VR.</li>
+                <li><strong>Rozumný default pro nové projekty.</strong></li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-purple" style="margin-top: 10px; padding: 11px 15px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.94em; margin-bottom: 3px;">Vlastnosti</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Shader Graph a&nbsp;<strong>VFX Graph</strong>.</li>
+                <li><strong>SRP Batcher</strong>, BatchRendererGroup, Entities (DOTS).</li>
+                <li><strong>GPU Resident Drawer</strong> (v&nbsp;URP vypnutý) a&nbsp;GPU occlusion culling.</li>
+                <li>Od URP 17 <strong>render graph system</strong> pro vlastní passy.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card accent-emerald" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 3px;">Rendering paths</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Forward</strong> (výchozí): jednoduchý, limity světel na objekt.</li>
+                <li><strong>Deferred / Deferred+</strong>: mnoho světel, detailní stíny.</li>
+                <li><strong>Forward+</strong>: bez limitu světel na GameObject; světla per-tile.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-amber" style="margin-top: 10px; padding: 11px 15px;">
+              <h3 style="color: var(--accent-amber); font-size: 0.94em; margin-bottom: 3px;">Kdy ho použít</h3>
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.45;">
+                Cross-platform 2D i&nbsp;3D, mobil, TBDR hardware, VR, konzole i&nbsp;desktop. Nové projekty, které
+                chtějí rozšiřitelnost a&nbsp;aktivní vývoj.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          URP je rozumný default pro nové projekty. „Universal“ neznamená nejnižší kvalita: znamená rozsah
+          platforem.
+          Ukažte tři rendering paths: Forward pro jednoduchost, Forward+ pro mnoho světel bez per-object limitu,
+          Deferred pro mnoho světel a detailní stíny.
+          Zmiňte, že URP 17 přinesl Render Graph a GPU Resident Drawer.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 28: HDRP
+           ========================================== -->
+      <section>
+        <span class="slide-category">Render pipelines &bull; HDRP</span>
+        <h2>High Definition Render Pipeline</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.94em; margin-bottom: 3px;">Co to je</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Předpřipravená <strong>SRP</strong> pro špičkovou, vysoce věrnou grafiku.</li>
+                <li><strong>Fyzikálně založené osvětlení a&nbsp;materiály.</strong></li>
+                <li>Forward i&nbsp;deferred rendering.</li>
+                <li>Využívá <strong>compute shadery</strong>; vyžaduje kompatibilní GPU.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card" style="margin-top: 10px; padding: 11px 15px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 3px;">Vlastnosti</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Pokročilé PBR: clear coat, skin, hair, eyes, subsurface scattering, water.</li>
+                <li>Fyzikální jednotky světla, volumetrics, pokročilé stíny.</li>
+                <li><strong>Ray tracing</strong> na podporovaném hardware.</li>
+                <li>Render Graph a&nbsp;GPU Resident Drawer (v&nbsp;HDRP zapnutý).</li>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card accent-emerald" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 3px;">Platformy</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Desktop (Windows, macOS, Linux), Xbox, PlayStation.</li>
+                <li><strong>Nintendo Switch 2.</strong></li>
+                <li><strong>Ne:</strong> původní Switch, iOS, Android, mobilní VR, WebGL.</li>
+                <li>Pouze 3D: bez 2D nástrojů URP.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-amber" style="margin-top: 10px; padding: 11px 15px;">
+              <h3 style="color: var(--accent-amber); font-size: 0.94em; margin-bottom: 3px;">Kdy ho použít</h3>
+              <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.45;">
+                AAA hry, automotive demos, architektonické vizualizace, fotorealistické scény na výkonném hardware.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          HDRP je nejvyšší kvalita za nejvyšší cenu. Nově je dobré zmínit Switch 2: v tabulce podpory Unity 6.6 je
+          HDRP pro Switch 2 dostupné, zatímco původní Switch, mobily a WebGL ne.
+          Pro fotorealistickou scénu na PC nebo konzoli je to správná volba, ale vyžaduje zkušený grafický tým.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 29: SROVNÁNÍ PIPELINE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Render pipelines &bull; Srovnání</span>
+        <h2>Srovnání pipeline</h2>
+        <table class="comparison-table dense-table" style="margin-top: 0;">
+          <thead>
+            <tr>
+              <th style="width: 21%;">Kritérium</th>
+              <th style="width: 27%;">URP</th>
+              <th style="width: 27%;">HDRP</th>
+              <th style="width: 25%;">Built-in</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cílové použití</td>
+              <td>škálovatelnost, 2D i&nbsp;3D, rozšiřitelnost</td>
+              <td>fotorealismus, high-end, 3D</td>
+              <td>legacy 2D i&nbsp;3D</td>
+            </tr>
+            <tr>
+              <td>Platformy</td>
+              <td>všechny Unity platformy</td>
+              <td>desktop, Xbox, PS, Switch 2</td>
+              <td>všechny Unity platformy</td>
+            </tr>
+            <tr>
+              <td>Mobil / Switch / WebGL</td>
+              <td>ano</td>
+              <td>ne (Switch 2 ano)</td>
+              <td>ano</td>
+            </tr>
+            <tr>
+              <td>Základ</td>
+              <td>SRP (C#)</td>
+              <td>SRP (C#)</td>
+              <td>non-SRP, převážně C++</td>
+            </tr>
+            <tr>
+              <td>Rozšiřitelnost</td>
+              <td>API + veřejný source; nejsnazší</td>
+              <td>API + veřejný source; složitější</td>
+              <td>command buffery; privátní source</td>
+            </tr>
+            <tr>
+              <td>Shader Graph</td>
+              <td>ano</td>
+              <td>ano</td>
+              <td>jen bug-fixy</td>
+            </tr>
+            <tr>
+              <td>Osvětlení</td>
+              <td>základní + některé pokročilé PBR</td>
+              <td>fyzikálně přesné, pokročilé PBR</td>
+              <td>základní PBR</td>
+            </tr>
+            <tr>
+              <td>Ray tracing</td>
+              <td>ne</td>
+              <td>ano (na podporovaném HW)</td>
+              <td>ne</td>
+            </tr>
+            <tr>
+              <td>2D nástroje</td>
+              <td>ano</td>
+              <td>ne</td>
+              <td>ano</td>
+            </tr>
+            <tr>
+              <td>Batching</td>
+              <td>static + SRP Batcher + BatchRendererGroup</td>
+              <td>static + SRP Batcher + BatchRendererGroup</td>
+              <td>static batching</td>
+            </tr>
+            <tr>
+              <td>Status</td>
+              <td>aktivně vyvíjená, pro nové projekty</td>
+              <td>aktivně vyvíjená</td>
+              <td><strong>deprecated</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="highlight-card alert" style="margin-top: 8px; padding: 8px 14px;">
+          <p style="margin: 0; font-size: 0.7em; color: var(--text-main); line-height: 1.35;">
+            <strong>URP a&nbsp;HDRP nelze kombinovat.</strong> Přepnutí pipeline uprostřed projektu je velmi nákladné:
+            různé shadery a&nbsp;funkce.
+          </p>
+        </div>
+        <aside class="notes">
+          Nečtěte celou tabulku. Vyberte čtyři řádky: platformy, základ (SRP vs. non-SRP), rozšiřitelnost a status.
+          Zbytek je reference.
+          Hlavní sdělení: URP je univerzál, HDRP specialista, Built-in legacy.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 30: SRP ARCHITEKTURA
+           ========================================== -->
+      <section>
+        <span class="slide-category">Render pipelines &bull; SRP</span>
+        <h2>Architektura SRP</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div class="flow-vertical" style="margin-top: 4px;">
+            <div class="flow-step" style="padding: 9px 13px;">
+              <span class="step-num">1</span>
+              <div><strong>RenderPipelineAsset</strong><br><span
+                  style="font-size: 0.9em; color: var(--text-muted);">ScriptableObject: konfigurace +
+                  <code>CreatePipeline()</code></span></div>
+            </div>
+            <div class="arch-arrow-v" style="font-size: 0.9em;">&darr; vytváří</div>
+            <div class="flow-step" style="padding: 9px 13px;">
+              <span class="step-num">2</span>
+              <div><strong>RenderPipeline Instance</strong><br><span
+                  style="font-size: 0.9em; color: var(--text-muted);">runtime objekt s metodou
+                  <code>Render()</code></span></div>
+            </div>
+            <div class="arch-arrow-v" style="font-size: 0.9em;">&darr; každý frame</div>
+            <div class="flow-step" style="padding: 9px 13px;">
+              <span class="step-num">3</span>
+              <div><strong>ScriptableRenderContext</strong><br><span
+                  style="font-size: 0.9em; color: var(--text-muted);">fronta příkazů &rarr; low-level graphics &rarr;
+                  graphics API</span></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 3px;">Proč na tom záleží</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>SRP je <strong>tenká C# API vrstva</strong> pro plánování a&nbsp;konfiguraci rendering příkazů.</li>
+                <li>URP, HDRP i&nbsp;vlastní pipeline jsou postavené na SRP.</li>
+                <li><strong>Render Graph</strong> je vyšší API v&nbsp;SRP Core pro správu passů a&nbsp;zdrojů; URP 17 ho
+                  používá.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin-top: 10px; padding: 9px 14px;">
+              <p style="margin: 0; font-size: 0.7em; color: var(--text-main); line-height: 1.4;">
+                SRP běží na hlavním vlákně. Příkazy se zapisují do <code>ScriptableRenderContext</code> a&nbsp;odesílají
+                metodou <code>Submit()</code>.
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Tohle je architektonické jádro grafické části. Asset je konfigurace, instance je běžící pipeline, Render je
+          vstupní bod, context je fronta příkazů.
+          Když to student pochopí, přestane být URP černá skříňka. Render Graph je nadstavba, ne náhrada SRP.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 31: RENDER GRAPH
+           ========================================== -->
+      <!-- <section>
+        <span class="slide-category">Render pipelines &bull; Render Graph</span>
+        <h2>Render Graph</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 3px;">Co to je</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Sada API z&nbsp;<strong>Core SRP package</strong> pro psaní <strong>Scriptable Render Pass</strong> v&nbsp;URP.</li>
+                <li>Dvě fáze: <strong>recording</strong> (deklarace textur a&nbsp;příkazů) a&nbsp;<strong>execution</strong> (vykonání).</li>
+                <li>Pass se injektuje do URP rendereru a&nbsp;stane se součástí interního render graphu.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-emerald" style="margin-top: 10px; padding: 11px 15px;">
+              <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 3px;">Optimalizace</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Nealokuje zdroje, které snímek nepoužije; znovu používá GPU paměť.</li>
+                <li>Odstraňuje passy, jejichž výstup nikdo nespotřebuje.</li>
+                <li>Synchronizuje compute a&nbsp;graphics fronty.</li>
+                <li>Na <strong>TBDR</strong> slučuje passy do jednoho native render passu: textury zůstávají v&nbsp;tile memory.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass-card accent-purple" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-purple); font-size: 0.94em; margin-bottom: 3px;">Resources</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Interní</strong>: vytvořené uvnitř passu; životnost řídí graph.</li>
+                <li><strong>Importované</strong>: existující textury (např. camera back buffer); životnost řídí aplikace.</li>
+                <li>Paměť se alokuje před prvním zápisem a&nbsp;uvolní po posledním čtení.</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-amber" style="margin-top: 10px; padding: 11px 15px;">
+              <h3 style="color: var(--accent-amber); font-size: 0.94em; margin-bottom: 3px;">Nástroje a&nbsp;kontext</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>Render Graph Viewer</strong>, Rendering Debugger, Frame Debugger.</li>
+                <li>Představeno v&nbsp;<strong>URP 17 (Unity 6)</strong>; HDRP ho také používá.</li>
+                <li>Není to čtvrtá pipeline: je to vrstva nad SRP.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Render Graph je novinka Unity 6, která studenty často mate. Zdůrazněte, že to není čtvrtá pipeline: je to
+          API vrstva, kterou URP a HDRP používají k tomu, aby passy správně seřadily a efektivně spravovaly paměť.
+          Nejlepší ukázka přínosu je TBDR: passy se slijí a textury zůstanou v tile memory.
+        </aside>
+      </section> -->
+
+      <!-- ==========================================
+           SLIDE 32: VLASTNÍ SRP
+           ========================================== -->
+      <section>
+        <span class="slide-category">Render pipelines &bull; Vlastní pipeline</span>
+        <h2>Vlastní SRP</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 3px;">Postup</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li>Přidat <strong>SRP Core</strong> package; volitelně URP/HDRP jako referenci.</li>
+                <li>Vytvořit třídu dědící z&nbsp;<code>RenderPipelineAsset</code>, přepsat
+                  <code>CreatePipeline()</code>.
+                </li>
+                <li>Vytvořit třídu dědící z&nbsp;<code>RenderPipeline</code>, implementovat <code>Render(...)</code>.
+                </li>
+                <li>Naplánovat culling, draw a&nbsp;post-processing; použít <code>ScriptableRenderContext</code>, nebo
+                  <strong>Render Graph</strong>.
+                </li>
+                <li>Asset přiřadit v&nbsp;<code>Project Settings &gt; Graphics</code>.</li>
+              </ul>
+            </div>
+
+            <div class="highlight-card" style="margin-top: 10px; padding: 9px 14px;">
+              <p style="margin: 0; font-size: 0.7em; color: var(--text-main); line-height: 1.4;">
+                Pro produkci je lepší vycházet z&nbsp;URP/HDRP. Pro vlastní passy v&nbsp;URP 17+ používejte
+                <strong>Render Graph</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="code-panel" style="margin-top: 0;">
+            <div class="code-label">MyPipeline.cs</div>
+            <pre style="font-size: 0.58em; line-height: 1.32;"><code class="language-csharp" data-trim data-noescape>public class MyPipelineAsset : RenderPipelineAsset
+{
+    protected override RenderPipeline CreatePipeline()
+        =&gt; new MyPipeline();
+}
+
+public class MyPipeline : RenderPipeline
+{
+    protected override void Render(
+        ScriptableRenderContext context, Camera[] cameras)
+    {
+        foreach (var camera in cameras)
+        {
+            context.Cull(...);
+            context.SetupCameraProperties(camera);
+            context.DrawRenderers(...);
+            context.Submit();
+        }
+    }
+}</code></pre>
+          </div>
+        </div>
+        <aside class="notes">
+          Ukázka je záměrně minimální: chybí jí spousta věcí, které produkční pipeline potřebuje. Cílem je ukázat tvar
+          API: asset, instance, Render, context.
+          Zdůrazněte, že vlastní SRP je pokročilá disciplína a že v Unity 6 je doporučená cesta pro rozšíření URP
+          Render Graph, ne vlastní pipeline od nuly.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 33: AKTIVACE PIPELINE ASSETU
+           ========================================== -->
+      <section>
+        <span class="slide-category">Render pipelines &bull; Nastavení</span>
+        <h2>Aktivace pipeline assetu</h2>
+        <div class="slide-grid-2" style="align-items: start;">
+          <div>
+            <div class="glass-card" style="margin-top: 0; padding: 11px 15px;">
+              <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 3px;">V&nbsp;Editoru</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><code>Edit &gt; Project Settings &gt; Graphics</code> &rarr; <strong>Default Render
+                    Pipeline</strong>.</li>
+                <li><code>Edit &gt; Project Settings &gt; Quality</code> &rarr; <strong>Render Pipeline Asset</strong>
+                  pro každou úroveň.</li>
+                <li>Pokud není nastaveno ani jedno, Unity použije <strong>Built-in</strong> (deprecated).</li>
+              </ul>
+            </div>
+
+            <div class="glass-card accent-amber" style="margin-top: 10px; padding: 11px 15px;">
+              <h3 style="color: var(--accent-amber); font-size: 0.94em; margin-bottom: 3px;">Priorita</h3>
+              <ul class="custom-list" style="margin: 0;">
+                <li><strong>1.</strong> <code>QualitySettings.renderPipeline</code> (per-quality override).</li>
+                <li><strong>2.</strong> <code>GraphicsSettings.defaultRenderPipeline</code> (globální default).</li>
+                <li><strong>3.</strong> Když jsou oba <code>null</code>, použije se <strong>Built-in</strong>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="code-panel" style="margin-top: 0;">
+            <div class="code-label">Runtime přepnutí</div>
+            <pre style="font-size: 0.56em; line-height: 1.35;"><code class="language-csharp" data-trim data-noescape>GraphicsSettings.defaultRenderPipeline = defaultAsset;
+QualitySettings.renderPipeline = perQualityAsset;
+
+// null = běží Built-in
+var active = GraphicsSettings.currentRenderPipeline;
+var instance = RenderPipelineManager.currentPipeline;</code></pre>
+            <p style="margin: 8px 0 0 0; font-size: 0.6em; color: var(--text-muted); line-height: 1.4;">
+              <code>currentPipeline</code> je dostupný až po prvním vykresleném snímku. Změnu typu zachytíte přes
+              <code>RenderPipelineManager.activeRenderPipelineTypeChanged</code>.
+            </p>
+          </div>
+        </div>
+        <aside class="notes">
+          Studenti často nevědí, proč se jim pipeline neprojevila. Odpověď bývá v prioritě: quality level přebíjí
+          graphics settings.
+          Tento slide je praktický návod, jak pipeline aktivovat a jak zjistit, která skutečně běží. Připomeňte, že
+          Built-in je jen fallback a v Unity 6.6 je deprecated.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 34: JAK VYBRAT PIPELINE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Render pipelines &bull; Rozhodování</span>
+        <h2>Jak vybrat pipeline</h2>
+        <div class="slide-grid-3" style="align-items: stretch; margin-top: 4px;">
+          <div class="glass-card" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-cyan); font-size: 0.94em; margin-bottom: 3px;">1. Cílové platformy</h3>
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+              Mobil, VR, WebGL &rarr; URP.<br>
+              High-end PC a&nbsp;konzole &rarr; HDRP.<br>
+              Legacy &rarr; Built-in jen dočasně.
+            </p>
+          </div>
+
+          <div class="glass-card accent-emerald" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-emerald); font-size: 0.94em; margin-bottom: 3px;">2. Vizuální cíl</h3>
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+              Stylizovaná grafika a&nbsp;flexibilita &rarr; URP.<br>
+              Fotorealismus, fyzikálně přesné materiály, ray tracing &rarr; HDRP.
+            </p>
+          </div>
+
+          <div class="glass-card accent-purple" style="margin-top: 0; padding: 12px 14px;">
+            <h3 style="color: var(--accent-purple); font-size: 0.94em; margin-bottom: 3px;">3. Tým a&nbsp;nástroje</h3>
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-muted); line-height: 1.4;">
+              Shader Graph, VFX Graph a&nbsp;vlastní passy &rarr; URP.<br>
+              Složitější high-end pipeline &rarr; HDRP.
+            </p>
+          </div>
+        </div>
+
+        <div class="slide-grid-2 equal" style="margin-top: 12px; align-items: start;">
+          <div class="highlight-card" style="margin: 0; padding: 10px 16px;">
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.45;">
+              <strong>4. Náklady na změnu:</strong> přepnutí uprostřed projektu je velmi nákladné. Různé pipeline
+              používají různé shadery a&nbsp;nemusí mít stejné funkce. Rozhodněte se na začátku.
+            </p>
+          </div>
+          <div class="highlight-card alert" style="margin: 0; padding: 10px 16px;">
+            <p style="margin: 0; font-size: 0.72em; color: var(--text-main); line-height: 1.45;">
+              <strong>Doporučení:</strong> nový projekt &rarr; <strong>URP</strong>.<br>
+              Fotorealistický high-end &rarr; <strong>HDRP</strong>.<br>
+              Legacy &rarr; <strong>Built-in</strong> jen do konce Unity 6.7 LTS.
+            </p>
+          </div>
+        </div>
+        <aside class="notes">
+          Tento slide je shrnutím rozhodování. Neexistuje univerzálně správná odpověď: záleží na platformě,
+          vizuálním cíli a týmu.
+          Hlavní rada: nový projekt na URP, HDRP jen když víte, že potřebujete high-end, a Built-in už jen jako
+          dočasný legacy.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 35: SHRNUTÍ
+           ========================================== -->
+      <section>
+        <span class="slide-category">Závěr &bull; Shrnutí</span>
+        <h2>Shrnutí</h2>
+        <div class="slide-grid-3" style="align-items: stretch; margin-top: 2px;">
+          <div class="glass-card" style="margin-top: 0; padding: 11px 14px;">
+            <h3 style="color: var(--accent-cyan); font-size: 0.92em; margin-bottom: 3px;">1. Native + managed</h3>
+            <p style="margin: 0; font-size: 0.7em; color: var(--text-muted); line-height: 1.4;">
+              Unity je native engine s&nbsp;C# fasádou: výkon v&nbsp;C++, logika v&nbsp;C#.
+            </p>
+          </div>
+
+          <div class="glass-card accent-purple" style="margin-top: 0; padding: 11px 14px;">
+            <h3 style="color: var(--accent-purple); font-size: 0.92em; margin-bottom: 3px;">2. Backend podle platformy
+            </h3>
+            <p style="margin: 0; font-size: 0.7em; color: var(--text-muted); line-height: 1.4;">
+              Mono/JIT pro iteraci, IL2CPP/AOT pro iOS, konzole a&nbsp;WebGL.
+            </p>
+          </div>
+
+          <div class="glass-card accent-rose" style="margin-top: 0; padding: 11px 14px;">
+            <h3 style="color: var(--accent-rose); font-size: 0.92em; margin-bottom: 3px;">3. AOT mění pravidla</h3>
+            <p style="margin: 0; font-size: 0.7em; color: var(--text-muted); line-height: 1.4;">
+              Žádné dynamické generování kódu; pozor na reflexi a&nbsp;stripping.
+            </p>
+          </div>
+
+          <div class="glass-card accent-emerald" style="margin-top: 0; padding: 11px 14px;">
+            <h3 style="color: var(--accent-emerald); font-size: 0.92em; margin-bottom: 3px;">4. Serializace je kontrakt
+            </h3>
+            <p style="margin: 0; font-size: 0.7em; color: var(--text-muted); line-height: 1.4;">
+              Public nebo <code>[SerializeField]</code>, podporovaný typ, žádná statická či readonly pole.
+            </p>
+          </div>
+
+          <div class="glass-card accent-amber" style="margin-top: 0; padding: 11px 14px;">
+            <h3 style="color: var(--accent-amber); font-size: 0.92em; margin-bottom: 3px;">5. Serializujte minimum</h3>
+            <p style="margin: 0; font-size: 0.7em; color: var(--text-muted); line-height: 1.4;">
+              Žádná duplicitní data, inline jako default, <code>[SerializeReference]</code> jen když je potřeba.
+            </p>
+          </div>
+
+          <div class="glass-card accent-blue" style="margin-top: 0; padding: 11px 14px;">
+            <h3 style="color: var(--accent-blue); font-size: 0.92em; margin-bottom: 3px;">6. Pipeline na začátku</h3>
+            <p style="margin: 0; font-size: 0.7em; color: var(--text-muted); line-height: 1.4;">
+              URP jako rozumný default, HDRP pro high-end, Built-in jen jako deprecated legacy do 6.7 LTS.
+            </p>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 14px; padding: 14px 22px;">
+          <p style="margin: 0; font-size: 0.8em; color: var(--text-main); line-height: 1.5;">
+            Architektura Unity není náhoda: každé omezení má důvod v&nbsp;oddělení nativního a&nbsp;managed světa.
+            Kdo to chápe, píše předvídatelnější a&nbsp;rychlejší hry.
+          </p>
+        </div>
+        <aside class="notes">
+          Šest bodů, které si mají odnést. Projděte je rychle, bez nových informací. U posledního bodu zdůrazněte
+          deprecaci Built-in pipeline: je to největší změna oproti starším verzím Unity.
+          Pokud zbývá čas, otevřete diskusi o tom, jaké pipeline a backendy používají studenti ve svých projektech.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 36: ZDROJE
+           ========================================== -->
+      <section>
+        <span class="slide-category">Závěr &bull; Zdroje</span>
+        <h2>Zdroje</h2>
+        <div class="slide-grid-2 equal" style="align-items: start;">
+          <div>
+            <h3 style="color: var(--accent-cyan); font-size: 0.88em; margin-bottom: 4px;">.NET a&nbsp;skriptování (Unity
+              2022.3)</h3>
+            <ul class="source-list">
+              <li><a href="https://docs.unity3d.com/2022.3/Documentation/Manual/overview-of-dot-net-in-unity.html"
+                  target="_blank">overview-of-dot-net-in-unity.html</a></li>
+              <li><a href="https://docs.unity3d.com/2022.3/Documentation/Manual/scripting-backends.html"
+                  target="_blank">scripting-backends.html</a></li>
+              <li><a href="https://docs.unity3d.com/2022.3/Documentation/Manual/IL2CPP.html"
+                  target="_blank">IL2CPP.html</a></li>
+            </ul>
+
+            <h3 style="color: var(--accent-emerald); font-size: 0.88em; margin: 8px 0 4px 0;">Serializace (Unity 2022.3)
+            </h3>
+            <ul class="source-list">
+              <li><a href="https://docs.unity3d.com/2022.3/Documentation/Manual/script-Serialization.html"
+                  target="_blank">script-Serialization.html</a></li>
+            </ul>
+
+            <h3 style="color: var(--accent-amber); font-size: 0.88em; margin: 8px 0 4px 0;">Architektura (Unity 2022.3)
+            </h3>
+            <ul class="source-list">
+              <li><a href="https://docs.unity3d.com/2022.3/Documentation/Manual/unity-architecture.html"
+                  target="_blank">unity-architecture.html</a></li>
+              <li><a href="https://docs.unity3d.com/2022.3/Documentation/Manual/ExecutionOrder.html"
+                  target="_blank">ExecutionOrder.html</a></li>
+            </ul>
+
+            <p style="margin: 10px 0 0 0; font-size: 0.6em; color: var(--text-muted); line-height: 1.4;">
+              .NET a&nbsp;serializace: Unity 2022.3 LTS.
+            </p>
+          </div>
+
+          <div>
+            <h3 style="color: var(--accent-purple); font-size: 0.88em; margin-bottom: 4px;">Render pipelines (Unity 6.6,
+              6000.6)</h3>
+            <ul class="source-list">
+              <li><a href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines"
+                  target="_blank">render-pipelines</a></li>
+              <li><a href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/overview"
+                  target="_blank">render-pipelines/overview</a></li>
+              <li><a
+                  href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/scriptable-render-pipeline-introduction"
+                  target="_blank">scriptable-render-pipeline-introduction</a></li>
+              <li><a
+                  href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/choose-a-render-pipeline/pipeline"
+                  target="_blank">choose-a-render-pipeline/pipeline</a></li>
+              <li><a
+                  href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/choose-a-render-pipeline/feature-comparison"
+                  target="_blank">choose-a-render-pipeline/feature-comparison</a></li>
+              <li><a
+                  href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/rendering-paths-introduction"
+                  target="_blank">rendering-paths-introduction</a></li>
+              <li><a href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/universal-render-pipeline"
+                  target="_blank">universal-render-pipeline</a></li>
+              <li><a
+                  href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/universal-render-pipeline/urp-whats-new"
+                  target="_blank">urp-whats-new (URP 17)</a></li>
+              <li><a
+                  href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/high-definition-render-pipeline"
+                  target="_blank">high-definition-render-pipeline</a></li>
+              <li><a href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/built-in-render-pipeline"
+                  target="_blank">built-in-render-pipeline</a></li>
+              <li><a
+                  href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/choose-a-render-pipeline/srp-setting-render-pipeline-asset"
+                  target="_blank">srp-setting-render-pipeline-asset</a></li>
+              <li><a
+                  href="https://docs.unity.com/en-us/engine/6000.6/manual/render-pipelines/universal-render-pipeline/customizing-urp/render-graph/introduction"
+                  target="_blank">render-graph/introduction</a></li>
+              <li><a
+                  href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.core@17.0/manual/srp-custom.html"
+                  target="_blank">srp-custom (SRP Core 17.0)</a></li>
+            </ul>
+
+            <p style="margin: 8px 0 0 0; font-size: 0.6em; color: var(--text-muted); line-height: 1.4;">
+              Render pipelines: Unity 6.6 (6000.6). Built-in je v&nbsp;této verzi deprecated.
+            </p>
+          </div>
+        </div>
+        <aside class="notes">
+          .NET a serializace vycházejí z dokumentace Unity 2022.3 LTS, render pipelines z aktuální dokumentace
+          Unity 6.6 (6000.6).
+          Doporučte studentům začít stránkou Render pipelines a průvodcem Choose a render pipeline; detaily URP
+          a Render Graph pak podle potřeby.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/multimodal/multimodal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+  <script src="../bordel/js/tooltips.js"></script>
+
+  <script>
+    // Rozšíření slovníku zkratek o pojmy specifické pro architekturu Unity
+    Object.assign(GLOSSARY, {
+      "CIL": { title: "Common Intermediate Language", desc: "Platformově nezávislý mezikód .NET, do kterého se kompiluje C#. Dříve označovaný jako MSIL." },
+      "MSIL": { title: "Microsoft Intermediate Language", desc: "Původní název pro CIL: mezikód .NET assemblies, který zpracovává Mono (JIT) nebo IL2CPP (AOT)." },
+      "Roslyn": { title: "Roslyn", desc: "C# kompilátor od Microsoftu. V Unity překládá skripty do managed assemblies (.dll) obsahujících CIL." },
+      "SRP": { title: "Scriptable Render Pipeline", desc: "Framework Unity pro řízení renderování pomocí C# skriptů. Na SRP jsou postavené URP, HDRP i vlastní pipeline." },
+      "SRP Core": { title: "SRP Core", desc: "Balíček Unity se společnou logikou, kterou využívají URP i HDRP." },
+      "ScriptableObject": { title: "ScriptableObject", desc: "Managed objekt dědící z UnityEngine.Object, který lze uložit jako asset a sdílet referencemi mezi scénami a prefaby." },
+      "MonoBehaviour": { title: "MonoBehaviour", desc: "Základní třída pro skripty připojené ke GameObjectu. Dostává callbacky player loopu jako Awake, Start, Update a FixedUpdate." },
+      "Domain Reload": { title: "Domain Reload", desc: "Znovunačtení managed domény po rekompilaci skriptů nebo při přechodu do Play mode. Serializovaná pole tento reload přežívají." },
+      "Boehm GC": { title: "Boehm Garbage Collector", desc: "Konzervativní garbage collector, který Unity používá pro managed haldu v Mono i IL2CPP." },
+      "Assembly Definition": { title: "Assembly Definition", desc: "Soubor .asmdef, který v Unity definuje samostatnou kompilační jednotku a její závislosti." },
+      "Forward Rendering": { title: "Forward Rendering", desc: "Rendering path, který počítá osvětlení pro každý objekt a každé světlo přímo při kreslení." },
+      "Deferred Rendering": { title: "Deferred Rendering", desc: "Rendering path, který nejprve uloží geometrii do G-bufferu a osvětlení spočítá až v druhém průchodu." },
+      "Ray Tracing": { title: "Ray Tracing", desc: "Sledování paprsků pro výpočet odrazů, stínů a globálního osvětlení. V HDRP dostupné na podporovaném hardware." },
+      "ScriptableRenderContext": { title: "ScriptableRenderContext", desc: "Rozhraní, do kterého SRP zapisuje rendering příkazy. Odesílají se metodou Submit()." },
+      "Render Graph": { title: "Render Graph", desc: "API v SRP Core pro deklarativní stavbu render passů. Řeší pořadí passů, životnost textur, synchronizaci a na TBDR slučuje passy do native render passu." },
+      "Forward+": { title: "Forward+ Rendering Path", desc: "Rendering path v URP podobný Forward, ale bez limitu světel na GameObject. Světla se vyhodnocují per-tile." },
+      "TBDR": { title: "Tile-Based Deferred Rendering", desc: "GPU architektura typická pro mobilní zařízení. Render Graph na ní slučuje passy do jednoho native render passu a drží textury v tile memory." },
+      "GPU Resident Drawer": { title: "GPU Resident Drawer", desc: "Systém URP 17 a HDRP, který přes BatchRendererGroup kreslí objekty s GPU instancingem a snižuje počet draw callů." },
+      "SRP Batcher": { title: "SRP Batcher", desc: "Optimalizace draw callů v URP a HDRP. Snižuje CPU režii tím, že seskupuje objekty se stejným shaderem." },
+      "BatchRendererGroup": { title: "BatchRendererGroup", desc: "Nízkoúrovňové API pro dávkové vykreslování velkého množství objektů na GPU. Používá ho GPU Resident Drawer a DOTS." }
+    });
+  </script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: false,
+      touch: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      view: "auto",
+      scrollLayout: "compact",
+      scrollActivationWidth: 600,
+      plugins: [RevealNotes, RevealHighlight, RevealSearch, RevealZoom, RevealPointer, Multimodal, RevealMath.KaTeX],
+      pointer: {
+        key: "q",
+        color: "red",
+        opacity: 0.8,
+        pointerSize: 25,
+        alwaysVisible: false,
+        tailLength: 10,
+      }
+    });
+  </script>
+</body>
+
+</html>

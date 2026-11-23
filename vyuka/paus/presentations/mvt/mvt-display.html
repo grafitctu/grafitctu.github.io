@@ -1,0 +1,2832 @@
+<!doctype html>
+<html lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>MVT: Technologie displejů — ČVUT</title>
+  <meta name="description" content="Přednáška Moderní vizualizační technologie: Technologie displejů — Petr Pauš">
+  <meta name="author" content="Petr Pauš">
+
+  <!-- Reveal.js Core Styles -->
+  <link rel="stylesheet" href="../bordel/vendor/reveal/reveal.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/theme/white-contrast.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/highlight/atom-one-light.css">
+  <link rel="stylesheet" href="../bordel/vendor/reveal/plugin/pointer.css">
+
+  <!-- Custom Presentation Styles -->
+  <link rel="stylesheet" href="../bordel/css/custom-theme.css">
+
+  <style>
+    /* ============================================================
+       MVT: Technologie displejů — doplňkové styly
+       ============================================================ */
+
+    /* Titulní animované pozadí — mřížka RGB subpixelů */
+    #pixelCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    .reveal .slides section.title-slide {
+      height: 720px !important;
+    }
+
+    .title-hero {
+      position: relative;
+      z-index: 2;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .title-veil {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: radial-gradient(circle at 50% 45%,
+          rgba(248, 251, 255, .10) 0%,
+          rgba(248, 251, 255, .58) 46%,
+          rgba(238, 244, 251, .92) 100%);
+      pointer-events: none;
+    }
+
+    .title-hero .title-sub {
+      color: var(--text-muted);
+      font-size: 1.06em;
+      margin-bottom: 24px;
+    }
+
+    /* Hero slide s fotografií na pozadí */
+    .hero-slide {
+      text-align: left;
+      height: 720px !important;
+      box-sizing: border-box;
+    }
+
+    .hero-slide .slide-category {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(8px);
+    }
+
+    .reveal .hero-fig {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      object-fit: cover;
+      z-index: -2;
+      margin: 0 !important;
+      max-height: none !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .hero-veil {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(100deg,
+          rgba(248, 251, 255, .94) 0%,
+          rgba(248, 251, 255, .88) 32%,
+          rgba(248, 251, 255, .62) 48%,
+          rgba(238, 244, 251, .06) 78%);
+    }
+
+    .hero-slide .glass-card,
+    .hero-slide .highlight-card {
+      background: rgba(255, 255, 255, .88);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Časová osa */
+    .timeline {
+      list-style: none;
+      margin: 6px 0 0 0;
+      padding: 0;
+    }
+
+    .timeline li {
+      position: relative;
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 8px;
+      margin-left: 7px;
+      padding: 3px 0 3px 14px;
+      border-left: 2px solid rgba(8, 145, 178, .28);
+      font-size: .7em;
+      line-height: 1.3;
+    }
+
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 11px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(8, 145, 178, .12);
+    }
+
+    .timeline .year {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-cyan);
+      font-size: .95em;
+    }
+
+    .timeline.tight li {
+      font-size: .70em;
+      padding: 3px 0 3px 13px;
+      line-height: 1.32;
+    }
+
+    .timeline.tight li::before {
+      top: 9px;
+    }
+
+    /* Číslované kroky */
+    .steps {
+      list-style: none;
+      counter-reset: step;
+      padding: 0;
+      margin: 4px 0 0 0;
+    }
+
+    .steps li {
+      counter-increment: step;
+      list-style: none !important;
+      position: relative;
+      padding-left: 38px;
+      margin-bottom: 9px;
+      font-size: .84em;
+      line-height: 1.4;
+    }
+
+    .steps li::marker {
+      content: none;
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(8, 145, 178, .1);
+      border: 1px solid rgba(8, 145, 178, .4);
+      color: #0e7490;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: .8em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Formulové a technické panely */
+    .formula-box {
+      font-family: var(--font-mono);
+      font-size: .8em;
+      line-height: 1.5;
+      color: #0e7490;
+      background: rgba(8, 145, 178, .07);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 0 8px 8px 0;
+      padding: 8px 14px;
+      margin: 10px 0;
+    }
+
+    .formula-box .big {
+      font-size: 1.35em;
+      color: var(--accent-purple);
+      font-weight: 700;
+    }
+
+    .lead {
+      font-size: .9em;
+      color: var(--text-muted);
+      margin: 0 0 8px 0;
+    }
+
+    .quote-line {
+      font-size: .84em;
+      font-style: italic;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 900px;
+      margin: 10px auto 0 auto;
+    }
+
+    .quote-line cite {
+      display: block;
+      font-style: normal;
+      font-family: var(--font-mono);
+      font-size: .78em;
+      color: var(--accent-purple);
+      margin-top: 4px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 14px;
+      font-size: .8em;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .kv dt {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-cyan);
+      white-space: nowrap;
+    }
+
+    .kv dd {
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    /* Galerie se stejnou výškou obrázků */
+    .gallery-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .gallery-3 .image-showcase {
+      width: 100%;
+      height: 100%;
+    }
+
+    .gallery-3 .image-showcase img {
+      height: 300px;
+      width: 100%;
+      object-fit: contain;
+      background: #ffffff;
+    }
+
+    .grid-2x2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid-2x2 .image-showcase {
+      width: 100%;
+    }
+
+    .grid-2x2 .image-showcase img {
+      height: 158px;
+      width: 100%;
+      object-fit: contain;
+      background: #ffffff;
+    }
+
+    .tight-list li {
+      margin-bottom: 6px !important;
+    }
+
+    .small-note {
+      font-family: var(--font-mono);
+      font-size: .64rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    /* Mřížka klíčových parametrů */
+    .param-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+      text-align: left;
+    }
+
+    .param-card {
+      background: rgba(255, 255, 255, .55);
+      border: 1px solid var(--border-card);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 10px;
+      padding: 9px 12px;
+      box-shadow: 0 6px 16px rgba(30, 60, 120, .08);
+    }
+
+    .param-card:nth-child(2) {
+      border-left-color: var(--accent-blue);
+    }
+
+    .param-card:nth-child(3) {
+      border-left-color: var(--accent-purple);
+    }
+
+    .param-card:nth-child(4) {
+      border-left-color: var(--accent-magenta);
+    }
+
+    .param-card:nth-child(5) {
+      border-left-color: var(--accent-emerald);
+    }
+
+    .param-card:nth-child(6) {
+      border-left-color: var(--accent-amber);
+    }
+
+    .param-card:nth-child(7) {
+      border-left-color: var(--accent-rose);
+    }
+
+    .param-card:nth-child(8) {
+      border-left-color: var(--accent-cyan);
+    }
+
+    .param-card .p-name {
+      font-size: .78em;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .param-card .p-val {
+      font-family: var(--font-mono);
+      font-size: .66em;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      margin-top: 2px;
+    }
+
+    .param-card .p-desc {
+      font-size: .66em;
+      color: var(--text-muted);
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    /* Horizontální pás epoch */
+    .era-strip {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      margin-top: 26px;
+      text-align: center;
+    }
+
+    .era-strip::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 10px;
+      height: 3px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #0891b2, #2563eb, #7c3aed, #db2777);
+    }
+
+    .era-node {
+      position: relative;
+      padding-top: 24px;
+    }
+
+    .era-node::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(8, 145, 178, .12);
+      z-index: 1;
+    }
+
+    .era-node:nth-child(2)::before {
+      border-color: var(--accent-blue);
+    }
+
+    .era-node:nth-child(3)::before {
+      border-color: var(--accent-purple);
+    }
+
+    .era-node:nth-child(4)::before {
+      border-color: var(--accent-magenta);
+    }
+
+    .era-node:nth-child(5)::before {
+      border-color: var(--accent-emerald);
+    }
+
+    .era-node:nth-child(6)::before {
+      border-color: var(--accent-amber);
+    }
+
+    .era-node:nth-child(7)::before {
+      border-color: var(--accent-rose);
+    }
+
+    .era-node:nth-child(8)::before {
+      border-color: var(--accent-cyan);
+    }
+
+    .era-year {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-cyan);
+      font-size: .78em;
+    }
+
+    .era-label {
+      font-size: .64em;
+      color: var(--text-muted);
+      line-height: 1.28;
+      margin-top: 2px;
+    }
+
+    /* Dvojice obrázků */
+    .media-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .media-pair .image-showcase img {
+      height: 230px;
+      width: 100%;
+      object-fit: contain;
+      background: #ffffff;
+    }
+
+    /* Matice subpixelů */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .matrix-grid .image-showcase img {
+      height: 132px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    /* Hustá srovnávací tabulka */
+    .compare-dense {
+      font-size: .64em;
+      margin: 6px 0 0 0;
+    }
+
+    .compare-dense th {
+      padding: 7px 8px;
+      font-size: .96em;
+    }
+
+    .compare-dense td {
+      padding: 6px 8px;
+      line-height: 1.3;
+    }
+
+    /* Tři karty vedle sebe s menším písmem */
+    .three-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      text-align: left;
+      align-items: stretch;
+    }
+
+    .three-cards .glass-card {
+      padding: 14px 16px;
+    }
+
+    .three-cards .custom-list li {
+      font-size: .78em;
+      margin-bottom: 6px;
+    }
+
+    .reveal .image-showcase img.diagram {
+      object-fit: contain;
+      background: #ffffff;
+    }
+
+    /* Šířka obrázku i popisku včetně paddingu a borderu */
+    .image-showcase,
+    .image-showcase img,
+    .reveal .image-caption {
+      box-sizing: border-box;
+    }
+
+    .reveal .image-caption {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .caption-strong {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .mini-badge {
+      font-family: var(--font-mono);
+      font-size: .64em;
+      font-weight: 600;
+      color: #0e7490;
+      background: rgba(8, 145, 178, .08);
+      border: 1px solid rgba(8, 145, 178, .3);
+      border-radius: 6px;
+      padding: 3px 8px;
+    }
+
+    /* Barevné odlišení výhod / nevýhod */
+    .pros-card {
+      border-top: 4px solid var(--accent-emerald);
+    }
+
+    .cons-card {
+      border-top: 4px solid var(--accent-rose);
+    }
+
+    .pros-card h3 {
+      color: var(--accent-emerald);
+    }
+
+    .cons-card h3 {
+      color: var(--accent-rose);
+    }
+
+    /* Závěrečný slide */
+    .final-slide {
+      height: 720px !important;
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .final-slide h1 {
+      font-size: 3.2em;
+      margin-bottom: .1em;
+    }
+  </style>
+<meta name="robots" content="noindex">
+<style id="grafit-lecture-return-style">
+.grafit-lecture-return,.grafit-course-link--floating{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:8px 12px;border:1px solid var(--line,#b6c3ca);border-radius:5px;background:var(--paper,#fcfbf8);color:var(--ink,#203039);font:600 14px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.grafit-lecture-return:hover,.grafit-course-link--floating:hover{background:var(--panel,#e8eff1)}
+.grafit-lecture-return:focus-visible,#grafit-course-link:focus-visible{outline:3px solid var(--accent,#245d72);outline-offset:3px}
+.grafit-lecture-return--floating,.grafit-course-link--floating{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;background:#fcfbf8;color:#203039;border-color:#b6c3ca;box-shadow:0 2px 10px #0002}
+#grafit-course-link.brand{display:inline-flex;align-items:center;min-height:44px} .grafit-course-link--floating{left:168px}
+body.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 70px}
+body.grafit-toolbar-return:has(#viewport){grid-template-rows:auto minmax(0,1fr) 50px}
+body.grafit-toolbar-return:has(#page-canvas){display:grid;height:100dvh;grid-template-rows:auto minmax(0,1fr) 70px;overflow:hidden}
+.grafit-toolbar-return:has(#page-canvas) .deck{height:auto;min-height:0}
+.grafit-toolbar-return:has(#page-canvas) .page{max-height:calc(100% - 24px)}
+.grafit-toolbar-return .toolbar{display:flex;height:auto;min-height:76px;flex-wrap:wrap;padding-block:10px;gap:12px}
+.grafit-toolbar-return .toolbar nav{flex-wrap:wrap}
+@media(max-width:1100px){.grafit-toolbar-return .toolbar #chapter{display:none}}
+@media(max-width:760px){.grafit-toolbar-return .toolbar{padding:10px 12px;min-height:65px}.grafit-toolbar-return .toolbar nav{width:100%;margin:0;gap:5px}.grafit-toolbar-return .toolbar .brand{font-size:17px}.grafit-toolbar-return .toolbar .variant-switch{flex-wrap:wrap}.grafit-toolbar-return.presenting{grid-template-rows:auto minmax(0,1fr) 64px}}
+@media print{.grafit-lecture-return,#grafit-course-link{display:none!important}body.grafit-toolbar-return:has(#page-canvas){display:block;height:auto;overflow:visible}}
+#grafit-course-link[data-subject="vhs"]{color:#68459b} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vhs"]{color:#c0a6df}
+#grafit-course-link[data-subject="dvd"]{color:#246087} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="dvd"]{color:#9bcbe7}
+#grafit-course-link[data-subject="pga"]{color:#745c16} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pga"]{color:#dccb8a}
+#grafit-course-link[data-subject="vga"]{color:#28674f} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="vga"]{color:#a0d5bd}
+#grafit-course-link[data-subject="egg"]{color:#8b4936} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="egg"]{color:#dfb09e}
+#grafit-course-link[data-subject="mvt"]{color:#805179} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="mvt"]{color:#d8acd0}
+#grafit-course-link[data-subject="pvr"]{color:#376279} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pvr"]{color:#a7cddb}
+#grafit-course-link[data-subject="pg2"]{color:#515d93} :root[data-theme="dark"] #grafit-course-link.brand[data-subject="pg2"]{color:#b8c1df}</style>
+<!-- GRAFIT whole-word typography -->
+<link rel="stylesheet" href="../../../lecture-typography.css?v=ee50533c322e">
+<script defer src="../../../lecture-typography.js?v=2e5d8b798ef4"></script>
+<!-- /GRAFIT whole-word typography -->
+</head>
+
+<body>
+<a id="grafit-lecture-return" class="grafit-lecture-return grafit-lecture-return--floating" href="../../../" aria-label="Zpět na přehled přednášek GRAFIT">← Zpět na přehled</a>
+<a id="grafit-course-link" class="grafit-course-link--floating" href="../../../mvt/" aria-label="Přehled přednášek MVT" data-subject="mvt">MVT</a>
+
+  <!-- Horní trvale zobrazené záhlaví -->
+  <header class="presentation-header" aria-label="Záhlaví prezentace"></header>
+
+  <!-- Dolní trvale zobrazené zápatí -->
+  <footer class="presentation-footer" aria-label="Zápatí a nápověda ovládání"></footer>
+
+  <!-- Global Tooltip Element -->
+  <div id="global-tooltip">
+    <div class="tooltip-header">
+      <span class="tooltip-title"></span>
+      <span class="tooltip-abbr"></span>
+    </div>
+    <div class="tooltip-body"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- =====================================================
+           BLOK 1: TITUL, ÚVOD, KONTEXT
+      ====================================================== -->
+
+      <!-- SLIDE 1: Titulní -->
+      <section class="center title-slide">
+        <canvas id="pixelCanvas" width="1280" height="720"></canvas>
+        <div class="title-veil"></div>
+
+        <div class="title-hero">
+          <span class="vr-badge">MVT &bull; Moderní vizualizační technologie</span>
+          <h1>Technologie displejů</h1>
+          <p class="title-sub">Od katodové trubice k microLED</p>
+          <div class="authors">
+            <div class="author-card" style="text-align: center;">
+              <div class="author-name">Petr Pauš</div>
+              <div class="course-name">FIT ČVUT v Praze</div>
+            </div>
+          </div>
+
+        </div>
+
+        <aside class="notes">
+          Vítejte na přednášce o technologiích displejů. Projdeme cestu od katodové trubice přes LCD
+          a plazmu až k OLED a microLED. U každé technologie si řekneme princip, historii, výhody,
+          nevýhody a proč nakonec zvítězila nebo zmizela. Cílem není naučit se tabulku parametrů, ale
+          pochopit, jaký fyzikální princip za obrazem stojí — a proč se jednotlivé technologie chovají
+          tak, jak se chovají.
+        </aside>
+      </section>
+
+      <!-- SLIDE 2: Co nás čeká -->
+      <section>
+        <span class="slide-category">Úvod</span>
+        <h2>Co nás čeká</h2>
+
+
+
+        <div class="slide-grid-3" style="align-items: stretch;">
+          <div class="glass-card">
+            <h3>1. Principy a historie</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>CRT</strong> — elektronový paprsek a luminofor.</li>
+              <li><strong>LED</strong> — elektroluminiscence PN přechodu.</li>
+              <li><strong>Plazma, VFD</strong> — výboj a vakuové elektronky.</li>
+              <li><strong>Elektromechanika</strong> — split-flap, stroboskop.</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3>2. LCD éra</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>TN, STN</strong> — první tekuté krystaly.</li>
+              <li><strong>TFT</strong> — aktivní matrice a tranzistor u každého pixelu.</li>
+              <li><strong>TN / IPS / VA</strong> — tři filozofie LC vrstvy.</li>
+              <li><strong>MiniLED, QLED</strong> — evoluce podsvícení.</li>
+            </ul>
+          </div>
+          <div class="glass-card">
+            <h3>3. Emisivní displeje a dotyk</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>OLED</strong> — organický polovodič, dokonalá černá.</li>
+              <li><strong>microLED</strong> — anorganická LED v každém pixelu.</li>
+              <li><strong>Dotykové obrazovky</strong> — odporové a kapacitní.</li>
+              <li><strong>Srovnání</strong> — co se hodí kam.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="era-strip">
+          <div class="era-node">
+            <div class="era-year">1897</div>
+            <div class="era-label">CRT</div>
+          </div>
+          <div class="era-node">
+            <div class="era-year">1950s</div>
+            <div class="era-label">split-flap</div>
+          </div>
+          <div class="era-node">
+            <div class="era-year">1959</div>
+            <div class="era-label">VFD</div>
+          </div>
+          <div class="era-node">
+            <div class="era-year">1964</div>
+            <div class="era-label">plazma</div>
+          </div>
+          <div class="era-node">
+            <div class="era-year">1971</div>
+            <div class="era-label">TN LCD</div>
+          </div>
+          <div class="era-node">
+            <div class="era-year">1987</div>
+            <div class="era-label">OLED</div>
+          </div>
+          <div class="era-node">
+            <div class="era-year">1996</div>
+            <div class="era-label">IPS</div>
+          </div>
+          <div class="era-node">
+            <div class="era-year">2000</div>
+            <div class="era-label">microLED</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Rychlý přehled, kam přednáška směřuje. Důležité je, že vývoj nebyl lineární: CRT, plazma,
+          LCD i OLED se dlouho vyvíjely paralelně a v různých aplikacích měly různé výhody. Na konci
+          budeme schopni říct, proč dnes v mobilu dominuje OLED, v levných monitorech IPS/VA a proč
+          microLED zatím zůstává v cenové hladině luxusních televizí.
+        </aside>
+      </section>
+
+      <!-- SLIDE 3: Jak displej funguje -->
+      <section>
+        <span class="slide-category">Základy</span>
+        <h2>Jak displej funguje</h2>
+
+        <div class="highlight-card" style="margin-top: 2px;">
+          <strong style="color: var(--accent-cyan);">Displej</strong> převádí elektrický signál na viditelný
+          obraz. Základní jednotkou je <strong>pixel</strong> — obvykle trojice subpixelů
+          <strong style="color:#dc2626;">R</strong>, <strong style="color:#16a34a;">G</strong>,
+          <strong style="color:#2563eb;">B</strong>. Jejich aditivním mícháním vzniká celá barevná škála.
+        </div>
+
+        <div class="slide-grid-2" style="margin-top: 8px; align-items: center;">
+          <div class="glass-card">
+            <h3>Tři základní principy</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>Emisivní</strong> — pixel sám vydává světlo: CRT, plazma, LED, OLED, microLED.</li>
+              <li><strong>Transmisivní</strong> — pixel jen propouští nebo blokuje světlo z podsvícení: LCD.</li>
+              <li><strong>Reflexivní</strong> — pixel odráží okolní světlo: elektronický papír.</li>
+              <li>U transmisivních a reflexivních technologií je <strong>světelný zdroj oddělený</strong> od
+                pixelu.</li>
+            </ul>
+            <div class="formula-box" style="margin-bottom: 0;">
+              pixel = R+G+B &nbsp;|&nbsp; jas, kontrast, barva, čas
+            </div>
+          </div>
+
+          <div class="glass-card" style="text-align: center;">
+            <svg viewBox="0 0 460 230" style="width: 100%; height: auto; max-height: 230px;" role="img"
+              aria-label="Aditivní míchání RGB">
+              <rect x="22" y="38" width="86" height="86" rx="8" fill="#ef4444" opacity=".9" />
+              <text x="65" y="92" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="700"
+                font-family="Outfit, sans-serif">R</text>
+              <text x="126" y="94" text-anchor="middle" fill="#64748b" font-size="30"
+                font-family="Outfit, sans-serif">+</text>
+              <rect x="154" y="38" width="86" height="86" rx="8" fill="#22c55e" opacity=".9" />
+              <text x="197" y="92" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="700"
+                font-family="Outfit, sans-serif">G</text>
+              <text x="258" y="94" text-anchor="middle" fill="#64748b" font-size="30"
+                font-family="Outfit, sans-serif">+</text>
+              <rect x="286" y="38" width="86" height="86" rx="8" fill="#3b82f6" opacity=".9" />
+              <text x="329" y="92" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="700"
+                font-family="Outfit, sans-serif">B</text>
+              <text x="390" y="94" text-anchor="middle" fill="#64748b" font-size="30"
+                font-family="Outfit, sans-serif">=</text>
+              <rect x="410" y="38" width="30" height="86" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" />
+              <text x="230" y="160" text-anchor="middle" fill="#475569" font-size="14"
+                font-family="JetBrains Mono, monospace">aditivní míchání světla</text>
+              <text x="230" y="186" text-anchor="middle" fill="#94a3b8" font-size="12"
+                font-family="JetBrains Mono, monospace">R+G = žlutá &nbsp; G+B = azurová &nbsp; R+B = purpurová</text>
+              <text x="230" y="210" text-anchor="middle" fill="#94a3b8" font-size="12"
+                font-family="JetBrains Mono, monospace">R+G+B = bílá</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 8px; margin-bottom: 0; padding: 6px 16px;">
+          <strong style="color: var(--accent-cyan);">Pixel = skupina subpixelů;</strong>
+          <span style="color: var(--text-muted);">PPI se proto u různých matic může lišit.</span>
+        </div>
+
+        <aside class="notes">
+          Tohle je jediný „teoretický“ slide, ke kterému se budeme celou přednášku vracet. Klíčové
+          rozlišení je emisivní vs. transmisivní/reflexivní: CRT, plazma, OLED a microLED svítí samy,
+          LCD jen moduluje světlo z podsvícení a e-paper odráží okolní světlo. Z toho pak plyne většina
+          rozdílů v kontrastu, spotřebě, tloušťce i pozorovacích úhlech. Konkrétní parametry si
+          rozebereme na dalším slidu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 4: Klíčové parametry -->
+      <section>
+        <span class="slide-category">Základy</span>
+        <h2>Klíčové parametry displeje</h2>
+
+        <p class="lead">Stejná čísla znamenají u různých technologií něco jiného — proto se vyplatí vědět,
+          co přesně měří.</p>
+
+        <div class="param-grid" style="margin-top: 4px;">
+          <div class="param-card">
+            <div class="p-name">Rozlišení</div>
+            <div class="p-val">Full HD → 8K</div>
+            <div class="p-desc">počet pixelů; PPI = hustota na palec</div>
+          </div>
+          <div class="param-card">
+            <div class="p-name">Obnovovací frekvence</div>
+            <div class="p-val">60 – 240 Hz</div>
+            <div class="p-desc">e-paper klidně &lt; 1 Hz</div>
+          </div>
+          <div class="param-card">
+            <div class="p-name">Odezva</div>
+            <div class="p-val">0,1–20 ms</div>
+            <div class="p-desc">LCD vs. OLED vs. CRT</div>
+          </div>
+          <div class="param-card">
+            <div class="p-name">Kontrast</div>
+            <div class="p-val">1000 : 1 → ∞</div>
+            <div class="p-desc">LCD vs. emisivní panely</div>
+          </div>
+          <div class="param-card">
+            <div class="p-name">Jas</div>
+            <div class="p-val">250 – 1000+ nitů</div>
+            <div class="p-desc">HDR vyžaduje vysoký jas</div>
+          </div>
+          <div class="param-card">
+            <div class="p-name">Barevný gamut</div>
+            <div class="p-val">sRGB / DCI-P3 / Rec. 2020</div>
+            <div class="p-desc">rozsah reprodukovatelných barev</div>
+          </div>
+          <div class="param-card">
+            <div class="p-name">Pozorovací úhly</div>
+            <div class="p-val">160 – 178°</div>
+            <div class="p-desc">změna barvy a kontrastu mimo osu</div>
+          </div>
+          <div class="param-card">
+            <div class="p-name">Spotřeba a životnost</div>
+            <div class="p-val">µW → stovky W</div>
+            <div class="p-desc">e-paper vs. plazma; burn-in</div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 14px; padding: 12px 18px;">
+          <strong style="color: var(--accent-cyan);">Pozor na marketing:</strong>
+          <span style="color: var(--text-muted);">„dynamický kontrast 1 000 000:1“ je často jen lokální
+            stmívání podsvícení, ne skutečný statický kontrast panelu. Podobně „efektivní PPI“ u OLED
+            závisí na subpixelové matici.</span>
+        </div>
+
+        <div class="highlight-card">
+          <strong>Nit:</strong>
+          <span style="color: var(--text-muted);">Nit (značka nt) je jednotka jasu, která vyjadřuje množství
+            světla vyzařovaného z plochy jednoho čtverečního metru (1 nt = 1 cd/m²).</span>
+        </div>
+
+        <aside class="notes">
+          Parametry jsou jazyk, kterým se displeje prodávají. U kontrastu je klíčový rozdíl mezi
+          statickým (native) a dynamickým (marketingovým) kontrastem. U odezvy záleží na tom, jaký
+          přechod se měří. U rozlišení záleží na subpixelové matici — zejména u OLED PenTile. Kdo
+          těmto rozdílům rozumí, nenechá se zmást čísly na krabici.
+        </aside>
+      </section>
+
+      <!-- SLIDE 5: Časová osa -->
+      <section class="dense">
+        <span class="slide-category">Historie</span>
+        <h2>Časová osa</h2>
+
+        <div class="slide-grid-2" style="align-items: stretch;">
+          <div class="glass-card">
+            <h3>Od objevu k prvnímu LCD</h3>
+            <ul class="timeline tight">
+              <li><span class="year">1888</span><span>Friedrich Reinitzer — tekuté krystaly</span></li>
+              <li><span class="year">1897</span><span>Karl Ferdinand Braun — katodová trubice</span></li>
+              <li><span class="year">1907</span><span>H. J. Round — první pozorování elektroluminiscence</span></li>
+              <li><span class="year">1927</span><span>Oleg Losev — nezávisle LED</span></li>
+              <li><span class="year">1920s</span><span>komerční CRT přístroje; 1930s televizní vysílání</span></li>
+              <li><span class="year">1950s</span><span>split-flap / Solari tabule</span></li>
+              <li><span class="year">1959</span><span>VFD — vakuový fluorescenční displej</span></li>
+              <li><span class="year">1964</span><span>plazmový displej (Bitzer, Slottow, Willson)</span></li>
+              <li><span class="year">1968</span><span>první funkční LCD (RCA)</span></li>
+            </ul>
+          </div>
+
+          <div class="glass-card">
+            <h3>Od TN k microLED</h3>
+            <ul class="timeline tight">
+              <li><span class="year">1971</span><span>TN efekt — Schadt a Helfrich</span></li>
+              <li><span class="year">1973</span><span>první LCD kalkulačka (Sharp)</span></li>
+              <li><span class="year">1983</span><span>STN — Scheffer a Nehring</span></li>
+              <li><span class="year">1987</span><span>praktický OLED — Tang a VanSlyke</span></li>
+              <li><span class="year">1992</span><span>první barevná plazma (Fujitsu)</span></li>
+              <li><span class="year">1996</span><span>IPS — Hitachi</span></li>
+              <li><span class="year">1997</span><span>E Ink — elektronický papír</span></li>
+              <li><span class="year">2000</span><span>výzkum microLED (Texas Tech)</span></li>
+              <li><span class="year">2007</span><span>Amazon Kindle</span></li>
+              <li><span class="year">2010s</span><span>OLED smartphony, QLED televize</span></li>
+              <li><span class="year">2020s</span><span>microLED a QD-OLED</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 8px; padding: 10px 16px;">
+          <strong style="color: var(--accent-cyan);">Není to lineární příběh.</strong>
+          <span style="color: var(--text-muted);">Technologie se překrývají, vracejí a často dlouho žijí
+            paralelně — CRT přežil první LCD o desítky let a plazma zmizela dřív než OLED.</span>
+        </div>
+
+        <aside class="notes">
+          Časová osa je záměrně hustá. Nejdůležitější je vidět, že tekuté krystaly jsou starší než CRT
+          (1888 vs. 1897), ale první použitelný LCD přišel až po druhé světové válce. Podobně LED
+          existovala desítky let jako indikátor, než přišla modrá LED (1993) a bílé osvětlení. A
+          microLED se vyvíjí už od roku 2000, ale masově se stále neprosadila.
+        </aside>
+      </section>
+
+      <!-- SLIDE 5: CRT úvod -->
+      <section>
+        <span class="slide-category">CRT &bull; 1897</span>
+        <h2>Katodová trubice (CRT)</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Cathode Ray Tube</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1897</strong> — Karl Ferdinand Braun sestrojil katodovou trubici pro osciloskop.</li>
+              <li><strong>1920s – 30s</strong> — první komerční přístroje a televizní vysílání; CRT vládne
+                až do nástupu LCD.</li>
+              <li>Použití: <strong>televize, monitory, osciloskopy, radary</strong>.</li>
+              <li>Není to „plochý panel“ — je to <strong>velká vakuová elektronka</strong>.</li>
+              <li>Barevná verze: <strong>tři elektronová děla</strong> a stínící maska.</li>
+            </ul>
+            <div class="formula-box" style="margin-bottom: 0;">
+              elektronové dělo → vychylovací cívky → luminofor → světlo
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img class="diagram" src="../bordel/images-mvt/images-display/display_s02_f01.jpeg"
+              alt="Zadní část CRT obrazovky s elektronovým dělem" style="max-height: 360px; width: 100%;"
+              data-preview-image>
+            <div class="image-caption">CRT obrazovka — baňka, hrdlo a elektronové dělo</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          CRT je dobré začít historicky: Braunova trubice z roku 1897 byla vědecký přístroj, ne televize.
+          Komerční televize přišla ve 30. letech a CRT pak dominoval celé 20. století. Pro studenty je
+          užitečné si uvědomit, že „obrazovka“ je vakuová elektronka: má katodu, anodu, vychylovací cívky
+          a luminofor. Všechny vlastnosti CRT — hloubka, hmotnost, vypalování, magnetická citlivost —
+          plynou z tohoto principu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 6: CRT princip -->
+      <section>
+        <span class="slide-category">CRT &bull; Princip</span>
+        <h2>CRT — princip fungování</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div>
+            <ol class="steps">
+              <li><strong>Vakuová baňka</strong> — elektronové dělo: katoda, řídicí mřížka, anody.</li>
+              <li><strong>Urychlení</strong> — elektrony získají energii z napětí v řádu
+                <strong>10 – 30 kV</strong>.
+              </li>
+              <li><strong>Vychylování</strong> — magnetické pole cívek směruje paprsek po řádcích.</li>
+              <li><strong>Luminofor</strong> — dopad elektronů vybudí luminofor k emisi světla.</li>
+              <li><strong>Odvod náboje</strong> — grafitový povlak (aquadag) odvádí dopadající elektrony;
+                bez něj by se stínítko nabíjelo.</li>
+              <li><strong>Barva</strong> — tři paprsky pro R, G, B a stínící maska, která zajistí, že každý
+                paprsek dopadne jen na správný luminofor.</li>
+            </ol>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <strong style="color: var(--accent-cyan);">Interlace:</strong>
+              <span style="color: var(--text-muted);">sudé a liché řádky se kreslí střídavě — 50 půlsnímků/s
+                vypadá jako 25 celých snímků/s.</span>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img class="diagram" src="../bordel/images-mvt/images-display/display_s03_f01.gif"
+              alt="Schéma CRT obrazovky s popisky" style="max-height: 380px; width: 100%;" data-preview-image>
+            <div class="image-caption">Schéma CRT: 1 elektronový svazek, 2 grafitový povlak, 3 luminofor,
+              4 stínítko, 6 vychylovací soustava, 7 elektronová tryska</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tady je důležité opravit původní formulaci „elektrony jsou odsávány“: správně jde o odvod náboje
+          grafitovým povlakem, který zabrání nabíjení stínítka. Také stojí za to zmínit, že v barevné CRT
+          nejde o jeden paprsek, ale o tři — a že konvergence tří paprsků na správný luminofor byla
+          technicky nejnáročnější část výroby. Interlace je kompromis: vyšší vnímaná frekvence při
+          omezené šířce pásma.
+        </aside>
+      </section>
+
+      <!-- SLIDE 7: CRT výhody a nevýhody -->
+      <section>
+        <span class="slide-category">CRT &bull; Bilance</span>
+        <h2>CRT — výhody a nevýhody</h2>
+
+        <div class="slide-grid-2 equal" style="align-items: stretch; margin-top: 4px;">
+          <div class="glass-card pros-card">
+            <h3>Výhody</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>Přirozené zobrazení mnoha rozlišení</strong> — analogový signál se přizpůsobí.</li>
+              <li><strong>Interlace i progresivní režim</strong> — volba podle obsahu.</li>
+              <li><strong>Výborná černá</strong> a podání barev; žádné podsvícení.</li>
+              <li><strong>Vysoké obnovovací frekvence</strong> a velmi nízká latence.</li>
+              <li>Ve své době <strong>levná a zralá</strong> technologie.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card cons-card">
+            <h3>Nevýhody</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>Těžké a hluboké</strong> — hloubka roste s úhlopříčkou.</li>
+              <li><strong>Vypalování</strong> statického obrazu do luminoforu.</li>
+              <li><strong>Vysoké napětí</strong> — X-ray záření, teplo, riziko úrazu.</li>
+              <li><strong>Citlivost na magnetické pole</strong> — deformace obrazu.</li>
+              <li><strong>Geometrické zkreslení</strong>, konvergence, blikání při 50 Hz.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 10px; padding: 12px 18px;">
+          <strong style="color: var(--accent-cyan);">Proč CRT zmizel:</strong>
+          <span style="color: var(--text-muted);">LCD nabídl plochý tvar, nižší spotřebu a postupně i vyšší
+            rozlišení. CRT přežil jen tam, kde záleželo na latenci a věrném černém podání — například
+            u profesionálních monitorů a retro her.</span>
+        </div>
+
+        <aside class="notes">
+          Bilanci je dobré vztáhnout k parametrům z úvodního slidu: CRT má vynikající kontrast a odezvu,
+          ale katastrofální tloušťku, hmotnost a spotřebu. Zajímavé je, že „native resolution“ u CRT
+          neexistuje — paprsek se dá nakreslit na libovolné rozlišení. To je něco, co LCD neumí a co
+          dnešní hráči řeší škálováním.
+        </aside>
+      </section>
+
+      <!-- SLIDE 8: CRT masky -->
+      <section class="dense">
+        <span class="slide-category">CRT &bull; Maska</span>
+        <h2>Různé typy masek</h2>
+
+        <p class="lead" style="margin-bottom: 4px;">Barevná CRT používá tři luminofory (R, G, B). Maska
+          zajišťuje, že každý paprsek dopadne jen na ten správný.</p>
+
+        <div class="gallery-3">
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-display/display_s05_f03.png" alt="Ilustrace stínové masky"
+              data-preview-image>
+            <div class="image-caption"><span class="caption-strong">Shadow mask</span> — děrovaný plech,
+              trojice R/G/B</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-display/display_s05_f01.jpeg"
+              alt="Detail aperture grille — vertikální RGB pruhy" data-preview-image>
+            <div class="image-caption"><span class="caption-strong">Aperture grille</span> — vertikální
+              dráty (Trinitron)</div>
+          </div>
+          <div class="image-showcase">
+            <img src="../bordel/images-mvt/images-display/display_s05_f02.jpeg" alt="Srovnání subpixelů TV a PC CRT"
+              data-preview-image>
+            <div class="image-caption"><span class="caption-strong">Slot mask</span> — kombinace;
+              srovnání TV a monitoru</div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 10px; padding: 10px 16px;">
+          <strong style="color: var(--accent-cyan);">Kompromis:</strong>
+          <span style="color: var(--text-muted);">vyšší jas → hrubší maska; jemnější maska → nižší jas a
+            riziko moiré. Dot pitch se pohyboval kolem 0,25–0,28 mm.</span>
+          <div class="tag-row">
+            <span class="mini-badge">3 paprsky</span>
+            <span class="mini-badge">konvergence</span>
+            <span class="mini-badge">dot pitch 0,25–0,28 mm</span>
+            <span class="mini-badge">moiré</span>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Maska je fyzikální filtr, který řeší barevnou čistotu. Shadow mask má kruhové otvory a trojice
+          luminoforů; aperture grille (Sony Trinitron) má vertikální dráty, takže propustí více světla,
+          ale je mechanicky citlivější a může být vidět jako jemné vodorovné čáry. Slot mask kombinuje
+          obojí. U CRT se také projevovalo moiré — interference masky a obrazu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 9: LED -->
+      <section>
+        <span class="slide-category">LED &bull; 1927</span>
+        <h2>LED — Light-Emitting Diode</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Elektroluminiscence PN přechodu</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1907</strong> — H. J. Round pozoruje elektroluminiscenci; <strong>1927</strong> —
+                Oleg Losev publikuje nezávisle.</li>
+              <li>Komerčně od <strong>60. let</strong> (červená); modrá LED až <strong>1993</strong>
+                (Shuji Nakamura, GaN).</li>
+              <li>Průchod proudu PN přechodem → rekombinace elektronů a děr → <strong>fotony</strong>.</li>
+              <li>10× účinnější než žárovka, životnost desítky tisíc hodin, velmi rychlé spínání.</li>
+              <li>Indikace, podsvícení, osvětlení — a základ <strong>microLED</strong>.</li>
+            </ul>
+            <div class="formula-box" style="margin-bottom: 0;">
+              e<sup>−</sup> + h<sup>+</sup> → foton &nbsp;&nbsp;|&nbsp;&nbsp; λ = hc / E<sub>g</sub>
+            </div>
+            <div class="small-note" style="margin-top: 6px; font-size: .66rem;">
+              Modrá LED + žlutý luminofor = bílé světlo; Nobelova cena 2014 (Akasaki, Amano, Nakamura).
+            </div>
+          </div>
+
+          <div>
+            <div class="media-pair">
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-display/display_s06_f01.png"
+                  alt="Červená, zelená a žlutá LED dioda" data-preview-image>
+                <div class="image-caption">LED diody — R, G, Y</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-display/display_s06_f02.png" alt="Schematická značka LED"
+                  data-preview-image>
+                <div class="image-caption">Schéma: anoda → katoda</div>
+              </div>
+            </div>
+
+            <div class="glass-card no-tooltip" style="margin-top: 10px; padding: 12px 16px;">
+              <h3 style="margin: 0 0 6px; font-size: 1em;">Zkratky, sloučeniny a vzorec</h3>
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px 14px; font-size: .72em; line-height: 1.4; color: var(--text-muted); text-align: left;">
+                <div><strong>LED</strong> — Light-Emitting Diode</div>
+                <div><strong>PN</strong> — přechod P/N</div>
+                <div><strong>GaAs</strong> — arsenid gallitý (IR)</div>
+                <div><strong>GaP</strong> — fosfid gallitý (zelená)</div>
+                <div><strong>GaN</strong> — nitrid gallitý (modrá)</div>
+                <div><strong>InGaN</strong> — nitrid gallitý a inditý (modrá)</div>
+                <div><strong>AlGaInP</strong> — fosfid hlinitý, gallitý a inditý (červená)</div>
+                <div><strong>e<sup>−</sup> / h<sup>+</sup></strong> — elektron / díra</div>
+              </div>
+              <div class="small-note"
+                style="margin-top: 7px; font-size: .70rem; line-height: 1.4; background: rgba(8, 145, 178, .06); border-left: 3px solid var(--accent-cyan); border-radius: 0 6px 6px 0; padding: 5px 8px;">
+                λ = vlnová délka, h = Planckova konstanta, c = rychlost světla,
+                E<sub>g</sub> = šířka zakázaného pásu
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          LED je dobrý příklad toho, jak jeden fyzikální jev vydrží desítky let, než se z kuriozity stane
+          technologie. Červená a zelená LED byly běžné od 60. let, ale modrá chyběla — a bez modré nelze
+          složit bílou. Nakamura v roce 1993 vyřešil GaN a otevřel cestu k bílému osvětlení i k moderním
+          microLED displejům.
+        </aside>
+      </section>
+
+      <!-- SLIDE 10: Solari board -->
+      <section>
+        <span class="slide-category">Elektromechanika &bull; 1950s</span>
+        <h2>Solari board / split-flap</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Tabule, která klape</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>Elektromechanická tabule</strong> — každý znak je otočný segment s polepy.</li>
+              <li><strong>1950s</strong> — Solari di Udine; varianty <strong>split-flap</strong> (klapky)
+                a <strong>flip-dot</strong> (tečky).</li>
+              <li>ČR a SR: Pragotron.</li>
+              <li>Charakteristický zvuk, vysoká spotřeba, mechanické opotřebení.</li>
+              <li>Dodnes na nádražích, letištích a v muzeích.</li>
+              <li>Postupně nahrazeno LCD a e-ink panely — nostalgie ale zůstává.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                <strong>split-flap</strong> = otočné klapky se znaky;
+                <strong>flip-dot</strong> = matice otočných bodů.
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-display/display_s07_f03.jpeg"
+                alt="Solari odjezdová tabule na nádraží" style="max-height: 300px; width: 100%; object-fit: cover;"
+                data-preview-image>
+              <div class="image-caption">Solari tabule — odjezdy vlaků</div>
+            </div>
+            <div class="media-pair" style="margin-top: 8px;">
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-display/display_s07_f02.gif" alt="Animace split-flap mechanismu"
+                  style="height: 145px; object-fit: contain;">
+                <div class="image-caption">Split-flap v pohybu</div>
+              </div>
+              <div class="image-showcase">
+                <img src="../bordel/images-mvt/images-display/display_s07_f01.png" alt="Patentový nákres mechanismu"
+                  style="height: 145px; object-fit: contain;">
+                <div class="image-caption">Patentový nákres</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Solari je hezká ukázka toho, že „displej“ nemusí být elektronický. Split-flap pracuje s
+          mechanickou pamětí: poloha klapky drží znak bez energie. Zajímavý je i zvukový projev — zvuk
+          se stal součástí identity nádraží. Dnes se split-flap vrací jako retro prvek v reklamě a
+          designu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 11: VFD -->
+      <section>
+        <span class="slide-category">VFD &bull; 1959</span>
+        <h2>Vakuový fluorescenční displej</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Vacuum Fluorescent Display</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1959</strong> — princip blízký CRT: vakuová baňka, katoda (vlákno), mřížka a
+                anoda s luminoforem.</li>
+              <li>Elektrony dopadají na <strong>luminofor na anodě</strong> — anoda je ta, která svítí.</li>
+              <li>Mnohem menší profil a nižší spotřeba než CRT; segmenty lze tvarovat.</li>
+              <li>Rádia, videorekordéry, kalkulačky, palubní desky automobilů.</li>
+              <li>Funguje i při nízkých teplotách; typicky zelený nebo modrý jas.</li>
+              <li>Vytlačeno LCD; starší červené luminofory obsahovaly kadmium.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                VFD je vlastně <strong>miniaturní vakuová elektronka</strong>, která svítí.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s08_f01.jpeg" alt="VFD palubní deska automobilu"
+              style="max-height: 360px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">VFD palubní deska — typický zelený jas</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          V původním materiálu bylo uvedeno „elektrony dopadají na luminiscenční katodu“ — to je
+          obráceně. Elektrony jsou emitovány z katody a dopadají na anodu pokrytou luminforem. VFD se
+          používal tam, kde byl potřeba jasný, spolehlivý a tvarovatelný displej — typicky v autech a
+          spotřební elektronice. Dnes ho najdeme spíš v retro zařízeních.
+        </aside>
+      </section>
+
+      <!-- SLIDE 12: Monochromatická plazma -->
+      <section>
+        <span class="slide-category">Plazma &bull; 1964</span>
+        <h2>Monochromatická plazma</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>První velký plochý displej</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1964</strong> — University of Illinois (Donald Bitzer, H. Gene Slottow,
+                Robert Willson).</li>
+              <li>Plazma = <strong>ionizovaný plyn</strong>; buňky s neonem a xenonem.</li>
+              <li>Elektrický výboj emituje <strong>UV záření</strong>, které excituje luminofor.</li>
+              <li>Monochromatická oranžová; použito v terminálech <strong>PLATO</strong>.</li>
+              <li>Menší rozlišení, ale velké úhlopříčky; vypalování a vyšší spotřeba.</li>
+              <li>Ukázala, že velký plochý displej je fyzikálně možný.</li>
+            </ul>
+            <div class="formula-box" style="margin-bottom: 0;">
+              výboj v Ne/Xe → UV → luminofor → viditelné světlo
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s09_f01.jpeg"
+              alt="Terminál PLATO s monochromatickým plazmovým displejem"
+              style="max-height: 380px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">PLATO terminál — oranžová plazma</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Plazma je zásadní historický mezník: poprvé ukázala, že velký plochý displej nemusí být
+          vakuová baňka. Princip je vlastně blízký CRT — také jde o excitaci luminoforu, jen se energie
+          nepřenáší elektronovým paprskem, ale UV výbojem v plynu. PLATO terminály byly první větší
+          nasazení a dodnes jsou sběratelsky cenné.
+        </aside>
+      </section>
+
+      <!-- SLIDE 13: Stroboskopický displej -->
+      <section>
+        <span class="slide-category">Kuriozita &bull; 1960s</span>
+        <h2>Stroboskopický displej</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Obraz, který vzniká v čase</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1960s</strong> — mechanický rotor s číslicemi a záblesk neonové lampy.</li>
+              <li>V jednu chvíli je vidět jen jedna číslice; oko si z rychlých záblesků složí obraz.</li>
+              <li>Použití hlavně v <strong>sovětských kalkulačkách</strong> (např. Elektronika).</li>
+              <li>Nutné mechanické části → hlučnost, opotřebení, poruchovost.</li>
+              <li>Velká čísla a málo součástek; dnes už jen kuriozita.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                <strong>Stroboskopický efekt:</strong> obraz nevzniká v prostoru, ale v čase.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s10_f01.jpeg"
+              alt="Sovětská kalkulačka se stroboskopickým displejem"
+              style="max-height: 340px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">Sovětská kalkulačka — rotor a záblesk</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tahle technologie je dnes zapomenutá, ale didakticky skvělá: ukazuje, že displej nemusí být
+          matice pixelů. Rotor nese číslice a lampa osvětlí vždy jen tu, která má být vidět. Pokud se
+          rotor točí dost rychle, oko je slije do jednoho stabilního obrazu. Je to vlastně mechanická
+          verze multiplexování.
+        </aside>
+      </section>
+
+      <!-- SLIDE 14: TN LCD úvod -->
+      <section>
+        <span class="slide-category">LCD &bull; 1888 / 1971</span>
+        <h2>Twisted-nematic LCD (TN)</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>První tekuté krystaly</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1888</strong> — Friedrich Reinitzer objevuje tekuté krystaly (cholesteryl benzoát).</li>
+              <li><strong>1968</strong> — první funkční LCD (RCA).</li>
+              <li><strong>1971</strong> — TN efekt (Wolfgang Helfrich a Martin Schadt).</li>
+              <li><strong>1973</strong> — první LCD kalkulačka (Sharp).</li>
+              <li>Monochromatické segmentové displeje; spotřeba v řádu <strong>µW</strong>.</li>
+              <li>Nižší obnovovací frekvence, citlivost na teplotu; nástup v 70.–80. letech.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Tekuté krystaly nejsou ani pevné, ani kapalné — mají <strong>uspořádání kapaliny</strong>
+                a <strong>optiku krystalu</strong>.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s11_f01.png" alt="Kalkulačka s TN LCD displejem"
+              style="max-height: 260px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">LCD kalkulačka — segmentový TN displej</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Původní slide měl u TN LCD letopočet 1960 a „počátek 20. století“; správně je objev tekutých
+          krystalů 1888 a TN efekt 1971. Je to hezký příklad dlouhé cesty od fyzikálního objevu k
+          produktu: Reinitzer objevil tekuté krystaly v 19. století, ale trvalo téměř sto let, než se
+          z nich stal displej. Spotřeba v µW je důvod, proč LCD vytlačil LED segmentovky v kalkulačkách
+          a hodinkách.
+        </aside>
+      </section>
+
+      <!-- SLIDE 15: TN princip -->
+      <section>
+        <span class="slide-category">LCD &bull; Princip</span>
+        <h2>TN LCD — princip</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div>
+            <ol class="steps">
+              <li>Dva <strong>zkřížené polarizátory</strong>; bez LC vrstvy by světlo neprošlo.</li>
+              <li>Molekuly LC se zkroutí o <strong>90°</strong> a stočí rovinu polarizace.</li>
+              <li>Polarizované světlo projde druhým polarizátorem → <strong>světlý pixel</strong>.</li>
+              <li>Přiložení napětí → molekuly se narovnají, polarizace se nezmění.</li>
+              <li>Druhý polarizátor světlo zablokuje → <strong>černý pixel</strong>.</li>
+            </ol>
+            <div class="formula-box">
+              bez napětí = světlo projde &nbsp;&nbsp;|&nbsp;&nbsp; napětí = černá
+            </div>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                LCD sám nesvítí — potřebuje <strong>podsvícení</strong>, nebo odráží okolní světlo.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s12_f01.png"
+              alt="Schéma TN LCD s polarizátory a tekutými krystaly"
+              style="max-height: 360px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">TN LC: vlevo bez napětí (světlo projde), vpravo pod napětím (černá)</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Původní slide měl v jedné odrážce „normálně světlo neprochází“, což odporuje zbytku. Správně:
+          dva zkřížené polarizátory samy světlo nepropustí, ale zkroucená LC vrstva polarizaci otočí,
+          takže bez napětí pixel svítí. Teprve napětím se krystaly narovnají a pixel ztmavne. Tomuto
+          uspořádání se říká „normally white“.
+        </aside>
+      </section>
+
+      <!-- SLIDE 16: STN -->
+      <section>
+        <span class="slide-category">LCD &bull; 1983</span>
+        <h2>Super-twisted nematic (STN)</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Větší zkrut, lepší kontrast</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1983</strong> — Terry Scheffer a Dietrich Nehring.</li>
+              <li>Zkrut molekul <strong>180°–270°</strong> místo 90°.</li>
+              <li>Vyšší kontrast a lepší <strong>multiplexing</strong> → více řádků, vyšší hustota.</li>
+              <li>Pasivní matrice; lze vyrobit <strong>čistě reflexivní</strong> (bez podsvícení).</li>
+              <li><strong>Nintendo Game Boy (1989)</strong> — nejslavnější STN.</li>
+              <li>Pomalejší odezva, horší pozorovací úhly; barevné CSTN s filtry.</li>
+              <li>Vytlačeno TFT, ale princip přežívá v segmentových displejích.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card" style="text-align: center;">
+            <svg viewBox="0 0 440 240" style="width: 100%; height: auto; max-height: 240px;" role="img"
+              aria-label="Srovnání zkrutu TN 90 stupňů a STN 270 stupňů">
+              <text x="110" y="24" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700"
+                font-family="Outfit, sans-serif">TN — 90°</text>
+              <rect x="45" y="42" width="130" height="9" rx="3" fill="#94a3b8" />
+              <rect x="45" y="196" width="130" height="9" rx="3" fill="#94a3b8" />
+              <path d="M62 190 C 158 172, 58 84, 158 62" stroke="#0891b2" stroke-width="9" fill="none"
+                stroke-linecap="round" opacity=".85" />
+              <path d="M150 58 L162 61 L155 71" stroke="#0891b2" stroke-width="9" fill="none" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <text x="110" y="226" text-anchor="middle" fill="#475569" font-size="12"
+                font-family="JetBrains Mono, monospace">90° twist</text>
+
+              <text x="330" y="24" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700"
+                font-family="Outfit, sans-serif">STN — 270°</text>
+              <rect x="265" y="42" width="130" height="9" rx="3" fill="#94a3b8" />
+              <rect x="265" y="196" width="130" height="9" rx="3" fill="#94a3b8" />
+              <path d="M282 190 C 396 178, 258 142, 380 120 C 396 112, 270 92, 382 70" stroke="#7c3aed" stroke-width="8"
+                fill="none" stroke-linecap="round" opacity=".85" />
+              <path d="M374 66 L386 69 L379 79" stroke="#7c3aed" stroke-width="8" fill="none" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <text x="330" y="226" text-anchor="middle" fill="#475569" font-size="12"
+                font-family="JetBrains Mono, monospace">270° twist</text>
+            </svg>
+            <div class="formula-box" style="margin-bottom: 0;">
+              STN = Super-Twisted Nematic
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          STN je vylepšení TN, ne nový princip. Větší zkrut zlepší kontrast a umožní adresovat více
+          řádků pasivní matice, takže displej může být větší a jemnější. Game Boy je ikona: zeleno-šedý
+          reflexivní STN bez podsvícení, který vydržel desítky hodin na baterky. Cena za to byla pomalá
+          odezva a „duchové“ při pohybu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 17: Elektronický papír -->
+      <section>
+        <span class="slide-category">E-paper &bull; 1970s</span>
+        <h2>Elektronický papír</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Bistabilní displej</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1970s</strong> — elektroforéza; <strong>E Ink 1997</strong>; Kindle 2007.</li>
+              <li>Mikrokapsle: <strong>bílé kladně nabité</strong> a <strong>černé záporně nabité</strong>
+                částice v kapalině.</li>
+              <li>Elektrické pole částice přesune → pixel světlý nebo tmavý.</li>
+              <li><strong>Bistabilní</strong>: energii spotřebuje jen při změně obrazu.</li>
+              <li>Reflexivní — čitelný na přímém slunci, žádné podsvícení.</li>
+              <li>Pomalé překreslování, převážně šedotón; barevné varianty (Kaleido, Gallery).</li>
+              <li>Čtečky, cenovky, signage, štítky.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                <strong>Mirasol</strong> nebyl e-paper, ale reflexivní MEMS displej — často se to plete.
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-display/display_s14_f01.png"
+                alt="Schéma mikrokapslí elektronického papíru"
+                style="max-height: 280px; width: 100%; object-fit: contain;" data-preview-image>
+              <div class="image-caption">Mikrokapsle: bílé (+) a černé (−) částice v kapalině</div>
+            </div>
+            <div class="highlight-card" style="margin-top: 10px; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Polarita elektrod rozhoduje, která strana částic se objeví u povrchu — a tedy jaký
+                odstín pixel ukáže.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          E-paper je jediná technologie v této přednášce, která je skutečně bistabilní: obraz zůstane
+          i bez energie. To je důvod, proč čtečka vydrží týdny. Barevný e-paper dnes existuje, ale
+          barevnost je omezená a obnovovací frekvence velmi nízká. Mirasol od Qualcommu byl zajímavý
+          pokus, ale šlo o MEMS reflexivní technologii, ne o elektroforézu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 18: Elektroluminiscenční displej -->
+      <section>
+        <span class="slide-category">EL &bull; 1970s</span>
+        <h2>Elektroluminiscenční displej</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Tenkovrstvá elektroluminiscence</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1970s</strong> — tenkovrstvý EL displej.</li>
+              <li>Luminofor <strong>ZnS:Mn</strong> (sulfid zinečnatý dotovaný manganem) mezi dvěma
+                elektrodami.</li>
+              <li>Monochromatický — žluto-oranžový (ZnS:Mn) nebo modrozelený (ZnS:Cu).</li>
+              <li>Velmi široký rozsah teplot <strong>−60 až +105 °C</strong>.</li>
+              <li>Až <strong>100 000 hodin</strong> bez vypálení; nízká spotřeba.</li>
+              <li>Hodinky, palubní desky, vojenské a průmyslové aplikace.</li>
+              <li>Omezené barvy a rozlišení; vytlačeno LCD.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                EL panel je <strong>pevnolátkový</strong> — žádná vakuová baňka, žádné plynové výboje.
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="image-showcase" style="width: 75%;">
+              <img src="../bordel/images-mvt/images-display/display_s15_f01.jpeg"
+                alt="Elektroluminiscenční palubní deska" style="max-height: 340px; width: 100%; object-fit: contain;"
+                data-preview-image>
+              <div class="image-caption">EL palubní deska — typický modrozelený jas</div>
+            </div>
+
+            <div class="image-showcase" style="width: 75%;">
+              <img src="../bordel/images-mvt/images-display/lumi.png" alt="Elektroluminiscenční displej"
+                style="max-height: 340px; width: 100%; object-fit: contain;" data-preview-image>
+              <div class="image-caption">Princip</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tady byla v původním materiálu faktická chyba: GaAs (arsenid gallitý) je materiál pro
+          infračervené LED, ne pro elektroluminiscenční luminofor. Správně se používá ZnS:Mn, který
+          svítí žluto-oranžově. EL displeje byly oblíbené v armádě a průmyslu díky extrémnímu teplotnímu
+          rozsahu a odolnosti, ale barevně a rozlišením zůstaly pozadu.
+        </aside>
+      </section>
+
+      <!-- SLIDE 19: Barevná plazma -->
+      <section>
+        <span class="slide-category">Plazma &bull; 1992</span>
+        <h2>Barevná plazma (PDP)</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Král velkých televizí</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1992</strong> — první barevná plazma (Fujitsu); vrchol v 2000s.</li>
+              <li>Buňka = mikrovýboj v Ne/Xe → <strong>UV</strong> → RGB luminofor.</li>
+              <li>Velké úhlopříčky 42–65", tenký profil, živé barvy.</li>
+              <li>Velmi dobrá černá, vysoký kontrast, <strong>600 Hz subfield drive</strong>.</li>
+              <li>Vypalování, nižší životnost, vysoká spotřeba a hmotnost.</li>
+              <li>Výroba ukončena kolem <strong>2014</strong> (Panasonic, Samsung).</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Plazma byla králem domácího kina, ale LCD a OLED ji vytlačily.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s16_f01.png"
+              alt="Schéma buněk barevného plazmového panelu"
+              style="max-height: 320px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">PDP — adresní a zobrazovací elektrody, RGB luminofor</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Barevná plazma je zajímavá tím, že každý pixel je vlastně miniaturní zářivka: UV výboj
+          excituje luminofor. Díky tomu má velmi dobrý kontrast a rychlou odezvu, ale také vysokou
+          spotřebu a problém s vypalováním. Když přišly levné LCD s LED podsvícením a pak OLED, plazma
+          ztratila smysl. Dnes je to technologie, která už se nevyrábí.
+        </aside>
+      </section>
+
+      <!-- SLIDE 20: TFT LCD úvod -->
+      <section>
+        <span class="slide-category">TFT &bull; 1990s</span>
+        <h2>TFT LCD — aktivní matrice</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Transistor u každého pixelu</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>Aktivní matrice</strong>: každý pixel má vlastní tenkovrstvý tranzistor (TFT).</li>
+              <li>TFT = <strong>Thin Film Transistor</strong>; vodivá vrstva z amorfního křemíku
+                (a-Si) na skle.</li>
+              <li>Tranzistor funguje jako <strong>spínač</strong>; kondenzátor drží náboj mezi obnovami.</li>
+              <li>Lepší adresovatelnost → <strong>vyšší rozlišení, kontrast</strong>, méně přeslechů.</li>
+              <li>Řádkové a sloupcové elektrody; multiplexní adresace.</li>
+              <li>Dnes standard; varianty <strong>TN, IPS, VA</strong>.</li>
+            </ul>
+            <div class="formula-box" style="margin-bottom: 0;">
+              1 pixel = 1 TFT + 1 kondenzátor + 1 LC buňka
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s17_f01.jpeg" alt="Subpixely TFT LCD pod mikroskopem"
+              style="max-height: 360px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">Subpixely TFT LCD pod mikroskopem</div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 8px; padding: 10px 16px;">
+          <strong style="color: var(--accent-cyan);">Pozor:</strong>
+          <span style="color: var(--text-muted);">TFT není typ LC vrstvy — je to spínač. O tom, jak se
+            krystaly natáčejí, rozhoduje TN, IPS nebo VA.</span>
+        </div>
+
+        <aside class="notes">
+          TFT je klíčový vynález, který z LCD udělal univerzální displej. Pasivní matice adresuje
+          řádky a sloupce přímo; při větším počtu pixelů vzniká přeslech a pomalé překreslování.
+          Aktivní matrice dá každému pixelu vlastní spínač a kondenzátor, takže obraz drží stabilně.
+          Studenti si často pletou TFT s IPS — TFT je technologie tranzistoru, IPS je orientace
+          krystalů.
+        </aside>
+      </section>
+
+      <!-- TFT: adresace matice -->
+      <section>
+        <span class="slide-category">TFT &bull; Adresace</span>
+        <h2>Jak probíhá adresace matice</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div>
+            <ol class="steps">
+              <li>Radič otevře <strong>řádkovou linku</strong> (gate) → sepnou se všechny TFT v řádku.</li>
+              <li>Na <strong>datové linky</strong> (source) se zároveň přivedou napětí pro celý řádek.</li>
+              <li>Otevřené tranzistory nabijí <strong>kondenzátory</strong> → nastaví se LC buňky.</li>
+              <li>Řádek se uzavře, kondenzátor <strong>drží náboj</strong>; radič jde na další řádek.</li>
+              <li>Po posledním řádku se cyklus opakuje → <strong>obnovovací frekvence</strong>.</li>
+            </ol>
+            <div class="formula-box">
+              1080 řádků × 60 snímků/s ≈ 65 tis. řádků/s
+            </div>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Datová linka je <strong>společná pro všechny řádky</strong> — proto je jeden radič na
+                sloupec, ne na pixel.
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card" style="text-align: center;">
+            <svg viewBox="0 0 520 300" style="width: 100%; height: auto; max-height: 330px;" role="img"
+              aria-label="Matice TFT — řádkové a datové linky se zvýrazněným aktivním řádkem">
+              <!-- radič sloupců -->
+              <rect x="84" y="8" width="356" height="26" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" />
+              <text x="262" y="26" text-anchor="middle" fill="#5b21b6" font-size="12" font-weight="700"
+                font-family="JetBrains Mono, monospace">radič sloupců — data (D1…Dn)</text>
+
+              <!-- radič řádků -->
+              <rect x="8" y="46" width="26" height="214" rx="6" fill="#cffafe" stroke="#0891b2" stroke-width="2" />
+              <text x="21" y="153" text-anchor="middle" fill="#0e7490" font-size="12" font-weight="700"
+                font-family="JetBrains Mono, monospace" transform="rotate(-90 21 153)">radič řádků</text>
+
+              <!-- datové linky (sloupce) -->
+              <path d="M120 34 V246 M190 34 V246 M260 34 V246 M330 34 V246 M400 34 V246" stroke="#c4b5fd"
+                stroke-width="2" />
+              <!-- řádkové linky -->
+              <path d="M34 70 H440 M34 174 H440 M34 226 H440" stroke="#cbd5e1" stroke-width="2" />
+              <path d="M34 122 H432" stroke="#0891b2" stroke-width="3" />
+              <path d="M422 115 L436 122 L422 129" fill="none" stroke="#0891b2" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round" />
+
+              <!-- popisky sloupců -->
+              <g fill="#7c3aed" font-size="11" font-family="JetBrains Mono, monospace" text-anchor="middle"
+                stroke="#ffffff" stroke-width="4" paint-order="stroke">
+                <text x="120" y="52">D1</text>
+                <text x="190" y="52">D2</text>
+                <text x="260" y="52">D3</text>
+                <text x="330" y="52">D4</text>
+                <text x="400" y="52">D5</text>
+              </g>
+
+              <!-- popisky řádků -->
+              <g font-size="11" font-family="JetBrains Mono, monospace" stroke="#ffffff" stroke-width="4"
+                paint-order="stroke">
+                <text x="42" y="64" fill="#94a3b8">G1</text>
+                <text x="42" y="116" fill="#0e7490">G2</text>
+                <text x="42" y="168" fill="#94a3b8">G3</text>
+                <text x="42" y="220" fill="#94a3b8">G4</text>
+              </g>
+
+              <!-- pixel v neaktivních řádcích -->
+              <g fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5">
+                <circle cx="120" cy="70" r="4.5" />
+                <circle cx="190" cy="70" r="4.5" />
+                <circle cx="260" cy="70" r="4.5" />
+                <circle cx="330" cy="70" r="4.5" />
+                <circle cx="400" cy="70" r="4.5" />
+                <circle cx="120" cy="174" r="4.5" />
+                <circle cx="190" cy="174" r="4.5" />
+                <circle cx="260" cy="174" r="4.5" />
+                <circle cx="330" cy="174" r="4.5" />
+                <circle cx="400" cy="174" r="4.5" />
+                <circle cx="120" cy="226" r="4.5" />
+                <circle cx="190" cy="226" r="4.5" />
+                <circle cx="260" cy="226" r="4.5" />
+                <circle cx="330" cy="226" r="4.5" />
+                <circle cx="400" cy="226" r="4.5" />
+              </g>
+
+              <!-- pixely v aktivním řádku -->
+              <g fill="#ecfeff" stroke="#0891b2" stroke-width="2">
+                <rect x="109" y="111" width="22" height="22" rx="4" />
+                <rect x="179" y="111" width="22" height="22" rx="4" />
+                <rect x="249" y="111" width="22" height="22" rx="4" />
+                <rect x="319" y="111" width="22" height="22" rx="4" />
+                <rect x="389" y="111" width="22" height="22" rx="4" />
+              </g>
+
+              <text x="452" y="127" fill="#0e7490" font-size="12" font-weight="700"
+                font-family="Outfit, sans-serif">aktivní</text>
+
+              <!-- legenda -->
+              <path d="M40 266 H58" stroke="#0891b2" stroke-width="3" />
+              <text x="64" y="270" fill="#64748b" font-size="12" font-family="JetBrains Mono, monospace">vybraný
+                řádek</text>
+              <rect x="206" y="258" width="14" height="14" rx="3" fill="#ecfeff" stroke="#0891b2" stroke-width="2" />
+              <text x="226" y="270" fill="#64748b" font-size="12" font-family="JetBrains Mono, monospace">pixel = TFT
+                + C + LC</text>
+              <circle cx="392" cy="265" r="4.5" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5" />
+              <text x="402" y="270" fill="#64748b" font-size="12" font-family="JetBrains Mono, monospace">zamrzlý</text>
+            </svg>
+            <div class="image-caption">Multiplexní adresace — vždy jen jeden řádek je otevřený</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Adresace je to, co odlišuje matici od jednoduché segmentové displeje. Datové linky (source)
+          vedou svisle a vedou je společné pro všechny řádky, proto jich je jen tolik, kolik je sloupců
+          — ne pixelů. Radič vždy otevře jednu gate linku, napíše data na celý řádek a zavře ji;
+          zbytek panelu je od dat odpojený a drží se na kondenzátorech. Proto má LCD pevnou obnovovací
+          frekvenci: každý řádek musí být každý snímek přepsán. V praxi se polarita zápisu ještě střídá
+          (line nebo frame inversion), aby tekuté krystaly nenamořily stejnosměrným napětím. Z
+          toho také plyne typická porucha: vadný gate řádek = černý pruh přes celý panel.
+        </aside>
+      </section>
+
+      <!-- TFT: aktivní vs. pasivní matice -->
+      <section>
+        <span class="slide-category">TFT &bull; Aktivní vs. pasivní</span>
+        <h2>Proč aktivní matice porazila pasivní</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card cons-card">
+            <h3>Pasivní matice (STN, DSTN)</h3>
+            <ul class="custom-list tight-list">
+              <li>Napětí se přivádí <strong>přímo na průsečík</strong> řádek × sloupec.</li>
+              <li>Přes sousední buňky teče <strong>zbytkový proud</strong> → přeslechy (crosstalk).</li>
+              <li>Výsledek: <strong>rozmazání a duchy</strong> (ghosting), omezený počet řádků.</li>
+              <li>Nutná strmá prahová křivka → proto STN a DSTN, ale pomalejší a horší úhly.</li>
+              <li>Dnes jen kalkulačky, měřáky a panely s nízkým rozlišením.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card pros-card">
+            <h3>Aktivní matice (TFT)</h3>
+            <ul class="custom-list tight-list">
+              <li>Tranzistor po zápisu pixel <strong>elektricky odpojí</strong> od datové linky.</li>
+              <li><strong>Kondenzátor</strong> drží přesné napětí po celý snímek.</li>
+              <li>Žádné přeslechy → <strong>plný kontrast</strong> a ostré hrany.</li>
+              <li>Rychlé přepisování, věrné barvy, <strong>miliony pixelů</strong>.</li>
+              <li>Standard pro monitory, telefony i televize.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 8px; padding: 10px 16px;">
+          <strong style="color: var(--accent-cyan);">Práhový problém:</strong>
+          <span style="color: var(--text-muted);">pasivní matice musí vybrat řádek tak, aby sousední
+            buňky zůstaly pod prahem rozsvícení. TFT tento kompromis nepotřebuje — pixel je po zápisu
+            prostě odpojený.</span>
+          <div class="tag-row">
+            <span class="mini-badge">crosstalk</span>
+            <span class="mini-badge">ghosting</span>
+            <span class="mini-badge">poloviční výběr</span>
+            <span class="mini-badge">storage capacitor</span>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tohle je jádro celého TFT slidu. U pasivní matice je buňka zapojená přímo mezi řádkovou a
+          sloupcovou elektrodu, takže při výběru jednoho řádku je zbytek buněk vystavený takzvanému
+          polovičnímu výběru — částečnému napětí, které je mírně roztočí. Vynechat se tomu dá jen
+          strmou prahovou charakteristikou, což je přesně ten důvod, proč STN a DSTN existují.
+          DSTN (dual-scan) dělí panel na dvě poloviny, které se skenují zvlášť, aby se omezil únik
+          proudu. Aktivní matice problém řeší hardwarově: tranzistor je po zápisu vypnutý a kondenzátor
+          drží náboj, takže buňka „neopadá“. Proto taky aktivní matice zvládá plné barvy a vysoké
+          rozlišení, kde pasivní končí na desítkách řádků.
+        </aside>
+      </section>
+
+      <!-- SLIDE 21: TFT TN -->
+      <section>
+        <span class="slide-category">TFT &bull; TN</span>
+        <h2>Druhy TFT LCD — TN</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Twisted nematic</h3>
+            <ul class="custom-list tight-list">
+              <li>Nejstarší a nejlevnější varianta TFT.</li>
+              <li>Bez napětí jsou krystaly zkroucené → <strong>světlo prochází</strong> (normally white).</li>
+              <li>Pod napětím se zarovnají → světlo je blokováno.</li>
+              <li>Barvy přes RGB filtry; často <strong>6 bitů na kanál</strong> (18 bitů, 262 tisíc barev),
+                někdy 6 bit + FRC.</li>
+              <li><strong>Nejrychlejší odezva</strong> (1–5 ms) — oblíbené u herních monitorů.</li>
+              <li>Špatné pozorovací úhly, nepřesné barvy, malý gamut.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                TN = kompromis: <strong>rychlost a cena</strong> vs. barvy a úhly.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s18_f01.png" alt="TN mode — bílý a černý stav"
+              style="max-height: 320px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">TN mód: bez napětí bílá, pod napětím černá; vpravo pozorovací úhly</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          TN je dnes synonymem pro levné herní monitory: rychlá odezva, vysoká obnovovací frekvence,
+          nízká cena. Barvy jsou ale slabší — 6 bitů na kanál znamená 262 tisíc barev, což výrobci
+          často „doplňují“ časovým ditheringem (FRC) na 16,7 milionu. Pozorovací úhly jsou nejhorší
+          z trojice, takže při pohledu z boku se obraz invertuje nebo ztrácí kontrast.
+        </aside>
+      </section>
+
+      <!-- SLIDE 22: TFT IPS -->
+      <section>
+        <span class="slide-category">TFT &bull; IPS</span>
+        <h2>Druhy TFT LCD — IPS</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>In-plane switching</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>1996</strong> — Hitachi; krystaly leží v rovině vrstvy.</li>
+              <li>Napětí je otáčí <strong>v rovině</strong>, ne kolmo k ní.</li>
+              <li><strong>PLS</strong> = Samsung varianta IPS (plane-to-line switching).</li>
+              <li><strong>Nejlepší pozorovací úhly</strong> a věrné barvy; 24 nebo 30 bitů.</li>
+              <li>Velký gamut; kontrast černé je horší než u VA.</li>
+              <li>Pomalejší odezva než TN (moderní IPS už rychlé), ~15 % vyšší spotřeba, dražší.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                IPS = <strong>barvy a úhly</strong>; VA = kontrast; TN = rychlost.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/ips.png" alt="IPS mode — černý a bílý stav"
+              style="max-height: 320px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">IPS mód: krystaly se otáčejí v rovině; vpravo stabilní úhly</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          IPS vzniklo jako odpověď na největší slabinu TN — pozorovací úhly. Trik je, že elektrody
+          jsou ve stejné rovině a pole otáčí krystaly laterálně. Díky tomu se obraz nemění při pohledu
+          z boku a barvy zůstávají věrné. Daň je vyšší spotřeba (kvůli širšímu poli) a nižší kontrast
+          černé, protože LC vrstva nedokáže dokonale zablokovat podsvícení.
+        </aside>
+      </section>
+
+      <!-- SLIDE 23: TFT VA -->
+      <section>
+        <span class="slide-category">TFT &bull; VA</span>
+        <h2>Druhy TFT LCD — VA</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Vertical alignment</h3>
+            <ul class="custom-list tight-list">
+              <li>Krystaly jsou bez napětí <strong>svisle</strong> k vrstvě.</li>
+              <li>Napětí je naklápí → propouštějí světlo.</li>
+              <li><strong>Nejlepší kontrast z LCD</strong> (3 000:1 a více), hluboká černá.</li>
+              <li>Varianty <strong>MVA</strong> (Fujitsu), <strong>PVA</strong> (Samsung), S-PVA.</li>
+              <li>Odezva horší než TN/IPS; ghosting u tmavých přechodů.</li>
+              <li>24 bitů, velký gamut; vhodné na filmy a VA monitory.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                VA obětuje rychlost a úhly za <strong>kontrast a černou</strong>.
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="image-showcase" style="width: 100%;">
+              <img src="../bordel/images-mvt/images-display/display_s20_f01.png"
+                alt="VA mód — krystaly svisle a nakloněné" style="max-height: 210px; width: 100%; object-fit: contain;"
+                data-preview-image>
+              <div class="image-caption">VA: bez pole svisle (off), s polem nakloněné (on)</div>
+            </div>
+
+            <div class="glass-card" style="margin-top: 8px; padding: 10px 14px;">
+              <div class="small-note" style="margin-bottom: 6px;">Typický statický kontrast</div>
+              <svg viewBox="0 0 420 128" style="width: 100%; height: auto; max-height: 128px;" role="img"
+                aria-label="Srovnání kontrastu TN, IPS, VA a OLED">
+                <text x="0" y="20" fill="#475569" font-size="12" font-family="JetBrains Mono, monospace">TN</text>
+                <rect x="52" y="8" width="82" height="16" rx="4" fill="#0891b2" opacity=".75" />
+                <text x="142" y="20" fill="#0e7490" font-size="12" font-weight="700"
+                  font-family="JetBrains Mono, monospace">~800:1</text>
+                <text x="0" y="48" fill="#475569" font-size="12" font-family="JetBrains Mono, monospace">IPS</text>
+                <rect x="52" y="36" width="100" height="16" rx="4" fill="#2563eb" opacity=".75" />
+                <text x="160" y="48" fill="#1d4ed8" font-size="12" font-weight="700"
+                  font-family="JetBrains Mono, monospace">~1 000:1</text>
+                <text x="0" y="76" fill="#475569" font-size="12" font-family="JetBrains Mono, monospace">VA</text>
+                <rect x="52" y="64" width="250" height="16" rx="4" fill="#7c3aed" opacity=".75" />
+                <text x="310" y="76" fill="#6d28d9" font-size="12" font-weight="700"
+                  font-family="JetBrains Mono, monospace">~3 000:1</text>
+                <text x="0" y="104" fill="#475569" font-size="12" font-family="JetBrains Mono, monospace">OLED</text>
+                <rect x="52" y="92" width="340" height="16" rx="4" fill="url(#oledGrad)" />
+                <defs>
+                  <linearGradient id="oledGrad" x1="0" x2="1">
+                    <stop offset="0" stop-color="#0891b2" />
+                    <stop offset="1" stop-color="#7c3aed" />
+                  </linearGradient>
+                </defs>
+                <text x="398" y="104" fill="#6d28d9" font-size="12" font-weight="700"
+                  font-family="JetBrains Mono, monospace">∞</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          VA je nejlepší volba pro tmavé místnosti a filmy: díky svislým krystalům dokáže velmi dobře
+          zablokovat podsvícení, takže černá je skutečně černá (v rámci LCD). Nevýhodou je pomalejší
+          odezva, zejména u přechodů ze šedé do černé, kde vzniká ghosting. VA panely jsou dnes běžné
+          v televizích a zakřivených monitorech.
+        </aside>
+      </section>
+
+      <!-- SLIDE 24: Další druhy LCD -->
+      <section>
+        <span class="slide-category">LCD &bull; Evoluce</span>
+        <h2>LCD — další varianty</h2>
+
+        <p class="lead">Tři směry, kterými se LCD vyvíjí: lepší tranzistorová vrstva, lepší podsvícení
+          a lepší barevné filtry.</p>
+
+        <div class="three-cards">
+          <div class="glass-card">
+            <h3>LTPS</h3>
+            <div class="small-note" style="margin-bottom: 6px;">Low-Temperature Polycrystalline Silicon</div>
+            <ul class="custom-list tight-list">
+              <li>Polykrystalický křemík místo amorfního <strong>v TFT vrstvě</strong>.</li>
+              <li>Vyšší pohyblivost → menší tranzistory, vyšší rozlišení.</li>
+              <li>Nižší spotřeba; elektroniku lze integrovat přímo na sklo.</li>
+              <li>Telefony, VR headsety, AMOLED.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card">
+            <h3>MiniLED</h3>
+            <div class="small-note" style="margin-bottom: 6px;">Lokální stmívání podsvícení</div>
+            <ul class="custom-list tight-list">
+              <li>Podsvícení z tisíců LED místo několika pásků.</li>
+              <li>Lokální dimming → lepší kontrast a HDR.</li>
+              <li>Stále LCD: světlo stále prochází LC vrstvou.</li>
+              <li>Levnější než microLED; běžné v TV a noteboocích.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card">
+            <h3>QLED</h3>
+            <div class="small-note" style="margin-bottom: 6px;">Quantum-dot film</div>
+            <ul class="custom-list tight-list">
+              <li>Kvantové tečky na modrém LED podsvícení.</li>
+              <li>Úzké emisní spektrum → širší gamut.</li>
+              <li>Samsung marketingově „QLED“; jde o LCD.</li>
+              <li>QD-OLED = kvantové tečky + OLED (hybrid).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 12px; padding: 12px 18px;">
+          <strong style="color: var(--accent-cyan);">Důležité rozlišení:</strong>
+          <span style="color: var(--text-muted);">MiniLED a QLED vylepšují <strong>podsvícení</strong> LCD.
+            MicroLED je nový <strong>emisivní pixel</strong> — každý pixel svítí sám.</span>
+        </div>
+
+        <aside class="notes">
+          Tyhle tři technologie se často pletou. LTPS je změna tranzistorové vrstvy — umožní jemnější
+          a energeticky úspornější panely. MiniLED a QLED jsou změny podsvícení: MiniLED přidá mnoho
+          zón lokálního stmívání, QLED zlepší barevný gamut pomocí kvantových teček. Ani jedno z toho
+          ale neodstraňuje základní omezení LCD: světlo musí projít LC vrstvou a polarizátory, takže
+          kontrast černé nikdy nebude nekonečný.
+        </aside>
+      </section>
+
+      <!-- SLIDE 25: OLED úvod -->
+      <section>
+        <span class="slide-category">OLED &bull; 1987</span>
+        <h2>OLED — Organic LED</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Organický polovodič, který svítí</h3>
+            <ul class="custom-list tight-list">
+              <li>První pokusy 1950s–70s; praktické použití <strong>1987</strong> (Tang a VanSlyke,
+                Kodak).</li>
+              <li>První barevný OLED koncem 90. let; masově v telefonech od 2010s.</li>
+              <li><strong>PMOLED</strong> — pasivní matrice, jednoduché displeje.</li>
+              <li><strong>AMOLED</strong> — aktivní matrice, LTPS; telefony, TV.</li>
+              <li><strong>P-OLED</strong> — plastový substrát, flexibilní panely.</li>
+              <li>Emisivní: každý pixel svítí sám, není potřeba podsvícení.</li>
+              <li>Tenký, flexibilní, vysoký kontrast.</li>
+            </ul>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s22_f01.jpeg"
+              alt="Flexibilní OLED displej od LG Display" style="max-height: 340px; width: 100%; object-fit: contain;"
+              data-preview-image>
+            <div class="image-caption">Flexibilní OLED — displej se ohne i ohne prstem</div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 8px; padding: 10px 16px;">
+          <strong style="color: var(--accent-cyan);">OLED = organický polovodič,</strong>
+          <span style="color: var(--text-muted);">který při průchodu proudu emituje světlo. Na rozdíl od
+            LCD nepotřebuje podsvícení ani polarizátory.</span>
+        </div>
+
+        <aside class="notes">
+          OLED je první technologie v této přednášce, která kombinuje výhody CRT (emisivní pixel,
+          dokonalá černá, rychlá odezva) s výhodami LCD (tenký plochý panel). Cesta k praktickému OLED
+          vedla přes Kodak v 80. letech; dnešní AMOLED panely používají LTPS tranzistorovou vrstvu.
+          P-OLED s plastovým substrátem otevřel cestu ohebným a skládacím telefonům.
+        </aside>
+      </section>
+
+      <!-- SLIDE 26: OLED princip -->
+      <section>
+        <span class="slide-category">OLED &bull; Princip</span>
+        <h2>OLED — princip</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div>
+            Mezi dvě elektrody – anodu a katodu – jsou vloženy velmi tenké vrstvy organických (uhlíkových) polovodičů,
+            včetně emisivní vrstvy:
+            <ol class="steps">
+              <li>Přivedením elektrického napětí se z katody vstřikují elektrony a z anody díry (kladné nosiče náboje).
+              </li>
+              <li>Elektrony a díry putují transportními vrstvami směrem k sobě, až se v emisivní vrstvě potkají a
+                rekombinují (vznikne excitovaný stav).</li>
+              <li>Při návratu do základního energetického stavu se uvolní přebytečná energie ve formě fotonu světla.
+              </li>
+              <li>Barvu určuje dopant; RGB subpixely, nebo bílé OLED + barevné filtry.</li>
+            </ol>
+            <div class="formula-box">
+              katoda → emisní vrstva → vodivá vrstva → ITO anoda
+            </div>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Organické vrstvy jsou citlivé na kyslík a vlhkost — nutné <strong>utěsnění
+                  (encapsulation)</strong>.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/oled.png" alt="Schéma vrstev OLED"
+              style="max-height: 340px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">OLED</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Princip je vlastně jednoduchý: elektrické pole přivede elektrony z katody a díry z anody do
+          organické vrstvy, kde se rekombinují a vznikne exciton, který se zbaví energie fotonem.
+          ITO je průhledná vodivá elektroda, takže světlo může vycházet skrz anodu. Největší
+          technologický problém není fyzika, ale výroba: organické vrstvy degradují v přítomnosti
+          kyslíku a vody, proto je nutné extrémně těsné zapouzdření.
+        </aside>
+      </section>
+
+      <!-- SLIDE 27: OLED výhody -->
+      <section>
+        <span class="slide-category">OLED &bull; Výhody</span>
+        <h2>OLED — výhody</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card pros-card">
+            <h3>Proč OLED?</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>Masová výroba mobilních panelů</strong> → nízká cena; velké panely jsou dražší.</li>
+              <li>Lze <strong>tisknout</strong> (inkjet) a vyrábět na fólii.</li>
+              <li><strong>Flexibilní a ohebné</strong> — skládačky, rolování, tvarované panely.</li>
+              <li>Nejsou křehké jako sklo.</li>
+              <li><strong>Dokonalá černá</strong> — vypnutý pixel = 0 nitů; obrovský kontrast.</li>
+              <li>Dobré pozorovací úhly, velmi tenký profil.</li>
+              <li><strong>Velmi rychlá odezva</strong> (&lt; 0,1 ms) — vhodné pro VR.</li>
+              <li>Nižší spotřeba u tmavých scén.</li>
+            </ul>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s24_f01.jpeg" alt="Ohebný OLED displej"
+              style="max-height: 340px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">Ohebný OLED panel</div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 8px; padding: 10px 16px;">
+          <strong style="color: var(--accent-cyan);">OLED vyhrává tam,</strong>
+          <span style="color: var(--text-muted);">kde záleží na černé, tloušťce a flexibilitě — telefony,
+            hodinky, VR, televize a automobilové displeje.</span>
+        </div>
+
+        <aside class="notes">
+          „Levná výroba“ platí hlavně pro malé mobilní panely, kde je OLED dnes standard. Velké OLED
+          televize jsou stále dražší než LCD, i když se rozdíl zmenšuje. Zásadní výhoda pro VR je
+          odezva: při pohybu hlavy nesmí obraz „zaostávat“, jinak vzniká nevolnost. OLED je také
+          jediná běžná technologie, která umí skutečně černou bez podsvícení.
+        </aside>
+      </section>
+
+      <!-- SLIDE 28: OLED nevýhody -->
+      <section>
+        <span class="slide-category">OLED &bull; Nevýhody</span>
+        <h2>OLED — nevýhody</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card cons-card">
+            <h3>Nevýhody</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>Životnost</strong>: různé barvy degradují různě — nejrychleji modrá,
+                nejpomaleji červená.</li>
+              <li>Degradace <strong>kyslíkem a vlhkostí</strong> i při vypnutí.</li>
+              <li><strong>Barevná nerovnováha</strong> → kompenzace, větší modrý subpixel.</li>
+              <li><strong>Vypalování</strong> statického obrazu (burn-in).</li>
+              <li>Voda znamená okamžité zničení.</li>
+              <li><strong>Vysoká spotřeba u světlých scén</strong> — bílá = všechny subpixely.</li>
+              <li><strong>PWM flicker</strong>: jas se řídí pulzy; citliví uživatelé to vnímají.</li>
+            </ul>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s25_f01.jpeg"
+              alt="OLED telefon s šedou plochou a kompenzací"
+              style="max-height: 320px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">Šedá plocha odhaluje neuniformitu a kompenzaci panelu</div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 8px; padding: 10px 16px;">
+          <strong style="color: var(--accent-rose);">Modrá je achillova pata OLED</strong>
+          <span style="color: var(--text-muted);">— proto Pentile matice, větší modré subpixely a
+            kompenzační algoritmy.</span>
+        </div>
+
+        <aside class="notes">
+          OLED má tři velké slabiny: modrá složka degraduje nejrychleji, organika nesnáší vodu a
+          kyslík a jas se často řídí pulzní modulací, což může způsobovat flicker a únavu očí. Burn-in
+          není mýtus — u telefonů s navigačními prvky a u televizí se statickým logem se projevuje.
+          Výrobci tomu čelí kompenzací, posunem obrazu a většími modrými subpixely.
+        </aside>
+      </section>
+
+      <!-- SLIDE 29: OLED subpixelové matice -->
+      <section>
+        <span class="slide-category">OLED &bull; Subpixely</span>
+        <h2>Subpixely pro OLED</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Proč nejsou všechny panely stejné</h3>
+            <ul class="custom-list tight-list">
+              <li>Různé rozložení subpixelů kvůli <strong>degradaci modré</strong>.</li>
+              <li><strong>RGB stripe</strong> — klasické rovnoměrné uspořádání.</li>
+              <li><strong>RGBG PenTile</strong> — sdílené subpixely; méně modrých.</li>
+              <li><strong>Diamond PenTile</strong> — diamantové uspořádání (Samsung).</li>
+              <li>PenTile šetří subpixely; efektivní rozlišení závisí na barvě.</li>
+              <li>Lidské oko je citlivější na zelenou — proto má zelená často více subpixelů.</li>
+              <li>Marketingové „efektivní PPI“ vs. skutečné rozlišení.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Větší modrý subpixel = delší životnost při stejné vnímané barvě.
+              </div>
+            </div>
+          </div>
+
+          <div class="matrix-grid">
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-display/display_s26_f01.jpeg" alt="RGB stripe matice"
+                data-preview-image>
+              <div class="image-caption">RGB stripe</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-display/display_s26_f03.jpeg" alt="Rovnoměrná RGB matice"
+                data-preview-image>
+              <div class="image-caption">RGB — rovnoměrné</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-display/display_s26_f02.png" alt="Diamond PenTile matice"
+                data-preview-image>
+              <div class="image-caption">Diamond PenTile</div>
+            </div>
+            <div class="image-showcase">
+              <img src="../bordel/images-mvt/images-display/display_s26_f04.png" alt="RGBG PenTile matice"
+                data-preview-image>
+              <div class="image-caption">RGBG PenTile</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Subpixelová matice je kompromis mezi životností, spotřebou a vnímanou ostrostí. Když modrá
+          degraduje rychleji, výrobce může zvětšit modrý subpixel nebo ho sdílet mezi sousedy. PenTile
+          tím ušetří subpixely, ale některé barvy mají nižší efektivní rozlišení. U telefonů se proto
+          setkáme s pojmem „efektivní PPI“, který se liší podle toho, jakou barvu zrovna zobrazujete.
+        </aside>
+      </section>
+
+      <!-- SLIDE 30: MicroLED úvod -->
+      <section>
+        <span class="slide-category">microLED &bull; 2000</span>
+        <h2>MicroLED</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Anorganická LED v každém pixelu</h3>
+            <ul class="custom-list tight-list">
+              <li>Nejnovější emisivní technologie; každý pixel je <strong>mikroskopická anorganická
+                  LED</strong>.</li>
+              <li>Materiály: <strong>InGaN</strong> (modrá/zelená), <strong>AlGaInP</strong> (červená).</li>
+              <li>Výzkum od <strong>2000</strong> (Texas Tech University).</li>
+              <li>Samostatné RGB LED, nebo modrá LED + konverzní vrstva.</li>
+              <li>Vývoj: Samsung, Sony, Apple, LG, AUO a další.</li>
+              <li>Zatím drahé; masová výroba je v začátcích.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                microLED = <strong>OLED bez organiky</strong>: svítí anorganická LED, ne organická vrstva.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s27_f01.png"
+              alt="Srovnání vrstev TFT LCD, OLED a microLED"
+              style="max-height: 340px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">TFT LCD vs. OLED vs. microLED — tři různé cesty ke světlu</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Původní materiál uváděl „Texas Univ.“; správně jde o Texas Tech University, kde kolem roku
+          2000 začal výzkum mikro-LED. Myšlenka je jednoduchá: vezměte LED, zmenšete ji na úroveň
+          pixelu a poskládejte z nich panel. Problém není fyzika, ale výroba — milióny čipů je třeba
+          přesně přenést na substrát (mass transfer) a opravit vadné pixely.
+        </aside>
+      </section>
+
+      <!-- SLIDE 31: MicroLED bilance -->
+      <section>
+        <span class="slide-category">microLED &bull; Bilance</span>
+        <h2>MicroLED — výhody, nevýhody, využití</h2>
+
+        <div class="three-cards" style="margin-top: 4px;">
+          <div class="glass-card pros-card">
+            <h3 style="margin-top: 0;">Výhody</h3>
+            <ul class="custom-list tight-list">
+              <li>Žádné vypalování; životnost větší než u LCD i OLED.</li>
+              <li>Obrovský kontrast a vysoký jas (1 000+ nitů).</li>
+              <li>Velmi rychlá odezva.</li>
+              <li>Až o <strong>50 % nižší spotřeba</strong> než OLED.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card cons-card">
+            <h3 style="margin-top: 0;">Nevýhody</h3>
+            <ul class="custom-list tight-list">
+              <li>Není sériová výroba → <strong>extrémní cena</strong>.</li>
+              <li>Větší mezery mezi pixely než u OLED/LCD.</li>
+              <li>Obtížné udělat malé panely s vysokým rozlišením.</li>
+              <li>Výtěžnost: mass transfer a oprava vadných pixelů.</li>
+            </ul>
+          </div>
+
+          <div class="glass-card">
+            <h3 style="margin-top: 0;">Využití</h3>
+            <ul class="custom-list tight-list">
+              <li>Velké modulární displeje, kina, signage.</li>
+              <li>Prototypy hodinek a telefonů — tloušťka 0,48 mm.</li>
+              <li>Luxusní domácí kino a prémiové televize.</li>
+            </ul>
+            <div class="image-showcase" style="margin-top: 8px; width: 100%;">
+              <img src="../bordel/images-mvt/images-display/display_s28_f01.png" alt="Detail mikro LED pixelů"
+                style="height: 120px; width: 100%; object-fit: contain;" data-preview-image>
+              <div class="image-caption">microLED — jednotlivé emisivní čipy</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 8px; padding: 10px 16px;">
+          <strong style="color: var(--accent-cyan);">Cena:</strong>
+          <span style="color: var(--text-muted);">110" 4K microLED TV Samsung stála v roce 2021 kolem
+            3,5 milionu Kč. Dnes se ceny snižují, ale stále jde o luxusní segment.</span>
+        </div>
+
+        <aside class="notes">
+          microLED má teoreticky nejlepší parametry ze všech technologií: emisivní pixel, anorganický
+          materiál, vysoký jas, žádné burn-in. Prakticky ho brzdí výroba. Každý pixel musí být
+          perfektní; pokud jich je 25 milionů, i malá poruchovost znamená drahou opravu. Proto se
+          microLED nejdřív prosazuje u velkých modulárních displejů, kde je cena méně citlivá a
+          oprava modulů snazší.
+        </aside>
+      </section>
+
+      <!-- SLIDE 32: Displeje ve slow-motion -->
+      <section>
+        <span class="slide-category">Vizualizace &bull; Video</span>
+        <h2>Displeje ve slow-motion</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div>
+            <ul class="custom-list tight-list">
+              <li><strong>CRT:</strong> paprsek kreslí řádek po řádku; luminofor chvíli svítí.</li>
+              <li><strong>LCD:</strong> sample-and-hold — obraz drží celý snímek, vzniká pohybový blur.</li>
+              <li><strong>OLED:</strong> krátké pulzy a PWM; jas se řídí střídou.</li>
+              <li><strong>Plazma:</strong> subfield drive — obraz vzniká z mnoha krátkých záblesků.</li>
+              <li>Slow-motion odhaluje, co oko při 60 Hz nevidí.</li>
+            </ul>
+
+            <a class="video-card" href="https://youtu.be/3BJU2drrtCM?t=165" target="_blank" rel="noopener">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">The Slow Mo Guys — Displays in slow motion</div>
+                <div class="video-url">youtu.be/3BJU2drrtCM?t=165</div>
+              </div>
+            </a>
+
+            <a class="video-card" href="https://youtu.be/tkLIBCq5RZo?t=116" target="_blank" rel="noopener"
+              style="margin-top: 8px;">
+              <div class="video-icon">▶</div>
+              <div class="video-details">
+                <div class="video-title">Samsung microLED — modulární displej</div>
+                <div class="video-url">youtu.be/tkLIBCq5RZo?t=116</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s29_f01.png"
+              alt="Snímek z videa displeje ve slow-motion"
+              style="max-height: 280px; width: 100%; object-fit: contain; background: #0f172a;" data-preview-image>
+            <div class="image-caption">Detail obnovy obrazu — světelné pulzy pixelů</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Tento slide je ideální pro přestávku a puštění videa. Slow-motion ukazuje, že obrazovka
+          nevykresluje spojitý obraz, ale sled diskrétních stavů. U CRT je to paprsek, u LCD
+          sample-and-hold, u OLED a plazmy pulzy. Z toho plynou i artefakty: blur u LCD, flicker u
+          PWM, ghosting u pomalé odezvy.
+        </aside>
+      </section>
+
+      <!-- SLIDE 33: Odporový touchscreen -->
+      <section>
+        <span class="slide-category">Touch &bull; 1970s</span>
+        <h2>Dotyková obrazovka — odporová</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Resistive touch</h3>
+            <ul class="custom-list tight-list">
+              <li>První dotykové obrazovky v <strong>70. letech</strong>; komerčně kolem 1977.</li>
+              <li>Dvě oddělené <strong>odporové vrstvy</strong> (ITO) a distanční tečky.</li>
+              <li>Stisk vrstvy spojí; <strong>napěťový dělič</strong> určí polohu X a Y.</li>
+              <li>Funguje se stylusem, rukavicemi i nehtem; levné a odolné.</li>
+              <li>Jen <strong>jeden dotyk</strong>, nutný tlak, horší průhlednost.</li>
+              <li>Mechanické opotřebení; bankomaty, průmyslové panely, starší PDA.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Odporový = <strong>tlak</strong>; kapacitní = <strong>dotyk</strong>.
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card" style="text-align: center;">
+            <svg viewBox="0 0 460 340" style="width: 100%; height: auto; max-height: 360px;" role="img"
+              aria-label="Průřez odporovým dotykovým panelem">
+              <!-- prst -->
+              <path
+                d="M214 10 C 198 10 194 26 196 46 L 200 86 C 202 100 210 106 220 106 C 232 106 238 98 238 86 L 238 46 C 238 24 230 10 214 10 Z"
+                fill="#fcd34d" stroke="#d97706" stroke-width="2" />
+              <text x="252" y="50" fill="#92400e" font-size="13" font-weight="700" font-family="Outfit, sans-serif">prst
+                / stylus</text>
+              <path d="M222 84 L222 102" stroke="#d97706" stroke-width="3" />
+              <path d="M215 96 L222 105 L229 96" fill="none" stroke="#d97706" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round" />
+
+              <!-- horní fólie + ITO -->
+              <text x="60" y="94" fill="#475569" font-size="12" font-family="JetBrains Mono, monospace">flexibilní
+                fólie</text>
+              <rect x="60" y="106" width="340" height="18" rx="7" fill="#e0f2fe" stroke="#60a5fa" stroke-width="2" />
+              <path d="M75 124 H385" stroke="#2563eb" stroke-width="4" />
+              <path d="M180 124 Q230 138 280 124" fill="none" stroke="#38bdf8" stroke-width="3" />
+              <text x="330" y="144" fill="#1d4ed8" font-size="12" font-family="JetBrains Mono, monospace">ITO
+                (horní)</text>
+
+              <!-- distanční tečky -->
+              <circle cx="110" cy="174" r="5" fill="#cbd5e1" stroke="#94a3b8" />
+              <circle cx="170" cy="174" r="5" fill="#cbd5e1" stroke="#94a3b8" />
+              <circle cx="230" cy="174" r="5" fill="#cbd5e1" stroke="#94a3b8" />
+              <circle cx="290" cy="174" r="5" fill="#cbd5e1" stroke="#94a3b8" />
+              <circle cx="350" cy="174" r="5" fill="#cbd5e1" stroke="#94a3b8" />
+              <text x="60" y="203" fill="#475569" font-size="12" font-family="JetBrains Mono, monospace">distanční
+                tečky</text>
+
+              <!-- spodní sklo + ITO -->
+              <rect x="60" y="218" width="340" height="38" rx="7" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2" />
+              <path d="M75 218 H385" stroke="#2563eb" stroke-width="4" />
+              <text x="330" y="238" fill="#1d4ed8" font-size="12" font-family="JetBrains Mono, monospace">ITO
+                (dolní)</text>
+              <text x="60" y="280" fill="#475569" font-size="12" font-family="JetBrains Mono, monospace">sklo</text>
+
+              <!-- princip -->
+              <text x="230" y="314" text-anchor="middle" fill="#0e7490" font-size="13" font-weight="700"
+                font-family="JetBrains Mono, monospace">stisk spojí vrstvy → napěťový dělič → X, Y</text>
+            </svg>
+            <div class="image-caption">Odporový panel — dvě vodivé vrstvy oddělené distančními tečkami</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Odporový displej je vlastně dvě průhledné vodivé fólie oddělené mikroskopickými distančníky.
+          Když na místo zatlačíte, fólie se spojí a kontrolér změří napětí v ose X a Y. Výhoda je, že
+          funguje s jakýmkoliv předmětem a v rukavicích; nevýhoda je nutný tlak, jeden dotyk a
+          postupná degradace fólie. V bankomatech a průmyslu proto stále přežívá.
+        </aside>
+      </section>
+
+      <!-- SLIDE 34: Kapacitní touchscreen -->
+      <section>
+        <span class="slide-category">Touch &bull; Dnes</span>
+        <h2>Dotyková obrazovka — kapacitní</h2>
+
+        <div class="slide-grid-2" style="align-items: center;">
+          <div class="glass-card">
+            <h3>Capacitive touch</h3>
+            <ul class="custom-list tight-list">
+              <li>Měří <strong>kapacitu</strong> mezi elektrodami; prst mění elektrické pole.</li>
+              <li>Izolátor (sklo) + průhledná vodivá vrstva (ITO).</li>
+              <li><strong>Self-capacitance</strong> vs. <strong>mutual-capacitance</strong> (projekční).</li>
+              <li>Multi-touch, gesta, vysoká citlivost; stačí lehký dotyk.</li>
+              <li>Problém s rukavicemi (dnes speciální rukavice).</li>
+              <li>Lze integrovat do displeje (<strong>in-cell / on-cell</strong>) → tenčí panel.</li>
+              <li>Omezení: rušení, voda, tlusté sklo.</li>
+            </ul>
+            <div class="highlight-card" style="margin: 8px 0 0; padding: 10px 14px;">
+              <div style="font-size: .8em; color: var(--text-muted);">
+                Kapacitní dotyk dnes dominuje mobilům, tabletům a automatům.
+              </div>
+            </div>
+          </div>
+
+          <div class="image-showcase" style="width: 100%;">
+            <img src="../bordel/images-mvt/images-display/display_s31_f01.png" alt="Schéma kapacitního dotyku s prstem"
+              style="max-height: 340px; width: 100%; object-fit: contain;" data-preview-image>
+            <div class="image-caption">Kapacitní touch — prst mění kapacitu elektrod</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Kapacitní dotyk nepotřebuje tlak — stačí přiblížení prstu, který svou vodivostí změní
+          kapacitu mezi elektrodami. Projekční kapacitní panely mají matici elektrod, takže umí
+          rozlišit více dotyků současně a sledovat gesta. Integrace in-cell/on-cell znamená, že
+          dotyková vrstva je přímo součástí LCD/OLED panelu, což ztenčuje zařízení. Slabina je voda a
+          silné rukavice.
+        </aside>
+      </section>
+
+      <!-- SLIDE 35: Srovnání -->
+      <section class="dense">
+        <span class="slide-category">Srovnání</span>
+        <h2>Technologie vedle sebe</h2>
+
+        <table class="comparison-table compare-dense">
+          <thead>
+            <tr>
+              <th>Technologie</th>
+              <th>Princip</th>
+              <th>Kontrast</th>
+              <th>Odezva</th>
+              <th>Pozorovací úhly</th>
+              <th>Životnost</th>
+              <th>Spotřeba</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>CRT</strong></td>
+              <td>elektronový paprsek + luminofor</td>
+              <td>velmi vysoký</td>
+              <td>&lt; 1 ms</td>
+              <td>dobré</td>
+              <td>vysoká (vypalování)</td>
+              <td>vysoká</td>
+            </tr>
+            <tr>
+              <td><strong>TN LCD</strong></td>
+              <td>LC + podsvícení</td>
+              <td>~800:1</td>
+              <td>1–5 ms</td>
+              <td>špatné</td>
+              <td>vysoká</td>
+              <td>nízká</td>
+            </tr>
+            <tr>
+              <td><strong>IPS LCD</strong></td>
+              <td>LC v rovině</td>
+              <td>~1 000:1</td>
+              <td>5–15 ms</td>
+              <td>výborné</td>
+              <td>vysoká</td>
+              <td>střední</td>
+            </tr>
+            <tr>
+              <td><strong>VA LCD</strong></td>
+              <td>LC svisle</td>
+              <td>3 000:1+</td>
+              <td>5–20 ms</td>
+              <td>dobré</td>
+              <td>vysoká</td>
+              <td>střední</td>
+            </tr>
+            <tr>
+              <td><strong>Plazma</strong></td>
+              <td>UV výboj + luminofor</td>
+              <td>velmi vysoký</td>
+              <td>&lt; 1 ms</td>
+              <td>dobré</td>
+              <td>střední</td>
+              <td>vysoká</td>
+            </tr>
+            <tr>
+              <td><strong>OLED</strong></td>
+              <td>organická emise</td>
+              <td>∞ (0 nitů)</td>
+              <td>&lt; 0,1 ms</td>
+              <td>výborné</td>
+              <td>střední (burn-in)</td>
+              <td>nízká–střední</td>
+            </tr>
+            <tr>
+              <td><strong>microLED</strong></td>
+              <td>anorganická LED</td>
+              <td>∞</td>
+              <td>&lt; 0,1 ms</td>
+              <td>výborné</td>
+              <td>velmi vysoká</td>
+              <td>nízká</td>
+            </tr>
+            <tr>
+              <td><strong>E-paper</strong></td>
+              <td>elektroforéza</td>
+              <td>vysoký (reflexe)</td>
+              <td>100+ ms</td>
+              <td>omezené</td>
+              <td>velmi vysoká</td>
+              <td>velmi nízká</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="highlight-card" style="margin-top: 6px; padding: 9px 16px;">
+          <strong style="color: var(--accent-cyan);">Čísla jsou orientační.</strong>
+          <span style="color: var(--text-muted);">Konkrétní panel rozhoduje: herní IPS může být rychlejší
+            než levné VA a OLED televize může mít jiný jas i spotřebu než telefon.</span>
+        </div>
+
+        <aside class="notes">
+          Tabulka je shrnutí, ne katalog. U kontrastu je „∞“ u emisivních panelů jen ideál — reálně ho
+          limituje odraz okolí a řídicí elektronika. U odezvy záleží na přechodu (šedá–šedá vs.
+          černá–bílá–černá). Cenu jsem do tabulky nedal, protože se mění příliš rychle; obecně platí:
+          TN < IPS ≈ VA < OLED < microLED, s výjimkou velkých OLED panelů. </aside>
+      </section>
+
+
+
+      <!-- SLIDE 37: Zdroje -->
+      <section>
+        <span class="slide-category">Zdroje</span>
+        <h2>Zdroje a další čtení</h2>
+
+        <div class="slide-grid-3" style="align-items: stretch;">
+          <div class="glass-card">
+            <h3>Přehledy</h3>
+            <ul class="custom-list tight-list">
+              <li><a href="https://en.wikipedia.org/wiki/Display_technology" target="_blank" rel="noopener">Wikipedia —
+                  Display technology</a></li>
+              <li><a href="https://en.wikipedia.org/wiki/Cathode-ray_tube" target="_blank" rel="noopener">Wikipedia —
+                  CRT</a></li>
+              <li><a href="https://en.wikipedia.org/wiki/Liquid-crystal_display" target="_blank"
+                  rel="noopener">Wikipedia — LCD</a></li>
+              <li><a href="https://en.wikipedia.org/wiki/OLED" target="_blank" rel="noopener">Wikipedia — OLED</a></li>
+              <li><a href="https://en.wikipedia.org/wiki/MicroLED" target="_blank" rel="noopener">Wikipedia —
+                  MicroLED</a></li>
+            </ul>
+          </div>
+
+          <div class="glass-card">
+            <h3>Parametry a videa</h3>
+            <ul class="custom-list tight-list">
+              <li><a href="https://www.displayspecifications.com/" target="_blank"
+                  rel="noopener">DisplaySpecifications.com</a> — databáze panelů</li>
+              <li><a href="https://youtu.be/3BJU2drrtCM?t=165" target="_blank" rel="noopener">The Slow
+                  Mo Guys — Displays</a></li>
+              <li><a href="https://youtu.be/tkLIBCq5RZo?t=116" target="_blank" rel="noopener">Samsung
+                  microLED</a></li>
+              <li><a href="https://www.samsung.com/display/" target="_blank" rel="noopener">Samsung
+                  Display</a></li>
+              <li><a href="https://www.lgdisplay.com/eng" target="_blank" rel="noopener">LG Display</a></li>
+            </ul>
+          </div>
+
+          <div class="glass-card">
+            <h3>Knihy</h3>
+            <ul class="custom-list tight-list">
+              <li><strong>Tsujimura</strong> — <em>OLED Display Fundamentals and Applications</em>
+                (Wiley).</li>
+              <li><strong>Chen, Cranton, Fihn</strong> — <em>Handbook of Visual Display Technology</em>
+                (Springer).</li>
+              <li><strong>Mentley</strong> — <em>OLED Display Technology</em>.</li>
+              <li><strong>Keller</strong> — <em>The Cathode-Ray Tube</em>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-card" style="margin-top: 10px; padding: 10px 16px;">
+          <strong style="color: var(--accent-cyan);">Poznámka:</strong>
+          <span style="color: var(--text-muted);">Údaje o letech a parametrech jsou zaokrouhlené;
+            konkrétní hodnoty se liší podle výrobce, generace panelu a nastavení.</span>
+        </div>
+
+        <aside class="notes">
+          Zdroje jsou vybrané tak, aby student mohl jít dál: Wikipedia pro rychlý přehled,
+          DisplaySpecifications pro reálné parametry panelů, videa pro vizuální demonstraci a knihy
+          pro hlubší studium. U historických letopočtů je dobré rozlišovat objev, patent a komerční
+          uvedení — často se v literatuře liší.
+
+          Podkladem této prezentace byl původní soubor MVT-DISPLAY.pptx. Text byl doplněn a
+          zkontrolován; opraveny byly například letopočty u TN LCD, materiál EL luminoforu (ZnS:Mn
+          místo GaAs), směr toku elektronů u VFD, rozpor v popisu polarizátorů u TN a údaj o
+          spotřebě LCD (µW místo nA).
+        </aside>
+      </section>
+
+
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="../bordel/vendor/reveal/reveal.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/notes.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/search.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/zoom.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/math.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/pointer.js"></script>
+  <script src="../bordel/vendor/reveal/plugin/highlight.js"></script>
+  <script src="../bordel/js/tooltips.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: false,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      view: "auto",
+      scrollLayout: "compact",
+      scrollActivationWidth: 600,
+      plugins: [RevealNotes, RevealSearch, RevealZoom, RevealMath.KaTeX, RevealPointer, RevealHighlight],
+      pointer: {
+        key: "q",
+        color: "red",
+        opacity: 0.8,
+        pointerSize: 25,
+        alwaysVisible: false,
+        tailLength: 10,
+      }
+    });
+  </script>
+
+  <script>
+    /* ============================================================
+       Titulní pozadí — animovaná mřížka RGB subpixelů
+       ============================================================ */
+    (function initPixelCanvas() {
+      var cv = document.getElementById('pixelCanvas');
+      if (!cv) return;
+
+      var ctx = cv.getContext('2d');
+      var W = cv.width;
+      var H = cv.height;
+      var cols = 48;
+      var rows = 27;
+      var cw = W / cols;
+      var ch = H / rows;
+      var start = performance.now();
+
+      function draw(now) {
+        if (document.hidden) {
+          requestAnimationFrame(draw);
+          return;
+        }
+
+        var t = (now - start) / 1000;
+        ctx.clearRect(0, 0, W, H);
+
+        for (var y = 0; y < rows; y++) {
+          for (var x = 0; x < cols; x++) {
+            var w1 = Math.sin(x * 0.22 + y * 0.16 - t * 0.85);
+            var w2 = Math.cos(x * 0.11 - y * 0.19 + t * 0.62);
+            var a1 = 0.07 + 0.20 * (w1 * 0.5 + 0.5);
+            var a2 = 0.07 + 0.20 * (w2 * 0.5 + 0.5);
+            var px = x * cw;
+            var py = y * ch;
+            var sw = cw / 3;
+
+            ctx.fillStyle = 'rgba(239, 68, 68, ' + (a1 * 0.75).toFixed(3) + ')';
+            ctx.fillRect(px, py, sw - 1, ch - 1);
+
+            ctx.fillStyle = 'rgba(34, 197, 94, ' + (a2 * 0.75).toFixed(3) + ')';
+            ctx.fillRect(px + sw, py, sw - 1, ch - 1);
+
+            ctx.fillStyle = 'rgba(59, 130, 246, ' + ((a1 + a2) * 0.42).toFixed(3) + ')';
+            ctx.fillRect(px + 2 * sw, py, sw - 1, ch - 1);
+          }
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      requestAnimationFrame(draw);
+    })();
+  </script>
+
+</body>
+
+</html>

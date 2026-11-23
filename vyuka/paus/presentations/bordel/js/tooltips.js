@@ -118,7 +118,7 @@ const GLOSSARY = {
     "Waveguide": { title: "Waveguide", desc: "Vlnovod: průhledná optická struktura přivádějící obraz z mikrodispleje do oka uživatele u AR brýlí." },
     "Eye tracking": { title: "Eye Tracking", desc: "Sledování směru pohledu očí uživatele. V AR/MR slouží k interakci i efektivnímu vykreslování (foveated rendering)." },
     "Segment Anything Model": { title: "SAM (Segment Anything)", desc: "Model Meta pro segmentaci jakéhokoliv objektu v obraze. Využívá se v AR pro porozumění scéně a interakci." },
-    "DCI-P3": { title: "DCI-P3", desc: "Digial Cinema Initiatives - Product 3. Široký barevný gamut využívaný digitálními kiny a profesionálními displeji." },
+    "DCI-P3": { title: "DCI-P3", desc: "Digital Cinema Initiatives - Product 3. Široký barevný gamut využívaný digitálními kiny a profesionálními displeji." },
     "Blend Spaces": { title: "Blend Spaces", desc: "Technika pro plynulé přechody mezi animacemi na základě více vstupů (např. rychlost a úhel)." },
     "Inverse Kinematics": { title: "Inverse Kinematics", desc: "Obrácená kinematika: výpočet úhlů kloubů pro dosažení požadované pozice končetin." },
     "Forward Shading": { title: "Forward Shading", desc: "Typ shaderu, který počítá osvětlení pro každý pixel zvlášť, na rozdíl od deferred shading" },
@@ -133,6 +133,64 @@ const GLOSSARY = {
     "LLM": { title: "Large Language Model", desc: "Velký jazykový model je počítačový model jazyka založený na neuronové síti s mnoha parametry." },
     "glTF": { title: "GL Transmission Format", desc: "glTF je otevřený standardní formát pro efektivní přenos a načítání 3D scén a modelů. Vyvíjí ho konsorcium Khronos Group." },
     "AST": { title: "Abstract Syntax Tree", desc: "AST zobrazuje kód jako strom uzlů, kde každý uzel odpovídá nějaké konstrukci v kódu (např. proměnná, operátor, cyklus, volání funkce)." },
+
+    /* ===== Technologie displejů ===== */
+    "CRT": { title: "Cathode Ray Tube", desc: "Katodová trubice — vakuová elektronka, jejíž elektronový paprsek kreslí obraz na luminofor." },
+    "LCD": { title: "Liquid Crystal Display", desc: "Displej z tekutých krystalů; světlo z podsvícení moduluje LC vrstva a polarizátory." },
+    "PN": { title: "P-N Junction", desc: "Přechod mezi polovodičem typu P (díry) a N (elektrony); základ LED, diod a tranzistorů." },
+    "GaAs": { title: "Gallium Arsenide", desc: "Arsenid gallitý — polovodič pro infračervené LED a vysokofrekvenční elektroniku." },
+    "GaP": { title: "Gallium Phosphide", desc: "Fosfid gallitý — polovodič pro zelené a červené LED." },
+    "GaN": { title: "Gallium Nitride", desc: "Nitrid gallitý — širokopásmový polovodič pro modré LED, lasery a výkonovou elektroniku." },
+    "InGaN": { title: "Indium Gallium Nitride", desc: "Nitrid gallitý a inditý — aktivní vrstva modrých a zelených LED." },
+    "AlGaInP": { title: "Aluminium Gallium Indium Phosphide", desc: "Fosfid hlinitý, gallitý a inditý — materiál pro červené a oranžové LED." },
+    "ZnS:Mn": { title: "Zinc Sulfide doped with Manganese", desc: "Sulfid zinečnatý dotovaný manganem — luminofor žluto-oranžových EL displejů." },
+    "LC": { title: "Liquid Crystal", desc: "Tekutý krystal — látka s uspořádáním kapaliny a optikou krystalu." },
+    "TFT": { title: "Thin Film Transistor", desc: "Tenkovrstvý tranzistor — spínač u každého pixelu aktivní matrice (a-Si, LTPS, IGZO)." },
+    "TN": { title: "Twisted Nematic", desc: "Zkroucený nematický mód LCD; rychlý a levný, ale s horšími pozorovacími úhly a barvami." },
+    "STN": { title: "Super-Twisted Nematic", desc: "LCD mód se zkrutem 180–270°; vyšší kontrast a lepší multiplexing než TN." },
+    "DSTN": { title: "Dual-Scan Super-Twisted Nematic", desc: "Pasivní matice, která se skenuje ve dvou polovinách; lepší kontrast než STN, ale stále bez tranzistorů." },
+    "crosstalk": { title: "Crosstalk (přeslech)", desc: "Napětí vybraného řádku částečně ovlivní i sousední buňky; u pasivních matic způsobuje duchy a rozmazání." },
+    "ghosting": { title: "Ghosting (duchování)", desc: "Stopa za pohybujícím se objektem, způsobená pomalou odezvou pixelu." },
+    "burn-in": { title: "Burn-in (vypálení obrazu)", desc: "Trvalé zbytkové zobrazování statického obsahu kvůli nerovnoměrnému stárnutí pixelů." },
+    "IPS": { title: "In-Plane Switching", desc: "LCD mód, ve kterém se krystaly otáčejí v rovině vrstvy; výborné pozorovací úhly a barvy." },
+    "VA": { title: "Vertical Alignment", desc: "LCD mód se svisle orientovanými krystaly; nejlepší kontrast z LCD." },
+    "MVA": { title: "Multi-domain Vertical Alignment", desc: "Varianta VA od Fujitsu s více doménami pro lepší pozorovací úhly." },
+    "PVA": { title: "Patterned Vertical Alignment", desc: "Varianta VA od Samsungu s vysokým kontrastem." },
+    "PLS": { title: "Plane-to-Line Switching", desc: "Varianta IPS od Samsungu; široké úhly a vysoká hustota pixelů." },
+    "OLED": { title: "Organic Light-Emitting Diode", desc: "Organická elektroluminiscenční dioda; každý pixel svítí sám, není potřeba podsvícení." },
+    "AMOLED": { title: "Active-Matrix OLED", desc: "OLED s aktivní matricí (LTPS); telefony, tablety a televize." },
+    "PMOLED": { title: "Passive-Matrix OLED", desc: "OLED s pasivní matricí; jednodušší a levnější displeje." },
+    "P-OLED": { title: "Plastic OLED", desc: "OLED na plastovém substrátu; flexibilní a ohebné panely." },
+    "QD-OLED": { title: "Quantum-Dot OLED", desc: "OLED s kvantovými tečkami pro širší barevný gamut; kombinace OLED a QLED." },
+    "WOLED": { title: "White OLED", desc: "Bílý OLED s barevnými filtry; používaný u velkých OLED televizí (LG)." },
+    "microLED": { title: "Micro Light-Emitting Diode", desc: "Každý pixel je mikroskopická anorganická LED; vysoký jas, kontrast a životnost." },
+    "MicroLED": { title: "Micro Light-Emitting Diode", desc: "Každý pixel je mikroskopická anorganická LED; vysoký jas, kontrast a životnost." },
+    "MiniLED": { title: "Mini LED", desc: "LCD s podsvícením z tisíců LED a lokálním stmíváním; kontrastnější než běžné LCD." },
+    "QLED": { title: "Quantum-dot LED", desc: "LCD s kvantovými tečkami na modrém podsvícení; širší barevný gamut." },
+    "LED": { title: "Light-Emitting Diode", desc: "Svítivá dioda; elektroluminiscence PN přechodu. Barvu určuje šířka zakázaného pásu." },
+    "PDP": { title: "Plasma Display Panel", desc: "Plazmový panel; UV výboj v Ne/Xe excituje RGB luminofor." },
+    "VFD": { title: "Vacuum Fluorescent Display", desc: "Vakuový fluorescenční displej; miniaturní vakuová elektronka s luminoforovou anodou." },
+    "EL": { title: "Electroluminescent", desc: "Elektroluminiscenční displej; luminofor (např. ZnS:Mn) svítí v elektrickém poli." },
+    "E Ink": { title: "E Ink", desc: "Elektroforetický elektronický papír; bistabilní a reflexivní." },
+    "e-paper": { title: "Electronic Paper", desc: "Elektronický papír; obraz drží bez energie a je čitelný na slunci." },
+    "E-paper": { title: "Electronic Paper", desc: "Elektronický papír; obraz drží bez energie a je čitelný na slunci." },
+    "ITO": { title: "Indium Tin Oxide", desc: "Oxid india a cínu — průhledná vodivá vrstva pro elektrody LCD, OLED a dotykových panelů." },
+    "RGB": { title: "Red Green Blue", desc: "Aditivní barevný model; mícháním R, G a B vzniká bílá." },
+    "RGBG": { title: "RGBG PenTile", desc: "Subpixelová matice se sdílenými zelenými subpixely; méně modrých subpixelů." },
+    "PenTile": { title: "PenTile", desc: "Subpixelová matice se sdílenými subpixely; snižuje počet subpixelů při zachování vnímaného rozlišení." },
+    "PPI": { title: "Pixels Per Inch", desc: "Počet pixelů na palec — hustota obrazu; vyšší PPI znamená ostřejší obraz." },
+    "PWM": { title: "Pulse-Width Modulation", desc: "Pulzní šířková modulace; řízení jasu rychlým zapínáním a vypínáním. Může způsobovat flicker." },
+    "FRC": { title: "Frame Rate Control", desc: "Časové střídání barevných úrovní pro simulaci vyššího barevného rozlišení (dithering)." },
+    "LTPS": { title: "Low-Temperature Polycrystalline Silicon", desc: "Polykrystalický křemík pro TFT; vyšší pohyblivost, menší tranzistory a nižší spotřeba." },
+    "a-Si": { title: "Amorphous Silicon", desc: "Amorfní křemík — základní vodivá vrstva TFT LCD." },
+    "IGZO": { title: "Indium Gallium Zinc Oxide", desc: "Oxidová polovodičová vrstva pro TFT; vysoká pohyblivost a nízký únik." },
+    "sRGB": { title: "Standard RGB", desc: "Standardní barevný prostor pro monitory a web; referenční gamut." },
+    "Rec. 2020": { title: "ITU-R BT.2020", desc: "Široký barevný prostor pro 4K/8K HDR televizi." },
+    "CCFL": { title: "Cold Cathode Fluorescent Lamp", desc: "Starší zářivkové podsvícení LCD; nahrazeno LED." },
+    "BLU": { title: "Backlight Unit", desc: "Podsvětlovací jednotka LCD; dnes nejčastěji LED, u MiniLED s lokálním stmíváním." },
+    "FALD": { title: "Full-Array Local Dimming", desc: "Lokální stmívání podsvícení v celé ploše panelu; zlepšuje kontrast LCD." },
+    "LTPO": { title: "Low-Temperature Polycrystalline Oxide", desc: "Hybridní LTPS/IGZO vrstva pro variabilní obnovovací frekvenci a nižší spotřebu." },
+    "VRR": { title: "Variable Refresh Rate", desc: "Adaptivní obnovovací frekvence; obraz se přizpůsobuje snímkové frekvenci zdroje." },
 
 }
 
@@ -154,8 +212,9 @@ function initAcronymTooltips() {
                 if (!parent) return NodeFilter.FILTER_REJECT;
                 const tag = parent.tagName.toLowerCase();
                 if (['script', 'style', 'pre', 'code', 'textarea'].includes(tag) ||
-                    parent.closest('pre') || parent.closest('code') ||
-                    parent.closest('.katex') || parent.classList.contains('abbr-tag')) {
+                    parent.closest('pre') || parent.closest('code') || parent.closest('svg') ||
+                    parent.closest('.katex') || parent.closest('.no-tooltip') ||
+                    parent.classList.contains('abbr-tag')) {
                     return NodeFilter.FILTER_REJECT;
                 }
                 return NodeFilter.FILTER_ACCEPT;
